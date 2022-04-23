@@ -1,0 +1,9 @@
+.git
+temp
+data.json
+node_modules
+npm-debug.log
+venv
+*.pyc
+staticfiles
+db.sqlite3
