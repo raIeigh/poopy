@@ -60,6 +60,7 @@ module.exports = async function (TOKEN = process.env.POOPYTOKEN, { testing = fal
         partials: ['CHANNEL']
     })
     const rest = new REST({ version: '9' }).setToken(TOKEN);
+    const pkg = JSON.parse(fs.readFileSync('package.json'))
     var ownerids = ['464438783866175489', '454732245425455105', '613501149282172970'];
     var jsoning = ['411624455194804224', '395947826690916362', '486845950200119307'];
     var shit = ['']
@@ -11471,7 +11472,7 @@ module.exports = async function (TOKEN = process.env.POOPYTOKEN, { testing = fal
                     color: 0x472604,
                     footer: {
                         icon_url: bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
-                        text: bot.user.username
+                        text: `${bot.user.username} - v${pkg.version}`
                     },
                     fields: [
                         {
