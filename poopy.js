@@ -34456,7 +34456,7 @@ module.exports = async function (TOKEN = process.env.POOPYTOKEN, { testing = fal
                                             }, 60000)
                                             infoPost(`Command \`${similarCmds[0].name}\` used`)
                                             var phrase = findLocalCmd ? (await getKeywordsFor(findLocalCmd.phrase, msg, true, { resetattempts: true }).catch(() => { }) ?? 'error') : 'error'
-                                            if (data2[msg.guild.id][msg.channel.id]['shut']) break
+                                            if (data2[msg.guild.id][msg.channel.id]['shut']) return
                                             await msg.channel.send({
                                                 content: phrase,
                                                 allowedMentions: {
