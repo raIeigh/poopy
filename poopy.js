@@ -710,13 +710,13 @@ module.exports = async function (TOKEN = process.env.POOPYTOKEN, { testing = fal
 
         //if (!jar) jar = await fetch("https://www.cleverbot.com/", { headers: { "User-Agent": UA } }).then(a => a.headers.raw()['set-cookie'][0].split(";")[0]);
 
-        var payload = "stimulus=" + encodeForSending(stim);
+        var payload = `stimulus=${encodeForSending(stim)}`;
         if (context.length > 10) context.splice(0, context.length - 10)
         var l = context.length - 1;
         for (var i = 0; i <= l; i++) {
             payload += `&vText${i + 2}=${encodeForSending(context[l - i])}`;
         }
-        payload += `&tweak1=50&cb_settings_tweak1=50&tweak2=50&cb_settings_tweak2=50&tweak3=50&cb_settings_tweak3=50&cb_settings_language=en&cb_settings_scripting=no&islearning=1&icognoid=ws&icognoid=wsf&icognocheck=${md5(payload.substring(7, 33))}`
+        payload += `&cb_settings_language=en&cb_settings_scripting=no&islearning=1&icognoid=wsf&icognocheck=${md5(payload.substring(7, 33))}`
         var res = await axios.request({ method: "POST", url: "https://www.cleverbot.com/webservicemin?uc=UseOfficialCleverbotAPI&ncf=V2&", data: payload, headers: { "Content-Type": "text/plain", "User-Agent": UA, Cookie: jar } })
             .then(a => a.data.split("\r")[0])
             .catch(() => '')
@@ -3980,7 +3980,7 @@ module.exports = async function (TOKEN = process.env.POOPYTOKEN, { testing = fal
                 func: async (matches) => {
                     var word = matches[1]
                     try {
-                        return mathjs.evaluate(word)
+                        return String(mathjs.evaluate(word))
                     } catch (err) {
                         return 'NaN'
                     }
@@ -4188,6 +4188,7 @@ module.exports = async function (TOKEN = process.env.POOPYTOKEN, { testing = fal
                 func: async (matches, msg) => {
                     var word = matches[1]
 
+                    if (data2[msg.guild.id][msg.channel.id]['shut']) return ''
                     if (data()[mongodatabase]['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown']) {
                         if ((data()[mongodatabase]['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] - Date.now()) > 0) {
                             return `Calm down! Wait more ${(data()[mongodatabase]['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] - Date.now()) / 1000} seconds.`
@@ -4274,6 +4275,8 @@ module.exports = async function (TOKEN = process.env.POOPYTOKEN, { testing = fal
 
                 func: async (matches, msg) => {
                     var word = matches[1]
+                    
+                    if (data2[msg.guild.id][msg.channel.id]['shut']) return ''
 
                     if (data()[mongodatabase]['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown']) {
                         if ((data()[mongodatabase]['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] - Date.now()) > 0) {
@@ -4493,6 +4496,21 @@ module.exports = async function (TOKEN = process.env.POOPYTOKEN, { testing = fal
                     var word = matches[1]
                     var index = Number(word.replace(/\+/g, '')) <= 0 ? 0 : Math.round(Number(word.replace(/\+/g, ''))) || 0
                     var words = isBot ? msg.content.replace(new RegExp(`${f}\\(([\\s\\S]*?)\\)`, 'ig'), '').split(' ') : string.replace(new RegExp(`${f}\\(([\\s\\S]*?)\\)`, 'ig'), '').split(' ')
+                    if (word.endsWith('+')) return await getKeywordsFor(words.slice(index).join(' ') || '', msg, isBot).catch(() => { }) || ''
+                    return await getKeywordsFor(words[index] || '', msg, isBot).catch(() => { }) || ''
+                },
+            },
+
+            rawarg: {
+                helpf: "(number)",
+
+                desc: "Returns the argument in the message with the index <number>, except keywords and functions are not executed automatically. Putting \"+\" after the number means all other arguments after it.",
+
+                func: async (matches, msg, isBot, string) => {
+                    var f = matches[0]
+                    var word = matches[1]
+                    var index = Number(word.replace(/\+/g, '')) <= 0 ? 0 : Math.round(Number(word.replace(/\+/g, ''))) || 0
+                    var words = isBot ? msg.oldcontent.replace(new RegExp(`${f}\\(([\\s\\S]*?)\\)`, 'ig'), '').split(' ') : msg.content.replace(new RegExp(`${f}\\(([\\s\\S]*?)\\)`, 'ig'), '').split(' ')
                     if (word.endsWith('+')) return await getKeywordsFor(words.slice(index).join(' ') || '', msg, isBot).catch(() => { }) || ''
                     return await getKeywordsFor(words[index] || '', msg, isBot).catch(() => { }) || ''
                 },
@@ -5313,6 +5331,8 @@ module.exports = async function (TOKEN = process.env.POOPYTOKEN, { testing = fal
                     var avatar = split[1] ?? ''
                     var message = split.slice(2).length ? split.slice(2).join(' | ') : ''
                     var allBlank = true
+                    
+                    if (data2[msg.guild.id][msg.channel.id]['shut']) return ''
 
                     if (data()[mongodatabase]['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown']) {
                         if ((data()[mongodatabase]['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] - Date.now()) > 0) {
@@ -5455,9 +5475,7 @@ module.exports = async function (TOKEN = process.env.POOPYTOKEN, { testing = fal
                     var localCommand = data()[mongodatabase]['guild-data'][msg.guild.id]['localcmds'].find(cmd => cmd.name === commandname)
                     var error = ''
 
-                    if (shit.find(id => id === msg.author.id)) {
-                        return 'shit'
-                    }
+                    if (data2[msg.guild.id][msg.channel.id]['shut']) return ''
 
                     if (data()[mongodatabase]['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown']) {
                         if ((data()[mongodatabase]['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] - Date.now()) > 0) {
@@ -5467,7 +5485,9 @@ module.exports = async function (TOKEN = process.env.POOPYTOKEN, { testing = fal
                         }
                     }
 
-                    if (data2[msg.guild.id][msg.channel.id]['shut']) return ''
+                    if (shit.find(id => id === msg.author.id)) {
+                        return 'shit'
+                    }
 
                     if (command || localCommand) {
                         if (data()[mongodatabase]['guild-data'][msg.guild.id]['disabled'].find(cmd => cmd.find(n => n === commandname))) {
@@ -34111,10 +34131,10 @@ module.exports = async function (TOKEN = process.env.POOPYTOKEN, { testing = fal
 
         if (!msg.guild || !msg.channel || data2[msg.guild.id][msg.channel.id]['shut']) return
 
-        var webhook = await msg.fetchWebhook().catch(() => { })
         var prefix = testing ? `2${data()[mongodatabase]['guild-data'][msg.guild.id]['prefix']}` : data()[mongodatabase]['guild-data'][msg.guild.id]['prefix']
         var ignored = ['eval', 'execute', 'localcommands', 'localcmds', 'servercommands', 'servercmds', 'commandtemplates', 'cmdtemplates', 'messages']
-
+        var webhook = await msg.fetchWebhook().catch(() => { })
+        
         if (!(ignored.find(name => msg.content.toLowerCase().includes(`${prefix}${name}`.toLowerCase()))) && !msg.author.bot) {
             var change = await getKeywordsFor(msg.content, msg, false, { resetattempts: true }).catch(err => {
                 msg.channel.send({
@@ -34124,8 +34144,9 @@ module.exports = async function (TOKEN = process.env.POOPYTOKEN, { testing = fal
                     }
                 }).catch(() => { })
             }) ?? 'error'
-            msg.content = change
 
+            msg.oldcontent = msg.content
+            msg.content = change
         }
 
         if (msg.content && !(msg.author.bot) && data()[mongodatabase]['guild-data'][msg.guild.id]['channels'][msg.channel.id]['read']) {
@@ -34365,6 +34386,7 @@ module.exports = async function (TOKEN = process.env.POOPYTOKEN, { testing = fal
                             }, 60000)
                             infoPost(`Command \`${args[0].toLowerCase()}\` used`)
                             var phrase = await getKeywordsFor(findLocalCmd.phrase, msg, true, { resetattempts: true }).catch(() => { }) ?? 'error'
+                            if (data2[msg.guild.id][msg.channel.id]['shut']) break
                             await msg.channel.send({
                                 content: phrase,
                                 allowedMentions: {
@@ -34434,6 +34456,7 @@ module.exports = async function (TOKEN = process.env.POOPYTOKEN, { testing = fal
                                             }, 60000)
                                             infoPost(`Command \`${similarCmds[0].name}\` used`)
                                             var phrase = findLocalCmd ? (await getKeywordsFor(findLocalCmd.phrase, msg, true, { resetattempts: true }).catch(() => { }) ?? 'error') : 'error'
+                                            if (data2[msg.guild.id][msg.channel.id]['shut']) break
                                             await msg.channel.send({
                                                 content: phrase,
                                                 allowedMentions: {
