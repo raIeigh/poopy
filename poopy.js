@@ -701,7 +701,7 @@ module.exports = async function (TOKEN = process.env.POOPYTOKEN, { testing = fal
 
         var jar = process.env.CLEVERBOTCOOKIE
         var contexts = {}
-        var UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/501.12 (KHTML, like Gecko) Chrome/90 Safari/501.12";
+        var UA = "Mozilla/5.0 (Linux; Android 7.0; Redmi Note 4X) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.127 Mobile Safari/537.36";
 
         var context = id;
         if (!Array.isArray(id)) {
