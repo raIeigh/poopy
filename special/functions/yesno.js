@@ -1,7 +1,7 @@
 module.exports = {
     helpf: '(phrase)',
     desc: 'Creates a new yes/no choice in the channel. Returns true if yes is chosen, blank otherwise. Has a cooldown.',
-    func: async (matches, msg) => {
+    func: async function (matches, msg) {
         let poopy = this
 
         var word = matches[1]

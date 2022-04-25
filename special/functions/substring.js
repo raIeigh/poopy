@@ -1,7 +1,7 @@
 module.exports = {
   helpf: '(phrase | start | end)',
   desc: 'Substrings the phrase from the start point to the end point.',
-  func: async (matches) => {
+  func: async function (matches) {
     let poopy = this
 
     var word = matches[1]

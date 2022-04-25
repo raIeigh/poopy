@@ -1,6 +1,6 @@
 module.exports = {
     desc: "Returns a completely nonsensical word that doesn't even exist.",
-    func: async () => {
+    func: async function () {
         let poopy = this
 
         var vowels = ['a', 'e', 'i', 'o', 'u']

@@ -1,7 +1,7 @@
 module.exports = {
   helpf: '(phrase)',
   desc: 'Generates subsequent text from the phrase inside the function.',
-  func: async (matches) => {
+  func: async function (matches) {
     let poopy = this
 
     var word = matches[1]

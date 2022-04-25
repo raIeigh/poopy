@@ -1,7 +1,7 @@
 module.exports = {
   helpf: '(arrayName)',
   desc: 'Returns the length of the array.',
-  func: async (matches, msg) => {
+  func: async function (matches, msg) {
     let poopy = this
 
     var word = matches[1]

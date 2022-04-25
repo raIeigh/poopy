@@ -1,7 +1,7 @@
 module.exports = {
   helpf: '(number)',
   desc: "Returns the first URL in the message. If <number> is supplied, it'll return the URL in the message with index <number>.",
-  func: async (matches, msg, _, string) => {
+  func: async function (matches, msg, _, string) {
     let poopy = this
 
     var word = matches[1]

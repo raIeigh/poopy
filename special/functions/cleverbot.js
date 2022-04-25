@@ -1,7 +1,7 @@
 module.exports = {
   helpf: '(phrase)',
   desc: 'Generates a response to the phrase inside the function with Cleverbot AI.',
-  func: async (matches, msg) => {
+  func: async function (matches, msg) {
     let poopy = this
 
     var word = matches[1]

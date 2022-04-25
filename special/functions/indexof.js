@@ -1,7 +1,7 @@
 module.exports = {
   helpf: '(phrase | regexp)',
   desc: 'Returns the first index in the phrase that matches the RegExp.',
-  func: async (matches) => {
+  func: async function (matches) {
     let poopy = this
 
     function regexIndexOf(string, regex, startpos) {

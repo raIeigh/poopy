@@ -1,7 +1,7 @@
 module.exports = {
   helpf: '(url)',
   desc: 'Fetches and returns the file mime of the specified file.',
-  func: async (matches) => {
+  func: async function (matches) {
     let poopy = this
 
     var word = matches[1]

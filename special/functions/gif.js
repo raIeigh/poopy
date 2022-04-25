@@ -1,7 +1,7 @@
 module.exports = {
     helpf: '(query | index)',
     desc: 'Returns a random Tenor GIF out of the search query, if no index is specified.',
-    func: async (matches, msg) => {
+    func: async function (matches, msg) {
         let poopy = this
 
         var word = matches[1]

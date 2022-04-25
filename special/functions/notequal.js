@@ -1,7 +1,7 @@
 module.exports = {
   helpf: '(phrase1 | phrase2)',
   desc: 'Returns true if phrase1 is not equal to phrase2.',
-  func: async (matches) => {
+  func: async function (matches) {
     let poopy = this
 
     var word = matches[1]

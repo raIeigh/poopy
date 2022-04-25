@@ -1,7 +1,7 @@
 module.exports = {
   helpf: '(number)',
   desc: "Returns the last URL in the channel. If <number> is supplied, it'll return the last URL with index <number>, knowing the limit is 100.",
-  func: async (matches, msg) => {
+  func: async function (matches, msg) {
     let poopy = this
 
     var word = matches[1]

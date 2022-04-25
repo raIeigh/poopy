@@ -1,7 +1,7 @@
 module.exports = {
     helpf: '(name | avatar | message) (manage webhooks only)',
     desc: 'Creates a webhook with the name and avatar specified that will send the desired message.',
-    func: async (matches, msg, isBot) => {
+    func: async function (matches, msg, isBot) {
         let poopy = this
 
         var word = matches[1]

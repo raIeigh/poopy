@@ -1,7 +1,7 @@
 module.exports = {
     helpf: '(arrayName | function<_index|_val>)',
     desc: "For each value in that array, it'll execute the function.",
-    func: async (matches, msg, isBot) => {
+    func: async function (matches, msg, isBot) {
         let poopy = this
 
         var word = matches[1]

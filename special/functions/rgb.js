@@ -1,7 +1,7 @@
 module.exports = {
   helpf: '(hex)',
   desc: 'Converts the supplied hex code to RGB.',
-  func: async (matches) => {
+  func: async function (matches) {
     let poopy = this
 
     var word = matches[1]

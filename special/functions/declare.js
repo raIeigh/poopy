@@ -1,7 +1,7 @@
 module.exports = {
     helpf: '(name | value)',
     desc: 'Declares a variable with the name and value specified. Variables can be used by typing in {variablename}.',
-    func: async (matches, msg, isBot, string) => {
+    func: async function (matches, msg, isBot, string) {
         let poopy = this
 
         var word = matches[1]

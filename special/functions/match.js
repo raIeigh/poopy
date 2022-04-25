@@ -1,7 +1,7 @@
 module.exports = {
   helpf: '(phrase | regexp)',
   desc: 'Matches the content in the phrase with the RegExp.',
-  func: async (matches) => {
+  func: async function (matches) {
     let poopy = this
 
     var word = matches[1]

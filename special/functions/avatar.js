@@ -1,7 +1,7 @@
 module.exports = {
   helpf: '(id)',
   desc: 'Fetches the avatar of the user with the specified ID.',
-  func: async (matches) => {
+  func: async function (matches) {
     let poopy = this
 
     var word = matches[1]

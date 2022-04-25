@@ -1,5 +1,5 @@
 module.exports = {
-    desc: 'hate', func: async () => {
+    desc: 'hate', func: async function () {
         let poopy = this
 
         var members = [

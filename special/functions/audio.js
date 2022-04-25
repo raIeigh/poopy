@@ -1,7 +1,7 @@
 module.exports = {
   helpf: '(url)',
   desc: 'Checks whether the specified file has audio or not.',
-  func: async (matches) => {
+  func: async function (matches) {
     let poopy = this
 
     var word = matches[1]

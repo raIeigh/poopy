@@ -1,7 +1,7 @@
 module.exports = {
   helpf: '(arrayName | separator)',
   desc: 'Joins all the elements in the array with the separator.',
-  func: async (matches, msg, isBot) => {
+  func: async function (matches, msg, isBot) {
     let poopy = this
 
     var word = matches[1]

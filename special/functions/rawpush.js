@@ -1,7 +1,7 @@
 module.exports = {
   helpf: '(arrayName | value)',
   desc: 'Pushes a new raw value to an array.',
-  func: async (matches, msg, isBot) => {
+  func: async function (matches, msg, isBot) {
     let poopy = this
 
     var word = matches[1]

@@ -1,7 +1,7 @@
 module.exports = {
   helpf: '(phrase1 | phrase2 | phrase3 | etc...)',
   desc: "Returns the first phrase that isn't blank.",
-  func: async (matches) => {
+  func: async function (matches) {
     let poopy = this
 
     var word = matches[1]

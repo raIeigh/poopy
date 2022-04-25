@@ -1,7 +1,7 @@
 module.exports = {
   helpf: '(countrycode)',
   desc: 'Returns a random nationality from the country that matches the country code.',
-  func: async (matches) => {
+  func: async function (matches) {
     let poopy = this
 
     var word = matches[1]

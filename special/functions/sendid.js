@@ -1,7 +1,7 @@
 module.exports = {
     helpf: '(phrase)',
     desc: 'Sends a message to the channel. After being sent, it returns its ID. Has the default cooldown of course.',
-    func: async (matches, msg) => {
+    func: async function (matches, msg) {
         let poopy = this
 
         var word = matches[1]

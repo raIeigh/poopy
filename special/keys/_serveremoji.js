@@ -1,5 +1,5 @@
 module.exports = {
-    desc: 'Returns a random server emoji.', func: async (msg) => {
+    desc: 'Returns a random server emoji.', func: async function (msg) {
         let poopy = this
 
         var emojis = msg.guild.emojis.cache;

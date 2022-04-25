@@ -5,7 +5,7 @@ module.exports = {
         "**resettimer()** - Resets the collector's timer\n" +
         "**stop(sendFinishPhrase)** - Stops the collector from running, sends the finishPhrase if sendFinishPhrase isn't blank.\n" +
         '**_collected** - Used when the collector stops running, containing all collected messages separated with the separator.',
-    func: async (matches, msg, isBot) => {
+    func: async function (matches, msg, isBot) {
         let poopy = this
 
         var word = matches[1]

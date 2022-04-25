@@ -941,6 +941,34 @@ class Poopy {
             return str.replace(/[\\^$.|?*+()[{]/g, (match) => `\\${match}`)
         }
 
+        function matchLongestKey(str, keys) {
+            if (keys.length <= 0) return ['']
+            var longest = ['']
+            var matched = false
+            for (var i in keys) {
+                var match = str.match(new RegExp(`^${poopy.functions.regexClean(keys[i])}`))
+                if (match && match[0].length > longest[0].length) {
+                    matched = true
+                    longest = match
+                }
+            }
+            return matched && longest
+        }
+
+        function matchLongestFunc(str, funcs) {
+            if (funcs.length <= 0) return ['']
+            var longest = ['']
+            var matched = false
+            for (var i in funcs) {
+                var match = str.match(new RegExp(`${poopy.functions.regexClean(funcs[i])}$`))
+                if (match && match[0].length > longest[0].length) {
+                    matched = true
+                    longest = match
+                }
+            }
+            return matched && longest
+        }
+
         poopy.functions.getKeyFunc = function (string, { extrakeys = {}, extrafuncs = {} } = {}) {
             var lastParenthesesIndex = -1
             var llastParenthesesIndex = -1
@@ -987,10 +1015,10 @@ class Poopy {
 
                 switch (char) {
                     case '(':
-                        var funcmatch = (string.substring(0, i)).match(new RegExp(`(${funcs.map(f => poopy.functions.regexClean(f)).join('|')})$`, 'i'))
-                        var pfuncmatch = (string.substring(0, i)).match(new RegExp(`(${parenthesesGoal.length <= 0 ? pfuncs.map(f => poopy.functions.regexClean(f)).join('|') : ''})$`, 'i'))
+                        var funcmatch = matchLongestFunc(string.substring(0, i), funcs)
+                        var pfuncmatch = matchLongestFunc(string.substring(0, i), parenthesesGoal.length <= 0 ? pfuncs : [])
 
-                        if (funcmatch) {
+                        if (funcmatch || funcmatch == '') {
                             parindex++
                             lastParenthesesIndex = i
                             if (!rawMatch) {
@@ -1008,16 +1036,16 @@ class Poopy {
                             } else {
                                 rawrequired++
                             }
-                        } else if (pfuncmatch) {
+                        } else if (pfuncmatch || pfuncmatch == '') {
                             parindex++
                             potentialindexes.push(parindex)
                         }
                         break
 
                     case ')':
-                        var funcmatch = (string.substring(0, lastParenthesesIndex)).match(new RegExp(`(${funcs.map(f => poopy.functions.regexClean(f)).join('|')})$`, 'i'))
+                        var funcmatch = matchLongestFunc(string.substring(0, lastParenthesesIndex), funcs)
 
-                        if (funcmatch && string[i - 1] !== '\\') {
+                        if ((funcmatch || funcmatch == '') && string[i - 1] !== '\\') {
                             if (parenthesesGoal.find(pgoal => parindex == pgoal)) {
                                 parenthesesGoal.splice(parenthesesGoal.findIndex(pgoal => parindex == pgoal), 1)
                             }
@@ -1047,7 +1075,7 @@ class Poopy {
                         break
                 }
 
-                var keymatch = string.substring(i).match(new RegExp(`^(${keys.map(k => poopy.functions.regexClean(k)).join('|')})`, 'i'))
+                var keymatch = matchLongestKey(string.substring(i), keys)
                 if (keymatch) {
                     keyindex = i
                     if (rawrequired <= 0) return {
@@ -1058,7 +1086,7 @@ class Poopy {
             }
 
             if (llastParenthesesIndex > -1) {
-                var funcmatch = string.substring(0, lastParenthesesIndex).match(new RegExp(`(${funcs.map(f => poopy.functions.regexClean(f)).join('|')})$`, 'i'))
+                var funcmatch = matchLongestFunc(string.substring(0, lastParenthesesIndex), funcs)
 
                 lastParenthesesIndex++
                 return {
@@ -1068,7 +1096,7 @@ class Poopy {
             }
 
             if (keyindex > -1) {
-                var keymatch = string.substring(keyindex).match(new RegExp(`^(${keys.map(k => poopy.functions.regexClean(k)).join('|')})`, 'i'))
+                var keymatch = matchLongestKey(string.substring(keyindex))
 
                 return {
                     match: keymatch[0].toLowerCase(),
@@ -1113,7 +1141,7 @@ class Poopy {
                 switch (char) {
                     case '(':
                         var funcmatch = (string.substring(0, i)).match(new RegExp(`(${parenthesesGoal.length <= 0 ? afuncs.map(f => poopy.functions.regexClean(f)).join('|') : ''})$`, 'i'))
-                        if (funcmatch) {
+                        if (funcmatch || funcmatch == '') {
                             lastParenthesesIndex = i
                             parenthesesrequired++
                             var func = funclist[funcmatch[0].toLowerCase()]
@@ -1135,7 +1163,7 @@ class Poopy {
 
                     case ')':
                         var funcmatch = (string.substring(0, lastParenthesesIndex)).match(new RegExp(`(${!parenthesesGoal.length > 0 ? afuncs.map(f => poopy.functions.regexClean(f)).join('|') : ''})$`, 'i'))
-                        if (funcmatch && string[i - 1] !== '\\') {
+                        if ((funcmatch || funcmatch == '') && string[i - 1] !== '\\') {
                             if (parenthesesGoal.find(pgoal => parenthesesrequired == pgoal)) {
                                 parenthesesGoal.splice(parenthesesGoal.findIndex(pgoal => parenthesesrequired == pgoal), 1)
                             }
@@ -2190,25 +2218,23 @@ class Poopy {
                     case 'key':
                         var key = poopy.specialkeys.keys[keydata.match] || extrakeys[keydata.match]
                         poopy.tempdata[msg.author.id]['keyattempts'] += key.attemptvalue ?? 1
-                        var func = key.func
-                        var change = await func.call(poopy, msg, isBot, string).catch(() => { }) ?? ''
+                        var change = await key.func.call(poopy, msg, isBot, string).catch(() => { }) ?? ''
                         string = typeof (change) === 'object' && change[1] === true ? change[0] : string.replace(new RegExp(poopy.functions.regexClean(keydata.match), 'i'), change)
                         break
 
                     case 'func':
                         var [funcName, match] = keydata.match
-                        var f = poopy.specialkeys.functions[funcName] || extrafuncs[funcName]
-                        poopy.tempdata[msg.author.id]['keyattempts'] += f.attemptvalue ?? 1
-                        var func = f.func
+                        var func = poopy.specialkeys.functions[funcName] || extrafuncs[funcName]
+                        poopy.tempdata[msg.author.id]['keyattempts'] += func.attemptvalue ?? 1
                         var m = match
-                        if (!f.raw) {
+                        if (!func.raw) {
                             match = await poopy.functions.getKeywordsFor(match, msg, isBot, { extrakeys: extrakeys, extrafuncs: extrafuncs }).catch(() => { }) ?? m
                         }
                         match = match.replace(/\\\)/g, ')')
-                        if (!f.raw) {
+                        if (!func.raw) {
                             string = string.replace(m, match)
                         }
-                        var change = await func.call(poopy, [funcName, match], msg, isBot, string).catch(() => { }) ?? ''
+                        var change = await func.func.call(poopy, [funcName, match], msg, isBot, string).catch(() => { }) ?? ''
                         string = typeof (change) === 'object' && change[1] === true ? change[0] : string.replace(new RegExp(poopy.functions.regexClean(`${funcName}(${match})`), 'i'), change)
                         break
                 }
@@ -2742,17 +2768,17 @@ class Poopy {
             functions: {}
         }
 
-        poopy.modules.fs.readdirSync('special/keys').forEach(key => {
-            key = key.replace(/\.js$/, '')
+        poopy.modules.fs.readdirSync('special/keys').forEach(name => {
+            var key = name.replace(/\.js$/, '')
             if (!(poopy.config.poosonia && poopy.config.poosoniakeywordblacklist.find(keyname => keyname == key))) {
-                poopy.specialkeys.keys[key] = require(`./special/keys/${key}.js`)
+                poopy.specialkeys.keys[key] = require(`./special/keys/${key}`)
             }
         })
 
-        poopy.modules.fs.readdirSync('special/functions').forEach(func => {
-            func = func.replace(/\.js$/, '')
+        poopy.modules.fs.readdirSync('special/functions').forEach(name => {
+            var func = name.replace(/\.js$/, '')
             if (!(poopy.config.poosonia && poopy.config.poosoniafunctionblacklist.find(funcname => funcname == func))) {
-                poopy.specialkeys.functions[func] = require(`./special/functions/${func}.js`)
+                poopy.specialkeys.functions[func] = require(`./special/functions/${name}`)
             }
         })
 

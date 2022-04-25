@@ -1,7 +1,7 @@
 module.exports = {
   helpf: '(phrase)',
   desc: 'chooses A RANDOM fUNCTION to USE With The Text.',
-  func: async (matches, msg, isBot, string) => {
+  func: async function (matches, msg, isBot, string) {
     let poopy = this
 
     var funcs = []

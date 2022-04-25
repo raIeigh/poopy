@@ -1,6 +1,6 @@
 module.exports = {
     desc: 'Returns a random Tenor gif.',
-    func: async (msg) => {
+    func: async function (msg) {
         let poopy = this
 
         return new Promise(resolve => {

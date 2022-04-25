@@ -1,6 +1,6 @@
 module.exports = {
   desc: 'Returns a random known Phexonia Studios member.',
-  func: async () => {
+  func: async function () {
     let poopy = this
 
     var members = [

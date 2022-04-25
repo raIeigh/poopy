@@ -1,7 +1,7 @@
 module.exports = {
     helpf: '(id | phrase)',
     desc: 'Edits a message sent by Poopy less than a minute ago.',
-    func: async (matches, msg) => {
+    func: async function (matches, msg) {
         let poopy = this
 
         var word = matches[1]

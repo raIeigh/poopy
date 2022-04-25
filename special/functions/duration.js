@@ -1,7 +1,7 @@
 module.exports = {
   helpf: '(url)',
   desc: 'Fetches and returns the duration of the specified file.',
-  func: async (matches) => {
+  func: async function (matches) {
     let poopy = this
 
     var word = matches[1]

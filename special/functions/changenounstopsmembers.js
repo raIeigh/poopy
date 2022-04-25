@@ -1,7 +1,7 @@
 module.exports = {
     helpf: '(phrase)',
     desc: 'Replaces all of the nouns in the phrase with Phexonia Studios members.',
-    func: async (matches) => {
+    func: async function (matches) {
         let poopy = this
 
         var word = matches[1]

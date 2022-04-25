@@ -1,7 +1,7 @@
 module.exports = {
     helpf: '(id)',
     desc: 'Deletes the message. If the ID is specified, the message must be sent by Poopy less than a minute ago.',
-    func: async (matches, msg) => {
+    func: async function (matches, msg) {
         let poopy = this
 
         var word = matches[1]

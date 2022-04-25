@@ -1,7 +1,7 @@
 module.exports = {
     helpf: '(name | function<_val>)',
     desc: 'Declares a function with the name and function specified. Functions can be used by typing in [functionname].',
-    func: async (matches, msg, isBot, string) => {
+    func: async function (matches, msg, isBot, string) {
         let poopy = this
 
         var word = matches[1]

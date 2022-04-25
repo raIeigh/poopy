@@ -1,7 +1,7 @@
 module.exports = {
   helpf: '(min | max)',
   desc: 'Returns a random number between min and max. They should be separated by "|".',
-  func: async (matches) => {
+  func: async function (matches) {
     let poopy = this
 
     var word = matches[1]

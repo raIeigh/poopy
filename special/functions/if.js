@@ -1,7 +1,7 @@
 module.exports = {
   helpf: '(condition | phrase | elsePhrase)',
   desc: 'Returns the phrase if the specified condition is not blank, or else it returns the elsePhrase, if it exists.',
-  func: async (matches, msg, isBot) => {
+  func: async function (matches, msg, isBot) {
     let poopy = this
 
     var word = matches[1]

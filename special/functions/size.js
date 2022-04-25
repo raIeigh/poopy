@@ -1,7 +1,7 @@
 module.exports = {
   helpf: '(url)',
   desc: 'Fetches and returns the size of the specified file in bytes.',
-  func: async (matches) => {
+  func: async function (matches) {
     let poopy = this
 
     var word = matches[1]

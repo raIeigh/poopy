@@ -1,6 +1,6 @@
 module.exports = {
   desc: 'Returns a random Phexonia Studios related image.',
-  func: async () => {
+  func: async function () {
     let poopy = this
 
     var psImages = []

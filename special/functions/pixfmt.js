@@ -1,7 +1,7 @@
 module.exports = {
   helpf: '(url)',
   desc: 'Fetches the pixel format of the specified file.',
-  func: async (matches) => {
+  func: async function (matches) {
     let poopy = this
 
     var word = matches[1]

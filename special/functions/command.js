@@ -1,7 +1,7 @@
 module.exports = {
     helpf: '(name | arguments)',
     desc: 'Allows you to execute any command!',
-    func: async (matches, msg, _, string) => {
+    func: async function (matches, msg, _, string) {
         let poopy = this
 
         var f = matches[0]

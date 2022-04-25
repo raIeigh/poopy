@@ -1,7 +1,7 @@
 module.exports = {
     helpf: '(arrayName | function<_val>)',
     desc: 'Finds a value in the array that matches the function.',
-    func: async (matches, msg, isBot) => {
+    func: async function (matches, msg, isBot) {
         let poopy = this
 
         var word = matches[1]

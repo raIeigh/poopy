@@ -1,7 +1,7 @@
 module.exports = {
   helpf: '(phrase)',
   desc: 'makes the phrase all lowercase.',
-  func: async (matches) => {
+  func: async function (matches) {
     let poopy = this
 
     var word = matches[1]

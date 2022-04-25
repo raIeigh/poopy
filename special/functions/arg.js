@@ -1,7 +1,7 @@
 module.exports = {
   helpf: '(number)',
   desc: 'Returns the argument in the message with the index <number>. Putting "+" after the number means all other arguments after it.',
-  func: async (matches, msg, isBot, string) => {
+  func: async function (matches, msg, isBot, string) {
     let poopy = this
 
     var f = matches[0]

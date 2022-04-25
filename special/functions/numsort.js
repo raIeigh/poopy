@@ -1,7 +1,7 @@
 module.exports = {
   helpf: '(arrayName)',
   desc: 'Sorts the array numerically.',
-  func: async (matches, msg) => {
+  func: async function (matches, msg) {
     let poopy = this
 
     var word = matches[1]

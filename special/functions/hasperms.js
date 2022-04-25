@@ -1,7 +1,7 @@
 module.exports = {
     helpf: '(id | perm1 | perm2 | perm3 | etc...)',
     desc: 'Checks whether the user in the server with the respective ID has all the specified permissions or not. (a list of permissions can be found in https://discord.com/developers/docs/topics/permissions#permissions-bitwise-permission-flags)',
-    func: async (matches, msg) => {
+    func: async function (matches, msg) {
         let poopy = this
 
         var word = matches[1]

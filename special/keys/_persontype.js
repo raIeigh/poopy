@@ -1,6 +1,6 @@
 module.exports = {
   desc: "Returns a random type of person. (i honestly don't know what to call it)",
-  func: async () => {
+  func: async function () {
     let poopy = this
 
     var insults = [

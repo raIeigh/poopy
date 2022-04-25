@@ -1,7 +1,7 @@
 module.exports = {
   helpf: '(expression)',
   desc: 'Evaluates the specified math expression if it is valid.',
-  func: async (matches) => {
+  func: async function (matches) {
     let poopy = this
 
     var word = matches[1]

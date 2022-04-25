@@ -1,6 +1,6 @@
 module.exports = {
   desc: 'Returns a random keyword.',
-  func: async (msg) => {
+  func: async function (msg) {
     let poopy = this
 
     var keys = []

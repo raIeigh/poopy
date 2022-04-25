@@ -1,7 +1,7 @@
 module.exports = {
     helpf: '(query | index)',
     desc: 'Returns a random image out of the search query, if no index is specified.',
-    func: async (matches) => {
+    func: async function (matches) {
         let poopy = this
 
         var word = matches[1]

@@ -1,7 +1,7 @@
 module.exports = {
   helpf: '(arrayName | index)',
   desc: 'Removes the value in the array with that index.',
-  func: async (matches, msg) => {
+  func: async function (matches, msg) {
     let poopy = this
 
     var word = matches[1]

@@ -1,6 +1,6 @@
 module.exports = {
   desc: 'Returns a random phrase based on FNAF, like "fred" or "Fred five nights".',
-  func: async () => {
+  func: async function () {
     let poopy = this
 
     var fnaf = [

@@ -1,7 +1,7 @@
 module.exports = {
   helpf: '(index)',
   desc: 'Returns the content of the last message in the channel. If index is specified, it returns the content of the message with that index.',
-  func: async (matches, msg, isBot) => {
+  func: async function (matches, msg, isBot) {
     let poopy = this
 
     var f = matches[0]
