@@ -1,4 +1,4 @@
-const Poopy = require('./modules/poopy')
+const Poopy = require('./poopy')
 const tokens = [
     {
         TOKEN: process.env[__dirname.includes('app') ? 'POOPYTOKEN' : 'POOPYTOKEN2'],
