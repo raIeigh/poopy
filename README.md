@@ -3,6 +3,11 @@
 
 ```javascript
 const Poopy = require('poopy')
+let poopy = new Poopy({
+    testing: true,
+    keyLimit: 1500,
+    globalPrefix: ':P'
+})
 
-new Poopy(process.env.TOKEN)
+poopy.start(process.env.TOKEN)
 ```

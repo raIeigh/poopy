@@ -1,6 +1,5 @@
-const Poopy = require('./poopy')
-
-var tokens = [
+const Poopy = require('./modules/poopy')
+const tokens = [
     {
         TOKEN: process.env[__dirname.includes('app') ? 'POOPYTOKEN' : 'POOPYTOKEN2'],
         opts: {
@@ -10,9 +9,11 @@ var tokens = [
 ]
 
 tokens.forEach(async tokendata => {
+    let poopy
     if (typeof tokendata == 'string') {
-        Poopy(tokendata)
+        poopy = new Poopy()
     } else {
-        Poopy(tokendata.TOKEN, tokendata.opts)
+        poopy = new Poopy(tokendata.opts)
     }
+    poopy.start(tokendata.TOKEN)
 })
