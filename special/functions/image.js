@@ -8,7 +8,7 @@ module.exports = {
         var split = poopy.functions.splitKeyFunc(word, { args: 2 })
         var query = poopy.functions.getIndexOption(split, 0)[0]
         var page = poopy.functions.getIndexOption(split, 1, { n: Infinity }).join(' | ')
-        var urls = poopy.functions.fetchImages(query, false, !msg.channel.nsfw).catch(() => { })
+        var urls = await poopy.functions.fetchImages(query, false, !msg.channel.nsfw).catch(() => { })
 
         if (!urls || !urls.length) return word
 
