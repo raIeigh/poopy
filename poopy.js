@@ -947,7 +947,7 @@ class Poopy {
             var matched = false
             for (var i in keys) {
                 var match = str.match(new RegExp(`^${poopy.functions.regexClean(keys[i])}`))
-                if (match && match[0].length > longest[0].length) {
+                if (match && match[0].length >= longest[0].length) {
                     matched = true
                     longest = match
                 }
@@ -961,7 +961,7 @@ class Poopy {
             var matched = false
             for (var i in funcs) {
                 var match = str.match(new RegExp(`${poopy.functions.regexClean(funcs[i])}$`))
-                if (match && match[0].length > longest[0].length) {
+                if (match && match[0].length >= longest[0].length) {
                     matched = true
                     longest = match
                 }
@@ -1016,9 +1016,9 @@ class Poopy {
                 switch (char) {
                     case '(':
                         var funcmatch = matchLongestFunc(string.substring(0, i), funcs)
-                        var pfuncmatch = matchLongestFunc(string.substring(0, i), parenthesesGoal.length <= 0 ? pfuncs : [])
+                        var pfuncmatch = matchLongestFunc(string.substring(0, i), parenthesesGoal.length <= 0 ? pfuncs : [''])
 
-                        if (funcmatch || funcmatch == '') {
+                        if (funcmatch) {
                             parindex++
                             lastParenthesesIndex = i
                             if (!rawMatch) {
@@ -1045,7 +1045,7 @@ class Poopy {
                     case ')':
                         var funcmatch = matchLongestFunc(string.substring(0, lastParenthesesIndex), funcs)
 
-                        if ((funcmatch || funcmatch == '') && string[i - 1] !== '\\') {
+                        if (funcmatch && string[i - 1] !== '\\') {
                             if (parenthesesGoal.find(pgoal => parindex == pgoal)) {
                                 parenthesesGoal.splice(parenthesesGoal.findIndex(pgoal => parindex == pgoal), 1)
                             }
@@ -1140,8 +1140,8 @@ class Poopy {
 
                 switch (char) {
                     case '(':
-                        var funcmatch = (string.substring(0, i)).match(new RegExp(`(${parenthesesGoal.length <= 0 ? afuncs.map(f => poopy.functions.regexClean(f)).join('|') : ''})$`, 'i'))
-                        if (funcmatch || funcmatch == '') {
+                        var funcmatch = matchLongestFunc(string.substring(0, i), parenthesesGoal.length <= 0 ? afuncs : [''])
+                        if (funcmatch) {
                             lastParenthesesIndex = i
                             parenthesesrequired++
                             var func = funclist[funcmatch[0].toLowerCase()]
@@ -1162,8 +1162,8 @@ class Poopy {
                         break
 
                     case ')':
-                        var funcmatch = (string.substring(0, lastParenthesesIndex)).match(new RegExp(`(${!parenthesesGoal.length > 0 ? afuncs.map(f => poopy.functions.regexClean(f)).join('|') : ''})$`, 'i'))
-                        if ((funcmatch || funcmatch == '') && string[i - 1] !== '\\') {
+                        var funcmatch = matchLongestFunc(string.substring(0, lastParenthesesIndex), parenthesesGoal.length <= 0 ? afuncs : [''])
+                        if (funcmatch && string[i - 1] !== '\\') {
                             if (parenthesesGoal.find(pgoal => parenthesesrequired == pgoal)) {
                                 parenthesesGoal.splice(parenthesesGoal.findIndex(pgoal => parenthesesrequired == pgoal), 1)
                             }
