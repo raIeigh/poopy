@@ -1,6 +1,6 @@
 module.exports = {
     helpf: '(query | index)',
-    desc: 'Returns a random image out of the search query from Google, if no index is specified.',
+    desc: 'Returns a random image out of the search query from Bing, if no index is specified.',
     func: async function (matches, msg) {
         let poopy = this
 
@@ -8,7 +8,7 @@ module.exports = {
         var split = poopy.functions.splitKeyFunc(word, { args: 2 })
         var query = poopy.functions.getIndexOption(split, 0)[0]
         var page = poopy.functions.getIndexOption(split, 1, { n: Infinity }).join(' | ')
-        var urls = poopy.functions.fetchImages(query, false, !msg.channel.nsfw).catch(() => { })
+        var urls = poopy.functions.fetchImages(query, true, !msg.channel.nsfw).catch(() => { })
 
         if (!urls || !urls.length) return word
 

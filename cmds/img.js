@@ -19,7 +19,7 @@ module.exports = {
             }
             var search = args.slice(1).join(" ");
 
-            var urls = await poopy.functions.fetchImages(search, bing).catch(() => { })
+            var urls = await poopy.functions.fetchImages(search, bing, !msg.channel.nsfw).catch(() => { })
 
             if (!urls) {
                 msg.channel.send('Error.').catch(() => { })
@@ -349,7 +349,7 @@ module.exports = {
     },
     help: {
         name: 'img/image <query> [-page <number>] [-bing]',
-        value: 'Search for a random image in Google.\nExample usage: p:img Burger -page 5'
+        value: 'Search for a random image in Google or Bing.\nExample usage: p:img Burger -page 5 -bing'
     },
     cooldown: 2500,
     type: 'Fetching'

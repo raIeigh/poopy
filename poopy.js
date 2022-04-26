@@ -109,7 +109,6 @@ class Poopy {
             poopy.modules.fs.rmSync('node_modules/@jimp/plugin-print', { force: true, recursive: true })
         }
         poopy.modules.fs.copySync('modules/plugin-print', 'node_modules/@jimp/plugin-print', { recursive: true })
-
         poopy.modules.Jimp = require('jimp')
 
         //poopy.modules.selenium = require('selenium-webdriver')
@@ -2251,13 +2250,13 @@ class Poopy {
             return string
         }
 
-        poopy.functions.fetchImages = async function (query, bing) {
+        poopy.functions.fetchImages = async function (query, bing, safe) {
             return new Promise(async (resolve) => {
                 if (bing) {
                     var options = {
                         method: 'GET',
                         url: 'https://bing-image-search1.p.rapidapi.com/images/search',
-                        params: { q: query, count: '100', safeSearch: 'moderate' },
+                        params: { q: query, count: '100', safeSearch: safe ? 'moderate' : 'off' },
                         headers: {
                             'x-rapidapi-host': 'bing-image-search1.p.rapidapi.com',
                             'x-rapidapi-key': poopy.functions.randomKey('RAPIDAPIKEY')
@@ -2285,7 +2284,10 @@ class Poopy {
 
                     resolve(images)
                 } else {
-                    poopy.modules.gis(query, async function (_, results) {
+                    poopy.modules.gis({
+                        searchTerm: query,
+                        queryStringAddition: `&safe=${safe ? 'active' : 'images'}`
+                    }, async function (_, results) {
                         var images = []
 
                         for (var i in results) {
