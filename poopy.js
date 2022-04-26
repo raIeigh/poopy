@@ -941,7 +941,7 @@ class Poopy {
             return str.replace(/[\\^$.|?*+()[{]/g, (match) => `\\${match}`)
         }
 
-        function matchLongestKey(str, keys) {
+        poopy.functions.matchLongestKey = function (str, keys) {
             if (keys.length <= 0) return ['']
             var longest = ['']
             var matched = false
@@ -955,7 +955,7 @@ class Poopy {
             return matched && longest
         }
 
-        function matchLongestFunc(str, funcs) {
+        poopy.functions.matchLongestFunc = function (str, funcs) {
             if (funcs.length <= 0) return ['']
             var longest = ['']
             var matched = false
@@ -1015,8 +1015,8 @@ class Poopy {
 
                 switch (char) {
                     case '(':
-                        var funcmatch = matchLongestFunc(string.substring(0, i), funcs)
-                        var pfuncmatch = matchLongestFunc(string.substring(0, i), parenthesesGoal.length <= 0 ? pfuncs : [''])
+                        var funcmatch = poopy.functions.matchLongestFunc(string.substring(0, i), funcs)
+                        var pfuncmatch = poopy.functions.matchLongestFunc(string.substring(0, i), parenthesesGoal.length <= 0 ? pfuncs : [''])
 
                         if (funcmatch) {
                             parindex++
@@ -1043,7 +1043,7 @@ class Poopy {
                         break
 
                     case ')':
-                        var funcmatch = matchLongestFunc(string.substring(0, lastParenthesesIndex), funcs)
+                        var funcmatch = poopy.functions.matchLongestFunc(string.substring(0, lastParenthesesIndex), funcs)
 
                         if (funcmatch && string[i - 1] !== '\\') {
                             if (parenthesesGoal.find(pgoal => parindex == pgoal)) {
@@ -1075,7 +1075,7 @@ class Poopy {
                         break
                 }
 
-                var keymatch = matchLongestKey(string.substring(i), keys)
+                var keymatch = poopy.functions.matchLongestKey(string.substring(i), keys)
                 if (keymatch) {
                     keyindex = i
                     if (rawrequired <= 0) return {
@@ -1086,7 +1086,7 @@ class Poopy {
             }
 
             if (llastParenthesesIndex > -1) {
-                var funcmatch = matchLongestFunc(string.substring(0, lastParenthesesIndex), funcs)
+                var funcmatch = poopy.functions.matchLongestFunc(string.substring(0, lastParenthesesIndex), funcs)
 
                 lastParenthesesIndex++
                 return {
@@ -1096,7 +1096,7 @@ class Poopy {
             }
 
             if (keyindex > -1) {
-                var keymatch = matchLongestKey(string.substring(keyindex))
+                var keymatch = poopy.functions.matchLongestKey(string.substring(keyindex))
 
                 return {
                     match: keymatch[0].toLowerCase(),
@@ -1140,7 +1140,7 @@ class Poopy {
 
                 switch (char) {
                     case '(':
-                        var funcmatch = matchLongestFunc(string.substring(0, i), parenthesesGoal.length <= 0 ? afuncs : [''])
+                        var funcmatch = poopy.functions.matchLongestFunc(string.substring(0, i), parenthesesGoal.length <= 0 ? afuncs : [''])
                         if (funcmatch) {
                             lastParenthesesIndex = i
                             parenthesesrequired++
@@ -1162,7 +1162,7 @@ class Poopy {
                         break
 
                     case ')':
-                        var funcmatch = matchLongestFunc(string.substring(0, lastParenthesesIndex), parenthesesGoal.length <= 0 ? afuncs : [''])
+                        var funcmatch = poopy.functions.matchLongestFunc(string.substring(0, lastParenthesesIndex), parenthesesGoal.length <= 0 ? afuncs : [''])
                         if (funcmatch && string[i - 1] !== '\\') {
                             if (parenthesesGoal.find(pgoal => parenthesesrequired == pgoal)) {
                                 parenthesesGoal.splice(parenthesesGoal.findIndex(pgoal => parenthesesrequired == pgoal), 1)
