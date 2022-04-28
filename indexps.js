@@ -6,7 +6,7 @@ const tokens = [
             testing: !(__dirname.includes('app')),
             poosonia: true,
             mongodatabase: 'poopypsdata',
-            prefix: __dirname.includes('app') ? 'p:' : '2p:'
+            globalPrefix: __dirname.includes('app') ? 'p:' : '2p:'
         }
     }
 ]
