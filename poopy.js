@@ -2360,7 +2360,7 @@ class Poopy {
         poopy.functions.sendFile = async function (msg, filepath, filename, extraOptions) {
             extraOptions = extraOptions || {}
 
-            var prefix = poopy.config.testing ? `2${poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['prefix']}` : poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['prefix']
+            var prefix = poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['prefix']
             var args = msg.content.substring(prefix.toLowerCase().length).split(' ')
 
             extraOptions.catbox = !!args.find(arg => arg === '-catbox')
@@ -2741,12 +2741,12 @@ class Poopy {
         poopy.functions.changeStatus = function () {
             if (poopy.bot && poopy.vars.statusChanges === 'true') {
                 var choosenStatus = poopy.statuses[Math.floor(Math.random() * poopy.statuses.length)]
-                poopy.functions.infoPost(`Status changed to ${choosenStatus.type.toLowerCase() + ' ' + ((choosenStatus.type === "COMPETING" && 'in ') || (choosenStatus.type === "LISTENING" && 'to ') || '') + choosenStatus.name.replace(/ \| 2?p\:help$/, '')}`)
+                poopy.functions.infoPost(`Status changed to ${choosenStatus.type.toLowerCase()} ${((choosenStatus.type === "COMPETING" && 'in ') || (choosenStatus.type === "LISTENING" && 'to ') || '')}${choosenStatus.name.replace(new RegExp(`${poopy.functions.regexClean(`${poopy.config.globalPrefix}help`)}$`), '')}`)
                 poopy.bot.user.setPresence({
                     status: 'online',
                     activities: [
                         {
-                            name: choosenStatus['name'] + ` | ${poopy.config.testing ? '2' : ''}p:help`,
+                            name: choosenStatus['name'] + ` | ${poopy.config.globalPrefix}help`,
                             type: choosenStatus['type'],
                             url: 'https://www.youtube.com/watch?v=LDQO0ALm0gE',
                         }
@@ -2976,11 +2976,12 @@ class Poopy {
             Fetching: 'Image, GIF, and video fetching commands.',
             Generation: 'Generate a new file from an AI or not.',
             'Inside Joke': 'phexonia studios',
+            'JSON Club': 'Exclusive to some people for editing the JSONs used by Poopy.',
             Main: 'Poopy\'s main commands.',
             Memes: 'Integrate an input in many different meme formats.',
             Mirroring: 'Flip or mirror a file in different axes.',
             OG: 'They were there since the very beginning...',
-            Owner: 'p:destroy',
+            Owner: 'salami commands',
             Overlaying: 'For stacking or overlaying a file on top of another.',
             Random: 'Send a random value from a collection of values.',
             Resizing: 'Scale a file in some way.',
@@ -2998,14 +2999,11 @@ class Poopy {
 
             poopy.data[poopy.config.mongodatabase]['bot-data']['bot']['messages']++
 
-            if (msg.channel.type === 'DM') {
-                if (msg.author.bot) return
-                await poopy.functions.sleep(Math.floor(Math.random() * 500) + 500)
-                msg.channel.sendTyping().catch(() => { })
+            if (msg.channel.type === 'DM' || msg.channel.type === 'GROUP_DM') {
+                if (msg.author.bot || msg.author.id == poopy.bot.user.id) return
                 await poopy.functions.sleep(Math.floor(Math.random() * 500) + 500)
                 msg.channel.send(poopy.arrays.dmPhrases[Math.floor(Math.random() * poopy.arrays.dmPhrases.length)]
                     .replace(/{mention}/, `<@${msg.author.id}>`)).catch(() => { })
-                msg.channel.sendTyping().catch(() => { })
                 return
             }
 
@@ -3013,11 +3011,11 @@ class Poopy {
 
             if (!msg.guild || !msg.channel || poopy.tempdata[msg.guild.id][msg.channel.id]['shut']) return
 
-            var prefix = poopy.config.testing ? `2${poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['prefix']}` : poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['prefix']
+            var prefix = poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['prefix']
             var ignored = ['eval', 'execute', 'localcommands', 'localcmds', 'servercommands', 'servercmds', 'commandtemplates', 'cmdtemplates', 'messages']
             var webhook = await msg.fetchWebhook().catch(() => { })
 
-            if (!(ignored.find(name => msg.content.toLowerCase().includes(`${prefix}${name}`.toLowerCase()))) && !msg.author.bot) {
+            if (!(ignored.find(name => msg.content.toLowerCase().includes(`${prefix}${name}`.toLowerCase()))) && ((!msg.author.bot && msg.author.id != poopy.bot.user.id) || poopy.config.allowbotusage)) {
                 var change = await poopy.functions.getKeywordsFor(msg.content, msg, false, { resetattempts: true }).catch(err => {
                     msg.channel.send({
                         content: err.stack,
@@ -3031,7 +3029,7 @@ class Poopy {
                 msg.content = change
             }
 
-            if (msg.content && !(msg.author.bot) && poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][msg.channel.id]['read']) {
+            if (msg.content && ((!(msg.author.bot) && msg.author.id != poopy.bot.user.id) || poopy.config.allowbotusage) && poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][msg.channel.id]['read']) {
                 var cleanMessage = poopy.modules.Discord.Util.cleanContent(msg.content, msg).replace(/\@/g, '@‌')
 
                 if (!(cleanMessage.match(/nigg|https?\:\/\/.*(rule34|e621|pornhub|hentaihaven|xxx|iplogger)|discord\.(gift|gg)\/[\d\w]+\/?$/ig) || cleanMessage.match(prefix.toLowerCase())) && !(poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['messages'].find(message => message.toLowerCase() === cleanMessage.toLowerCase()))) {
@@ -3164,7 +3162,7 @@ class Poopy {
 
             var usedCommand = false
 
-            if (msg.content.toLowerCase().includes(prefix.toLowerCase()) && (!msg.author.bot || poopy.config.allowbotusage)) {
+            if (msg.content.toLowerCase().includes(prefix.toLowerCase()) && ((!msg.author.bot && msg.author.id != poopy.bot.user.id) || poopy.config.allowbotusage)) {
                 if (poopy.config.shit.find(id => id === msg.author.id)) {
                     msg.channel.send('shit').catch(() => { })
                     return
@@ -3379,7 +3377,7 @@ class Poopy {
 
             if (!msg.guild || !msg.channel || poopy.tempdata[msg.guild.id][msg.channel.id]['shut']) return
 
-            if (msg.mentions.members.find(member => member.user.id === poopy.bot.user.id) && (!msg.author.bot || poopy.config.allowbotusage) && !usedCommand) {
+            if (msg.mentions.members.find(member => member.user.id === poopy.bot.user.id) && ((!msg.author.bot && msg.author.id != poopy.bot.user.id) || poopy.config.allowbotusage) && !usedCommand) {
                 var eggPhrases = [
                     `My prefix here is \`${prefix}\``,
                     `My prefix here is \`${prefix}\``,
@@ -3480,7 +3478,7 @@ class Poopy {
                     if (findCmd.cooldown) {
                         poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] = (poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] || Date.now()) + findCmd.cooldown
                     }
-                    await findCmd.execute.call(this, msg, ['setprefix', 'p:']).catch(err => {
+                    await findCmd.execute.call(this, msg, ['setprefix', poopy.config.globalPrefix]).catch(err => {
                         msg.channel.send({
                             content: err.stack,
                             allowedMentions: {
@@ -3490,15 +3488,17 @@ class Poopy {
                         msg.channel.sendTyping().catch(() => { })
                     })
                 } else if (msg.content.toLowerCase().includes('lore')) {
-                    msg.channel.send('Well... If you played a little bit with `p:poop`, I could give you some...').catch(() => { })
+                    msg.channel.send(`Well... If you played a little bit with \`${poopy.config.globalPrefix}poop\`, I could give you some...`).catch(() => { })
                 } else if ((msg.content.toLowerCase().includes('how') && msg.content.toLowerCase().includes('are') && msg.content.toLowerCase().includes('you')) || (msg.content.toLowerCase().includes('what') && msg.content.toLowerCase().includes('up')) || (msg.content.toLowerCase().includes('what') && msg.content.toLowerCase().includes('doing')) || msg.content.toLowerCase().includes('wassup') || (msg.content.toLowerCase().includes('how') && msg.content.toLowerCase().includes('it') && msg.content.toLowerCase().includes('going'))) {
                     var activity = poopy.bot.user.presence.activities[0]
-                    msg.channel.send({
-                        content: 'Ya know, just ' + activity.type.toLowerCase() + ' ' + ((activity.type === "COMPETING" && 'in ') || (activity.type === "LISTENING" && 'to ') || '') + activity.name.replace(/ \| 2?p\:help$/, '') + '.',
-                        allowedMentions: {
-                            parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
-                        }
-                    }).catch(() => { })
+                    if (activity) {
+                        msg.channel.send({
+                            content: `Ya know, just ${choosenStatus.type.toLowerCase()} ${((choosenStatus.type === "COMPETING" && 'in ') || (choosenStatus.type === "LISTENING" && 'to ') || '')}${choosenStatus.name.replace(new RegExp(`${poopy.functions.regexClean(`${poopy.config.globalPrefix}help`)}$`), '')}.`,
+                            allowedMentions: {
+                                parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                            }
+                        }).catch(() => { })
+                    }
                 } else if (msg.content.toLowerCase().includes('\?') || msg.content.toLowerCase().includes('do you') || msg.content.toLowerCase().includes('are you') || msg.content.toLowerCase().includes('did you') || msg.content.toLowerCase().includes('will you') || msg.content.toLowerCase().includes('were you') || msg.content.toLowerCase().includes('do you') || msg.content.toLowerCase().includes('when') || msg.content.toLowerCase().includes('where') || msg.content.toLowerCase().includes('how') || msg.content.toLowerCase().includes('why') || msg.content.toLowerCase().includes('what') || msg.content.toLowerCase().includes('who')) {
                     var answers = ['I don\'t know.', 'Maybe...', 'I think so.', 'Of course.', 'I don\'t think so.', 'I can afirm.', 'No, that\'s wrong.', 'Yes, that\'s right.', 'I assume so.', 'Yes.', 'No.', 'I have no answers.', 'That\'s true.', 'That\'s false.', 'Isn\'t it obvious?']
                     msg.channel.send(answers[Math.floor(Math.random() * answers.length)]).catch(() => { })

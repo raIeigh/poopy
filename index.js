@@ -1,9 +1,10 @@
 const Poopy = require('./poopy')
 const tokens = [
     {
-        TOKEN: process.env[__dirname.includes('app') ? 'POOPYTOKEN' : 'POOPYTOKEN2'],
+        TOKEN: process.env[__dirname.includes('app') ? 'POOPYTOKEN' : 'RACIST'],
         opts: {
-            testing: !(__dirname.includes('app'))
+            testing: !(__dirname.includes('app')),
+            prefix: __dirname.includes('app') ? 'p:' : '2p:'
         }
     }
 ]

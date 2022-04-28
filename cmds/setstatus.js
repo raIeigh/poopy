@@ -30,7 +30,7 @@ module.exports = {
                         status: 'online',
                         activities: [
                             {
-                                name: saidMessage + ` | ${poopy.config.testing ? '2' : ''}p:help`,
+                                name: saidMessage + ` | ${poopy.config.globalPrefix}help`,
                                 type: args[2],
                                 url: 'https://www.youtube.com/watch?v=LDQO0ALm0gE'
                             }

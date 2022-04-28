@@ -20,7 +20,7 @@ module.exports = {
                 return
             }
             poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['prefix'] = saidMessage
-            msg.channel.send('The prefix was set to `' + (poopy.config.testing ? `2${poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['prefix']}` : poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['prefix']) + '` (if this is wrong, mention me with "reset prefix")').catch(() => { })
+            msg.channel.send(`The prefix was set to \`${poopy.config.globalPrefix}\` (if this is wrong, mention me with "reset prefix")`).catch(() => { })
         } else {
             msg.channel.send('You need to be an administrator to execute that!').catch(() => { })
             return;
