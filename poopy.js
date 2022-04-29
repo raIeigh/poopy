@@ -842,7 +842,7 @@ class Poopy {
         }
 
         poopy.functions.cleverbot = async function (stim, id) {
-            /*function encodeForSending(a) {
+            function encodeForSending(a) {
                 var f = ""
                 var d = ""
                 a = a.replace(/[|]/g, "{*}")
@@ -864,7 +864,7 @@ class Poopy {
     
             var jar = process.env.CLEVERBOTCOOKIE
             var contexts = {}
-            var UA = "Mozilla/5.0 (Linux; Android 7.0; Redmi Note 4X) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.127 Mobile Safari/537.36"
+            var UA = process.env.CLEVERBOTUSERAGENT
     
             var context = id
             if (!Array.isArray(id)) {
@@ -879,15 +879,20 @@ class Poopy {
             for (var i = 0; i <= l; i++) {
                 payload += `&vText${i + 2}=${encodeForSending(context[l - i])}`
             }
-            payload += `&cb_settings_language=en&cb_settings_scripting=no&islearning=1&icognoid=wsf&icognocheck=${poopy.modules.md5(payload.substring(7, 33))}`
-            var res = await poopy.modules.axios.request({ method: "POST", url: "https://www.cleverbot.com/webservicemin?uc=UseOfficialCleverbotAPI&ncf=V2&", data: payload, headers: { "Content-Type": "text/plain", "User-Agent": UA, Cookie: jar } })
+            payload += `&cb_settings_language=en&cb_settings_scripting=no&islearning=1&icognoid=wsf&icognocheck=`
+            payload += poopy.modules.md5(payload.substring(7, 33))
+            var res = await poopy.modules.axios.request({ method: "POST", url: "https://www.cleverbot.com/webservicemin?uc=UseOfficialCleverbotAPI&ncf=V2&", data: payload, headers: {
+                "Content-Type": "text/plain",
+                Cookie: jar,
+                "User-Agent": UA
+            } })
                 .then(a => a.data.split("\r")[0])
                 .catch(() => '')
             if (id != undefined) context.push(stim)
             if (id != undefined) context.push(res)
-            return res*/
+            return res
 
-            var options = {
+            /*var options = {
                 method: 'GET',
                 url: 'https://random-stuff-api.p.rapidapi.com/ai',
                 params: {
@@ -920,7 +925,7 @@ class Poopy {
 
             var res = await poopy.modules.axios.request(options).catch(() => { }) ?? { data: { AIResponse: '' } }
 
-            return res.data.AIResponse
+            return res.data.AIResponse*/
         }
 
         poopy.functions.infoPost = async function (message) {
