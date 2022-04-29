@@ -1,7 +1,8 @@
 const GraphemeSplitter = require('grapheme-splitter')
 const graphemes = new GraphemeSplitter()
+const emojiRegex = require('emoji-regex')()
 const matches = {
-  emoji: require('emoji-regex')(),
+  emoji: new RegExp(`^(${emojiRegex.source})`),
   discord: /^<a?:.+?:\d+>/,
   image: /^<Img=((http|https):\/\/[^ "<>]+)>/
 }

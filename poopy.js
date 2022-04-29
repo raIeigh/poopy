@@ -929,6 +929,8 @@ class Poopy {
         }
 
         poopy.functions.infoPost = async function (message) {
+            if (poopy.config.stfu) return
+
             var avatar = poopy.bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' })
             var color = await poopy.functions.averageColor(avatar)
             await poopy.functions.waitMessageCooldown(true)
@@ -3652,7 +3654,7 @@ class Poopy {
         }
 
         poopy.callbacks.interactionCallback = async interaction => {
-            if (interaction.isCommand()) {
+            if (interaction.isCommand && interaction.isCommand()) {
                 var findCmd = poopy.slashCommands.find(cmd => cmd.info.name === interaction.commandName)
 
                 if (findCmd) {
