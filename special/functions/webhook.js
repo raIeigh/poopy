@@ -62,6 +62,7 @@ module.exports = {
             if (webhooks ? webhooks.size : undefined) {
                 var findWebhook = webhooks.find(webhook => poopy.bot.user === webhook.owner)
                 if (findWebhook) {
+                    await poopy.functions.waitMessageCooldown()
                     await findWebhook.send({
                         content: message,
                         username: name,
@@ -75,6 +76,7 @@ module.exports = {
                     if (!createdWebhook) {
                         return 'I need admin for this command!'
                     } else {
+                        await poopy.functions.waitMessageCooldown()
                         await createdWebhook.send({
                             content: message,
                             username: name,
@@ -90,6 +92,7 @@ module.exports = {
                 if (!createdWebhook) {
                     return 'I need admin for this command!'
                 } else {
+                    await poopy.functions.waitMessageCooldown()
                     await createdWebhook.send({
                         content: message,
                         username: name,

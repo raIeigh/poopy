@@ -24,6 +24,7 @@ module.exports = {
             for (var i in evalMessage) {
                 if (poopy.tempdata[msg.guild.id][msg.channel.id]['shut']) break
                 var ev = evalMessage[i]
+                await poopy.functions.waitMessageCooldown()
                 await msg.channel.send({
                     content: ev,
                     allowedMentions: {

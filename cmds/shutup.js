@@ -8,12 +8,15 @@ module.exports = {
 
       var duration = isNaN(Number(args[1])) ? 10 : Number(args[1]) >= 60 ? 60 : Number(args[1]) ?? 10
 
+      await poopy.functions.waitMessageCooldown()
       msg.channel.send('i shit up').catch(() => { })
       poopy.tempdata[msg.guild.id][msg.channel.id]['shut'] = true
       await poopy.functions.sleep(duration * 1000)
       poopy.tempdata[msg.guild.id][msg.channel.id]['shut'] = false
+      await poopy.functions.waitMessageCooldown()
       msg.channel.send('i came back').catch(() => { })
     } else {
+      await poopy.functions.waitMessageCooldown()
       msg.channel.send('You need to be an admin to execute that!').catch(() => { })
       return
     }

@@ -52,6 +52,7 @@ module.exports = {
             poopy.tempdata[guildid][channelid][authorid].messageCollector = collector
 
             collector.on('collect', async m => {
+                await poopy.functions.waitMessageCooldown()
                 if (poopy.tempdata[msg.guild.id][msg.channel.id]['shut']) return
                 try {
                     var content = await poopy.functions.getKeywordsFor(m.content ?? '', m, false).catch(() => { }) ?? m.content
@@ -78,6 +79,7 @@ module.exports = {
             })
 
             collector.on('end', async (_, reason) => {
+                await poopy.functions.waitMessageCooldown()
                 if (poopy.tempdata[msg.guild.id][msg.channel.id]['shut']) return
                 try {
                     delete poopy.tempdata[guildid][channelid][authorid].messageCollector

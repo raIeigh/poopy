@@ -62,6 +62,7 @@ module.exports = {
             }
             for (var i = 0; i < numToRepeat; i++) {
                 if (poopy.tempdata[msg.guild.id][msg.channel.id]['shut']) break
+                await poopy.functions.waitMessageCooldown()
                 await msg.channel.send(sendObject).catch(() => { })
             };
             msg.channel.sendTyping().catch(() => { })

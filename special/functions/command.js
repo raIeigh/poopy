@@ -32,7 +32,7 @@ module.exports = {
 
         if (command || localCommand) {
             if (poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['disabled'].find(cmd => cmd.find(n => n === commandname))) {
-                msg.channel.send('This command is disabled in this server.').catch(() => { })
+                return 'This command is disabled in this server.'
             } else {
                 var msgclone = msg
 
@@ -61,6 +61,7 @@ module.exports = {
                     }, 1000)
 
                     poopy.functions.infoPost(`Command \`${commandname}\` used`)
+                    await poopy.functions.waitMessageCooldown()
                     await command.execute.call(this, msgclone, [commandname].concat(args.split(' '))).catch(err => {
                         error = err.stack
                     })

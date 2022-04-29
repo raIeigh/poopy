@@ -78,6 +78,7 @@ module.exports = {
 
                         collected.push(content)
 
+                        await poopy.functions.waitMessageCooldown()
                         channel.send({
                             content: collect,
                             allowedMentions: {
@@ -103,6 +104,7 @@ module.exports = {
                             }
                         }).catch(() => { }) ?? ''
 
+                        await poopy.functions.waitMessageCooldown()
                         channel.send({
                             content: finishphrasek,
                             allowedMentions: {
