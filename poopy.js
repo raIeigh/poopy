@@ -144,7 +144,7 @@ class Poopy {
         })
         poopy.package = JSON.parse(poopy.modules.fs.readFileSync('package.json'))
 
-        poopy.vars.msgcooldown = Date.now()
+        poopy.vars.msgcooldown = false
         poopy.vars.validUrl = /(http|https):\/\/[^\s`"]+/
         poopy.vars.emojiRegex = require('emoji-regex')()
         poopy.vars.Catbox = new poopy.modules.catbox.Catbox()
@@ -2882,14 +2882,14 @@ class Poopy {
 
         poopy.functions.waitMessageCooldown = async function (noreset) {
             if (poopy.config.msgcooldown <= 0) return
-            
-            if (poopy.vars.msgcooldown > Date.now()) {
-                await poopy.functions.sleep(poopy.vars.msgcooldown - Date.now())
-            }
 
-            if (!noreset) {
-                poopy.vars.msgcooldown = Date.now() + poopy.config.msgcooldown
+            while (poopy.vars.msgcooldown) {
+                await poopy.functions.sleep(1000)
             }
+            
+            poopy.vars.msgcooldown = true
+            
+            if (!noreset) setTimeout(() => poopy.vars.msgcooldown = false, poopy.config.msgcooldown)
         }
 
         poopy.vars.helpCmds = []
