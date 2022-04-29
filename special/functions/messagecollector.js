@@ -21,7 +21,7 @@ module.exports = {
         var channelid = channel.id
         var authorid = msg.author.id
 
-        if (msg.member.permissions.has('MANAGE_GUILD') || msg.member.roles.cache.find(role => role.name.match(/mod|dev|admin|owner|creator|founder|staff/ig)) || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || authorid === msg.guild.ownerID || poopy.config.ownerids.find(id => id == msg.author.id) || isBot) {
+        if (msg.member.permissions.has('MANAGE_GUILD') || msg.member.roles.cache.find(role => role.name.match(/mod|dev|admin|owner|creator|founder|staff/ig)) || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || authorid === msg.guild.ownerID || poopy.config.ownerids.find(id => id == msg.author.id) || isBot || authorid == poopy.bot.user.id) {
             if (poopy.tempdata[guildid][channelid][authorid].messageCollector) {
                 poopy.tempdata[guildid][channelid][authorid].messageCollector.stop()
                 delete poopy.tempdata[guildid][channelid][authorid].messageCollector
