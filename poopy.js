@@ -8,6 +8,7 @@ class Poopy {
         poopy.config = {
             testing: false,
             poosonia: false,
+            forcetrue: false,
             poosoniablacklist: ['dm', 'tdms', 'spam', 'eval', 'leave', 'shutup'],
             poosoniakeywordblacklist: [],
             poosoniafunctionblacklist: ['messagecollector', 'stopcollector', 'stopallcollectors'],
@@ -1228,6 +1229,8 @@ class Poopy {
         }
 
         poopy.functions.yesno = async function (channel, content, who) {
+            if (poopy.config.forcetrue) return true
+
             var buttonRow = new poopy.modules.Discord.MessageActionRow()
             var yesbutton = new poopy.modules.Discord.MessageButton()
                 .setStyle('SUCCESS')
@@ -3341,81 +3344,58 @@ class Poopy {
                                 buttonRow.addComponents([yesbutton])
                                 buttonRow.addComponents([nobutton])
                                 await poopy.functions.waitMessageCooldown()
-                                await msg.channel.send({
-                                    content: `Did you mean to use \`${similarCmds[0].name}\`?`,
-                                    components: [buttonRow]
-                                }).then(async similarMsg => {
-                                    var filter = async (button) => {
-                                        if (!(button.user.id === msg.author.id && button.user.id !== poopy.bot.user.id && !button.user.bot)) {
-                                            button.deferUpdate().catch(() => { })
-                                            return
+                                var useCmd = await poopy.functions.yesno(msg.channel, `Did you mean to use \`${similarCmds[0].name}\`?`, msg.author.id).catch(() => { })
+                                if (useCmd) {
+                                    if (similarCmds[0].type === 'cmd') {
+                                        var findCmd = poopy.commands.find(fcmd => fcmd.name.find(fcmdname => fcmdname === similarCmds[0].name))
+                                        if (findCmd.cooldown) {
+                                            poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] = (poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] || Date.now()) + findCmd.cooldown / ((msg.member.permissions.has('MANAGE_GUILD') || msg.member.roles.cache.find(role => role.name.match(/mod|dev|admin|owner|creator|founder|staff/ig)) || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID) && (findCmd.type === 'Text' || findCmd.type === 'Main') ? 5 : 1)
                                         }
-                                        if (button.customId === '874406154619469864') {
-                                            similarMsg.delete().catch(() => { })
-                                            if (similarCmds[0].type === 'cmd') {
-                                                var findCmd = poopy.commands.find(fcmd => fcmd.name.find(fcmdname => fcmdname === similarCmds[0].name))
-                                                if (findCmd.cooldown) {
-                                                    poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] = (poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] || Date.now()) + findCmd.cooldown / ((msg.member.permissions.has('MANAGE_GUILD') || msg.member.roles.cache.find(role => role.name.match(/mod|dev|admin|owner|creator|founder|staff/ig)) || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID) && (findCmd.type === 'Text' || findCmd.type === 'Main') ? 5 : 1)
-                                                }
-                                                poopy.vars.cps++
-                                                poopy.data[poopy.config.mongodatabase]['bot-data']['bot']['commands']++
-                                                var t = setTimeout(() => {
-                                                    poopy.vars.cps--
-                                                    clearTimeout(t)
-                                                }, 1000)
-                                                poopy.functions.infoPost(`Command \`${similarCmds[0].name}\` used`)
-                                                var p = await findCmd.execute.call(this, msg, args, pathObject).catch(async err => {
-                                                    try {
-                                                        await poopy.functions.waitMessageCooldown()
-                                                        await msg.channel.send({
-                                                            content: err.stack,
-                                                            allowedMentions: {
-                                                                parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
-                                                            }
-                                                        }).catch(() => { })
-                                                        msg.channel.sendTyping().catch(() => { })
-                                                    } catch (_) { }
-                                                })
-                                                poopy.data[poopy.config.mongodatabase]['bot-data']['bot']['filecount'] = poopy.vars.filecount
-                                                if (p) {
-                                                    pathObject = p
-                                                }
-                                            } else if (similarCmds[0].type === 'local') {
-                                                var findLocalCmd = poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['localcmds'].find(cmd => cmd.name === similarCmds[0].name)
-                                                poopy.vars.cps++
-                                                poopy.data[poopy.config.mongodatabase]['bot-data']['bot']['commands']++
-                                                var t = setTimeout(() => {
-                                                    poopy.vars.cps--
-                                                    clearTimeout(t)
-                                                }, 60000)
-                                                poopy.functions.infoPost(`Command \`${similarCmds[0].name}\` used`)
-                                                var phrase = findLocalCmd ? (await poopy.functions.getKeywordsFor(findLocalCmd.phrase, msg, true, { resetattempts: true }).catch(() => { }) ?? 'error') : 'error'
-                                                if (poopy.tempdata[msg.guild.id][msg.channel.id]['shut']) return
+                                        poopy.vars.cps++
+                                        poopy.data[poopy.config.mongodatabase]['bot-data']['bot']['commands']++
+                                        var t = setTimeout(() => {
+                                            poopy.vars.cps--
+                                            clearTimeout(t)
+                                        }, 1000)
+                                        poopy.functions.infoPost(`Command \`${similarCmds[0].name}\` used`)
+                                        var p = await findCmd.execute.call(this, msg, args, pathObject).catch(async err => {
+                                            try {
                                                 await poopy.functions.waitMessageCooldown()
                                                 await msg.channel.send({
-                                                    content: phrase,
+                                                    content: err.stack,
                                                     allowedMentions: {
                                                         parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                                                     }
                                                 }).catch(() => { })
-
-                                                poopy.data[poopy.config.mongodatabase]['bot-data']['bot']['filecount'] = poopy.vars.filecount
+                                                msg.channel.sendTyping().catch(() => { })
+                                            } catch (_) { }
+                                        })
+                                        poopy.data[poopy.config.mongodatabase]['bot-data']['bot']['filecount'] = poopy.vars.filecount
+                                        if (p) {
+                                            pathObject = p
+                                        }
+                                    } else if (similarCmds[0].type === 'local') {
+                                        var findLocalCmd = poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['localcmds'].find(cmd => cmd.name === similarCmds[0].name)
+                                        poopy.vars.cps++
+                                        poopy.data[poopy.config.mongodatabase]['bot-data']['bot']['commands']++
+                                        var t = setTimeout(() => {
+                                            poopy.vars.cps--
+                                            clearTimeout(t)
+                                        }, 60000)
+                                        poopy.functions.infoPost(`Command \`${similarCmds[0].name}\` used`)
+                                        var phrase = findLocalCmd ? (await poopy.functions.getKeywordsFor(findLocalCmd.phrase, msg, true, { resetattempts: true }).catch(() => { }) ?? 'error') : 'error'
+                                        if (poopy.tempdata[msg.guild.id][msg.channel.id]['shut']) return
+                                        await poopy.functions.waitMessageCooldown()
+                                        await msg.channel.send({
+                                            content: phrase,
+                                            allowedMentions: {
+                                                parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                                             }
-                                        } else if (button.customId === '874406183933444156') {
-                                            similarMsg.delete().catch(() => { })
-                                        } else {
-                                            button.deferUpdate().catch(() => { })
-                                        }
+                                        }).catch(() => { })
+    
+                                        poopy.data[poopy.config.mongodatabase]['bot-data']['bot']['filecount'] = poopy.vars.filecount
                                     }
-                                    similarMsg.awaitMessageComponent({ componentType: 'BUTTON', time: 60000, filter }).catch((err) => {
-                                        if (err.message.endsWith('reason: time')) {
-                                            similarMsg.edit({
-                                                content: 'No response.',
-                                                components: []
-                                            }).catch(() => { })
-                                        }
-                                    })
-                                })
+                                }
                             }
                         }
                     }
