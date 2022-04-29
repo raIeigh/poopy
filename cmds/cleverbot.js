@@ -46,7 +46,7 @@ module.exports = {
                 delete poopy.tempdata[guildid][channelid][authorid].messageCollector
             }
 
-            var filter = m => !m.author.bot && msg.author.id != poopy.bot.user.id && m.author.id === msg.author.id
+            var filter = m => !m.author.bot && m.author.id != poopy.bot.user.id && m.author.id === msg.author.id
             var collector = channel.createMessageCollector({ filter, time: 30000 })
 
             poopy.tempdata[guildid][channelid][authorid].messageCollector = collector
