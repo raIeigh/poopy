@@ -932,6 +932,7 @@ class Poopy {
             var avatar = poopy.bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' })
             var color = await poopy.functions.averageColor(avatar)
             await poopy.functions.waitMessageCooldown(true)
+            
             var infoMsg = await poopy.bot.guilds.cache.get('834431435704107018')?.channels.cache.get('967083645619830834')?.send({
                 embeds: [{
                     description: message,
@@ -942,7 +943,11 @@ class Poopy {
                     color: (color.r << 8 << 8) + (color.g << 8) + (color.b)
                 }]
             }).catch(() => { })
-            if (infoMsg) poopy.vars.msgcooldown = Date.now() + poopy.config.msgcooldown
+            
+            if (infoMsg) {
+                poopy.vars.msgcooldown = true
+                setTimeout(() => poopy.vars.msgcooldown = false, poopy.config.msgcooldown)
+            }
         }
 
         poopy.functions.regexClean = function (str) {
@@ -2886,10 +2891,11 @@ class Poopy {
             while (poopy.vars.msgcooldown) {
                 await poopy.functions.sleep(1000)
             }
-            
-            poopy.vars.msgcooldown = true
-            
-            if (!noreset) setTimeout(() => poopy.vars.msgcooldown = false, poopy.config.msgcooldown)
+
+            if (!noreset) {
+                poopy.vars.msgcooldown = true
+                setTimeout(() => poopy.vars.msgcooldown = false, poopy.config.msgcooldown)
+            }
         }
 
         poopy.vars.helpCmds = []
