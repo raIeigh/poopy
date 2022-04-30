@@ -1277,12 +1277,15 @@ class Poopy {
                 }
 
                 await poopy.functions.waitMessageCooldown()
-                var similarMsg = await channel.send(sendObject).catch(() => { })
+                var yesnoMsg = await channel.send(sendObject).catch(() => { })
 
-                if (!similarMsg) resolve(false)
+                if (!yesnoMsg) {
+                    resolve(false)
+                    return
+                }
 
                 if (poopy.config.useReactions) {
-                    var collector = similarMsg.createReactionCollector({ time: 60_000 })
+                    var collector = yesnoMsg.createReactionCollector({ time: 60_000 })
 
                     collector.on('collect', (reaction, user) => {
                         if (!(user.id === who && ((user.id !== poopy.bot.user.id && !user.bot) || poopy.config.allowbotusage))) {
@@ -1299,21 +1302,21 @@ class Poopy {
 
                     collector.on('end', (_, reason) => {
                         if (reason == 'time') {
-                            similarMsg.edit({
+                            yesnoMsg.edit({
                                 content: 'No response.'
                             }).catch(() => { })
-                            similarMsg.reactions.removeAll().catch(() => { })
+                            yesnoMsg.reactions.removeAll().catch(() => { })
                         } else {
-                            similarMsg.delete().catch(() => { })
+                            yesnoMsg.delete().catch(() => { })
                         }
                     })
 
                     for (var i in buttonsData) {
                         var bdata = buttonsData[i]
-                        await similarMsg.react(bdata.reactemoji).catch(() => { })
+                        await yesnoMsg.react(bdata.reactemoji).catch(() => { })
                     }
                 } else {
-                    var collector = similarMsg.createMessageComponentCollector({ time: 60_000 })
+                    var collector = yesnoMsg.createMessageComponentCollector({ time: 60_000 })
 
                     collector.on('collect', (button) => {
                         button.deferUpdate().catch(() => { })
@@ -1332,12 +1335,12 @@ class Poopy {
 
                     collector.on('end', (_, reason) => {
                         if (reason == 'time') {
-                            similarMsg.edit({
+                            yesnoMsg.edit({
                                 content: 'No response.',
                                 components: []
                             }).catch(() => { })
                         } else {
-                            similarMsg.delete().catch(() => { })
+                            yesnoMsg.delete().catch(() => { })
                         }
                     })
                 }
