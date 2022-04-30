@@ -23,7 +23,7 @@ module.exports = {
     msg.channel.sendTyping().catch(() => { })
   },
   help: {
-    name: '<:newpoopy:839191885310066729> fetchurls/geturls <message> [-nodelete] [-tts]',
+    name: 'fetchurls/geturls <message> [-nodelete] [-tts]',
     value: 'Fetches the file URLs in the message and returns them.'
   },
   cooldown: 2500,

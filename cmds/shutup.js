@@ -22,7 +22,7 @@ module.exports = {
     }
   },
   help: {
-    name: '<:newpoopy:839191885310066729> shutup [duration (max 60)] (admin only)',
+    name: 'shutup [duration (max 60)] (admin only)',
     value: 'he shuts up'
   },
   perms: ['ADMINISTRATOR'],

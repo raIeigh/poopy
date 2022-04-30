@@ -3015,7 +3015,7 @@ class Poopy {
             Effects: 'A wide range of commands that change the way the file looks.',
             Fetching: 'Image, GIF, and video fetching commands.',
             Generation: 'Generate a new file from an AI or not.',
-            'Hex Manipulation': 'Manipulate the file\'s Hex Code to make it longer, shorter, or even make it a crasher.',
+            'Hex Manipulation': 'Manipulate the file\'s Hex Code to make it shorter, longer, etc.',
             'Inside Joke': 'phexonia studios',
             'JSON Club': 'Exclusive to some people for editing the JSONs used by Poopy.',
             Main: 'Poopy\'s main commands.',
@@ -3978,16 +3978,16 @@ class Poopy {
                 poopy.modules.fs.mkdirSync(`temp/${poopy.config.mongodatabase}`)
             }
             await poopy.functions.updateSlashCommands()
-            poopy.functions.changeStatus()
             poopy.functions.save()
-            poopy.vars.statusInterval = setInterval(function () {
-                poopy.functions.changeStatus()
-            }, 300000)
             poopy.vars.saveInterval = setInterval(function () {
                 poopy.functions.save()
             }, 120000)
             console.log('all done, he\'s actually online now')
             await poopy.functions.infoPost(`Reboot ${poopy.data[poopy.config.mongodatabase]['bot-data']['bot']['reboots']} succeeded, he's up now`)
+            poopy.functions.changeStatus()
+            poopy.vars.statusInterval = setInterval(function () {
+                poopy.functions.changeStatus()
+            }, 300000)
 
             var wakecount = String(poopy.data[poopy.config.mongodatabase]['bot-data']['bot']['reboots'] + 1)
             var thmatch = wakecount.match(/[^1][1-3]$|^[1-3]$/)

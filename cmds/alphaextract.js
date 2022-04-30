@@ -49,7 +49,7 @@ module.exports = {
         }
     },
     help: {
-        name: '<:newpoopy:839191885310066729> alphaextract/createmask <image/gif>',
+        name: 'alphaextract/createmask <image/gif>',
         value: 'Extracts the alpha from the file.'
     },
     cooldown: 2500,
