@@ -78,13 +78,18 @@ module.exports = {
 
                         collected.push(content)
 
-                        await poopy.functions.waitMessageCooldown()
-                        channel.send({
+                        await poopy.functions.waitMessageCooldown(true)
+                        var collectMsg = await channel.send({
                             content: collect,
                             allowedMentions: {
                                 parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && authorid !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                             }
                         }).catch(() => { })
+                        
+                        if (collectMsg) {
+                            poopy.vars.msgcooldown = true
+                            setTimeout(() => poopy.vars.msgcooldown = false, poopy.config.msgcooldown)
+                        }
                     }
                 } catch (_) { }
             })
@@ -104,13 +109,18 @@ module.exports = {
                             }
                         }).catch(() => { }) ?? ''
 
-                        await poopy.functions.waitMessageCooldown()
-                        channel.send({
+                        await poopy.functions.waitMessageCooldown(true)
+                        var finishMsg = await channel.send({
                             content: finishphrasek,
                             allowedMentions: {
                                 parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && authorid !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                             }
                         }).catch(() => { })
+                        
+                        if (finishMsg) {
+                            poopy.vars.msgcooldown = true
+                            setTimeout(() => poopy.vars.msgcooldown = false, poopy.config.msgcooldown)
+                        }
                     }
                 } catch (_) { }
             })
