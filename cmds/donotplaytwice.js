@@ -63,5 +63,5 @@ module.exports = {
         value: `Creates a "DO NOT PLAY THIS AUDIO TWICE" ogg with the audio. Probably doesn't work now...`
     },
     cooldown: 2500,
-    type: 'Audio'
+    type: 'Hex Manipulation'
 }
