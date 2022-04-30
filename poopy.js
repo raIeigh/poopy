@@ -841,6 +841,8 @@ class Poopy {
                 gather()
             }
         }
+        
+        poopy.vars.clevercontexts = []
 
         poopy.functions.cleverbot = async function (stim, id) {
             function encodeForSending(a) {
@@ -864,12 +866,11 @@ class Poopy {
             }
     
             var jar = process.env.CLEVERBOTCOOKIE
-            var contexts = {}
             var UA = process.env.CLEVERBOTUSERAGENT
     
             var context = id
             if (!Array.isArray(id)) {
-                context = contexts[id] || (contexts[id] = [])
+                context = poopy.vars.clevercontexts[id] || (poopy.vars.clevercontexts[id] = [])
             }
     
             //if (!jar) jar = await fetch("https://www.cleverbot.com/", { headers: { "User-Agent": UA } }).then(a => a.headers.raw()['set-cookie'][0].split(";")[0])
