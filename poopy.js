@@ -3015,6 +3015,7 @@ class Poopy {
             Effects: 'A wide range of commands that change the way the file looks.',
             Fetching: 'Image, GIF, and video fetching commands.',
             Generation: 'Generate a new file from an AI or not.',
+            'Hex Manipulation': 'Manipulate the file\'s Hex Code to make it longer, shorter, or even make it a crasher.',
             'Inside Joke': 'phexonia studios',
             'JSON Club': 'Exclusive to some people for editing the JSONs used by Poopy.',
             Main: 'Poopy\'s main commands.',
