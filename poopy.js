@@ -842,7 +842,7 @@ class Poopy {
                 gather()
             }
         }
-        
+
         poopy.vars.clevercontexts = []
 
         poopy.functions.cleverbot = async function (stim, id) {
@@ -1233,60 +1233,54 @@ class Poopy {
         }
 
         poopy.functions.yesno = async function (channel, content, who) {
-            if (poopy.config.forcetrue) return true
+            return new Promise(async (resolve) => {
+                if (poopy.config.forcetrue) resolve(true)
 
-            var sendObject = {
-                content: content
-            }
-
-            var buttonsData = [
-                {
-                    emoji: '874406154619469864',
-                    reactemoji: '✅',
-                    customid: 'yes',
-                    style: 'SUCCESS',
-                    resolve: true
-                },
-                {
-                    emoji: '874406183933444156',
-                    reactemoji: '❌',
-                    customid: 'no',
-                    style: 'DANGER',
-                    resolve: false
+                var sendObject = {
+                    content: content
                 }
-            ]
 
-            if (!poopy.config.useReactions) {
-                var buttonRow = new poopy.modules.Discord.MessageActionRow()
-                var buttons = []
+                var buttonsData = [
+                    {
+                        emoji: '874406154619469864',
+                        reactemoji: '✅',
+                        customid: 'yes',
+                        style: 'SUCCESS',
+                        resolve: true
+                    },
 
-                buttonsData.forEach(bdata => {
-                    var button = new poopy.modules.Discord.MessageButton()
-                        .setStyle(bdata.style)
-                        .setEmoji(bdata.emoji)
-                        .setCustomId(bdata.customid)
+                    {
+                        emoji: '874406183933444156',
+                        reactemoji: '❌',
+                        customid: 'no',
+                        style: 'DANGER',
+                        resolve: false
+                    }
+                ]
 
-                    buttons.push(button)
-                })
+                if (!poopy.config.useReactions) {
+                    var buttonRow = new poopy.modules.Discord.MessageActionRow()
+                    var buttons = []
 
-                buttonRow.addComponents(buttons)
+                    buttonsData.forEach(bdata => {
+                        var button = new poopy.modules.Discord.MessageButton()
+                            .setStyle(bdata.style)
+                            .setEmoji(bdata.emoji)
+                            .setCustomId(bdata.customid)
 
-                sendObject.components = [buttonRow]
-            }
+                        buttons.push(button)
+                    })
 
-            await poopy.functions.waitMessageCooldown()
-            var similarMsg = await channel.send(sendObject).catch(() => { })
+                    buttonRow.addComponents(buttons)
 
-            if (!similarMsg) return
-
-            if (poopy.config.useReactions) {
-                for (var i in buttonsData) {
-                    var bdata = buttonsData[i]
-                    await similarMsg.react(bdata.reactemoji).catch(() => { })
+                    sendObject.components = [buttonRow]
                 }
-            }
 
-            return new Promise((resolve) => {
+                await poopy.functions.waitMessageCooldown()
+                var similarMsg = await channel.send(sendObject).catch(() => { })
+
+                if (!similarMsg) resolve(false)
+
                 if (poopy.config.useReactions) {
                     var collector = similarMsg.createReactionCollector({ time: 60_000 })
 
@@ -1295,25 +1289,29 @@ class Poopy {
                             return
                         }
 
-                        if (reaction.customId === 'yes') {
+                        var buttonData = buttonsData.find(bdata => bdata.reactemoji == reaction.emoji.name)
+
+                        if (buttonData) {
                             collector.stop()
-                            resolve(true)
-                        } else if (reaction.customId === 'no') {
-                            collector.stop()
-                            resolve(false)
+                            resolve(buttonData.resolve)
                         }
                     })
 
                     collector.on('end', (_, reason) => {
                         if (reason == 'time') {
                             similarMsg.edit({
-                                content: 'No response.',
-                                components: []
+                                content: 'No response.'
                             }).catch(() => { })
+                            similarMsg.reactions.removeAll().catch(() => { })
                         } else {
                             similarMsg.delete().catch(() => { })
                         }
                     })
+
+                    for (var i in buttonsData) {
+                        var bdata = buttonsData[i]
+                        await similarMsg.react(bdata.reactemoji).catch(() => { })
+                    }
                 } else {
                     var collector = similarMsg.createMessageComponentCollector({ time: 60_000 })
 
@@ -1324,12 +1322,11 @@ class Poopy {
                             return
                         }
 
-                        if (button.customId === 'yes') {
+                        var buttonData = buttonsData.find(bdata => bdata.customid == button.customId)
+
+                        if (buttonData) {
                             collector.stop()
-                            resolve(true)
-                        } else if (button.customId === 'no') {
-                            collector.stop()
-                            resolve(false)
+                            resolve(buttonData.resolve)
                         }
                     })
 
