@@ -49,5 +49,5 @@ module.exports = {
         value: "Manipulates the video's Hex Code to double its duration."
     },
     cooldown: 2500,
-    type: 'Duration'
+    type: 'Hex Manipulation'
 }
