@@ -106,7 +106,8 @@ module.exports = {
                 }
 
                 if (dcmdTemplates.length <= 0) {
-                    msg.channel.send({
+                    if (poopy.config.textEmbeds) msg.channel.send('there is nothing').catch(() => { })
+                    else msg.channel.send({
                         embeds: [none]
                     }).catch(() => { })
                     return

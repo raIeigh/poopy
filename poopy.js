@@ -10,6 +10,7 @@ class Poopy {
             poosonia: false,
             forcetrue: false,
             useReactions: false,
+            textEmbeds: false,
             poosoniablacklist: ['dm', 'tdms', 'spam', 'eval', 'leave', 'shutup'],
             poosoniakeywordblacklist: [],
             poosoniafunctionblacklist: ['messagecollector', 'stopcollector', 'stopallcollectors'],
