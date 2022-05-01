@@ -4,10 +4,10 @@ module.exports = {
         let poopy = this
 
         async function video(msg, parts) {
-            var page = 0
+            var page = 1
             var pageindex = args.indexOf('-page')
             if (pageindex > -1) {
-                page = isNaN(Number(args[pageindex + 1])) ? 0 : Number(args[pageindex + 1]) <= 1 ? 1 : Math.round(Number(args[pageindex + 1])) || 0
+                page = isNaN(Number(args[pageindex + 1])) ? 1: Number(args[pageindex + 1]) <= 1 ? 1: Math.round(Number(args[pageindex + 1])) || 1
                 parts.splice(pageindex, 2)
             }
             var search = parts.slice(1).join(" ");
@@ -17,7 +17,7 @@ module.exports = {
                 q: search,
                 part: 'snippet',
                 maxResults: 50,
-                safeSearch: msg.channel.nsfw ? 'none' : 'strict'
+                safeSearch: msg.channel.nsfw ? 'none': 'strict'
             }).then(async (body) => {
                 var results = body.data.items
 
@@ -37,349 +37,68 @@ module.exports = {
                 }
 
                 if (!urls.length) {
-                    msg.channel.send('Not found.').catch(() => { })
-                    msg.channel.sendTyping().catch(() => { })
+                    msg.channel.send('Not found.').catch(() => {})
+                    msg.channel.sendTyping().catch(() => {})
                     return;
                 }
 
-                var number = 1
-                if (page) {
-                    number = Number(page)
-                    if (isNaN(number)) {
-                        msg.channel.send({
-                            content: '**' + page + '** is not a number.',
-                            allowedMentions: {
-                                parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
-                            }
-                        }).catch(() => { })
-                        msg.channel.sendTyping().catch(() => { })
-                        return;
-                    };
-                    if (number > urls.length) number = urls.length;
-                    if (number < 1) number = 1
-                    var thumbresponse = await poopy.modules.axios.request(urls[number - 1].thumb.replace('hqdefault', 'hq720')).catch(() => { })
-                    var imgEmbed = {
+                var number = page
+                if (number > urls.length) number = urls.length;
+                if (number < 1) number = 1
+
+                await poopy.functions.navigateEmbed(msg.channel, async (page) => {
+                    var youtubeurl = await poopy.modules.youtubedl(urls[page - 1].url, {
+                        format: '18',
+                        'get-url': ''
+                    }).catch(() => {})
+                    if (youtubeurl) {
+                        poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl2'] = poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl']
+                        poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl'] = youtubeurl
+                        var lastUrls = [youtubeurl].concat(poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrls'])
+                        lastUrls.splice(100)
+                        poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrls'] = lastUrls
+                    }
+
+                    var thumbresponse = await poopy.modules.axios.request(urls[page - 1].thumb.replace('hqdefault', 'hq720')).catch(() => {})
+
+                    if (poopy.config.textEmbeds) return `${urls[page - 1].url}\n\nVideo ${page}/${urls.length}`
+                    else return {
                         "title": "YouTube Video Search Results For " + search,
-                        "description": `[${urls[number - 1].title}](${urls[number - 1].url})`,
+                        "description": `[${urls[page - 1].title}](${urls[page - 1].url})`,
                         "color": 0x472604,
                         "footer": {
-                            "text": "Video " + number + "/" + urls.length
+                            "text": "Video " + page + "/" + urls.length
                         },
                         "image": {
-                            "url": thumbresponse ? (thumbresponse.status >= 200 && thumbresponse.status < 300) ? urls[number - 1].thumb.replace('hqdefault', 'hq720') : urls[number - 1].thumb : urls[number - 1].thumb
+                            "url": thumbresponse ? (thumbresponse.status >= 200 && thumbresponse.status < 300) ? urls[page - 1].thumb.replace('hqdefault', 'hq720'): urls[page - 1].thumb: urls[page - 1].thumb
                         },
                         "author": {
                             "name": msg.author.tag,
-                            "icon_url": msg.author.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' })
-                        }
-                    };
-                    var reactions = [
-                        {
-                            reaction: "861253229723123762",
-                            function: () => {
-                                return 1
-                            },
-                        },
-                        {
-                            reaction: "861253229726793728",
-                            function: (number) => {
-                                return number - 1
-                            },
-                        },
-                        {
-                            reaction: "861253230070988860",
-                            function: () => {
-                                return Math.floor(Math.random() * urls.length) + 1
-                            },
-                        },
-                        {
-                            reaction: "861253229798621205",
-                            function: (number) => {
-                                return number + 1
-                            },
-                        },
-                        {
-                            reaction: "861253229740556308",
-                            function: () => {
-                                return urls.length
-                            },
-                        },
-                    ]
-                    var buttonRow = new poopy.modules.Discord.MessageActionRow()
-                    reactions.forEach(reaction => {
-                        var button = new poopy.modules.Discord.MessageButton()
-                            .setStyle('PRIMARY')
-                            .setEmoji(reaction.reaction)
-                            .setCustomId(reaction.reaction)
-                        buttonRow.addComponents([button])
-                    })
-                    var buttonRow2 = new poopy.modules.Discord.MessageActionRow()
-                    var benson = new poopy.modules.Discord.MessageButton()
-                        .setStyle('DANGER')
-                        .setEmoji('874406183933444156')
-                        .setCustomId('delete')
-                    buttonRow2.addComponents([benson])
-
-                    var imgMessage = await msg.channel.send({
-                        embeds: [imgEmbed],
-                        components: [buttonRow, buttonRow2]
-                    }).catch(() => { })
-                    if (!imgMessage) {
-                        msg.channel.sendTyping().catch(() => { })
-                        return
-                    }
-                    msg.channel.sendTyping().catch(() => { })
-                    var filter = async (button) => {
-                        if (poopy.tempdata[msg.guild.id][msg.author.id]['promises'].find(promise => promise.promise === p).active === false) return
-                        if (!(button.user.id === msg.author.id && button.user.id !== poopy.bot.user.id && !button.user.bot)) {
-                            button.deferUpdate().catch(() => { })
-                            return
-                        }
-                        if (button.customId === 'delete') {
-                            button.deferUpdate().catch(() => { })
-                            imgMessage.delete().catch(() => { })
-                            return
-                        }
-                        if (reactions.find(findreaction => findreaction.reaction === button.customId).function(number) > urls.length || reactions.find(findreaction => findreaction.reaction === button.customId).function(number) < 1) {
-                            button.deferUpdate().catch(() => { })
-                            return
-                        }
-                        number = reactions.find(findreaction => findreaction.reaction === button.customId).function(number)
-                        var thumbresponse = await poopy.modules.axios.request(urls[number - 1].thumb.replace('hqdefault', 'hq720')).catch(() => { })
-                        imgEmbed = {
-                            "title": "YouTube Video Search Results For " + search,
-                            "description": `[${urls[number - 1].title}](${urls[number - 1].url})`,
-                            "color": 0x472604,
-                            "footer": {
-                                "text": "Video " + number + "/" + urls.length
-                            },
-                            "image": {
-                                "url": thumbresponse ? (thumbresponse.status >= 200 && thumbresponse.status < 300) ? urls[number - 1].thumb.replace('hqdefault', 'hq720') : urls[number - 1].thumb : urls[number - 1].thumb
-                            },
-                            "author": {
-                                "name": msg.author.tag,
-                                "icon_url": msg.author.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' })
-                            }
-                        };
-                        imgMessage.edit({
-                            embeds: [imgEmbed],
-                            components: [buttonRow, buttonRow2]
-                        }).catch(() => { })
-                        button.deferUpdate().catch(() => { })
-                        var youtubeurl = await poopy.modules.youtubedl(urls[number - 1].url, {
-                            format: '18',
-                            'get-url': ''
-                        }).catch(() => { })
-                        if (youtubeurl) {
-                            poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl2'] = poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl']
-                            poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl'] = youtubeurl
-                            var lastUrls = [youtubeurl].concat(poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrls'])
-                            lastUrls.splice(100)
-                            poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrls'] = lastUrls
+                            "icon_url": msg.author.displayAvatarURL({
+                                dynamic: true, size: 1024, format: 'png'
+                            })
                         }
                     }
-                    for (var i in poopy.tempdata[msg.guild.id][msg.author.id]['promises']) {
-                        if (poopy.tempdata[msg.guild.id][msg.author.id]['promises'][i]) {
-                            poopy.tempdata[msg.guild.id][msg.author.id]['promises'][i]['active'] = false
-                        }
+                }, urls.length, msg.member, [
+                    {
+                        emoji: '874406183933444156',
+                        reactemoji: '❌',
+                        customid: 'delete',
+                        style: 'DANGER',
+                        function: async (_, __, resultsMsg, collector) => {
+                            collector.stop()
+                            resultsMsg.delete().catch(() => { })
+                        },
+                        page: false
                     }
-                    var p = imgMessage.awaitMessageComponent({ componentType: 'BUTTON', time: 600000, filter }).then(() => {
-                        for (var i in poopy.tempdata[msg.guild.id][msg.author.id]['promises']) {
-                            if (poopy.tempdata[msg.guild.id][msg.author.id]['promises'][i] == p) {
-                                poopy.tempdata[msg.guild.id][msg.author.id]['promises'][i] = undefined
-                                break
-                            }
-                        }
-                        if (!imgMessage.edit) return
-                        imgMessage.edit({
-                            embeds: [imgEmbed],
-                            components: []
-                        }).catch(() => { })
-                    })
-                        .catch((err) => {
-                            if (err.message.endsWith('reason: time')) {
-                                imgMessage.edit({
-                                    embeds: [imgEmbed],
-                                    components: []
-                                }).catch(() => { })
-                            }
-                        })
-                    poopy.tempdata[msg.guild.id][msg.author.id]['promises'].push({ promise: p, active: true })
-                    var youtubeurl = await poopy.modules.youtubedl(urls[number - 1].url, {
-                        format: '18',
-                        'get-url': ''
-                    }).catch(() => { })
-                    if (youtubeurl) {
-                        poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl2'] = poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl']
-                        poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl'] = youtubeurl
-                        var lastUrls = [youtubeurl].concat(poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrls'])
-                        lastUrls.splice(100)
-                        poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrls'] = lastUrls
-                    }
-                } else {
-                    var thumbresponse = await poopy.modules.axios.request(urls[number - 1].thumb.replace('hqdefault', 'hq720')).catch(() => { })
-                    var imgEmbed = {
-                        "title": "YouTube Video Search Results For: " + search,
-                        "description": `[${urls[number - 1].title}](${urls[number - 1].url})`,
-                        "color": 0x472604,
-                        "footer": {
-                            "text": "Video " + number + "/" + urls.length
-                        },
-                        "image": {
-                            "url": thumbresponse ? (thumbresponse.status >= 200 && thumbresponse.status < 300) ? urls[number - 1].thumb.replace('hqdefault', 'hq720') : urls[number - 1].thumb : urls[number - 1].thumb
-                        },
-                        "author": {
-                            "name": msg.author.tag,
-                            "icon_url": msg.author.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' })
-                        }
-                    };
-                    var reactions = [
-                        {
-                            reaction: "861253229723123762",
-                            function: () => {
-                                return 1
-                            },
-                        },
-                        {
-                            reaction: "861253229726793728",
-                            function: (number) => {
-                                return number - 1
-                            },
-                        },
-                        {
-                            reaction: "861253230070988860",
-                            function: () => {
-                                return Math.floor(Math.random() * urls.length) + 1
-                            },
-                        },
-                        {
-                            reaction: "861253229798621205",
-                            function: (number) => {
-                                return number + 1
-                            },
-                        },
-                        {
-                            reaction: "861253229740556308",
-                            function: () => {
-                                return urls.length
-                            },
-                        },
-                    ]
-                    var buttonRow = new poopy.modules.Discord.MessageActionRow()
-                    reactions.forEach(reaction => {
-                        var button = new poopy.modules.Discord.MessageButton()
-                            .setStyle('PRIMARY')
-                            .setEmoji(reaction.reaction)
-                            .setCustomId(reaction.reaction)
-                        buttonRow.addComponents([button])
-                    })
-                    var buttonRow2 = new poopy.modules.Discord.MessageActionRow()
-                    var benson = new poopy.modules.Discord.MessageButton()
-                        .setStyle('DANGER')
-                        .setEmoji('874406183933444156')
-                        .setCustomId('delete')
-                    buttonRow2.addComponents([benson])
-
-                    var imgMessage = await msg.channel.send({
-                        embeds: [imgEmbed],
-                        components: [buttonRow, buttonRow2]
-                    }).catch(() => { })
-                    msg.channel.sendTyping().catch(() => { })
-                    var filter = async (button) => {
-                        if (poopy.tempdata[msg.guild.id][msg.author.id]['promises'].find(promise => promise.promise === p).active === false) return
-                        if (!(button.user.id === msg.author.id && button.user.id !== poopy.bot.user.id && !button.user.bot)) {
-                            button.deferUpdate().catch(() => { })
-                            return
-                        }
-                        if (button.customId === 'delete') {
-                            button.deferUpdate().catch(() => { })
-                            imgMessage.delete().catch(() => { })
-                            return
-                        }
-                        if (reactions.find(findreaction => findreaction.reaction === button.customId).function(number) > urls.length || reactions.find(findreaction => findreaction.reaction === button.customId).function(number) < 1) {
-                            button.deferUpdate().catch(() => { })
-                            return
-                        }
-                        number = reactions.find(findreaction => findreaction.reaction === button.customId).function(number)
-                        var thumbresponse = await poopy.modules.axios.request(urls[number - 1].thumb.replace('hqdefault', 'hq720')).catch(() => { })
-                        imgEmbed = {
-                            "title": "YouTube Video Search Results For: " + search,
-                            "description": `[${urls[number - 1].title}](${urls[number - 1].url})`,
-                            "color": 0x472604,
-                            "footer": {
-                                "text": "Video " + number + "/" + urls.length
-                            },
-                            "image": {
-                                "url": thumbresponse ? (thumbresponse.status >= 200 && thumbresponse.status < 300) ? urls[number - 1].thumb.replace('hqdefault', 'hq720') : urls[number - 1].thumb : urls[number - 1].thumb
-                            },
-                            "author": {
-                                "name": msg.author.tag,
-                                "icon_url": msg.author.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' })
-                            }
-                        };
-                        imgMessage.edit({
-                            embeds: [imgEmbed],
-                            components: [buttonRow, buttonRow2]
-                        }).catch(() => { })
-                        button.deferUpdate().catch(() => { })
-                        var youtubeurl = await poopy.modules.youtubedl(urls[number - 1].url, {
-                            format: '18',
-                            'get-url': ''
-                        }).catch(() => { })
-                        if (youtubeurl) {
-                            poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl2'] = poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl']
-                            poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl'] = youtubeurl
-                            var lastUrls = [youtubeurl].concat(poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrls'])
-                            lastUrls.splice(100)
-                            poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrls'] = lastUrls
-                        }
-                    }
-                    for (var i in poopy.tempdata[msg.guild.id][msg.author.id]['promises']) {
-                        if (poopy.tempdata[msg.guild.id][msg.author.id]['promises'][i]) {
-                            poopy.tempdata[msg.guild.id][msg.author.id]['promises'][i]['active'] = false
-                        }
-                    }
-                    var p = imgMessage.awaitMessageComponent({ componentType: 'BUTTON', time: 600000, filter }).then(() => {
-                        for (var i in poopy.tempdata[msg.guild.id][msg.author.id]['promises']) {
-                            if (poopy.tempdata[msg.guild.id][msg.author.id]['promises'][i] == p) {
-                                poopy.tempdata[msg.guild.id][msg.author.id]['promises'][i] = undefined
-                                break
-                            }
-                        }
-                        if (!imgMessage.edit) return
-                        imgMessage.edit({
-                            embeds: [imgEmbed],
-                            components: []
-                        }).catch(() => { })
-                    })
-                        .catch((err) => {
-                            if (err.message.endsWith('reason: time')) {
-                                imgMessage.edit({
-                                    embeds: [imgEmbed],
-                                    components: []
-                                }).catch(() => { })
-                            }
-                        })
-                    poopy.tempdata[msg.guild.id][msg.author.id]['promises'].push({ promise: p, active: true })
-                    var youtubeurl = await poopy.modules.youtubedl(urls[number - 1].url, {
-                        format: '18',
-                        'get-url': ''
-                    }).catch(() => { })
-                    if (youtubeurl) {
-                        poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl2'] = poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl']
-                        poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl'] = youtubeurl
-                        var lastUrls = [youtubeurl].concat(poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrls'])
-                        lastUrls.splice(100)
-                        poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrls'] = lastUrls
-                    }
-                }
+                ], number)
             });
         }
 
-        msg.channel.sendTyping().catch(() => { })
+        msg.channel.sendTyping().catch(() => {})
         if (args[1] === undefined) {
-            msg.channel.send('What do I search for?!').catch(() => { })
-            msg.channel.sendTyping().catch(() => { })
+            msg.channel.send('What do I search for?!').catch(() => {})
+            msg.channel.sendTyping().catch(() => {})
             return;
         }
 

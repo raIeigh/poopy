@@ -2,6 +2,11 @@ module.exports = {
     name: ['tango', 'deleteembed', 'dembed'],
     execute: async function (msg, args) {
         let poopy = this
+        
+        if (poopy.config.textEmbeds) {
+            msg.channel.send('but how').catch(() => { })
+            return
+        }
 
         var saidMessage = args.join(' ').substring(args[0].length + 1)
         var rulesChannel = msg.guild.channels.cache.find(channel => channel.name === 'rules' || channel.name.includes('rule'))

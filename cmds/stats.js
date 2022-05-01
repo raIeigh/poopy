@@ -32,7 +32,7 @@ module.exports = {
         }
 
         var statsEmbed = {
-            title: 'Poopy\'s Stats',
+            title: `${poopy.bot.user.username}'s Stats`,
             color: 0x472604,
             footer: {
                 icon_url: poopy.bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
@@ -127,11 +127,14 @@ module.exports = {
             ]
         }
 
-        msg.channel.send({
-            embeds: [statsEmbed],
+        if (poopy.config.textEmbeds) msg.channel.send({
+            content: `${statsEmbed.fields.map(p => `**${p.name}**: ${p.value}`).join('\n')}\n\nv${poopy.package.version}`,
             allowedMentions: {
                 parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
             }
+        }).catch(() => { })
+        else msg.channel.send({
+            embeds: [statsEmbed]
         }).catch(() => { })
     },
     help: { name: 'stats/botstats', value: "Shows Poopy's stats." },

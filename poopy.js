@@ -941,7 +941,14 @@ class Poopy {
             var color = await poopy.functions.averageColor(avatar)
             await poopy.functions.waitMessageCooldown(true)
 
-            var infoMsg = await poopy.bot.guilds.cache.get('834431435704107018')?.channels.cache.get('967083645619830834')?.send({
+            var infoMsg
+            if (poopy.config.textEmbeds) infoMsg = await poopy.bot.guilds.cache.get('834431435704107018')?.channels.cache.get('967083645619830834')?.send({
+                content: message,
+                allowedMentions: {
+                    parse: ['users']
+                }
+            }).catch(() => { })
+            else infoMsg = await poopy.bot.guilds.cache.get('834431435704107018')?.channels.cache.get('967083645619830834')?.send({
                 embeds: [{
                     description: message,
                     author: {
@@ -1358,7 +1365,7 @@ class Poopy {
             })
         }
 
-        poopy.functions.navigateEmbed = async function (channel, pageFunc, results, who, extraButtons, page, selectMenu) {
+        poopy.functions.navigateEmbed = async function (channel, pageFunc, results, who, extraButtons, page, selectMenu, errOnFail) {
             page = page ?? 1
 
             var buttonsData = [
@@ -1444,16 +1451,24 @@ class Poopy {
                 })
             }
 
-            if (selectMenu) {
-
-                components.push(menu)
-            }
-
             var resultEmbed = await pageFunc(page)
             var sendObject = {
                 components: components
             }
             var allowedMentions
+
+            if (selectMenu) {
+                var menuRow = new poopy.modules.Discord.MessageActionRow()
+                var menu = new poopy.modules.Discord.MessageSelectMenu()
+                    .setCustomId(selectMenu.customid)
+                    .setPlaceholder(selectMenu.text)
+                    .addOptions(selectMenu.options)
+
+                menuRow.addComponents([menu])
+
+                buttonsData.push(selectMenu)
+                sendObject.components.push(menuRow)
+            }
 
             if (typeof (who) != 'string') {
                 allowedMentions = {
@@ -1473,20 +1488,24 @@ class Poopy {
             var resultsMsg = await channel.send(sendObject).catch(() => { })
 
             if (!resultsMsg) {
-                return
+                if (errOnFail) throw new Error(`Couldn't send navigable embed to channel`)
+                else return
             }
+
+            var usingButton = false
 
             if (poopy.config.useReactions) {
                 var collector = resultsMsg.createReactionCollector({ time: 60_000 })
 
                 collector.on('collect', async (reaction, user) => {
-                    if (!(user.id === who && ((user.id !== poopy.bot.user.id && !user.bot) || poopy.config.allowbotusage))) {
+                    if (!(user.id === who && ((user.id !== poopy.bot.user.id && !user.bot) || poopy.config.allowbotusage)) || usingButton) {
                         return
                     }
 
                     var buttonData = buttonsData.find(bdata => bdata.reactemoji == reaction.emoji.name)
 
                     if (buttonData) {
+                        usingButton = true
                         collector.resetTimer()
                         reaction.users.remove(user).catch(() => { })
                         var newpage = await buttonData.function(page, reaction, resultsMsg, collector)
@@ -1506,6 +1525,7 @@ class Poopy {
 
                             resultsMsg.edit(sendObject).catch(() => { })
                         }
+                        usingButton = false
                     }
                 })
 
@@ -1523,13 +1543,14 @@ class Poopy {
                 collector.on('collect', async (button) => {
                     button.deferUpdate().catch(() => { })
 
-                    if (!(button.user.id === who && ((button.user.id !== poopy.bot.user.id && !button.user.bot) || poopy.config.allowbotusage))) {
+                    if (!(button.user.id === who && ((button.user.id !== poopy.bot.user.id && !button.user.bot) || poopy.config.allowbotusage)) || usingButton) {
                         return
                     }
 
                     var buttonData = buttonsData.find(bdata => bdata.customid == button.customId)
 
                     if (buttonData) {
+                        usingButton = true
                         collector.resetTimer()
                         var newpage = await buttonData.function(page, button, resultsMsg, collector)
                         if (buttonData.page) {
@@ -1540,6 +1561,20 @@ class Poopy {
                             var sendObject = {
                                 components: components
                             }
+                            
+                            if (selectMenu) {
+                                var menuRow = new poopy.modules.Discord.MessageActionRow()
+                                var menu = new poopy.modules.Discord.MessageSelectMenu()
+                                    .setCustomId(selectMenu.customid)
+                                    .setPlaceholder(resultEmbed.menuText || selectMenu.text)
+                                    .addOptions(selectMenu.options)
+                
+                                menuRow.addComponents([menu])
+                
+                                sendObject.components.push(menuRow)
+                                
+                                if (resultEmbed.menuText) delete resultEmbed.menuText
+                            }
 
                             if (allowedMentions) sendObject.allowedMentions = allowedMentions
 
@@ -1548,6 +1583,7 @@ class Poopy {
 
                             resultsMsg.edit(sendObject).catch(() => { })
                         }
+                        usingButton = false
                     }
                 })
 

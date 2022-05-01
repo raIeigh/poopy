@@ -5,7 +5,7 @@ module.exports = {
 
         var saidMessage = args.join(' ').substring(args[0].length + 1)
         var number = 1
-        if (saidMessage || poopy.config.textEmbeds) {
+        if (saidMessage) {
             var fCmds = []
 
             if (saidMessage) poopy.commands.forEach(cmd => {
@@ -69,56 +69,6 @@ module.exports = {
         }
         var jsonid = poopy.config.ownerids.find(id => id == msg.author.id) || poopy.config.jsoning.find(id => id == msg.author.id);
         var ownerid = poopy.config.ownerids.find(id => id == msg.author.id);
-        var cmdEmbed = {
-            "title": `${poopy.vars.shelpCmds[number - 1].type} Commands`,
-            "description": "Arguments between \"<>\" are required.\nArguments between \"[]\" are optional.\nArguments between \"{}\" are optional but should normally be supplied.\nMultiple commands can be executed separating them with \"-|-\".\nFile manipulation commands have special options that can be used:\n`-encodingpreset <preset>` - More info in `reencode` command.\n`-filename <name>` - Saves the file as the specified name.\n`-catbox` - Forces the file to be uploaded to catbox.moe.\n`-nosend` - Does not send the file, but stores its catbox.moe URL in the channel's last urls.",
-            "color": 0x472604,
-            "footer": {
-                "icon_url": poopy.bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
-                "text": `Page ${number}/${poopy.vars.shelpCmds.length}`
-            },
-            "fields": poopy.vars.shelpCmds[number - 1].commands
-        };
-        var reactions = [
-            {
-                reaction: "861253229723123762",
-                function: () => {
-                    return 1
-                },
-            },
-            {
-                reaction: "861253229726793728",
-                function: (number) => {
-                    return number - 1
-                },
-            },
-            {
-                reaction: "861253230070988860",
-                function: () => {
-                    return Math.floor(Math.random() * poopy.vars.shelpCmds.length) + 1
-                },
-            },
-            {
-                reaction: "861253229798621205",
-                function: (number) => {
-                    return number + 1
-                },
-            },
-            {
-                reaction: "861253229740556308",
-                function: () => {
-                    return poopy.vars.shelpCmds.length
-                },
-            },
-        ]
-        var buttonRow = new poopy.modules.Discord.MessageActionRow()
-        reactions.forEach(reaction => {
-            var button = new poopy.modules.Discord.MessageButton()
-                .setStyle('PRIMARY')
-                .setEmoji(reaction.reaction)
-                .setCustomId(reaction.reaction)
-            buttonRow.addComponents([button])
-        })
 
         var categoryOptions = {}
 
@@ -137,36 +87,54 @@ module.exports = {
             }
         })
 
-        var menuRow = new poopy.modules.Discord.MessageActionRow()
-        var selectMenu = new poopy.modules.Discord.MessageSelectMenu()
-            .setCustomId('select')
-            .setPlaceholder('Select Category')
-            .addOptions(categoriesMenu)
-
-        menuRow.addComponents([selectMenu])
-
         await poopy.functions.navigateEmbed(msg.author, async (page) => {
-            if (poopy.config.textEmbeds) return `${fCmds[page - 1].help.name}\n\n**Description:** ${fCmds[page - 1].help.value}\n**Cooldown:** ${fCmds[page - 1].cooldown ? `${fCmds[page - 1].cooldown / 1000} seconds` : 'None'}\n**Type:** ${fCmds[page - 1].type}\n\nCommand ${number}/${findCmds.length}`
+            var textEmbedText = `**${poopy.vars.shelpCmds[page - 1].type} Commands**\n\n` + "Arguments between \"<>\" are required.\nArguments between \"[]\" are optional.\nArguments between \"{}\" are optional but should normally be supplied.\nMultiple commands can be executed separating them with \"-|-\".\nFile manipulation commands have special options that can be used:\n`-encodingpreset <preset>` - More info in `reencode` command.\n`-filename <name>` - Saves the file as the specified name.\n`-catbox` - Forces the file to be uploaded to catbox.moe.\n`-nosend` - Does not send the file, but stores its catbox.moe URL in the channel's last urls.\n\n" + poopy.vars.shelpCmds[page - 1].commands.map(k => `\`${k.name}\`\n> ${k.value}`).join('\n') + `\n\nPage ${page}/${poopy.vars.shelpCmds.length}`
+            if (poopy.config.textEmbeds) return textEmbedText.substring(textEmbedText.length - 2000)
             else return {
-                "title": findCmds[page - 1].title,
+                "title": `${poopy.vars.shelpCmds[page - 1].type} Commands`,
+                "description": "Arguments between \"<>\" are required.\nArguments between \"[]\" are optional.\nArguments between \"{}\" are optional but should normally be supplied.\nMultiple commands can be executed separating them with \"-|-\".\nFile manipulation commands have special options that can be used:\n`-encodingpreset <preset>` - More info in `reencode` command.\n`-filename <name>` - Saves the file as the specified name.\n`-catbox` - Forces the file to be uploaded to catbox.moe.\n`-nosend` - Does not send the file, but stores its catbox.moe URL in the channel's last urls.",
                 "color": 0x472604,
                 "footer": {
                     "icon_url": poopy.bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
-                    "text": `Command ${page}/${findCmds.length}`
+                    "text": `Page ${page}/${poopy.vars.shelpCmds.length}`
                 },
-                "fields": findCmds[page - 1].fields,
+                "fields": poopy.vars.shelpCmds[page - 1].commands,
+                "menuText": poopy.vars.shelpCmds[page - 1].type
             }
-        }, findCmds.length, msg.author.id, [
-            {
-                
-            }
-        ])
+        }, poopy.vars.shelpCmds.length, msg.author.id, poopy.config.useReactions ? [{
+            emoji: '🔠',
+            reactemoji: '🔠',
+            customid: 'category',
+            function: async (page) => new Promise(async resolve => {
+                var goMessage = await channel.send(`Which category would you like to go... Being case sensitive, we have:\n${Object.keys(categoryOptions).map(c => `- ${c}`).join('\n')}`).catch(() => { })
 
-        await msg.author.send({
-            embeds: [cmdEmbed],
-            components: [buttonRow, menuRow]
-        }).then(async sentMessage => {
-            var helpMessage = sentMessage
+                var pageCollector = channel.createMessageCollector({ time: 30000 })
+
+                var newpage = page
+
+                pageCollector.on('collect', (msg) => {
+                    if (!(msg.author.id === who && ((msg.author.id !== poopy.bot.user.id && !msg.author.bot) || poopy.config.allowbotusage))) {
+                        return
+                    }
+
+                    newpage = categoryOptions[msg.content] ?? page
+                    pageCollector.stop()
+                    msg.delete().catch(() => { })
+                })
+
+                pageCollector.on('end', () => {
+                    if (goMessage) goMessage.delete().catch(() => { })
+                    resolve(newpage)
+                })
+            }),
+            page: true
+        }] : undefined, undefined, !poopy.config.useReactions ? {
+            text: 'Select Category',
+            customid: 'category',
+            options: categoriesMenu,
+            function: async (_, option) => categoryOptions[option.values[0]],
+            page: true
+        } : undefined, true).then(async () => {
             if (jsonid !== undefined) {
                 var jsoncmdEmbed = {
                     "title": "JSON Club Commands",
@@ -177,7 +145,8 @@ module.exports = {
                     },
                     "fields": poopy.vars.jsonCmds
                 };
-                await msg.author.send({
+                if (poopy.config.textEmbeds) await msg.author.send(`**JSON Club Commands**\n\n${poopy.vars.jsonCmds[page - 1].commands.map(k => `\`${k.name}\`\n> ${k.value}`).join('\n')}`).catch(() => { })
+                else await msg.author.send({
                     embeds: [jsoncmdEmbed]
                 }).catch(() => { })
             }
@@ -191,108 +160,16 @@ module.exports = {
                     },
                     "fields": poopy.vars.devCmds
                 };
-                await msg.author.send({
+                if (poopy.config.textEmbeds) await msg.author.send(`**Owner Commands**\n\n${poopy.vars.devCmds[page - 1].commands.map(k => `\`${k.name}\`\n> ${k.value}`).join('\n')}`).catch(() => { })
+                else await msg.author.send({
                     embeds: [devcmdEmbed]
                 }).catch(() => { })
             }
             msg.channel.send('✅ Check your DMs.').catch(() => { })
-            var filter = (interaction) => {
-                if (poopy.tempdata[msg.author.id]['promises'].find(promise => promise.promise === p).active === false) return
-
-                if (interaction.isButton()) {
-                    var button = interaction
-
-                    if (!(button.user.id === msg.author.id && button.user.id !== poopy.bot.user.id && !button.user.bot)) {
-                        button.deferUpdate().catch(() => { })
-                        return
-                    }
-                    if (reactions.find(findreaction => findreaction.reaction === button.customId).function(number) > poopy.vars.shelpCmds.length || reactions.find(findreaction => findreaction.reaction === button.customId).function(number) < 1) {
-                        button.deferUpdate().catch(() => { })
-                        return
-                    }
-                    number = reactions.find(findreaction => findreaction.reaction === button.customId).function(number)
-                    menuRow = new poopy.modules.Discord.MessageActionRow()
-                    selectMenu = new poopy.modules.Discord.MessageSelectMenu()
-                        .setCustomId('select')
-                        .setPlaceholder(poopy.vars.shelpCmds[number - 1].type)
-                        .addOptions(categoriesMenu)
-                    menuRow.addComponents([selectMenu])
-                    cmdEmbed = {
-                        "title": `${poopy.vars.shelpCmds[number - 1].type} Commands`,
-                        "description": "Arguments between \"<>\" are required.\nArguments between \"[]\" are optional.\nArguments between \"{}\" are optional but should normally be supplied.\nMultiple commands can be executed separating them with \"-|-\".\nFile manipulation commands have special options that can be used:\n`-encodingpreset <preset>` - More info in `reencode` command.\n`-filename <name>` - Saves the file as the specified name.\n`-catbox` - Forces the file to be uploaded to catbox.moe.\n`-nosend` - Does not send the file, but stores its catbox.moe URL in the channel's last urls.",
-                        "color": 0x472604,
-                        "footer": {
-                            "icon_url": poopy.bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
-                            "text": `Page ${number}/${poopy.vars.shelpCmds.length}`
-                        },
-                        "fields": poopy.vars.shelpCmds[number - 1].commands
-                    };
-                    button.update({
-                        embeds: [cmdEmbed],
-                        components: [buttonRow, menuRow]
-                    }).catch(() => { })
-                } else if (interaction.isSelectMenu()) {
-                    var option = interaction
-
-                    if (!(option.user.id === msg.author.id && option.user.id !== poopy.bot.user.id && !option.user.bot)) {
-                        option.deferUpdate().catch(() => { })
-                        return
-                    }
-                    number = categoryOptions[option.values[0]]
-                    menuRow = new poopy.modules.Discord.MessageActionRow()
-                    selectMenu = new poopy.modules.Discord.MessageSelectMenu()
-                        .setCustomId('select')
-                        .setPlaceholder(poopy.vars.shelpCmds[number - 1].type)
-                        .addOptions(categoriesMenu)
-                    menuRow.addComponents([selectMenu])
-                    cmdEmbed = {
-                        "title": `${poopy.vars.shelpCmds[number - 1].type} Commands`,
-                        "description": "Arguments between \"<>\" are required.\nArguments between \"[]\" are optional.\nArguments between \"{}\" are optional but should normally be supplied.\nMultiple commands can be executed separating them with \"-|-\".\nFile manipulation commands have special options that can be used:\n`-encodingpreset <preset>` - More info in `reencode` command.\n`-filename <name>` - Saves the file as the specified name.\n`-catbox` - Forces the file to be uploaded to catbox.moe.\n`-nosend` - Does not send the file, but stores its catbox.moe URL in the channel's last urls.",
-                        "color": 0x472604,
-                        "footer": {
-                            "icon_url": poopy.bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
-                            "text": `Page ${number}/${poopy.vars.shelpCmds.length}`
-                        },
-                        "fields": poopy.vars.shelpCmds[number - 1].commands
-                    };
-                    option.update({
-                        embeds: [cmdEmbed],
-                        components: [buttonRow, menuRow]
-                    }).catch(() => { })
-                }
-            }
-            for (var i in poopy.tempdata[msg.author.id]['promises']) {
-                if (poopy.tempdata[msg.author.id]['promises'][i]) {
-                    poopy.tempdata[msg.author.id]['promises'][i]['active'] = false
-                }
-            }
-            var p = helpMessage.awaitMessageComponent({ time: 600000, filter }).then(() => {
-                for (var i in poopy.tempdata[msg.author.id]['promises']) {
-                    if (poopy.tempdata[msg.author.id]['promises'][i] == p) {
-                        poopy.tempdata[msg.author.id]['promises'][i] = undefined
-                        break
-                    }
-                }
-                if (!helpMessage.edit) return
-                helpMessage.edit({
-                    embeds: [cmdEmbed],
-                    components: []
-                }).catch(() => { })
-            })
-                .catch((err) => {
-                    if (err.message.endsWith('reason: time')) {
-                        helpMessage.edit({
-                            embeds: [cmdEmbed],
-                            components: []
-                        }).catch(() => { })
-                    }
-                })
-            poopy.tempdata[msg.author.id]['promises'].push({ promise: p, active: true })
+        }).catch(() => {
+            msg.channel.send('Couldn\'t send help to you. Do you have me blocked?').catch(() => { })
+            return
         })
-            .catch(() => {
-                msg.channel.send('Couldn\'t send help to you. Do you have me blocked?')
-                return
-            })
     },
     help: {
         name: 'help/commands/cmds [command]',

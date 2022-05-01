@@ -154,7 +154,8 @@ module.exports = {
         }
 
         if (!args[1]) {
-            msg.channel.send({
+            if (poopy.config.textEmbeds) msg.channel.send("**list** - Sends a text file with a list of all messages that exist within the guild's message database.\n\n**search** <query> - Searches for every message in the server that matches the query.\n\n**random** - Sends a random message from the database to the channel.\n\n**add** <message> - Adds a new message to the guild's database, if it is available for use.\n\n**delete** <message> - Deletes the message, if it exists.\n\n**clear** (admin only) - Clears ALL the messages from the database.\n\n**read** (admin only) - Toggles whether the bot can read the messages from the channel or not.\n\n**readall** (admin only) - Toggles whether the bot can read the messages from all channels or not.").catch(() => { })
+            else msg.channel.send({
                 embeds: [
                     {
                         "title": "Available Options",

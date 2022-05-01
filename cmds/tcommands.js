@@ -25,11 +25,14 @@ module.exports = {
                     }
                 }
 
-                msg.channel.send({
-                    embeds: [listEmbed],
+                if (poopy.config.textEmbeds) msg.channel.send({
+                    content: list.join('\n'),
                     allowedMentions: {
                         parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                     }
+                }).catch(() => { })
+                else msg.channel.send({
+                    embeds: [listEmbed]
                 }).catch(() => { })
             },
 
@@ -77,7 +80,13 @@ module.exports = {
         }
 
         if (!args[1]) {
-            msg.channel.send({
+            if (poopy.config.textEmbeds) msg.channel.send({
+                content: "**list** - Gets a list of disabled commands.\n**toggle** <command> (admin only) - Disables/enables a command, if it exists.",
+                allowedMentions: {
+                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                }
+            }).catch(() => { })
+            else msg.channel.send({
                 embeds: [
                     {
                         "title": "Available Options",

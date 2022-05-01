@@ -11,115 +11,34 @@ module.exports = {
                     var cmd = poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['localcmds'][i]
                     localCmdsArray.push(`- ${cmd.name}`)
                 }
-                var localCmds = localCmdsArray.length ? poopy.functions.chunkArray(localCmdsArray, 10) : [['None.']]
-                var cmdEmbed = {
-                    "title": `List of local commands for ${msg.guild.name}`,
-                    "description": localCmds[number - 1].join('\n'),
-                    "color": 0x472604,
-                    "footer": {
-                        "icon_url": poopy.bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
-                        "text": `Page ${number}/${localCmds.length}`
-                    },
-                };
-                var reactions = [
-                    {
-                        reaction: "861253229723123762",
-                        function: () => {
-                            return 1
+                
+                if (!localCmdsArray.length) {
+                    if (poopy.config.textEmbeds) msg.channel.send('None.').catch(() => { })
+                    else msg.channel.send({
+                        "title": `List of local commands for ${msg.guild.name}`,
+                        "description": 'None.',
+                        "color": 0x472604,
+                        "footer": {
+                            "icon_url": poopy.bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
+                            "text": `Poopy`
                         },
-                    },
-                    {
-                        reaction: "861253229726793728",
-                        function: (number) => {
-                            return number - 1
-                        },
-                    },
-                    {
-                        reaction: "861253230070988860",
-                        function: () => {
-                            return Math.floor(Math.random() * localCmds.length) + 1
-                        },
-                    },
-                    {
-                        reaction: "861253229798621205",
-                        function: (number) => {
-                            return number + 1
-                        },
-                    },
-                    {
-                        reaction: "861253229740556308",
-                        function: () => {
-                            return localCmds.length
-                        },
-                    },
-                ]
-                var buttonRow = new poopy.modules.Discord.MessageActionRow()
-                reactions.forEach(reaction => {
-                    var button = new poopy.modules.Discord.MessageButton()
-                        .setStyle('PRIMARY')
-                        .setEmoji(reaction.reaction)
-                        .setCustomId(reaction.reaction)
-                    buttonRow.addComponents([button])
-                })
+                    }).catch(() => { })
+                }
+                
+                var localCmds = poopy.functions.chunkArray(localCmdsArray, 10)
 
-                await msg.channel.send({
-                    embeds: [cmdEmbed],
-                    components: [buttonRow]
-                }).then(async sentMessage => {
-                    var helpMessage = sentMessage
-                    var filter = (button) => {
-                        if (poopy.tempdata[msg.guild.id][msg.author.id]['promises'].find(promise => promise.promise === p).active === false) return
-                        if (!(button.user.id === msg.author.id && button.user.id !== poopy.bot.user.id && !button.user.bot)) {
-                            button.deferUpdate().catch(() => { })
-                            return
-                        }
-                        if (reactions.find(findreaction => findreaction.reaction === button.customId).function(number) > localCmds.length || reactions.find(findreaction => findreaction.reaction === button.customId).function(number) < 1) {
-                            button.deferUpdate().catch(() => { })
-                            return
-                        }
-                        number = reactions.find(findreaction => findreaction.reaction === button.customId).function(number)
-                        cmdEmbed = {
-                            "title": `List of local commands for ${msg.guild.name}`,
-                            "description": localCmds[number - 1].join('\n'),
-                            "color": 0x472604,
-                            "footer": {
-                                "icon_url": poopy.bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
-                                "text": `Page ${number}/${localCmds.length}`
-                            },
-                        };
-                        helpMessage.edit({
-                            embeds: [cmdEmbed],
-                            components: [buttonRow]
-                        }).catch(() => { })
-                        button.deferUpdate().catch(() => { })
+                await poopy.functions.navigateEmbed(msg.channel, async (page) => {
+                    if (poopy.config.textEmbeds) return `${localCmds[page - 1].join('\n')}\n\nPage ${page}/${localCmds.length}`
+                    else return {
+                        "title": `List of local commands for ${msg.guild.name}`,
+                        "description": localCmds[page - 1].join('\n'),
+                        "color": 0x472604,
+                        "footer": {
+                            "icon_url": poopy.bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
+                            "text": `Page ${page}/${localCmds.length}`
+                        },
                     }
-                    for (var i in poopy.tempdata[msg.guild.id][msg.author.id]['promises']) {
-                        if (poopy.tempdata[msg.guild.id][msg.author.id]['promises'][i]) {
-                            poopy.tempdata[msg.guild.id][msg.author.id]['promises'][i]['active'] = false
-                        }
-                    }
-                    var p = helpMessage.awaitMessageComponent({ componentType: 'BUTTON', time: 600000, filter }).then(() => {
-                        for (var i in poopy.tempdata[msg.guild.id][msg.author.id]['promises']) {
-                            if (poopy.tempdata[msg.guild.id][msg.author.id]['promises'][i] == p) {
-                                poopy.tempdata[msg.guild.id][msg.author.id]['promises'][i] = undefined
-                                break
-                            }
-                        }
-                        if (!helpMessage.edit) return
-                        helpMessage.edit({
-                            embeds: [cmdEmbed]
-                        }).catch(() => { })
-                    })
-                        .catch((err) => {
-                            if (err.message.endsWith('reason: time')) {
-                                helpMessage.edit({
-                                    embeds: [cmdEmbed]
-                                }).catch(() => { })
-                            }
-                        })
-                    poopy.tempdata[msg.guild.id][msg.author.id]['promises'].push({ promise: p, active: true })
-                })
-                    .catch(() => { })
+                }, localCmds.length, msg.member)
             },
 
             phrase: async (msg, args) => {
@@ -281,7 +200,8 @@ module.exports = {
         }
 
         if (!args[1]) {
-            msg.channel.send({
+            if (poopy.config.textEmbeds) msg.channel.send("**list** - Gets a list of local commands.\n**phrase** <commandname> - Displays the phrase of a specific command.\n**add** <commandname> <phrase> (admin only) - Adds a new local command, if the name is available for use.\n**import** <id> [name] (admin only) - Imports a new local command from Poopy's command template database (`commandtemplates` command) by ID.\n**edit** <commandname> <phrase> (admin only) - Edits the local command, if it exists.\n**delete** <commandname> (admin only) - Deletes the local command, if it exists.").catch(() => { })
+            else msg.channel.send({
                 embeds: [
                     {
                         "title": "Available Options",
