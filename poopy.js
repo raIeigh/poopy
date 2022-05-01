@@ -1365,7 +1365,7 @@ class Poopy {
             })
         }
 
-        poopy.functions.navigateEmbed = async function (channel, pageFunc, results, who, extraButtons, page, selectMenu, errOnFail) {
+        poopy.functions.navigateEmbed = async function (channel, pageFunc, results, who, extraButtons, page, selectMenu, errOnFail, endFunc) {
             page = page ?? 1
 
             var buttonsData = [
@@ -1453,7 +1453,7 @@ class Poopy {
 
             var resultEmbed = await pageFunc(page)
             var sendObject = {
-                components: components
+                components: components.slice()
             }
             var allowedMentions
 
@@ -1508,14 +1508,20 @@ class Poopy {
                         usingButton = true
                         collector.resetTimer()
                         reaction.users.remove(user).catch(() => { })
+
                         var newpage = await buttonData.function(page, reaction, resultsMsg, collector)
+
                         if (buttonData.page) {
-                            if (newpage < 1 || newpage > results || newpage == page) return
+                            if (newpage < 1 || newpage > results || newpage == page) {
+                                usingButton = false
+                                return
+                            }
+
                             page = newpage
 
                             var resultEmbed = await pageFunc(page)
                             var sendObject = {
-                                components: components
+                                components: components.slice()
                             }
 
                             if (allowedMentions) sendObject.allowedMentions = allowedMentions
@@ -1529,8 +1535,9 @@ class Poopy {
                     }
                 })
 
-                collector.on('end', async () => {
+                collector.on('end', async (_, reason) => {
                     resultsMsg.reactions.removeAll().catch(() => { })
+                    if (endFunc) endFunc(reason)
                 })
 
                 for (var i in buttonsData) {
@@ -1552,27 +1559,33 @@ class Poopy {
                     if (buttonData) {
                         usingButton = true
                         collector.resetTimer()
+
                         var newpage = await buttonData.function(page, button, resultsMsg, collector)
+
                         if (buttonData.page) {
-                            if (newpage < 1 || newpage > results || newpage == page) return
+                            if (newpage < 1 || newpage > results || newpage == page) {
+                                usingButton = false
+                                return
+                            }
+
                             page = newpage
 
                             var resultEmbed = await pageFunc(page)
                             var sendObject = {
-                                components: components
+                                components: components.slice()
                             }
-                            
+
                             if (selectMenu) {
                                 var menuRow = new poopy.modules.Discord.MessageActionRow()
                                 var menu = new poopy.modules.Discord.MessageSelectMenu()
                                     .setCustomId(selectMenu.customid)
                                     .setPlaceholder(resultEmbed.menuText || selectMenu.text)
                                     .addOptions(selectMenu.options)
-                
+
                                 menuRow.addComponents([menu])
-                
+
                                 sendObject.components.push(menuRow)
-                                
+
                                 if (resultEmbed.menuText) delete resultEmbed.menuText
                             }
 
@@ -1587,7 +1600,7 @@ class Poopy {
                     }
                 })
 
-                collector.on('end', async () => {
+                collector.on('end', async (_, reason) => {
                     var resultEmbed = await pageFunc(page)
                     var sendObject = {
                         components: []
@@ -1599,6 +1612,8 @@ class Poopy {
                     else sendObject.embeds = [resultEmbed]
 
                     resultsMsg.edit(sendObject).catch(() => { })
+
+                    if (endFunc) endFunc(reason)
                 })
             }
         }

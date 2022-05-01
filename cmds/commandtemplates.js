@@ -534,18 +534,7 @@ module.exports = {
     },
     help: {
         name: 'commandtemplates/cmdtemplates <option>',
-        value: 'Gives you access to a global database of command templates you can use in your servers! Anyone can contribute to it.\n' +
-            'fun fact: this was made because im too lazy to add commands myself haha\n' +
-            '\n' +
-            '**list** - Sends a navigable embed with a list of all command templates made by the users of Poopy.\n' +
-            '\n' +
-            '**search** <query> - Searches for every command in the command database that matches the query.\n' +
-            '\n' +
-            "**register**/**add** <name> <phrase> {-description <text>} [-image <url>] [-syntax <text>] - Registers the command with the respective name, description and syntax (if supplied), it'll then be assigned an ID that can be used to import it via the `localcmds` command.\n" +
-            '\n' +
-            '**edit** <id> [-name <text>] [-phrase <text>] [-description <text>] [-image <url>] [-syntax <text>] - Allows you to edit the command with the respective ID in the database, if it exists and you made it.\n' +
-            '\n' +
-            '**delete** <id> - Permanently deletes the command from the database with the respective ID, if it exists and YOU made it.'
+        value: 'Gives you access to a global database of command templates you can use in your servers! Anyone can contribute to it. Use the command alone for more info.'
     },
     cooldown: 5000,
     type: 'Unique'

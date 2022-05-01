@@ -180,23 +180,7 @@ module.exports = {
     },
     help: {
         name: 'messages <option>',
-        value: "Allows you to see or manage the server's message database. Used by the `_message` keyword and has a 1000 messages limit.\n" +
-            '\n' +
-            "**list** - Sends a text file with a list of all messages that exist within the guild's message database.\n" +
-            '\n' +
-            '**search** <query> - Searches for every message in the server that matches the query.\n' +
-            '\n' +
-            '**random** - Sends a random message from the database to the channel.\n' +
-            '\n' +
-            "**add** <message> - Adds a new message to the guild's database, if it is available for use.\n" +
-            '\n' +
-            '**delete** <message> - Deletes the message, if it exists.\n' +
-            '\n' +
-            '**clear** (admin only) - Clears ALL the messages from the database.\n' +
-            '\n' +
-            '**read** (admin only) - Toggles whether the bot can read the messages from the channel or not.\n' +
-            '\n' +
-            '**readall** (admin only) - Toggles whether the bot can read the messages from all channels or not.'
+        value: "Allows you to see or manage the server's message database. Used by the `_message` keyword and has a 1000 messages limit. Use the command alone for more info."
     },
     cooldown: 2500,
     type: 'Unique'

@@ -5,14 +5,13 @@ module.exports = {
 
         var options = {
             list: async (msg) => {
-                var number = 1
                 var localCmdsArray = []
                 for (var i in poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['localcmds']) {
                     var cmd = poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['localcmds'][i]
                     localCmdsArray.push(`- ${cmd.name}`)
                 }
                 
-                if (!localCmdsArray.length) {
+                if (localCmdsArray.length <= 0) {
                     if (poopy.config.textEmbeds) msg.channel.send('None.').catch(() => { })
                     else msg.channel.send({
                         "title": `List of local commands for ${msg.guild.name}`,
@@ -225,15 +224,8 @@ module.exports = {
         await options[args[1].toLowerCase()](msg, args.slice(1))
     },
     help: {
-        name: 'localcommands/localcmds <option>',
-        value: 'Note: Keywords can be used.\n' +
-            '\n' +
-            '**list** - Gets a list of local commands.\n' +
-            '**phrase** <commandname> - Displays the phrase of a specific command.\n' +
-            '**add** <commandname> <phrase> (admin only) - Adds a new local command, if the name is available for use.\n' +
-            "**import** <id> [name] (admin only) - Imports a new local command from Poopy's command template database (`commandtemplates` command) by ID.\n" +
-            '**edit** <commandname> <phrase> (admin only) - Edits the local command, if it exists.\n' +
-            '**delete** <commandname> (admin only) - Deletes the local command, if it exists.'
+        name: 'localcommands/localcmds/servercommands/servercmds <option>',
+        value: 'Allows you to add custom commands for your servers! Use the command alone for more info.'
     },
     cooldown: 5000,
     type: 'Unique'

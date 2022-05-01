@@ -111,8 +111,7 @@ module.exports = {
     },
     help: {
         name: 'tcommands/toggledcommands/togglecommands <option>',
-        value: '**list** - Gets a list of disabled commands.\n' +
-            '**toggle** <command> (admin only) - Disables/enables a command, if it exists.'
+        value: 'Disable or enable commands in your servers. Use the command alone for more info.'
     },
     cooldown: 5000,
     type: 'Settings'

@@ -4,7 +4,6 @@ module.exports = {
         let poopy = this
 
         var saidMessage = args.join(' ').substring(args[0].length + 1)
-        var number = 1
         if (saidMessage) {
             var fCmds = []
 
@@ -39,7 +38,7 @@ module.exports = {
                 })
 
                 await poopy.functions.navigateEmbed(msg.channel, async (page) => {
-                    if (poopy.config.textEmbeds) return `${fCmds[page - 1].help.name}\n\n**Description:** ${fCmds[page - 1].help.value}\n**Cooldown:** ${fCmds[page - 1].cooldown ? `${fCmds[page - 1].cooldown / 1000} seconds` : 'None'}\n**Type:** ${fCmds[page - 1].type}\n\nCommand ${number}/${findCmds.length}`
+                    if (poopy.config.textEmbeds) return `${fCmds[page - 1].help.name}\n\n**Description:** ${fCmds[page - 1].help.value}\n**Cooldown:** ${fCmds[page - 1].cooldown ? `${fCmds[page - 1].cooldown / 1000} seconds` : 'None'}\n**Type:** ${fCmds[page - 1].type}\n\nCommand ${page}/${findCmds.length}`
                     else return {
                         "title": findCmds[page - 1].title,
                         "color": 0x472604,
@@ -87,7 +86,9 @@ module.exports = {
             }
         })
 
-        await poopy.functions.navigateEmbed(msg.author, async (page) => {
+        var dmChannel = await msg.author.createDM().catch(() => { })
+
+        if (dmChannel) await poopy.functions.navigateEmbed(dmChannel, async (page) => {
             var textEmbedText = `**${poopy.vars.shelpCmds[page - 1].type} Commands**\n\n` + "Arguments between \"<>\" are required.\nArguments between \"[]\" are optional.\nArguments between \"{}\" are optional but should normally be supplied.\nMultiple commands can be executed separating them with \"-|-\".\nFile manipulation commands have special options that can be used:\n`-encodingpreset <preset>` - More info in `reencode` command.\n`-filename <name>` - Saves the file as the specified name.\n`-catbox` - Forces the file to be uploaded to catbox.moe.\n`-nosend` - Does not send the file, but stores its catbox.moe URL in the channel's last urls.\n\n" + poopy.vars.shelpCmds[page - 1].commands.map(k => `\`${k.name}\`\n> ${k.value}`).join('\n') + `\n\nPage ${page}/${poopy.vars.shelpCmds.length}`
             if (poopy.config.textEmbeds) return textEmbedText.substring(textEmbedText.length - 2000)
             else return {
@@ -106,20 +107,20 @@ module.exports = {
             reactemoji: '🔠',
             customid: 'category',
             function: async (page) => new Promise(async resolve => {
-                var goMessage = await channel.send(`Which category would you like to go... Being case sensitive, we have:\n${Object.keys(categoryOptions).map(c => `- ${c}`).join('\n')}`).catch(() => { })
+                var goMessage = await dmChannel.send(`Which category would you like to go... Being case sensitive, we have:\n${Object.keys(categoryOptions).map(c => `- ${c}`).join('\n')}`).catch(() => { })
 
-                var pageCollector = channel.createMessageCollector({ time: 30000 })
+                var pageCollector = dmChannel.createMessageCollector({ time: 30000 })
 
                 var newpage = page
 
-                pageCollector.on('collect', (msg) => {
-                    if (!(msg.author.id === who && ((msg.author.id !== poopy.bot.user.id && !msg.author.bot) || poopy.config.allowbotusage))) {
+                pageCollector.on('collect', (m) => {
+                    if (!(m.author.id === msg.author.id && ((m.author.id !== poopy.bot.user.id && !m.author.bot) || poopy.config.allowbotusage))) {
                         return
                     }
 
-                    newpage = categoryOptions[msg.content] ?? page
+                    newpage = categoryOptions[m.content] ?? page
                     pageCollector.stop()
-                    msg.delete().catch(() => { })
+                    m.delete().catch(() => { })
                 })
 
                 pageCollector.on('end', () => {
@@ -145,7 +146,7 @@ module.exports = {
                     },
                     "fields": poopy.vars.jsonCmds
                 };
-                if (poopy.config.textEmbeds) await msg.author.send(`**JSON Club Commands**\n\n${poopy.vars.jsonCmds[page - 1].commands.map(k => `\`${k.name}\`\n> ${k.value}`).join('\n')}`).catch(() => { })
+                if (poopy.config.textEmbeds) await msg.author.send(`**JSON Club Commands**\n\n${poopy.vars.jsonCmds.map(k => `\`${k.name}\`\n> ${k.value}`).join('\n')}`).catch(() => { })
                 else await msg.author.send({
                     embeds: [jsoncmdEmbed]
                 }).catch(() => { })
@@ -160,7 +161,7 @@ module.exports = {
                     },
                     "fields": poopy.vars.devCmds
                 };
-                if (poopy.config.textEmbeds) await msg.author.send(`**Owner Commands**\n\n${poopy.vars.devCmds[page - 1].commands.map(k => `\`${k.name}\`\n> ${k.value}`).join('\n')}`).catch(() => { })
+                if (poopy.config.textEmbeds) await msg.author.send(`**Owner Commands**\n\n${poopy.vars.devCmds.map(k => `\`${k.name}\`\n> ${k.value}`).join('\n')}`).catch(() => { })
                 else await msg.author.send({
                     embeds: [devcmdEmbed]
                 }).catch(() => { })
@@ -170,6 +171,7 @@ module.exports = {
             msg.channel.send('Couldn\'t send help to you. Do you have me blocked?').catch(() => { })
             return
         })
+        else msg.channel.send('Couldn\'t send help to you. Do you have me blocked?').catch(() => { })
     },
     help: {
         name: 'help/commands/cmds [command]',
