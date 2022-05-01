@@ -105,7 +105,7 @@ module.exports = {
 
             clear: async (msg) => {
                 if (msg.member.permissions.has('MANAGE_GUILD') || msg.member.roles.cache.find(role => role.name.match(/mod|dev|admin|owner|creator|founder|staff/ig)) || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || poopy.config.ownerids.find(id => id == msg.author.id)) {
-                    var confirm = await poopy.functions.yesno(msg.channel, 'are you sure about this', msg.member.id).catch(() => { })
+                    var confirm = await poopy.functions.yesno(msg.channel, 'are you sure about this', msg.member).catch(() => { })
 
                     if (confirm) {
                         poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['messages'] = []

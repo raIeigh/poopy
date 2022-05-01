@@ -26,7 +26,7 @@ module.exports = {
                         }
                     ]
                 }],
-                content: `***${msg.author.username}'s Stats***\n\nHealth: \`${poopy.data[poopy.config.mongodatabase]['user-data'][msg.author.id]['health']} HP\``
+                content: `***${msg.author.username}'s Stats***\n\nHealth: \`${poopy.data[poopy.config.mongodatabase]['user-data'][msg.author.id]['health']} HP\``,
                 allowedMentions: {
                     parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
@@ -73,7 +73,7 @@ module.exports = {
                                 }
                             ]
                         }],
-                        content: `***${member.username}'s Stats***\n\nHealth: \`${poopy.data[poopy.config.mongodatabase]['user-data'][member.id]['health']} HP\``
+                        content: `***${member.username}'s Stats***\n\nHealth: \`${poopy.data[poopy.config.mongodatabase]['user-data'][member.id]['health']} HP\``,
                         allowedMentions: {
                             parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                         }
@@ -110,7 +110,7 @@ module.exports = {
                         }
                     ]
                 }],
-                content: `***${mention.user.username}'s Stats***\n\nHealth: \`${poopy.data[poopy.config.mongodatabase]['user-data'][mention.id]['health']} HP\``
+                content: `***${mention.user.username}'s Stats***\n\nHealth: \`${poopy.data[poopy.config.mongodatabase]['user-data'][mention.id]['health']} HP\``,
                 allowedMentions: {
                     parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }

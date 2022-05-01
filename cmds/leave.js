@@ -43,7 +43,7 @@ module.exports = {
                 'mug',
                 ''
             ]
-            var confirm = await poopy.functions.yesno(msg.channel, 'are you sure about this', msg.member.id).catch(() => { })
+            var confirm = await poopy.functions.yesno(msg.channel, 'are you sure about this', msg.member).catch(() => { })
 
             if (confirm) {
                 await msg.channel.send(phrases[Math.floor(Math.random() * phrases.length)]).catch(() => { })

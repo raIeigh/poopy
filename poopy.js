@@ -1241,6 +1241,16 @@ class Poopy {
                     content: content
                 }
 
+                if (typeof (who) != 'string') {
+                    sendObject.allowedMentions = {
+                        parse: (!who.permissions.has('ADMINISTRATOR') &&
+                            !who.permissions.has('MENTION_EVERYONE') &&
+                            who.id !== channel.guild.ownerID) ?
+                            ['users'] : ['users', 'everyone', 'roles']
+                    }
+                    who = who.id
+                }
+
                 var buttonsData = [
                     {
                         emoji: '874406154619469864',
@@ -1346,6 +1356,215 @@ class Poopy {
                     })
                 }
             })
+        }
+
+        poopy.functions.navigateEmbed = async function (channel, pageFunc, results, who, extraButtons, page, selectMenu) {
+            page = page ?? 1
+
+            var buttonsData = [
+                {
+                    emoji: '861253229726793728',
+                    reactemoji: '⬅️',
+                    customid: 'previous',
+                    style: 'PRIMARY',
+                    function: async () => page - 1,
+                    page: true
+                },
+
+                {
+                    emoji: '861253230070988860',
+                    reactemoji: '🔀',
+                    customid: 'random',
+                    style: 'PRIMARY',
+                    function: async () => Math.floor(Math.random() * results) + 1,
+                    page: true
+                },
+
+                {
+                    emoji: '861253229798621205',
+                    reactemoji: '➡️',
+                    customid: 'next',
+                    style: 'PRIMARY',
+                    function: async () => page + 1,
+                    page: true
+                },
+
+                {
+                    emoji: '970292877785727036',
+                    reactemoji: '🔢',
+                    customid: 'page',
+                    style: 'PRIMARY',
+                    function: async () => new Promise(async resolve => {
+                        var goMessage = await channel.send('Which page would you like to go...').catch(() => { })
+
+                        var pageCollector = channel.createMessageCollector({ time: 30000 })
+
+                        var newpage = page
+
+                        pageCollector.on('collect', (msg) => {
+                            if (!(msg.author.id === who && ((msg.author.id !== poopy.bot.user.id && !msg.author.bot) || poopy.config.allowbotusage))) {
+                                return
+                            }
+
+                            newpage = poopy.functions.parseNumber(msg.content, { dft: page, min: 1, max: results, round: true })
+                            pageCollector.stop()
+                            msg.delete().catch(() => { })
+                        })
+
+                        pageCollector.on('end', () => {
+                            if (goMessage) goMessage.delete().catch(() => { })
+                            resolve(newpage)
+                        })
+                    }),
+                    page: true
+                }
+            ].concat(extraButtons || [])
+
+            var components = []
+
+            if (!poopy.config.useReactions) {
+                var chunkButtonData = poopy.functions.chunkArray(buttonsData, 5)
+
+                chunkButtonData.forEach(buttonsData => {
+                    var buttonRow = new poopy.modules.Discord.MessageActionRow()
+                    var buttons = []
+
+                    buttonsData.forEach(bdata => {
+                        var button = new poopy.modules.Discord.MessageButton()
+                            .setStyle(bdata.style)
+                            .setEmoji(bdata.emoji)
+                            .setCustomId(bdata.customid)
+
+                        buttons.push(button)
+                    })
+
+                    buttonRow.addComponents(buttons)
+
+                    components.push(buttonRow)
+                })
+            }
+
+            if (selectMenu) {
+
+                components.push(menu)
+            }
+
+            var resultEmbed = await pageFunc(page)
+            var sendObject = {
+                components: components
+            }
+            var allowedMentions
+
+            if (typeof (who) != 'string') {
+                allowedMentions = {
+                    parse: (!who.permissions.has('ADMINISTRATOR') &&
+                        !who.permissions.has('MENTION_EVERYONE') &&
+                        who.id !== channel.guild.ownerID) ?
+                        ['users'] : ['users', 'everyone', 'roles']
+                }
+                sendObject.allowedMentions = allowedMentions
+                who = who.id
+            }
+
+            if (poopy.config.textEmbeds) sendObject.content = resultEmbed
+            else sendObject.embeds = [resultEmbed]
+
+            await poopy.functions.waitMessageCooldown()
+            var resultsMsg = await channel.send(sendObject).catch(() => { })
+
+            if (!resultsMsg) {
+                return
+            }
+
+            if (poopy.config.useReactions) {
+                var collector = resultsMsg.createReactionCollector({ time: 60_000 })
+
+                collector.on('collect', async (reaction, user) => {
+                    if (!(user.id === who && ((user.id !== poopy.bot.user.id && !user.bot) || poopy.config.allowbotusage))) {
+                        return
+                    }
+
+                    var buttonData = buttonsData.find(bdata => bdata.reactemoji == reaction.emoji.name)
+
+                    if (buttonData) {
+                        collector.resetTimer()
+                        reaction.users.remove(user).catch(() => { })
+                        var newpage = await buttonData.function(page, reaction, resultsMsg, collector)
+                        if (buttonData.page) {
+                            if (newpage < 1 || newpage > results || newpage == page) return
+                            page = newpage
+
+                            var resultEmbed = await pageFunc(page)
+                            var sendObject = {
+                                components: components
+                            }
+
+                            if (allowedMentions) sendObject.allowedMentions = allowedMentions
+
+                            if (poopy.config.textEmbeds) sendObject.content = resultEmbed
+                            else sendObject.embeds = [resultEmbed]
+
+                            resultsMsg.edit(sendObject).catch(() => { })
+                        }
+                    }
+                })
+
+                collector.on('end', async () => {
+                    resultsMsg.reactions.removeAll().catch(() => { })
+                })
+
+                for (var i in buttonsData) {
+                    var bdata = buttonsData[i]
+                    await resultsMsg.react(bdata.reactemoji).catch(() => { })
+                }
+            } else {
+                var collector = resultsMsg.createMessageComponentCollector({ time: 60_000 })
+
+                collector.on('collect', async (button) => {
+                    button.deferUpdate().catch(() => { })
+
+                    if (!(button.user.id === who && ((button.user.id !== poopy.bot.user.id && !button.user.bot) || poopy.config.allowbotusage))) {
+                        return
+                    }
+
+                    var buttonData = buttonsData.find(bdata => bdata.customid == button.customId)
+
+                    if (buttonData) {
+                        collector.resetTimer()
+                        var newpage = await buttonData.function(page, button, resultsMsg, collector)
+                        if (buttonData.page) {
+                            if (newpage < 1 || newpage > results || newpage == page) return
+                            page = newpage
+
+                            var resultEmbed = await pageFunc(page)
+                            var sendObject = {
+                                components: components
+                            }
+
+                            if (allowedMentions) sendObject.allowedMentions = allowedMentions
+
+                            if (poopy.config.textEmbeds) sendObject.content = resultEmbed
+                            else sendObject.embeds = [resultEmbed]
+
+                            resultsMsg.edit(sendObject).catch(() => { })
+                        }
+                    }
+                })
+
+                collector.on('end', async () => {
+                    var resultEmbed = await pageFunc(page)
+                    var sendObject = {
+                        components: []
+                    }
+
+                    if (allowedMentions) sendObject.allowedMentions = allowedMentions
+
+                    if (poopy.config.textEmbeds) sendObject.content = resultEmbed
+                    else sendObject.embeds = [resultEmbed]
+
+                    resultsMsg.edit(sendObject).catch(() => { })
+                })
+            }
         }
 
         /*poopy.functions.waitForChromeSessionEnd = async function (msg) {

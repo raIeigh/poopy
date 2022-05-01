@@ -30,144 +30,40 @@ module.exports = {
             var output = poopy.modules.fs.createWriteStream(`${filepath}/output.zip`)
             var archive = poopy.modules.archiver('zip')
             output.on('finish', async () => {
-                var number = 1
                 var frames = poopy.modules.fs.readdirSync(`${filepath}/frames`)
                 var catboxframes = {}
-                var frameurl = await poopy.vars.Catbox.upload(`${filepath}/frames/${frames[number - 1]}`).catch(() => { }) ?? ''
-                catboxframes[frames[number - 1]] = frameurl
-                var frameEmbed = {
-                    "color": 0x472604,
-                    "image": {
-                        "url": catboxframes[frames[number - 1]]
-                    },
-                    "footer": {
-                        "icon_url": poopy.bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
-                        "text": `Frame ${number}/${frames.length}`
-                    },
-                }
-                var reactions = [
-                    {
-                        reaction: "861253229723123762",
-                        function: () => {
-                            return 1
-                        },
-                    },
-                    {
-                        reaction: "861253229726793728",
-                        function: (number) => {
-                            return number - 1
-                        },
-                    },
-                    {
-                        reaction: "861253230070988860",
-                        function: () => {
-                            return Math.floor(Math.random() * frames.length) + 1
-                        },
-                    },
-                    {
-                        reaction: "861253229798621205",
-                        function: (number) => {
-                            return number + 1
-                        },
-                    },
-                    {
-                        reaction: "861253229740556308",
-                        function: () => {
-                            return frames.length
-                        },
-                    },
-                ]
-                var buttonRow = new poopy.modules.Discord.MessageActionRow()
-                reactions.forEach(reaction => {
-                    var button = new poopy.modules.Discord.MessageButton()
-                        .setStyle('PRIMARY')
-                        .setEmoji(reaction.reaction)
-                        .setCustomId(reaction.reaction)
-                    buttonRow.addComponents([button])
-                })
-                var zipRow = new poopy.modules.Discord.MessageActionRow()
-                var zip = new poopy.modules.Discord.MessageButton()
-                    .setStyle('PRIMARY')
-                    .setEmoji('939523064658526278')
-                    .setCustomId('zip')
-                zipRow.addComponents([zip])
 
-                msg.channel.send({
-                    embeds: [frameEmbed],
-                    components: [buttonRow, zipRow]
-                }).then(async sentMessage => {
-                    var frameMessage = sentMessage
-                    var filter = async (button) => {
-                        if (poopy.tempdata[msg.author.id]['promises'].find(promise => promise.promise === p).active === false) return
-                        if (!(button.user.id === msg.author.id && button.user.id !== poopy.bot.user.id && !button.user.bot)) {
-                            button.deferUpdate().catch(() => { })
-                            return
-                        }
-                        if (button.customId === zip.customId) {
-                            frameMessage.delete().catch(() => { })
-                            await poopy.functions.sendFile(msg, filepath, `output.zip`)
-                            return
-                        }
-                        if (reactions.find(findreaction => findreaction.reaction === button.customId).function(number) > frames.length || reactions.find(findreaction => findreaction.reaction === button.customId).function(number) < 1) {
-                            button.deferUpdate().catch(() => { })
-                            return
-                        }
-                        number = reactions.find(findreaction => findreaction.reaction === button.customId).function(number)
-                        if (!catboxframes[frames[number - 1]]) {
-                            var frameurl = await poopy.vars.Catbox.upload(`${filepath}/frames/${frames[number - 1]}`).catch(() => { }) ?? ''
-                            catboxframes[frames[number - 1]] = frameurl
-                        }
-                        frameEmbed = {
-                            "color": 0x472604,
-                            "image": {
-                                "url": catboxframes[frames[number - 1]]
-                            },
-                            "footer": {
-                                "icon_url": poopy.bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
-                                "text": `Frame ${number}/${frames.length}`
-                            },
-                        }
-                        frameMessage.edit({
-                            embeds: [frameEmbed],
-                            components: [buttonRow, zipRow]
-                        }).catch(() => { })
-                        button.deferUpdate().catch(() => { })
+                await poopy.functions.navigateEmbed(msg.channel, async (page) => {
+                    if (!catboxframes[frames[page - 1]]) {
+                        var frameurl = await poopy.vars.Catbox.upload(`${filepath}/frames/${frames[page - 1]}`).catch(() => { }) ?? ''
+                        catboxframes[frames[page - 1]] = frameurl
                     }
-                    for (var i in poopy.tempdata[msg.author.id]['promises']) {
-                        if (poopy.tempdata[msg.author.id]['promises'][i]) {
-                            poopy.tempdata[msg.author.id]['promises'][i]['active'] = false
-                        }
+
+                    if (poopy.config.textEmbeds) return `${catboxframes[frames[page - 1]]}\n\nFrame ${page}/${frames.length}`
+                    else return {
+                        "color": 0x472604,
+                        "image": {
+                            "url": catboxframes[frames[page - 1]]
+                        },
+                        "footer": {
+                            "icon_url": poopy.bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
+                            "text": `Frame ${page}/${frames.length}`
+                        },
                     }
-                    var p = frameMessage.awaitMessageComponent({ componentType: 'BUTTON', time: 600000, filter }).then(() => {
-                        for (var i in poopy.tempdata[msg.author.id]['promises']) {
-                            if (poopy.tempdata[msg.author.id]['promises'][i] == p) {
-                                poopy.tempdata[msg.author.id]['promises'][i] = undefined
-                                break
-                            }
-                        }
-                        if (!frameMessage.edit) return
-                        frameMessage.edit({
-                            embeds: [frameEmbed],
-                            components: []
-                        }).catch(() => { })
-                        try {
-                            poopy.modules.fs.rmSync(filepath, { force: true, recursive: true })
-                        } catch (_) { }
-                    })
-                        .catch((err) => {
-                            if (err.message.endsWith('reason: time')) {
-                                frameMessage.edit({
-                                    embeds: [frameEmbed],
-                                    components: []
-                                }).catch(() => { })
-                                try {
-                                    poopy.modules.fs.rmSync(filepath, { force: true, recursive: true })
-                                } catch (_) { }
-                            }
-                        })
-                    poopy.tempdata[msg.author.id]['promises'].push({ promise: p, active: true })
-                })
-                    .catch(() => { })
+                }, frames.length, msg.member, [
+                    {
+                        emoji: '939523064658526278',
+                        reactemoji: '⏬',
+                        customid: 'zip',
+                        style: 'PRIMARY',
+                        function: async (_, __, resultsMsg, collector) => {
+                            collector.stop()
+                            resultsMsg.delete().catch(() => { })
+                            poopy.functions.sendFile(msg, filepath, `output.zip`)
+                        },
+                        page: false
+                    }
+                ])
             });
 
             archive.pipe(output)

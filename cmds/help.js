@@ -5,14 +5,15 @@ module.exports = {
 
         var saidMessage = args.join(' ').substring(args[0].length + 1)
         var number = 1
-        if (saidMessage) {
+        if (saidMessage || poopy.config.textEmbeds) {
             var fCmds = []
 
-            poopy.commands.forEach(cmd => {
+            if (saidMessage) poopy.commands.forEach(cmd => {
                 if (cmd.name.find(name => name.toLowerCase().includes(saidMessage.toLowerCase()))) {
                     fCmds.push(cmd)
                 }
             })
+            else fCmds = poopy.commands
 
             if (fCmds.length) {
                 fCmds.sort((a, b) => Math.abs(1 - poopy.functions.similarity(a.name.find(name => name.toLowerCase().includes(saidMessage.toLowerCase())), saidMessage)) - Math.abs(1 - poopy.functions.similarity(b.name.find(name => name.toLowerCase().includes(saidMessage.toLowerCase())), saidMessage)))
@@ -37,118 +38,21 @@ module.exports = {
                     }
                 })
 
-                var cmdEmbed = {
-                    "title": findCmds[number - 1].title,
-                    "color": 0x472604,
-                    "footer": {
-                        "icon_url": poopy.bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
-                        "text": `Command ${number}/${findCmds.length}`
-                    },
-                    "fields": findCmds[number - 1].fields,
-                }
-                var reactions = [
-                    {
-                        reaction: "861253229723123762",
-                        function: () => {
-                            return 1
+                await poopy.functions.navigateEmbed(msg.channel, async (page) => {
+                    if (poopy.config.textEmbeds) return `${fCmds[page - 1].help.name}\n\n**Description:** ${fCmds[page - 1].help.value}\n**Cooldown:** ${fCmds[page - 1].cooldown ? `${fCmds[page - 1].cooldown / 1000} seconds` : 'None'}\n**Type:** ${fCmds[page - 1].type}\n\nCommand ${number}/${findCmds.length}`
+                    else return {
+                        "title": findCmds[page - 1].title,
+                        "color": 0x472604,
+                        "footer": {
+                            "icon_url": poopy.bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
+                            "text": `Command ${page}/${findCmds.length}`
                         },
-                    },
-                    {
-                        reaction: "861253229726793728",
-                        function: (number) => {
-                            return number - 1
-                        },
-                    },
-                    {
-                        reaction: "861253230070988860",
-                        function: () => {
-                            return Math.floor(Math.random() * findCmds.length) + 1
-                        },
-                    },
-                    {
-                        reaction: "861253229798621205",
-                        function: (number) => {
-                            return number + 1
-                        },
-                    },
-                    {
-                        reaction: "861253229740556308",
-                        function: () => {
-                            return findCmds.length
-                        },
-                    },
-                ]
-                var buttonRow = new poopy.modules.Discord.MessageActionRow()
-                reactions.forEach(reaction => {
-                    var button = new poopy.modules.Discord.MessageButton()
-                        .setStyle('PRIMARY')
-                        .setEmoji(reaction.reaction)
-                        .setCustomId(reaction.reaction)
-                    buttonRow.addComponents([button])
-                })
-
-                msg.channel.send({
-                    embeds: [cmdEmbed],
-                    components: [buttonRow]
-                }).then(async sentMessage => {
-                    var helpMessage = sentMessage
-                    var filter = (button) => {
-                        if (poopy.tempdata[msg.author.id]['promises'].find(promise => promise.promise === p).active === false) return
-                        if (!(button.user.id === msg.author.id && button.user.id !== poopy.bot.user.id && !button.user.bot)) {
-                            button.deferUpdate().catch(() => { })
-                            return
-                        }
-                        if (reactions.find(findreaction => findreaction.reaction === button.customId).function(number) > findCmds.length || reactions.find(findreaction => findreaction.reaction === button.customId).function(number) < 1) {
-                            button.deferUpdate().catch(() => { })
-                            return
-                        }
-                        number = reactions.find(findreaction => findreaction.reaction === button.customId).function(number)
-                        cmdEmbed = {
-                            "title": findCmds[number - 1].title,
-                            "color": 0x472604,
-                            "footer": {
-                                "icon_url": poopy.bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
-                                "text": `Command ${number}/${findCmds.length}`
-                            },
-                            "fields": findCmds[number - 1].fields,
-                        };
-                        helpMessage.edit({
-                            embeds: [cmdEmbed],
-                            components: [buttonRow]
-                        }).catch(() => { })
-                        button.deferUpdate().catch(() => { })
+                        "fields": findCmds[page - 1].fields,
                     }
-                    for (var i in poopy.tempdata[msg.author.id]['promises']) {
-                        if (poopy.tempdata[msg.author.id]['promises'][i]) {
-                            poopy.tempdata[msg.author.id]['promises'][i]['active'] = false
-                        }
-                    }
-                    var p = helpMessage.awaitMessageComponent({ componentType: 'BUTTON', time: 600000, filter }).then(() => {
-                        for (var i in poopy.tempdata[msg.author.id]['promises']) {
-                            if (poopy.tempdata[msg.author.id]['promises'][i] == p) {
-                                poopy.tempdata[msg.author.id]['promises'][i] = undefined
-                                break
-                            }
-                        }
-                        if (!helpMessage.edit) return
-                        helpMessage.edit({
-                            embeds: [cmdEmbed],
-                            components: []
-                        }).catch(() => { })
-                    })
-                        .catch((err) => {
-                            if (err.message.endsWith('reason: time')) {
-                                helpMessage.edit({
-                                    embeds: [cmdEmbed],
-                                    components: []
-                                }).catch(() => { })
-                            }
-                        })
-                    poopy.tempdata[msg.author.id]['promises'].push({ promise: p, active: true })
-                })
-                    .catch(() => { })
+                }, findCmds.length, msg.member)
             } else {
-                msg.channel.send({
+                if (poopy.config.textEmbeds) msg.channel.send("No commands match your search.").catch(() => { })
+                else msg.channel.send({
                     embeds: [
                         {
                             "description": "No commands match your search.",
@@ -240,6 +144,23 @@ module.exports = {
             .addOptions(categoriesMenu)
 
         menuRow.addComponents([selectMenu])
+
+        await poopy.functions.navigateEmbed(msg.author, async (page) => {
+            if (poopy.config.textEmbeds) return `${fCmds[page - 1].help.name}\n\n**Description:** ${fCmds[page - 1].help.value}\n**Cooldown:** ${fCmds[page - 1].cooldown ? `${fCmds[page - 1].cooldown / 1000} seconds` : 'None'}\n**Type:** ${fCmds[page - 1].type}\n\nCommand ${number}/${findCmds.length}`
+            else return {
+                "title": findCmds[page - 1].title,
+                "color": 0x472604,
+                "footer": {
+                    "icon_url": poopy.bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
+                    "text": `Command ${page}/${findCmds.length}`
+                },
+                "fields": findCmds[page - 1].fields,
+            }
+        }, findCmds.length, msg.author.id, [
+            {
+                
+            }
+        ])
 
         await msg.author.send({
             embeds: [cmdEmbed],

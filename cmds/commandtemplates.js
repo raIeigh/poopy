@@ -93,22 +93,20 @@ module.exports = {
 
         var options = {
             list: async (msg) => {
-                var number = 1
                 var dcmdTemplates = poopy.data[poopy.config.mongodatabase]['bot-data']['bot']['commandTemplates']
-                var none = {
-                    "title": `there is nothing`,
-                    "description": 'wow',
-                    "color": 0x472604,
-                    "footer": {
-                        "icon_url": poopy.bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
-                        "text": poopy.bot.user.username
-                    },
-                }
 
                 if (dcmdTemplates.length <= 0) {
                     if (poopy.config.textEmbeds) msg.channel.send('there is nothing').catch(() => { })
                     else msg.channel.send({
-                        embeds: [none]
+                        embeds: [{
+                            "title": `there is nothing`,
+                            "description": 'wow',
+                            "color": 0x472604,
+                            "footer": {
+                                "icon_url": poopy.bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
+                                "text": poopy.bot.user.username
+                            },
+                        }]
                     }).catch(() => { })
                     return
                 }
@@ -175,72 +173,26 @@ module.exports = {
                         }
                     }
 
-                    cmdTemplates.push(embed)
+                    var textEmbed = `\`${name}${syntax ? ` ${syntax}` : ''}\`\n\n**Description:** ${description || 'No description available.'}\n**ID:** \`${id}\`\n**Phrase:** \`${phrase}\`\n**Date Updated:** <t:${date}>\n\nMade by ${creator} - Command ${Number(i) + 1}/${dcmdTemplates.length}`.substring(0, 2000)
+
+                    cmdTemplates.push({
+                        embed: embed,
+                        text: textEmbed
+                    })
                 }
 
-                var cmdEmbed = cmdTemplates[number - 1]
-                var reactions = [
+                await poopy.functions.navigateEmbed(msg.channel, async (page) => {
+                    if (poopy.config.textEmbeds) return cmdTemplates[page - 1].text
+                    else return cmdTemplates[page - 1].embed
+                }, cmdTemplates.length, msg.member, [
                     {
-                        reaction: "861253229723123762",
-                        function: () => {
-                            return 1
-                        },
-                    },
-                    {
-                        reaction: "861253229726793728",
-                        function: (number) => {
-                            return number - 1
-                        },
-                    },
-                    {
-                        reaction: "861253230070988860",
-                        function: () => {
-                            return Math.floor(Math.random() * cmdTemplates.length) + 1
-                        },
-                    },
-                    {
-                        reaction: "861253229798621205",
-                        function: (number) => {
-                            return number + 1
-                        },
-                    },
-                    {
-                        reaction: "861253229740556308",
-                        function: () => {
-                            return cmdTemplates.length
-                        },
-                    },
-                ]
-                var buttonRow = new poopy.modules.Discord.MessageActionRow()
-                reactions.forEach(reaction => {
-                    var button = new poopy.modules.Discord.MessageButton()
-                        .setStyle('PRIMARY')
-                        .setEmoji(reaction.reaction)
-                        .setCustomId(reaction.reaction)
-                    buttonRow.addComponents([button])
-                })
-
-                var importButtonRow = new poopy.modules.Discord.MessageActionRow()
-                var importButton = new poopy.modules.Discord.MessageButton()
-                    .setStyle('PRIMARY')
-                    .setEmoji('939523064658526278')
-                    .setCustomId('import')
-                importButtonRow.addComponents([importButton])
-
-                await msg.channel.send({
-                    embeds: [cmdEmbed],
-                    components: [buttonRow, importButtonRow]
-                }).then(async sentMessage => {
-                    var helpMessage = sentMessage
-                    var filter = (button) => {
-                        if (poopy.tempdata[msg.guild.id][msg.author.id]['promises'].find(promise => promise.promise === p).active === false) return
-                        if (!(button.user.id === msg.author.id && button.user.id !== poopy.bot.user.id && !button.user.bot)) {
-                            button.deferUpdate().catch(() => { })
-                            return
-                        }
-                        if (button.customId == importButton.customId) {
+                        emoji: '939523064658526278',
+                        reactemoji: '⏬',
+                        customid: 'import',
+                        style: 'PRIMARY',
+                        function: async (page, button) => {
                             if (msg.member.permissions.has('MANAGE_GUILD') || msg.member.roles.cache.find(role => role.name.match(/mod|dev|admin|owner|creator|founder|staff/ig)) || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || poopy.config.ownerids.find(id => id == msg.author.id)) {
-                                var findCommandTemplate = dcmdTemplates[number - 1]
+                                var findCommandTemplate = dcmdTemplates[page - 1]
 
                                 if (findCommandTemplate) {
                                     var name = findCommandTemplate.name
@@ -248,7 +200,8 @@ module.exports = {
                                     var findCommand = poopy.commands.find(cmd => cmd.name.find(n => n === name)) || poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['localcmds'].find(cmd => cmd.name === name)
 
                                     if (findCommand) {
-                                        button.reply({
+                                        if (poopy.config.useReactions) msg.channel.send(`The name of that command was already taken!`).catch(() => { })
+                                        else button.reply({
                                             content: `The name of that command was already taken!`,
                                             ephemeral: true
                                         }).catch(() => { })
@@ -267,60 +220,23 @@ module.exports = {
                                         }
                                     }).catch(() => { })
                                 } else {
-                                    button.reply({
+                                    if (poopy.config.useReactions) msg.channel.send('Error fetching command.').catch(() => { })
+                                    else button.reply({
                                         content: 'Error fetching command.',
                                         ephemeral: true
                                     }).catch(() => { })
                                 }
                             } else {
-                                button.reply({
+                                if (poopy.config.useReactions) msg.channel.send('You need to be an administrator to execute that!').catch(() => { })
+                                else button.reply({
                                     content: 'You need to be an administrator to execute that!',
                                     ephemeral: true
                                 }).catch(() => { })
-                            };
-                            button.deferUpdate().catch(() => { })
-                            return;
-                        }
-                        if (reactions.find(findreaction => findreaction.reaction === button.customId).function(number) > cmdTemplates.length || reactions.find(findreaction => findreaction.reaction === button.customId).function(number) < 1) {
-                            button.deferUpdate().catch(() => { })
-                            return
-                        }
-                        number = reactions.find(findreaction => findreaction.reaction === button.customId).function(number)
-                        cmdEmbed = cmdTemplates[number - 1]
-                        helpMessage.edit({
-                            embeds: [cmdEmbed],
-                            components: [buttonRow, importButtonRow]
-                        }).catch(() => { })
-                        button.deferUpdate().catch(() => { })
-                    }
-                    for (var i in poopy.tempdata[msg.guild.id][msg.author.id]['promises']) {
-                        if (poopy.tempdata[msg.guild.id][msg.author.id]['promises'][i]) {
-                            poopy.tempdata[msg.guild.id][msg.author.id]['promises'][i]['active'] = false
-                        }
-                    }
-                    var p = helpMessage.awaitMessageComponent({ componentType: 'BUTTON', time: 600000, filter }).then(() => {
-                        for (var i in poopy.tempdata[msg.guild.id][msg.author.id]['promises']) {
-                            if (poopy.tempdata[msg.guild.id][msg.author.id]['promises'][i] == p) {
-                                poopy.tempdata[msg.guild.id][msg.author.id]['promises'][i] = undefined
-                                break
                             }
-                        }
-                        if (!helpMessage.edit) return
-                        helpMessage.edit({
-                            embeds: [cmdEmbed],
-                            components: []
-                        }).catch(() => { })
-                    })
-                        .catch((err) => {
-                            if (err.message.endsWith('reason: time')) {
-                                helpMessage.edit({
-                                    embeds: [cmdEmbed]
-                                }).catch(() => { })
-                            }
-                        })
-                    poopy.tempdata[msg.guild.id][msg.author.id]['promises'].push({ promise: p, active: true })
-                })
-                    .catch(() => { })
+                        },
+                        page: false
+                    }
+                ])
             },
 
             search: async (msg, args) => {
@@ -331,7 +247,6 @@ module.exports = {
 
                 var saidMessage = args.join('').substring(args[0].length + 1).toLowerCase()
 
-                var number = 1
                 var ddcmdTemplates = poopy.data[poopy.config.mongodatabase]['bot-data']['bot']['commandTemplates']
                 var none = {
                     "title": `there is nothing`,
@@ -419,72 +334,26 @@ module.exports = {
                         }
                     }
 
-                    cmdTemplates.push(embed)
+                    var textEmbed = `\`${name}${syntax ? ` ${syntax}` : ''}\`\n\n**Description:** ${description || 'No description available.'}\n**ID:** \`${id}\`\n**Phrase:** \`${phrase}\`\n**Date Updated:** <t:${date}>\n\nMade by ${creator} - Command ${Number(i) + 1}/${dcmdTemplates.length}`.substring(0, 2000)
+
+                    cmdTemplates.push({
+                        embed: embed,
+                        text: textEmbed
+                    })
                 }
 
-                var cmdEmbed = cmdTemplates[number - 1]
-                var reactions = [
+                await poopy.functions.navigateEmbed(msg.channel, async (page) => {
+                    if (poopy.config.textEmbeds) return cmdTemplates[page - 1].text
+                    else return cmdTemplates[page - 1].embed
+                }, cmdTemplates.length, msg.member, [
                     {
-                        reaction: "861253229723123762",
-                        function: () => {
-                            return 1
-                        },
-                    },
-                    {
-                        reaction: "861253229726793728",
-                        function: (number) => {
-                            return number - 1
-                        },
-                    },
-                    {
-                        reaction: "861253230070988860",
-                        function: () => {
-                            return Math.floor(Math.random() * cmdTemplates.length) + 1
-                        },
-                    },
-                    {
-                        reaction: "861253229798621205",
-                        function: (number) => {
-                            return number + 1
-                        },
-                    },
-                    {
-                        reaction: "861253229740556308",
-                        function: () => {
-                            return cmdTemplates.length
-                        },
-                    },
-                ]
-                var buttonRow = new poopy.modules.Discord.MessageActionRow()
-                reactions.forEach(reaction => {
-                    var button = new poopy.modules.Discord.MessageButton()
-                        .setStyle('PRIMARY')
-                        .setEmoji(reaction.reaction)
-                        .setCustomId(reaction.reaction)
-                    buttonRow.addComponents([button])
-                })
-
-                var importButtonRow = new poopy.modules.Discord.MessageActionRow()
-                var importButton = new poopy.modules.Discord.MessageButton()
-                    .setStyle('PRIMARY')
-                    .setEmoji('939523064658526278')
-                    .setCustomId('import')
-                importButtonRow.addComponents([importButton])
-
-                await msg.channel.send({
-                    embeds: [cmdEmbed],
-                    components: [buttonRow, importButtonRow]
-                }).then(async sentMessage => {
-                    var helpMessage = sentMessage
-                    var filter = (button) => {
-                        if (poopy.tempdata[msg.guild.id][msg.author.id]['promises'].find(promise => promise.promise === p).active === false) return
-                        if (!(button.user.id === msg.author.id && button.user.id !== poopy.bot.user.id && !button.user.bot)) {
-                            button.deferUpdate().catch(() => { })
-                            return
-                        }
-                        if (button.customId == importButton.customId) {
+                        emoji: '939523064658526278',
+                        reactemoji: '⏬',
+                        customid: 'import',
+                        style: 'PRIMARY',
+                        function: async (page, button) => {
                             if (msg.member.permissions.has('MANAGE_GUILD') || msg.member.roles.cache.find(role => role.name.match(/mod|dev|admin|owner|creator|founder|staff/ig)) || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || poopy.config.ownerids.find(id => id == msg.author.id)) {
-                                var findCommandTemplate = dcmdTemplates[number - 1]
+                                var findCommandTemplate = dcmdTemplates[page - 1]
 
                                 if (findCommandTemplate) {
                                     var name = findCommandTemplate.name
@@ -492,7 +361,8 @@ module.exports = {
                                     var findCommand = poopy.commands.find(cmd => cmd.name.find(n => n === name)) || poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['localcmds'].find(cmd => cmd.name === name)
 
                                     if (findCommand) {
-                                        button.reply({
+                                        if (poopy.config.useReactions) msg.channel.send(`The name of that command was already taken!`).catch(() => { })
+                                        else button.reply({
                                             content: `The name of that command was already taken!`,
                                             ephemeral: true
                                         }).catch(() => { })
@@ -511,60 +381,23 @@ module.exports = {
                                         }
                                     }).catch(() => { })
                                 } else {
-                                    button.reply({
+                                    if (poopy.config.useReactions) msg.channel.send('Error fetching command.').catch(() => { })
+                                    else button.reply({
                                         content: 'Error fetching command.',
                                         ephemeral: true
                                     }).catch(() => { })
                                 }
                             } else {
-                                button.reply({
+                                if (poopy.config.useReactions) msg.channel.send('You need to be an administrator to execute that!').catch(() => { })
+                                else button.reply({
                                     content: 'You need to be an administrator to execute that!',
                                     ephemeral: true
                                 }).catch(() => { })
-                            };
-                            button.deferUpdate().catch(() => { })
-                            return;
-                        }
-                        if (reactions.find(findreaction => findreaction.reaction === button.customId).function(number) > cmdTemplates.length || reactions.find(findreaction => findreaction.reaction === button.customId).function(number) < 1) {
-                            button.deferUpdate().catch(() => { })
-                            return
-                        }
-                        number = reactions.find(findreaction => findreaction.reaction === button.customId).function(number)
-                        cmdEmbed = cmdTemplates[number - 1]
-                        helpMessage.edit({
-                            embeds: [cmdEmbed],
-                            components: [buttonRow, importButtonRow]
-                        }).catch(() => { })
-                        button.deferUpdate().catch(() => { })
-                    }
-                    for (var i in poopy.tempdata[msg.guild.id][msg.author.id]['promises']) {
-                        if (poopy.tempdata[msg.guild.id][msg.author.id]['promises'][i]) {
-                            poopy.tempdata[msg.guild.id][msg.author.id]['promises'][i]['active'] = false
-                        }
-                    }
-                    var p = helpMessage.awaitMessageComponent({ componentType: 'BUTTON', time: 600000, filter }).then(() => {
-                        for (var i in poopy.tempdata[msg.guild.id][msg.author.id]['promises']) {
-                            if (poopy.tempdata[msg.guild.id][msg.author.id]['promises'][i] == p) {
-                                poopy.tempdata[msg.guild.id][msg.author.id]['promises'][i] = undefined
-                                break
                             }
-                        }
-                        if (!helpMessage.edit) return
-                        helpMessage.edit({
-                            embeds: [cmdEmbed],
-                            components: []
-                        }).catch(() => { })
-                    })
-                        .catch((err) => {
-                            if (err.message.endsWith('reason: time')) {
-                                helpMessage.edit({
-                                    embeds: [cmdEmbed]
-                                }).catch(() => { })
-                            }
-                        })
-                    poopy.tempdata[msg.guild.id][msg.author.id]['promises'].push({ promise: p, active: true })
-                })
-                    .catch(() => { })
+                        },
+                        page: false
+                    }
+                ])
             },
 
             register: async (msg, args) => {
@@ -675,11 +508,12 @@ module.exports = {
         }
 
         if (!args[1]) {
-            msg.channel.send({
+            if (poopy.config.textEmbeds) msg.channel.send("**list** - Sends a navigable embed with a list of all command templates made by the users of Poopy.\n\n**search** <query> - Searches for every command in the command database that matches the query.\n\n**register**/**add** <name> <phrase> {-description <text>} [-image <url>] [-syntax <text>] - Registers the command with the respective name, description and syntax (if supplied), it'll then be assigned an ID that can be used to import it via the `localcmds` command.\n\n**edit** <id> [-name <text>] [-phrase <text>] [-description <text>] [-image <url>] [-syntax <text>] - Allows you to edit the command with the respective ID in the database, if it exists and you made it.\n\n**delete** <id> - Permanently deletes the command from the database with the respective ID, if it exists and YOU made it.").catch(() => { })
+            else msg.channel.send({
                 embeds: [
                     {
                         "title": "Available Options",
-                        "description": "**list** - Sends an navigable embed with a list of all command templates made by the users of Poopy.\n\n**search** <query> - Searches for every command in the command database that matches the query.\n\n**register**/**add** <name> <phrase> {-description <text>} [-image <url>] [-syntax <text>] - Registers the command with the respective name, description and syntax (if supplied), it'll then be assigned an ID that can be used to import it via the `localcmds` command.\n\n**edit** <id> [-name <text>] [-phrase <text>] [-description <text>] [-image <url>] [-syntax <text>] - Allows you to edit the command with the respective ID in the database, if it exists and you made it.\n\n**delete** <id> - Permanently deletes the command from the database with the respective ID, if it exists and YOU made it.",
+                        "description": "**list** - Sends a navigable embed with a list of all command templates made by the users of Poopy.\n\n**search** <query> - Searches for every command in the command database that matches the query.\n\n**register**/**add** <name> <phrase> {-description <text>} [-image <url>] [-syntax <text>] - Registers the command with the respective name, description and syntax (if supplied), it'll then be assigned an ID that can be used to import it via the `localcmds` command.\n\n**edit** <id> [-name <text>] [-phrase <text>] [-description <text>] [-image <url>] [-syntax <text>] - Allows you to edit the command with the respective ID in the database, if it exists and you made it.\n\n**delete** <id> - Permanently deletes the command from the database with the respective ID, if it exists and YOU made it.",
                         "color": 0x472604,
                         "footer": {
                             "icon_url": poopy.bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
@@ -703,7 +537,7 @@ module.exports = {
         value: 'Gives you access to a global database of command templates you can use in your servers! Anyone can contribute to it.\n' +
             'fun fact: this was made because im too lazy to add commands myself haha\n' +
             '\n' +
-            '**list** - Sends an navigable embed with a list of all command templates made by the users of Poopy.\n' +
+            '**list** - Sends a navigable embed with a list of all command templates made by the users of Poopy.\n' +
             '\n' +
             '**search** <query> - Searches for every command in the command database that matches the query.\n' +
             '\n' +

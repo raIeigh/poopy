@@ -299,7 +299,16 @@ module.exports = {
             }
         }
 
-        msg.channel.send({
+        if (poopy.config.textEmbeds) msg.channel.send({
+            content: `\`${fileinfo.name}\`\n\n${params.join('\n')}`,
+            allowedMentions: {
+                parse: (!msg.member.permissions.has('ADMINISTRATOR') &&
+                    !msg.member.permissions.has('MENTION_EVERYONE') &&
+                    msg.author.id !== msg.guild.ownerID) ?
+                    ['users'] : ['users', 'everyone', 'roles']
+            }
+        }).catch(() => { })
+        else msg.channel.send({
             embeds: [embed]
         }).catch(() => { })
     },
