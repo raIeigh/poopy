@@ -111,7 +111,7 @@ module.exports = {
             
             helped = true
             
-            if (poopy.config.textEmbeds) return helpEmbedText.substring(textEmbedText.length - 2000).replace(new RegExp(poopy.vars.validUrl, 'g'), (url) => `<${url}>`)
+            if (poopy.config.textEmbeds) return helpEmbedText.substring(helpEmbedText.length - 2000).replace(new RegExp(poopy.vars.validUrl, 'g'), (url) => `<${url}>`)
             else return helpEmbed
         }, poopy.vars.shelpCmds.length, msg.author.id, poopy.config.useReactions ? [{
             emoji: '🔠',
