@@ -96,6 +96,7 @@ class Poopy {
 
         // module trash
         poopy.modules.Discord = Discord
+        poopy.modules.discordModals = require('discord-modals')
         poopy.modules.REST = require('@discordjs/rest').REST
         poopy.modules.Routes = require('discord-api-types/v9').Routes
         poopy.modules.DiscordBuilders = require('@discordjs/builders')
@@ -147,6 +148,16 @@ class Poopy {
         })
         poopy.package = JSON.parse(poopy.modules.fs.readFileSync('package.json'))
 
+        poopy.modules.discordModals.InteractionResponses.applyToClass(poopy.modules.discordModals.ModalSubmitInteraction, [
+            'deferReply',
+            'reply',
+            'fetchReply',
+            'editReply',
+            'deleteReply',
+            'followUp',
+            'update',
+        ])
+        poopy.modules.discordModals(poopy.bot)
         poopy.vars.msgcooldown = false
         poopy.vars.validUrl = /(http|https):\/\/[^\s`"]+/
         poopy.vars.emojiRegex = require('emoji-regex')()
@@ -1401,27 +1412,72 @@ class Poopy {
                     reactemoji: '🔢',
                     customid: 'page',
                     style: 'PRIMARY',
-                    function: async () => new Promise(async resolve => {
-                        var goMessage = await channel.send('Which page would you like to go...').catch(() => { })
-
-                        var pageCollector = channel.createMessageCollector({ time: 30000 })
-
+                    function: async (_, interaction) => new Promise(async resolve => {
                         var newpage = page
 
-                        pageCollector.on('collect', (msg) => {
-                            if (!(msg.author.id === who && ((msg.author.id !== poopy.bot.user.id && !msg.author.bot) || poopy.config.allowbotusage))) {
-                                return
-                            }
+                        if (poopy.config.useReactions) {
+                            var goMessage = await channel.send('Which page would you like to go...?').catch(() => { })
 
-                            newpage = poopy.functions.parseNumber(msg.content, { dft: page, min: 1, max: results, round: true })
-                            pageCollector.stop()
-                            msg.delete().catch(() => { })
-                        })
+                            var pageCollector = channel.createMessageCollector({ time: 30000 })
 
-                        pageCollector.on('end', () => {
-                            if (goMessage) goMessage.delete().catch(() => { })
-                            resolve(newpage)
-                        })
+                            pageCollector.on('collect', (msg) => {
+                                if (!(msg.author.id === who && ((msg.author.id !== poopy.bot.user.id && !msg.author.bot) || poopy.config.allowbotusage))) {
+                                    return
+                                }
+
+                                newpage = poopy.functions.parseNumber(msg.content, { dft: page, min: 1, max: results, round: true })
+                                pageCollector.stop()
+                                msg.delete().catch(() => { })
+                            })
+
+                            pageCollector.on('end', () => {
+                                if (goMessage) goMessage.delete().catch(() => { })
+                                resolve(newpage)
+                            })
+                        } else {
+                            var pageModal = new poopy.modules.discordModals.Modal()
+                                .setCustomId('page-modal')
+                                .setTitle('Select your page...')
+                                .addComponents(
+                                    new poopy.modules.discordModals.TextInputComponent()
+                                        .setCustomId('page-num')
+                                        .setLabel('Page')
+                                        .setStyle('SHORT')
+                                        .setMinLength(1)
+                                        .setMaxLength(String(results).length)
+                                        .setPlaceholder(`1-${results}`)
+                                        .setRequired(true)
+                                )
+
+                            poopy.modules.discordModals.showModal(pageModal, {
+                                client: poopy.bot,
+                                interaction: interaction
+                            }).then(() => {
+                                var done = false
+
+                                var modalCallback = (modal) => {
+                                    if (modal.deferUpdate) modal.deferUpdate().catch(() => { })
+
+                                    if (!(modal.user.id === who && ((modal.user.id !== poopy.bot.user.id && !modal.user.bot) || poopy.config.allowbotusage)) || done) {
+                                        return
+                                    }
+
+                                    done = true
+                                    newpage = poopy.functions.parseNumber(modal.getTextInputValue('page-num'), { dft: page, min: 1, max: results, round: true })
+                                    clearTimeout(modalTimeout)
+                                    resolve(newpage)
+                                }
+
+                                var modalTimeout = setTimeout(() => {
+                                    if (!done) {
+                                        done = true
+                                        resolve(newpage)
+                                    }
+                                }, 30000)
+
+                                poopy.bot.once('modalSubmit', modalCallback)
+                            }).catch(() => resolve(newpage))
+                        }
                     }),
                     page: true
                 }
@@ -1499,6 +1555,7 @@ class Poopy {
 
                 collector.on('collect', async (reaction, user) => {
                     if (!(user.id === who && ((user.id !== poopy.bot.user.id && !user.bot) || poopy.config.allowbotusage)) || usingButton) {
+                        reaction.users.remove(user).catch(() => { })
                         return
                     }
 
@@ -1507,9 +1564,9 @@ class Poopy {
                     if (buttonData) {
                         usingButton = true
                         collector.resetTimer()
-                        reaction.users.remove(user).catch(() => { })
 
                         var newpage = await buttonData.function(page, reaction, resultsMsg, collector)
+                        reaction.users.remove(user).catch(() => { })
 
                         if (buttonData.page) {
                             if (newpage < 1 || newpage > results || newpage == page) {
@@ -1548,9 +1605,8 @@ class Poopy {
                 var collector = resultsMsg.createMessageComponentCollector({ time: 60_000 })
 
                 collector.on('collect', async (button) => {
-                    button.deferUpdate().catch(() => { })
-
                     if (!(button.user.id === who && ((button.user.id !== poopy.bot.user.id && !button.user.bot) || poopy.config.allowbotusage)) || usingButton) {
+                        button.deferUpdate().catch(() => { })
                         return
                     }
 
@@ -1561,6 +1617,7 @@ class Poopy {
                         collector.resetTimer()
 
                         var newpage = await buttonData.function(page, button, resultsMsg, collector)
+                        button.deferUpdate().catch(() => { })
 
                         if (buttonData.page) {
                             if (newpage < 1 || newpage > results || newpage == page) {
@@ -3672,17 +3729,6 @@ class Poopy {
                                 poopy.data[poopy.config.mongodatabase]['bot-data']['bot']['filecount'] = poopy.vars.filecount
                             } else if (similarCmds ? similarCmds.find(fcmd => fcmd.similarity >= 0.5) : undefined) {
                                 usedCommand = true
-                                var buttonRow = new poopy.modules.Discord.MessageActionRow()
-                                var yesbutton = new poopy.modules.Discord.MessageButton()
-                                    .setStyle('SUCCESS')
-                                    .setEmoji('874406154619469864')
-                                    .setCustomId('874406154619469864')
-                                var nobutton = new poopy.modules.Discord.MessageButton()
-                                    .setStyle('DANGER')
-                                    .setEmoji('874406183933444156')
-                                    .setCustomId('874406183933444156')
-                                buttonRow.addComponents([yesbutton])
-                                buttonRow.addComponents([nobutton])
                                 await poopy.functions.waitMessageCooldown()
                                 var useCmd = await poopy.functions.yesno(msg.channel, `Did you mean to use \`${similarCmds[0].name}\`?`, msg.author.id).catch(() => { })
                                 if (useCmd) {
