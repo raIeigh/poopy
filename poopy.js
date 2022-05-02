@@ -1555,7 +1555,6 @@ class Poopy {
 
                 collector.on('collect', async (reaction, user) => {
                     if (!(user.id === who && ((user.id !== poopy.bot.user.id && !user.bot) || poopy.config.allowbotusage)) || usingButton) {
-                        reaction.users.remove(user).catch(() => { })
                         return
                     }
 
@@ -3472,7 +3471,7 @@ class Poopy {
             if (msg.content && ((!(msg.author.bot) && msg.author.id != poopy.bot.user.id) || poopy.config.allowbotusage) && poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][msg.channel.id]['read']) {
                 var cleanMessage = poopy.modules.Discord.Util.cleanContent(msg.content, msg).replace(/\@/g, '@‌')
 
-                if (!(cleanMessage.match(/nigg|https?\:\/\/.*(rule34|e621|pornhub|hentaihaven|xxx|iplogger)|discord\.(gift|gg)\/[\d\w]+\/?$/ig) || cleanMessage.match(prefix.toLowerCase())) && !(poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['messages'].find(message => message.toLowerCase() === cleanMessage.toLowerCase()))) {
+                if (!(cleanMessage.match(/nigg|https?\:\/\/.*(rule34|e621|pornhub|hentaihaven|xxx|iplogger)|discord\.(gift|gg)\/[\d\w]+\/?$/ig) || cleanMessage.includes(prefix.toLowerCase())) && !(poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['messages'].find(message => message.toLowerCase() === cleanMessage.toLowerCase()))) {
                     var messages = [cleanMessage].concat(poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['messages'])
                     messages.splice(1000)
                     poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['messages'] = messages

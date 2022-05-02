@@ -4,7 +4,7 @@ module.exports = {
         let poopy = this
 
         msg.channel.sendTyping().catch(() => { })
-        if (poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl2'] === undefined && args[2] === undefined) {
+        if (poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl'] === undefined && args[1] === undefined) {
             msg.channel.send('What are the files?!').catch(() => { })
             msg.channel.sendTyping().catch(() => { })
             return;
@@ -68,10 +68,11 @@ module.exports = {
 
         var errors = {}
         var filetypes = {}
-        var nofiles = true
         var lasturlserror = ''
+        var lasturlget = false
+        var nofiles = !(Object.keys(stageimages).length)
 
-        if (!(Object.keys(stageimages).length)) {
+        if (nofiles) {
             var validfilecount = 0
 
             async function inspect(url) {
@@ -88,7 +89,9 @@ module.exports = {
                 var filetype = fileinfo.type
                 if (!filetype || !(filetype.mime.startsWith('image') && !(poopy.vars.gifFormats.find(f => f === filetype.ext)))) return
                 stageimages['stage' + (validfilecount + 1)] = url
+                filetypes['stage' + (validfilecount + 1)] = filetype
                 nofiles = false
+                lasturlget = true
                 return true
             }
 
@@ -101,18 +104,20 @@ module.exports = {
         }
 
         for (var stage in stageimages) {
-            var imageurl = stageimages[stage]
-            var fileinfo = await poopy.functions.validateFile(imageurl, false, {
-                size: `one of the files exceeds the size limit of {param} mb hahahaha (try to use the shrink, setfps, trim or crunch commands)`,
-                frames: `the frames of one of the files exceed the limit of {param} hahahaha (try to use the setfps or the trim commands)`,
-                width: `the width of one of the files exceeds the limit of {param} hahahaha (try to use the shrink command)`,
-                height: `the height of one of the files exceeds the limit of {param} hahahaha (try to use the shrink command)`
-            }).catch(error => {
-                errors.validate = error
-            })
-            var filetype = fileinfo.type
-            if (!(filetype.mime.startsWith('image') && !(poopy.vars.gifFormats.find(f => f === filetype.ext)))) errors.filetype = `Unsupported file: \`${imageurl}\``
-            filetypes[stage] = filetype
+            if (!filetypes[stage]) {
+                var imageurl = stageimages[stage]
+                var fileinfo = await poopy.functions.validateFile(imageurl, false, {
+                    size: `one of the files exceeds the size limit of {param} mb hahahaha (try to use the shrink, setfps, trim or crunch commands)`,
+                    frames: `the frames of one of the files exceed the limit of {param} hahahaha (try to use the setfps or the trim commands)`,
+                    width: `the width of one of the files exceeds the limit of {param} hahahaha (try to use the shrink command)`,
+                    height: `the height of one of the files exceeds the limit of {param} hahahaha (try to use the shrink command)`
+                }).catch(error => {
+                    errors.validate = error
+                })
+                var filetype = fileinfo.type
+                if (!(filetype.mime.startsWith('image') && !(poopy.vars.gifFormats.find(f => f === filetype.ext)))) errors.filetype = `Unsupported file: \`${imageurl}\``
+                filetypes[stage] = filetype
+            }
         }
 
         if (nofiles && lasturlserror) {
