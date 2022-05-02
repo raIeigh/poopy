@@ -85,16 +85,14 @@ module.exports = {
                 value: cat
             }
         })
+        
+        var helped = false
 
         var dmChannel = await msg.author.createDM().catch(() => { })
 
         if (dmChannel) await poopy.functions.navigateEmbed(dmChannel, async (page) => {
-            var textEmbedText = `**${poopy.vars.shelpCmds[page - 1].type} Commands**\n\n` + "Arguments between \"<>\" are required.\nArguments between \"[]\" are optional.\nArguments between \"{}\" are optional but should normally be supplied.\nMultiple commands can be executed separating them with \"-|-\".\nFile manipulation commands have special options that can be used:\n`-encodingpreset <preset>` - More info in `reencode` command.\n`-filename <name>` - Saves the file as the specified name.\n`-catbox` - Forces the file to be uploaded to catbox.moe.\n`-nosend` - Does not send the file, but stores its catbox.moe URL in the channel's last urls.\n\n" + poopy.vars.shelpCmds[page - 1].commands.map(k => `\`${k.name}\`\n> ${k.value}`).join('\n') + `\n\nPage ${page}/${poopy.vars.shelpCmds.length}`
-            
-            if (textEmbedText > 2000) textEmbedText = `**${poopy.vars.shelpCmds[page - 1].type} Commands**\n\n` + poopy.vars.shelpCmds[page - 1].commands.map(k => `\`${k.name}\`\n> ${k.value}`).join('\n') + `\n\nPage ${page}/${poopy.vars.shelpCmds.length}`
-            
-            if (poopy.config.textEmbeds) return textEmbedText.substring(textEmbedText.length - 2000)
-            else return {
+            var helpEmbedText = `**${poopy.vars.shelpCmds[page - 1].type} Commands**\n\n` + "Arguments between \"<>\" are required.\nArguments between \"[]\" are optional.\nArguments between \"{}\" are optional but should normally be supplied.\nMultiple commands can be executed separating them with \"-|-\".\nFile manipulation commands have special options that can be used:\n`-encodingpreset <preset>` - More info in `reencode` command.\n`-filename <name>` - Saves the file as the specified name.\n`-catbox` - Forces the file to be uploaded to catbox.moe.\n`-nosend` - Does not send the file, but stores its catbox.moe URL in the channel's last urls.\n\n" + poopy.vars.shelpCmds[page - 1].commands.map(k => `\`${k.name}\`\n> ${k.value}`).join('\n') + `\n\nPage ${page}/${poopy.vars.shelpCmds.length}`
+            var helpEmbed = {
                 "title": `${poopy.vars.shelpCmds[page - 1].type} Commands`,
                 "description": "Arguments between \"<>\" are required.\nArguments between \"[]\" are optional.\nArguments between \"{}\" are optional but should normally be supplied.\nMultiple commands can be executed separating them with \"-|-\".\nFile manipulation commands have special options that can be used:\n`-encodingpreset <preset>` - More info in `reencode` command.\n`-filename <name>` - Saves the file as the specified name.\n`-catbox` - Forces the file to be uploaded to catbox.moe.\n`-nosend` - Does not send the file, but stores its catbox.moe URL in the channel's last urls.",
                 "color": 0x472604,
@@ -105,6 +103,16 @@ module.exports = {
                 "fields": poopy.vars.shelpCmds[page - 1].commands,
                 "menuText": poopy.vars.shelpCmds[page - 1].type
             }
+            
+            if (helped) {
+                helpEmbedText = `**${poopy.vars.shelpCmds[page - 1].type} Commands**\n\n` + poopy.vars.shelpCmds[page - 1].commands.map(k => `\`${k.name}\`\n> ${k.value}`).join('\n') + `\n\nPage ${page}/${poopy.vars.shelpCmds.length}`
+                delete helpEmbed.description
+            }
+            
+            helped = true
+            
+            if (poopy.config.textEmbeds) return helpEmbedText.substring(textEmbedText.length - 2000).replace(new RegExp(poopy.vars.validUrl, 'g'), (url) => `<${url}>`)
+            else return helpEmbed
         }, poopy.vars.shelpCmds.length, msg.author.id, poopy.config.useReactions ? [{
             emoji: '🔠',
             reactemoji: '🔠',

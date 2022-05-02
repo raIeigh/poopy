@@ -39,7 +39,7 @@ module.exports = {
             })
 
             await poopy.functions.navigateEmbed(dmChannel, async (page) => {
-                if (poopy.config.textEmbeds) return `${poopy.vars.keyfields[page - 1].map(k => `\`${k.name}\`\n> ${k.value}`).join('\n')}\n\nPage ${page}/${poopy.vars.keyfields.length}`
+                if (poopy.config.textEmbeds) return `${poopy.vars.keyfields[page - 1].map(k => `\`${k.name}\`\n> ${k.value}`).join('\n').replace(new RegExp(poopy.vars.validUrl, 'g'), (url) => `<${url}>`)}\n\nPage ${page}/${poopy.vars.keyfields.length}`
                 else return {
                     "title": `Special Keywords`,
                     "description": "Here's a list of all keywords that can be used.",
@@ -56,7 +56,7 @@ module.exports = {
             })
 
             await poopy.functions.navigateEmbed(dmChannel, async (page) => {
-                if (poopy.config.textEmbeds) return `${poopy.vars.funcfields[page - 1].map(k => `\`${k.name}\`\n> ${k.value}`).join('\n')}\n\nPage ${page}/${poopy.vars.keyfields.length}`
+                if (poopy.config.textEmbeds) return `${poopy.vars.funcfields[page - 1].map(k => `\`${k.name}\`\n> ${k.value}`).join('\n').replace(new RegExp(poopy.vars.validUrl, 'g'), (url) => `<${url}>`)}\n\nPage ${page}/${poopy.vars.keyfields.length}`
                 else return {
                     "title": `Special Functions`,
                     "description": "Here's a list of all functions that can be used.",
