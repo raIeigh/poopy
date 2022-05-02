@@ -178,7 +178,8 @@ module.exports = {
                 }).catch(() => { })
             }
             msg.channel.send('✅ Check your DMs.').catch(() => { })
-        }).catch(() => {
+        }).catch((e) => {
+            console.log(e)
             msg.channel.send('Couldn\'t send help to you. Do you have me blocked?').catch(() => { })
             return
         })
