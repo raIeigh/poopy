@@ -66,6 +66,7 @@ module.exports = {
             for (var i in poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrls']) {
                 var url = poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrls'][i]
                 var success = await inspect(url).catch(() => { })
+                console.log(validfilecount)
                 if (success) validfilecount += 1
                 if (validfilecount >= framenumber) break
             }
