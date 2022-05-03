@@ -66,8 +66,8 @@ module.exports = {
             }
         }
 
-        var errors = {}
         var filetypes = {}
+        var infos = {}
         var lasturlserror = ''
         var nofiles = !(Object.keys(stageimages).length)
 
@@ -75,7 +75,7 @@ module.exports = {
             var validfilecount = 0
 
             async function inspect(url) {
-                var lasturlerror = false
+                var lasturlerror
                 var fileinfo = await poopy.functions.validateFile(url, false, {
                     size: `one of the files exceeds the size limit of {param} mb hahahaha (try to use the shrink, setfps, trim or crunch commands)`,
                     frames: `the frames of one of the files exceed the limit of {param} hahahaha (try to use the setfps or the trim commands)`,
@@ -83,12 +83,18 @@ module.exports = {
                     height: `the height of one of the files exceeds the limit of {param} hahahaha (try to use the shrink command)`
                 }).catch(error => {
                     lasturlerror = error
+                    lasturlserror = error
                 })
-                if (lasturlerror || !fileinfo) return
+                if (lasturlerror || !fileinfo) return false
                 var filetype = fileinfo.type
-                if (!filetype || !(filetype.mime.startsWith('image') && !(poopy.vars.gifFormats.find(f => f === filetype.ext)))) return
-                stageimages['stage' + (validfilecount + 1)] = url
+                if (!filetype || !(filetype.mime.startsWith('image') && !(poopy.vars.gifFormats.find(f => f === filetype.ext)))) {
+                    lasturlerror = error
+                    lasturlserror = `Unsupported file: ${url}`
+                    return false
+                }
+                frameurls['stage' + (validfilecount + 1)] = url
                 filetypes['stage' + (validfilecount + 1)] = filetype
+                infos['stage' + (validfilecount + 1)] = fileinfo
                 nofiles = false
                 return true
             }
@@ -98,23 +104,6 @@ module.exports = {
                 var success = await inspect(url).catch(() => { })
                 if (success) validfilecount += 1
                 if (validfilecount >= stages) break
-            }
-        }
-
-        for (var stage in stageimages) {
-            if (!filetypes[stage]) {
-                var imageurl = stageimages[stage]
-                var fileinfo = await poopy.functions.validateFile(imageurl, false, {
-                    size: `one of the files exceeds the size limit of {param} mb hahahaha (try to use the shrink, setfps, trim or crunch commands)`,
-                    frames: `the frames of one of the files exceed the limit of {param} hahahaha (try to use the setfps or the trim commands)`,
-                    width: `the width of one of the files exceeds the limit of {param} hahahaha (try to use the shrink command)`,
-                    height: `the height of one of the files exceeds the limit of {param} hahahaha (try to use the shrink command)`
-                }).catch(error => {
-                    errors.validate = error
-                })
-                var filetype = fileinfo.type
-                if (!(filetype.mime.startsWith('image') && !(poopy.vars.gifFormats.find(f => f === filetype.ext)))) errors.filetype = `Unsupported file: \`${imageurl}\``
-                filetypes[stage] = filetype
             }
         }
 
@@ -129,31 +118,42 @@ module.exports = {
             return
         }
 
-        for (var i in errors) {
-            var error = errors[i]
-            if (error) {
-                msg.channel.send({
-                    content: error,
-                    allowedMentions: {
-                        parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
-                    }
-                }).catch(() => { })
-                msg.channel.sendTyping().catch(() => { })
-                return
-            }
-        }
-
-        for (var i in filetypes) {
-            var type = filetypes[i]
-            if (!(type.mime.startsWith('image') && !(poopy.vars.gifFormats.find(f => f === type.ext)))) {
-                msg.channel.send({
-                    content: 'Unsupported file types.',
-                    allowedMentions: {
-                        parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
-                    }
-                }).catch(() => { })
-                msg.channel.sendTyping().catch(() => { })
-                return
+        for (var stage in stageimages) {
+            if (!filetypes[stage] || !infos[stage]) {
+                var error
+                var imageurl = stageimages[stage]
+                var fileinfo = await poopy.functions.validateFile(imageurl, false, {
+                    size: `one of the files exceeds the size limit of {param} mb hahahaha (try to use the shrink, setfps, trim or crunch commands)`,
+                    frames: `the frames of one of the files exceed the limit of {param} hahahaha (try to use the setfps or the trim commands)`,
+                    width: `the width of one of the files exceeds the limit of {param} hahahaha (try to use the shrink command)`,
+                    height: `the height of one of the files exceeds the limit of {param} hahahaha (try to use the shrink command)`
+                }).catch(err => {
+                    error = err
+                })
+                if (error) {
+                    msg.channel.send({
+                        content: error,
+                        allowedMentions: {
+                            parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                        }
+                    }).catch(() => { })
+                    msg.channel.sendTyping().catch(() => { })
+                    return
+                }
+                var filetype = fileinfo.type
+                if (!(filetype.mime.startsWith('image') && !(poopy.vars.gifFormats.find(f => f === filetype.ext)))) error = `Unsupported file: \`${imageurl}\``
+                if (error) {
+                    msg.channel.send({
+                        content: error,
+                        allowedMentions: {
+                            parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                        }
+                    }).catch(() => { })
+                    msg.channel.sendTyping().catch(() => { })
+                    return
+                }
+                filetypes[stage] = filetype
+                infos[stage] = fileinfo
             }
         }
 
@@ -168,9 +168,11 @@ module.exports = {
         for (var i in stageimages) {
             var imageurl = stageimages[i]
             var filetype = filetypes[i]
+            var info = infos[i]
             var dimensions = stageimgdimensions[i]
 
             await poopy.functions.downloadFile(imageurl, `${i}.png`, {
+                fileinfo: info,
                 filepath: filepath
             })
             var image = await poopy.modules.Jimp.read(`${filepath}/${i}.png`)

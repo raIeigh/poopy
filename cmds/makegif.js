@@ -10,13 +10,11 @@ module.exports = {
             return;
         };
 
-        var saidMessage = args.splice(1, fpsIsLastArg ? args.length - 2 : args.length - 1).join(' ')
-
         var fpsIsLastArg = false
         if (!isNaN(Number(args[args.length - 1])) && args[args.length - 2] !== '-frames') {
             fpsIsLastArg = true
         }
-        var fps = !fpsIsLastArg ? undefined : Number(args[args.length - 1]) >= 50 ? 50 : Number(args[args.length - 1]) <= 0 ? 0 : Number(args[args.length - 1]) || undefined
+        var fps = !fpsIsLastArg ? 50 : Number(args[args.length - 1]) >= 50 ? 50 : Number(args[args.length - 1]) <= 0 ? 0 : Number(args[args.length - 1]) ?? 50
 
         var framenumber = 50
         var framesindex = args.indexOf('-frames')
@@ -25,7 +23,8 @@ module.exports = {
             args.splice(framesindex, 2)
         }
 
-        var errors = {}
+        var saidMessage = args.slice(1, fpsIsLastArg ? args.length - 1 : args.length).join(' ')
+
         var lasturlserror = ''
 
         var frameurls = {}
@@ -56,9 +55,9 @@ module.exports = {
                     lasturlserror = `Unsupported file: ${url}`
                     return false
                 }
-                frameurls[validfilecount] = url
-                filetypes[validfilecount] = filetype
-                infos[validfilecount] = fileinfo
+                frameurls[validfilecount + 1] = url
+                filetypes[validfilecount + 1] = filetype
+                infos[validfilecount + 1] = fileinfo
                 nofiles = false
                 return true
             }
@@ -66,16 +65,15 @@ module.exports = {
             for (var i in poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrls']) {
                 var url = poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrls'][i]
                 var success = await inspect(url).catch(() => { })
-                console.log(validfilecount)
                 if (success) validfilecount += 1
                 if (validfilecount >= framenumber) break
             }
         } else if (msg.attachments.size) {
             var attachments = msg.attachments.map(attachment => attachment.url)
-            for (var i in attachments) frameurls[i] = attachments[i]
+            for (var i in attachments) frameurls[Number(i) + 1] = attachments[i]
         } else {
             var split = saidMessage.split(' ')
-            for (var i in split) frameurls[i] = split[i]
+            for (var i in split) frameurls[Number(i) + 1] = split[i]
         }
 
         if (nofiles && lasturlserror) {
@@ -91,47 +89,40 @@ module.exports = {
 
         for (var i in frameurls) {
             if (!filetypes[i] || !infos[i]) {
+                var error
                 var imageurl = frameurls[i]
                 var fileinfo = await poopy.functions.validateFile(imageurl, false, {
                     size: `one of the files exceeds the size limit of {param} mb hahahaha (try to use the shrink, setfps, trim or crunch commands)`,
                     frames: `the frames of one of the files exceed the limit of {param} hahahaha (try to use the setfps or the trim commands)`,
                     width: `the width of one of the files exceeds the limit of {param} hahahaha (try to use the shrink command)`,
                     height: `the height of one of the files exceeds the limit of {param} hahahaha (try to use the shrink command)`
-                }).catch(error => {
-                    errors.validate = error
+                }).catch(err => {
+                    error = err
                 })
+                if (error) {
+                    msg.channel.send({
+                        content: error,
+                        allowedMentions: {
+                            parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                        }
+                    }).catch(() => { })
+                    msg.channel.sendTyping().catch(() => { })
+                    return
+                }
                 var filetype = fileinfo.type
-                if (!(filetype.mime.startsWith('image') && !(poopy.vars.gifFormats.find(f => f === filetype.ext)))) errors.filetype = `Unsupported file: \`${imageurl}\``
+                if (!(filetype.mime.startsWith('image') && !(poopy.vars.gifFormats.find(f => f === filetype.ext)))) error = `Unsupported file: \`${imageurl}\``
+                if (error) {
+                    msg.channel.send({
+                        content: error,
+                        allowedMentions: {
+                            parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                        }
+                    }).catch(() => { })
+                    msg.channel.sendTyping().catch(() => { })
+                    return
+                }
                 filetypes[i] = filetype
                 infos[i] = fileinfo
-            }
-        }
-
-        for (var i in errors) {
-            var error = errors[i]
-            if (error) {
-                msg.channel.send({
-                    content: error,
-                    allowedMentions: {
-                        parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
-                    }
-                }).catch(() => { })
-                msg.channel.sendTyping().catch(() => { })
-                return
-            }
-        }
-
-        for (var i in filetypes) {
-            var type = filetypes[i]
-            if (!(type.mime.startsWith('image') && !(poopy.vars.gifFormats.find(f => f === type.ext)))) {
-                msg.channel.send({
-                    content: 'Unsupported file types.',
-                    allowedMentions: {
-                        parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
-                    }
-                }).catch(() => { })
-                msg.channel.sendTyping().catch(() => { })
-                return
             }
         }
 
@@ -147,16 +138,14 @@ module.exports = {
             if (!framesizes) {
                 framesizes = { x: infos[i].info.width, y: infos[i].info.height }
             }
-            await poopy.functions.downloadFile(frameurl, `${i}.png`, {
-                fileinfo: infos[i],
-                filepath: `${filepath}/frames`,
-                ffmpeg: true,
-                ffmpegstring: `-filter_complex "[0:v]scale=${framesizes.x}:${framesizes.y},scale='min(400,iw)':min'(400,ih)':force_original_aspect_ratio=decrease[out]" -map [out]`
-            })
+
+            var image = await poopy.modules.Jimp.read(frameurl)
+            image.resize(framesizes.x, framesizes.y)
+            await image.writeAsync(`${filepath}/frames/${i}.png`)
         }
 
-        await poopy.functions.execPromise(`ffmpeg ${fps && `-r ${fps}` || ''} -i ${filepath}/frames/%d.png -filter_complex "[0:v]split[gif][pgif];[pgif]palettegen=reserve_transparent=1[palette];[gif][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} -vsync 0 -gifflags -offsetting ${filepath}/output.gif`)
-        await poopy.functions.sendFile(msg, filepath, `output.gif`, { keep: true })
+        await poopy.functions.execPromise(`ffmpeg -r ${fps} -i ${filepath}/frames/%d.png -filter_complex "[0:v]scale='min(400,iw)':min'(400,ih)':force_original_aspect_ratio=decrease,split[gif][pgif];[pgif]palettegen=reserve_transparent=1[palette];[gif][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} -vsync 0 -gifflags -offsetting ${filepath}/output.gif`)
+        await poopy.functions.sendFile(msg, filepath, `output.gif`)
     },
     help: {
         name: 'makegif <frames> [-frames <framenumber (max 100)> {fps (max 50)}',
