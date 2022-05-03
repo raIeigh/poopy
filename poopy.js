@@ -1471,6 +1471,7 @@ class Poopy {
                                 var modalTimeout = setTimeout(() => {
                                     if (!done) {
                                         done = true
+                                        poopy.bot.removeListener('modalSubmit', modalCallback)
                                         resolve(newpage)
                                     }
                                 }, 30000)
