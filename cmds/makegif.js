@@ -49,14 +49,13 @@ module.exports = {
                     lasturlerror = error
                     lasturlserror = error
                 })
-                if (lasturlerror || !fileinfo) return
+                if (lasturlerror || !fileinfo) return false
                 var filetype = fileinfo.type
                 if (!filetype || !(filetype.mime.startsWith('image') && !(poopy.vars.gifFormats.find(f => f === filetype.ext)))) {
                     lasturlerror = error
                     lasturlserror = `Unsupported file: ${url}`
-                    return
+                    return false
                 }
-                validfilecount += 1
                 frameurls[validfilecount] = url
                 filetypes[validfilecount] = filetype
                 infos[validfilecount] = fileinfo
@@ -66,7 +65,8 @@ module.exports = {
 
             for (var i in poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrls']) {
                 var url = poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrls'][i]
-                await inspect(url).catch(() => { })
+                var success = await inspect(url).catch(() => { })
+                if (success) validfilecount += 1
                 if (validfilecount >= framenumber) break
             }
         } else if (msg.attachments.size) {

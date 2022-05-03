@@ -69,7 +69,6 @@ module.exports = {
         var errors = {}
         var filetypes = {}
         var lasturlserror = ''
-        var lasturlget = false
         var nofiles = !(Object.keys(stageimages).length)
 
         if (nofiles) {
@@ -91,15 +90,14 @@ module.exports = {
                 stageimages['stage' + (validfilecount + 1)] = url
                 filetypes['stage' + (validfilecount + 1)] = filetype
                 nofiles = false
-                lasturlget = true
                 return true
             }
 
             for (var i in poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrls']) {
                 var url = poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrls'][i]
-                var success = await inspect(url)
+                var success = await inspect(url).catch(() => { })
                 if (success) validfilecount += 1
-                if (validfilecount >= 10) break
+                if (validfilecount >= stages) break
             }
         }
 
@@ -167,8 +165,6 @@ module.exports = {
         var iceberg = await poopy.modules.Jimp.read(`templates/iceberg.png`)
         var arialr = await poopy.modules.Jimp.loadFont(`templates/fonts/ArialRed/ArialRed.fnt`)
 
-        iceberg.crop(0, 0, iceberg.bitmap.width, stagewrdsdimensions['stage' + stages][1] + stagewrdsdimensions['stage' + stages][3])
-
         for (var i in stageimages) {
             var imageurl = stageimages[i]
             var filetype = filetypes[i]
@@ -196,6 +192,8 @@ module.exports = {
 
             await iceberg.print(arialr, dimensions[0], dimensions[1], { text: poopy.modules.Discord.Util.cleanContent(text, msg), alignmentX: poopy.modules.Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: poopy.modules.Jimp.VERTICAL_ALIGN_MIDDLE }, dimensions[2], dimensions[3])
         }
+
+        iceberg.crop(0, 0, iceberg.bitmap.width, stagewrdsdimensions['stage' + stages][1] + stagewrdsdimensions['stage' + stages][3])
 
         await iceberg.writeAsync(`${filepath}/output.png`)
 
