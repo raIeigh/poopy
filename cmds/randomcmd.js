@@ -8,7 +8,7 @@ module.exports = {
             var cmd
             if (type === 'Rand') {
                 cmd = poopy.commands[Math.floor(Math.random() * poopy.commands.length)]
-                if (cmd.type === 'Owner' || cmd.type === 'JSON Club' || cmd.perms || poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['disabled'].find(c => c.find(n => n === cmd.name.find(nn => nn === n)))) {
+                if (cmd.type === 'Owner' || cmd.type === 'JSON Club' || cmd.perms || poopy.data['guild-data'][msg.guild.id]['disabled'].find(c => c.find(n => n === cmd.name.find(nn => nn === n)))) {
                     return chooseCmd()
                 }
                 return cmd
@@ -20,7 +20,7 @@ module.exports = {
                         for (var j in shelpCmd.commands) {
                             var command = shelpCmd.commands[j]
                             var cmd = poopy.commands.find(c => c.help.name === command.name)
-                            if (!(cmd.type === 'Owner' || cmd.type === 'JSON Club' || cmd.perms || poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['disabled'].find(c => c.find(n => n === cmd.name.find(nn => nn === n))))) {
+                            if (!(cmd.type === 'Owner' || cmd.type === 'JSON Club' || cmd.perms || poopy.data['guild-data'][msg.guild.id]['disabled'].find(c => c.find(n => n === cmd.name.find(nn => nn === n))))) {
                                 cmds.push(cmd)
                             }
                         }
@@ -49,7 +49,7 @@ module.exports = {
 
         var cmdmessage = await msg.channel.send(`Executing \`${cmd.name[0]}\`.`).catch(() => { })
         if (cmd.cooldown) {
-            poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] = (poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] || Date.now()) + cmd.cooldown / ((msg.member.permissions.has('MANAGE_GUILD') || msg.member.roles.cache.find(role => role.name.match(/mod|dev|admin|owner|creator|founder|staff/ig)) || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID) && (cmd.type === 'Text' || cmd.type === 'Main') ? 5 : 1)
+            poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] = (poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] || Date.now()) + cmd.cooldown / ((msg.member.permissions.has('MANAGE_GUILD') || msg.member.roles.cache.find(role => role.name.match(/mod|dev|admin|owner|creator|founder|staff/ig)) || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID) && (cmd.type === 'Text' || cmd.type === 'Main') ? 5 : 1)
         }
         var deletetimeout = setTimeout(() => {
             if (!cmdmessage) return

@@ -3,14 +3,14 @@ module.exports = {
     execute: async function (msg) {
         let poopy = this
 
-        if (!poopy.data[poopy.config.mongodatabase]['user-data'][msg.author.id]) {
-            poopy.data[poopy.config.mongodatabase]['user-data'][msg.author.id] = {}
+        if (!poopy.data['user-data'][msg.author.id]) {
+            poopy.data['user-data'][msg.author.id] = {}
         }
-        if (poopy.data[poopy.config.mongodatabase]['user-data'][msg.author.id]['dms'] === undefined) {
-            poopy.data[poopy.config.mongodatabase]['user-data'][msg.author.id]['dms'] = false
+        if (poopy.data['user-data'][msg.author.id]['dms'] === undefined) {
+            poopy.data['user-data'][msg.author.id]['dms'] = false
         }
-        if (poopy.data[poopy.config.mongodatabase]['user-data'][msg.author.id]['dms'] === false) {
-            poopy.data[poopy.config.mongodatabase]['user-data'][msg.author.id]['dms'] = true
+        if (poopy.data['user-data'][msg.author.id]['dms'] === false) {
+            poopy.data['user-data'][msg.author.id]['dms'] = true
             msg.channel.send({
                 content: 'Unrelated DMs from `dm` will **be sent** to you now.',
                 allowedMentions: {
@@ -18,7 +18,7 @@ module.exports = {
                 }
             }).catch(() => { })
         } else {
-            poopy.data[poopy.config.mongodatabase]['user-data'][msg.author.id]['dms'] = false
+            poopy.data['user-data'][msg.author.id]['dms'] = false
             msg.channel.send({
                 content: 'Unrelated DMs from `dm` will **not be sent** to you now.',
                 allowedMentions: {

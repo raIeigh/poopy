@@ -52,11 +52,11 @@ module.exports = {
                         'get-url': ''
                     }).catch(() => {})
                     if (youtubeurl) {
-                        poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl2'] = poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl']
-                        poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl'] = youtubeurl
-                        var lastUrls = [youtubeurl].concat(poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrls'])
+                        poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl2'] = poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl']
+                        poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl'] = youtubeurl
+                        var lastUrls = [youtubeurl].concat(poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrls'])
                         lastUrls.splice(100)
-                        poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrls'] = lastUrls
+                        poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrls'] = lastUrls
                     }
 
                     var thumbresponse = await poopy.modules.axios.request(urls[page - 1].thumb.replace('hqdefault', 'hq720')).catch(() => {})

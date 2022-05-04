@@ -4,7 +4,7 @@ module.exports = {
   func: async function (_, msg) {
     let poopy = this
 
-    var cooldown = (poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] || 0) - Date.now()
+    var cooldown = (poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] || 0) - Date.now()
     await poopy.functions.sleep(cooldown)
     return ''
   }

@@ -14,7 +14,7 @@ module.exports = {
       clearInterval(poopy.vars.saveInterval)
       delete poopy.vars.saveInterval
       poopy.bot.destroy()
-      delete poopy.data[poopy.config.mongodatabase]
+      delete poopy.data
       poopy.functions.execPromise('node .')
     };
   },

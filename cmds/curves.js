@@ -4,7 +4,7 @@ module.exports = {
         let poopy = this
 
         msg.channel.sendTyping().catch(() => { })
-        if (poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl'] === undefined && args[4] === undefined) {
+        if (poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl'] === undefined && args[4] === undefined) {
             msg.channel.send('What is the file?!').catch(() => { })
             msg.channel.sendTyping().catch(() => { })
             return;
@@ -40,7 +40,7 @@ module.exports = {
         var gcurves = matchedTextes[1].substring(1, matchedTextes[1].length - 1).match(curvesregexg).map(curves => curves.replace(curvesregexg, matchfunc))
         var bcurves = matchedTextes[2].substring(1, matchedTextes[2].length - 1).match(curvesregexg).map(curves => curves.replace(curvesregexg, matchfunc))
 
-        var currenturl = poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl']
+        var currenturl = poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl']
         var fileinfo = await poopy.functions.validateFile(currenturl).catch(error => {
             msg.channel.send(error)
             msg.channel.sendTyping().catch(() => { })

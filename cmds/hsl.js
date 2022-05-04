@@ -4,12 +4,12 @@ module.exports = {
         let poopy = this
 
         msg.channel.sendTyping().catch(() => { })
-        if (poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl'] === undefined && args[4] === undefined) {
+        if (poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl'] === undefined && args[4] === undefined) {
             msg.channel.send('What is the file?!').catch(() => { })
             msg.channel.sendTyping().catch(() => { })
             return;
         };
-        var currenturl = poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl']
+        var currenturl = poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl']
         var hue = isNaN(Number(String(args[1]).replace(/,/g, ''))) ? 0 : Number(String(args[1]).replace(/,/g, '')) <= -360 ? -360 : Number(String(args[1]).replace(/,/g, '')) >= 360 ? 360 : Number(String(args[1]).replace(/,/g, '')) || 0
         var saturation = isNaN(Number(String(args[2]).replace(/,/g, ''))) ? 1 : Number(String(args[2]).replace(/,/g, '')) <= -10 ? -10 : Number(String(args[2]).replace(/,/g, '')) >= 10 ? 10 : Number(String(args[2]).replace(/,/g, '')) ?? 1
         var lightness = isNaN(Number(String(args[3]).replace(/,/g, ''))) ? 0 : Number(String(args[3]).replace(/,/g, '')) <= -10 ? -10 : Number(String(args[3]).replace(/,/g, '')) >= 10 ? 10 : Number(String(args[3]).replace(/,/g, '')) || 0

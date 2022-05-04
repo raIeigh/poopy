@@ -19,7 +19,7 @@ module.exports = {
                 msg.channel.send('The prefix can\'t be bigger than 20 characters.').catch(() => { })
                 return
             }
-            poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['prefix'] = saidMessage
+            poopy.data['guild-data'][msg.guild.id]['prefix'] = saidMessage
             msg.channel.send(`The prefix was set to \`${saidMessage}\` (if this is wrong, mention me with "reset prefix")`).catch(() => { })
         } else {
             msg.channel.send('You need to be an administrator to execute that!').catch(() => { })

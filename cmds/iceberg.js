@@ -4,7 +4,7 @@ module.exports = {
         let poopy = this
 
         msg.channel.sendTyping().catch(() => { })
-        if (poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl'] === undefined && args[1] === undefined) {
+        if (poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl'] === undefined && args[1] === undefined) {
             msg.channel.send('What are the files?!').catch(() => { })
             msg.channel.sendTyping().catch(() => { })
             return;
@@ -99,8 +99,8 @@ module.exports = {
                 return true
             }
 
-            for (var i in poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrls']) {
-                var url = poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrls'][i]
+            for (var i in poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrls']) {
+                var url = poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrls'][i]
                 var success = await inspect(url).catch(() => { })
                 if (success) validfilecount += 1
                 if (validfilecount >= stages) break

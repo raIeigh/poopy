@@ -6,25 +6,25 @@ module.exports = {
         msg.channel.sendTyping().catch(() => { })
         msg.channel.send('Let\'s see...').catch(() => { })
         var fartRating = Math.floor(Math.random() * 100) + 1
-        if (!poopy.data[poopy.config.mongodatabase]['user-data'][msg.author.id]) {
-            poopy.data[poopy.config.mongodatabase]['user-data'][msg.author.id] = {}
+        if (!poopy.data['user-data'][msg.author.id]) {
+            poopy.data['user-data'][msg.author.id] = {}
         }
-        if (!poopy.data[poopy.config.mongodatabase]['user-data'][msg.author.id]['fartRate']) {
-            poopy.data[poopy.config.mongodatabase]['user-data'][msg.author.id]['fartRate'] = fartRating;
+        if (!poopy.data['user-data'][msg.author.id]['fartRate']) {
+            poopy.data['user-data'][msg.author.id]['fartRate'] = fartRating;
         }
-        if (!poopy.data[poopy.config.mongodatabase]['user-data'][msg.author.id]['lastFartRate']) {
-            poopy.data[poopy.config.mongodatabase]['user-data'][msg.author.id]['lastFartRate'] = Date.now();
+        if (!poopy.data['user-data'][msg.author.id]['lastFartRate']) {
+            poopy.data['user-data'][msg.author.id]['lastFartRate'] = Date.now();
         }
-        var lastFartRating = Date.now() - poopy.data[poopy.config.mongodatabase]['user-data'][msg.author.id]['lastFartRate']
+        var lastFartRating = Date.now() - poopy.data['user-data'][msg.author.id]['lastFartRate']
         if (lastFartRating >= 600000) {
-            poopy.data[poopy.config.mongodatabase]['user-data'][msg.author.id]['fartRate'] = fartRating;
-            poopy.data[poopy.config.mongodatabase]['user-data'][msg.author.id]['lastFartRate'] = Date.now();
+            poopy.data['user-data'][msg.author.id]['fartRate'] = fartRating;
+            poopy.data['user-data'][msg.author.id]['lastFartRate'] = Date.now();
         }
-        if (poopy.data[poopy.config.mongodatabase]['user-data'][msg.author.id]['fartRate'] >= 70) {
-            msg.channel.send('**' + poopy.data[poopy.config.mongodatabase]['user-data'][msg.author.id]['fartRate'] + '**/100, great farts!').catch(() => { })
+        if (poopy.data['user-data'][msg.author.id]['fartRate'] >= 70) {
+            msg.channel.send('**' + poopy.data['user-data'][msg.author.id]['fartRate'] + '**/100, great farts!').catch(() => { })
         }
         else {
-            msg.channel.send('**' + poopy.data[poopy.config.mongodatabase]['user-data'][msg.author.id]['fartRate'] + '**/100').catch(() => { })
+            msg.channel.send('**' + poopy.data['user-data'][msg.author.id]['fartRate'] + '**/100').catch(() => { })
         }
         msg.channel.sendTyping().catch(() => { })
     },

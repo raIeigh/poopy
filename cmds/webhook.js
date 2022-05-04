@@ -14,16 +14,16 @@ module.exports = {
                 async function getUser(id) {
                     await msg.guild.members.fetch(id)
                         .then(async function (user) {
-                            if (!poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]) {
-                                poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id] = {}
+                            if (!poopy.data['guild-data'][msg.guild.id]) {
+                                poopy.data['guild-data'][msg.guild.id] = {}
                             }
-                            if (!poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['members'][user.id]) {
-                                poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['members'][user.id] = {}
+                            if (!poopy.data['guild-data'][msg.guild.id]['members'][user.id]) {
+                                poopy.data['guild-data'][msg.guild.id]['members'][user.id] = {}
                             }
-                            if (!poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['members'][user.id]['custom']) {
-                                poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['members'][user.id]['custom'] = false
+                            if (!poopy.data['guild-data'][msg.guild.id]['members'][user.id]['custom']) {
+                                poopy.data['guild-data'][msg.guild.id]['members'][user.id]['custom'] = false
                             }
-                            if (poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['members'][user.id]['custom'] === false) {
+                            if (poopy.data['guild-data'][msg.guild.id]['members'][user.id]['custom'] === false) {
                                 var saidMessage = args.join(' ').substring(args[0].length + 1)
                                 var symbolReplacedMessage
                                 poopy.vars.symbolreplacements.forEach(symbolReplacement => {
@@ -73,7 +73,7 @@ module.exports = {
                                 }
                                 var avatar = args[args.length - 1]
 
-                                poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['members'][user.id]['custom'] = {
+                                poopy.data['guild-data'][msg.guild.id]['members'][user.id]['custom'] = {
                                     name: allBlank ? '⠀' : name,
                                     avatar: avatar
                                 }
@@ -85,12 +85,12 @@ module.exports = {
                                 }).catch(() => { })
                             } else {
                                 msg.channel.send({
-                                    content: user.user.username + ` is not ${poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['members'][user.id]['custom']['name']}.`,
+                                    content: user.user.username + ` is not ${poopy.data['guild-data'][msg.guild.id]['members'][user.id]['custom']['name']}.`,
                                     allowedMentions: {
                                         parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                                     }
                                 }).catch(() => { })
-                                poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['members'][user.id]['custom'] = false
+                                poopy.data['guild-data'][msg.guild.id]['members'][user.id]['custom'] = false
                             }
                         })
                         .catch(function () {
@@ -105,16 +105,16 @@ module.exports = {
 
                 getUser(user)
             } else {
-                if (!poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]) {
-                    poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id] = {}
+                if (!poopy.data['guild-data'][msg.guild.id]) {
+                    poopy.data['guild-data'][msg.guild.id] = {}
                 }
-                if (!poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['members'][userMention.id]) {
-                    poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['members'][userMention.id] = {}
+                if (!poopy.data['guild-data'][msg.guild.id]['members'][userMention.id]) {
+                    poopy.data['guild-data'][msg.guild.id]['members'][userMention.id] = {}
                 }
-                if (!poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['members'][userMention.id]['custom']) {
-                    poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['members'][userMention.id]['custom'] = false
+                if (!poopy.data['guild-data'][msg.guild.id]['members'][userMention.id]['custom']) {
+                    poopy.data['guild-data'][msg.guild.id]['members'][userMention.id]['custom'] = false
                 }
-                if (poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['members'][userMention.id]['custom'] === false) {
+                if (poopy.data['guild-data'][msg.guild.id]['members'][userMention.id]['custom'] === false) {
                     var saidMessage = args.join(' ').substring(args[0].length + 1)
                     var symbolReplacedMessage
                     poopy.vars.symbolreplacements.forEach(symbolReplacement => {
@@ -151,7 +151,7 @@ module.exports = {
                     }
                     var avatar = args[args.length - 1]
 
-                    poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['members'][userMention.id]['custom'] = {
+                    poopy.data['guild-data'][msg.guild.id]['members'][userMention.id]['custom'] = {
                         name: name,
                         avatar: avatar
                     }
@@ -163,12 +163,12 @@ module.exports = {
                     }).catch(() => { })
                 } else {
                     msg.channel.send({
-                        content: userMention.user.username + ` is not ${poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['members'][user.id]['custom']['name']}.`,
+                        content: userMention.user.username + ` is not ${poopy.data['guild-data'][msg.guild.id]['members'][user.id]['custom']['name']}.`,
                         allowedMentions: {
                             parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                         }
                     }).catch(() => { })
-                    poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['members'][userMention.id]['custom'] = false
+                    poopy.data['guild-data'][msg.guild.id]['members'][userMention.id]['custom'] = false
                 }
             }
         } else {

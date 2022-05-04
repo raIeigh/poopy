@@ -28,7 +28,7 @@ module.exports = {
             poopy.vars.filecount++
             var filepath = `temp/${poopy.config.mongodatabase}/file${currentcount}`
             poopy.modules.fs.mkdirSync(filepath)
-            poopy.modules.fs.writeFileSync(`${filepath}/jsonlist.txt`, poopy.data[poopy.config.mongodatabase]['bot-data']['bot'][type].join('\n\n-----------------------------------------------\n\n') || 'lmao theres nothing')
+            poopy.modules.fs.writeFileSync(`${filepath}/jsonlist.txt`, poopy.functions.globalData()['bot-data'][type].join('\n\n-----------------------------------------------\n\n') || 'lmao theres nothing')
             await msg.channel.send({
                 files: [new poopy.modules.Discord.MessageAttachment(`${filepath}/jsonlist.txt`)]
             }).catch(() => { })

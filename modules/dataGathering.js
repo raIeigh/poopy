@@ -1,83 +1,66 @@
 const mongo = require('./mongo')
-const dataschema = require('./schema')
 const schemas = require('./schemas')
 
 module.exports = {
-    getAllData: async (databaseName, old) => {
-        var data = {}
+    getAllData: async (databaseName) => {
+        var data = {
+            data: {},
+            globaldata: {}
+        }
         var url = process.env.MONGOOSEURL
         const database = await mongo(url).catch(() => { })
 
-        if (old) {
-            for (var i in schemas) {
-                var schema = schemas[i]
-                data[i] = {}
+        await schemas.data.find({
+            dataid: databaseName
+        }, (_, objects) => {
+            var object = objects[0]
 
-                await schema.find({}, (_, objects) => {
-                    for (var j in objects) {
-                        var object = objects[j]
-                        data[i][object.dataid] = {}
+            for (var k in object) {
+                var value = object[k]
 
-                        for (var k in object) {
-                            var value = object[k]
-
-                            if (k != 'dataid' && k != 'toString' && schema.prototype.schema.obj[k]) {
-                                data[i][object.dataid][k] = value
-                            }
-                        }
-                    }
-                }).catch(() => { })
-            }
-        } else {
-            await dataschema.find({
-                dataid: databaseName
-            }, (_, objects) => {
-                var object = objects[0]
-
-                for (var k in object) {
-                    var value = object[k]
-
-                    if (k != 'dataid' && k != 'toString' && dataschema.prototype.schema.obj[k]) {
-                        data[k] = value
-                    }
+                if (k != 'dataid' && k != 'toString' && schemas.data.prototype.schema.obj[k]) {
+                    data.data[k] = value
                 }
-            }).catch(() => { })
-        }
+            }
+        }).catch(() => { })
+
+        await schemas.globaldata.find({}, (_, objects) => {
+            var object = objects[0]
+
+            for (var k in object) {
+                var value = object[k]
+
+                if (k != 'dataid' && k != 'toString' && schemas.globaldata.prototype.schema.obj[k]) {
+                    data.globaldata[k] = value
+                }
+            }
+        }).catch(() => { })
 
         database.connection.close()
 
         return data
     },
 
-    updateAllData: async (databaseName, data, old) => {
+    updateAllData: async (databaseName, d) => {
         var url = process.env.MONGOOSEURL
         const database = await mongo(url).catch(() => { })
 
-        if (old) {
-            for (var i in data) {
-                var dataType = data[i]
-                var schema = schemas[i]
+        var data = d.data
 
-                for (var j in dataType) {
-                    var dataObject = dataType[j]
+        await schemas.data.findOneAndUpdate({
+            dataid: databaseName
+        }, data, {
+            upsert: true,
+            useFindAndModify: false
+        }).catch(() => { })
 
-                    await schema.findOneAndUpdate({
-                        dataid: j
-                    }, dataObject, {
-                        upsert: true,
-                        useFindAndModify: false
-                    }).catch(() => { })
-                }
-            }
-        } else {
-            await dataschema.findOneAndUpdate({
-                dataid: databaseName
-            }, data, {
-                upsert: true,
-                useFindAndModify: false
-            }).catch(() => { })
+        var globaldata = d.globaldata
 
-            database.connection.close()
-        }
+        await schemas.globaldata.findOneAndUpdate({}, globaldata, {
+            upsert: true,
+            useFindAndModify: false
+        }).catch(() => { })
+
+        database.connection.close()
     }
 }

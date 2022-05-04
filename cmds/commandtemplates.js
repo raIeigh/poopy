@@ -62,7 +62,7 @@ module.exports = {
 
             params.phrase = phraseArgs.join(' ')
 
-            var findCommand = poopy.data[poopy.config.mongodatabase]['bot-data']['bot']['commandTemplates'].find(cmd => cmd.name === name && cmd.creator === msg.author.id)
+            var findCommand = poopy.functions.globalData()['bot-data']['commandTemplates'].find(cmd => cmd.name === name && cmd.creator === msg.author.id)
 
             if (findCommand) {
                 msg.channel.send(`You've already created a command with that name! (ID: \`${findCommand.id}\`)`).catch(() => { })
@@ -79,8 +79,8 @@ module.exports = {
                     id: id,
                     creator: msg.author.id,
                     date: Math.floor(Date.now() / 1000)
-                }].concat(poopy.data[poopy.config.mongodatabase]['bot-data']['bot']['commandTemplates'])
-                poopy.data[poopy.config.mongodatabase]['bot-data']['bot']['commandTemplates'] = commands
+                }].concat(poopy.functions.globalData()['bot-data']['commandTemplates'])
+                poopy.functions.globalData()['bot-data']['commandTemplates'] = commands
 
                 msg.channel.send({
                     content: `✅ \`${name}\` was successfully registered to the command template database! (ID: \`${id}\`)`,
@@ -93,7 +93,7 @@ module.exports = {
 
         var options = {
             list: async (msg) => {
-                var dcmdTemplates = poopy.data[poopy.config.mongodatabase]['bot-data']['bot']['commandTemplates']
+                var dcmdTemplates = poopy.functions.globalData()['bot-data']['commandTemplates']
 
                 if (dcmdTemplates.length <= 0) {
                     if (poopy.config.textEmbeds) msg.channel.send('there is nothing').catch(() => { })
@@ -197,7 +197,7 @@ module.exports = {
                                 if (findCommandTemplate) {
                                     var name = findCommandTemplate.name
 
-                                    var findCommand = poopy.commands.find(cmd => cmd.name.find(n => n === name)) || poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['localcmds'].find(cmd => cmd.name === name)
+                                    var findCommand = poopy.commands.find(cmd => cmd.name.find(n => n === name)) || poopy.data['guild-data'][msg.guild.id]['localcmds'].find(cmd => cmd.name === name)
 
                                     if (findCommand) {
                                         if (poopy.config.useReactions) msg.channel.send(`The name of that command was already taken!`).catch(() => { })
@@ -208,7 +208,7 @@ module.exports = {
                                         return
                                     }
 
-                                    poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['localcmds'].push({
+                                    poopy.data['guild-data'][msg.guild.id]['localcmds'].push({
                                         name: name,
                                         phrase: findCommandTemplate.phrase
                                     })
@@ -247,7 +247,7 @@ module.exports = {
 
                 var saidMessage = args.join('').substring(args[0].length + 1).toLowerCase()
 
-                var ddcmdTemplates = poopy.data[poopy.config.mongodatabase]['bot-data']['bot']['commandTemplates']
+                var ddcmdTemplates = poopy.functions.globalData()['bot-data']['commandTemplates']
                 var none = {
                     "title": `there is nothing`,
                     "description": 'wow',
@@ -358,7 +358,7 @@ module.exports = {
                                 if (findCommandTemplate) {
                                     var name = findCommandTemplate.name
 
-                                    var findCommand = poopy.commands.find(cmd => cmd.name.find(n => n === name)) || poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['localcmds'].find(cmd => cmd.name === name)
+                                    var findCommand = poopy.commands.find(cmd => cmd.name.find(n => n === name)) || poopy.data['guild-data'][msg.guild.id]['localcmds'].find(cmd => cmd.name === name)
 
                                     if (findCommand) {
                                         if (poopy.config.useReactions) msg.channel.send(`The name of that command was already taken!`).catch(() => { })
@@ -369,7 +369,7 @@ module.exports = {
                                         return
                                     }
 
-                                    poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['localcmds'].push({
+                                    poopy.data['guild-data'][msg.guild.id]['localcmds'].push({
                                         name: name,
                                         phrase: findCommandTemplate.phrase
                                     })
@@ -415,8 +415,8 @@ module.exports = {
                 }
 
                 var id = args[1].replace(/#/g, '')
-                var command = poopy.data[poopy.config.mongodatabase]['bot-data']['bot']['commandTemplates'].find(cmd => cmd.id === id)
-                var commandIndex = poopy.data[poopy.config.mongodatabase]['bot-data']['bot']['commandTemplates'].findIndex(cmd => cmd.id === id)
+                var command = poopy.functions.globalData()['bot-data']['commandTemplates'].find(cmd => cmd.id === id)
+                var commandIndex = poopy.functions.globalData()['bot-data']['commandTemplates'].findIndex(cmd => cmd.id === id)
 
                 if (command && commandIndex > -1) {
                     if (command.creator !== msg.author.id) {
@@ -464,7 +464,7 @@ module.exports = {
                     }
 
                     if (params.name) {
-                        var findCommand = poopy.data[poopy.config.mongodatabase]['bot-data']['bot']['commandTemplates'].find(cmd => cmd.name === params.name && cmd.creator === msg.author.id)
+                        var findCommand = poopy.functions.globalData()['bot-data']['commandTemplates'].find(cmd => cmd.name === params.name && cmd.creator === msg.author.id)
 
                         if (findCommand) {
                             msg.channel.send(`You've already created a command with that name! (ID: \`${findCommand.id}\`)`).catch(() => { })
@@ -473,7 +473,7 @@ module.exports = {
                     }
 
                     for (var param in params) {
-                        poopy.data[poopy.config.mongodatabase]['bot-data']['bot']['commandTemplates'][commandIndex][param] = params[param]
+                        poopy.functions.globalData()['bot-data']['commandTemplates'][commandIndex][param] = params[param]
                     }
 
                     msg.channel.send(`✅ Command successfully updated.`).catch(() => { })
@@ -489,8 +489,8 @@ module.exports = {
                 }
 
                 var id = args[1].replace(/#/g, '')
-                var command = poopy.data[poopy.config.mongodatabase]['bot-data']['bot']['commandTemplates'].find(cmd => cmd.id === id)
-                var commandIndex = poopy.data[poopy.config.mongodatabase]['bot-data']['bot']['commandTemplates'].findIndex(cmd => cmd.id === id)
+                var command = poopy.functions.globalData()['bot-data']['commandTemplates'].find(cmd => cmd.id === id)
+                var commandIndex = poopy.functions.globalData()['bot-data']['commandTemplates'].findIndex(cmd => cmd.id === id)
 
                 if (command && commandIndex > -1) {
                     if (command.creator !== msg.author.id) {
@@ -498,7 +498,7 @@ module.exports = {
                         return
                     }
 
-                    poopy.data[poopy.config.mongodatabase]['bot-data']['bot']['commandTemplates'].splice(commandIndex, 1)
+                    poopy.functions.globalData()['bot-data']['commandTemplates'].splice(commandIndex, 1)
 
                     msg.channel.send(`✅ Command successfully deleted.`).catch(() => { })
                 } else {

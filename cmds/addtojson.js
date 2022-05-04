@@ -28,12 +28,12 @@ module.exports = {
             }
             var saidMessage = args.join(' ').substring(args[0].length + args[1].length + 2)
 
-            if (poopy.data[poopy.config.mongodatabase]['bot-data']['bot'][type].find(v => v === saidMessage)) {
+            if (poopy.functions.globalData()['bot-data'][type].find(v => v === saidMessage)) {
                 msg.channel.send('Already exists.').catch(() => { })
                 return
             }
 
-            poopy.data[poopy.config.mongodatabase]['bot-data']['bot'][type].push(saidMessage)
+            poopy.functions.globalData()['bot-data'][type].push(saidMessage)
 
             msg.channel.send({
                 content: '✅ Added ' + saidMessage,
@@ -42,11 +42,11 @@ module.exports = {
                 }
             }).catch(() => { })
 
-            poopy.arrays.psFiles = poopy.data[poopy.config.mongodatabase]['bot-data']['bot']['psfiles']
-            poopy.arrays.psPasta = poopy.data[poopy.config.mongodatabase]['bot-data']['bot']['pspasta']
-            poopy.arrays.funnygifs = poopy.data[poopy.config.mongodatabase]['bot-data']['bot']['funnygif']
-            poopy.arrays.poopPhrases = poopy.data[poopy.config.mongodatabase]['bot-data']['bot']['poop']
-            poopy.arrays.dmPhrases = poopy.data[poopy.config.mongodatabase]['bot-data']['bot']['dmphrases']
+            poopy.arrays.psFiles = poopy.functions.globalData()['bot-data']['psfiles']
+            poopy.arrays.psPasta = poopy.functions.globalData()['bot-data']['pspasta']
+            poopy.arrays.funnygifs = poopy.functions.globalData()['bot-data']['funnygif']
+            poopy.arrays.poopPhrases = poopy.functions.globalData()['bot-data']['poop']
+            poopy.arrays.dmPhrases = poopy.functions.globalData()['bot-data']['dmphrases']
         };
     },
     help: {

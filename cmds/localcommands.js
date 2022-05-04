@@ -6,8 +6,8 @@ module.exports = {
         var options = {
             list: async (msg) => {
                 var localCmdsArray = []
-                for (var i in poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['localcmds']) {
-                    var cmd = poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['localcmds'][i]
+                for (var i in poopy.data['guild-data'][msg.guild.id]['localcmds']) {
+                    var cmd = poopy.data['guild-data'][msg.guild.id]['localcmds'][i]
                     localCmdsArray.push(`- ${cmd.name}`)
                 }
                 
@@ -46,10 +46,10 @@ module.exports = {
                     return
                 }
 
-                var findCommand = poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['localcmds'].findIndex(cmd => cmd.name === args[1].toLowerCase())
+                var findCommand = poopy.data['guild-data'][msg.guild.id]['localcmds'].findIndex(cmd => cmd.name === args[1].toLowerCase())
 
                 if (findCommand > -1) {
-                    msg.channel.send(`\`${poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['localcmds'][findCommand].phrase}\``).catch(() => { })
+                    msg.channel.send(`\`${poopy.data['guild-data'][msg.guild.id]['localcmds'][findCommand].phrase}\``).catch(() => { })
                 } else {
                     msg.channel.send(`Not a valid command.`).catch(() => { })
                     return
@@ -68,13 +68,13 @@ module.exports = {
                     }
 
                     var saidMessage = args.join(' ').substring(args[0].length + args[1].length + 2)
-                    var findCommand = poopy.commands.find(cmd => cmd.name.find(n => n === args[1].toLowerCase())) || poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['localcmds'].find(cmd => cmd.name === args[1].toLowerCase())
+                    var findCommand = poopy.commands.find(cmd => cmd.name.find(n => n === args[1].toLowerCase())) || poopy.data['guild-data'][msg.guild.id]['localcmds'].find(cmd => cmd.name === args[1].toLowerCase())
 
                     if (findCommand) {
                         msg.channel.send(`That name was already taken!`).catch(() => { })
                         return
                     } else {
-                        poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['localcmds'].push({
+                        poopy.data['guild-data'][msg.guild.id]['localcmds'].push({
                             name: args[1].toLowerCase(),
                             phrase: saidMessage
                         })
@@ -101,19 +101,19 @@ module.exports = {
 
                     var id = args[1].replace(/#/g, '')
 
-                    var findCommandTemplate = poopy.data[poopy.config.mongodatabase]['bot-data']['bot']['commandTemplates'].find(cmd => cmd.id == id)
+                    var findCommandTemplate = poopy.data['bot-data']['bot']['commandTemplates'].find(cmd => cmd.id == id)
 
                     if (findCommandTemplate) {
                         var name = args[2] ? args[2].toLowerCase() : findCommandTemplate.name
 
-                        var findCommand = poopy.commands.find(cmd => cmd.name.find(n => n === name)) || poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['localcmds'].find(cmd => cmd.name === name)
+                        var findCommand = poopy.commands.find(cmd => cmd.name.find(n => n === name)) || poopy.data['guild-data'][msg.guild.id]['localcmds'].find(cmd => cmd.name === name)
 
                         if (findCommand) {
                             msg.channel.send(`The name of that command was already taken!`).catch(() => { })
                             return
                         }
 
-                        poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['localcmds'].push({
+                        poopy.data['guild-data'][msg.guild.id]['localcmds'].push({
                             name: name,
                             phrase: findCommandTemplate.phrase
                         })
@@ -145,10 +145,10 @@ module.exports = {
                     }
 
                     var saidMessage = args.join(' ').substring(args[0].length + args[1].length + 2)
-                    var findCommand = poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['localcmds'].findIndex(cmd => cmd.name === args[1].toLowerCase())
+                    var findCommand = poopy.data['guild-data'][msg.guild.id]['localcmds'].findIndex(cmd => cmd.name === args[1].toLowerCase())
 
                     if (findCommand > -1) {
-                        poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['localcmds'][findCommand] = {
+                        poopy.data['guild-data'][msg.guild.id]['localcmds'][findCommand] = {
                             name: args[1].toLowerCase(),
                             phrase: saidMessage
                         }
@@ -176,10 +176,10 @@ module.exports = {
                         return
                     }
 
-                    var findCommand = poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['localcmds'].findIndex(cmd => cmd.name === args[1].toLowerCase())
+                    var findCommand = poopy.data['guild-data'][msg.guild.id]['localcmds'].findIndex(cmd => cmd.name === args[1].toLowerCase())
 
                     if (findCommand > -1) {
-                        poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['localcmds'].splice(findCommand, 1)
+                        poopy.data['guild-data'][msg.guild.id]['localcmds'].splice(findCommand, 1)
 
                         msg.channel.send({
                             content: `✅ Removed \`${args[1].toLowerCase()}\` command.`,

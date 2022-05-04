@@ -38,13 +38,13 @@ module.exports = {
                             },
                             files: attachments
                         }).catch(() => { })
-                        if (!poopy.data[poopy.config.mongodatabase]['user-data'][member.id]) {
-                            poopy.data[poopy.config.mongodatabase]['user-data'][member.id] = {}
-                            poopy.data[poopy.config.mongodatabase]['user-data'][member.id]['health'] = 100
+                        if (!poopy.data['user-data'][member.id]) {
+                            poopy.data['user-data'][member.id] = {}
+                            poopy.data['user-data'][member.id]['health'] = 100
                         }
-                        poopy.data[poopy.config.mongodatabase]['user-data'][member.id]['health'] = poopy.data[poopy.config.mongodatabase]['user-data'][member.id]['health'] - 10
-                        if (poopy.data[poopy.config.mongodatabase]['user-data'][member.id]['health'] <= 0) {
-                            poopy.data[poopy.config.mongodatabase]['user-data'][member.id]['health'] = 100
+                        poopy.data['user-data'][member.id]['health'] = poopy.data['user-data'][member.id]['health'] - 10
+                        if (poopy.data['user-data'][member.id]['health'] <= 0) {
+                            poopy.data['user-data'][member.id]['health'] = 100
                             msg.channel.send('**' + member.username + '** died!', {
                                 allowedMentions: {
                                     parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
@@ -69,13 +69,13 @@ module.exports = {
                     },
                     files: attachments
                 }).catch(() => { })
-                if (!poopy.data[poopy.config.mongodatabase]['user-data'][member.id]) {
-                    poopy.data[poopy.config.mongodatabase]['user-data'][member.id] = {}
-                    poopy.data[poopy.config.mongodatabase]['user-data'][member.id]['health'] = 100
+                if (!poopy.data['user-data'][member.id]) {
+                    poopy.data['user-data'][member.id] = {}
+                    poopy.data['user-data'][member.id]['health'] = 100
                 }
-                poopy.data[poopy.config.mongodatabase]['user-data'][member.id]['health'] = poopy.data[poopy.config.mongodatabase]['user-data'][member.id]['health'] - 10
-                if (poopy.data[poopy.config.mongodatabase]['user-data'][member.id]['health'] <= 0) {
-                    poopy.data[poopy.config.mongodatabase]['user-data'][member.id]['health'] = 100
+                poopy.data['user-data'][member.id]['health'] = poopy.data['user-data'][member.id]['health'] - 10
+                if (poopy.data['user-data'][member.id]['health'] <= 0) {
+                    poopy.data['user-data'][member.id]['health'] = 100
                     msg.channel.send({
                         content: '**' + member.user.username + '** died!',
                         allowedMentions: {

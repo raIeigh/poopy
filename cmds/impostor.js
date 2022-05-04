@@ -13,17 +13,17 @@ module.exports = {
                 async function getUser(id) {
                     await msg.guild.members.fetch(id)
                         .then(function (user) {
-                            if (!poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]) {
-                                poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id] = {}
+                            if (!poopy.data['guild-data'][msg.guild.id]) {
+                                poopy.data['guild-data'][msg.guild.id] = {}
                             }
-                            if (!poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['members'][user.id]) {
-                                poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['members'][user.id] = {}
+                            if (!poopy.data['guild-data'][msg.guild.id]['members'][user.id]) {
+                                poopy.data['guild-data'][msg.guild.id]['members'][user.id] = {}
                             }
-                            if (!poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['members'][user.id]['impostor']) {
-                                poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['members'][user.id]['impostor'] = false
+                            if (!poopy.data['guild-data'][msg.guild.id]['members'][user.id]['impostor']) {
+                                poopy.data['guild-data'][msg.guild.id]['members'][user.id]['impostor'] = false
                             }
-                            if (poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['members'][user.id]['impostor'] === false) {
-                                poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['members'][user.id]['impostor'] = true
+                            if (poopy.data['guild-data'][msg.guild.id]['members'][user.id]['impostor'] === false) {
+                                poopy.data['guild-data'][msg.guild.id]['members'][user.id]['impostor'] = true
                                 msg.channel.send({
                                     content: user.user.username + ' is now the Impostor.',
                                     allowedMentions: {
@@ -31,7 +31,7 @@ module.exports = {
                                     }
                                 }).catch(() => { })
                             } else {
-                                poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['members'][user.id]['impostor'] = false
+                                poopy.data['guild-data'][msg.guild.id]['members'][user.id]['impostor'] = false
                                 msg.channel.send({
                                     content: user.user.username + ' is not the Impostor.',
                                     allowedMentions: {
@@ -52,17 +52,17 @@ module.exports = {
 
                 getUser(user)
             } else {
-                if (!poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]) {
-                    poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id] = {}
+                if (!poopy.data['guild-data'][msg.guild.id]) {
+                    poopy.data['guild-data'][msg.guild.id] = {}
                 }
-                if (!poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['members'][msg.mentions.members.first().id]) {
-                    poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['members'][msg.mentions.members.first().id] = {}
+                if (!poopy.data['guild-data'][msg.guild.id]['members'][msg.mentions.members.first().id]) {
+                    poopy.data['guild-data'][msg.guild.id]['members'][msg.mentions.members.first().id] = {}
                 }
-                if (!poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['members'][msg.mentions.members.first().id]['impostor']) {
-                    poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['members'][msg.mentions.members.first().id]['impostor'] = false
+                if (!poopy.data['guild-data'][msg.guild.id]['members'][msg.mentions.members.first().id]['impostor']) {
+                    poopy.data['guild-data'][msg.guild.id]['members'][msg.mentions.members.first().id]['impostor'] = false
                 }
-                if (poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['members'][msg.mentions.members.first().id]['impostor'] === false) {
-                    poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['members'][msg.mentions.members.first().id]['impostor'] = true
+                if (poopy.data['guild-data'][msg.guild.id]['members'][msg.mentions.members.first().id]['impostor'] === false) {
+                    poopy.data['guild-data'][msg.guild.id]['members'][msg.mentions.members.first().id]['impostor'] = true
                     msg.channel.send({
                         content: msg.mentions.members.first().user.username + ' is now the Impostor.',
                         allowedMentions: {
@@ -70,7 +70,7 @@ module.exports = {
                         }
                     }).catch(() => { })
                 } else {
-                    poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['members'][msg.mentions.members.first().id]['impostor'] = false
+                    poopy.data['guild-data'][msg.guild.id]['members'][msg.mentions.members.first().id]['impostor'] = false
                     msg.channel.send({
                         content: msg.mentions.members.first().user.username + ' is not the Impostor.',
                         allowedMentions: {

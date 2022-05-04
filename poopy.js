@@ -137,6 +137,7 @@ class Poopy {
         poopy.functions.spectrogram = require('./modules/spectrogram')
         poopy.functions.getAllData = require('./modules/dataGathering').getAllData
         poopy.functions.updateAllData = require('./modules/dataGathering').updateAllData
+        poopy.functions.globalData = require('./modules/globalData')
         poopy.functions.brainfuck = require('./modules/brainfuck')
         poopy.functions.tobrainfuck = require('./modules/tobrainfuck')
         poopy.functions.gibberish = require('./modules/gibberish')
@@ -697,87 +698,87 @@ class Poopy {
             var webhook = await msg.fetchWebhook().catch(() => { })
 
             if (!webhook) {
-                if (!poopy.data[poopy.config.mongodatabase]['user-data'][msg.author.id]) {
-                    poopy.data[poopy.config.mongodatabase]['user-data'][msg.author.id] = {}
+                if (!poopy.data['user-data'][msg.author.id]) {
+                    poopy.data['user-data'][msg.author.id] = {}
                 }
 
-                poopy.data[poopy.config.mongodatabase]['user-data'][msg.author.id]['username'] = msg.author.username
+                poopy.data['user-data'][msg.author.id]['username'] = msg.author.username
 
-                if (!poopy.data[poopy.config.mongodatabase]['user-data'][msg.author.id]['health']) {
-                    poopy.data[poopy.config.mongodatabase]['user-data'][msg.author.id]['health'] = 100
+                if (!poopy.data['user-data'][msg.author.id]['health']) {
+                    poopy.data['user-data'][msg.author.id]['health'] = 100
                 }
             }
 
-            if (!poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]) {
-                poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id] = {}
+            if (!poopy.data['guild-data'][msg.guild.id]) {
+                poopy.data['guild-data'][msg.guild.id] = {}
             }
 
-            if (poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['read'] === undefined) {
-                poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['read'] = false
+            if (poopy.data['guild-data'][msg.guild.id]['read'] === undefined) {
+                poopy.data['guild-data'][msg.guild.id]['read'] = false
             }
 
-            if (!poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['gettingData']) {
-                poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['gettingData'] = 0
+            if (!poopy.data['guild-data'][msg.guild.id]['gettingData']) {
+                poopy.data['guild-data'][msg.guild.id]['gettingData'] = 0
             }
 
-            if (poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['chaincommands'] == undefined) {
-                poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['chaincommands'] = true
+            if (poopy.data['guild-data'][msg.guild.id]['chaincommands'] == undefined) {
+                poopy.data['guild-data'][msg.guild.id]['chaincommands'] = true
             }
 
-            if (poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['prefix'] === undefined) {
-                poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['prefix'] = poopy.config.globalPrefix
+            if (poopy.data['guild-data'][msg.guild.id]['prefix'] === undefined) {
+                poopy.data['guild-data'][msg.guild.id]['prefix'] = poopy.config.globalPrefix
             }
 
-            if (!poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels']) {
-                poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'] = {}
+            if (!poopy.data['guild-data'][msg.guild.id]['channels']) {
+                poopy.data['guild-data'][msg.guild.id]['channels'] = {}
             }
 
-            if (!poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][msg.channel.id]) {
-                poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][msg.channel.id] = {}
+            if (!poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]) {
+                poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id] = {}
             }
 
-            if (!poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl']) {
-                poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl'] = undefined
+            if (!poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl']) {
+                poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl'] = undefined
             }
 
-            if (!poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl2']) {
-                poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl2'] = undefined
+            if (!poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl2']) {
+                poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl2'] = undefined
             }
 
-            if (!poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrls']) {
-                poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrls'] = []
+            if (!poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrls']) {
+                poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrls'] = []
             }
 
-            if (poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][msg.channel.id]['read'] === undefined) {
-                poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][msg.channel.id]['read'] = false
+            if (poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['read'] === undefined) {
+                poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['read'] = false
             }
 
             if (!webhook) {
-                if (!poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['members']) {
-                    poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['members'] = {}
+                if (!poopy.data['guild-data'][msg.guild.id]['members']) {
+                    poopy.data['guild-data'][msg.guild.id]['members'] = {}
                 }
 
-                if (!poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['members'][msg.author.id]) {
-                    poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['members'][msg.author.id] = {}
+                if (!poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]) {
+                    poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id] = {}
                 }
 
-                if (!poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown']) {
-                    poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] = false
+                if (!poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown']) {
+                    poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] = false
                 }
 
-                poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['members'][msg.author.id]['username'] = msg.author.username
+                poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['username'] = msg.author.username
             }
 
-            if (!poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['disabled']) {
-                poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['disabled'] = []
+            if (!poopy.data['guild-data'][msg.guild.id]['disabled']) {
+                poopy.data['guild-data'][msg.guild.id]['disabled'] = []
             }
 
-            if (!poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['localcmds']) {
-                poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['localcmds'] = []
+            if (!poopy.data['guild-data'][msg.guild.id]['localcmds']) {
+                poopy.data['guild-data'][msg.guild.id]['localcmds'] = []
             }
 
-            if (!poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['messages']) {
-                poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['messages'] = []
+            if (!poopy.data['guild-data'][msg.guild.id]['messages']) {
+                poopy.data['guild-data'][msg.guild.id]['messages'] = []
             }
 
             if (!poopy.tempdata[msg.guild.id]) {
@@ -832,20 +833,20 @@ class Poopy {
                 poopy.tempdata[msg.author.id]['eggphrases']['phrase'] = 0
             }
 
-            var lastDataGather = Date.now() - poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['gettingData']
+            var lastDataGather = Date.now() - poopy.data['guild-data'][msg.guild.id]['gettingData']
             if (lastDataGather >= 600000) {
                 async function gather() {
                     var cantFetch = false
 
-                    for (var id in poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['members']) {
-                        var member = poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['members'][id]
+                    for (var id in poopy.data['guild-data'][msg.guild.id]['members']) {
+                        var member = poopy.data['guild-data'][msg.guild.id]['members'][id]
                         if (member.username === undefined) {
                             var user = await poopy.bot.users.fetch(id).catch(() => { })
-                            if (!cantFetch) poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['gettingData'] = Date.now()
+                            if (!cantFetch) poopy.data['guild-data'][msg.guild.id]['gettingData'] = Date.now()
                             if (user) {
-                                poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['members'][id]['username'] = user.username
+                                poopy.data['guild-data'][msg.guild.id]['members'][id]['username'] = user.username
                             } else {
-                                delete poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['members'][id]
+                                delete poopy.data['guild-data'][msg.guild.id]['members'][id]
                             }
                         }
                     }
@@ -1135,7 +1136,7 @@ class Poopy {
             }
 
             if (keyindex > -1) {
-                var keymatch = poopy.functions.matchLongestKey(string.substring(keyindex))
+                var keymatch = poopy.functions.matchLongestKey(string.substring(keyindex), keys)
 
                 return {
                     match: keymatch[0].toLowerCase(),
@@ -1778,7 +1779,7 @@ class Poopy {
             }
 
             if (unique) {
-                var cmdTemplates = poopy.data[poopy.config.mongodatabase]['bot-data']['bot']['commandTemplates']
+                var cmdTemplates = poopy.functions.globalData()['bot-data']['commandTemplates']
 
                 if (cmdTemplates.length ? cmdTemplates.find(cmd => cmd.id === id) : false) {
                     return poopy.functions.generateId(unique)
@@ -2400,7 +2401,7 @@ class Poopy {
         poopy.functions.getUrls = async function (msg, options = {}) {
             if (!msg) return []
             var string = (options.string ?? msg.content ?? '').replace(/"([\s\S]*?)"/g, '')
-            var prefixFound = string.toLowerCase().includes(poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['prefix'].toLowerCase())
+            var prefixFound = string.toLowerCase().includes(poopy.data['guild-data'][msg.guild.id]['prefix'].toLowerCase())
             var urls = []
             var regexes = [
                 {
@@ -2586,11 +2587,11 @@ class Poopy {
                 for (var i in urlsr) {
                     var url = urlsr[i]
 
-                    poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl2'] = poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl']
-                    poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl'] = url
-                    var lastUrls = [url].concat(poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrls'])
+                    poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl2'] = poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl']
+                    poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl'] = url
+                    var lastUrls = [url].concat(poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrls'])
                     lastUrls.splice(100)
-                    poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrls'] = lastUrls
+                    poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrls'] = lastUrls
                 }
             }
 
@@ -2776,7 +2777,7 @@ class Poopy {
         poopy.functions.sendFile = async function (msg, filepath, filename, extraOptions) {
             extraOptions = extraOptions || {}
 
-            var prefix = poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['prefix']
+            var prefix = poopy.data['guild-data'][msg.guild.id]['prefix']
             var args = msg.content.substring(prefix.toLowerCase().length).split(' ')
 
             extraOptions.catbox = !!args.find(arg => arg === '-catbox')
@@ -2811,11 +2812,11 @@ class Poopy {
 
                     if (extraOptions.nosend) {
                         if (isUrl) {
-                            poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl2'] = poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl']
-                            poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl'] = fileLink
-                            var lastUrls = [fileLink].concat(poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrls'])
+                            poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl2'] = poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl']
+                            poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl'] = fileLink
+                            var lastUrls = [fileLink].concat(poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrls'])
                             lastUrls.splice(100)
-                            poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrls'] = lastUrls
+                            poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrls'] = lastUrls
                         } else {
                             await poopy.functions.waitMessageCooldown()
                             await msg.channel.send(fileLink.includes('retard') ? 'ok so what happened right here is i tried to upload a gif with a size bigger than 20 mb to catbox.moe but apparently you cant do it so uhhhhhh haha no link for you' : fileLink).catch(() => { })
@@ -3181,9 +3182,10 @@ class Poopy {
         poopy.functions.save = async function () {
             poopy.functions.infoPost(`Saving data`)
             if (poopy.config.testing) {
-                poopy.modules.fs.writeFileSync(`data/${poopy.config.mongodatabase}.json`, JSON.stringify(poopy.data[poopy.config.mongodatabase]), () => { })
+                poopy.modules.fs.writeFileSync(`data/${poopy.config.mongodatabase}.json`, JSON.stringify(poopy.data))
+                poopy.modules.fs.writeFileSync(`data/globaldata.json`, JSON.stringify(poopy.functions.globalData()))
             } else {
-                await poopy.functions.updateAllData(poopy.config.mongodatabase, poopy.data[poopy.config.mongodatabase]).catch(() => { })
+                await poopy.functions.updateAllData(poopy.config.mongodatabase, { data: poopy.data, globaldata: poopy.functions.globalData() }).catch(() => { })
             }
             poopy.functions.infoPost(`Data saved`)
         }
@@ -3435,7 +3437,7 @@ class Poopy {
                 return
             }
 
-            poopy.data[poopy.config.mongodatabase]['bot-data']['bot']['messages']++
+            poopy.data['bot-data']['bot']['messages']++
 
             if (msg.channel.type === 'DM' || msg.channel.type === 'GROUP_DM') {
                 if (msg.author.bot || msg.author.id == poopy.bot.user.id) return
@@ -3450,7 +3452,7 @@ class Poopy {
 
             if (!msg.guild || !msg.channel || poopy.tempdata[msg.guild.id][msg.channel.id]['shut']) return
 
-            var prefix = poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['prefix']
+            var prefix = poopy.data['guild-data'][msg.guild.id]['prefix']
             var ignored = ['eval', 'execute', 'localcommands', 'localcmds', 'servercommands', 'servercmds', 'commandtemplates', 'cmdtemplates', 'messages']
             var webhook = await msg.fetchWebhook().catch(() => { })
 
@@ -3469,13 +3471,13 @@ class Poopy {
                 msg.content = change
             }
 
-            if (msg.content && ((!(msg.author.bot) && msg.author.id != poopy.bot.user.id) || poopy.config.allowbotusage) && poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][msg.channel.id]['read']) {
+            if (msg.content && ((!(msg.author.bot) && msg.author.id != poopy.bot.user.id) || poopy.config.allowbotusage) && poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['read']) {
                 var cleanMessage = poopy.modules.Discord.Util.cleanContent(msg.content, msg).replace(/\@/g, '@‌')
 
-                if (!(cleanMessage.match(/nigg|https?\:\/\/.*(rule34|e621|pornhub|hentaihaven|xxx|iplogger)|discord\.(gift|gg)\/[\d\w]+\/?$/ig) || cleanMessage.includes(prefix.toLowerCase())) && !(poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['messages'].find(message => message.toLowerCase() === cleanMessage.toLowerCase()))) {
-                    var messages = [cleanMessage].concat(poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['messages'])
+                if (!(cleanMessage.match(/nigg|https?\:\/\/.*(rule34|e621|pornhub|hentaihaven|xxx|iplogger)|discord\.(gift|gg)\/[\d\w]+\/?$/ig) || cleanMessage.includes(prefix.toLowerCase())) && !(poopy.data['guild-data'][msg.guild.id]['messages'].find(message => message.toLowerCase() === cleanMessage.toLowerCase()))) {
+                    var messages = [cleanMessage].concat(poopy.data['guild-data'][msg.guild.id]['messages'])
                     messages.splice(1000)
-                    poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['messages'] = messages
+                    poopy.data['guild-data'][msg.guild.id]['messages'] = messages
                 }
             }
 
@@ -3498,18 +3500,18 @@ class Poopy {
             var parent = msg.channel.parent
 
             if (parent) {
-                if (poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['members'][msg.author.id]['custom']) {
-                    if (typeof (poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['members'][msg.author.id]['custom']) === 'object' && (msg.content || msg.attachments.size) && !(parent.isText())) {
+                if (poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['custom']) {
+                    if (typeof (poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['custom']) === 'object' && (msg.content || msg.attachments.size) && !(parent.isText())) {
                         var attachments = []
                         msg.attachments.forEach(attachment => {
                             attachments.push(new poopy.modules.Discord.MessageAttachment(attachment.url))
                         })
-                        var name = poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['members'][msg.author.id]['custom']['name']
+                        var name = poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['custom']['name']
                         var randomindex = Math.floor(Math.random() * name.length)
                         name = `${name.substring(0, randomindex)}​${name.substring(randomindex, name.length)}`
                         var sendObject = {
                             username: name.substring(0, 32),
-                            avatarURL: poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['members'][msg.author.id]['custom']['avatar'],
+                            avatarURL: poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['custom']['avatar'],
                             files: attachments,
                             allowedMentions: {
                                 parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
@@ -3530,7 +3532,7 @@ class Poopy {
                                 var createdWebhook = await msg.channel.createWebhook('Poopyhook', { avatar: 'https://cdn.discordapp.com/attachments/760223418968047629/835923489834664056/poopy2.png' }).catch(() => { })
                                 if (!createdWebhook) {
                                     await poopy.functions.waitMessageCooldown()
-                                    await msg.channel.send(`I need admin to turn you into ${poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['members'][msg.author.id]['custom']['name']}.`).catch(() => { })
+                                    await msg.channel.send(`I need admin to turn you into ${poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['custom']['name']}.`).catch(() => { })
                                 } else {
                                     await poopy.functions.waitMessageCooldown()
                                     await createdWebhook.send(sendObject).then(() => {
@@ -3542,7 +3544,7 @@ class Poopy {
                             var createdWebhook = await msg.channel.createWebhook('Poopyhook', { avatar: 'https://cdn.discordapp.com/attachments/760223418968047629/835923489834664056/poopy2.png' }).catch(() => { })
                             if (!createdWebhook) {
                                 await poopy.functions.waitMessageCooldown()
-                                await msg.channel.send(`I need admin to turn you into ${poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['members'][msg.author.id]['custom']['name']}.`).catch(() => { })
+                                await msg.channel.send(`I need admin to turn you into ${poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['custom']['name']}.`).catch(() => { })
                             } else {
                                 await poopy.functions.waitMessageCooldown()
                                 await createdWebhook.send(sendObject).then(() => {
@@ -3551,8 +3553,8 @@ class Poopy {
                             }
                         }
                     }
-                } else if (poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['members'][msg.author.id]['impostor']) {
-                    if (poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['members'][msg.author.id]['impostor'] === true && (msg.content || msg.attachments.size) && !(parent.isText())) {
+                } else if (poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['impostor']) {
+                    if (poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['impostor'] === true && (msg.content || msg.attachments.size) && !(parent.isText())) {
                         var attachments = []
                         msg.attachments.forEach(attachment => {
                             attachments.push(new poopy.modules.Discord.MessageAttachment(attachment.url))
@@ -3613,18 +3615,18 @@ class Poopy {
                     msg.channel.send('shit').catch(() => { })
                     return
                 }
-                var cmds = poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['chaincommands'] == true ? msg.content.split(/ ?-\|- ?/) : [msg.content]
-                if (poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown']) {
-                    if ((poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] - Date.now()) > 0) {
+                var cmds = poopy.data['guild-data'][msg.guild.id]['chaincommands'] == true ? msg.content.split(/ ?-\|- ?/) : [msg.content]
+                if (poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown']) {
+                    if ((poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] - Date.now()) > 0) {
                         await poopy.functions.waitMessageCooldown()
-                        msg.channel.send(`Calm down! Wait more ${(poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] - Date.now()) / 1000} seconds.`).catch(() => { })
+                        msg.channel.send(`Calm down! Wait more ${(poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] - Date.now()) / 1000} seconds.`).catch(() => { })
                         return
                     } else {
-                        poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] = false
+                        poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] = false
                     }
                 }
 
-                if (cmds.length > 1 && poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['chaincommands'] == false) {
+                if (cmds.length > 1 && poopy.data['guild-data'][msg.guild.id]['chaincommands'] == false) {
                     await poopy.functions.waitMessageCooldown()
                     msg.channel.send('You can\'t chain commands in this server.').catch(() => { })
                     return
@@ -3647,7 +3649,7 @@ class Poopy {
                         if (cmd.toLowerCase().startsWith(prefix.toLowerCase())) {
                             var args = cmd.substring(prefix.toLowerCase().length).split(' ')
                             var findCmd = poopy.commands.find(fcmd => fcmd.name.find(fcmdname => fcmdname === args[0].toLowerCase()))
-                            var findLocalCmd = poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['localcmds'].find(cmd => cmd.name === args[0].toLowerCase())
+                            var findLocalCmd = poopy.data['guild-data'][msg.guild.id]['localcmds'].find(cmd => cmd.name === args[0].toLowerCase())
                             var similarCmds = []
 
                             if (args[0].length) {
@@ -3662,8 +3664,8 @@ class Poopy {
                                         })
                                     }
                                 }
-                                for (var i in poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['localcmds']) {
-                                    var fcmd = poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['localcmds'][i]
+                                for (var i in poopy.data['guild-data'][msg.guild.id]['localcmds']) {
+                                    var fcmd = poopy.data['guild-data'][msg.guild.id]['localcmds'][i]
                                     similarCmds.push({
                                         name: fcmd.name,
                                         type: 'local',
@@ -3676,15 +3678,15 @@ class Poopy {
 
                             if (findCmd) {
                                 usedCommand = true
-                                if (poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['disabled'].find(cmd => cmd.find(n => n === args[0].toLowerCase()))) {
+                                if (poopy.data['guild-data'][msg.guild.id]['disabled'].find(cmd => cmd.find(n => n === args[0].toLowerCase()))) {
                                     await poopy.functions.waitMessageCooldown()
                                     msg.channel.send('This command is disabled in this server.').catch(() => { })
                                 } else {
                                     if (findCmd.cooldown) {
-                                        poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] = (poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] || Date.now()) + findCmd.cooldown / ((msg.member.permissions.has('MANAGE_GUILD') || msg.member.roles.cache.find(role => role.name.match(/mod|dev|admin|owner|creator|founder|staff/ig)) || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID) && (findCmd.type === 'Text' || findCmd.type === 'Main') ? 5 : 1)
+                                        poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] = (poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] || Date.now()) + findCmd.cooldown / ((msg.member.permissions.has('MANAGE_GUILD') || msg.member.roles.cache.find(role => role.name.match(/mod|dev|admin|owner|creator|founder|staff/ig)) || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID) && (findCmd.type === 'Text' || findCmd.type === 'Main') ? 5 : 1)
                                     }
                                     poopy.vars.cps++
-                                    poopy.data[poopy.config.mongodatabase]['bot-data']['bot']['commands']++
+                                    poopy.data['bot-data']['bot']['commands']++
                                     var t = setTimeout(() => {
                                         poopy.vars.cps--
                                         clearTimeout(t)
@@ -3702,7 +3704,7 @@ class Poopy {
                                             msg.channel.sendTyping().catch(() => { })
                                         } catch (_) { }
                                     })
-                                    poopy.data[poopy.config.mongodatabase]['bot-data']['bot']['filecount'] = poopy.vars.filecount
+                                    poopy.data['bot-data']['bot']['filecount'] = poopy.vars.filecount
                                     if (p) {
                                         pathObject = p
                                     }
@@ -3710,7 +3712,7 @@ class Poopy {
                             } else if (findLocalCmd) {
                                 usedCommand = true
                                 poopy.vars.cps++
-                                poopy.data[poopy.config.mongodatabase]['bot-data']['bot']['commands']++
+                                poopy.data['bot-data']['bot']['commands']++
                                 var t = setTimeout(() => {
                                     poopy.vars.cps--
                                     clearTimeout(t)
@@ -3726,19 +3728,18 @@ class Poopy {
                                     }
                                 }).catch(() => { })
 
-                                poopy.data[poopy.config.mongodatabase]['bot-data']['bot']['filecount'] = poopy.vars.filecount
+                                poopy.data['bot-data']['bot']['filecount'] = poopy.vars.filecount
                             } else if (similarCmds ? similarCmds.find(fcmd => fcmd.similarity >= 0.5) : undefined) {
                                 usedCommand = true
-                                await poopy.functions.waitMessageCooldown()
                                 var useCmd = await poopy.functions.yesno(msg.channel, `Did you mean to use \`${similarCmds[0].name}\`?`, msg.author.id).catch(() => { })
                                 if (useCmd) {
                                     if (similarCmds[0].type === 'cmd') {
                                         var findCmd = poopy.commands.find(fcmd => fcmd.name.find(fcmdname => fcmdname === similarCmds[0].name))
                                         if (findCmd.cooldown) {
-                                            poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] = (poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] || Date.now()) + findCmd.cooldown / ((msg.member.permissions.has('MANAGE_GUILD') || msg.member.roles.cache.find(role => role.name.match(/mod|dev|admin|owner|creator|founder|staff/ig)) || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID) && (findCmd.type === 'Text' || findCmd.type === 'Main') ? 5 : 1)
+                                            poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] = (poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] || Date.now()) + findCmd.cooldown / ((msg.member.permissions.has('MANAGE_GUILD') || msg.member.roles.cache.find(role => role.name.match(/mod|dev|admin|owner|creator|founder|staff/ig)) || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID) && (findCmd.type === 'Text' || findCmd.type === 'Main') ? 5 : 1)
                                         }
                                         poopy.vars.cps++
-                                        poopy.data[poopy.config.mongodatabase]['bot-data']['bot']['commands']++
+                                        poopy.data['bot-data']['bot']['commands']++
                                         var t = setTimeout(() => {
                                             poopy.vars.cps--
                                             clearTimeout(t)
@@ -3756,14 +3757,14 @@ class Poopy {
                                                 msg.channel.sendTyping().catch(() => { })
                                             } catch (_) { }
                                         })
-                                        poopy.data[poopy.config.mongodatabase]['bot-data']['bot']['filecount'] = poopy.vars.filecount
+                                        poopy.data['bot-data']['bot']['filecount'] = poopy.vars.filecount
                                         if (p) {
                                             pathObject = p
                                         }
                                     } else if (similarCmds[0].type === 'local') {
-                                        var findLocalCmd = poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['localcmds'].find(cmd => cmd.name === similarCmds[0].name)
+                                        var findLocalCmd = poopy.data['guild-data'][msg.guild.id]['localcmds'].find(cmd => cmd.name === similarCmds[0].name)
                                         poopy.vars.cps++
-                                        poopy.data[poopy.config.mongodatabase]['bot-data']['bot']['commands']++
+                                        poopy.data['bot-data']['bot']['commands']++
                                         var t = setTimeout(() => {
                                             poopy.vars.cps--
                                             clearTimeout(t)
@@ -3779,7 +3780,7 @@ class Poopy {
                                             }
                                         }).catch(() => { })
 
-                                        poopy.data[poopy.config.mongodatabase]['bot-data']['bot']['filecount'] = poopy.vars.filecount
+                                        poopy.data['bot-data']['bot']['filecount'] = poopy.vars.filecount
                                     }
                                 }
                             }
@@ -3899,7 +3900,7 @@ class Poopy {
                     var findCmd = poopy.commands.find(fcmd => fcmd.name.find(fcmdname => fcmdname === 'setprefix'))
                     usedCommand = true
                     if (findCmd.cooldown) {
-                        poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] = (poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] || Date.now()) + findCmd.cooldown
+                        poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] = (poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] || Date.now()) + findCmd.cooldown
                     }
                     await findCmd.execute.call(this, msg, ['setprefix', poopy.config.globalPrefix]).catch(async err => {
                         await poopy.functions.waitMessageCooldown()
@@ -3991,27 +3992,27 @@ class Poopy {
                     `stop ${kickType} me${kickEntry ? ` ${kickEntry.executor.username.toLowerCase()}` : ''}`
                 ]
 
-                if (!poopy.data[poopy.config.mongodatabase]['guild-data']) {
-                    poopy.data[poopy.config.mongodatabase]['guild-data'] = {}
+                if (!poopy.data['guild-data']) {
+                    poopy.data['guild-data'] = {}
                 }
 
-                if (!poopy.data[poopy.config.mongodatabase]['guild-data'][guild.id]) {
-                    poopy.data[poopy.config.mongodatabase]['guild-data'][guild.id] = {}
+                if (!poopy.data['guild-data'][guild.id]) {
+                    poopy.data['guild-data'][guild.id] = {}
                 }
 
-                if (!poopy.data[poopy.config.mongodatabase]['guild-data'][guild.id]['joins']) {
-                    poopy.data[poopy.config.mongodatabase]['guild-data'][guild.id]['joins'] = 0
+                if (!poopy.data['guild-data'][guild.id]['joins']) {
+                    poopy.data['guild-data'][guild.id]['joins'] = 0
                 }
 
                 await poopy.functions.waitMessageCooldown()
                 channel.send({
-                    content: joinPhrases[poopy.data[poopy.config.mongodatabase]['guild-data'][guild.id]['joins'] % joinPhrases.length],
+                    content: joinPhrases[poopy.data['guild-data'][guild.id]['joins'] % joinPhrases.length],
                     allowedMentions: {
                         parse: ['users']
                     }
                 }).catch(() => { })
 
-                poopy.data[poopy.config.mongodatabase]['guild-data'][guild.id]['joins']++
+                poopy.data['guild-data'][guild.id]['joins']++
             }
         }
 
@@ -4030,20 +4031,40 @@ class Poopy {
         }
 
         poopy.bot.on('ready', async () => {
-            async function getAllDataLoop(old) {
-                var data = await poopy.functions.getAllData(poopy.config.mongodatabase, old).catch(() => { })
-                if (!data) {
-                    console.log('no data, retrying')
-                    await poopy.functions.infoPost(`Error fetching data, retrying`)
-                    return getAllDataLoop(old)
+            async function getAllDataLoop() {
+                if (poopy.config.testing) {
+                    var data = {}
+
+                    if (poopy.modules.fs.existsSync(`data/${poopy.config.mongodatabase}.json`)) {
+                        data.data = JSON.parse(poopy.modules.fs.readFileSync(`data/${poopy.config.mongodatabase}.json`).toString())
+                    } else {
+                        data.data = {
+                            'bot-data': {},
+                            'user-data': {},
+                            'guild-data': {}
+                        }
+                    }
+
+                    if (poopy.modules.fs.existsSync(`data/globaldata.json`)) {
+                        data.globaldata = JSON.parse(poopy.modules.fs.readFileSync(`data/globaldata.json`).toString())
+                    } else {
+                        data.globaldata = {
+                            'bot-data': {}
+                        }
+                    }
+
+                    return data
+                } else {
+                    var data = await poopy.functions.getAllData(poopy.config.mongodatabase).catch(() => { })
+
+                    if (!data || Object.keys(data).length <= 0) {
+                        console.log('no data, retrying')
+                        await poopy.functions.infoPost(`Error fetching data, retrying`)
+                        return getAllDataLoop()
+                    }
+
+                    return data
                 }
-                var length = Object.keys(data).length
-                if (length <= 0) {
-                    console.log('no data, retrying')
-                    await poopy.functions.infoPost(`Error fetching data, retrying`)
-                    return getAllDataLoop(old)
-                }
-                return data
             }
 
             console.log(`${poopy.bot.user.username} is online, RUN`)
@@ -4063,70 +4084,70 @@ class Poopy {
             })
 
             await poopy.functions.infoPost(`Gathering data in \`${poopy.config.mongodatabase}\``)
-            var gdata = poopy.config.testing ? { 'bot-data': {}, 'user-data': {}, 'guild-data': {} } : await getAllDataLoop(false)
-            poopy.data[poopy.config.mongodatabase] = {}
+            var gdata = await getAllDataLoop()
 
-            for (var dataType in gdata) {
-                poopy.data[poopy.config.mongodatabase][dataType] = gdata[dataType]
-            }
+            poopy.data = gdata.data
+            for (var type in gdata.globaldata) poopy.functions.globalData()[type] = gdata.globaldata[type]
+
             console.log('all data gathered!!!')
             await poopy.functions.infoPost(`All data gathered`)
 
-            if (!poopy.data[poopy.config.mongodatabase]['bot-data']) {
-                poopy.data[poopy.config.mongodatabase]['bot-data'] = {}
+            if (!poopy.data['bot-data']) {
+                poopy.data['bot-data'] = {}
             }
 
-            if (!poopy.data[poopy.config.mongodatabase]['guild-data']) {
-                poopy.data[poopy.config.mongodatabase]['guild-data'] = {}
+            if (!poopy.data['guild-data']) {
+                poopy.data['guild-data'] = {}
             }
 
-            if (!poopy.data[poopy.config.mongodatabase]['user-data']) {
-                poopy.data[poopy.config.mongodatabase]['user-data'] = {}
+            if (!poopy.data['user-data']) {
+                poopy.data['user-data'] = {}
             }
 
-            if (!poopy.data[poopy.config.mongodatabase]['bot-data']['bot']) {
-                poopy.data[poopy.config.mongodatabase]['bot-data']['bot'] = {}
+            if (!poopy.data['bot-data']['bot']) {
+                poopy.data['bot-data']['bot'] = {}
             }
 
-            if (!poopy.data[poopy.config.mongodatabase]['bot-data']['bot']['commandTemplates']) {
-                poopy.data[poopy.config.mongodatabase]['bot-data']['bot']['commandTemplates'] = []
+            if (!poopy.data['bot-data']['bot']['messages']) {
+                poopy.data['bot-data']['bot']['messages'] = 0
             }
 
-            if (!poopy.data[poopy.config.mongodatabase]['bot-data']['bot']['commandId']) {
-                poopy.data[poopy.config.mongodatabase]['bot-data']['bot']['commandId'] = 0
-            }
-            if (!poopy.data[poopy.config.mongodatabase]['bot-data']['bot']['messages']) {
-                poopy.data[poopy.config.mongodatabase]['bot-data']['bot']['messages'] = 0
+            if (!poopy.data['bot-data']['bot']['commands']) {
+                poopy.data['bot-data']['bot']['commands'] = 0
             }
 
-            if (!poopy.data[poopy.config.mongodatabase]['bot-data']['bot']['commands']) {
-                poopy.data[poopy.config.mongodatabase]['bot-data']['bot']['commands'] = 0
+            if (!poopy.data['bot-data']['bot']['filecount']) {
+                poopy.data['bot-data']['bot']['filecount'] = 0
             }
 
-            if (!poopy.data[poopy.config.mongodatabase]['bot-data']['bot']['filecount']) {
-                poopy.data[poopy.config.mongodatabase]['bot-data']['bot']['filecount'] = 0
-            }
-
-            if (poopy.data[poopy.config.mongodatabase]['bot-data']['bot']['reboots'] === undefined) {
-                poopy.data[poopy.config.mongodatabase]['bot-data']['bot']['reboots'] = 0
+            if (poopy.data['bot-data']['bot']['reboots'] === undefined) {
+                poopy.data['bot-data']['bot']['reboots'] = 0
             } else {
-                poopy.data[poopy.config.mongodatabase]['bot-data']['bot']['reboots']++
+                poopy.data['bot-data']['bot']['reboots']++
             }
 
-            if (!poopy.data[poopy.config.mongodatabase]['bot-data']['bot']['psfiles']) {
-                poopy.data[poopy.config.mongodatabase]['bot-data']['bot']['psfiles'] = await poopy.functions.getPsFiles().catch(() => { }) || ['i broke the json']
+            if (!poopy.functions.globalData()['bot-data']) {
+                poopy.functions.globalData()['bot-data'] = {}
             }
 
-            if (!poopy.data[poopy.config.mongodatabase]['bot-data']['bot']['pspasta']) {
-                poopy.data[poopy.config.mongodatabase]['bot-data']['bot']['pspasta'] = await poopy.functions.getPsPasta().catch(() => { }) || ['i broke the json']
+            if (!poopy.functions.globalData()['bot-data']['commandTemplates']) {
+                poopy.functions.globalData()['bot-data']['commandTemplates'] = poopy.data['bot-data']['bot']['commandTemplates'] || []
             }
 
-            if (!poopy.data[poopy.config.mongodatabase]['bot-data']['bot']['funnygif']) {
-                poopy.data[poopy.config.mongodatabase]['bot-data']['bot']['funnygif'] = await poopy.functions.getFunny().catch(() => { }) || ['i broke the json']
+            if (!poopy.functions.globalData()['bot-data']['psfiles']) {
+                poopy.functions.globalData()['bot-data']['psfiles'] = poopy.data['bot-data']['bot']['psfiles'] || await poopy.functions.getPsFiles().catch(() => { }) || ['i broke the json']
             }
 
-            if (!poopy.data[poopy.config.mongodatabase]['bot-data']['bot']['poop']) {
-                poopy.data[poopy.config.mongodatabase]['bot-data']['bot']['poop'] = [
+            if (!poopy.functions.globalData()['bot-data']['pspasta']) {
+                poopy.functions.globalData()['bot-data']['pspasta'] = poopy.data['bot-data']['bot']['pspasta'] || await poopy.functions.getPsPasta().catch(() => { }) || ['i broke the json']
+            }
+
+            if (!poopy.functions.globalData()['bot-data']['funnygif']) {
+                poopy.functions.globalData()['bot-data']['funnygif'] = poopy.data['bot-data']['bot']['funnygif'] || await poopy.functions.getFunny().catch(() => { }) || ['i broke the json']
+            }
+
+            if (!poopy.functions.globalData()['bot-data']['poop']) {
+                poopy.functions.globalData()['bot-data']['poop'] = poopy.data['bot-data']['bot']['poop'] || [
                     "I farted loudly.",
                     "I pooped again.",
                     "Poopy",
@@ -4241,8 +4262,8 @@ class Poopy {
                 ]
             }
 
-            if (!poopy.data[poopy.config.mongodatabase]['bot-data']['bot']['dmphrases']) {
-                poopy.data[poopy.config.mongodatabase]['bot-data']['bot']['dmphrases'] = [
+            if (!poopy.functions.globalData()['bot-data']['dmphrases']) {
+                poopy.functions.globalData()['bot-data']['dmphrases'] = poopy.data['bot-data']['bot']['dmphrases'] || [
                     "Yo.",
                     "ADMIN?",
                     "I don't care how long I have to keep this up, I'll make a post daily, or maybe even more frequently until one of two things happen. Deinbag's cheated level is removed from the leaderboard, or Calm gets its One Winged Angel theme back. I will not put up with two major things I cared about in the game be influenced by the developers when they had no good reason. And until it gets fixed, you'll be seeing this message over and over, no matter the platform.",
@@ -4338,18 +4359,21 @@ class Poopy {
                 ]
             }
 
-            poopy.arrays.psFiles = poopy.data[poopy.config.mongodatabase]['bot-data']['bot']['psfiles']
-            poopy.arrays.psPasta = poopy.data[poopy.config.mongodatabase]['bot-data']['bot']['pspasta']
-            poopy.arrays.funnygifs = poopy.data[poopy.config.mongodatabase]['bot-data']['bot']['funnygif']
-            poopy.arrays.poopPhrases = poopy.data[poopy.config.mongodatabase]['bot-data']['bot']['poop']
-            poopy.arrays.dmPhrases = poopy.data[poopy.config.mongodatabase]['bot-data']['bot']['dmphrases']
+            poopy.arrays.psFiles = poopy.functions.globalData()['bot-data']['psfiles']
+            poopy.arrays.psPasta = poopy.functions.globalData()['bot-data']['pspasta']
+            poopy.arrays.funnygifs = poopy.functions.globalData()['bot-data']['funnygif']
+            poopy.arrays.poopPhrases = poopy.functions.globalData()['bot-data']['poop']
+            poopy.arrays.dmPhrases = poopy.functions.globalData()['bot-data']['dmphrases']
 
-            poopy.vars.filecount = poopy.data[poopy.config.mongodatabase]['bot-data']['bot']['filecount'] || 0
+            poopy.vars.filecount = poopy.data['bot-data']['bot']['filecount'] || 0
 
-            if (!poopy.modules.fs.existsSync('data')) {
-                poopy.modules.fs.mkdirSync('data')
+            if (poopy.config.testing) {
+                if (!poopy.modules.fs.existsSync('data')) {
+                    poopy.modules.fs.mkdirSync('data')
+                }
+                poopy.modules.fs.writeFileSync(`data/${poopy.config.mongodatabase}.json`, JSON.stringify(poopy.data))
+                poopy.modules.fs.writeFileSync(`data/globaldata.json`, JSON.stringify(poopy.functions.globalData()))
             }
-            poopy.modules.fs.writeFileSync(`data/${poopy.config.mongodatabase}.json`, JSON.stringify(poopy.data[poopy.config.mongodatabase]), () => { })
 
             await poopy.functions.infoPost(`Finishing extra steps...`)
 
@@ -4368,13 +4392,13 @@ class Poopy {
                 poopy.functions.save()
             }, 120000)
             console.log('all done, he\'s actually online now')
-            await poopy.functions.infoPost(`Reboot ${poopy.data[poopy.config.mongodatabase]['bot-data']['bot']['reboots']} succeeded, he's up now`)
+            await poopy.functions.infoPost(`Reboot ${poopy.data['bot-data']['bot']['reboots']} succeeded, he's up now`)
             poopy.functions.changeStatus()
             poopy.vars.statusInterval = setInterval(function () {
                 poopy.functions.changeStatus()
             }, 300000)
 
-            var wakecount = String(poopy.data[poopy.config.mongodatabase]['bot-data']['bot']['reboots'] + 1)
+            var wakecount = String(poopy.data['bot-data']['bot']['reboots'] + 1)
             var thmatch = wakecount.match(/[^1][1-3]$|^[1-3]$/)
 
             if (thmatch) {

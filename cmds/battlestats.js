@@ -5,11 +5,11 @@ module.exports = {
 
         msg.channel.sendTyping().catch(() => { })
         if (args[1] === undefined) {
-            if (!poopy.data[poopy.config.mongodatabase]['user-data'][msg.author.id]) {
-                poopy.data[poopy.config.mongodatabase]['user-data'][msg.author.id] = {}
+            if (!poopy.data['user-data'][msg.author.id]) {
+                poopy.data['user-data'][msg.author.id] = {}
             }
-            if (!poopy.data[poopy.config.mongodatabase]['user-data'][msg.author.id]['health']) {
-                poopy.data[poopy.config.mongodatabase]['user-data'][msg.author.id]['health'] = 100
+            if (!poopy.data['user-data'][msg.author.id]['health']) {
+                poopy.data['user-data'][msg.author.id]['health'] = 100
             }
             var sendObject = {
                 embeds: [{
@@ -22,11 +22,11 @@ module.exports = {
                     fields: [
                         {
                             name: "Health",
-                            value: poopy.data[poopy.config.mongodatabase]['user-data'][msg.author.id]['health'] + ' HP'
+                            value: poopy.data['user-data'][msg.author.id]['health'] + ' HP'
                         }
                     ]
                 }],
-                content: `**${msg.author.username}'s Stats**\n\nHealth: \`${poopy.data[poopy.config.mongodatabase]['user-data'][msg.author.id]['health']} HP\``,
+                content: `**${msg.author.username}'s Stats**\n\nHealth: \`${poopy.data['user-data'][msg.author.id]['health']} HP\``,
                 allowedMentions: {
                     parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
@@ -52,11 +52,11 @@ module.exports = {
                     })
 
                 if (member) {
-                    if (!poopy.data[poopy.config.mongodatabase]['user-data'][member.id]) {
-                        poopy.data[poopy.config.mongodatabase]['user-data'][member.id] = {}
+                    if (!poopy.data['user-data'][member.id]) {
+                        poopy.data['user-data'][member.id] = {}
                     }
-                    if (!poopy.data[poopy.config.mongodatabase]['user-data'][member.id]['health']) {
-                        poopy.data[poopy.config.mongodatabase]['user-data'][member.id]['health'] = 100
+                    if (!poopy.data['user-data'][member.id]['health']) {
+                        poopy.data['user-data'][member.id]['health'] = 100
                     }
                     var sendObject = {
                         embeds: [{
@@ -69,11 +69,11 @@ module.exports = {
                             fields: [
                                 {
                                     name: "Health",
-                                    value: poopy.data[poopy.config.mongodatabase]['user-data'][member.id]['health'] + ' HP'
+                                    value: poopy.data['user-data'][member.id]['health'] + ' HP'
                                 }
                             ]
                         }],
-                        content: `**${member.username}'s Stats**\n\nHealth: \`${poopy.data[poopy.config.mongodatabase]['user-data'][member.id]['health']} HP\``,
+                        content: `**${member.username}'s Stats**\n\nHealth: \`${poopy.data['user-data'][member.id]['health']} HP\``,
                         allowedMentions: {
                             parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                         }
@@ -89,11 +89,11 @@ module.exports = {
         }
         else {
             var mention = msg.mentions.members.first();
-            if (!poopy.data[poopy.config.mongodatabase]['user-data'][mention.id]) {
-                poopy.data[poopy.config.mongodatabase]['user-data'][mention.id] = {}
+            if (!poopy.data['user-data'][mention.id]) {
+                poopy.data['user-data'][mention.id] = {}
             }
-            if (!poopy.data[poopy.config.mongodatabase]['user-data'][mention.id]['health']) {
-                poopy.data[poopy.config.mongodatabase]['user-data'][mention.id]['health'] = 100
+            if (!poopy.data['user-data'][mention.id]['health']) {
+                poopy.data['user-data'][mention.id]['health'] = 100
             }
             var sendObject = {
                 embeds: [{
@@ -106,11 +106,11 @@ module.exports = {
                     fields: [
                         {
                             name: "Health",
-                            value: poopy.data[poopy.config.mongodatabase]['user-data'][mention.id]['health'] + ' HP'
+                            value: poopy.data['user-data'][mention.id]['health'] + ' HP'
                         }
                     ]
                 }],
-                content: `**${mention.user.username}'s Stats**\n\nHealth: \`${poopy.data[poopy.config.mongodatabase]['user-data'][mention.id]['health']} HP\``,
+                content: `**${mention.user.username}'s Stats**\n\nHealth: \`${poopy.data['user-data'][mention.id]['health']} HP\``,
                 allowedMentions: {
                     parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }

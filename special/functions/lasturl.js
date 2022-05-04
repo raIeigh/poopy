@@ -5,7 +5,7 @@ module.exports = {
     let poopy = this
 
     var word = matches[1]
-    var lastUrls = poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrls']
+    var lastUrls = poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrls']
     var number = isNaN(Number(word)) ? 0 : Number(word) <= 0 ? 0 : Number(word) >= lastUrls.length - 1 ? lastUrls.length - 1 : Math.round(Number(word)) || 0
     return lastUrls[number] ?? ''
   }

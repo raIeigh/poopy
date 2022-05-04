@@ -7,7 +7,7 @@ module.exports = {
             list: async (msg) => {
                 var list = []
 
-                poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['disabled'].forEach(cmd => {
+                poopy.data['guild-data'][msg.guild.id]['disabled'].forEach(cmd => {
                     list.push(`- \`${cmd.join('/')}\``)
                 })
 
@@ -46,16 +46,16 @@ module.exports = {
                     var findCommand = poopy.commands.find(cmd => cmd.name.find(n => n === args[2].toLowerCase()))
 
                     if (findCommand) {
-                        var findDCommand = poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['disabled'].find(cmd => cmd.find(n => n === args[2].toLowerCase()))
+                        var findDCommand = poopy.data['guild-data'][msg.guild.id]['disabled'].find(cmd => cmd.find(n => n === args[2].toLowerCase()))
 
                         if (findDCommand) {
-                            var index = poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['disabled'].findIndex(cmd => {
+                            var index = poopy.data['guild-data'][msg.guild.id]['disabled'].findIndex(cmd => {
                                 return cmd.find(n => {
                                     return n === args[2].toLowerCase()
                                 })
                             })
 
-                            poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['disabled'].splice(index, 1)
+                            poopy.data['guild-data'][msg.guild.id]['disabled'].splice(index, 1)
 
                             msg.channel.send(`Enabled \`${findCommand.name.join('/')}\`.`)
                         } else {
@@ -64,7 +64,7 @@ module.exports = {
                                 return
                             }
 
-                            poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['disabled'].push(findCommand.name)
+                            poopy.data['guild-data'][msg.guild.id]['disabled'].push(findCommand.name)
 
                             msg.channel.send(`Disabled \`${findCommand.name.join('/')}\`.`)
                         }

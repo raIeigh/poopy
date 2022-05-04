@@ -20,14 +20,14 @@ module.exports = {
         var channels = poopy.bot.channels.cache.size
         var emojis = poopy.bot.emojis.cache.size
         var files = poopy.modules.fs.readdirSync(`temp/${poopy.config.mongodatabase}`).length
-        var messages = poopy.data[poopy.config.mongodatabase]['bot-data']['bot']['messages']
-        var users = Object.keys(poopy.data[poopy.config.mongodatabase]['user-data']).length
-        var pcommands = poopy.data[poopy.config.mongodatabase]['bot-data']['bot']['commands']
-        var reboots = poopy.data[poopy.config.mongodatabase]['bot-data']['bot']['reboots']
+        var messages = poopy.data['bot-data']['bot']['messages']
+        var users = Object.keys(poopy.data['user-data']).length
+        var pcommands = poopy.data['bot-data']['bot']['commands']
+        var reboots = poopy.data['bot-data']['bot']['reboots']
         var members = 0
 
-        for (var id in poopy.data[poopy.config.mongodatabase]['guild-data']) {
-            var guild = poopy.data[poopy.config.mongodatabase]['guild-data'][id]
+        for (var id in poopy.data['guild-data']) {
+            var guild = poopy.data['guild-data'][id]
             if (guild['members']) members += Object.keys(guild['members']).length
         }
 

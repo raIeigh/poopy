@@ -33,11 +33,11 @@ module.exports = {
                 if (number < 1) number = 1
 
                 await poopy.functions.navigateEmbed(msg.channel, async (page) => {
-                    poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl2'] = poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl']
-                    poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl'] = urls[page - 1]
-                    var lastUrls = [urls[page - 1]].concat(poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrls'])
+                    poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl2'] = poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl']
+                    poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl'] = urls[page - 1]
+                    var lastUrls = [urls[page - 1]].concat(poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrls'])
                     lastUrls.splice(100)
-                    poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrls'] = lastUrls
+                    poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrls'] = lastUrls
                     
                     if (poopy.config.textEmbeds) return `${urls[page - 1]}\n\nGIF ${page}/${urls.length}`
                     else return {

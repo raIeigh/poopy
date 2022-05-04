@@ -41,8 +41,8 @@ module.exports = {
                 });
 
             if (member) {
-                if (!poopy.data[poopy.config.mongodatabase]['user-data'][member.id]) {
-                    poopy.data[poopy.config.mongodatabase]['user-data'][member.id] = {}
+                if (!poopy.data['user-data'][member.id]) {
+                    poopy.data['user-data'][member.id] = {}
                 }
                 if (!poopy.tempdata[member.id]) {
                     poopy.tempdata[member.id] = {}
@@ -62,14 +62,14 @@ module.exports = {
                         })
                     return
                 }
-                if (poopy.data[poopy.config.mongodatabase]['user-data'][member.id]['dms'] === undefined && !poopy.tempdata[member.id]['dmconsent']) {
+                if (poopy.data['user-data'][member.id]['dms'] === undefined && !poopy.tempdata[member.id]['dmconsent']) {
                     poopy.tempdata[msg.author.id]['dmconsent'] = true
 
                     var pending = await msg.channel.send('Pending response.').catch(() => { })
                     var send = await poopy.functions.yesno(member, `${!anon ? msg.author.tag : 'Someone'} is trying to send you a message. Will you consent to any unrelated DMs sent with the \`dm\` command?`, member.id).catch(() => { })
 
                     if (send !== undefined) {
-                        poopy.data[poopy.config.mongodatabase]['user-data'][member.id]['dms'] = send
+                        poopy.data['user-data'][member.id]['dms'] = send
                         member.send({
                             content: `Unrelated DMs from \`dm\` will **${!send ? 'not ' : ''}be sent** to you now.`,
                             allowedMentions: {
@@ -83,7 +83,7 @@ module.exports = {
                         pending.edit('Couldn\'t send a message to this user. Make sure they share any of the servers I\'m in, or not have me blocked.').catch(() => { })
                     }
                 } else {
-                    if (poopy.data[poopy.config.mongodatabase]['user-data'][member.id]['dms'] === false) {
+                    if (poopy.data['user-data'][member.id]['dms'] === false) {
                         msg.channel.send('I don\'t have the permission to send unrelated DMs to this user.').catch(() => { })
                         msg.channel.sendTyping().catch(() => { })
                         return
@@ -105,8 +105,8 @@ module.exports = {
         }
         else {
             var member = msg.mentions.members.first()
-            if (!poopy.data[poopy.config.mongodatabase]['user-data'][member.id]) {
-                poopy.data[poopy.config.mongodatabase]['user-data'][member.id] = {}
+            if (!poopy.data['user-data'][member.id]) {
+                poopy.data['user-data'][member.id] = {}
             }
             if (!poopy.tempdata[member.id]) {
                 poopy.tempdata[member.id] = {}
@@ -126,14 +126,14 @@ module.exports = {
                     })
                 return
             }
-            if (poopy.data[poopy.config.mongodatabase]['user-data'][member.id]['dms'] === undefined && !poopy.tempdata[member.id]['dmconsent']) {
+            if (poopy.data['user-data'][member.id]['dms'] === undefined && !poopy.tempdata[member.id]['dmconsent']) {
                 poopy.tempdata[msg.author.id]['dmconsent'] = true
 
                 var pending = await msg.channel.send('Pending response.').catch(() => { })
                 var send = await poopy.functions.yesno(member, `${!anon ? msg.author.tag : 'Someone'} is trying to send you a message. Will you consent to any unrelated DMs sent with the \`dm\` command?`, member.id).catch(() => { })
 
                 if (send !== undefined) {
-                    poopy.data[poopy.config.mongodatabase]['user-data'][member.id]['dms'] = send
+                    poopy.data['user-data'][member.id]['dms'] = send
                     member.send({
                         content: `Unrelated DMs from \`dm\` will **${!send ? 'not ' : ''}be sent** to you now.`,
                         allowedMentions: {
@@ -147,7 +147,7 @@ module.exports = {
                     pending.edit('Couldn\'t send a message to this user. Make sure they share any of the servers I\'m in, or not have me blocked.').catch(() => { })
                 }
             } else {
-                if (poopy.data[poopy.config.mongodatabase]['user-data'][member.id]['dms'] === false) {
+                if (poopy.data['user-data'][member.id]['dms'] === false) {
                     msg.channel.send('I don\'t have the permission to send unrelated DMs to this user.').catch(() => { })
                     msg.channel.sendTyping().catch(() => { })
                     return

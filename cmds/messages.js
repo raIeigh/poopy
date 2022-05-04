@@ -9,7 +9,7 @@ module.exports = {
                 poopy.vars.filecount++
                 var filepath = `temp/${poopy.config.mongodatabase}/file${currentcount}`
                 poopy.modules.fs.mkdirSync(`${filepath}`)
-                poopy.modules.fs.writeFileSync(`${filepath}/messagelist.txt`, poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['messages'].join('\n\n-----------------------------------------------\n\n') || 'lmao theres nothing')
+                poopy.modules.fs.writeFileSync(`${filepath}/messagelist.txt`, poopy.data['guild-data'][msg.guild.id]['messages'].join('\n\n-----------------------------------------------\n\n') || 'lmao theres nothing')
                 await msg.channel.send({
                     files: [new poopy.modules.Discord.MessageAttachment(`${filepath}/messagelist.txt`)]
                 }).catch(() => { })
@@ -26,7 +26,7 @@ module.exports = {
                 var cleanMessage = poopy.modules.Discord.Util.cleanContent(saidMessage, msg).replace(/\@/g, '@‌')
                 var results = []
 
-                poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['messages'].forEach(message => {
+                poopy.data['guild-data'][msg.guild.id]['messages'].forEach(message => {
                     if (message.toLowerCase().includes(cleanMessage.toLowerCase())) {
                         results.push(message)
                     }
@@ -48,7 +48,7 @@ module.exports = {
             },
 
             random: async (msg) => {
-                msg.channel.send(poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['messages'][Math.floor(Math.random() * poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['messages'].length)]).catch(() => { })
+                msg.channel.send(poopy.data['guild-data'][msg.guild.id]['messages'][Math.floor(Math.random() * poopy.data['guild-data'][msg.guild.id]['messages'].length)]).catch(() => { })
             },
 
             add: async (msg, args) => {
@@ -59,7 +59,7 @@ module.exports = {
 
                 var saidMessage = args.join(' ').substring(args[0].length + 1)
                 var cleanMessage = poopy.modules.Discord.Util.cleanContent(saidMessage, msg).replace(/\@/g, '@‌')
-                var findMessage = poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['messages'].find(message => message.toLowerCase() === cleanMessage.toLowerCase())
+                var findMessage = poopy.data['guild-data'][msg.guild.id]['messages'].find(message => message.toLowerCase() === cleanMessage.toLowerCase())
 
                 if (findMessage) {
                     msg.channel.send(`That message already exists.`).catch(() => { })
@@ -71,9 +71,9 @@ module.exports = {
                         send = await poopy.functions.yesno(msg.channel, 'That message looks dangerous, are you sure about this?', msg.member.id).catch(() => { }) ?? false
                     }
 
-                    var messages = [cleanMessage].concat(poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['messages'])
+                    var messages = [cleanMessage].concat(poopy.data['guild-data'][msg.guild.id]['messages'])
                     messages.splice(1000)
-                    poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['messages'] = messages
+                    poopy.data['guild-data'][msg.guild.id]['messages'] = messages
 
                     msg.channel.send({
                         content: `✅ Added ${cleanMessage}`,
@@ -92,10 +92,10 @@ module.exports = {
 
                 var saidMessage = args.join(' ').substring(args[0].length + 1)
                 var cleanMessage = poopy.modules.Discord.Util.cleanContent(saidMessage, msg).replace(/\@/g, '@‌')
-                var findMessage = poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['messages'].findIndex(message => message.toLowerCase() === cleanMessage.toLowerCase())
+                var findMessage = poopy.data['guild-data'][msg.guild.id]['messages'].findIndex(message => message.toLowerCase() === cleanMessage.toLowerCase())
 
                 if (findMessage > -1) {
-                    poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['messages'].splice(findMessage, 1)
+                    poopy.data['guild-data'][msg.guild.id]['messages'].splice(findMessage, 1)
 
                     msg.channel.send(`✅ Removed.`).catch(() => { })
                 } else {
@@ -108,7 +108,7 @@ module.exports = {
                     var confirm = await poopy.functions.yesno(msg.channel, 'are you sure about this', msg.member).catch(() => { })
 
                     if (confirm) {
-                        poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['messages'] = []
+                        poopy.data['guild-data'][msg.guild.id]['messages'] = []
 
                         msg.channel.send(`✅ All the messages from the database have been cleared.`).catch(() => { })
                     }
@@ -119,9 +119,9 @@ module.exports = {
 
             read: async (msg) => {
                 if (msg.member.permissions.has('MANAGE_GUILD') || msg.member.roles.cache.find(role => role.name.match(/mod|dev|admin|owner|creator|founder|staff/ig)) || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || poopy.config.ownerids.find(id => id == msg.author.id)) {
-                    poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][msg.channel.id]['read'] = !(poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][msg.channel.id]['read'])
+                    poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['read'] = !(poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['read'])
 
-                    var read = poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][msg.channel.id]['read']
+                    var read = poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['read']
                     msg.channel.send(`I **can${!read ? '\'t' : ''} read** messages from the channel now.`).catch(() => { })
                 } else {
                     msg.channel.send('You need to be an administrator to execute that!').catch(() => { })
@@ -131,20 +131,20 @@ module.exports = {
 
             readall: async (msg) => {
                 if (msg.member.permissions.has('MANAGE_GUILD') || msg.member.roles.cache.find(role => role.name.match(/mod|dev|admin|owner|creator|founder|staff/ig)) || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || poopy.config.ownerids.find(id => id == msg.author.id)) {
-                    poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['read'] = !(poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['read'])
+                    poopy.data['guild-data'][msg.guild.id]['read'] = !(poopy.data['guild-data'][msg.guild.id]['read'])
                     var channels = msg.guild.channels.cache
 
                     channels.forEach(channel => {
                         if (channel.isText()) {
-                            if (!poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][channel.id]) {
-                                poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][channel.id] = {}
+                            if (!poopy.data['guild-data'][msg.guild.id]['channels'][channel.id]) {
+                                poopy.data['guild-data'][msg.guild.id]['channels'][channel.id] = {}
                             }
 
-                            poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['channels'][channel.id]['read'] = poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['read']
+                            poopy.data['guild-data'][msg.guild.id]['channels'][channel.id]['read'] = poopy.data['guild-data'][msg.guild.id]['read']
                         }
                     })
 
-                    var read = poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['read']
+                    var read = poopy.data['guild-data'][msg.guild.id]['read']
                     msg.channel.send(`I **can${!read ? '\'t' : ''} read** messages from all channels now.`).catch(() => { })
                 } else {
                     msg.channel.send('You need to be an administrator to execute that!').catch(() => { })

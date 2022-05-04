@@ -2,7 +2,7 @@ module.exports = {
     desc: 'returns not sayori ai', func: async function (msg) {
         let poopy = this
 
-        var datamembers = poopy.data[poopy.config.mongodatabase]['guild-data'][msg.guild.id]['members'];
+        var datamembers = poopy.data['guild-data'][msg.guild.id]['members'];
         var members = []
         for (var id in datamembers) {
             var datamember = datamembers[id]
