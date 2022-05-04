@@ -4087,7 +4087,7 @@ class Poopy {
             var gdata = await getAllDataLoop()
 
             poopy.data = gdata.data
-            for (var type in gdata.globaldata) poopy.functions.globalData()[type] = gdata.globaldata[type]
+            if (Object.keys(poopy.functions.globalData()).length <= 0) for (var type in gdata.globaldata) poopy.functions.globalData()[type] = gdata.globaldata[type]
 
             console.log('all data gathered!!!')
             await poopy.functions.infoPost(`All data gathered`)
