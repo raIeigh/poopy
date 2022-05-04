@@ -17,12 +17,12 @@ module.exports = {
         var width = 300
         var widthindex = args.indexOf('-width')
         if (widthindex > -1) {
-            width = isNaN(Number(args[widthindex + 1])) ? 300 : Number(args[widthindex + 1]) <= 1 ? 1 : Number(args[widthindex + 1]) >= 750 ? 750 : Number(args[widthindex + 1]) || 300
+            width = isNaN(Number(args[widthindex + 1])) ? 300 : Number(args[widthindex + 1]) <= 1 ? 1 : Number(args[widthindex + 1]) >= 1000 ? 1000 : Number(args[widthindex + 1]) || 300
         }
         var height = 300
         var heightindex = args.indexOf('-height')
         if (heightindex > -1) {
-            height = isNaN(Number(args[heightindex + 1])) ? 300 : Number(args[heightindex + 1]) <= 1 ? 1 : Number(args[heightindex + 1]) >= 750 ? 750 : Number(args[heightindex + 1]) || 300
+            height = isNaN(Number(args[heightindex + 1])) ? 300 : Number(args[heightindex + 1]) <= 1 ? 1 : Number(args[heightindex + 1]) >= 1000 ? 1000 : Number(args[heightindex + 1]) || 300
         }
         var startsize = [100, 100]
         var startsizeindex = args.indexOf('-startsize')

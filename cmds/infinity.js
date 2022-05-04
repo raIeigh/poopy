@@ -17,22 +17,22 @@ module.exports = {
         var width = 300
         var widthindex = args.indexOf('-width')
         if (widthindex > -1) {
-            width = isNaN(Number(args[widthindex + 1])) ? 300 : Number(args[widthindex + 1]) <= 1 ? 1 : Number(args[widthindex + 1]) >= 750 ? 750 : Number(args[widthindex + 1]) || 300
+            width = isNaN(Number(args[widthindex + 1])) ? 300 : Number(args[widthindex + 1]) <= 1 ? 1 : Number(args[widthindex + 1]) >= 1000 ? 1000 : Number(args[widthindex + 1]) || 300
         }
         var height = 300
         var heightindex = args.indexOf('-height')
         if (heightindex > -1) {
-            height = isNaN(Number(args[heightindex + 1])) ? 300 : Number(args[heightindex + 1]) <= 1 ? 1 : Number(args[heightindex + 1]) >= 750 ? 750 : Number(args[heightindex + 1]) || 300
+            height = isNaN(Number(args[heightindex + 1])) ? 300 : Number(args[heightindex + 1]) <= 1 ? 1 : Number(args[heightindex + 1]) >= 1000 ? 1000 : Number(args[heightindex + 1]) || 300
         }
         var owidth = 100
         var owidthindex = args.indexOf('-owidth')
         if (owidthindex > -1) {
-            owidth = isNaN(Number(args[owidthindex + 1])) ? 100 : Number(args[owidthindex + 1]) <= 1 ? 1 : Number(args[owidthindex + 1]) >= 750 ? 750 : Number(args[owidthindex + 1]) || 100
+            owidth = isNaN(Number(args[owidthindex + 1])) ? 100 : Number(args[owidthindex + 1]) <= 1 ? 1 : Number(args[owidthindex + 1]) >= 1000 ? 1000 : Number(args[owidthindex + 1]) || 100
         }
         var oheight = 100
         var oheightindex = args.indexOf('-oheight')
         if (oheightindex > -1) {
-            oheight = isNaN(Number(args[oheightindex + 1])) ? 100 : Number(args[oheightindex + 1]) <= 1 ? 1 : Number(args[oheightindex + 1]) >= 750 ? 750 : Number(args[oheightindex + 1]) || 100
+            oheight = isNaN(Number(args[oheightindex + 1])) ? 100 : Number(args[oheightindex + 1]) <= 1 ? 1 : Number(args[oheightindex + 1]) >= 1000 ? 1000 : Number(args[oheightindex + 1]) || 100
         }
         var currenturl = poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl'] || args[1]
         var fileinfo = await poopy.functions.validateFile(currenturl).catch(error => {
