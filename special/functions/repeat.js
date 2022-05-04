@@ -13,7 +13,7 @@ module.exports = {
     for (var i = 0; i < times; i++) {
       repeat.push(phrase)
     }
-    return repeat.join(separator)
+    return repeat.join(separator).substring(0, 2000)
   },
-  attemptvalue: 5
+  attemptvalue: 10
 }

@@ -3,9 +3,8 @@ const tokens = [
     {
         TOKEN: process.env[__dirname.includes('app') ? 'POOPYTOKEN' : 'POOPYTOKEN2'],
         opts: {
-            //testing: !(__dirname.includes('app')),
+            testing: !(__dirname.includes('app')),
             globalPrefix: __dirname.includes('app') ? 'p:' : '2p:',
-            //mongodatabase: 'popytest'
         }
     }
 ]

@@ -4,5 +4,6 @@ module.exports = {
     let poopy = this
 
     return poopy.arrays.psPasta[Math.floor(Math.random() * poopy.arrays.psPasta.length)]
-  }
+  },
+  attemptvalue: 5
 }

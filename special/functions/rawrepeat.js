@@ -11,10 +11,10 @@ module.exports = {
     var separator = await poopy.functions.getKeywordsFor(split[2] ?? '', msg, isBot).catch(() => { }) ?? ''
     var repeat = []
     for (var i = 0; i < times; i++) {
-      repeat.push(phrase)
+      repeat.push(await poopy.functions.getKeywordsFor(phrase, msg, isBot).catch(() => { }) ?? '')
     }
-    return repeat.join(separator)
+    return repeat.join(separator).substring(0, 2000)
   },
   raw: true,
-  attemptvalue: 5
+  attemptvalue: 10
 }

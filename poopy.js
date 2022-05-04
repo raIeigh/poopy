@@ -1046,9 +1046,9 @@ class Poopy {
             }
             for (var f in extrafuncs) funclist[f] = extrafuncs[f]
 
-            var keys = Object.keys(keylist)
-            var funcs = Object.keys(funclist)
-            var pfuncs = Object.keys(pfunclist)
+            var keys = Object.keys(keylist).sort((a, b) => b.length - a.length)
+            var funcs = Object.keys(funclist).sort((a, b) => b.length - a.length)
+            var pfuncs = Object.keys(pfunclist).sort((a, b) => b.length - a.length)
 
             for (var i in string) {
                 var char = string[i]
@@ -1170,9 +1170,9 @@ class Poopy {
             }
             for (var f in extrafuncs) funclist[f] = extrafuncs[f]
 
-            var funcs = Object.keys(funclist)
-            var pfuncs = Object.keys(pfunclist)
-            var afuncs = funcs.concat(pfuncs)
+            var funcs = Object.keys(funclist).sort((a, b) => b.length - a.length)
+            var pfuncs = Object.keys(pfunclist).sort((a, b) => b.length - a.length)
+            var afuncs = funcs.concat(pfuncs).sort((a, b) => b.length - a.length)
 
             for (var i in string) {
                 var char = string[i]
@@ -2621,8 +2621,13 @@ class Poopy {
                 poopy.tempdata[msg.author.id]['keywordsExecuted'] = []
             }
 
+            if (!poopy.tempdata[msg.author.id]['startTime']) {
+                poopy.tempdata[msg.author.id]['startTime'] = Date.now()
+            }
+
             while (poopy.functions.getKeyFunc(string, { extrakeys: extrakeys, extrafuncs: extrafuncs }) !== false) {
                 if (poopy.tempdata[msg.author.id]['keyattempts'] >= poopy.config.keyLimit) {
+                    poopy.functions.infoPost(`Keyword attempts value exceeded`)
                     return 'Keyword attempts value exceeded.'
                 }
 
@@ -2659,9 +2664,10 @@ class Poopy {
             if (resetattempts) {
                 poopy.tempdata[msg.author.id]['keyattempts'] = 0
                 if (poopy.tempdata[msg.author.id]['keywordsExecuted'].length) {
-                    poopy.functions.infoPost(`Executed keywords/functions: ${poopy.tempdata[msg.author.id]['keywordsExecuted'].map(k => `\`${k}\``).join(', ')}`)
+                    poopy.functions.infoPost(`Took ${(Date.now() - poopy.tempdata[msg.author.id]['startTime']) / 1000} seconds to execute keywords/functions: ${poopy.tempdata[msg.author.id]['keywordsExecuted'].map(k => `\`${k}\``).join(', ')}`)
                 }
                 poopy.tempdata[msg.author.id]['keywordsExecuted'] = []
+                delete poopy.tempdata[msg.author.id]['startTime']
             }
 
             return string
@@ -3165,7 +3171,7 @@ class Poopy {
         poopy.functions.changeStatus = function () {
             if (poopy.bot && poopy.vars.statusChanges === 'true') {
                 var choosenStatus = poopy.statuses[Math.floor(Math.random() * poopy.statuses.length)]
-                poopy.functions.infoPost(`Status changed to ${choosenStatus.type.toLowerCase()} ${((choosenStatus.type === "COMPETING" && 'in ') || (choosenStatus.type === "LISTENING" && 'to ') || '')}${choosenStatus.name.replace(new RegExp(`${poopy.functions.regexClean(`${poopy.config.globalPrefix}help`)}$`), '')}`)
+                poopy.functions.infoPost(`Status changed to ${choosenStatus.type.toLowerCase()} ${((choosenStatus.type === "COMPETING" && 'in ') || (choosenStatus.type === "LISTENING" && 'to ') || '')}${choosenStatus.name}`)
                 poopy.bot.user.setPresence({
                     status: 'online',
                     activities: [
@@ -3920,7 +3926,7 @@ class Poopy {
                     if (activity) {
                         await poopy.functions.waitMessageCooldown()
                         msg.channel.send({
-                            content: `Ya know, just ${choosenStatus.type.toLowerCase()} ${((choosenStatus.type === "COMPETING" && 'in ') || (choosenStatus.type === "LISTENING" && 'to ') || '')}${choosenStatus.name.replace(new RegExp(`${poopy.functions.regexClean(`${poopy.config.globalPrefix}help`)}$`), '')}.`,
+                            content: `Ya know, just ${activity.type.toLowerCase()} ${((activity.type === "COMPETING" && 'in ') || (activity.type === "LISTENING" && 'to ') || '')}${activity.name.replace(new RegExp(`${poopy.functions.regexClean(` | ${poopy.config.globalPrefix}help`)}$`), '')}.`,
                             allowedMentions: {
                                 parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                             }
