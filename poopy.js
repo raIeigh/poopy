@@ -3187,12 +3187,14 @@ class Poopy {
 
         poopy.functions.save = async function () {
             poopy.functions.infoPost(`Saving data`)
+
             if (poopy.config.testing) {
                 poopy.modules.fs.writeFileSync(`data/${poopy.config.mongodatabase}.json`, JSON.stringify(poopy.data))
                 poopy.modules.fs.writeFileSync(`data/globaldata.json`, JSON.stringify(poopy.functions.globalData()))
             } else {
                 await poopy.functions.updateAllData(poopy.config.mongodatabase, { data: poopy.data, globaldata: poopy.functions.globalData() }).catch(() => { })
             }
+
             poopy.functions.infoPost(`Data saved`)
         }
 
@@ -4063,7 +4065,7 @@ class Poopy {
                 } else {
                     var data = await poopy.functions.getAllData(poopy.config.mongodatabase).catch(() => { })
 
-                    if (!data || Object.keys(data).length <= 0 || Object.keys(data.data).length <= 0 || Object.keys(data.globaldata).length <= 0) {
+                    if (!data || Object.keys(data).length <= 0 || !data.data || Object.keys(data.data).length <= 0 || !data.globaldata || Object.keys(data.globaldata).length <= 0) {
                         console.log('no data, retrying')
                         await poopy.functions.infoPost(`Error fetching data, retrying`)
                         return getAllDataLoop()

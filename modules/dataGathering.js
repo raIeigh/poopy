@@ -1,5 +1,6 @@
-const mongo = require('./mongo')
+const mongoose = require('mongoose')
 const schemas = require('./schemas')
+let requests = 0
 
 module.exports = {
     getAllData: async (databaseName) => {
@@ -7,8 +8,13 @@ module.exports = {
             data: {},
             globaldata: {}
         }
+
         var url = process.env.MONGOOSEURL
-        const database = await mongo(url).catch(() => { })
+        if (requests <= 0) await mongoose.connect(url, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true
+        })
+        requests++
 
         await schemas.data.find({
             dataid: databaseName
@@ -36,14 +42,19 @@ module.exports = {
             }
         }).catch(() => { })
 
-        database.connection.close()
+        requests--
+        if (requests <= 0) mongoose.connection.close()
 
         return data
     },
 
     updateAllData: async (databaseName, d) => {
         var url = process.env.MONGOOSEURL
-        const database = await mongo(url).catch(() => { })
+        if (requests <= 0) await mongoose.connect(url, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true
+        })
+        requests++
 
         var data = d.data
 
@@ -61,6 +72,7 @@ module.exports = {
             useFindAndModify: false
         }).catch(() => { })
 
-        database.connection.close()
+        requests--
+        if (requests <= 0) mongoose.connection.close()
     }
 }
