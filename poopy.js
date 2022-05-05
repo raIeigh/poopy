@@ -3443,7 +3443,7 @@ class Poopy {
                 return
             }
 
-            poopy.data['bot-data']['bot']['messages']++
+            poopy.data['bot-data']['messages']++
 
             if (msg.channel.type === 'DM' || msg.channel.type === 'GROUP_DM') {
                 if (msg.author.bot || msg.author.id == poopy.bot.user.id) return
@@ -3692,7 +3692,7 @@ class Poopy {
                                         poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] = (poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] || Date.now()) + findCmd.cooldown / ((msg.member.permissions.has('MANAGE_GUILD') || msg.member.roles.cache.find(role => role.name.match(/mod|dev|admin|owner|creator|founder|staff/ig)) || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID) && (findCmd.type === 'Text' || findCmd.type === 'Main') ? 5 : 1)
                                     }
                                     poopy.vars.cps++
-                                    poopy.data['bot-data']['bot']['commands']++
+                                    poopy.data['bot-data']['commands']++
                                     var t = setTimeout(() => {
                                         poopy.vars.cps--
                                         clearTimeout(t)
@@ -3710,7 +3710,7 @@ class Poopy {
                                             msg.channel.sendTyping().catch(() => { })
                                         } catch (_) { }
                                     })
-                                    poopy.data['bot-data']['bot']['filecount'] = poopy.vars.filecount
+                                    poopy.data['bot-data']['filecount'] = poopy.vars.filecount
                                     if (p) {
                                         pathObject = p
                                     }
@@ -3718,7 +3718,7 @@ class Poopy {
                             } else if (findLocalCmd) {
                                 usedCommand = true
                                 poopy.vars.cps++
-                                poopy.data['bot-data']['bot']['commands']++
+                                poopy.data['bot-data']['commands']++
                                 var t = setTimeout(() => {
                                     poopy.vars.cps--
                                     clearTimeout(t)
@@ -3734,7 +3734,7 @@ class Poopy {
                                     }
                                 }).catch(() => { })
 
-                                poopy.data['bot-data']['bot']['filecount'] = poopy.vars.filecount
+                                poopy.data['bot-data']['filecount'] = poopy.vars.filecount
                             } else if (similarCmds ? similarCmds.find(fcmd => fcmd.similarity >= 0.5) : undefined) {
                                 usedCommand = true
                                 var useCmd = await poopy.functions.yesno(msg.channel, `Did you mean to use \`${similarCmds[0].name}\`?`, msg.author.id).catch(() => { })
@@ -3745,7 +3745,7 @@ class Poopy {
                                             poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] = (poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] || Date.now()) + findCmd.cooldown / ((msg.member.permissions.has('MANAGE_GUILD') || msg.member.roles.cache.find(role => role.name.match(/mod|dev|admin|owner|creator|founder|staff/ig)) || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID) && (findCmd.type === 'Text' || findCmd.type === 'Main') ? 5 : 1)
                                         }
                                         poopy.vars.cps++
-                                        poopy.data['bot-data']['bot']['commands']++
+                                        poopy.data['bot-data']['commands']++
                                         var t = setTimeout(() => {
                                             poopy.vars.cps--
                                             clearTimeout(t)
@@ -3763,14 +3763,14 @@ class Poopy {
                                                 msg.channel.sendTyping().catch(() => { })
                                             } catch (_) { }
                                         })
-                                        poopy.data['bot-data']['bot']['filecount'] = poopy.vars.filecount
+                                        poopy.data['bot-data']['filecount'] = poopy.vars.filecount
                                         if (p) {
                                             pathObject = p
                                         }
                                     } else if (similarCmds[0].type === 'local') {
                                         var findLocalCmd = poopy.data['guild-data'][msg.guild.id]['localcmds'].find(cmd => cmd.name === similarCmds[0].name)
                                         poopy.vars.cps++
-                                        poopy.data['bot-data']['bot']['commands']++
+                                        poopy.data['bot-data']['commands']++
                                         var t = setTimeout(() => {
                                             poopy.vars.cps--
                                             clearTimeout(t)
@@ -3786,7 +3786,7 @@ class Poopy {
                                             }
                                         }).catch(() => { })
 
-                                        poopy.data['bot-data']['bot']['filecount'] = poopy.vars.filecount
+                                        poopy.data['bot-data']['filecount'] = poopy.vars.filecount
                                     }
                                 }
                             }
@@ -4110,26 +4110,22 @@ class Poopy {
                 poopy.data['user-data'] = {}
             }
 
-            if (!poopy.data['bot-data']['bot']) {
-                poopy.data['bot-data']['bot'] = {}
+            if (!poopy.data['bot-data']['messages']) {
+                poopy.data['bot-data']['messages'] = 0
             }
 
-            if (!poopy.data['bot-data']['bot']['messages']) {
-                poopy.data['bot-data']['bot']['messages'] = 0
+            if (!poopy.data['bot-data']['commands']) {
+                poopy.data['bot-data']['commands'] = 0
             }
 
-            if (!poopy.data['bot-data']['bot']['commands']) {
-                poopy.data['bot-data']['bot']['commands'] = 0
+            if (!poopy.data['bot-data']['filecount']) {
+                poopy.data['bot-data']['filecount'] = 0
             }
 
-            if (!poopy.data['bot-data']['bot']['filecount']) {
-                poopy.data['bot-data']['bot']['filecount'] = 0
-            }
-
-            if (poopy.data['bot-data']['bot']['reboots'] === undefined) {
-                poopy.data['bot-data']['bot']['reboots'] = 0
+            if (poopy.data['bot-data']['reboots'] === undefined) {
+                poopy.data['bot-data']['reboots'] = 0
             } else {
-                poopy.data['bot-data']['bot']['reboots']++
+                poopy.data['bot-data']['reboots']++
             }
 
             if (!poopy.functions.globalData()['bot-data']) {
@@ -4137,23 +4133,23 @@ class Poopy {
             }
 
             if (!poopy.functions.globalData()['bot-data']['commandTemplates']) {
-                poopy.functions.globalData()['bot-data']['commandTemplates'] = poopy.data['bot-data']['bot']['commandTemplates'] || []
+                poopy.functions.globalData()['bot-data']['commandTemplates'] = []
             }
 
             if (!poopy.functions.globalData()['bot-data']['psfiles']) {
-                poopy.functions.globalData()['bot-data']['psfiles'] = poopy.data['bot-data']['bot']['psfiles'] || await poopy.functions.getPsFiles().catch(() => { }) || ['i broke the json']
+                poopy.functions.globalData()['bot-data']['psfiles'] = await poopy.functions.getPsFiles().catch(() => { }) || ['i broke the json']
             }
 
             if (!poopy.functions.globalData()['bot-data']['pspasta']) {
-                poopy.functions.globalData()['bot-data']['pspasta'] = poopy.data['bot-data']['bot']['pspasta'] || await poopy.functions.getPsPasta().catch(() => { }) || ['i broke the json']
+                poopy.functions.globalData()['bot-data']['pspasta'] = await poopy.functions.getPsPasta().catch(() => { }) || ['i broke the json']
             }
 
             if (!poopy.functions.globalData()['bot-data']['funnygif']) {
-                poopy.functions.globalData()['bot-data']['funnygif'] = poopy.data['bot-data']['bot']['funnygif'] || await poopy.functions.getFunny().catch(() => { }) || ['i broke the json']
+                poopy.functions.globalData()['bot-data']['funnygif'] = await poopy.functions.getFunny().catch(() => { }) || ['i broke the json']
             }
 
             if (!poopy.functions.globalData()['bot-data']['poop']) {
-                poopy.functions.globalData()['bot-data']['poop'] = poopy.data['bot-data']['bot']['poop'] || [
+                poopy.functions.globalData()['bot-data']['poop'] = [
                     "I farted loudly.",
                     "I pooped again.",
                     "Poopy",
@@ -4269,7 +4265,7 @@ class Poopy {
             }
 
             if (!poopy.functions.globalData()['bot-data']['dmphrases']) {
-                poopy.functions.globalData()['bot-data']['dmphrases'] = poopy.data['bot-data']['bot']['dmphrases'] || [
+                poopy.functions.globalData()['bot-data']['dmphrases'] = [
                     "Yo.",
                     "ADMIN?",
                     "I don't care how long I have to keep this up, I'll make a post daily, or maybe even more frequently until one of two things happen. Deinbag's cheated level is removed from the leaderboard, or Calm gets its One Winged Angel theme back. I will not put up with two major things I cared about in the game be influenced by the developers when they had no good reason. And until it gets fixed, you'll be seeing this message over and over, no matter the platform.",
@@ -4371,7 +4367,7 @@ class Poopy {
             poopy.arrays.poopPhrases = poopy.functions.globalData()['bot-data']['poop']
             poopy.arrays.dmPhrases = poopy.functions.globalData()['bot-data']['dmphrases']
 
-            poopy.vars.filecount = poopy.data['bot-data']['bot']['filecount'] || 0
+            poopy.vars.filecount = poopy.data['bot-data']['filecount'] || 0
 
             if (poopy.config.testing) {
                 if (!poopy.modules.fs.existsSync('data')) {
@@ -4398,13 +4394,13 @@ class Poopy {
                 poopy.functions.save()
             }, 120000)
             console.log('all done, he\'s actually online now')
-            await poopy.functions.infoPost(`Reboot ${poopy.data['bot-data']['bot']['reboots']} succeeded, he's up now`)
+            await poopy.functions.infoPost(`Reboot ${poopy.data['bot-data']['reboots']} succeeded, he's up now`)
             poopy.functions.changeStatus()
             poopy.vars.statusInterval = setInterval(function () {
                 poopy.functions.changeStatus()
             }, 300000)
 
-            var wakecount = String(poopy.data['bot-data']['bot']['reboots'] + 1)
+            var wakecount = String(poopy.data['bot-data']['reboots'] + 1)
             var thmatch = wakecount.match(/[^1][1-3]$|^[1-3]$/)
 
             if (thmatch) {

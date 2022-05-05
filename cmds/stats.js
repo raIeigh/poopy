@@ -20,10 +20,10 @@ module.exports = {
         var channels = poopy.bot.channels.cache.size
         var emojis = poopy.bot.emojis.cache.size
         var files = poopy.modules.fs.readdirSync(`temp/${poopy.config.mongodatabase}`).length
-        var messages = poopy.data['bot-data']['bot']['messages']
+        var messages = poopy.data['bot-data']['messages']
         var users = Object.keys(poopy.data['user-data']).length
-        var pcommands = poopy.data['bot-data']['bot']['commands']
-        var reboots = poopy.data['bot-data']['bot']['reboots']
+        var pcommands = poopy.data['bot-data']['commands']
+        var reboots = poopy.data['bot-data']['reboots']
         var members = 0
 
         for (var id in poopy.data['guild-data']) {

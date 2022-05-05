@@ -101,7 +101,7 @@ module.exports = {
 
                     var id = args[1].replace(/#/g, '')
 
-                    var findCommandTemplate = poopy.data['bot-data']['bot']['commandTemplates'].find(cmd => cmd.id == id)
+                    var findCommandTemplate = poopy.functions.globalData()['bot-data']['commandTemplates'].find(cmd => cmd.id == id)
 
                     if (findCommandTemplate) {
                         var name = args[2] ? args[2].toLowerCase() : findCommandTemplate.name

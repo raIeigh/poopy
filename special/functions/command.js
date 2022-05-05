@@ -54,7 +54,7 @@ module.exports = {
                     }
 
                     poopy.vars.cps++
-                    poopy.data['bot-data']['bot']['commands']++
+                    poopy.data['bot-data']['commands']++
                     var t = setTimeout(() => {
                         poopy.vars.cps--;
                         clearTimeout(t)
@@ -65,17 +65,17 @@ module.exports = {
                     await command.execute.call(this, msgclone, [commandname].concat(args.split(' '))).catch(err => {
                         error = err.stack
                     })
-                    poopy.data['bot-data']['bot']['filecount'] = poopy.vars.filecount
+                    poopy.data['bot-data']['filecount'] = poopy.vars.filecount
                 } else if (localCommand) {
                     poopy.vars.cps++
-                    poopy.data['bot-data']['bot']['commands']++
+                    poopy.data['bot-data']['commands']++
                     var t = setTimeout(() => {
                         poopy.vars.cps--;
                         clearTimeout(t)
                     }, 60000)
                     poopy.functions.infoPost(`Command \`${commandname}\` used`)
                     var phrase = await poopy.functions.getKeywordsFor(localCommand.phrase, msg, true).catch(() => { }) ?? 'error'
-                    poopy.data['bot-data']['bot']['filecount'] = poopy.vars.filecount
+                    poopy.data['bot-data']['filecount'] = poopy.vars.filecount
                     return phrase
                 }
             }
