@@ -163,7 +163,7 @@ module.exports = {
                     }).catch(() => { })
                 } else {
                     msg.channel.send({
-                        content: userMention.user.username + ` is not ${poopy.data['guild-data'][msg.guild.id]['members'][user.id]['custom']['name']}.`,
+                        content: userMention.user.username + ` is not ${poopy.data['guild-data'][msg.guild.id]['members'][userMention.id]['custom']['name']}.`,
                         allowedMentions: {
                             parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                         }
