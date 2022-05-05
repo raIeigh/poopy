@@ -1,5 +1,4 @@
 var mongoose = require('mongoose')
-const Any = mongoose.SchemaTypes.Mixed
 
 module.exports = {
     data: mongoose.model('database', mongoose.Schema({
@@ -9,25 +8,25 @@ module.exports = {
         },
 
         'bot-data': {
-            type: Any,
-            required: false
+            type: Object,
+            required: true
         },
 
         'user-data': {
-            type: Any,
-            required: false
+            type: Object,
+            required: true
         },
 
         'guild-data': {
-            type: Any,
-            required: false
+            type: Object,
+            required: true
         }
     })),
 
     globaldata: mongoose.model('globaldata', mongoose.Schema({
         'bot-data': {
-            type: Any,
-            required: false
+            type: Object,
+            required: true
         }
     }))
 }
