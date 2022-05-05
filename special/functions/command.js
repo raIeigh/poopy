@@ -1,7 +1,7 @@
 module.exports = {
-    helpf: '(name | arguments)',
+    helpf: '(name | arguments) (manage messages only)',
     desc: 'Allows you to execute any command!',
-    func: async function (matches, msg, _, string) {
+    func: async function (matches, msg, isBot, string) {
         let poopy = this
 
         var f = matches[0]
@@ -30,57 +30,61 @@ module.exports = {
             return 'shit'
         }
 
-        if (command || localCommand) {
-            if (poopy.data['guild-data'][msg.guild.id]['disabled'].find(cmd => cmd.find(n => n === commandname))) {
-                return 'This command is disabled in this server.'
-            } else {
-                var msgclone = msg
+        if (msg.member.permissions.has('MANAGE_GUILD') || msg.member.roles.cache.find(role => role.name.match(/mod|dev|admin|owner|creator|founder|staff/ig)) || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || poopy.config.ownerids.find(id => id == msg.author.id) || isBot) {
+            if (command || localCommand) {
+                if (poopy.data['guild-data'][msg.guild.id]['disabled'].find(cmd => cmd.find(n => n === commandname))) {
+                    return 'This command is disabled in this server.'
+                } else {
+                    var msgclone = msg
 
-                msgclone.content = `${commandname} ${args}`
+                    msgclone.content = `${commandname} ${args}`
 
-                await poopy.functions.getUrls(msgclone, {
-                    string: args,
-                    update: true
-                }).catch(err => msg.channel.send({
-                    content: err.message,
-                    allowedMentions: {
-                        parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    await poopy.functions.getUrls(msgclone, {
+                        string: args,
+                        update: true
+                    }).catch(err => msg.channel.send({
+                        content: err.message,
+                        allowedMentions: {
+                            parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                        }
+                    }).catch(() => { }))
+
+                    if (command) {
+                        if (command.cooldown) {
+                            poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] = (poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] || Date.now()) + command.cooldown / ((msg.member.permissions.has('MANAGE_GUILD') || msg.member.roles.cache.find(role => role.name.match(/mod|dev|admin|owner|creator|founder|staff/ig)) || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID) && (command.type === 'Text' || command.type === 'Main') ? 5 : 1)
+                        }
+
+                        poopy.vars.cps++
+                        poopy.data['bot-data']['commands']++
+                        var t = setTimeout(() => {
+                            poopy.vars.cps--;
+                            clearTimeout(t)
+                        }, 1000)
+
+                        poopy.functions.infoPost(`Command \`${commandname}\` used`)
+                        await poopy.functions.waitMessageCooldown()
+                        await command.execute.call(this, msgclone, [commandname].concat(args.split(' '))).catch(err => {
+                            error = err.stack
+                        })
+                        poopy.data['bot-data']['filecount'] = poopy.vars.filecount
+                    } else if (localCommand) {
+                        poopy.vars.cps++
+                        poopy.data['bot-data']['commands']++
+                        var t = setTimeout(() => {
+                            poopy.vars.cps--;
+                            clearTimeout(t)
+                        }, 60000)
+                        poopy.functions.infoPost(`Command \`${commandname}\` used`)
+                        var phrase = await poopy.functions.getKeywordsFor(localCommand.phrase, msg, true).catch(() => { }) ?? 'error'
+                        poopy.data['bot-data']['filecount'] = poopy.vars.filecount
+                        return phrase
                     }
-                }).catch(() => { }))
-
-                if (command) {
-                    if (command.cooldown) {
-                        poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] = (poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] || Date.now()) + command.cooldown / ((msg.member.permissions.has('MANAGE_GUILD') || msg.member.roles.cache.find(role => role.name.match(/mod|dev|admin|owner|creator|founder|staff/ig)) || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID) && (command.type === 'Text' || command.type === 'Main') ? 5 : 1)
-                    }
-
-                    poopy.vars.cps++
-                    poopy.data['bot-data']['commands']++
-                    var t = setTimeout(() => {
-                        poopy.vars.cps--;
-                        clearTimeout(t)
-                    }, 1000)
-
-                    poopy.functions.infoPost(`Command \`${commandname}\` used`)
-                    await poopy.functions.waitMessageCooldown()
-                    await command.execute.call(this, msgclone, [commandname].concat(args.split(' '))).catch(err => {
-                        error = err.stack
-                    })
-                    poopy.data['bot-data']['filecount'] = poopy.vars.filecount
-                } else if (localCommand) {
-                    poopy.vars.cps++
-                    poopy.data['bot-data']['commands']++
-                    var t = setTimeout(() => {
-                        poopy.vars.cps--;
-                        clearTimeout(t)
-                    }, 60000)
-                    poopy.functions.infoPost(`Command \`${commandname}\` used`)
-                    var phrase = await poopy.functions.getKeywordsFor(localCommand.phrase, msg, true).catch(() => { }) ?? 'error'
-                    poopy.data['bot-data']['filecount'] = poopy.vars.filecount
-                    return phrase
                 }
+            } else {
+                return 'Invalid command.'
             }
         } else {
-            return 'Invalid command.'
+            return 'You need to have the manage messages permission to execute that!'
         }
 
         return error

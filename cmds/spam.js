@@ -3,7 +3,7 @@ module.exports = {
     execute: async function (msg, args) {
         let poopy = this
 
-        if (msg.member.permissions.has('MANAGE_GUILD') || msg.member.roles.cache.find(role => role.name.match(/mod|dev|admin|owner|creator|founder|staff/ig)) || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || msg.author.id == poopy.bot.user.id) {
+        if (msg.member.permissions.has('MANAGE_GUILD') || msg.member.roles.cache.find(role => role.name.match(/mod|dev|admin|owner|creator|founder|staff/ig)) || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || poopy.config.ownerids.find(id => id == msg.author.id)) {
             if (args[1] === undefined && args[2] === undefined) {
                 msg.channel.send('How much do I spam?!').catch(() => { })
                 return;
@@ -66,8 +66,7 @@ module.exports = {
                 await msg.channel.send(sendObject).catch(() => { })
             };
             msg.channel.sendTyping().catch(() => { })
-        }
-        else {
+        } else {
             msg.channel.send('You need to have the manage messages permission to execute that!').catch(() => { })
             return;
         };

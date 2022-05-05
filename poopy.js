@@ -3479,6 +3479,8 @@ class Poopy {
                 msg.content = change
             }
 
+            if (!msg.guild || !msg.channel) return
+
             if (msg.content && ((!(msg.author.bot) && msg.author.id != poopy.bot.user.id) || poopy.config.allowbotusage) && poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['read']) {
                 var cleanMessage = poopy.modules.Discord.Util.cleanContent(msg.content, msg).replace(/\@/g, '@‌')
 
