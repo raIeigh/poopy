@@ -4063,7 +4063,7 @@ class Poopy {
                 } else {
                     var data = await poopy.functions.getAllData(poopy.config.mongodatabase).catch(() => { })
 
-                    if (!data || Object.keys(data).length <= 0) {
+                    if (!data || Object.keys(data).length <= 0 || Object.keys(data.data).length <= 0 || Object.keys(data.globaldata).length <= 0) {
                         console.log('no data, retrying')
                         await poopy.functions.infoPost(`Error fetching data, retrying`)
                         return getAllDataLoop()
