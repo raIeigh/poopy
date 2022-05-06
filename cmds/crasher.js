@@ -47,7 +47,7 @@ module.exports = {
         }
     },
     help: {
-        name: '<:newpoopy:839191885310066729> crasher/crashvideo <file> (admin only)',
+        name: 'crasher/crashvideo <file> (admin only)',
         value: "Manipulates the file to make it a WebM crasher."
     },
     cooldown: 2500,

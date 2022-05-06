@@ -1,6 +1,6 @@
 {
   "name": "poopy",
-  "version": "0.35.31",
+  "version": "0.35.32",
   "description": "Ballfish",
   "main": "index.js",
   "scripts": {
@@ -36,7 +36,6 @@
     "md5": "^2.3.0",
     "mongoose": "^5.12.12",
     "noblox.js": "^4.12.0",
-    "node-fetch": "^2.6.1",
     "pretty-bytes": "^5.6.0",
     "request": "^2.88.2",
     "twitter": "^1.7.1",

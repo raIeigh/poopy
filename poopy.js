@@ -106,6 +106,7 @@ class Poopy {
         poopy.modules.exec = require('child_process').exec
         poopy.modules.fileType = require('file-type')
         poopy.modules.axios = require('axios').default
+        poopy.modules.request = require('request')
         poopy.modules.cheerio = require('cheerio')
         poopy.modules.util = require('util')
         poopy.modules.md5 = require('md5')
