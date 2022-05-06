@@ -618,6 +618,9 @@ class Poopy {
 
                 var stdout = []
                 var stderr = []
+                var stdoutclosed = false
+                var stderrclosed = false
+                var procExited = false
 
                 var proc = poopy.modules.spawn(command, args, {
                     shell: true,
@@ -632,6 +635,16 @@ class Poopy {
                     if ((rss / 1024 / 1024) <= poopy.config.memLimit) proc.kill('SIGINT')
                 }, 1000)
 
+                function handleExit() {
+                    if (!stdoutclosed || !stderrclosed || !procExited) return
+                    var fproc = poopy.procs.findIndex(p => p === proc)
+                    if (fproc > -1) poopy.procs.splice(fproc, 1)
+                    var out = stdout.join('\n') || stderr.join('\n')
+                    clearInterval(memoryInterval)
+                    proc.removeAllListeners()
+                    resolve(out)
+                }
+
                 proc.stdout.on('data', (buffer) => {
                     if (!buffer.toString()) return
                     stdout.push(buffer.toString())
@@ -642,16 +655,25 @@ class Poopy {
                     stderr.push(buffer.toString())
                 })
 
+                proc.stdout.on('close', () => {
+                    stdoutclosed = true
+                    handleExit()
+                })
+
+                proc.stderr.on('close', () => {
+                    stderrclosed = true
+                    handleExit()
+                })
+
                 proc.on('error', (err) => {
+                    clearInterval(memoryInterval)
+                    proc.removeAllListeners()
                     resolve(err.message)
                 })
 
-                proc.on('close', () => {
-                    var fproc = poopy.procs.findIndex(p => p === proc)
-                    if (fproc > -1) poopy.procs.splice(fproc, 1)
-                    var out = stdout.join('\n') || stderr.join('\n')
-                    clearInterval(memoryInterval)
-                    resolve(out)
+                proc.on('exit', () => {
+                    procExited = true
+                    handleExit()
                 })
 
                 poopy.procs.push(proc)
