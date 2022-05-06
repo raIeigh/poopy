@@ -103,6 +103,7 @@ class Poopy {
         poopy.modules.fs = require('fs-extra')
         poopy.modules.archiver = require('archiver')
         poopy.modules.spawn = require('child_process').spawn
+        poopy.modules.exec = require('child_process').exec
         poopy.modules.fileType = require('file-type')
         poopy.modules.axios = require('axios').default
         poopy.modules.cheerio = require('cheerio')
@@ -632,7 +633,10 @@ class Poopy {
                 var memoryInterval = setInterval(() => {
                     var usage = process.memoryUsage()
                     var rss = usage.rss
-                    if ((rss / 1024 / 1024) <= poopy.config.memLimit) proc.kill('SIGINT')
+                    if ((rss / 1024 / 1024) <= poopy.config.memLimit) {
+                        if (poopy.modules.os.platform() == 'win32') poopy.modules.exec(`taskkill /pid ${proc.pid} /f /t`)
+                        else poopy.modules.exec(`kill -9 ${proc.pid}`) //proc.kill('SIGKILL')
+                    }
                 }, 1000)
 
                 function handleExit() {
