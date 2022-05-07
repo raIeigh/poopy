@@ -77,8 +77,17 @@ module.exports = {
                     return
                 }
 
+                if (response.data.hasError) {
+                    if (response.data.statusCode == 464) {
+                        await msg.channel.send(`I can't hear the voices.`).catch(() => { })
+                    } else {
+                        await msg.channel.send(response.data.statusMessage).catch(() => { })
+                    }
+                    return
+                }
+
                 await msg.channel.send({
-                    content: response.data.data.text,
+                    content: response.data.data.text.toLowerCase(),
                     allowedMentions: {
                         parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                     }
@@ -138,10 +147,17 @@ module.exports = {
                 return
             }
 
-            console.log(response.data)
+            if (response.data.hasError) {
+                if (response.data.statusCode == 464) {
+                    await msg.channel.send(`I can't hear the voices.`).catch(() => { })
+                } else {
+                    await msg.channel.send(response.data.statusMessage).catch(() => { })
+                }
+                return
+            }
 
             await msg.channel.send({
-                content: response.data.data.text,
+                content: response.data.data.text.toLowerCase(),
                 allowedMentions: {
                     parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
