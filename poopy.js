@@ -3570,6 +3570,7 @@ class Poopy {
             var usedCommand = false
             var cmds = poopy.data['guild-data'][msg.guild.id]['chaincommands'] == true ? msg.content.split(/ ?-\|- ?/) : [msg.content]
             var pathObject
+            var oldcontent = msg.content.substring()
 
             try {
                 for (var i in cmds) {
@@ -3587,14 +3588,14 @@ class Poopy {
                         }) ?? 'error'
 
                         msg.oldcontent = cmd
-                        cmd = change
+                        msg.content = change
                     }
 
                     if (!msg.guild || !msg.channel) return
 
                     await poopy.functions.getUrls(msg, {
                         update: true,
-                        string: cmd
+                        string: msg.content
                     }).catch(async err => {
                         try {
                             await poopy.functions.waitMessageCooldown()
@@ -3609,7 +3610,7 @@ class Poopy {
 
                     if (poopy.tempdata[msg.guild.id][msg.channel.id]['shut']) break
 
-                    if (cmd.toLowerCase().startsWith(prefix.toLowerCase()) && ((!msg.author.bot && msg.author.id != poopy.bot.user.id) || poopy.config.allowbotusage)) {
+                    if (msg.content.toLowerCase().startsWith(prefix.toLowerCase()) && ((!msg.author.bot && msg.author.id != poopy.bot.user.id) || poopy.config.allowbotusage)) {
                         if (poopy.config.shit.find(id => id === msg.author.id)) {
                             await poopy.functions.waitMessageCooldown()
                             msg.channel.send('shit').catch(() => { })
@@ -3638,7 +3639,7 @@ class Poopy {
                             return
                         }
 
-                        var args = cmd.substring(prefix.toLowerCase().length).split(' ')
+                        var args = msg.content.substring(prefix.toLowerCase().length).split(' ')
                         var findCmd = poopy.commands.find(fcmd => fcmd.name.find(fcmdname => fcmdname === args[0].toLowerCase()))
                         var findLocalCmd = poopy.data['guild-data'][msg.guild.id]['localcmds'].find(cmd => cmd.name === args[0].toLowerCase())
                         var similarCmds = []
@@ -3779,6 +3780,8 @@ class Poopy {
                 }
             } catch (_) { }
 
+            msg.content = oldcontent
+
             if (typeof (pathObject) === 'object') {
                 if (pathObject.path) {
                     if (poopy.modules.fs.existsSync(pathObject.path)) {
@@ -3845,37 +3848,6 @@ class Poopy {
                 ]
 
                 if (await msg.fetchReference().catch(() => { })) {
-                    /*var options = {
-                        method: 'GET',
-                        url: 'https://random-stuff-api.p.rapidapi.com/ai',
-                        params: {
-                          msg: msg.content,
-                          bot_name: poopy.bot.user.username,
-                          bot_gender: 'male',
-                          bot_master: 'raleigh',
-                          bot_age: '19',
-                          bot_company: 'PGamerX Studio (OPTIONAL)',
-                          bot_location: 'India (OPTIONAL)',
-                          bot_email: 'admin@pgamerx.com (OPTIONAL)',
-                          bot_build: 'Public (OPTIONAL)',
-                          bot_birth_year: '2002 (OPTIONAL)',
-                          bot_birth_date: '1st January, 2002 (OPTIONAL)',
-                          bot_birth_place: 'India (OPTIONAL)',
-                          bot_favorite_color: 'Blue (OPTIONAL)',
-                          bot_favorite_book: 'Harry Potter (OPTIONAL)',
-                          bot_favorite_band: 'Imagine Doggos (OPTIONAL)',
-                          bot_favorite_artist: 'Eminem (OPTIONAL)',
-                          bot_favorite_actress: 'Emma Watson (OPTIONAL)',
-                          bot_favorite_actor: 'Jim Carrey (OPTIONAL)',
-                          id: 'For customised response for each user'
-                        },
-                        headers: {
-                          authorization: poopy.functions.randomKey('RANDOMSTUFFKEY'),
-                          'x-rapidapi-host': 'random-stuff-api.p.rapidapi.com',
-                          'x-rapidapi-key': poopy.functions.randomKey('RAPIDAPIKEY')
-                        }
-                      }*/
-
                     var resp = await poopy.functions.cleverbot(msg.content, msg.channel.id).catch(() => { })
 
                     if (resp) {
