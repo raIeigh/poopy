@@ -21,15 +21,12 @@ module.exports = {
         var emojis = poopy.bot.emojis.cache.size
         var files = poopy.modules.fs.readdirSync(`temp/${poopy.config.mongodatabase}`).length
         var messages = poopy.data['bot-data']['messages']
-        var users = Object.keys(poopy.data['user-data']).length
+        var users = poopy.bot.users.cache.size
         var pcommands = poopy.data['bot-data']['commands']
         var reboots = poopy.data['bot-data']['reboots']
         var members = 0
 
-        for (var id in poopy.data['guild-data']) {
-            var guild = poopy.data['guild-data'][id]
-            if (guild['members']) members += Object.keys(guild['members']).length
-        }
+        poopy.bot.guilds.cache.forEach(guild => members += guild.memberCount)
 
         var statsEmbed = {
             title: `${poopy.bot.user.username}'s Stats`,
