@@ -113,92 +113,34 @@ module.exports = {
             optiontext = option['text']
         }
 
-        var sayoriMessage
+        var botmsg
 
         var webhooks = await msg.channel.fetchWebhooks().catch(() => { })
         if (webhooks ? webhooks.size : undefined) {
             var findWebhook = webhooks.find(webhook => poopy.bot.user === webhook.owner)
             if (findWebhook) {
-                sayoriMessage = await findWebhook.send({
+                botmsg = await findWebhook.send({
                     content: optiontext,
                     username: sayori.username,
                     avatarURL: sayori.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
                     allowedMentions: {
                         parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                     }
-                })
-                    .then(botmsg => {
-                        if (option['edit']) {
-                            var editTimeout = setTimeout(() => {
-                                if (option['pings'] === true) {
-                                    botmsg.delete().catch(() => { })
-                                    findWebhook.send({
-                                        content: '<@' + msg.author.id + '> ' + option['edit'] + ' ⁽ᵉᵈᶦᵗᵉᵈ⁾',
-                                        username: sayori.username,
-                                        avatarURL: sayori.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
-                                        allowedMentions: {
-                                            parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
-                                        }
-                                    }).catch(() => { })
-                                } else {
-                                    botmsg.delete().catch(() => { })
-                                    findWebhook.send({
-                                        content: option['edit'] + ' ⁽ᵉᵈᶦᵗᵉᵈ⁾',
-                                        username: sayori.username,
-                                        avatarURL: sayori.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
-                                        allowedMentions: {
-                                            parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
-                                        }
-                                    }).catch(() => { })
-                                }
-                                clearTimeout(editTimeout)
-                            }, 3000)
-                        }
-                    })
-                    .catch(() => { })
+                }).catch(() => { })
             } else {
                 var createdWebhook = await msg.channel.createWebhook('Poopyhook', { avatar: 'https://cdn.discordapp.com/attachments/760223418968047629/835923489834664056/poopy2.png' }).catch(() => { })
                 if (!createdWebhook) {
                     msg.channel.send('I need admin for this command!').catch(() => { })
                     return
                 }
-                sayoriMessage = await createdWebhook.send({
+                botmsg = await createdWebhook.send({
                     content: optiontext,
                     username: sayori.username,
                     avatarURL: sayori.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
                     allowedMentions: {
                         parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                     }
-                })
-                    .then(botmsg => {
-                        if (option['edit']) {
-                            var editTimeout = setTimeout(() => {
-                                if (option['pings'] === true) {
-                                    botmsg.delete().catch(() => { })
-                                    findWebhook.send({
-                                        content: '<@' + msg.author.id + '> ' + option['edit'] + ' ⁽ᵉᵈᶦᵗᵉᵈ⁾',
-                                        username: sayori.username,
-                                        avatarURL: sayori.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
-                                        allowedMentions: {
-                                            parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
-                                        }
-                                    }).catch(() => { })
-                                } else {
-                                    botmsg.delete().catch(() => { })
-                                    findWebhook.send({
-                                        content: option['edit'] + ' ⁽ᵉᵈᶦᵗᵉᵈ⁾',
-                                        username: sayori.username,
-                                        avatarURL: sayori.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
-                                        allowedMentions: {
-                                            parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
-                                        }
-                                    }).catch(() => { })
-                                }
-                                clearTimeout(editTimeout)
-                            }, 3000)
-                        }
-                    })
-                    .catch(() => { })
+                }).catch(() => { })
             }
         } else {
             var createdWebhook = await msg.channel.createWebhook('Poopyhook', { avatar: 'https://cdn.discordapp.com/attachments/760223418968047629/835923489834664056/poopy2.png' }).catch(() => { })
@@ -206,75 +148,73 @@ module.exports = {
                 msg.channel.send('I need admin for this command!').catch(() => { })
                 return
             }
-            sayoriMessage = await createdWebhook.send({
+            botmsg = await createdWebhook.send({
                 content: optiontext,
                 username: sayori.username,
                 avatarURL: sayori.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
                 allowedMentions: {
                     parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
-            })
-                .then(botmsg => {
-                    if (option['edit']) {
-                        var editTimeout = setTimeout(() => {
-                            if (option['pings'] === true) {
-                                botmsg.delete().catch(() => { })
-                                findWebhook.send({
-                                    content: '<@' + msg.author.id + '> ' + option['edit'] + ' ⁽ᵉᵈᶦᵗᵉᵈ⁾',
-                                    username: sayori.username,
-                                    avatarURL: sayori.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
-                                    allowedMentions: {
-                                        parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
-                                    }
-                                }).catch(() => { })
-                            } else {
-                                botmsg.delete().catch(() => { })
-                                findWebhook.send({
-                                    content: option['edit'] + ' ⁽ᵉᵈᶦᵗᵉᵈ⁾',
-                                    username: sayori.username,
-                                    avatarURL: sayori.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
-                                    allowedMentions: {
-                                        parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
-                                    }
-                                }).catch(() => { })
-                            }
-                            clearTimeout(editTimeout)
-                        }, 3000)
-                    }
-                })
-                .catch(() => { })
+            }).catch(() => { })
         }
 
-        if (!sayoriMessage) {
-            sayoriMessage = await msg.channel.send({
+        if (botmsg) {
+            if (option['edit']) {
+                var editTimeout = setTimeout(() => {
+                    if (option['pings'] === true) {
+                        botmsg.delete().catch(() => { })
+                        findWebhook.send({
+                            content: '<@' + msg.author.id + '> ' + option['edit'] + ' ⁽ᵉᵈᶦᵗᵉᵈ⁾',
+                            username: sayori.username,
+                            avatarURL: sayori.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
+                            allowedMentions: {
+                                parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                            }
+                        }).catch(() => { })
+                    } else {
+                        botmsg.delete().catch(() => { })
+                        findWebhook.send({
+                            content: option['edit'] + ' ⁽ᵉᵈᶦᵗᵉᵈ⁾',
+                            username: sayori.username,
+                            avatarURL: sayori.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
+                            allowedMentions: {
+                                parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                            }
+                        }).catch(() => { })
+                    }
+                    clearTimeout(editTimeout)
+                }, 3000)
+            }
+        } else {
+            botmsg = await msg.channel.send({
                 content: optiontext,
                 allowedMentions: {
                     parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
-            })
-                .then(botmsg => {
-                    if (option['edit']) {
-                        var editTimeout = setTimeout(() => {
-                            if (option['pings'] === true) {
-                                botmsg.edit({
-                                    content: '<@' + msg.author.id + '> ' + option['edit'],
-                                    allowedMentions: {
-                                        parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
-                                    }
-                                }).catch(() => { })
-                            } else {
-                                botmsg.edit({
-                                    content: option['edit'],
-                                    allowedMentions: {
-                                        parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
-                                    }
-                                }).catch(() => { })
-                            }
-                            clearTimeout(editTimeout)
-                        }, 3000)
-                    }
-                })
-                .catch(() => { })
+            }).catch(() => { })
+
+            if (botmsg) {
+                if (option['edit']) {
+                    var editTimeout = setTimeout(() => {
+                        if (option['pings'] === true) {
+                            botmsg.edit({
+                                content: '<@' + msg.author.id + '> ' + option['edit'],
+                                allowedMentions: {
+                                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                                }
+                            }).catch(() => { })
+                        } else {
+                            botmsg.edit({
+                                content: option['edit'],
+                                allowedMentions: {
+                                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                                }
+                            }).catch(() => { })
+                        }
+                        clearTimeout(editTimeout)
+                    }, 3000)
+                }
+            }
         }
     },
     help: { name: 'sayori [phraseChoice]', value: 'no not sayori ai' },
