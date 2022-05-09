@@ -38,7 +38,7 @@ module.exports = {
                 })
 
                 await poopy.functions.navigateEmbed(msg.channel, async (page) => {
-                    if (poopy.config.textEmbeds) return `${fCmds[page - 1].help.name}\n\n**Description:** ${fCmds[page - 1].help.value}\n**Cooldown:** ${fCmds[page - 1].cooldown ? `${fCmds[page - 1].cooldown / 1000} seconds` : 'None'}\n**Type:** ${fCmds[page - 1].type}\n\nCommand ${page}/${findCmds.length}`
+                    if (poopy.config.textEmbeds) return `\`${fCmds[page - 1].help.name}\`\n\n**Description:** ${fCmds[page - 1].help.value}\n**Cooldown:** ${fCmds[page - 1].cooldown ? `${fCmds[page - 1].cooldown / 1000} seconds` : 'None'}\n**Type:** ${fCmds[page - 1].type}\n\nCommand ${page}/${findCmds.length}`
                     else return {
                         "title": findCmds[page - 1].title,
                         "color": 0x472604,

@@ -37,17 +37,12 @@ module.exports = {
                 } else {
                     var msgclone = msg
 
-                    msgclone.content = `${commandname} ${args}`
+                    msgclone.content = `${poopy.data['guild-data'][msg.guild.id]['prefix']}${commandname} ${args}`
 
                     await poopy.functions.getUrls(msgclone, {
-                        string: args,
+                        string: msgclone.content,
                         update: true
-                    }).catch(err => msg.channel.send({
-                        content: err.message,
-                        allowedMentions: {
-                            parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
-                        }
-                    }).catch(() => { }))
+                    }).catch(() => { })
 
                     if (command) {
                         if (command.cooldown) {
@@ -75,7 +70,7 @@ module.exports = {
                             clearTimeout(t)
                         }, 60000)
                         poopy.functions.infoPost(`Command \`${commandname}\` used`)
-                        var phrase = await poopy.functions.getKeywordsFor(localCommand.phrase, msg, true).catch(() => { }) ?? 'error'
+                        var phrase = await poopy.functions.getKeywordsFor(localCommand.phrase, msgclone, true).catch(() => { }) ?? 'error'
                         poopy.data['bot-data']['filecount'] = poopy.vars.filecount
                         return phrase
                     }

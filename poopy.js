@@ -3640,7 +3640,7 @@ class Poopy {
                         }
 
                         var args = msg.content.substring(prefix.toLowerCase().length).split(' ')
-                        var findCmd = poopy.commands.find(fcmd => fcmd.name.find(fcmdname => fcmdname === args[0].toLowerCase()))
+                        var findCmd = poopy.functions.findCommand(args[0].toLowerCase())
                         var findLocalCmd = poopy.data['guild-data'][msg.guild.id]['localcmds'].find(cmd => cmd.name === args[0].toLowerCase())
                         var similarCmds = []
 
@@ -3726,32 +3726,37 @@ class Poopy {
                             var useCmd = await poopy.functions.yesno(msg.channel, `Did you mean to use \`${similarCmds[0].name}\`?`, msg.author.id).catch(() => { })
                             if (useCmd) {
                                 if (similarCmds[0].type === 'cmd') {
-                                    var findCmd = poopy.commands.find(fcmd => fcmd.name.find(fcmdname => fcmdname === similarCmds[0].name))
-                                    if (findCmd.cooldown) {
-                                        poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] = (poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] || Date.now()) + findCmd.cooldown / ((msg.member.permissions.has('MANAGE_GUILD') || msg.member.roles.cache.find(role => role.name.match(/mod|dev|admin|owner|creator|founder|staff/ig)) || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID) && (findCmd.type === 'Text' || findCmd.type === 'Main') ? 5 : 1)
-                                    }
-                                    poopy.vars.cps++
-                                    poopy.data['bot-data']['commands']++
-                                    var t = setTimeout(() => {
-                                        poopy.vars.cps--
-                                        clearTimeout(t)
-                                    }, 1000)
-                                    poopy.functions.infoPost(`Command \`${similarCmds[0].name}\` used`)
-                                    var p = await findCmd.execute.call(this, msg, args, pathObject).catch(async err => {
-                                        try {
-                                            await poopy.functions.waitMessageCooldown()
-                                            await msg.channel.send({
-                                                content: err.stack,
-                                                allowedMentions: {
-                                                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
-                                                }
-                                            }).catch(() => { })
-                                            msg.channel.sendTyping().catch(() => { })
-                                        } catch (_) { }
-                                    })
-                                    poopy.data['bot-data']['filecount'] = poopy.vars.filecount
-                                    if (p) {
-                                        pathObject = p
+                                    if (poopy.data['guild-data'][msg.guild.id]['disabled'].find(cmd => cmd.find(n => n === similarCmds[0].name))) {
+                                        await poopy.functions.waitMessageCooldown()
+                                        msg.channel.send('This command is disabled in this server.').catch(() => { })
+                                    } else {
+                                        var findCmd = poopy.functions.findCommand(similarCmds[0].name)
+                                        if (findCmd.cooldown) {
+                                            poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] = (poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] || Date.now()) + findCmd.cooldown / ((msg.member.permissions.has('MANAGE_GUILD') || msg.member.roles.cache.find(role => role.name.match(/mod|dev|admin|owner|creator|founder|staff/ig)) || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID) && (findCmd.type === 'Text' || findCmd.type === 'Main') ? 5 : 1)
+                                        }
+                                        poopy.vars.cps++
+                                        poopy.data['bot-data']['commands']++
+                                        var t = setTimeout(() => {
+                                            poopy.vars.cps--
+                                            clearTimeout(t)
+                                        }, 1000)
+                                        poopy.functions.infoPost(`Command \`${similarCmds[0].name}\` used`)
+                                        var p = await findCmd.execute.call(this, msg, args, pathObject).catch(async err => {
+                                            try {
+                                                await poopy.functions.waitMessageCooldown()
+                                                await msg.channel.send({
+                                                    content: err.stack,
+                                                    allowedMentions: {
+                                                        parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                                                    }
+                                                }).catch(() => { })
+                                                msg.channel.sendTyping().catch(() => { })
+                                            } catch (_) { }
+                                        })
+                                        poopy.data['bot-data']['filecount'] = poopy.vars.filecount
+                                        if (p) {
+                                            pathObject = p
+                                        }
                                     }
                                 } else if (similarCmds[0].type === 'local') {
                                     var findLocalCmd = poopy.data['guild-data'][msg.guild.id]['localcmds'].find(cmd => cmd.name === similarCmds[0].name)
@@ -3859,7 +3864,7 @@ class Poopy {
                         msg.channel.send(answers[Math.floor(Math.random() * answers.length)]).catch(() => { })
                     }
                 } else if (msg.content.includes('prefix') && msg.content.includes('reset')) {
-                    var findCmd = poopy.commands.find(fcmd => fcmd.name.find(fcmdname => fcmdname === 'setprefix'))
+                    var findCmd = poopy.functions.findCommand('setprefix')
                     usedCommand = true
                     if (findCmd.cooldown) {
                         poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] = (poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] || Date.now()) + findCmd.cooldown
