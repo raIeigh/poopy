@@ -129,10 +129,20 @@ module.exports = {
                 }).catch(() => { })
             } else {
                 var createdWebhook = await msg.channel.createWebhook('Poopyhook', { avatar: 'https://cdn.discordapp.com/attachments/760223418968047629/835923489834664056/poopy2.png' }).catch(() => { })
-                if (!createdWebhook) {
-                    msg.channel.send('I need admin for this command!').catch(() => { })
-                    return
+                if (createdWebhook) {
+                    botmsg = await createdWebhook.send({
+                        content: optiontext,
+                        username: sayori.username,
+                        avatarURL: sayori.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
+                        allowedMentions: {
+                            parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                        }
+                    }).catch(() => { })
                 }
+            }
+        } else {
+            var createdWebhook = await msg.channel.createWebhook('Poopyhook', { avatar: 'https://cdn.discordapp.com/attachments/760223418968047629/835923489834664056/poopy2.png' }).catch(() => { })
+            if (createdWebhook) {
                 botmsg = await createdWebhook.send({
                     content: optiontext,
                     username: sayori.username,
@@ -142,20 +152,6 @@ module.exports = {
                     }
                 }).catch(() => { })
             }
-        } else {
-            var createdWebhook = await msg.channel.createWebhook('Poopyhook', { avatar: 'https://cdn.discordapp.com/attachments/760223418968047629/835923489834664056/poopy2.png' }).catch(() => { })
-            if (!createdWebhook) {
-                msg.channel.send('I need admin for this command!').catch(() => { })
-                return
-            }
-            botmsg = await createdWebhook.send({
-                content: optiontext,
-                username: sayori.username,
-                avatarURL: sayori.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
-                allowedMentions: {
-                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
-                }
-            }).catch(() => { })
         }
 
         if (botmsg) {
