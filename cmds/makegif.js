@@ -36,6 +36,11 @@ module.exports = {
 
         if (nofiles) {
             var validfilecount = 0
+            var framemessage = await msg.channel.send(`Found 0 images.`).catch(() => { })
+
+            var frameeditinterval = setInterval(() => {
+                if (framemessage) framemessage.edit(`Found ${validfilecount} images.`).catch(() => { })
+            }, 5000)
 
             async function inspect(url) {
                 var lasturlerror
@@ -68,6 +73,9 @@ module.exports = {
                 if (success) validfilecount += 1
                 if (validfilecount >= framenumber) break
             }
+            
+            clearInterval(frameeditinterval)
+            if (framemessage) framemessage.delete().catch(() => { })
         } else if (msg.attachments.size) {
             var attachments = msg.attachments.map(attachment => attachment.url)
             for (var i in attachments) frameurls[Number(i) + 1] = attachments[i]

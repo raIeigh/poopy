@@ -99,7 +99,7 @@ module.exports = {
                 }).join('\n'))
 
                 var clipeditinterval = setInterval(() => {
-                    clipsmessage.edit(`Processing clip ${clipsmade + 1} out of ${clips * repetitions}.`).catch(() => { })
+                    if (clipsmessage) clipsmessage.edit(`Processing clip ${clipsmade + 1} out of ${clips * repetitions}.`).catch(() => { })
                 }, 5000)
 
                 for (var h = 0; h < repetitions; h++) {
@@ -194,7 +194,7 @@ module.exports = {
                 clipsmessage.edit(`Concatenating clips.`).catch(() => { })
 
                 await poopy.functions.execPromise(`ffmpeg -f concat -i ${filepath}/clips/list.txt -preset ${poopy.functions.findpreset(args)} -c:v libx264 -pix_fmt yuv420p ${filepath}/output.mp4`)
-                clipsmessage.delete().catch(() => { })
+                if (clipsmessage) clipsmessage.delete().catch(() => { })
                 await poopy.functions.sendFile(msg, filepath, `output.mp4`)
             } else {
                 var fps = fileinfo.info.fps
