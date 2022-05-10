@@ -8,12 +8,15 @@ module.exports = {
             msg.channel.send('Owner only!').catch(() => { })
             return
         } else {
-            msg.channel.send('The salami lid')
-                .then(() => {
-                    poopy.bot.destroy()
-                    process.exit()
-                })
-                .catch(() => { })
+            await msg.channel.send('The salami lid').catch(() => { })
+            clearInterval(poopy.vars.statusInterval)
+            delete poopy.vars.statusInterval
+            clearInterval(poopy.vars.saveInterval)
+            delete poopy.vars.saveInterval
+            poopy.bot.destroy()
+            delete poopy.data
+            delete poopy.tempdata
+            for (var type in poopy.functions.globalData()) delete poopy.functions.globalData()[type]
         };
     },
     help: { name: 'destroy/kill/shutdown', value: 'Causes Poopy to shutdown.' },

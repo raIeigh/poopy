@@ -25,7 +25,7 @@ module.exports = {
 
                 for (var i in results) {
                     var result = results[i]
-                    var title = result.snippet.title.replace(/&quot;/g, '"').replace(/&#\d+;/g, (match) => {
+                    var title = result.snippet.title.replace(/&quot;/g, '"').replace(/&amp;/g, '&').replace(/&#\d+;/g, (match) => {
                         return String.fromCharCode(match.substring(2, match.length - 1))
                     })
 
