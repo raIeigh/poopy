@@ -63,7 +63,7 @@ module.exports = {
         }
         for (var i in filetypes) {
             var type = filetypes[i]
-            if (!(type.mime.startsWith('image') || type.mime.startsWith('video'))) {
+            if (!(type.mime.startsWith('image') && !(poopy.vars.gifFormats.find(f => f === type.ext)) && poopy.vars.jimpFormats.find(f => f === type.ext))) {
                 msg.channel.send({
                     content: 'Unsupported file types.',
                     allowedMentions: {

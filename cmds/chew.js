@@ -41,7 +41,7 @@ module.exports = {
         if (!fileinfo) return
         var type = fileinfo.type
 
-        if (type.mime.startsWith('image') && !(poopy.vars.gifFormats.find(f => f === type.ext))) {
+        if (type.mime.startsWith('image') && !(poopy.vars.gifFormats.find(f => f === type.ext)) && poopy.vars.jimpFormats.find(f => f === type.ext)) {
             var currentcount = poopy.vars.filecount
             poopy.vars.filecount++
             var filepath = `temp/${poopy.config.mongodatabase}/file${currentcount}`

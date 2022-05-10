@@ -87,7 +87,7 @@ module.exports = {
                 })
                 if (lasturlerror || !fileinfo) return false
                 var filetype = fileinfo.type
-                if (!filetype || !(filetype.mime.startsWith('image') && !(poopy.vars.gifFormats.find(f => f === filetype.ext)))) {
+                if (!filetype || !(filetype.mime.startsWith('image') && !(poopy.vars.gifFormats.find(f => f === filetype.ext)) && poopy.vars.jimpFormats.find(f => f === filetype.ext))) {
                     lasturlerror = error
                     lasturlserror = `Unsupported file: ${url}`
                     return false
@@ -141,7 +141,7 @@ module.exports = {
                     return
                 }
                 var filetype = fileinfo.type
-                if (!(filetype.mime.startsWith('image') && !(poopy.vars.gifFormats.find(f => f === filetype.ext)))) error = `Unsupported file: \`${imageurl}\``
+                if (!(filetype.mime.startsWith('image') && !(poopy.vars.gifFormats.find(f => f === filetype.ext)) && poopy.vars.jimpFormats.find(f => f === filetype.ext))) error = `Unsupported file: \`${imageurl}\``
                 if (error) {
                     msg.channel.send({
                         content: error,

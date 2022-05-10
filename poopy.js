@@ -197,6 +197,7 @@ class Poopy {
         })*/
         poopy.vars.rest = new poopy.modules.REST({ version: '9' })
         poopy.vars.gifFormats = ['gif', 'apng']
+        poopy.vars.jimpFormats = ['png', 'jpeg', 'jpg', 'gif', 'bmp', 'tiff']
         poopy.vars.symbolreplacements = [
             {
                 target: ['‘', '’', '‛', '❛', '❜'],
