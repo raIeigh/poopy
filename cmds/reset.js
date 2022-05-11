@@ -8,16 +8,15 @@ module.exports = {
             msg.channel.send('Owner only!').catch(() => { })
             return
         } else {
+            var config = poopy.config
+            var TOKEN = poopy.__TOKEN
+
             await msg.channel.send('The chorizo slice').catch(() => { })
-            clearInterval(poopy.vars.statusInterval)
-            delete poopy.vars.statusInterval
-            clearInterval(poopy.vars.saveInterval)
-            delete poopy.vars.saveInterval
-            poopy.bot.destroy()
-            delete poopy.data
-            delete poopy.tempdata
-            for (var type in poopy.functions.globalData()) delete poopy.functions.globalData()[type]
-            poopy.functions.execPromise('node .')
+            await poopy.destroy()
+
+            var Poopy = require('../poopy')
+            poopy = new Poopy(config)
+            await poopy.start(TOKEN)
         };
     },
     help: { name: 'reset/restart/reboot', value: 'Resets Poopy.' },

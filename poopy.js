@@ -3571,7 +3571,7 @@ class Poopy {
             var usedCommand = false
             var cmds = poopy.data['guild-data'][msg.guild.id]['chaincommands'] == true ? msg.content.split(/ ?-\|- ?/) : [msg.content]
             var pathObject
-            var oldcontent = msg.content.substring()
+            var oldcontent = msg.content
 
             try {
                 for (var i in cmds) {
@@ -3997,406 +3997,422 @@ class Poopy {
                 }
             }
         }
-
-        poopy.bot.on('ready', async () => {
-            async function getAllDataLoop() {
-                if (poopy.config.testing) {
-                    var data = {}
-
-                    if (poopy.modules.fs.existsSync(`data/${poopy.config.mongodatabase}.json`)) {
-                        data.data = JSON.parse(poopy.modules.fs.readFileSync(`data/${poopy.config.mongodatabase}.json`).toString())
-                    } else {
-                        data.data = {
-                            'bot-data': {},
-                            'user-data': {},
-                            'guild-data': {}
-                        }
-                    }
-
-                    if (poopy.modules.fs.existsSync(`data/globaldata.json`)) {
-                        data.globaldata = JSON.parse(poopy.modules.fs.readFileSync(`data/globaldata.json`).toString())
-                    } else {
-                        data.globaldata = {
-                            'bot-data': {}
-                        }
-                    }
-
-                    return data
-                } else {
-                    var data = await poopy.functions.getAllData(poopy.config.mongodatabase).catch(() => { })
-
-                    if (!data || Object.keys(data).length <= 0 || !data.data || Object.keys(data.data).length <= 0 || !data.globaldata || Object.keys(data.globaldata).length <= 0) {
-                        console.log('no data, retrying')
-                        await poopy.functions.infoPost(`Error fetching data, retrying`)
-                        return getAllDataLoop()
-                    }
-
-                    return data
-                }
-            }
-
-            console.log(`${poopy.bot.user.username} is online, RUN`)
-            await poopy.functions.infoPost(`${poopy.bot.user.username} woke up to ash and dust`)
-            await poopy.functions.waitMessageCooldown()
-            poopy.bot.guilds.cache.get('834431435704107018')?.channels.cache.get('947167169718923341')?.send(!poopy.config.stfu ? 'i wake up to ash and dust' : '').catch(() => { })
-            poopy.config.ownerids.push(poopy.bot.user.id)
-            poopy.bot.user.setPresence({
-                status: 'idle',
-                activities: [
-                    {
-                        name: 'gathering data...',
-                        type: 'COMPETING',
-                        url: 'https://www.youtube.com/watch?v=LDQO0ALm0gE'
-                    }
-                ]
-            })
-
-            await poopy.functions.infoPost(`Gathering data in \`${poopy.config.mongodatabase}\``)
-            var gdata = await getAllDataLoop()
-
-            poopy.data = gdata.data
-            if (Object.keys(poopy.functions.globalData()).length <= 0) for (var type in gdata.globaldata) poopy.functions.globalData()[type] = gdata.globaldata[type]
-
-            console.log('all data gathered!!!')
-            await poopy.functions.infoPost(`All data gathered`)
-
-            if (!poopy.data['bot-data']) {
-                poopy.data['bot-data'] = {}
-            }
-
-            if (!poopy.data['guild-data']) {
-                poopy.data['guild-data'] = {}
-            }
-
-            if (!poopy.data['user-data']) {
-                poopy.data['user-data'] = {}
-            }
-
-            if (!poopy.data['bot-data']['messages']) {
-                poopy.data['bot-data']['messages'] = 0
-            }
-
-            if (!poopy.data['bot-data']['commands']) {
-                poopy.data['bot-data']['commands'] = 0
-            }
-
-            if (!poopy.data['bot-data']['filecount']) {
-                poopy.data['bot-data']['filecount'] = 0
-            }
-
-            if (poopy.data['bot-data']['reboots'] === undefined) {
-                poopy.data['bot-data']['reboots'] = 0
-            } else {
-                poopy.data['bot-data']['reboots']++
-            }
-
-            if (!poopy.functions.globalData()['bot-data']) {
-                poopy.functions.globalData()['bot-data'] = {}
-            }
-
-            if (!poopy.functions.globalData()['bot-data']['commandTemplates']) {
-                poopy.functions.globalData()['bot-data']['commandTemplates'] = []
-            }
-
-            if (!poopy.functions.globalData()['bot-data']['psfiles']) {
-                poopy.functions.globalData()['bot-data']['psfiles'] = await poopy.functions.getPsFiles().catch(() => { }) || ['i broke the json']
-            }
-
-            if (!poopy.functions.globalData()['bot-data']['pspasta']) {
-                poopy.functions.globalData()['bot-data']['pspasta'] = await poopy.functions.getPsPasta().catch(() => { }) || ['i broke the json']
-            }
-
-            if (!poopy.functions.globalData()['bot-data']['funnygif']) {
-                poopy.functions.globalData()['bot-data']['funnygif'] = await poopy.functions.getFunny().catch(() => { }) || ['i broke the json']
-            }
-
-            if (!poopy.functions.globalData()['bot-data']['poop']) {
-                poopy.functions.globalData()['bot-data']['poop'] = [
-                    "I farted loudly.",
-                    "I pooped again.",
-                    "Poopy",
-                    "Funny farts",
-                    "Poooooop",
-                    "<:poopy:621064531908755467>",
-                    "My poop is powerful.",
-                    "I pooped on your carpet.",
-                    "arabotto please come home",
-                    "<:poopy:621064531908755467> <:poopy:621064531908755467> <:poopy:621064531908755467> <:poopy:621064531908755467> <:poopy:621064531908755467> <:poopy:621064531908755467>",
-                    "Ungh *farts*",
-                    "I have passed gas.",
-                    "Poopy Poopy Stinky Ew",
-                    "<@454732245425455105>",
-                    "You live in a VAN!",
-                    "gondal",
-                    "😂",
-                    "🎅🏿",
-                    "L is real",
-                    "Do you fart?",
-                    "I have over {fart} confirmed farts.",
-                    "{mention} shut up",
-                    "Optimus prime",
-                    "👁👄👁",
-                    "🤮🤮🤮🤮🤮🤮🤮🤮🤮🤮",
-                    "Lol XD funny large fart POOP big burger two watermelon fish",
-                    "Quesley is a mysterious figure, yes.",
-                    "Regal is quite stingy.",
-                    "One bighead is much stronger than the others...",
-                    "peed",
-                    "What the hell do you want?",
-                    "😀😃😄😁😆😅😂🤣☺️😊😇🙂🙃😉😌😍🥰😘😗😙😚😋😛😝😜🤪🤨🧐🤓😎🤩🥳😏😒😞😔😟😕🙁☹️😣😖😫😩🥺😢😭😤😠😡🤬🤯😳🥵🥶😱😨😰😥😓🤗🤔🤭🤫🤥😶😐😑😬🙄😯😦😧😮😲🥱😴🤤😪😵🤐🥴🤢🤮🤧😷🤒🤕🤑🤠😈👿👹👺🤡💩👻💀☠️👽👾🤖🎃😺😸😹😻😼😽🙀😿😾🤲👐🙌👏🤝👍👎👊✊🤛🤜🤞✌️🤟🤘👌🤏👈👉👆👇☝️✋🤚🖐🖖👋🤙",
-                    "The ocean is hiding something.",
-                    "I don't think it’s possible that anyone could poop more than me.",
-                    "c",
-                    "{mention} please go away",
-                    "You will die of spicy diarrhea in {seconds} seconds.",
-                    "The lad race is widespread on many planets.",
-                    "Dude I’m buying groceries.",
-                    "Dude I’m taking a bath.",
-                    "Doge is watching us intently...",
-                    "Lore? Hmm, keep using this command and I might give you some.",
-                    "Soup Arena? Never heard of it.",
-                    "I will poop on you if you don’t fucking stop.",
-                    "I will crap in your mouth!",
-                    "OMG NO WAY HE",
-                    "Superbrohouse",
-                    "I can’t",
-                    "YOU CANT STOP THEM.",
-                    "If the Essence wins...",
-                    "It’s raining men!",
-                    "I might actually not be made of poop.",
-                    "I used to be yellow, just like my bretheren.",
-                    "Are you expecting something?",
-                    "My favorite food is sugar cookies.",
-                    "Planet travel is much easier thanks to me...",
-                    "Amateur Sailor will be a great sailor one day!",
-                    "omgbroyoucrazywhyyouusethiscommandsomuchidiotstinkyperson",
-                    "Quoth the raven, \"nevermore\".",
-                    "Nah fam",
-                    "Uniting the legendary items will finally complete the prophecy...",
-                    "I’ll never forget the day...",
-                    "Deinx if you’re reading this you’re fat hahahahaha",
-                    "The prototype I am building has endless capabilities.",
-                    "The others don’t appreciate me, but they should.",
-                    "You’ll never find my secret base!",
-                    "I’ve been keeping a close eye on you for a while now.",
-                    "You are dumb.",
-                    "We captured the spy!",
-                    "Pood",
-                    "Paad",
-                    "Piid",
-                    "Puud",
-                    "You will never reach the truth.",
-                    "Yo.",
-                    "fack you",
-                    "Me when",
-                    "Ballfish is actually at-",
-                    "No",
-                    "Yes",
-                    "Wired were the eyes of a horse on a jet pilot, one that smiled when they flew over the bay!",
-                    "Chop Suey!",
-                    "What is wrong with you?",
-                    "I may not look it, but my intelligence is far beyond.",
-                    "is soup remastered ever getting a thumbnail",
-                    "Response",
-                    "Plain Text",
-                    "is krima?",
-                    "theres 104 days of summer vacation",
-                    "I farted quietly.",
-                    "Ha! Sand in the eye! You’ll never get my lore!",
-                    "Words can not describe how much I absolutely despise stew.",
-                    "My home planet is so far...",
-                    "Will my brethren ever accept me again?",
-                    "Skibidi bop mm dada",
-                    ":hole <@613501149282172970>",
-                    "Entity 1 will not stop until he has gained all the power.",
-                    "The entities have massacred 24 planets so far, and you're next.",
-                    "Soup rains will come soon, but they will be a bit different.",
-                    "Regal will have karma someday...",
-                    "Stew aliens are building a weapon to melt planet Soup's surface. You must stop them.",
-                    "**UPDATE 999** - Add shit - Add shat - Add shot - Add shut - Add shet",
-                    "WTFNOOOO!",
-                    "Leave right now.",
-                    "THE LE-D-R",
-                    "CO-R—TI-N",
-                    "I want legs for Christmas.",
-                    "The crystals grow ever more aggravated...",
-                    "Nobody will miss 2020.",
-                    "Gork rights!",
-                    "My prototype is enormous, and it's equipped with all kinds of powerful weapons!"
-                ]
-            }
-
-            if (!poopy.functions.globalData()['bot-data']['dmphrases']) {
-                poopy.functions.globalData()['bot-data']['dmphrases'] = [
-                    "Yo.",
-                    "ADMIN?",
-                    "I don't care how long I have to keep this up, I'll make a post daily, or maybe even more frequently until one of two things happen. Deinbag's cheated level is removed from the leaderboard, or Calm gets its One Winged Angel theme back. I will not put up with two major things I cared about in the game be influenced by the developers when they had no good reason. And until it gets fixed, you'll be seeing this message over and over, no matter the platform.",
-                    "Eat your chair",
-                    "same feel",
-                    "NO WAY HE",
-                    "What.",
-                    "That's spicy.",
-                    "SAME!",
-                    "<:poopy:621064531908755467> this is me",
-                    "Wait, what the hell is the peedapocalypse?",
-                    "Cool.",
-                    "NaN",
-                    "undefined",
-                    "nil",
-                    "Good work.",
-                    "That deserves a reward!",
-                    "but how can",
-                    "YES",
-                    "DAMN DANIEL!",
-                    "Hello everybody my name is Markiplier and today we'll <@454732245425455105>",
-                    "Why does it smell like fart",
-                    "Mama Luigi? MAMA LUIGI?!?!",
-                    "ballfishe",
-                    "Don't expect to see lore here anytime soon.",
-                    "** **",
-                    "that's stupid",
-                    "Epic School Prank",
-                    "I feel like I've heard that before...",
-                    ":deciduous_tree:",
-                    "no......",
-                    "So Phil, is it?",
-                    "it was",
-                    "it wasn't",
-                    "FINE I DO IT",
-                    "HI DEINX",
-                    "INPOSSINBLE",
-                    "Poop shit. Idiot Dream Hotel Mario. You are a man's friend for a moment.",
-                    "how do i help you",
-                    "AWESOME! i died",
-                    "just like that, my life became a misery",
-                    "ROAST",
-                    "bmmptsmptshmptsptsptsptsptsmhmptsmmhmmptsptsptsptsmhptsmmhptsmmmptshmptsptsptsmmptsmptshhptsmmptsmmmhmmmhmm",
-                    "POOPY. HEAD.",
-                    "Descend to hell.",
-                    "Ascend to heaven.",
-                    "SHUT UP YOU RACIS TIDITO!!!!!",
-                    "coel",
-                    "erectile dysfunction",
-                    "brb i'm gonna block you for fun",
-                    "omg!!!! creator",
-                    "I blew up Malaysia",
-                    "Oh? On god?",
-                    "funy",
-                    "You May Insert",
-                    "O_o",
-                    "Genius.",
-                    "let's get this thing viral",
-                    "2b2t",
-                    "NUMBER",
-                    "epica moment",
-                    "https://www.youtube.com/watch?v=RR856dzGhv8",
-                    "ARE YOU GORK'S MOTHER!?!?!?!",
-                    "```bat\ncd desktop\ncd poopy\nnode .\n```",
-                    "```lua\ngame.Players.PlayerAdded:Connect(function(plr)\n    plr.Kick()\nend)```",
-                    "Bro tip number 80:\nsuicide is the answer",
-                    "now you understand what that ominous entity was",
-                    "it was minecraft steve, he's turned your world into his, and now he wants to kill you",
-                    "wholesome 100",
-                    "cringe",
-                    "TABLE.",
-                    "Pufferfish Defense",
-                    "my mom",
-                    "I blew up",
-                    "my skin is rotting slowly",
-                    "{mention}",
-                    "seen that already",
-                    "I knew it.",
-                    "bye bye troller",
-                    "we don't need you",
-                    "I can track your location",
-                    "fuck",
-                    "HAHAHAHAHAHAH",
-                    "Congrats, your Reddit account has been successfully created",
-                    "you putrid fuck",
-                    "fortnite balls i'm gay",
-                    "thats not funny",
-                    "and i genuinely love this girl",
-                    "Oh My Fucking God Shut The Fuck Up You're So Annoying If I Wasn't A Bot I Would Immediately Block You It'd Be Pretty Awesome If I Wasn't One Anyways I Could Just Join Any Server And Bomb Each One Of Them With My Great Awesome 10/10 Commands But Guess I Can't Because Of You Yes That's Right You Are One Of The Biggest Obstacles I've Ever Bumped With In My Entire History But Anyways The Whole Point Of This Speech Was To Shut You The Fuck Up Please Get Out Of My Dms I Can't Handle It Anymore I Will Do Anything To Stop You Even Delete Myself From The Existance Of Discord So Now I'm Just Gonna Smash My Keyboard Until I'm Done With You SJDASFUIDASHUDIHASUIDFAHSKUALDOWRQWPRS 65 ttfgiootifgiotf  re uir ue      re7 r   r7eriue rei reirrrr  r r r rick sa9df a8 9san 7 47897472 YRYEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEER78QR@ L2l2  0 4l v l£§30324-",
-                    "Bosom...?",
-                    "I NEED TO SUCK MAD TITTIES RN!",
-                    "i could kill you"
-                ]
-            }
-
-            poopy.arrays.psFiles = poopy.functions.globalData()['bot-data']['psfiles']
-            poopy.arrays.psPasta = poopy.functions.globalData()['bot-data']['pspasta']
-            poopy.arrays.funnygifs = poopy.functions.globalData()['bot-data']['funnygif']
-            poopy.arrays.poopPhrases = poopy.functions.globalData()['bot-data']['poop']
-            poopy.arrays.dmPhrases = poopy.functions.globalData()['bot-data']['dmphrases']
-
-            poopy.vars.filecount = poopy.data['bot-data']['filecount'] || 0
-
-            if (poopy.config.testing) {
-                if (!poopy.modules.fs.existsSync('data')) {
-                    poopy.modules.fs.mkdirSync('data')
-                }
-                poopy.modules.fs.writeFileSync(`data/${poopy.config.mongodatabase}.json`, JSON.stringify(poopy.data))
-                poopy.modules.fs.writeFileSync(`data/globaldata.json`, JSON.stringify(poopy.functions.globalData()))
-            }
-
-            await poopy.functions.infoPost(`Finishing extra steps...`)
-
-            await poopy.modules.noblox.setCookie(process.env.ROBLOXCOOKIE).catch(() => { })
-            poopy.json.emojiJSON = await poopy.functions.getEmojis().catch(() => { })
-            console.log('emojis')
-            if (!poopy.modules.fs.existsSync('temp')) {
-                poopy.modules.fs.mkdirSync('temp')
-            }
-            if (!poopy.modules.fs.existsSync(`temp/${poopy.config.mongodatabase}`)) {
-                poopy.modules.fs.mkdirSync(`temp/${poopy.config.mongodatabase}`)
-            }
-            await poopy.functions.updateSlashCommands()
-            poopy.functions.save()
-            poopy.vars.saveInterval = setInterval(function () {
-                poopy.functions.save()
-            }, 120000)
-            console.log('all done, he\'s actually online now')
-            await poopy.functions.infoPost(`Reboot ${poopy.data['bot-data']['reboots']} succeeded, he's up now`)
-            poopy.functions.changeStatus()
-            poopy.vars.statusInterval = setInterval(function () {
-                poopy.functions.changeStatus()
-            }, 300000)
-
-            var wakecount = String(poopy.data['bot-data']['reboots'] + 1)
-            var thmatch = wakecount.match(/[^1][1-3]$|^[1-3]$/)
-
-            if (thmatch) {
-                wakecount += ['st', 'nd', 'rd'][Number(thmatch[0][thmatch[0].length - 1]) - 1]
-            } else {
-                wakecount += 'th'
-            }
-
-            await poopy.functions.waitMessageCooldown()
-            poopy.bot.guilds.cache.get('834431435704107018')?.channels.cache.get('947167169718923341')?.send(!poopy.config.stfu ? (poopy.config.testing ? 'raleigh is testing' : `this is the ${wakecount} time this happens`) : '').catch(() => { })
-
-            poopy.bot.on('messageCreate', (msg) => {
-                poopy.callbacks.messageCallback(msg).catch(() => { })
-            })
-            poopy.bot.on('guildCreate', (guild) => {
-                poopy.callbacks.guildCallback(guild).catch(() => { })
-            })
-            poopy.bot.on('guildDelete', (guild) => {
-                poopy.callbacks.guildDeleteCallback(guild).catch(() => { })
-            })
-            poopy.bot.on('interactionCreate', (interaction) => {
-                poopy.callbacks.interactionCallback(interaction).catch(() => { })
-            })
-        })
     }
 
     async start(TOKEN) {
         let poopy = this
-        if (!TOKEN) {
+        if (!TOKEN && !poopy.__TOKEN) {
             throw new Error(`Token can't be blank`)
         }
 
-        poopy.vars.rest.setToken(TOKEN)
-        await poopy.bot.login(TOKEN)
+        if (!poopy.__TOKEN) Object.defineProperty(poopy, '__TOKEN', {
+            value: TOKEN,
+            writable: false
+        })
+
+        poopy.vars.rest.setToken(poopy.__TOKEN)
+        await poopy.bot.login(poopy.__TOKEN)
+
+        async function getAllDataLoop() {
+            if (poopy.config.testing) {
+                var data = {}
+
+                if (poopy.modules.fs.existsSync(`data/${poopy.config.mongodatabase}.json`)) {
+                    data.data = JSON.parse(poopy.modules.fs.readFileSync(`data/${poopy.config.mongodatabase}.json`).toString())
+                } else {
+                    data.data = {
+                        'bot-data': {},
+                        'user-data': {},
+                        'guild-data': {}
+                    }
+                }
+
+                if (poopy.modules.fs.existsSync(`data/globaldata.json`)) {
+                    data.globaldata = JSON.parse(poopy.modules.fs.readFileSync(`data/globaldata.json`).toString())
+                } else {
+                    data.globaldata = {
+                        'bot-data': {}
+                    }
+                }
+
+                return data
+            } else {
+                var data = await poopy.functions.getAllData(poopy.config.mongodatabase).catch(() => { })
+
+                if (!data || Object.keys(data).length <= 0 || !data.data || Object.keys(data.data).length <= 0 || !data.globaldata || Object.keys(data.globaldata).length <= 0) {
+                    console.log('no data, retrying')
+                    await poopy.functions.infoPost(`Error fetching data, retrying`)
+                    return getAllDataLoop()
+                }
+
+                return data
+            }
+        }
+
+        console.log(`${poopy.bot.user.username} is online, RUN`)
+        await poopy.functions.infoPost(`${poopy.bot.user.username} woke up to ash and dust`)
+        await poopy.functions.waitMessageCooldown()
+        poopy.bot.guilds.cache.get('834431435704107018')?.channels.cache.get('947167169718923341')?.send(!poopy.config.stfu ? 'i wake up to ash and dust' : '').catch(() => { })
+        poopy.config.ownerids.push(poopy.bot.user.id)
+        poopy.bot.user.setPresence({
+            status: 'idle',
+            activities: [
+                {
+                    name: 'gathering data...',
+                    type: 'COMPETING',
+                    url: 'https://www.youtube.com/watch?v=LDQO0ALm0gE'
+                }
+            ]
+        })
+
+        await poopy.functions.infoPost(`Gathering data in \`${poopy.config.mongodatabase}\``)
+        var gdata = await getAllDataLoop()
+
+        poopy.data = gdata.data
+        if (Object.keys(poopy.functions.globalData()).length <= 0) for (var type in gdata.globaldata) poopy.functions.globalData()[type] = gdata.globaldata[type]
+
+        console.log('all data gathered!!!')
+        await poopy.functions.infoPost(`All data gathered`)
+
+        if (!poopy.data['bot-data']) {
+            poopy.data['bot-data'] = {}
+        }
+
+        if (!poopy.data['guild-data']) {
+            poopy.data['guild-data'] = {}
+        }
+
+        if (!poopy.data['user-data']) {
+            poopy.data['user-data'] = {}
+        }
+
+        if (!poopy.data['bot-data']['messages']) {
+            poopy.data['bot-data']['messages'] = 0
+        }
+
+        if (!poopy.data['bot-data']['commands']) {
+            poopy.data['bot-data']['commands'] = 0
+        }
+
+        if (!poopy.data['bot-data']['filecount']) {
+            poopy.data['bot-data']['filecount'] = 0
+        }
+
+        if (poopy.data['bot-data']['reboots'] === undefined) {
+            poopy.data['bot-data']['reboots'] = 0
+        } else {
+            poopy.data['bot-data']['reboots']++
+        }
+
+        if (!poopy.functions.globalData()['bot-data']) {
+            poopy.functions.globalData()['bot-data'] = {}
+        }
+
+        if (!poopy.functions.globalData()['bot-data']['commandTemplates']) {
+            poopy.functions.globalData()['bot-data']['commandTemplates'] = []
+        }
+
+        if (!poopy.functions.globalData()['bot-data']['psfiles']) {
+            poopy.functions.globalData()['bot-data']['psfiles'] = await poopy.functions.getPsFiles().catch(() => { }) || ['i broke the json']
+        }
+
+        if (!poopy.functions.globalData()['bot-data']['pspasta']) {
+            poopy.functions.globalData()['bot-data']['pspasta'] = await poopy.functions.getPsPasta().catch(() => { }) || ['i broke the json']
+        }
+
+        if (!poopy.functions.globalData()['bot-data']['funnygif']) {
+            poopy.functions.globalData()['bot-data']['funnygif'] = await poopy.functions.getFunny().catch(() => { }) || ['i broke the json']
+        }
+
+        if (!poopy.functions.globalData()['bot-data']['poop']) {
+            poopy.functions.globalData()['bot-data']['poop'] = [
+                "I farted loudly.",
+                "I pooped again.",
+                "Poopy",
+                "Funny farts",
+                "Poooooop",
+                "<:poopy:621064531908755467>",
+                "My poop is powerful.",
+                "I pooped on your carpet.",
+                "arabotto please come home",
+                "<:poopy:621064531908755467> <:poopy:621064531908755467> <:poopy:621064531908755467> <:poopy:621064531908755467> <:poopy:621064531908755467> <:poopy:621064531908755467>",
+                "Ungh *farts*",
+                "I have passed gas.",
+                "Poopy Poopy Stinky Ew",
+                "<@454732245425455105>",
+                "You live in a VAN!",
+                "gondal",
+                "😂",
+                "🎅🏿",
+                "L is real",
+                "Do you fart?",
+                "I have over {fart} confirmed farts.",
+                "{mention} shut up",
+                "Optimus prime",
+                "👁👄👁",
+                "🤮🤮🤮🤮🤮🤮🤮🤮🤮🤮",
+                "Lol XD funny large fart POOP big burger two watermelon fish",
+                "Quesley is a mysterious figure, yes.",
+                "Regal is quite stingy.",
+                "One bighead is much stronger than the others...",
+                "peed",
+                "What the hell do you want?",
+                "😀😃😄😁😆😅😂🤣☺️😊😇🙂🙃😉😌😍🥰😘😗😙😚😋😛😝😜🤪🤨🧐🤓😎🤩🥳😏😒😞😔😟😕🙁☹️😣😖😫😩🥺😢😭😤😠😡🤬🤯😳🥵🥶😱😨😰😥😓🤗🤔🤭🤫🤥😶😐😑😬🙄😯😦😧😮😲🥱😴🤤😪😵🤐🥴🤢🤮🤧😷🤒🤕🤑🤠😈👿👹👺🤡💩👻💀☠️👽👾🤖🎃😺😸😹😻😼😽🙀😿😾🤲👐🙌👏🤝👍👎👊✊🤛🤜🤞✌️🤟🤘👌🤏👈👉👆👇☝️✋🤚🖐🖖👋🤙",
+                "The ocean is hiding something.",
+                "I don't think it’s possible that anyone could poop more than me.",
+                "c",
+                "{mention} please go away",
+                "You will die of spicy diarrhea in {seconds} seconds.",
+                "The lad race is widespread on many planets.",
+                "Dude I’m buying groceries.",
+                "Dude I’m taking a bath.",
+                "Doge is watching us intently...",
+                "Lore? Hmm, keep using this command and I might give you some.",
+                "Soup Arena? Never heard of it.",
+                "I will poop on you if you don’t fucking stop.",
+                "I will crap in your mouth!",
+                "OMG NO WAY HE",
+                "Superbrohouse",
+                "I can’t",
+                "YOU CANT STOP THEM.",
+                "If the Essence wins...",
+                "It’s raining men!",
+                "I might actually not be made of poop.",
+                "I used to be yellow, just like my bretheren.",
+                "Are you expecting something?",
+                "My favorite food is sugar cookies.",
+                "Planet travel is much easier thanks to me...",
+                "Amateur Sailor will be a great sailor one day!",
+                "omgbroyoucrazywhyyouusethiscommandsomuchidiotstinkyperson",
+                "Quoth the raven, \"nevermore\".",
+                "Nah fam",
+                "Uniting the legendary items will finally complete the prophecy...",
+                "I’ll never forget the day...",
+                "Deinx if you’re reading this you’re fat hahahahaha",
+                "The prototype I am building has endless capabilities.",
+                "The others don’t appreciate me, but they should.",
+                "You’ll never find my secret base!",
+                "I’ve been keeping a close eye on you for a while now.",
+                "You are dumb.",
+                "We captured the spy!",
+                "Pood",
+                "Paad",
+                "Piid",
+                "Puud",
+                "You will never reach the truth.",
+                "Yo.",
+                "fack you",
+                "Me when",
+                "Ballfish is actually at-",
+                "No",
+                "Yes",
+                "Wired were the eyes of a horse on a jet pilot, one that smiled when they flew over the bay!",
+                "Chop Suey!",
+                "What is wrong with you?",
+                "I may not look it, but my intelligence is far beyond.",
+                "is soup remastered ever getting a thumbnail",
+                "Response",
+                "Plain Text",
+                "is krima?",
+                "theres 104 days of summer vacation",
+                "I farted quietly.",
+                "Ha! Sand in the eye! You’ll never get my lore!",
+                "Words can not describe how much I absolutely despise stew.",
+                "My home planet is so far...",
+                "Will my brethren ever accept me again?",
+                "Skibidi bop mm dada",
+                ":hole <@613501149282172970>",
+                "Entity 1 will not stop until he has gained all the power.",
+                "The entities have massacred 24 planets so far, and you're next.",
+                "Soup rains will come soon, but they will be a bit different.",
+                "Regal will have karma someday...",
+                "Stew aliens are building a weapon to melt planet Soup's surface. You must stop them.",
+                "**UPDATE 999** - Add shit - Add shat - Add shot - Add shut - Add shet",
+                "WTFNOOOO!",
+                "Leave right now.",
+                "THE LE-D-R",
+                "CO-R—TI-N",
+                "I want legs for Christmas.",
+                "The crystals grow ever more aggravated...",
+                "Nobody will miss 2020.",
+                "Gork rights!",
+                "My prototype is enormous, and it's equipped with all kinds of powerful weapons!"
+            ]
+        }
+
+        if (!poopy.functions.globalData()['bot-data']['dmphrases']) {
+            poopy.functions.globalData()['bot-data']['dmphrases'] = [
+                "Yo.",
+                "ADMIN?",
+                "I don't care how long I have to keep this up, I'll make a post daily, or maybe even more frequently until one of two things happen. Deinbag's cheated level is removed from the leaderboard, or Calm gets its One Winged Angel theme back. I will not put up with two major things I cared about in the game be influenced by the developers when they had no good reason. And until it gets fixed, you'll be seeing this message over and over, no matter the platform.",
+                "Eat your chair",
+                "same feel",
+                "NO WAY HE",
+                "What.",
+                "That's spicy.",
+                "SAME!",
+                "<:poopy:621064531908755467> this is me",
+                "Wait, what the hell is the peedapocalypse?",
+                "Cool.",
+                "NaN",
+                "undefined",
+                "nil",
+                "Good work.",
+                "That deserves a reward!",
+                "but how can",
+                "YES",
+                "DAMN DANIEL!",
+                "Hello everybody my name is Markiplier and today we'll <@454732245425455105>",
+                "Why does it smell like fart",
+                "Mama Luigi? MAMA LUIGI?!?!",
+                "ballfishe",
+                "Don't expect to see lore here anytime soon.",
+                "** **",
+                "that's stupid",
+                "Epic School Prank",
+                "I feel like I've heard that before...",
+                ":deciduous_tree:",
+                "no......",
+                "So Phil, is it?",
+                "it was",
+                "it wasn't",
+                "FINE I DO IT",
+                "HI DEINX",
+                "INPOSSINBLE",
+                "Poop shit. Idiot Dream Hotel Mario. You are a man's friend for a moment.",
+                "how do i help you",
+                "AWESOME! i died",
+                "just like that, my life became a misery",
+                "ROAST",
+                "bmmptsmptshmptsptsptsptsptsmhmptsmmhmmptsptsptsptsmhptsmmhptsmmmptshmptsptsptsmmptsmptshhptsmmptsmmmhmmmhmm",
+                "POOPY. HEAD.",
+                "Descend to hell.",
+                "Ascend to heaven.",
+                "SHUT UP YOU RACIS TIDITO!!!!!",
+                "coel",
+                "erectile dysfunction",
+                "brb i'm gonna block you for fun",
+                "omg!!!! creator",
+                "I blew up Malaysia",
+                "Oh? On god?",
+                "funy",
+                "You May Insert",
+                "O_o",
+                "Genius.",
+                "let's get this thing viral",
+                "2b2t",
+                "NUMBER",
+                "epica moment",
+                "https://www.youtube.com/watch?v=RR856dzGhv8",
+                "ARE YOU GORK'S MOTHER!?!?!?!",
+                "```bat\ncd desktop\ncd poopy\nnode .\n```",
+                "```lua\ngame.Players.PlayerAdded:Connect(function(plr)\n    plr.Kick()\nend)```",
+                "Bro tip number 80:\nsuicide is the answer",
+                "now you understand what that ominous entity was",
+                "it was minecraft steve, he's turned your world into his, and now he wants to kill you",
+                "wholesome 100",
+                "cringe",
+                "TABLE.",
+                "Pufferfish Defense",
+                "my mom",
+                "I blew up",
+                "my skin is rotting slowly",
+                "{mention}",
+                "seen that already",
+                "I knew it.",
+                "bye bye troller",
+                "we don't need you",
+                "I can track your location",
+                "fuck",
+                "HAHAHAHAHAHAH",
+                "Congrats, your Reddit account has been successfully created",
+                "you putrid fuck",
+                "fortnite balls i'm gay",
+                "thats not funny",
+                "and i genuinely love this girl",
+                "Oh My Fucking God Shut The Fuck Up You're So Annoying If I Wasn't A Bot I Would Immediately Block You It'd Be Pretty Awesome If I Wasn't One Anyways I Could Just Join Any Server And Bomb Each One Of Them With My Great Awesome 10/10 Commands But Guess I Can't Because Of You Yes That's Right You Are One Of The Biggest Obstacles I've Ever Bumped With In My Entire History But Anyways The Whole Point Of This Speech Was To Shut You The Fuck Up Please Get Out Of My Dms I Can't Handle It Anymore I Will Do Anything To Stop You Even Delete Myself From The Existance Of Discord So Now I'm Just Gonna Smash My Keyboard Until I'm Done With You SJDASFUIDASHUDIHASUIDFAHSKUALDOWRQWPRS 65 ttfgiootifgiotf  re uir ue      re7 r   r7eriue rei reirrrr  r r r rick sa9df a8 9san 7 47897472 YRYEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEER78QR@ L2l2  0 4l v l£§30324-",
+                "Bosom...?",
+                "I NEED TO SUCK MAD TITTIES RN!",
+                "i could kill you"
+            ]
+        }
+
+        poopy.arrays.psFiles = poopy.functions.globalData()['bot-data']['psfiles']
+        poopy.arrays.psPasta = poopy.functions.globalData()['bot-data']['pspasta']
+        poopy.arrays.funnygifs = poopy.functions.globalData()['bot-data']['funnygif']
+        poopy.arrays.poopPhrases = poopy.functions.globalData()['bot-data']['poop']
+        poopy.arrays.dmPhrases = poopy.functions.globalData()['bot-data']['dmphrases']
+
+        poopy.vars.filecount = poopy.data['bot-data']['filecount'] || 0
+
+        if (poopy.config.testing) {
+            if (!poopy.modules.fs.existsSync('data')) {
+                poopy.modules.fs.mkdirSync('data')
+            }
+            poopy.modules.fs.writeFileSync(`data/${poopy.config.mongodatabase}.json`, JSON.stringify(poopy.data))
+            poopy.modules.fs.writeFileSync(`data/globaldata.json`, JSON.stringify(poopy.functions.globalData()))
+        }
+
+        await poopy.functions.infoPost(`Finishing extra steps...`)
+
+        await poopy.modules.noblox.setCookie(process.env.ROBLOXCOOKIE).catch(() => { })
+        poopy.json.emojiJSON = await poopy.functions.getEmojis().catch(() => { })
+        console.log('emojis')
+        if (!poopy.modules.fs.existsSync('temp')) {
+            poopy.modules.fs.mkdirSync('temp')
+        }
+        if (!poopy.modules.fs.existsSync(`temp/${poopy.config.mongodatabase}`)) {
+            poopy.modules.fs.mkdirSync(`temp/${poopy.config.mongodatabase}`)
+        }
+        await poopy.functions.updateSlashCommands()
+        poopy.functions.save()
+        poopy.vars.saveInterval = setInterval(function () {
+            poopy.functions.save()
+        }, 120000)
+        console.log('all done, he\'s actually online now')
+        await poopy.functions.infoPost(`Reboot ${poopy.data['bot-data']['reboots']} succeeded, he's up now`)
+        poopy.functions.changeStatus()
+        poopy.vars.statusInterval = setInterval(function () {
+            poopy.functions.changeStatus()
+        }, 300000)
+
+        var wakecount = String(poopy.data['bot-data']['reboots'] + 1)
+        var thmatch = wakecount.match(/[^1][1-3]$|^[1-3]$/)
+
+        if (thmatch) {
+            wakecount += ['st', 'nd', 'rd'][Number(thmatch[0][thmatch[0].length - 1]) - 1]
+        } else {
+            wakecount += 'th'
+        }
+
+        await poopy.functions.waitMessageCooldown()
+        poopy.bot.guilds.cache.get('834431435704107018')?.channels.cache.get('947167169718923341')?.send(!poopy.config.stfu ? (poopy.config.testing ? 'raleigh is testing' : `this is the ${wakecount} time this happens`) : '').catch(() => { })
+
+        poopy.bot.on('messageCreate', (msg) => {
+            poopy.callbacks.messageCallback(msg).catch(() => { })
+        })
+        poopy.bot.on('guildCreate', (guild) => {
+            poopy.callbacks.guildCallback(guild).catch(() => { })
+        })
+        poopy.bot.on('guildDelete', (guild) => {
+            poopy.callbacks.guildDeleteCallback(guild).catch(() => { })
+        })
+        poopy.bot.on('interactionCreate', (interaction) => {
+            poopy.callbacks.interactionCallback(interaction).catch(() => { })
+        })
+    }
+
+    async destroy() {
+        let poopy = this
+
+        clearInterval(poopy.vars.statusInterval)
+        delete poopy.vars.statusInterval
+        clearInterval(poopy.vars.saveInterval)
+        delete poopy.vars.saveInterval
+        poopy.bot.destroy()
+        delete poopy.data
+        delete poopy.tempdata
+        for (var type in poopy.functions.globalData()) delete poopy.functions.globalData()[type]
     }
 }
 
