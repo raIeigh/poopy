@@ -4374,10 +4374,18 @@ class Poopy {
             await poopy.functions.waitMessageCooldown()
             poopy.bot.guilds.cache.get('834431435704107018')?.channels.cache.get('947167169718923341')?.send(!poopy.config.stfu ? (poopy.config.testing ? 'raleigh is testing' : `this is the ${wakecount} time this happens`) : '').catch(() => { })
 
-            poopy.bot.on('messageCreate', poopy.callbacks.messageCallback)
-            poopy.bot.on('guildCreate', poopy.callbacks.guildCallback)
-            poopy.bot.on('guildDelete', poopy.callbacks.guildDeleteCallback)
-            poopy.bot.on('interactionCreate', poopy.callbacks.interactionCallback)
+            poopy.bot.on('messageCreate', (msg) => {
+                poopy.callbacks.messageCallback(msg).catch(() => { })
+            })
+            poopy.bot.on('guildCreate', (guild) => {
+                poopy.callbacks.guildCallback(guild).catch(() => { })
+            })
+            poopy.bot.on('guildDelete', (guild) => {
+                poopy.callbacks.guildDeleteCallback(guild).catch(() => { })
+            })
+            poopy.bot.on('interactionCreate', (interaction) => {
+                poopy.callbacks.interactionCallback(interaction).catch(() => { })
+            })
         })
     }
 
