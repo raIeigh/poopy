@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>poopy data required</title>
+    <link rel="icon" href="https://poopies-for-you.herokuapp.com/resources/rouge.png">
+    <meta property="og:image" content="https://poopies-for-you.herokuapp.com/resources/rouge.png">
+    <meta property="og:title" content="poopy data required">
+    <meta property="og:description" content="wait for him">
+    <script async>
+        async function main() {
+            var poopyStarted = false
+
+            while (!poopyStarted) {
+                var json = await fetch('https://poopies-for-you.herokuapp.com/poopystarted').then(res => res.json()).catch(() => { })
+
+                if (json && json.started) {
+                    poopyStarted = true
+                }
+            }
+
+            window.location.reload()
+        }
+
+        main()
+    </script>
+</head>
+
+<body>poopy is starting, you must wait</body>
+
+</html>
