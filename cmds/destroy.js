@@ -10,6 +10,7 @@ module.exports = {
         } else {
             await msg.channel.send('The salami lid').catch(() => { })
             await poopy.destroy()
+            if (poopy.config.quitOnDestroy) process.exit()
         };
     },
     help: { name: 'destroy/kill/shutdown', value: 'Causes Poopy to shutdown.' },

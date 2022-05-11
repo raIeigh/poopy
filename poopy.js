@@ -98,7 +98,8 @@ class Poopy {
             },
             commandLimit: 5,
             keyLimit: 500,
-            memLimit: 0
+            memLimit: 0,
+            quitOnDestroy: false
         }
 
         for (var i in config) {

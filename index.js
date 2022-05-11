@@ -1,18 +1,12 @@
 async function main() {
-    const Poopy = require('./poopy')
     var poopyStarted = false
     const express = require('express')
     const axios = require('axios')
     const cors = require('cors')
     var globalData = require('./modules/globalData')
-    var mongolia = false
 
     const app = express()
     const PORT = process.env.PORT || 8080
-
-    function sleep(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms))
-    }
 
     app.use(cors())
 
@@ -32,7 +26,12 @@ async function main() {
     })
 
     app.use(function (req, res, next) {
-        if (req.protocol !== 'https') return res.redirect(`https://${req.headers.host}${req.url}`)
+        if (req.protocol !== 'https') {
+            req.protocol = 'https'
+            res.redirect(`https://${req.headers.host}${req.url}`)
+            return
+        }
+        next()
     })
 
     app.use(express.static('public'))
@@ -47,12 +46,15 @@ async function main() {
         axios.get(`https://poopies-for-you.herokuapp.com`).catch(() => { })
     }, 300000)
 
+    const Poopy = require('./poopy')
+
     const tokens = [
         {
             TOKEN: process.env[__dirname.includes('app') ? 'POOPYTOKEN' : 'POOPYTOKEN2'],
             opts: {
                 testing: !(__dirname.includes('app')),
                 globalPrefix: __dirname.includes('app') ? 'p:' : '2p:',
+                quitOnDestroy: true
             }
         }
     ]
