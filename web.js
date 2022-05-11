@@ -14,6 +14,4 @@ app.get('/', function (req, res) {
     res.render('index');
 })
 
-app.listen(1950, () => console.log('website is up'))
-
-setInterval(() => axios.get('https://poopies-for-you.herokuapp.com/'), 600000)
+app.listen(5000, () => console.log('website is up'))
