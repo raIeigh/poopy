@@ -25,14 +25,13 @@ async function main() {
         }
     })
 
-    app.use(function (req, res, next) {
-        if (req.protocol !== 'https') {
-            req.protocol = 'https'
+    /*app.use(function (req, res, next) {
+        if (req.protocol != 'https') {
             res.redirect(`https://${req.headers.host}${req.url}`)
             return
         }
         next()
-    })
+    })*/
 
     app.use(express.static('public'))
 
