@@ -1,8 +1,6 @@
 async function main() {
     var poopyStarted = false
     const express = require('express')
-    const https = require('https')
-    const http = require('http');
     const fs = require('fs-extra')
     const axios = require('axios')
     const cors = require('cors')
@@ -12,6 +10,11 @@ async function main() {
     const PORT = process.env.PORT || 8080
 
     app.use(cors())
+
+    app.use(function (req, res) {
+        if (req.protocol != 'https') res.redirect(`https://${req.headers.host}${req.url}`)
+        else next()
+    })
 
     app.get('/api/poopystarted', async function (req, res, next) {
         res.type('json').send({
@@ -38,14 +41,7 @@ async function main() {
         res.status(404).sendFile(`${__dirname}/https/errorpages/404.html`)
     })
 
-    https.createServer({
-        key: fs.readFileSync('https/poopy-key.pem'),
-        cert: fs.readFileSync('https/poopy-cert.pem')
-    }, app).listen(PORT)
-
-    http.createServer(express().use(function (req, res) {
-        res.redirect(`https://${req.headers.host}${req.url}`)
-    })).listen(Math.round(PORT / 2))
+    app.listen(PORT, () => console.log('website is up'))
 
     setInterval(function () {
         axios.get(`https://poopies-for-you.herokuapp.com`).catch(() => { })
