@@ -1,6 +1,9 @@
 async function main() {
     var poopyStarted = false
     const express = require('express')
+    const https = require('https')
+    const http = require('http');
+    const fs = require('fs-extra')
     const axios = require('axios')
     const cors = require('cors')
     var globalData = require('./modules/globalData')
@@ -10,10 +13,14 @@ async function main() {
 
     app.use(cors())
 
-    app.get('/poopystarted', async function (req, res, next) {
+    app.get('/api/poopystarted', async function (req, res, next) {
         res.type('json').send({
             started: poopyStarted
         })
+    })
+
+    app.get('/api/globaldata', async function (req, res, next) {
+        res.type('json').send(globalData())
     })
 
     app.get('/psfile', async function (req, res, next) {
@@ -21,26 +28,24 @@ async function main() {
             var psfiles = globalData()['bot-data']['psfiles']
             res.redirect(psfiles[Math.floor(Math.random() * psfiles.length)])
         } else {
-            res.sendFile(`${__dirname}/startpage/index.html`)
+            res.sendFile(`${__dirname}/https/startpage.html`)
         }
     })
 
-    app.use(function (req, res, next) {
-        if (req.protocol !== 'https') {
-            req.protocol = 'https'
-            res.redirect(`https://${req.headers.host}${req.url}`)
-            return
-        }
-        next()
-    })
-
-    app.use(express.static('public'))
+    app.use(express.static('https/public'))
 
     app.use(function (req, res, next) {
-        res.status(404).sendFile(`${__dirname}/errorpages/404.html`)
+        res.status(404).sendFile(`${__dirname}/https/errorpages/404.html`)
     })
 
-    app.listen(PORT, () => console.log('your balls are my property'))
+    https.createServer({
+        key: fs.readFileSync('https/poopy-key.pem'),
+        cert: fs.readFileSync('https/poopy-cert.pem')
+    }, app).listen(PORT)
+
+    http.createServer(express().use(function (req, res) {
+        res.redirect(`https://${req.headers.host}${req.url}`)
+    })).listen(Math.round(PORT / 2))
 
     setInterval(function () {
         axios.get(`https://poopies-for-you.herokuapp.com`).catch(() => { })
