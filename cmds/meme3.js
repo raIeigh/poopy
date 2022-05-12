@@ -82,7 +82,6 @@ module.exports = {
             var futura = await poopy.modules.Jimp.loadFont('templates/fonts/FuturaCondensed/FuturaCondensed.fnt')
             white.resize(width, height)
             white.resize(Math.round(2000 / size), poopy.modules.Jimp.AUTO)
-            var defaultheight = futura.common.lineHeight
             var textheight = poopy.modules.Jimp.measureTextHeight(futura, text, white.bitmap.width - Math.round(160 / size))
             white.resize(Math.round(2000 / size), textheight + Math.round(160 / size))
             await white.print(futura, Math.round(80 / size), Math.round(80 / size), { text: poopy.modules.Discord.Util.cleanContent(text, msg), alignmentX: poopy.modules.Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: poopy.modules.Jimp.VERTICAL_ALIGN_MIDDLE }, white.bitmap.width - Math.round(160 / size), white.bitmap.height - Math.round(160 / size))
@@ -134,7 +133,6 @@ module.exports = {
             var futura = await poopy.modules.Jimp.loadFont('templates/fonts/FuturaCondensed/FuturaCondensed.fnt')
             white.resize(width, height)
             white.resize(Math.round(2000 / size), poopy.modules.Jimp.AUTO)
-            var defaultheight = futura.common.lineHeight
             var textheight = poopy.modules.Jimp.measureTextHeight(futura, text, white.bitmap.width - Math.round(160 / size))
             white.resize(Math.round(2000 / size), textheight + Math.round(160 / size))
             await white.print(futura, Math.round(80 / size), Math.round(80 / size), { text: poopy.modules.Discord.Util.cleanContent(text, msg), alignmentX: poopy.modules.Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: poopy.modules.Jimp.VERTICAL_ALIGN_MIDDLE }, white.bitmap.width - Math.round(160 / size), white.bitmap.height - Math.round(160 / size))
@@ -186,7 +184,6 @@ module.exports = {
             var futura = await poopy.modules.Jimp.loadFont('templates/fonts/FuturaCondensed/FuturaCondensed.fnt')
             white.resize(width, height)
             white.resize(Math.round(2000 / size), poopy.modules.Jimp.AUTO)
-            var defaultheight = futura.common.lineHeight
             var textheight = poopy.modules.Jimp.measureTextHeight(futura, text, white.bitmap.width - Math.round(160 / size))
             white.resize(Math.round(2000 / size), textheight + Math.round(160 / size))
             await white.print(futura, Math.round(80 / size), Math.round(80 / size), { text: poopy.modules.Discord.Util.cleanContent(text, msg), alignmentX: poopy.modules.Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: poopy.modules.Jimp.VERTICAL_ALIGN_MIDDLE }, white.bitmap.width - Math.round(160 / size), white.bitmap.height - Math.round(160 / size))

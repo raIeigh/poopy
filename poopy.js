@@ -946,7 +946,10 @@ class Poopy {
             payload += `&cb_settings_language=en&cb_settings_scripting=no&islearning=1&icognoid=wsf&icognocheck=`
             payload += poopy.modules.md5(payload.substring(7, 33))
             var res = await poopy.modules.axios.request({
-                method: "POST", url: "https://www.cleverbot.com/webservicemin?uc=UseOfficialCleverbotAPI&ncf=V2&", data: payload, headers: {
+                method: "POST",
+                url: "https://www.cleverbot.com/webservicemin?uc=UseOfficialCleverbotAPI&ncf=V2&",
+                data: payload,
+                headers: {
                     "Content-Type": "text/plain",
                     Cookie: jar,
                     "User-Agent": UA
@@ -2606,7 +2609,7 @@ class Poopy {
                 poopy.tempdata[msg.author.id]['startTime'] = Date.now()
             }
 
-            while (poopy.functions.getKeyFunc(string, { extrakeys: extrakeys, extrafuncs: extrafuncs }) !== false) {
+            while (poopy.functions.getKeyFunc(string, { extrakeys: extrakeys, extrafuncs: extrafuncs }) !== false && poopy.tempdata[msg.author.id]['return'] == undefined) {
                 if (poopy.tempdata[msg.author.id]['keyattempts'] >= poopy.config.keyLimit) {
                     poopy.functions.infoPost(`Keyword attempts value exceeded`)
                     return 'Keyword attempts value exceeded.'
@@ -2650,6 +2653,9 @@ class Poopy {
                 poopy.tempdata[msg.author.id]['keywordsExecuted'] = []
                 delete poopy.tempdata[msg.author.id]['startTime']
             }
+
+            if (poopy.tempdata[msg.author.id]['return'] != undefined) string = poopy.tempdata[msg.author.id]['return']
+            delete poopy.tempdata[msg.author.id]['return']
 
             return string
         }
@@ -2977,7 +2983,8 @@ class Poopy {
                     shortext: shortext,
                     shortpixfmt: shortpixfmt,
                     name: names[names.length - 1],
-                    info: info
+                    info: info,
+                    buffer: poopy.modules.fs.readFileSync(path)
                 })
             })
         }
@@ -3006,6 +3013,12 @@ class Poopy {
                 }).catch((err) => {
                     reject(err.message)
                 })
+
+                var bufferresponse = await poopy.modules.axios.request({
+                    method: 'GET',
+                    url: url,
+                    responseType: 'arraybuffer'
+                }).catch(() => { }) ?? { data: '' }
 
                 if (!response) {
                     return
@@ -3082,12 +3095,6 @@ class Poopy {
                     info.size = Number(contentLength) / 1048576
                     info.realsize = Number(contentLength)
                 } else {
-                    var bufferresponse = await poopy.modules.axios.request({
-                        method: 'GET',
-                        url: url,
-                        responseType: 'arraybuffer'
-                    }).catch(() => { }) ?? { data: '' }
-
                     info.size = bufferresponse.data.length / 1048576
                     info.realsize = bufferresponse.data.length
                 }
@@ -3144,7 +3151,8 @@ class Poopy {
                     shortext: shortext,
                     shortpixfmt: shortpixfmt,
                     name: name,
-                    info: info
+                    info: info,
+                    buffer: bufferresponse.data
                 })
             })
         }
