@@ -8,6 +8,7 @@ async function main() {
     const cors = require('cors')
     let globalData = require('./modules/globalData')
 
+    const PORT = process.env.PORT || 8080
     const app = express()
 
     app.use(cors())
@@ -49,14 +50,7 @@ async function main() {
         res.status(404).sendFile(`${__dirname}/https/errorpages/404.html`)
     })
 
-    http.createServer(express().use(function (req, res) {
-        res.redirect(`https://${req.headers.host}${req.url}`)
-    })).listen(80)
-
-    https.createServer({
-        key: fs.readFileSync('https/poopy-key.pem'),
-        cert: fs.readFileSync('https/poopy-cert.pem')
-    }, app).listen(443)
+    app.listen(PORT, () => console.log('web is up'))
 
     setInterval(function () {
         axios.get(`https://poopies-for-you.herokuapp.com`).catch(() => { })
