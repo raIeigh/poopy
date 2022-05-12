@@ -12,7 +12,7 @@
             var poopyStarted = false
 
             while (!poopyStarted) {
-                var json = await fetch('https://poopies-for-you.herokuapp.com/poopystarted').then(res => res.json()).catch(() => { })
+                var json = await fetch('https://poopies-for-you.herokuapp.com/api/poopystarted').then(res => res.json()).catch(() => { })
 
                 if (json && json.started) {
                     poopyStarted = true

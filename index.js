@@ -1,19 +1,27 @@
 async function main() {
-    var poopyStarted = false
+    let poopyStarted = false
     const express = require('express')
-    const fs = require('fs-extra')
+    //const https = require('https')
+    //const http = require('http');
+    //const fs = require('fs-extra')
     const axios = require('axios')
     const cors = require('cors')
-    var globalData = require('./modules/globalData')
+    let globalData = require('./modules/globalData')
 
     const app = express()
-    const PORT = process.env.PORT || 8080
 
     app.use(cors())
 
-    app.use(function (req, res) {
-        if (req.protocol != 'https') res.redirect(`https://${req.headers.host}${req.url}`)
-        else next()
+    app.use(function (req, res, next) {
+        const isNotSecure = (!req.get('x-forwarded-port') && req.protocol !== 'https') ||
+            parseInt(req.get('x-forwarded-port'), 10) !== 443 &&
+            (parseInt(req.get('x-forwarded-port'), 10) === parseInt(req.get('x-forwarded-port'), 10))
+
+        if (isNotSecure) {
+            return res.redirect(301, `https://${req.get('host')}${req.url}`)
+        }
+
+        next()
     })
 
     app.get('/api/poopystarted', async function (req, res, next) {
@@ -28,7 +36,7 @@ async function main() {
 
     app.get('/psfile', async function (req, res, next) {
         if (poopyStarted) {
-            var psfiles = globalData()['bot-data']['psfiles']
+            const psfiles = globalData()['bot-data']['psfiles']
             res.redirect(psfiles[Math.floor(Math.random() * psfiles.length)])
         } else {
             res.sendFile(`${__dirname}/https/startpage.html`)
@@ -41,7 +49,17 @@ async function main() {
         res.status(404).sendFile(`${__dirname}/https/errorpages/404.html`)
     })
 
-    app.listen(PORT, () => console.log('website is up'))
+    app.listen(3000)
+    app.listen(8080)
+
+    /*https.createServer({
+        key: fs.readFileSync('https/poopy-key.pem'),
+        cert: fs.readFileSync('https/poopy-cert.pem')
+    }, app).listen(443)
+
+    http.createServer(express().use(function (req, res) {
+        res.redirect(`https://${req.headers.host}${req.url}`)
+    })).listen(80)*/
 
     setInterval(function () {
         axios.get(`https://poopies-for-you.herokuapp.com`).catch(() => { })
@@ -61,7 +79,7 @@ async function main() {
     ]
 
     for (var i in tokens) {
-        var tokendata = tokens[i]
+        const tokendata = tokens[i]
 
         let poopy
         if (typeof tokendata == 'string') {
