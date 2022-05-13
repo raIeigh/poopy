@@ -7,22 +7,12 @@
     <meta property="og:image" content="https://poopies-for-you.herokuapp.com/resources/rouge.png">
     <meta property="og:title" content="poopy data required">
     <meta property="og:description" content="wait for him">
-    <script async>
-        async function main() {
-            var poopyStarted = false
+    <script>
+        const source = new EventSource('/api/onpoopystart');
 
-            while (!poopyStarted) {
-                var json = await fetch('https://poopies-for-you.herokuapp.com/api/poopystarted').then(res => res.json()).catch(() => { })
-
-                if (json && json.started) {
-                    poopyStarted = true
-                }
-            }
-
+        source.addEventListener('message', () => {
             window.location.reload()
-        }
-
-        main()
+        })
     </script>
 </head>
 
