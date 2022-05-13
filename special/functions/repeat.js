@@ -12,8 +12,9 @@ module.exports = {
     var repeat = []
     for (var i = 0; i < times; i++) {
       repeat.push(phrase)
+      poopy.tempdata[msg.author.id]['keyattempts']++
+      if (poopy.tempdata[msg.author.id]['keyattempts'] >= poopy.config.keyLimit) break
     }
-    return repeat.join(separator).substring(0, 2000)
-  },
-  attemptvalue: 10
+    return repeat.join(separator)
+  }
 }
