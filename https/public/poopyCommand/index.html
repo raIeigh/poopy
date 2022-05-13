@@ -1,0 +1,20 @@
+<html>
+  <head>
+    <title>poopy command executor</title>
+    <link rel="icon" href="https://cdn.discordapp.com/attachments/760223418968047629/973329887433736233/94b2caa2c814b2a08f880d0ea57df45e.png">
+    <meta content="Poopy's Public Execution" property="og:description" />
+    <meta content="https://cdn.discordapp.com/attachments/760223418968047629/973329887433736233/94b2caa2c814b2a08f880d0ea57df45e.png" property="og:image" />
+  </head>
+  
+  <body>
+    Today, and today, you can execute the poopy command right here.
+    <br>
+    <form action="/api/command" method="POST">
+      <label for="command">command:</label>
+      <input type="text" id="command" placeholder="spam" name="command"><br><br>
+      <label for="args">arguments:</label>
+      <textarea id="args" rows="4" cols="50" placeholder="25 shit -tts" name="args"></textarea><br><br>
+      <input type="submit" value="execute">
+    </form>
+  </body>
+</html>

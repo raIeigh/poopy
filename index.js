@@ -23,7 +23,7 @@ async function main() {
         return new Promise(resolve => setTimeout(resolve, ms))
     }
 
-    app.use(function (req, res, next) {
+    /*app.use(function (req, res, next) {
         const isNotSecure = (!req.get('x-forwarded-port') && req.protocol !== 'https') ||
             parseInt(req.get('x-forwarded-port'), 10) !== 443 &&
             (parseInt(req.get('x-forwarded-port'), 10) === parseInt(req.get('x-forwarded-port'), 10))
@@ -33,7 +33,7 @@ async function main() {
         }
 
         next()
-    })
+    })*/
 
     app.get('/api/onpoopystart', async function (req, res) {
         res.set({
@@ -48,20 +48,17 @@ async function main() {
         res.write('retry: 10000\n\n')
     })
 
-    app.get('/api/text', async function (req, res) {
-        for (var i = 0; i < 10; i++) {
-            await sleep(1000)
-            res.write('fazballs')
-        }
-    })
-
     app.post('/api/command', async function (req, res) {
         if (poopyStarted) {
             let sent = false
 
-            if (!req.body || req.body.command != undefined) {
-                return res.status(400).type('text').send('You need a command name.')
+            res.type('text')
+
+            if (!req.body || req.body.command == undefined) {
+                return res.status(400).send('You need a command name.')
             }
+
+            let contents = []
 
             let msg = {
                 content: `${mainPoopy.config.globalPrefix}${req.body.command}${req.body.args != undefined ? ` ${req.body.args}` : ''}`,
@@ -107,7 +104,7 @@ async function main() {
                 }
             }
 
-            msg.guild = {
+            let guild = {
                 name: 'Guild',
                 fetchAuditLogs: async () => {
                     return {
@@ -118,17 +115,17 @@ async function main() {
                     cache: new Map()
                 },
                 ownerID: md5(req.ip),
-                id: md5(req.ip).reverse()
+                id: md5(req.ip).split('').reverse().join('')
             }
 
-            msg.channel = {
+            let channel = {
                 isText: () => true,
 
                 sendTyping: async () => undefined,
 
-                fetchWebhooks: async () => new Map([['apichannel', msg.channel]]),
+                fetchWebhooks: async () => new Map([['apichannel', channel]]),
 
-                createWebhook: async () => msg.channel,
+                createWebhook: async () => channel,
 
                 createMessageCollector: () => {
                     return {
@@ -143,8 +140,7 @@ async function main() {
                     if (sent) return
 
                     if (typeof (payload) == 'string') {
-                        sent = true
-                        res.type('text').send(payload)
+                        contents.push(payload)
                     } else {
                         function getAttachment() {
                             return (payload.files && payload.files.length > 0 && payload.files[0].attachment) || (payload.embeds && payload.embeds.length > 0 && payload.embeds[0].image && payload.embeds[0].image.url)
@@ -161,25 +157,22 @@ async function main() {
                                 res.sendFile(`${__dirname}/${attachment}`)
                             }
                         } else if (payload.embeds && payload.embeds.length > 0) {
-                            let contents = []
+                            let textEmbed = []
 
                             payload.embeds.forEach(embed => {
-                                if (embed.author && embed.author.name) contents.push(embed.author.name)
-                                if (embed.title) contents.push(embed.title)
-                                if (embed.description) contents.push(embed.description)
-                                if (embed.fields && embed.fields.length > 0) contents.push(embed.fields.map(field => `${field.name ?? ''}\n${field.value ?? ''}`).join('\n'))
-                                if (embed.footer && embed.footer.text) contents.push(embed.footer.text)
+                                if (embed.author && embed.author.name) textEmbed.push(embed.author.name)
+                                if (embed.title) textEmbed.push(embed.title)
+                                if (embed.description) textEmbed.push(embed.description)
+                                if (embed.fields && embed.fields.length > 0) textEmbed.push(embed.fields.map(field => `${field.name ?? ''}\n${field.value ?? ''}`).join('\n'))
+                                if (embed.footer && embed.footer.text) textEmbed.push(embed.footer.text)
                             })
 
-                            res.type('text').send(contents.join('\n'))
+                            contents.push(textEmbed.join('\n'))
                         } else {
-                            sent = true
-                            res.type('text').send(payload.content ?? '')
+                            contents.push(payload.content ?? '')
                         }
                     }
                 },
-
-                guild: msg.guild,
 
                 owner: mainPoopy.bot.user,
 
@@ -188,20 +181,19 @@ async function main() {
                 id: 'apichannel'
             }
 
-            msg.author = {
+            let user = {
                 send: async () => msg,
                 displayAvatarURL: () => mainPoopy.bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
-                createDM: async () => msg.channel,
+                createDM: async () => channel,
                 username: 'User',
-                dmChannel: msg.channel,
+                dmChannel: channel,
                 id: md5(req.ip)
             }
 
-            msg.member = {
-                send: async () => msg,
-                user: msg.author,
+            let member = {
+                send: channel.send,
+                user: user,
                 nickname: 'Member',
-                guild: msg.guild,
                 roles: {
                     cache: new Map([['apirole', { name: 'owner', id: 'apirole' }]])
                 },
@@ -211,34 +203,45 @@ async function main() {
                 id: md5(req.ip)
             }
 
-            msg.guild.members = {
-                fetch: async () => msg.member,
-                cache: new Map([[md5(req.ip), msg.member]])
+            member.guild = guild
+
+            channel.guild = guild
+
+            guild.members = {
+                fetch: async () => member,
+                cache: new Map([[md5(req.ip), member]])
             }
 
-            msg.guild.channels = {
-                cache: new Map([['apichannel', msg.channel]])
+            guild.channels = {
+                cache: new Map([['apichannel', channel]])
             }
 
-            msg.channel.messages = {
+            channel.messages = {
                 fetch: async () => msg,
                 cache: new Map([['apimessage', msg]])
             }
 
-            if (poopy.tempdata[msg.guild.id][msg.channel.id]['shut']) {
-                return res.status(400).type('text').send('shut')
+            msg.author = user
+            msg.member = member
+            msg.channel = channel
+            msg.guild = guild
+
+            await mainPoopy.functions.gatherData(msg).catch(() => { })
+
+            if (mainPoopy.tempdata[msg.guild.id][msg.channel.id]['shut']) {
+                return res.status(400).send('shut')
             }
 
-            if (poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown']) {
-                if ((poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] - Date.now()) > 0) {
-                    return res.status(400).type('text').send(`Calm down! Wait more ${(poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] - Date.now()) / 1000} seconds.`)
+            if (mainPoopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown']) {
+                if ((mainPoopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] - Date.now()) > 0) {
+                    return res.status(400).send(`Calm down! Wait more ${(mainPoopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] - Date.now()) / 1000} seconds.`)
                 } else {
-                    poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] = false
+                    mainPoopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] = false
                 }
             }
 
-            if (poopy.config.shit.find(id => id === msg.author.id)) {
-                return res.status(400).type('text').send('shit')
+            if (mainPoopy.config.shit.find(id => id === msg.author.id)) {
+                return res.status(400).send('shit')
             }
 
             const commandname = req.body.command.toLowerCase()
@@ -248,10 +251,8 @@ async function main() {
 
             if (command || localCommand) {
                 if (mainPoopy.data['guild-data'][msg.guild.id]['disabled'].find(cmd => cmd.find(n => n === commandname))) {
-                    return res.status(400).type('text').send('This command is disabled here.')
+                    return res.status(400).send('This command is disabled here.')
                 }
-
-                await mainPoopy.functions.gatherData(msg).catch(() => { })
 
                 var change = await mainPoopy.functions.getKeywordsFor(msg.content, msg, false, { resetattempts: true }).catch(() => { }) ?? 'error'
 
@@ -264,39 +265,45 @@ async function main() {
 
                 if (command) {
                     if (command.cooldown) {
-                        poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] = (poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] || Date.now()) + command.cooldown / ((msg.member.permissions.has('MANAGE_GUILD') || msg.member.roles.cache.find(role => role.name.match(/mod|dev|admin|owner|creator|founder|staff/ig)) || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID) && (command.type === 'Text' || command.type === 'Main') ? 5 : 1)
+                        mainPoopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] = (mainPoopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] || Date.now()) + command.cooldown / ((msg.member.permissions.has('MANAGE_GUILD') || msg.member.roles.cache.find(role => role.name.match(/mod|dev|admin|owner|creator|founder|staff/ig)) || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID) && (command.type === 'Text' || command.type === 'Main') ? 5 : 1)
                     }
 
-                    poopy.vars.cps++
-                    poopy.data['bot-data']['commands']++
+                    mainPoopy.vars.cps++
+                    mainPoopy.data['bot-data']['commands']++
                     var t = setTimeout(() => {
-                        poopy.vars.cps--;
+                        mainPoopy.vars.cps--;
                         clearTimeout(t)
                     }, 1000)
 
-                    poopy.functions.infoPost(`Command \`${commandname}\` used`)
+                    mainPoopy.functions.infoPost(`Command \`${commandname}\` used`)
                     await command.execute.call(mainPoopy, msg, args).catch((e) => {
-                        if (!sent) res.type('text').send(e.stack)
+                        if (!sent) res.send(e.stack)
                     })
-                    poopy.data['bot-data']['filecount'] = poopy.vars.filecount
+                    mainPoopy.data['bot-data']['filecount'] = mainPoopy.vars.filecount
+                    sent = true
+                    res.send(contents.join('\n'))
                 } else if (localCommand) {
-                    poopy.vars.cps++
-                    poopy.data['bot-data']['commands']++
+                    mainPoopy.vars.cps++
+                    mainPoopy.data['bot-data']['commands']++
                     var t = setTimeout(() => {
-                        poopy.vars.cps--;
+                        mainPoopy.vars.cps--;
                         clearTimeout(t)
                     }, 60000)
 
-                    poopy.functions.infoPost(`Command \`${commandname}\` used`)
-                    var phrase = await poopy.functions.getKeywordsFor(localCommand.phrase, msg, true).catch(() => { }) ?? 'error'
-                    poopy.data['bot-data']['filecount'] = poopy.vars.filecount
-                    if (!sent) res.type('text').send(phrase)
+                    mainPoopy.functions.infoPost(`Command \`${commandname}\` used`)
+                    var phrase = await mainPoopy.functions.getKeywordsFor(localCommand.phrase, msg, true).catch(() => { }) ?? 'error'
+                    mainPoopy.data['bot-data']['filecount'] = mainPoopy.vars.filecount
+                    if (!sent) {
+                        sent = true
+                        contents.push(phrase)
+                        res.send(contents.join('\n'))
+                    }
                 }
             } else {
-                res.status(400).type('text').send('Invalid command.')
+                res.status(400).send('Invalid command.')
             }
         } else {
-            res.status(102).res.sendFile(`${__dirname}/https/startpage.html`)
+            res.status(102).sendFile(`${__dirname}/https/startpage.html`)
         }
     })
 
@@ -329,6 +336,7 @@ async function main() {
             config: {
                 testing: !(__dirname.includes('app')),
                 globalPrefix: __dirname.includes('app') ? 'p:' : '2p:',
+                stfu: true,
                 quitOnDestroy: true
             }
         }
