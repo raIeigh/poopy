@@ -2543,6 +2543,7 @@ class Poopy {
                     if (url) {
                         urls = [url].concat(urls)
                     }
+                    if (urls >= 25) break
                 }
             }
 
