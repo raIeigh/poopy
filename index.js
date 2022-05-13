@@ -277,11 +277,13 @@ async function main() {
 
                     mainPoopy.functions.infoPost(`Command \`${commandname}\` used`)
                     await command.execute.call(mainPoopy, msg, args).catch((e) => {
-                        if (!sent) res.send(e.stack)
+                        contents.push(e.stack)
                     })
                     mainPoopy.data['bot-data']['filecount'] = mainPoopy.vars.filecount
-                    sent = true
-                    res.send(contents.join('\n'))
+                    if (!sent) {
+                        sent = true
+                        res.send(contents.join('\n'))
+                    }
                 } else if (localCommand) {
                     mainPoopy.vars.cps++
                     mainPoopy.data['bot-data']['commands']++
@@ -336,7 +338,6 @@ async function main() {
             config: {
                 testing: !(__dirname.includes('app')),
                 globalPrefix: __dirname.includes('app') ? 'p:' : '2p:',
-                stfu: true,
                 quitOnDestroy: true
             }
         }
