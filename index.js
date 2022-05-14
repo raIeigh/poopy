@@ -6,9 +6,9 @@ async function main() {
     const bp = require('body-parser')
     const { EventEmitter } = require('events')
     const fs = require('fs-extra')
+    const fileType = require('file-type')
     const axios = require('axios')
     const md5 = require('md5')
-    const fileType = require('file-type')
     let globalData = require('./modules/globalData')
 
     const PORT = process.env.PORT || 8080
@@ -23,7 +23,19 @@ async function main() {
         return new Promise(resolve => setTimeout(resolve, ms))
     }
 
-    /*app.use(function (req, res, next) {
+    function format(str) {
+        return str
+            .replace(/./gm, (s) => (s.match(/[a-z0-9\s*_~`>]+/i)) ? s : "&#" + s.charCodeAt(0) + ";")
+            .replace(/~{2}.+~{2}/g, (s) => `<s>${s.substring(2, s.length - 2)}</s>`)
+            .replace(/_{2}.+_{2}/g, (s) => `<u>${s.substring(2, s.length - 2)}</u>`)
+            .replace(/_.+_/g, (s) => `<i>${s.substring(2, s.length - 2)}</i>`)
+            .replace(/\*{2}.+\*{2}/g, (s) => `<b>${s.substring(2, s.length - 2)}</b>`)
+            .replace(/\*.+\*/g, (s) => `<i>${s.substring(1, s.length - 1)}</i>`)
+            .replace(/`{3}.+`{3}/g, (s) => `<pre>${s.substring(1, s.length - 1)}</pre>`)
+            .replace(/`.+`/g, (s) => `<code>${s.substring(1, s.length - 1)}</code>`)
+    }
+
+    app.use(function (req, res, next) {
         const isNotSecure = (!req.get('x-forwarded-port') && req.protocol !== 'https') ||
             parseInt(req.get('x-forwarded-port'), 10) !== 443 &&
             (parseInt(req.get('x-forwarded-port'), 10) === parseInt(req.get('x-forwarded-port'), 10))
@@ -33,26 +45,23 @@ async function main() {
         }
 
         next()
-    })*/
+    })
 
-    app.get('/api/onpoopystart', async function (req, res) {
-        res.set({
-            'Cache-Control': 'no-cache',
-            'Content-Type': 'text/event-stream',
-            'Connection': 'keep-alive'
-        })
-        res.flushHeaders()
+    app.get('/api/waitPoopyStart', async function (req, res) {
+        while (!poopyStarted) await sleep(1000)
+        res.end()
+    })
 
-        eventEmitter.once('poopystart', () => res.write(`data: true\n\n`))
-
-        res.write('retry: 10000\n\n')
+    app.get('/api/globalData', async function (req, res) {
+        while (!poopyStarted) await sleep(1000)
+        res.type('json').send(globalData())
     })
 
     app.post('/api/command', async function (req, res) {
         if (poopyStarted) {
             let sent = false
 
-            res.type('text')
+            res.type('html')
 
             if (!req.body || req.body.command == undefined) {
                 return res.status(400).send('You need a command name.')
@@ -140,36 +149,39 @@ async function main() {
                     if (sent) return
 
                     if (typeof (payload) == 'string') {
-                        contents.push(payload)
+                        contents.push(format(payload))
+                        return contents
                     } else {
-                        function getAttachment() {
-                            return (payload.files && payload.files.length > 0 && payload.files[0].attachment) || (payload.embeds && payload.embeds.length > 0 && payload.embeds[0].image && payload.embeds[0].image.url)
-                        }
+                        const attachment = (payload.files && payload.files.length > 0 && payload.files[0].attachment) || (payload.embeds && payload.embeds.length > 0 && payload.embeds[0].image && payload.embeds[0].image.url)
 
-                        if (getAttachment()) {
-                            const attachment = getAttachment()
-
+                        if (attachment) {
+                            console.log('attachment')
+                            sent = true
                             if (mainPoopy.vars.validUrl.test(attachment)) {
-                                sent = true
                                 res.redirect(attachment)
                             } else {
-                                sent = true
                                 res.sendFile(`${__dirname}/${attachment}`)
                             }
-                        } else if (payload.embeds && payload.embeds.length > 0) {
-                            let textEmbed = []
-
-                            payload.embeds.forEach(embed => {
-                                if (embed.author && embed.author.name) textEmbed.push(embed.author.name)
-                                if (embed.title) textEmbed.push(embed.title)
-                                if (embed.description) textEmbed.push(embed.description)
-                                if (embed.fields && embed.fields.length > 0) textEmbed.push(embed.fields.map(field => `${field.name ?? ''}\n${field.value ?? ''}`).join('\n'))
-                                if (embed.footer && embed.footer.text) textEmbed.push(embed.footer.text)
-                            })
-
-                            contents.push(textEmbed.join('\n'))
+                            return attachment
                         } else {
-                            contents.push(payload.content ?? '')
+                            if (payload.content != undefined) contents.push(format(payload.content))
+
+                            if (payload.embeds && payload.embeds.length > 0) {
+                                let textEmbed = []
+
+                                payload.embeds.forEach(embed => {
+                                    if (embed.thumbnail && embed.thumbnail.url) textEmbed.push(`<img src="${embed.thumbnail.url}" align="right">`)
+                                    if (embed.author && embed.author.name) textEmbed.push(embed.author.name)
+                                    if (embed.title) textEmbed.push(embed.title)
+                                    if (embed.description) textEmbed.push(embed.description)
+                                    if (embed.fields && embed.fields.length > 0) textEmbed.push(embed.fields.map(field => `${field.name ?? ''}\n${field.value ?? ''}`).join('\n'))
+                                    if (embed.image && embed.image.url) textEmbed.push(`<img src="${embed.thumbnail.url}">`)
+                                    if (embed.footer && embed.footer.text) textEmbed.push(embed.footer.text)
+                                })
+
+                                contents.push(format(textEmbed.join('\n')))
+                            }
+                            return contents
                         }
                     }
                 },
@@ -178,14 +190,17 @@ async function main() {
 
                 type: 'GUILD_TEXT',
 
+                name: 'Channel',
+
                 id: 'apichannel'
             }
 
             let user = {
                 send: async () => msg,
-                displayAvatarURL: () => mainPoopy.bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
+                displayAvatarURL: () => 'https://cdn.discordapp.com/attachments/760223418968047629/975040060741263400/unknown.png',
                 createDM: async () => channel,
                 username: 'User',
+                tag: 'User',
                 dmChannel: channel,
                 id: md5(req.ip)
             }
@@ -305,7 +320,7 @@ async function main() {
                 res.status(400).send('Invalid command.')
             }
         } else {
-            res.status(102).sendFile(`${__dirname}/https/startpage.html`)
+            res.status(102).sendFile(`${__dirname}/html/startPage.html`)
         }
     })
 
@@ -314,14 +329,14 @@ async function main() {
             const psfiles = globalData()['bot-data']['psfiles']
             res.redirect(psfiles[Math.floor(Math.random() * psfiles.length)])
         } else {
-            res.sendFile(`${__dirname}/https/startpage.html`)
+            res.sendFile(`${__dirname}/html/startPage.html`)
         }
     })
 
-    app.use(express.static('https/public'))
+    app.use(express.static('html/public'))
 
     app.use(function (req, res) {
-        res.status(404).sendFile(`${__dirname}/https/errorpages/404.html`)
+        res.status(404).sendFile(`${__dirname}/html/errorpages/404.html`)
     })
 
     app.listen(PORT, () => console.log('web is up'))
@@ -332,16 +347,28 @@ async function main() {
 
     const Poopy = require('./poopy')
 
-    const tokens = [
-        {
-            TOKEN: process.env[__dirname.includes('app') ? 'POOPYTOKEN' : 'POOPYTOKEN2'],
+    const tokens = []
+
+    if (__dirname.includes('app')) {
+        tokens.push({
+            TOKEN: process.env.POOPYTOKEN,
             config: {
-                testing: !(__dirname.includes('app')),
-                globalPrefix: __dirname.includes('app') ? 'p:' : '2p:',
+                testing: false,
+                globalPrefix: 'p:',
                 quitOnDestroy: true
             }
-        }
-    ]
+        })
+    } else {
+        tokens.push({
+            TOKEN: process.env.POOPYTOKEN2,
+            config: {
+                testing: true,
+                globalPrefix: '2p:',
+                notSave: true,
+                quitOnDestroy: true
+            }
+        })
+    }
 
     for (var i in tokens) {
         const tokendata = tokens[i]
@@ -357,6 +384,7 @@ async function main() {
 
         if (!mainPoopy) mainPoopy = poopy
     }
+
     poopyStarted = true
     eventEmitter.emit('poopystarted')
 }

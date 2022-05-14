@@ -3,7 +3,7 @@ module.exports = {
   execute: async function (msg) {
     let poopy = this
 
-    msg.channel.send(poopy.arrays.psPasta[Math.floor(Math.random() * poopy.arrays.psPasta.length)]).catch(() => { })
+    await msg.channel.send(poopy.arrays.psPasta[Math.floor(Math.random() * poopy.arrays.psPasta.length)]).catch(() => { })
   },
   help: {
     name: 'pspasta/phexoniastudiospasta',

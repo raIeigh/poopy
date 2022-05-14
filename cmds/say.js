@@ -3,7 +3,7 @@ module.exports = {
     execute: async function (msg, args) {
         let poopy = this
 
-        msg.channel.sendTyping().catch(() => { })
+        await msg.channel.sendTyping().catch(() => { })
         var del = true
         var deleteIndex = args.indexOf('-nodelete')
         if (deleteIndex > -1) {
@@ -22,8 +22,8 @@ module.exports = {
             attachments.push(new poopy.modules.Discord.MessageAttachment(attachment.url))
         });
         if (args[1] === undefined && attachments.length <= 0) {
-            msg.channel.send('What is the message to say?!').catch(() => { })
-            msg.channel.sendTyping().catch(() => { })
+            await msg.channel.send('What is the message to say?!').catch(() => { })
+            await msg.channel.sendTyping().catch(() => { })
             return;
         };
         var sendObject = {
@@ -45,7 +45,7 @@ module.exports = {
         if (del) {
             msg.delete().catch(() => { })
         }
-        msg.channel.sendTyping().catch(() => { })
+        await msg.channel.sendTyping().catch(() => { })
     },
     help: {
         name: 'say/talk/speak <message> [-nodelete] [-tts]',

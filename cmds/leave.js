@@ -50,7 +50,7 @@ module.exports = {
                 msg.guild.leave().catch(() => { })
             }
         } else {
-            msg.channel.send('You need to be an admin to execute that!').catch(() => { })
+            await msg.channel.send('You need to be an admin to execute that!').catch(() => { })
             return
         }
     },

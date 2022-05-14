@@ -3,22 +3,22 @@ module.exports = {
     execute: async function (msg, args) {
         let poopy = this
 
-        msg.channel.sendTyping().catch(() => { })
+        await msg.channel.sendTyping().catch(() => { })
         if (poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl'] === undefined && args[1] === undefined) {
-            msg.channel.send('What is the file?!').catch(() => { })
-            msg.channel.sendTyping().catch(() => { })
+            await msg.channel.send('What is the file?!').catch(() => { })
+            await msg.channel.sendTyping().catch(() => { })
             return;
         };
         var bitrate = isNaN(Number(args[1])) ? undefined : Number(args[1]) <= 1 ? 1 : Number(args[1]) >= 2000 ? 2000 : Number(args[1]) || undefined
         if (bitrate === undefined) {
-            msg.channel.send('What is the bitrate?!').catch(() => { })
-            msg.channel.sendTyping().catch(() => { })
+            await msg.channel.send('What is the bitrate?!').catch(() => { })
+            await msg.channel.sendTyping().catch(() => { })
             return;
         }
         var currenturl = poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl'] || args[1]
-        var fileinfo = await poopy.functions.validateFile(currenturl, true).catch(error => {
-            msg.channel.send(error)
-            msg.channel.sendTyping().catch(() => { })
+        var fileinfo = await poopy.functions.validateFile(currenturl, true).catch(async error => {
+            await msg.channel.send(error).catch(() => { })
+            await msg.channel.sendTyping().catch(() => { })
             return;
         })
 
@@ -37,7 +37,7 @@ module.exports = {
                 await poopy.functions.sendFile(msg, filepath, `output.mp4`)
             } else {
                 await msg.channel.send('No audio stream detected.').catch(() => { })
-                msg.channel.sendTyping().catch(() => { })
+                await msg.channel.sendTyping().catch(() => { })
                 poopy.modules.fs.rmSync(`${filepath}`, { force: true, recursive: true })
             }
         } else if (type.mime.startsWith('audio')) {
@@ -48,13 +48,13 @@ module.exports = {
             await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -b:a ${bitrate}k -preset ${poopy.functions.findpreset(args)} ${filepath}/output.mp3`)
             await poopy.functions.sendFile(msg, filepath, `output.mp3`)
         } else {
-            msg.channel.send({
+            await msg.channel.send({
                 content: `Unsupported file: \`${currenturl}\``,
                 allowedMentions: {
                     parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
-            msg.channel.sendTyping().catch(() => { })
+            await msg.channel.sendTyping().catch(() => { })
             return
         }
     },

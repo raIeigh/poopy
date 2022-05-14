@@ -3,14 +3,14 @@ module.exports = {
   execute: async function (msg, args) {
     let poopy = this
 
-    msg.channel.sendTyping().catch(() => { })
+    await msg.channel.sendTyping().catch(() => { })
     var attachments = []
     msg.attachments.forEach(attachment => {
       attachments.push(new poopy.modules.Discord.MessageAttachment(attachment.url))
     });
     if (args[1] === undefined && attachments.length <= 0) {
-      msg.channel.send('What are the URLs to fetch?!').catch(() => { })
-      msg.channel.sendTyping().catch(() => { })
+      await msg.channel.send('What are the URLs to fetch?!').catch(() => { })
+      await msg.channel.sendTyping().catch(() => { })
       return;
     };
     var urls = await poopy.functions.getUrls(msg).catch(() => { }) ?? []
@@ -20,7 +20,7 @@ module.exports = {
       },
       content: urls.join('\n') || 'No URLs fetched.'
     }).catch(() => { })
-    msg.channel.sendTyping().catch(() => { })
+    await msg.channel.sendTyping().catch(() => { })
   },
   help: {
     name: 'fetchurls/geturls <message> [-nodelete] [-tts]',

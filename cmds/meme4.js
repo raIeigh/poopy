@@ -3,10 +3,10 @@ module.exports = {
     execute: async function (msg, args) {
         let poopy = this
 
-        msg.channel.sendTyping().catch(() => { })
+        await msg.channel.sendTyping().catch(() => { })
         if (poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl'] === undefined && poopy.vars.validUrl.test(args[args.length - 1]) === false) {
-            msg.channel.send('What is the file?!').catch(() => { })
-            msg.channel.sendTyping().catch(() => { })
+            await msg.channel.send('What is the file?!').catch(() => { })
+            await msg.channel.sendTyping().catch(() => { })
             return;
         };
         var size = 1
@@ -43,9 +43,9 @@ module.exports = {
             rgb.b = isNaN(Number(String(b).replace(/,/g, ''))) ? 0 : Number(String(b).replace(/,/g, '')) <= 0 ? 0 : Number(String(b).replace(/,/g, '')) >= 255 ? 255 : Number(String(b).replace(/,/g, '')) || 0
         }
         var currenturl = poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl'] || args[1]
-        var fileinfo = await poopy.functions.validateFile(currenturl).catch(error => {
-            msg.channel.send(error)
-            msg.channel.sendTyping().catch(() => { })
+        var fileinfo = await poopy.functions.validateFile(currenturl).catch(async error => {
+            await msg.channel.send(error).catch(() => { })
+            await msg.channel.sendTyping().catch(() => { })
             return;
         })
 
@@ -116,13 +116,13 @@ module.exports = {
             await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -i ${filepath}/caption.png -i ${filepath}/caption2.png -filter_complex "[1:v]curves=r='0/0 1/${rgb.r / 255}':g='0/0 1/${rgb.g / 255}':b='0/0 1/${rgb.b / 255}'[top];[2:v]curves=r='0/0 1/${rgb.r / 255}':g='0/0 1/${rgb.g / 255}':b='0/0 1/${rgb.b / 255}'[bottom];[0:v][top]overlay=x=0:y=0:format=auto[caption];[caption][bottom]overlay=x=0:y=0:format=auto[oout];[oout]split[pout][ppout];[ppout]palettegen=reserve_transparent=1[palette];[pout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} -gifflags -offsetting ${filepath}/output.gif`)
             await poopy.functions.sendFile(msg, filepath, `output.gif`)
         } else {
-            msg.channel.send({
+            await msg.channel.send({
                 content: `Unsupported file: \`${currenturl}\``,
                 allowedMentions: {
                     parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
-            msg.channel.sendTyping().catch(() => { })
+            await msg.channel.sendTyping().catch(() => { })
             return
         }
     },

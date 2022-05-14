@@ -3,7 +3,7 @@ module.exports = {
   execute: async function (msg, args) {
     let poopy = this
 
-    msg.channel.sendTyping().catch(() => { })
+    await msg.channel.sendTyping().catch(() => { })
     var saidMessage = args.join(' ').substring(args[0].length + 1).replace(/’/g, '\'')
     poopy.vars.symbolreplacements.forEach(symbolReplacement => {
       symbolReplacement.target.forEach(target => {

@@ -3,10 +3,10 @@ module.exports = {
     execute: async function (msg, args) {
         let poopy = this
 
-        msg.channel.sendTyping().catch(() => { })
+        await msg.channel.sendTyping().catch(() => { })
         if (poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl'] === undefined && args[1] === undefined) {
-            msg.channel.send('What is the file?!').catch(() => { })
-            msg.channel.sendTyping().catch(() => { })
+            await msg.channel.send('What is the file?!').catch(() => { })
+            await msg.channel.sendTyping().catch(() => { })
             return;
         };
         var duration = 1
@@ -75,7 +75,7 @@ module.exports = {
             if (easings[args[easingindex + 1].toLowerCase()]) {
                 easing = args[easingindex + 1]
             } else {
-                msg.channel.send('Not a supported easing style.').catch(() => { })
+                await msg.channel.send('Not a supported easing style.').catch(() => { })
                 return
             }
         }
@@ -125,9 +125,9 @@ module.exports = {
             endangle = isNaN(Number(args[endangleindex + 1])) ? startangle : (Number(args[endangleindex + 1]) || 0) ?? startangle
         }
         var currenturl = poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl'] || args[1]
-        var fileinfo = await poopy.functions.validateFile(currenturl).catch(error => {
-            msg.channel.send(error)
-            msg.channel.sendTyping().catch(() => { })
+        var fileinfo = await poopy.functions.validateFile(currenturl).catch(async error => {
+            await msg.channel.send(error).catch(() => { })
+            await msg.channel.sendTyping().catch(() => { })
             return;
         })
 
@@ -142,13 +142,13 @@ module.exports = {
             await poopy.functions.execPromise(`ffmpeg -stream_loop -1 -t ${duration} -i ${filepath}/${filename} -r 50 -stream_loop -1 -t ${duration} -i templates/transparent.png -filter_complex "[0:v]fps=50,rotate=${easingstring(startangle, endangle)}*PI/180${args.find(arg => arg === '-fitangle') ? `:ow=rotw(45*PI/180):oh=roth(45*PI/180)` : ''}:c=0x00000000,scale=${easingstring(startsize[0], endsize[0])}:${easingstring(startsize[1], endsize[1])}:eval=frame[overlay];[1:v]scale=${width}:${height}[transparent];[transparent][overlay]overlay=x=${originx}+${easingstring(startpos[0], endpos[0])}:y=${originy}+${easingstring(startpos[1], endpos[1])}:format=auto,split[pout][ppout];[ppout]palettegen=reserve_transparent=1[palette];[pout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} -gifflags -offsetting -r 50 -t ${duration} ${filepath}/output.gif`)
             await poopy.functions.sendFile(msg, filepath, `output.gif`)
         } else {
-            msg.channel.send({
+            await msg.channel.send({
                 content: `Unsupported file: \`${currenturl}\``,
                 allowedMentions: {
                     parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
-            msg.channel.sendTyping().catch(() => { })
+            await msg.channel.sendTyping().catch(() => { })
             return
         }
     },

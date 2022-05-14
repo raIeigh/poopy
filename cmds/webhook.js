@@ -12,98 +12,99 @@ module.exports = {
 
             if (!userMention) {
                 async function getUser(id) {
-                    await msg.guild.members.fetch(id)
-                        .then(async function (user) {
-                            if (!poopy.data['guild-data'][msg.guild.id]) {
-                                poopy.data['guild-data'][msg.guild.id] = {}
+                    var user = await msg.guild.members.fetch(id).catch(async () => {
+                        await msg.channel.send({
+                            content: 'Invalid user ID: **' + user + '**',
+                            allowedMentions: {
+                                parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                             }
-                            if (!poopy.data['guild-data'][msg.guild.id]['members'][user.id]) {
-                                poopy.data['guild-data'][msg.guild.id]['members'][user.id] = {}
-                            }
-                            if (!poopy.data['guild-data'][msg.guild.id]['members'][user.id]['custom']) {
-                                poopy.data['guild-data'][msg.guild.id]['members'][user.id]['custom'] = false
-                            }
-                            if (poopy.data['guild-data'][msg.guild.id]['members'][user.id]['custom'] === false) {
-                                var saidMessage = args.join(' ').substring(args[0].length + 1)
-                                var symbolReplacedMessage
-                                poopy.vars.symbolreplacements.forEach(symbolReplacement => {
-                                    symbolReplacement.target.forEach(target => {
-                                        symbolReplacedMessage = saidMessage.replace(new RegExp(target, 'ig'), symbolReplacement.replacement)
-                                    })
+                        }).catch(() => { })
+                    })
+
+                    if (user) {
+
+                        if (!poopy.data['guild-data'][msg.guild.id]) {
+                            poopy.data['guild-data'][msg.guild.id] = {}
+                        }
+                        if (!poopy.data['guild-data'][msg.guild.id]['members'][user.id]) {
+                            poopy.data['guild-data'][msg.guild.id]['members'][user.id] = {}
+                        }
+                        if (!poopy.data['guild-data'][msg.guild.id]['members'][user.id]['custom']) {
+                            poopy.data['guild-data'][msg.guild.id]['members'][user.id]['custom'] = false
+                        }
+                        if (poopy.data['guild-data'][msg.guild.id]['members'][user.id]['custom'] === false) {
+                            var saidMessage = args.join(' ').substring(args[0].length + 1)
+                            var symbolReplacedMessage
+                            poopy.vars.symbolreplacements.forEach(symbolReplacement => {
+                                symbolReplacement.target.forEach(target => {
+                                    symbolReplacedMessage = saidMessage.replace(new RegExp(target, 'ig'), symbolReplacement.replacement)
                                 })
-                                var matchedTextes = symbolReplacedMessage.match(/"([\s\S]*?)"/)
-                                if (!matchedTextes) {
-                                    msg.channel.send('Where\'s the name?!').catch(() => { })
-                                    return
-                                }
-                                if (!poopy.vars.validUrl.test(args[args.length - 1])) {
-                                    msg.channel.send('Where\'s the avatar?!').catch(() => { })
-                                    return
-                                }
-                                var name = matchedTextes[1]
-                                var allBlank = true
-
-                                for (var i = 0; i < name.length; i++) {
-                                    var letter = name[i]
-                                    if (letter !== ' ') {
-                                        allBlank = false
-                                    }
-                                }
-
-                                if (allBlank) {
-                                    msg.channel.send('Invalid name.').catch(() => { })
-                                    return
-                                }
-                                var fetchAvatar = await poopy.modules.axios.request({
-                                    url: args[args.length - 1],
-                                    responseType: 'stream'
-                                }).catch(() => { })
-                                if (!fetchAvatar) {
-                                    msg.channel.send('Invalid avatar.').catch(() => { })
-                                    return
-                                }
-                                var avatarFiletype = await poopy.modules.fileType.fromStream(fetchAvatar.data).catch(() => { })
-                                if (!avatarFiletype) {
-                                    msg.channel.send('Invalid avatar.').catch(() => { })
-                                    return
-                                }
-                                if (!(avatarFiletype.mime.startsWith('image'))) {
-                                    msg.channel.send('Invalid avatar.').catch(() => { })
-                                    return
-                                }
-                                var avatar = args[args.length - 1]
-
-                                poopy.data['guild-data'][msg.guild.id]['members'][user.id]['custom'] = {
-                                    name: allBlank ? '⠀' : name,
-                                    avatar: avatar
-                                }
-                                msg.channel.send({
-                                    content: user.user.username + ` is now ${name}.`,
-                                    allowedMentions: {
-                                        parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
-                                    }
-                                }).catch(() => { })
-                            } else {
-                                msg.channel.send({
-                                    content: user.user.username + ` is not ${poopy.data['guild-data'][msg.guild.id]['members'][user.id]['custom']['name']}.`,
-                                    allowedMentions: {
-                                        parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
-                                    }
-                                }).catch(() => { })
-                                poopy.data['guild-data'][msg.guild.id]['members'][user.id]['custom'] = false
+                            })
+                            var matchedTextes = symbolReplacedMessage.match(/"([\s\S]*?)"/)
+                            if (!matchedTextes) {
+                                await msg.channel.send('Where\'s the name?!').catch(() => { })
+                                return
                             }
-                        })
-                        .catch(function () {
-                            msg.channel.send({
-                                content: 'Invalid user ID: **' + user + '**',
+                            if (!poopy.vars.validUrl.test(args[args.length - 1])) {
+                                await msg.channel.send('Where\'s the avatar?!').catch(() => { })
+                                return
+                            }
+                            var name = matchedTextes[1]
+                            var allBlank = true
+
+                            for (var i = 0; i < name.length; i++) {
+                                var letter = name[i]
+                                if (letter !== ' ') {
+                                    allBlank = false
+                                }
+                            }
+
+                            if (allBlank) {
+                                await msg.channel.send('Invalid name.').catch(() => { })
+                                return
+                            }
+                            var fetchAvatar = await poopy.modules.axios.request({
+                                url: args[args.length - 1],
+                                responseType: 'stream'
+                            }).catch(() => { })
+                            if (!fetchAvatar) {
+                                await msg.channel.send('Invalid avatar.').catch(() => { })
+                                return
+                            }
+                            var avatarFiletype = await poopy.modules.fileType.fromStream(fetchAvatar.data).catch(() => { })
+                            if (!avatarFiletype) {
+                                await msg.channel.send('Invalid avatar.').catch(() => { })
+                                return
+                            }
+                            if (!(avatarFiletype.mime.startsWith('image'))) {
+                                await msg.channel.send('Invalid avatar.').catch(() => { })
+                                return
+                            }
+                            var avatar = args[args.length - 1]
+
+                            poopy.data['guild-data'][msg.guild.id]['members'][user.id]['custom'] = {
+                                name: allBlank ? '⠀' : name,
+                                avatar: avatar
+                            }
+                            await msg.channel.send({
+                                content: user.user.username + ` is now ${name}.`,
                                 allowedMentions: {
                                     parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                                 }
                             }).catch(() => { })
-                        })
+                        } else {
+                            await msg.channel.send({
+                                content: user.user.username + ` is not ${poopy.data['guild-data'][msg.guild.id]['members'][user.id]['custom']['name']}.`,
+                                allowedMentions: {
+                                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                                }
+                            }).catch(() => { })
+                            poopy.data['guild-data'][msg.guild.id]['members'][user.id]['custom'] = false
+                        }
+                    }
                 }
 
-                getUser(user)
+                await getUser(user)
             } else {
                 if (!poopy.data['guild-data'][msg.guild.id]) {
                     poopy.data['guild-data'][msg.guild.id] = {}
@@ -124,11 +125,11 @@ module.exports = {
                     })
                     var matchedTextes = symbolReplacedMessage.match(/"([\s\S]*?)"/)
                     if (!matchedTextes) {
-                        msg.channel.send('Where\'s the name?!').catch(() => { })
+                        await msg.channel.send('Where\'s the name?!').catch(() => { })
                         return
                     }
                     if (!poopy.vars.validUrl.test(args[args.length - 1])) {
-                        msg.channel.send('Where\'s the avatar?!').catch(() => { })
+                        await msg.channel.send('Where\'s the avatar?!').catch(() => { })
                         return
                     }
                     var name = matchedTextes[1]
@@ -137,16 +138,16 @@ module.exports = {
                         responseType: 'stream'
                     }).catch(() => { })
                     if (!fetchAvatar) {
-                        msg.channel.send('Invalid avatar.').catch(() => { })
+                        await msg.channel.send('Invalid avatar.').catch(() => { })
                         return
                     }
                     var avatarFiletype = await poopy.modules.fileType.fromStream(fetchAvatar.data).catch(() => { })
                     if (!avatarFiletype) {
-                        msg.channel.send('Invalid avatar.').catch(() => { })
+                        await msg.channel.send('Invalid avatar.').catch(() => { })
                         return
                     }
                     if (!(avatarFiletype.mime.startsWith('image'))) {
-                        msg.channel.send('Invalid avatar.').catch(() => { })
+                        await msg.channel.send('Invalid avatar.').catch(() => { })
                         return
                     }
                     var avatar = args[args.length - 1]
@@ -155,14 +156,14 @@ module.exports = {
                         name: name,
                         avatar: avatar
                     }
-                    msg.channel.send({
+                    await msg.channel.send({
                         content: userMention.user.username + ` is now ${name}.`,
                         allowedMentions: {
                             parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                         }
                     }).catch(() => { })
                 } else {
-                    msg.channel.send({
+                    await msg.channel.send({
                         content: userMention.user.username + ` is not ${poopy.data['guild-data'][msg.guild.id]['members'][userMention.id]['custom']['name']}.`,
                         allowedMentions: {
                             parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
@@ -172,7 +173,7 @@ module.exports = {
                 }
             }
         } else {
-            msg.channel.send('You need to have the manage webhooks permission to execute that!').catch(() => { })
+            await msg.channel.send('You need to have the manage webhooks permission to execute that!').catch(() => { })
             return;
         };
     },

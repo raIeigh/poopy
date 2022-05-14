@@ -3,10 +3,10 @@ module.exports = {
     execute: async function (msg, args) {
         let poopy = this
 
-        msg.channel.sendTyping().catch(() => { })
+        await msg.channel.sendTyping().catch(() => { })
         if (poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl'] === undefined && args[1] === undefined) {
-            msg.channel.send('What is the file?!').catch(() => { })
-            msg.channel.sendTyping().catch(() => { })
+            await msg.channel.send('What is the file?!').catch(() => { })
+            await msg.channel.sendTyping().catch(() => { })
             return;
         };
         var duration = 10
@@ -20,9 +20,9 @@ module.exports = {
             fps = isNaN(Number(args[fpsindex + 1])) ? 20 : Number(args[fpsindex + 1]) <= 0.1 ? 0.1 : Number(args[fpsindex + 1]) >= 50 ? 50 : Number(args[fpsindex + 1]) || 20
         }
         var currenturl = poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl'] || args[1]
-        var fileinfo = await poopy.functions.validateFile(currenturl).catch(error => {
-            msg.channel.send(error)
-            msg.channel.sendTyping().catch(() => { })
+        var fileinfo = await poopy.functions.validateFile(currenturl).catch(async error => {
+            await msg.channel.send(error).catch(() => { })
+            await msg.channel.sendTyping().catch(() => { })
             return;
         })
 
@@ -41,7 +41,7 @@ module.exports = {
                 poopy.modules.fs.renameSync(`${filepath}/output.apng`, `${filepath}/output.png`)
             } catch (_) {
                 await msg.channel.send('Couldn\'t send file.').catch(() => { })
-                msg.channel.sendTyping().catch(() => { })
+                await msg.channel.sendTyping().catch(() => { })
                 poopy.modules.fs.rmSync(`${filepath}`, { force: true, recursive: true })
                 return
             }
@@ -58,19 +58,19 @@ module.exports = {
                 poopy.modules.fs.renameSync(`${filepath}/output.apng`, `${filepath}/output.png`)
             } catch (_) {
                 await msg.channel.send('Couldn\'t send file.').catch(() => { })
-                msg.channel.sendTyping().catch(() => { })
+                await msg.channel.sendTyping().catch(() => { })
                 poopy.modules.fs.rmSync(`${filepath}`, { force: true, recursive: true })
                 return
             }
             await poopy.functions.sendFile(msg, filepath, `output.png`)
         } else {
-            msg.channel.send({
+            await msg.channel.send({
                 content: `Unsupported file: \`${currenturl}\``,
                 allowedMentions: {
                     parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
-            msg.channel.sendTyping().catch(() => { })
+            await msg.channel.sendTyping().catch(() => { })
             return
         }
     },

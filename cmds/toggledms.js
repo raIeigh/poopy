@@ -11,7 +11,7 @@ module.exports = {
         }
         if (poopy.data['user-data'][msg.author.id]['dms'] === false) {
             poopy.data['user-data'][msg.author.id]['dms'] = true
-            msg.channel.send({
+            await msg.channel.send({
                 content: 'Unrelated DMs from `dm` will **be sent** to you now.',
                 allowedMentions: {
                     parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
@@ -19,7 +19,7 @@ module.exports = {
             }).catch(() => { })
         } else {
             poopy.data['user-data'][msg.author.id]['dms'] = false
-            msg.channel.send({
+            await msg.channel.send({
                 content: 'Unrelated DMs from `dm` will **not be sent** to you now.',
                 allowedMentions: {
                     parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']

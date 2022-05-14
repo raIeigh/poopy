@@ -18,7 +18,7 @@ module.exports = {
 
             search: async (msg, args) => {
                 if (!args[1]) {
-                    msg.channel.send('You gotta specify the query!').catch(() => { })
+                    await msg.channel.send('You gotta specify the query!').catch(() => { })
                     return
                 }
 
@@ -48,12 +48,12 @@ module.exports = {
             },
 
             random: async (msg) => {
-                msg.channel.send(poopy.data['guild-data'][msg.guild.id]['messages'][Math.floor(Math.random() * poopy.data['guild-data'][msg.guild.id]['messages'].length)]).catch(() => { })
+                await msg.channel.send(poopy.data['guild-data'][msg.guild.id]['messages'][Math.floor(Math.random() * poopy.data['guild-data'][msg.guild.id]['messages'].length)]).catch(() => { })
             },
 
             add: async (msg, args) => {
                 if (!args[1]) {
-                    msg.channel.send('You gotta specify the message!').catch(() => { })
+                    await msg.channel.send('You gotta specify the message!').catch(() => { })
                     return
                 }
 
@@ -62,7 +62,7 @@ module.exports = {
                 var findMessage = poopy.data['guild-data'][msg.guild.id]['messages'].find(message => message.toLowerCase() === cleanMessage.toLowerCase())
 
                 if (findMessage) {
-                    msg.channel.send(`That message already exists.`).catch(() => { })
+                    await msg.channel.send(`That message already exists.`).catch(() => { })
                     return
                 } else {
                     var send = true
@@ -75,7 +75,7 @@ module.exports = {
                     messages.splice(1000)
                     poopy.data['guild-data'][msg.guild.id]['messages'] = messages
 
-                    msg.channel.send({
+                    await msg.channel.send({
                         content: `✅ Added ${cleanMessage}`,
                         allowedMentions: {
                             parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
@@ -86,7 +86,7 @@ module.exports = {
 
             delete: async (msg, args) => {
                 if (!args[1]) {
-                    msg.channel.send('You gotta specify the message!').catch(() => { })
+                    await msg.channel.send('You gotta specify the message!').catch(() => { })
                     return
                 }
 
@@ -97,9 +97,9 @@ module.exports = {
                 if (findMessage > -1) {
                     poopy.data['guild-data'][msg.guild.id]['messages'].splice(findMessage, 1)
 
-                    msg.channel.send(`✅ Removed.`).catch(() => { })
+                    await msg.channel.send(`✅ Removed.`).catch(() => { })
                 } else {
-                    msg.channel.send(`Not found.`).catch(() => { })
+                    await msg.channel.send(`Not found.`).catch(() => { })
                 }
             },
 
@@ -110,10 +110,10 @@ module.exports = {
                     if (confirm) {
                         poopy.data['guild-data'][msg.guild.id]['messages'] = []
 
-                        msg.channel.send(`✅ All the messages from the database have been cleared.`).catch(() => { })
+                        await msg.channel.send(`✅ All the messages from the database have been cleared.`).catch(() => { })
                     }
                 } else {
-                    msg.channel.send('You need to be an administrator to execute that!').catch(() => { })
+                    await msg.channel.send('You need to be an administrator to execute that!').catch(() => { })
                 };
             },
 
@@ -122,9 +122,9 @@ module.exports = {
                     poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['read'] = !(poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['read'])
 
                     var read = poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['read']
-                    msg.channel.send(`I **can${!read ? '\'t' : ''} read** messages from the channel now.`).catch(() => { })
+                    await msg.channel.send(`I **can${!read ? '\'t' : ''} read** messages from the channel now.`).catch(() => { })
                 } else {
-                    msg.channel.send('You need to be an administrator to execute that!').catch(() => { })
+                    await msg.channel.send('You need to be an administrator to execute that!').catch(() => { })
                     return;
                 };
             },
@@ -145,9 +145,9 @@ module.exports = {
                     })
 
                     var read = poopy.data['guild-data'][msg.guild.id]['read']
-                    msg.channel.send(`I **can${!read ? '\'t' : ''} read** messages from all channels now.`).catch(() => { })
+                    await msg.channel.send(`I **can${!read ? '\'t' : ''} read** messages from all channels now.`).catch(() => { })
                 } else {
-                    msg.channel.send('You need to be an administrator to execute that!').catch(() => { })
+                    await msg.channel.send('You need to be an administrator to execute that!').catch(() => { })
                     return;
                 };
             },
@@ -172,7 +172,7 @@ module.exports = {
         }
 
         if (!options[args[1].toLowerCase()]) {
-            msg.channel.send('Not a valid option.').catch(() => { })
+            await msg.channel.send('Not a valid option.').catch(() => { })
             return
         }
 

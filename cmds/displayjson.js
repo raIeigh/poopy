@@ -5,13 +5,13 @@ module.exports = {
 
         var jsonid = poopy.config.ownerids.find(id => id == msg.author.id) || poopy.config.jsoning.find(id => id == msg.author.id);
         if (jsonid === undefined) {
-            msg.channel.send('json club only').catch(() => { })
+            await msg.channel.send('json club only').catch(() => { })
             return
         } else {
             var types = ['psfiles', 'pspasta', 'funnygif', 'poop', 'dmphrases']
 
             if (args[1] === undefined) {
-                msg.channel.send(`What is the JSON to display?! (Available: ${types.map(t => `**${t}**`).join(', ')})`).catch(() => { })
+                await msg.channel.send(`What is the JSON to display?! (Available: ${types.map(t => `**${t}**`).join(', ')})`).catch(() => { })
                 return;
             }
 
@@ -20,7 +20,7 @@ module.exports = {
             if (types.find(t => t === args[1].toLowerCase())) {
                 type = args[1].toLowerCase()
             } else {
-                msg.channel.send('Not a JSON type.').catch(() => { })
+                await msg.channel.send('Not a JSON type.').catch(() => { })
                 return
             }
 

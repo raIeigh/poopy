@@ -3,7 +3,7 @@ module.exports = {
     execute: async function (msg, args) {
         let poopy = this
 
-        msg.channel.sendTyping().catch(() => { })
+        await msg.channel.sendTyping().catch(() => { })
         var saidMessage = args.join(' ').substring(args[0].length + 1).replace(/’/g, '\'')
         poopy.vars.symbolreplacements.forEach(symbolReplacement => {
             symbolReplacement.target.forEach(target => {
@@ -87,9 +87,9 @@ module.exports = {
             return
         }
 
-        var fileinfo = await poopy.functions.validateFile(currenturl).catch(error => {
-            msg.channel.send(error)
-            msg.channel.sendTyping().catch(() => { })
+        var fileinfo = await poopy.functions.validateFile(currenturl).catch(async error => {
+            await msg.channel.send(error).catch(() => { })
+            await msg.channel.sendTyping().catch(() => { })
             return;
         })
 
@@ -148,13 +148,13 @@ module.exports = {
             await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -i ${filepath}/box.png -filter_complex "[0:v]scale=${squareS.constraint === 'width' || squareS.constraint === 'both' ? 58 : -1}:${squareS.constraint === 'height' || squareS.constraint === 'both' ? 58 : -1}[frame];[1:v][frame]overlay=x=${xpoint}+(58/2-w/2):y=${ypoint}+(60/2-h/2):format=auto${!(args.find(arg => arg === '-small')) ? `,scale=iw*2:ih*2:flags=neighbor` : ''},split[pout][ppout];[ppout]palettegen=reserve_transparent=1[palette];[pout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} -gifflags -offsetting ${filepath}/output.gif`)
             await poopy.functions.sendFile(msg, filepath, `output.gif`)
         } else {
-            msg.channel.send({
+            await msg.channel.send({
                 content: `Unsupported file: \`${currenturl}\``,
                 allowedMentions: {
                     parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
-            msg.channel.sendTyping().catch(() => { })
+            await msg.channel.sendTyping().catch(() => { })
             return
         }
     },

@@ -15,7 +15,7 @@ module.exports = {
     for (i = 0; i < Math.floor(Math.random() * 3) + 2; i++) {
       word += consonants[Math.floor(Math.random() * consonants.length)] + vowels[Math.floor(Math.random() * vowels.length)]
     }
-    msg.channel.send(word).catch(() => { })
+    await msg.channel.send(word).catch(() => { })
   },
   help: {
     name: 'araboword/raleighword',

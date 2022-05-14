@@ -3,10 +3,10 @@ module.exports = {
     execute: async function (msg, args) {
         let poopy = this
 
-        msg.channel.sendTyping().catch(() => { })
+        await msg.channel.sendTyping().catch(() => { })
         if (args[1] === undefined && msg.attachments.size <= 0 && !(poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrls'].length)) {
-            msg.channel.send('What are the frames?!').catch(() => { })
-            msg.channel.sendTyping().catch(() => { })
+            await msg.channel.send('What are the frames?!').catch(() => { })
+            await msg.channel.sendTyping().catch(() => { })
             return;
         };
 
@@ -85,13 +85,13 @@ module.exports = {
         }
 
         if (nofiles && lasturlserror) {
-            msg.channel.send({
+            await msg.channel.send({
                 content: lasturlserror,
                 allowedMentions: {
                     parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
-            msg.channel.sendTyping().catch(() => { })
+            await msg.channel.sendTyping().catch(() => { })
             return
         }
 
@@ -108,25 +108,25 @@ module.exports = {
                     error = err
                 })
                 if (error) {
-                    msg.channel.send({
+                    await msg.channel.send({
                         content: error,
                         allowedMentions: {
                             parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                         }
                     }).catch(() => { })
-                    msg.channel.sendTyping().catch(() => { })
+                    await msg.channel.sendTyping().catch(() => { })
                     return
                 }
                 var filetype = fileinfo.type
                 if (!(filetype.mime.startsWith('image') && !(poopy.vars.gifFormats.find(f => f === filetype.ext)) && poopy.vars.jimpFormats.find(f => f === filetype.ext))) error = `Unsupported file: \`${imageurl}\``
                 if (error) {
-                    msg.channel.send({
+                    await msg.channel.send({
                         content: error,
                         allowedMentions: {
                             parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                         }
                     }).catch(() => { })
-                    msg.channel.sendTyping().catch(() => { })
+                    await msg.channel.sendTyping().catch(() => { })
                     return
                 }
                 filetypes[i] = filetype

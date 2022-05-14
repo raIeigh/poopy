@@ -11,46 +11,46 @@ module.exports = {
                 }
 
                 async function getUser(id) {
-                    await msg.guild.members.fetch(id)
-                        .then(function (user) {
-                            if (!poopy.data['guild-data'][msg.guild.id]) {
-                                poopy.data['guild-data'][msg.guild.id] = {}
+                    var user = await msg.guild.members.fetch(id).catch(async () => {
+                        await msg.channel.send({
+                            content: 'Invalid user ID: **' + user + '**',
+                            allowedMentions: {
+                                parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                             }
-                            if (!poopy.data['guild-data'][msg.guild.id]['members'][user.id]) {
-                                poopy.data['guild-data'][msg.guild.id]['members'][user.id] = {}
-                            }
-                            if (!poopy.data['guild-data'][msg.guild.id]['members'][user.id]['impostor']) {
-                                poopy.data['guild-data'][msg.guild.id]['members'][user.id]['impostor'] = false
-                            }
-                            if (poopy.data['guild-data'][msg.guild.id]['members'][user.id]['impostor'] === false) {
-                                poopy.data['guild-data'][msg.guild.id]['members'][user.id]['impostor'] = true
-                                msg.channel.send({
-                                    content: user.user.username + ' is now the Impostor.',
-                                    allowedMentions: {
-                                        parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
-                                    }
-                                }).catch(() => { })
-                            } else {
-                                poopy.data['guild-data'][msg.guild.id]['members'][user.id]['impostor'] = false
-                                msg.channel.send({
-                                    content: user.user.username + ' is not the Impostor.',
-                                    allowedMentions: {
-                                        parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
-                                    }
-                                }).catch(() => { })
-                            }
-                        })
-                        .catch(function () {
-                            msg.channel.send({
-                                content: 'Invalid user ID: **' + user + '**',
+                        }).catch(() => { })
+                    })
+
+                    if (user) {
+                        if (!poopy.data['guild-data'][msg.guild.id]) {
+                            poopy.data['guild-data'][msg.guild.id] = {}
+                        }
+                        if (!poopy.data['guild-data'][msg.guild.id]['members'][user.id]) {
+                            poopy.data['guild-data'][msg.guild.id]['members'][user.id] = {}
+                        }
+                        if (!poopy.data['guild-data'][msg.guild.id]['members'][user.id]['impostor']) {
+                            poopy.data['guild-data'][msg.guild.id]['members'][user.id]['impostor'] = false
+                        }
+                        if (poopy.data['guild-data'][msg.guild.id]['members'][user.id]['impostor'] === false) {
+                            poopy.data['guild-data'][msg.guild.id]['members'][user.id]['impostor'] = true
+                            await msg.channel.send({
+                                content: user.user.username + ' is now the Impostor.',
                                 allowedMentions: {
                                     parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                                 }
                             }).catch(() => { })
-                        })
+                        } else {
+                            poopy.data['guild-data'][msg.guild.id]['members'][user.id]['impostor'] = false
+                            await msg.channel.send({
+                                content: user.user.username + ' is not the Impostor.',
+                                allowedMentions: {
+                                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                                }
+                            }).catch(() => { })
+                        }
+                    }
                 }
 
-                getUser(user)
+                await getUser(user)
             } else {
                 if (!poopy.data['guild-data'][msg.guild.id]) {
                     poopy.data['guild-data'][msg.guild.id] = {}
@@ -63,7 +63,7 @@ module.exports = {
                 }
                 if (poopy.data['guild-data'][msg.guild.id]['members'][msg.mentions.members.first().id]['impostor'] === false) {
                     poopy.data['guild-data'][msg.guild.id]['members'][msg.mentions.members.first().id]['impostor'] = true
-                    msg.channel.send({
+                    await msg.channel.send({
                         content: msg.mentions.members.first().user.username + ' is now the Impostor.',
                         allowedMentions: {
                             parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
@@ -71,7 +71,7 @@ module.exports = {
                     }).catch(() => { })
                 } else {
                     poopy.data['guild-data'][msg.guild.id]['members'][msg.mentions.members.first().id]['impostor'] = false
-                    msg.channel.send({
+                    await msg.channel.send({
                         content: msg.mentions.members.first().user.username + ' is not the Impostor.',
                         allowedMentions: {
                             parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
@@ -81,7 +81,7 @@ module.exports = {
             }
         }
         else {
-            msg.channel.send('You need to have the manage webhooks permission to execute that!').catch(() => { })
+            await msg.channel.send('You need to have the manage webhooks permission to execute that!').catch(() => { })
             return;
         };
     },

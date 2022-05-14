@@ -3,10 +3,10 @@ module.exports = {
     execute: async function (msg, args) {
         let poopy = this
 
-        msg.channel.sendTyping().catch(() => { })
+        await msg.channel.sendTyping().catch(() => { })
         if (poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl2'] === undefined && args[2] === undefined) {
-            msg.channel.send('What are the files?!').catch(() => { })
-            msg.channel.sendTyping().catch(() => { })
+            await msg.channel.send('What are the files?!').catch(() => { })
+            await msg.channel.sendTyping().catch(() => { })
             return;
         }
         var keepaspectratio
@@ -57,9 +57,9 @@ module.exports = {
             frames: `the frames of the first file exceed the limit of {param} hahahaha (try to use the setfps or the trim commands)`,
             width: `the width of the first file exceeds the limit of {param} hahahaha (try to use the shrink command)`,
             height: `the height of the first file exceeds the limit of {param} hahahaha (try to use the shrink command)`
-        }).catch(error => {
-            msg.channel.send(error)
-            msg.channel.sendTyping().catch(() => { })
+        }).catch(async error => {
+            await msg.channel.send(error).catch(() => { })
+            await msg.channel.sendTyping().catch(() => { })
             return;
         })
         if (!fileinfo) return
@@ -69,9 +69,9 @@ module.exports = {
             frames: `the frames of the second file exceed the limit of {param} hahahaha (try to use the setfps or the trim commands)`,
             width: `the width of the second file exceeds the limit of {param} hahahaha (try to use the shrink command)`,
             height: `the height of the second file exceeds the limit of {param} hahahaha (try to use the shrink command)`
-        }).catch(error => {
-            msg.channel.send(error)
-            msg.channel.sendTyping().catch(() => { })
+        }).catch(async error => {
+            await msg.channel.send(error).catch(() => { })
+            await msg.channel.sendTyping().catch(() => { })
             return;
         })
         if (!fileinfo2) return
@@ -80,26 +80,26 @@ module.exports = {
         for (var i in errors) {
             var error = errors[i]
             if (error) {
-                msg.channel.send({
+                await msg.channel.send({
                     content: error,
                     allowedMentions: {
                         parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                     }
                 }).catch(() => { })
-                msg.channel.sendTyping().catch(() => { })
+                await msg.channel.sendTyping().catch(() => { })
                 return
             }
         }
         for (var i in filetypes) {
             var type = filetypes[i]
             if (!(type.mime.startsWith('image') || type.mime.startsWith('video'))) {
-                msg.channel.send({
+                await msg.channel.send({
                     content: 'Unsupported file types.',
                     allowedMentions: {
                         parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                     }
                 }).catch(() => { })
-                msg.channel.sendTyping().catch(() => { })
+                await msg.channel.sendTyping().catch(() => { })
                 return
             }
         }

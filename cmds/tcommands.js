@@ -39,7 +39,7 @@ module.exports = {
             toggle: async (msg, args) => {
                 if (msg.member.permissions.has('MANAGE_GUILD') || msg.member.roles.cache.find(role => role.name.match(/mod|dev|admin|owner|creator|founder|staff/ig)) || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || (poopy.config.ownerids.find(id => id == msg.author.id))) {
                     if (!args[2]) {
-                        msg.channel.send('You gotta specify a command!')
+                        await msg.channel.send('You gotta specify a command!')
                         return
                     }
 
@@ -57,23 +57,23 @@ module.exports = {
 
                             poopy.data['guild-data'][msg.guild.id]['disabled'].splice(index, 1)
 
-                            msg.channel.send(`Enabled \`${findCommand.name.join('/')}\`.`)
+                            await msg.channel.send(`Enabled \`${findCommand.name.join('/')}\`.`)
                         } else {
                             if (findCommand.name.find(n => n === args[0].toLowerCase())) {
-                                msg.channel.send(`You can't disable the disabling command!`)
+                                await msg.channel.send(`You can't disable the disabling command!`)
                                 return
                             }
 
                             poopy.data['guild-data'][msg.guild.id]['disabled'].push(findCommand.name)
 
-                            msg.channel.send(`Disabled \`${findCommand.name.join('/')}\`.`)
+                            await msg.channel.send(`Disabled \`${findCommand.name.join('/')}\`.`)
                         }
                     } else {
-                        msg.channel.send('Not a valid command.')
+                        await msg.channel.send('Not a valid command.')
                         return
                     }
                 } else {
-                    msg.channel.send('You need to be an administrator to execute that!').catch(() => { })
+                    await msg.channel.send('You need to be an administrator to execute that!').catch(() => { })
                     return;
                 };
             },
@@ -103,7 +103,7 @@ module.exports = {
         }
 
         if (!options[args[1].toLowerCase()]) {
-            msg.channel.send('Not a valid option.')
+            await msg.channel.send('Not a valid option.')
             return
         }
 

@@ -3,8 +3,8 @@ module.exports = {
     execute: async function (msg) {
         let poopy = this
 
-        msg.channel.sendTyping().catch(() => { })
-        msg.channel.send('Let\'s see...').catch(() => { })
+        await msg.channel.sendTyping().catch(() => { })
+        await msg.channel.send('Let\'s see...').catch(() => { })
         var fartRating = Math.floor(Math.random() * 100) + 1
         if (!poopy.data['user-data'][msg.author.id]) {
             poopy.data['user-data'][msg.author.id] = {}
@@ -21,12 +21,12 @@ module.exports = {
             poopy.data['user-data'][msg.author.id]['lastFartRate'] = Date.now();
         }
         if (poopy.data['user-data'][msg.author.id]['fartRate'] >= 70) {
-            msg.channel.send('**' + poopy.data['user-data'][msg.author.id]['fartRate'] + '**/100, great farts!').catch(() => { })
+            await msg.channel.send('**' + poopy.data['user-data'][msg.author.id]['fartRate'] + '**/100, great farts!').catch(() => { })
         }
         else {
-            msg.channel.send('**' + poopy.data['user-data'][msg.author.id]['fartRate'] + '**/100').catch(() => { })
+            await msg.channel.send('**' + poopy.data['user-data'][msg.author.id]['fartRate'] + '**/100').catch(() => { })
         }
-        msg.channel.sendTyping().catch(() => { })
+        await msg.channel.sendTyping().catch(() => { })
     },
     help: { name: 'ratemyfarts', value: 'Poopy rates your farts.' },
     cooldown: 2500,

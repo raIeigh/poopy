@@ -43,7 +43,7 @@ module.exports = {
         var cmd = chooseCmd()
 
         if (!cmd) {
-            msg.channel.send('no').catch(() => { })
+            await msg.channel.send('no').catch(() => { })
             return
         }
 

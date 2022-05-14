@@ -42,16 +42,16 @@ module.exports = {
 
             phrase: async (msg, args) => {
                 if (!args[1]) {
-                    msg.channel.send('You gotta specify a command name!').catch(() => { })
+                    await msg.channel.send('You gotta specify a command name!').catch(() => { })
                     return
                 }
 
                 var findCommand = poopy.data['guild-data'][msg.guild.id]['localcmds'].findIndex(cmd => cmd.name === args[1].toLowerCase())
 
                 if (findCommand > -1) {
-                    msg.channel.send(`\`${poopy.data['guild-data'][msg.guild.id]['localcmds'][findCommand].phrase}\``).catch(() => { })
+                    await msg.channel.send(`\`${poopy.data['guild-data'][msg.guild.id]['localcmds'][findCommand].phrase}\``).catch(() => { })
                 } else {
-                    msg.channel.send(`Not a valid command.`).catch(() => { })
+                    await msg.channel.send(`Not a valid command.`).catch(() => { })
                     return
                 }
             },
@@ -59,11 +59,11 @@ module.exports = {
             add: async (msg, args) => {
                 if (msg.member.permissions.has('MANAGE_GUILD') || msg.member.roles.cache.find(role => role.name.match(/mod|dev|admin|owner|creator|founder|staff/ig)) || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || poopy.config.ownerids.find(id => id == msg.author.id)) {
                     if (!args[1]) {
-                        msg.channel.send('You gotta specify a command name!').catch(() => { })
+                        await msg.channel.send('You gotta specify a command name!').catch(() => { })
                         return
                     }
                     if (!args[2]) {
-                        msg.channel.send('You gotta specify a command phrase!').catch(() => { })
+                        await msg.channel.send('You gotta specify a command phrase!').catch(() => { })
                         return
                     }
 
@@ -71,7 +71,7 @@ module.exports = {
                     var findCommand = poopy.commands.find(cmd => cmd.name.find(n => n === args[1].toLowerCase())) || poopy.data['guild-data'][msg.guild.id]['localcmds'].find(cmd => cmd.name === args[1].toLowerCase())
 
                     if (findCommand) {
-                        msg.channel.send(`That name was already taken!`).catch(() => { })
+                        await msg.channel.send(`That name was already taken!`).catch(() => { })
                         return
                     } else {
                         poopy.data['guild-data'][msg.guild.id]['localcmds'].push({
@@ -79,7 +79,7 @@ module.exports = {
                             phrase: saidMessage
                         })
 
-                        msg.channel.send({
+                        await msg.channel.send({
                             content: `✅ Added \`${args[1].toLowerCase()}\` command with phrase \`${saidMessage}\``,
                             allowedMentions: {
                                 parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
@@ -87,7 +87,7 @@ module.exports = {
                         }).catch(() => { })
                     }
                 } else {
-                    msg.channel.send('You need to be an administrator to execute that!').catch(() => { })
+                    await msg.channel.send('You need to be an administrator to execute that!').catch(() => { })
                     return;
                 };
             },
@@ -95,7 +95,7 @@ module.exports = {
             import: async (msg, args) => {
                 if (msg.member.permissions.has('MANAGE_GUILD') || msg.member.roles.cache.find(role => role.name.match(/mod|dev|admin|owner|creator|founder|staff/ig)) || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || poopy.config.ownerids.find(id => id == msg.author.id)) {
                     if (!args[1]) {
-                        msg.channel.send('You gotta specify the ID!').catch(() => { })
+                        await msg.channel.send('You gotta specify the ID!').catch(() => { })
                         return
                     }
 
@@ -109,7 +109,7 @@ module.exports = {
                         var findCommand = poopy.commands.find(cmd => cmd.name.find(n => n === name)) || poopy.data['guild-data'][msg.guild.id]['localcmds'].find(cmd => cmd.name === name)
 
                         if (findCommand) {
-                            msg.channel.send(`The name of that command was already taken!`).catch(() => { })
+                            await msg.channel.send(`The name of that command was already taken!`).catch(() => { })
                             return
                         }
 
@@ -118,17 +118,17 @@ module.exports = {
                             phrase: findCommandTemplate.phrase
                         })
 
-                        msg.channel.send({
+                        await msg.channel.send({
                             content: `✅ Imported \`${name}\` command with phrase \`${findCommandTemplate.phrase}\``,
                             allowedMentions: {
                                 parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                             }
                         }).catch(() => { })
                     } else {
-                        msg.channel.send('Not a valid ID.').catch(() => { })
+                        await msg.channel.send('Not a valid ID.').catch(() => { })
                     }
                 } else {
-                    msg.channel.send('You need to be an administrator to execute that!').catch(() => { })
+                    await msg.channel.send('You need to be an administrator to execute that!').catch(() => { })
                     return;
                 };
             },
@@ -136,11 +136,11 @@ module.exports = {
             edit: async (msg, args) => {
                 if (msg.member.permissions.has('MANAGE_GUILD') || msg.member.roles.cache.find(role => role.name.match(/mod|dev|admin|owner|creator|founder|staff/ig)) || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || poopy.config.ownerids.find(id => id == msg.author.id)) {
                     if (!args[1]) {
-                        msg.channel.send('You gotta specify a command name!').catch(() => { })
+                        await msg.channel.send('You gotta specify a command name!').catch(() => { })
                         return
                     }
                     if (!args[2]) {
-                        msg.channel.send('You gotta specify a command phrase!').catch(() => { })
+                        await msg.channel.send('You gotta specify a command phrase!').catch(() => { })
                         return
                     }
 
@@ -153,18 +153,18 @@ module.exports = {
                             phrase: saidMessage
                         }
 
-                        msg.channel.send({
+                        await msg.channel.send({
                             content: `✅ Edited \`${args[1].toLowerCase()}\` command with phrase \`${saidMessage}\``,
                             allowedMentions: {
                                 parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                             }
                         }).catch(() => { })
                     } else {
-                        msg.channel.send(`Not a valid command.`).catch(() => { })
+                        await msg.channel.send(`Not a valid command.`).catch(() => { })
                         return
                     }
                 } else {
-                    msg.channel.send('You need to be an administrator to execute that!').catch(() => { })
+                    await msg.channel.send('You need to be an administrator to execute that!').catch(() => { })
                     return;
                 };
             },
@@ -172,7 +172,7 @@ module.exports = {
             delete: async (msg, args) => {
                 if (msg.member.permissions.has('MANAGE_GUILD') || msg.member.roles.cache.find(role => role.name.match(/mod|dev|admin|owner|creator|founder|staff/ig)) || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || poopy.config.ownerids.find(id => id == msg.author.id)) {
                     if (!args[1]) {
-                        msg.channel.send('You gotta specify a command name!').catch(() => { })
+                        await msg.channel.send('You gotta specify a command name!').catch(() => { })
                         return
                     }
 
@@ -181,18 +181,18 @@ module.exports = {
                     if (findCommand > -1) {
                         poopy.data['guild-data'][msg.guild.id]['localcmds'].splice(findCommand, 1)
 
-                        msg.channel.send({
+                        await msg.channel.send({
                             content: `✅ Removed \`${args[1].toLowerCase()}\` command.`,
                             allowedMentions: {
                                 parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                             }
                         }).catch(() => { })
                     } else {
-                        msg.channel.send(`Not a valid command.`).catch(() => { })
+                        await msg.channel.send(`Not a valid command.`).catch(() => { })
                         return
                     }
                 } else {
-                    msg.channel.send('You need to be an administrator to execute that!').catch(() => { })
+                    await msg.channel.send('You need to be an administrator to execute that!').catch(() => { })
                     return;
                 };
             },
@@ -217,7 +217,7 @@ module.exports = {
         }
 
         if (!options[args[1].toLowerCase()]) {
-            msg.channel.send('Not a valid option.').catch(() => { })
+            await msg.channel.send('Not a valid option.').catch(() => { })
             return
         }
 

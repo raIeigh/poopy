@@ -5,12 +5,12 @@ module.exports = {
 
         async function createCommand(msg, args) {
             if (!args[1]) {
-                msg.channel.send('You gotta specify the name!').catch(() => { })
+                await msg.channel.send('You gotta specify the name!').catch(() => { })
                 return
             }
 
             if (!args[2]) {
-                msg.channel.send('You gotta specify the phrase!').catch(() => { })
+                await msg.channel.send('You gotta specify the phrase!').catch(() => { })
                 return
             }
 
@@ -23,7 +23,7 @@ module.exports = {
                 if (poopy.vars.validUrl.test(args[imageindex + 1])) {
                     params.image = args[imageindex + 1]
                 } else {
-                    msg.channel.send('Not a valid image URL.').catch(() => { })
+                    await msg.channel.send('Not a valid image URL.').catch(() => { })
                     return
                 }
             }
@@ -56,7 +56,7 @@ module.exports = {
             phraseArgs.splice(0, 2)
 
             if (phraseArgs.length <= 0) {
-                msg.channel.send('You gotta specify the phrase!').catch(() => { })
+                await msg.channel.send('You gotta specify the phrase!').catch(() => { })
                 return
             }
 
@@ -65,7 +65,7 @@ module.exports = {
             var findCommand = poopy.functions.globalData()['bot-data']['commandTemplates'].find(cmd => cmd.name === name && cmd.creator === msg.author.id)
 
             if (findCommand) {
-                msg.channel.send(`You've already created a command with that name! (ID: \`${findCommand.id}\`)`).catch(() => { })
+                await msg.channel.send(`You've already created a command with that name! (ID: \`${findCommand.id}\`)`).catch(() => { })
                 return
             } else {
                 var id = poopy.functions.generateId(true)
@@ -82,7 +82,7 @@ module.exports = {
                 }].concat(poopy.functions.globalData()['bot-data']['commandTemplates'])
                 poopy.functions.globalData()['bot-data']['commandTemplates'] = commands
 
-                msg.channel.send({
+                await msg.channel.send({
                     content: `✅ \`${name}\` was successfully registered to the command template database! (ID: \`${id}\`)`,
                     allowedMentions: {
                         parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
@@ -213,7 +213,7 @@ module.exports = {
                                         phrase: findCommandTemplate.phrase
                                     })
 
-                                    msg.channel.send({
+                                    await msg.channel.send({
                                         content: `✅ Imported \`${name}\` command with phrase \`${findCommandTemplate.phrase}\``,
                                         allowedMentions: {
                                             parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
@@ -241,7 +241,7 @@ module.exports = {
 
             search: async (msg, args) => {
                 if (!args[1]) {
-                    msg.channel.send('You gotta specify the name of the command you want to search!').catch(() => { })
+                    await msg.channel.send('You gotta specify the name of the command you want to search!').catch(() => { })
                     return
                 }
 
@@ -259,7 +259,7 @@ module.exports = {
                 }
 
                 if (ddcmdTemplates.length <= 0) {
-                    msg.channel.send({
+                    await msg.channel.send({
                         embeds: [none]
                     }).catch(() => { })
                     return
@@ -276,7 +276,7 @@ module.exports = {
                 if (dcmdTemplates.length) {
                     dcmdTemplates.sort((a, b) => Math.abs(1 - poopy.functions.similarity(a.name, saidMessage)) - Math.abs(1 - poopy.functions.similarity(b.name, saidMessage)))
                 } else {
-                    msg.channel.send({
+                    await msg.channel.send({
                         embeds: [none]
                     }).catch(() => { })
                     return
@@ -374,7 +374,7 @@ module.exports = {
                                         phrase: findCommandTemplate.phrase
                                     })
 
-                                    msg.channel.send({
+                                    await msg.channel.send({
                                         content: `✅ Imported \`${name}\` command with phrase \`${findCommandTemplate.phrase}\``,
                                         allowedMentions: {
                                             parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
@@ -410,7 +410,7 @@ module.exports = {
 
             edit: async (msg, args) => {
                 if (!args[1]) {
-                    msg.channel.send('You gotta specify the ID!').catch(() => { })
+                    await msg.channel.send('You gotta specify the ID!').catch(() => { })
                     return
                 }
 
@@ -420,7 +420,7 @@ module.exports = {
 
                 if (command && commandIndex > -1) {
                     if (command.creator !== msg.author.id) {
-                        msg.channel.send(`idiot you didn't make that command`).catch(() => { })
+                        await msg.channel.send(`idiot you didn't make that command`).catch(() => { })
                         return
                     }
 
@@ -438,7 +438,7 @@ module.exports = {
                         if (poopy.vars.validUrl.test(args[imageindex + 1])) {
                             params.image = args[imageindex + 1]
                         } else {
-                            msg.channel.send('Not a valid image URL.').catch(() => { })
+                            await msg.channel.send('Not a valid image URL.').catch(() => { })
                             return
                         }
                     }
@@ -467,7 +467,7 @@ module.exports = {
                         var findCommand = poopy.functions.globalData()['bot-data']['commandTemplates'].find(cmd => cmd.name === params.name && cmd.creator === msg.author.id)
 
                         if (findCommand) {
-                            msg.channel.send(`You've already created a command with that name! (ID: \`${findCommand.id}\`)`).catch(() => { })
+                            await msg.channel.send(`You've already created a command with that name! (ID: \`${findCommand.id}\`)`).catch(() => { })
                             return
                         }
                     }
@@ -476,15 +476,15 @@ module.exports = {
                         poopy.functions.globalData()['bot-data']['commandTemplates'][commandIndex][param] = params[param]
                     }
 
-                    msg.channel.send(`✅ Command successfully updated.`).catch(() => { })
+                    await msg.channel.send(`✅ Command successfully updated.`).catch(() => { })
                 } else {
-                    msg.channel.send('Not a valid ID.').catch(() => { })
+                    await msg.channel.send('Not a valid ID.').catch(() => { })
                 }
             },
 
             delete: async (msg, args) => {
                 if (!args[1]) {
-                    msg.channel.send('You gotta specify the ID!').catch(() => { })
+                    await msg.channel.send('You gotta specify the ID!').catch(() => { })
                     return
                 }
 
@@ -494,15 +494,15 @@ module.exports = {
 
                 if (command && commandIndex > -1) {
                     if (command.creator !== msg.author.id) {
-                        msg.channel.send(`idiot you didn't make that command`).catch(() => { })
+                        await msg.channel.send(`idiot you didn't make that command`).catch(() => { })
                         return
                     }
 
                     poopy.functions.globalData()['bot-data']['commandTemplates'].splice(commandIndex, 1)
 
-                    msg.channel.send(`✅ Command successfully deleted.`).catch(() => { })
+                    await msg.channel.send(`✅ Command successfully deleted.`).catch(() => { })
                 } else {
-                    msg.channel.send('Not a valid ID.').catch(() => { })
+                    await msg.channel.send('Not a valid ID.').catch(() => { })
                 }
             },
         }
@@ -526,7 +526,7 @@ module.exports = {
         }
 
         if (!options[args[1].toLowerCase()]) {
-            msg.channel.send('Not a valid option.').catch(() => { })
+            await msg.channel.send('Not a valid option.').catch(() => { })
             return
         }
 

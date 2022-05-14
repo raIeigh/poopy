@@ -3,10 +3,10 @@ module.exports = {
     execute: async function (msg, args) {
         let poopy = this
 
-        msg.channel.sendTyping().catch(() => { })
+        await msg.channel.sendTyping().catch(() => { })
         if (args[1] === undefined) {
-            msg.channel.send('Who do I DM?!').catch(() => { })
-            msg.channel.sendTyping().catch(() => { })
+            await msg.channel.send('Who do I DM?!').catch(() => { })
+            await msg.channel.sendTyping().catch(() => { })
             return;
         };
         var anon = false
@@ -21,22 +21,22 @@ module.exports = {
             attachments.push(new poopy.modules.Discord.MessageAttachment(attachment.url))
         });
         if (args[2] === undefined && attachments.length <= 0) {
-            msg.channel.send('What is the message to DM?!').catch(() => { })
-            msg.channel.sendTyping().catch(() => { })
+            await msg.channel.send('What is the message to DM?!').catch(() => { })
+            await msg.channel.sendTyping().catch(() => { })
             return;
         };
         if (!msg.mentions.members.size) {
             var id = args[1]
 
             var member = await poopy.bot.users.fetch(id)
-                .catch(function () {
-                    msg.channel.send({
+                .catch(async () => {
+                    await msg.channel.send({
                         content: 'Invalid user id: **' + id + '**',
                         allowedMentions: {
                             parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                         }
                     }).catch(() => { })
-                    msg.channel.sendTyping().catch(() => { })
+                    await msg.channel.sendTyping().catch(() => { })
                     return
                 });
 
@@ -51,15 +51,14 @@ module.exports = {
                     member.send({
                         content: (anon ? '' : `${msg.author.tag} from ${msg.guild.name}:\n\n`) + saidMessage,
                         files: attachments
-                    }).then(function () {
+                    }).then(async () => {
                         msg.react('✅').catch(() => { })
-                        msg.channel.sendTyping().catch(() => { })
+                        await msg.channel.sendTyping().catch(() => { })
+                    }).catch(async () => {
+                        await msg.channel.send('unblock me').catch(() => { })
+                        await msg.channel.sendTyping().catch(() => { })
+                        return
                     })
-                        .catch(function () {
-                            msg.channel.send('unblock me').catch(() => { })
-                            msg.channel.sendTyping().catch(() => { })
-                            return
-                        })
                     return
                 }
                 if (poopy.data['user-data'][member.id]['dms'] === undefined && !poopy.tempdata[member.id]['dmconsent']) {
@@ -84,22 +83,21 @@ module.exports = {
                     }
                 } else {
                     if (poopy.data['user-data'][member.id]['dms'] === false) {
-                        msg.channel.send('I don\'t have the permission to send unrelated DMs to this user.').catch(() => { })
-                        msg.channel.sendTyping().catch(() => { })
+                        await msg.channel.send('I don\'t have the permission to send unrelated DMs to this user.').catch(() => { })
+                        await msg.channel.sendTyping().catch(() => { })
                         return
                     }
                     member.send({
                         content: (!anon ? `${msg.author.tag} from ${msg.guild.name}:\n\n` : '') + saidMessage,
                         files: attachments
-                    }).then(function () {
+                    }).then(async () => {
                         msg.react('✅').catch(() => { })
-                        msg.channel.sendTyping().catch(() => { })
+                        await msg.channel.sendTyping().catch(() => { })
+                    }).catch(async () => {
+                        await msg.channel.send('Couldn\'t send a message to this user. Make sure they share any of the servers I\'m in, or not have me blocked.').catch(() => { })
+                        await msg.channel.sendTyping().catch(() => { })
+                        return
                     })
-                        .catch(function () {
-                            msg.channel.send('Couldn\'t send a message to this user. Make sure they share any of the servers I\'m in, or not have me blocked.').catch(() => { })
-                            msg.channel.sendTyping().catch(() => { })
-                            return
-                        })
                 }
             }
         }
@@ -115,15 +113,14 @@ module.exports = {
                 member.send({
                     content: (anon ? '' : `${msg.author.tag} from ${msg.guild.name}:\n\n`) + saidMessage,
                     files: attachments
-                }).then(function () {
+                }).then(async () => {
                     msg.react('✅').catch(() => { })
-                    msg.channel.sendTyping().catch(() => { })
+                    await msg.channel.sendTyping().catch(() => { })
+                }).catch(async () => {
+                    await msg.channel.send('unblock me').catch(() => { })
+                    await msg.channel.sendTyping().catch(() => { })
+                    return
                 })
-                    .catch(function () {
-                        msg.channel.send('unblock me').catch(() => { })
-                        msg.channel.sendTyping().catch(() => { })
-                        return
-                    })
                 return
             }
             if (poopy.data['user-data'][member.id]['dms'] === undefined && !poopy.tempdata[member.id]['dmconsent']) {
@@ -148,22 +145,21 @@ module.exports = {
                 }
             } else {
                 if (poopy.data['user-data'][member.id]['dms'] === false) {
-                    msg.channel.send('I don\'t have the permission to send unrelated DMs to this user.').catch(() => { })
-                    msg.channel.sendTyping().catch(() => { })
+                    await msg.channel.send('I don\'t have the permission to send unrelated DMs to this user.').catch(() => { })
+                    await msg.channel.sendTyping().catch(() => { })
                     return
                 }
                 member.send({
                     content: (!anon ? `${msg.author.tag} from ${msg.guild.name}:\n\n` : '') + saidMessage,
                     files: attachments
-                }).then(function () {
+                }).then(async () => {
                     msg.react('✅').catch(() => { })
-                    msg.channel.sendTyping().catch(() => { })
+                    await msg.channel.sendTyping().catch(() => { })
+                }).catch(async () => {
+                    await msg.channel.send('Couldn\'t send a message to this user. Make sure they share any of the servers I\'m in, or not have me blocked.').catch(() => { })
+                    await msg.channel.sendTyping().catch(() => { })
+                    return
                 })
-                    .catch(function () {
-                        msg.channel.send('Couldn\'t send a message to this user. Make sure they share any of the servers I\'m in, or not have me blocked.').catch(() => { })
-                        msg.channel.sendTyping().catch(() => { })
-                        return
-                    })
             }
         }
     },

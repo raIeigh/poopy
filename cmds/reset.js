@@ -5,7 +5,7 @@ module.exports = {
 
         var ownerid = poopy.config.ownerids.find(id => id == msg.author.id);
         if (ownerid === undefined) {
-            msg.channel.send('Owner only!').catch(() => { })
+            await msg.channel.send('Owner only!').catch(() => { })
             return
         } else {
             var config = poopy.config

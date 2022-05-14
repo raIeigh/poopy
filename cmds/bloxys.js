@@ -3,10 +3,10 @@ module.exports = {
     execute: async function (msg, args) {
         let poopy = this
 
-        msg.channel.sendTyping().catch(() => { })
+        await msg.channel.sendTyping().catch(() => { })
         if (poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl'] === undefined && args[1] === undefined) {
-            msg.channel.send('What is the file?!').catch(() => { })
-            msg.channel.sendTyping().catch(() => { })
+            await msg.channel.send('What is the file?!').catch(() => { })
+            await msg.channel.sendTyping().catch(() => { })
             return;
         };
         var currenturl = poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl'] || args[1]
@@ -21,9 +21,9 @@ module.exports = {
             matchedTextes = ['""', '']
         }
         var text = matchedTextes[1]
-        var fileinfo = await poopy.functions.validateFile(currenturl).catch(error => {
-            msg.channel.send(error)
-            msg.channel.sendTyping().catch(() => { })
+        var fileinfo = await poopy.functions.validateFile(currenturl).catch(async error => {
+            await msg.channel.send(error).catch(() => { })
+            await msg.channel.sendTyping().catch(() => { })
             return;
         })
 
@@ -44,13 +44,13 @@ module.exports = {
             await poopy.functions.execPromise(`ffmpeg -stream_loop -1 -i ${filepath}/${filename} -i ${filepath}/bloxy.png -i templates/bloxys.mp3 -filter_complex "[0:v]scale=219:124[frame];[1:v][frame]overlay=x=89:y=64:format=auto[oout];[oout]scale=ceil(iw/2)*2:ceil(ih/2)*2[out]" -shortest -map "[out]" -preset ${poopy.functions.findpreset(args)} -map 2:a:0 -c:v libx264 -pix_fmt yuv420p -t 00:00:07.05 -y ${filepath}/output.mp4`)
             await poopy.functions.sendFile(msg, filepath, `output.mp4`)
         } else {
-            msg.channel.send({
+            await msg.channel.send({
                 content: `Unsupported file: \`${currenturl}\``,
                 allowedMentions: {
                     parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
-            msg.channel.sendTyping().catch(() => { })
+            await msg.channel.sendTyping().catch(() => { })
             return
         }
     },

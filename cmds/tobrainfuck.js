@@ -3,14 +3,14 @@ module.exports = {
     execute: async function (msg, args) {
         let poopy = this
 
-        msg.channel.sendTyping().catch(() => { })
+        await msg.channel.sendTyping().catch(() => { })
         var saidMessage = args.join(' ').substring(args[0].length + 1)
         if (args[1] === undefined) {
-            msg.channel.send('What is the message to convert?!').catch(() => { })
-            msg.channel.sendTyping().catch(() => { })
+            await msg.channel.send('What is the message to convert?!').catch(() => { })
+            await msg.channel.sendTyping().catch(() => { })
             return;
         };
-        msg.channel.send({
+        await msg.channel.send({
             content: poopy.functions.tobrainfuck(saidMessage),
             allowedMentions: {
                 parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
@@ -26,7 +26,7 @@ module.exports = {
             }).catch(() => { })
             poopy.modules.fs.rmSync(`${filepath}`, { force: true, recursive: true })
         })
-        msg.channel.sendTyping().catch(() => { })
+        await msg.channel.sendTyping().catch(() => { })
     },
     help: {
         name: 'tobrainfuck/tobf <message>',

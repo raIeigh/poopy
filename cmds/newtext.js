@@ -3,11 +3,11 @@ module.exports = {
     execute: async function (msg, args) {
         let poopy = this
 
-        msg.channel.sendTyping().catch(() => { })
+        await msg.channel.sendTyping().catch(() => { })
         var fonts = poopy.modules.fs.readdirSync('templates/fonts')
         if (!args[1]) {
-            msg.channel.send(`No font specified. A valid list of fonts is ${fonts.join(', ')}`).catch(() => { })
-            msg.channel.sendTyping().catch(() => { })
+            await msg.channel.send(`No font specified. A valid list of fonts is ${fonts.join(', ')}`).catch(() => { })
+            await msg.channel.sendTyping().catch(() => { })
             return;
         }
 
@@ -15,7 +15,7 @@ module.exports = {
         if (fonts.find(font => font.toLowerCase() === args[1].toLowerCase())) {
             font = fonts.find(font => font.toLowerCase() === args[1].toLowerCase())
         } else {
-            msg.channel.send(`Not a supported font. A valid list of fonts are:\n${fonts.map(font => `\`${font}\``).join(', ')}`).catch(() => { })
+            await msg.channel.send(`Not a supported font. A valid list of fonts are:\n${fonts.map(font => `\`${font}\``).join(', ')}`).catch(() => { })
             return
         }
 

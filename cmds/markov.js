@@ -17,7 +17,7 @@ module.exports = {
         if (saidMessage) {
             messages.push(saidMessage)
         }
-        msg.channel.sendTyping().catch(() => { })
+        await msg.channel.sendTyping().catch(() => { })
         var markovChain = poopy.functions.markovChainGenerator(messages.join('  '))
         var markov = poopy.functions.markovMe(markovChain, saidMessage, {
             wordNumber: wordNumber,
@@ -25,7 +25,7 @@ module.exports = {
             keepcase: keepcase,
             randlerp: randlerp
         })
-        msg.channel.send({
+        await msg.channel.send({
             content: markov,
             allowedMentions: {
                 parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']

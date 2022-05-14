@@ -1,1 +1,1 @@
-web: node pipeline.js
+web: node index.js

@@ -3,10 +3,10 @@ module.exports = {
     execute: async function (msg, args, pathObject) {
         let poopy = this
 
-        msg.channel.sendTyping().catch(() => { })
+        await msg.channel.sendTyping().catch(() => { })
         if (poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl'] === undefined && poopy.vars.validUrl.test(args[args.length - 1]) === false) {
-            msg.channel.send('What is the file?!').catch(() => { })
-            msg.channel.sendTyping().catch(() => { })
+            await msg.channel.send('What is the file?!').catch(() => { })
+            await msg.channel.sendTyping().catch(() => { })
             return;
         };
         var size = 1
@@ -29,15 +29,15 @@ module.exports = {
         var fileinfo
 
         if (pathObject) {
-            fileinfo = await poopy.functions.validateFileFromPath(`${pathObject.path}/${pathObject.name}`).catch(error => {
-                msg.channel.send(error)
-                msg.channel.sendTyping().catch(() => { })
+            fileinfo = await poopy.functions.validateFileFromPath(`${pathObject.path}/${pathObject.name}`).catch(async error => {
+                await msg.channel.send(error).catch(() => { })
+                await msg.channel.sendTyping().catch(() => { })
                 return;
             })
         } else {
-            fileinfo = await poopy.functions.validateFile(currenturl).catch(error => {
-                msg.channel.send(error)
-                msg.channel.sendTyping().catch(() => { })
+            fileinfo = await poopy.functions.validateFile(currenturl).catch(async error => {
+                await msg.channel.send(error).catch(() => { })
+                await msg.channel.sendTyping().catch(() => { })
                 return;
             })
         }
@@ -198,13 +198,13 @@ module.exports = {
                 await poopy.functions.sendFile(msg, filepath, object.name)
             }
         } else {
-            msg.channel.send({
+            await msg.channel.send({
                 content: `Unsupported file: \`${currenturl}\``,
                 allowedMentions: {
                     parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
-            msg.channel.sendTyping().catch(() => { })
+            await msg.channel.sendTyping().catch(() => { })
             return
         }
     },

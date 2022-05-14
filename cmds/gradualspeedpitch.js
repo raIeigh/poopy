@@ -3,19 +3,19 @@ module.exports = {
     execute: async function (msg, args) {
         let poopy = this
 
-        msg.channel.sendTyping().catch(() => { })
+        await msg.channel.sendTyping().catch(() => { })
         if (poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl'] === undefined && args[2] === undefined) {
-            msg.channel.send('What is the file?!').catch(() => { })
-            msg.channel.sendTyping().catch(() => { })
+            await msg.channel.send('What is the file?!').catch(() => { })
+            await msg.channel.sendTyping().catch(() => { })
             return;
         };
         var currenturl = poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl']
         var speed = isNaN(Number(args[1])) ? 2 : Number(args[1]) <= 1 ? 1 : Number(args[1]) >= 6 ? 6 : Number(args[1]) || 2
         var gradual = []
         var n = 100
-        var fileinfo = await poopy.functions.validateFile(currenturl, true).catch(error => {
-            msg.channel.send(error)
-            msg.channel.sendTyping().catch(() => { })
+        var fileinfo = await poopy.functions.validateFile(currenturl, true).catch(async error => {
+            await msg.channel.send(error).catch(() => { })
+            await msg.channel.sendTyping().catch(() => { })
             return;
         })
 
@@ -61,7 +61,7 @@ module.exports = {
                 var gradualinfo = await poopy.functions.validateFileFromPath(`${filepath}/gradual.mp4`, 'very true').catch(() => { })
                 if (!gradualinfo) {
                     await msg.channel.send('Error while processing initial effect.').catch(() => { })
-                    msg.channel.sendTyping().catch(() => { })
+                    await msg.channel.sendTyping().catch(() => { })
                     poopy.modules.fs.rmSync(`${filepath}`, { force: true, recursive: true })
                     return
                 }
@@ -70,13 +70,13 @@ module.exports = {
                 await poopy.functions.execPromise(`ffmpeg -i ${filepath}/gradual.mp4 -filter_complex "[0:v]setpts=PTS/(${Number(gduration)}/${Number(gaduration)})/${ratio}[v]" -map "[v]" -map 0:a -preset ${poopy.functions.findpreset(args)} -c:v libx264 -pix_fmt yuv420p ${filepath}/output.mp4`)
                 await poopy.functions.sendFile(msg, filepath, `output.mp4`)
             } else {
-                msg.channel.send({
+                await msg.channel.send({
                     content: `File has no audio stream, maybe you should just use \`gradualspeedup\` for that.`,
                     allowedMentions: {
                         parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                     }
                 }).catch(() => { })
-                msg.channel.sendTyping().catch(() => { })
+                await msg.channel.sendTyping().catch(() => { })
             }
         } else if (type.mime.startsWith('audio')) {
             var filepath = await poopy.functions.downloadFile(currenturl, `input.mp3`, {
@@ -101,22 +101,22 @@ module.exports = {
             await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -filter_complex "${gradual.map(g => g.filter).join(';')};${gradual.map(g => g.audio).join('')}concat=n=${n}:a=1:v=0,atempo[a]" -map "[a]" -preset ${poopy.functions.findpreset(args)} ${filepath}/output.mp3`)
             await poopy.functions.sendFile(msg, filepath, `output.mp3`)
         } else if (type.mime.startsWith('image') && poopy.vars.gifFormats.find(f => f === type.ext)) {
-            msg.channel.send({
+            await msg.channel.send({
                 content: `Maybe you should just use \`gradualspeedup\` for that.`,
                 allowedMentions: {
                     parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
-            msg.channel.sendTyping().catch(() => { })
+            await msg.channel.sendTyping().catch(() => { })
             return
         } else {
-            msg.channel.send({
+            await msg.channel.send({
                 content: `Unsupported file: \`${currenturl}\``,
                 allowedMentions: {
                     parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
-            msg.channel.sendTyping().catch(() => { })
+            await msg.channel.sendTyping().catch(() => { })
             return
         }
     },

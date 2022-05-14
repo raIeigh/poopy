@@ -3,10 +3,10 @@ module.exports = {
     execute: async function (msg, args) {
         let poopy = this
 
-        msg.channel.sendTyping().catch(() => { })
+        await msg.channel.sendTyping().catch(() => { })
         if (args[1] === undefined) {
-            msg.channel.send('What is the text to translate?!').catch(() => { })
-            msg.channel.sendTyping().catch(() => { })
+            await msg.channel.send('What is the text to translate?!').catch(() => { })
+            await msg.channel.sendTyping().catch(() => { })
             return;
         }
         var lresponse = await poopy.modules.axios.request({
@@ -30,7 +30,7 @@ module.exports = {
             if (languages.find(language => (language.language === args[sourceindex + 1].toLowerCase()) || (language.name === args[sourceindex + 1].toLowerCase()))) {
                 source = languages.find(language => (language.language === args[sourceindex + 1].toLowerCase()) || (language.name === args[sourceindex + 1].toLowerCase())).language
             } else {
-                msg.channel.send(`Not a supported source language. A list of supported languages are:\n${languages.map(language => `${language.name} (${language.language})`).join(', ')}`).catch(() => { })
+                await msg.channel.send(`Not a supported source language. A list of supported languages are:\n${languages.map(language => `${language.name} (${language.language})`).join(', ')}`).catch(() => { })
                 return
             }
             args.splice(sourceindex, 2)
@@ -42,7 +42,7 @@ module.exports = {
             if (languages.find(language => (language.language === args[targetindex + 1].toLowerCase()) || (language.name === args[targetindex + 1].toLowerCase()))) {
                 target = languages.find(language => (language.language === args[targetindex + 1].toLowerCase()) || (language.name === args[targetindex + 1].toLowerCase())).language
             } else {
-                msg.channel.send(`Not a supported target language. A list of supported languages are:\n${languages.map(language => `${language.name} (\`${language.language}\`)`).join(', ')}`).catch(() => { })
+                await msg.channel.send(`Not a supported target language. A list of supported languages are:\n${languages.map(language => `${language.name} (\`${language.language}\`)`).join(', ')}`).catch(() => { })
                 return
             }
             args.splice(targetindex, 2)
@@ -66,13 +66,13 @@ module.exports = {
             await msg.channel.send('Error.').catch(() => { })
         })
 
-        msg.channel.send({
+        await msg.channel.send({
             content: response.data[0].translations[0].text,
             allowedMentions: {
                 parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
             }
         }).catch(() => { })
-        msg.channel.sendTyping().catch(() => { })
+        await msg.channel.sendTyping().catch(() => { })
     },
     help: {
         name: 'translate/tr <message> [-source <language>] [-target <language>]',

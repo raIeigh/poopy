@@ -16,31 +16,37 @@ module.exports = {
         })
         requests++
 
-        await schemas.data.find({
+        var dataobjects = await schemas.data.find({
             dataid: databaseName
-        }, (_, objects) => {
-            var object = objects[0]
+        }).catch((e) => console.log(e))
 
-            for (var k in object) {
-                var value = object[k]
+        console.log(dataobjects.length)
 
+        if (dataobjects) {
+            var dataobject = dataobjects[0]
+            for (var k in dataobject) {
+                var value = dataobject[k]
+    
                 if (k != 'dataid' && k != 'toString' && schemas.data.prototype.schema.obj[k]) {
                     data.data[k] = value
                 }
             }
-        }).catch(() => { })
+        }
 
-        await schemas.globaldata.find({}, (_, objects) => {
-            var object = objects[0]
+        var globaldataobjects = await schemas.globaldata.find({}).catch((e) => console.log(e))
 
-            for (var k in object) {
-                var value = object[k]
+        console.log(globaldataobjects.length)
 
+        if (globaldataobjects) {
+            var globaldataobject = globaldataobjects[0]
+            for (var k in globaldataobject) {
+                var value = globaldataobject[k]
+    
                 if (k != 'dataid' && k != 'toString' && schemas.globaldata.prototype.schema.obj[k]) {
                     data.globaldata[k] = value
                 }
             }
-        }).catch(() => { })
+        }
 
         requests--
         if (requests <= 0) mongoose.connection.close()

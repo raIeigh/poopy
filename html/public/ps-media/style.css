@@ -32,7 +32,6 @@ button:hover {
     border-color: #ddcaff;
     background: #ddcaff;
     color: white;
-    font-family: 'Ubuntu';
     box-shadow: 3px 3px 3px black;
     text-shadow: 3px 3px 3px black;
     border-radius: 10px;
@@ -49,7 +48,6 @@ button:active {
     border-color: #1b0049;
     background: #1b0049;
     color: white;
-    font-family: 'Ubuntu';
     box-shadow: 3px 3px 3px black;
     text-shadow: 3px 3px 3px black;
     border-radius: 10px;
@@ -66,7 +64,6 @@ div#options button {
     border-color: #673ab7;
     background: #673ab7;
     color: white;
-    font-family: 'Ubuntu';
     box-shadow: 3px 3px 3px black;
     text-shadow: 3px 3px 3px black;
     border-radius: 10px;
@@ -81,7 +78,6 @@ div#options button:hover {
     border-color: #ddcaff;
     background: #ddcaff;
     color: white;
-    font-family: 'Ubuntu';
     box-shadow: 3px 3px 3px black;
     text-shadow: 3px 3px 3px black;
     border-radius: 10px;
@@ -98,7 +94,6 @@ div#options button:active {
     border-color: #1b0049;
     background: #1b0049;
     color: white;
-    font-family: 'Ubuntu';
     box-shadow: 3px 3px 3px black;
     text-shadow: 3px 3px 3px black;
     border-radius: 10px;
@@ -117,4 +112,8 @@ div#options button img {
     transform: translate(-50%, 10%);
     position: fixed;
     z-index: 1;
+}
+
+body {
+    background: #a16dfd;
 }

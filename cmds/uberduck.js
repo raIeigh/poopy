@@ -3,15 +3,15 @@ module.exports = {
     execute: async function (msg, args) {
         let poopy = this
 
-        msg.channel.sendTyping().catch(() => { })
+        await msg.channel.sendTyping().catch(() => { })
         if (args[1] === undefined) {
-            msg.channel.send('What is the voice?! A list can be found at https://uberduck.ai/quack-help').catch(() => { })
-            msg.channel.sendTyping().catch(() => { })
+            await msg.channel.send('What is the voice?! A list can be found at https://uberduck.ai/quack-help').catch(() => { })
+            await msg.channel.sendTyping().catch(() => { })
             return;
         }
         if (args[2] === undefined) {
-            msg.channel.send('What is the text?!').catch(() => { })
-            msg.channel.sendTyping().catch(() => { })
+            await msg.channel.send('What is the text?!').catch(() => { })
+            await msg.channel.sendTyping().catch(() => { })
             return;
         }
 
@@ -39,7 +39,7 @@ module.exports = {
         })
 
         if (rejected && response.data.detail) {
-            msg.channel.send(response.data.detail).catch(() => { })
+            await msg.channel.send(response.data.detail).catch(() => { })
             return;
         }
 

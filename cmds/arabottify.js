@@ -3,7 +3,7 @@ module.exports = {
     execute: async function (msg, args) {
         let poopy = this
 
-        msg.channel.sendTyping().catch(() => { })
+        await msg.channel.sendTyping().catch(() => { })
         var wordNumber = Math.floor(Math.random() * 40) + 1
         var wordsSpecified = false
         var noextrawords = false
@@ -50,7 +50,7 @@ module.exports = {
                     chooseWord()
                 }
             }
-            msg.channel.send({
+            await msg.channel.send({
                 content: arabArray.join(' '),
                 allowedMentions: {
                     parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
@@ -66,7 +66,7 @@ module.exports = {
                 }).catch(() => { })
                 poopy.modules.fs.rmSync(`${filepath}`, { force: true, recursive: true })
             })
-            msg.channel.sendTyping().catch(() => { })
+            await msg.channel.sendTyping().catch(() => { })
             return;
         };
         var arabArray = args.splice(1)
@@ -96,7 +96,7 @@ module.exports = {
         if (wordsSpecified) {
             arabArray.splice(wordNumber)
         }
-        msg.channel.send({
+        await msg.channel.send({
             content: arabArray.join(' '),
             allowedMentions: {
                 parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
@@ -112,7 +112,7 @@ module.exports = {
             }).catch(() => { })
             poopy.modules.fs.rmSync(`${filepath}`, { force: true, recursive: true })
         })
-        msg.channel.sendTyping().catch(() => { })
+        await msg.channel.sendTyping().catch(() => { })
     },
     help: {
         name: 'arabottify [message] [-words <wordNumber>] [-noextrawords] [-nopunctuation]',

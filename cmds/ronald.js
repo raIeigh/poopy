@@ -3,7 +3,7 @@ module.exports = {
   execute: async function (msg) {
     let poopy = this
 
-    msg.channel.send(await poopy.specialkeys.keys._ronald.func()).catch(() => { })
+    await msg.channel.send(await poopy.specialkeys.keys._ronald.func()).catch(() => { })
   },
   help: {
     name: 'ronald/ronaldgif',

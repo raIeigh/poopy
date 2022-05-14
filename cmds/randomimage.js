@@ -5,7 +5,7 @@ module.exports = {
 
     var imageJSON = poopy.json.imageJSON
     var image = imageJSON.data[Math.floor(Math.random() * imageJSON.data.length)]
-    msg.channel.send({
+    await msg.channel.send({
       content: image.description,
       files: [new poopy.modules.Discord.MessageAttachment('https://randomwordgenerator.com' + image.image_url)],
     }).catch(() => { })

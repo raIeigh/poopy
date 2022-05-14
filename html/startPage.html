@@ -3,16 +3,17 @@
 
 <head>
     <title>poopy data required</title>
-    <link rel="icon" href="https://poopies-for-you.herokuapp.com/resources/rouge.png">
-    <meta property="og:image" content="https://poopies-for-you.herokuapp.com/resources/rouge.png">
+    <link rel="icon" href="/assets/rouge.png">
+    <meta property="og:image" content="https://poopies-for-you.herokuapp.com/assets/rouge.png">
     <meta property="og:title" content="poopy data required">
     <meta property="og:description" content="wait for him">
     <script>
-        const source = new EventSource('/api/onpoopystart');
-
-        source.addEventListener('message', () => {
+        async function main() {
+            await fetch('/api/waitPoopyStart')
             window.location.reload()
-        })
+        }
+
+        main()
     </script>
 </head>
 

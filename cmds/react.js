@@ -4,10 +4,10 @@ module.exports = {
         let poopy = this
 
         if (args[1] === undefined) {
-            msg.channel.send('Where are the arguments?!').catch(() => { })
+            await msg.channel.send('Where are the arguments?!').catch(() => { })
             return;
         }
-        msg.channel.sendTyping().catch(() => { })
+        await msg.channel.sendTyping().catch(() => { })
         var saidEmojis = args[1];
         var saidMessage = args[2];
 
@@ -17,42 +17,40 @@ module.exports = {
 
         if (saidEmojis) {
             var saidEmojisArray = saidEmojis.split(',');
-            saidEmojisArray.forEach(
-                saidEmoji => {
-                    async function getMessage(id) {
-                        var messageToReact = await msg.channel.messages.fetch(id)
-                            .catch(function () {
-                                msg.channel.send({
-                                    content: 'Invalid message id: **' + id + '**',
+            saidEmojisArray.forEach(async saidEmoji => {
+                async function getMessage(id) {
+                    var messageToReact = await msg.channel.messages.fetch(id)
+                        .catch(async () => {
+                            await msg.channel.send({
+                                content: 'Invalid message id: **' + id + '**',
+                                allowedMentions: {
+                                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                                }
+                            }).catch(() => { })
+                            await msg.channel.sendTyping().catch(() => { })
+                            return
+                        })
+
+                    if (messageToReact) {
+                        messageToReact.react(saidEmoji)
+                            .then(async () => {
+                                await msg.channel.sendTyping().catch(() => { })
+                            })
+                            .catch(async () => {
+                                await msg.channel.send({
+                                    content: 'Invalid emoji: **' + saidEmoji + '**',
                                     allowedMentions: {
                                         parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                                     }
                                 }).catch(() => { })
-                                msg.channel.sendTyping().catch(() => { })
-                                return
+                                await msg.channel.sendTyping().catch(() => { })
+                                return;
                             })
-
-                        if (messageToReact) {
-                            messageToReact.react(saidEmoji)
-                                .then(function () {
-                                    msg.channel.sendTyping().catch(() => { })
-                                })
-                                .catch(function () {
-                                    msg.channel.send({
-                                        content: 'Invalid emoji: **' + saidEmoji + '**',
-                                        allowedMentions: {
-                                            parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
-                                        }
-                                    }).catch(() => { })
-                                    msg.channel.sendTyping().catch(() => { })
-                                    return;
-                                })
-                        }
                     }
-
-                    getMessage(saidMessage)
                 }
-            )
+
+                await getMessage(saidMessage)
+            })
         };
     },
     help: {

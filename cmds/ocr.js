@@ -66,7 +66,7 @@ module.exports = {
         };
         var currenturl = poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl'] || args[1]
         var fileinfo = await poopy.functions.validateFile(currenturl).catch(async error => {
-            await msg.channel.send(error)
+            await msg.channel.send(error).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
         })

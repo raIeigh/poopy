@@ -177,10 +177,9 @@ module.exports = {
                     embeds: [devcmdEmbed]
                 }).catch(() => { })
             }
-            msg.channel.send('✅ Check your DMs.').catch(() => { })
-        }).catch((e) => {
-            console.log(e)
-            msg.channel.send('Couldn\'t send help to you. Do you have me blocked?').catch(() => { })
+            await msg.channel.send('✅ Check your DMs.').catch(() => { })
+        }).catch(async () => {
+            await msg.channel.send('Couldn\'t send help to you. Do you have me blocked?').catch(() => { })
             return
         })
         else msg.channel.send('Couldn\'t send help to you. Do you have me blocked?').catch(() => { })

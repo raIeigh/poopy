@@ -3,10 +3,10 @@ module.exports = {
   execute: async function (msg, args) {
     let poopy = this
 
-    msg.channel.sendTyping().catch(() => { })
+    await msg.channel.sendTyping().catch(() => { })
     if (args.length < 6) {
-      msg.channel.send('Where are all the required arguments?!').catch(() => { })
-      msg.channel.sendTyping().catch(() => { })
+      await msg.channel.send('Where are all the required arguments?!').catch(() => { })
+      await msg.channel.sendTyping().catch(() => { })
       return;
     }
 

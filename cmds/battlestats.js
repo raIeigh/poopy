@@ -3,7 +3,7 @@ module.exports = {
     execute: async function (msg, args) {
         let poopy = this
 
-        msg.channel.sendTyping().catch(() => { })
+        await msg.channel.sendTyping().catch(() => { })
         if (args[1] === undefined) {
             if (!poopy.data['user-data'][msg.author.id]) {
                 poopy.data['user-data'][msg.author.id] = {}
@@ -33,21 +33,21 @@ module.exports = {
             }
             if (poopy.config.textEmbeds) delete sendObject.embeds
             else delete sendObject.content
-            msg.channel.send(sendObject).catch(() => { })
-            msg.channel.sendTyping().catch(() => { })
+            await msg.channel.send(sendObject).catch(() => { })
+            await msg.channel.sendTyping().catch(() => { })
             return;
         }
         if (!msg.mentions.members.size) {
             async function getMember(id) {
                 var member = await poopy.bot.users.fetch(id)
-                    .catch(function () {
-                        msg.channel.send({
+                    .catch(async () => {
+                        await msg.channel.send({
                             content: 'Invalid user id: **' + id + '**',
                             allowedMentions: {
                                 parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                             }
                         }).catch(() => { })
-                        msg.channel.sendTyping().catch(() => { })
+                        await msg.channel.sendTyping().catch(() => { })
                         return
                     })
 
@@ -80,12 +80,12 @@ module.exports = {
                     }
                     if (poopy.config.textEmbeds) delete sendObject.embeds
                     else delete sendObject.content
-                    msg.channel.send(sendObject).catch(() => { })
-                    msg.channel.sendTyping().catch(() => { })
+                    await msg.channel.send(sendObject).catch(() => { })
+                    await msg.channel.sendTyping().catch(() => { })
                 }
             }
 
-            getMember(args[1]);
+            await getMember(args[1]);
         }
         else {
             var mention = msg.mentions.members.first();
@@ -117,8 +117,8 @@ module.exports = {
             }
             if (poopy.config.textEmbeds) delete sendObject.embeds
             else delete sendObject.content
-            msg.channel.send(sendObject).catch(() => { })
-            msg.channel.sendTyping().catch(() => { })
+            await msg.channel.send(sendObject).catch(() => { })
+            await msg.channel.sendTyping().catch(() => { })
         }
     },
     help: {

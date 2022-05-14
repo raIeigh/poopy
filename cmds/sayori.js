@@ -5,7 +5,7 @@ module.exports = {
 
         if (msg.channel.parent) {
             if (msg.channel.parent.isText()) {
-                msg.channel.send('Webhooks can\'t be used here.').catch(() => { })
+                await msg.channel.send('Webhooks can\'t be used here.').catch(() => { })
                 return
             }
         }
