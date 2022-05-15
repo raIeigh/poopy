@@ -268,12 +268,38 @@
     --deprecated-text-input-border-hover: #040405;
     --deprecated-text-input-border-disabled: #202225;
     --deprecated-text-input-prefix: #dcddde;
+}
 
+body {
     background: var(--background-primary);
-    color: var(--text-normal);
     font-family: Whitney;
     font-size: 1rem;
     line-height: 1.375rem;
+    color: var(--text-normal);
+    white-space: pre-wrap;
+    white-space: break-spaces;
+    word-wrap: break-word;
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
+    font-weight: 400;
+    overflow: hidden;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    overflow-anchor: none;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-box-pack: end;
+    -ms-flex-pack: end;
+    justify-content: flex-end;
+    -webkit-box-align: stretch;
+    -ms-flex-align: stretch;
+    align-items: stretch;
+    min-height: 100%;
 }
 
 .hljs {
@@ -559,6 +585,25 @@ var {
     vertical-align: baseline;
 }
 
+a,
+button,
+div,
+input,
+label,
+select,
+span,
+strong,
+textarea {
+    outline: 0;
+}
+
+.contents {
+    position: static;
+    margin-left: 0;
+    padding-left: 0;
+    text-indent: 0;
+}
+
 pre {
     border-radius: 4px;
     padding: 0;
@@ -593,18 +638,6 @@ code.inline {
     white-space: pre-wrap;
 }
 
-a,
-button,
-div,
-input,
-label,
-select,
-span,
-strong,
-textarea {
-    outline: 0;
-}
-
 .blockquoteDivider {
     background-color: var(--interactive-muted);
 }
@@ -615,8 +648,7 @@ textarea {
     display: flex;
 }
 
-.blockquoteContainer,
-.blockquoteDivider {
+.blockquoteContainer .blockquoteDivider {
     width: 4px;
     border-radius: 4px;
 }
@@ -635,10 +667,41 @@ pre {
     text-indent: 0;
 }
 
+.container {
+    display: grid;
+    grid-auto-flow: row;
+    grid-row-gap: 0.25rem;
+    grid-template-columns: repeat(auto-fill,minmax(100%,1fr));
+    text-indent: 0;
+    min-height: 0;
+    min-width: 0;
+    padding-top: 0.125rem;
+    padding-bottom: 0.125rem;
+    position: relative;
+}
+
 .emoji {
+    display: inline-block;
     -o-object-fit: contain;
     object-fit: contain;
     width: 1.375em;
     height: 1.375em;
     vertical-align: bottom;
+}
+
+a {
+    color: var(--text-link);
+    word-break: break-word;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+img, video {
+    display: block;
+    position: relative;
+    border-radius: 3px;
 }

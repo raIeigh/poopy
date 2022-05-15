@@ -23,29 +23,14 @@ async function main() {
         return new Promise(resolve => setTimeout(resolve, ms))
     }
 
-    function format(str) {
-        return str
-            .replace(/./gm, (s) => (s.match(/[a-z0-9\s*_~`>]+/i)) ? s : "&#" + s.charCodeAt(0) + ";")
-            .replace(/~{2}.+~{2}/g, (s) => `<s>${s.substring(2, s.length - 2)}</s>`)
-            .replace(/_{2}.+_{2}/g, (s) => `<u>${s.substring(2, s.length - 2)}</u>`)
-            .replace(/_.+_/g, (s) => `<i>${s.substring(2, s.length - 2)}</i>`)
-            .replace(/\*{2}.+\*{2}/g, (s) => `<b>${s.substring(2, s.length - 2)}</b>`)
-            .replace(/\*.+\*/g, (s) => `<i>${s.substring(1, s.length - 1)}</i>`)
-            .replace(/`{3}.+`{3}/g, (s) => `<pre>${s.substring(1, s.length - 1)}</pre>`)
-            .replace(/`.+`/g, (s) => `<code>${s.substring(1, s.length - 1)}</code>`)
+    function escapeHTML(value) {
+        return value
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&apos;')
     }
-
-    app.use(function (req, res, next) {
-        const isNotSecure = (!req.get('x-forwarded-port') && req.protocol !== 'https') ||
-            parseInt(req.get('x-forwarded-port'), 10) !== 443 &&
-            (parseInt(req.get('x-forwarded-port'), 10) === parseInt(req.get('x-forwarded-port'), 10))
-
-        if (isNotSecure) {
-            return res.redirect(301, `https://${req.get('host')}${req.url}`)
-        }
-
-        next()
-    })
 
     app.get('/api/waitPoopyStart', async function (req, res) {
         while (!poopyStarted) await sleep(1000)
@@ -149,14 +134,68 @@ async function main() {
                     if (sent) return
 
                     if (typeof (payload) == 'string') {
-                        contents.push(format(payload))
+                        contents.push(escapeHTML(payload))
                         return contents
                     } else {
                         const attachment = (payload.files && payload.files.length > 0 && payload.files[0].attachment) || (payload.embeds && payload.embeds.length > 0 && payload.embeds[0].image && payload.embeds[0].image.url)
 
                         if (attachment) {
-                            console.log('attachment')
                             sent = true
+
+                            function wrapImage(fileinfo) {
+                                var width = fileinfo.info.width
+                                var height = fileinfo.info.height
+
+                                var embedWidth = width
+                                var embedHeight = height
+
+                                if (width == height && width > 300 && height > 300) {
+                                    embedWidth = 300
+                                    embedHeight = 300
+                                }
+
+                                if (width > 400) {
+                                    embedWidth = 400
+                                    embedHeight /= width / 400
+                                }
+
+                                if (height > 300) {
+                                    embedWidth /= height / 300
+                                    embedHeight = 300
+                                }
+
+                                return `<a href="${fileinfo.path}" target="_blank"><img alt="Image" src="${fileinfo.path}" style="width: ${embedWidth}px; height: ${embedHeight}px;"></a>`
+                            }
+
+                            function wrapVideo(fileinfo) {
+                                var width = fileinfo.info.width
+                                var height = fileinfo.info.height
+
+                                var embedWidth = width
+                                var embedHeight = height
+
+                                if (width == height && width > 300 && height > 300) {
+                                    embedWidth = 300
+                                    embedHeight = 300
+                                }
+
+                                if (width > 400) {
+                                    embedWidth = 400
+                                    embedHeight /= width / 400
+                                }
+
+                                if (height > 300) {
+                                    embedWidth /= height / 300
+                                    embedHeight = 300
+                                }
+
+                                return `<video controls height="${embedHeight}" width="${embedWidth}" src="${fileinfo.path}"></video>`
+                            }
+
+                            function wrapAudio(fileinfo) {
+                                return `<audio controls src="${fileinfo.path}"></audio>`
+                            }
+
                             if (mainPoopy.vars.validUrl.test(attachment)) {
                                 res.redirect(attachment)
                             } else {
@@ -164,7 +203,7 @@ async function main() {
                             }
                             return attachment
                         } else {
-                            if (payload.content != undefined) contents.push(format(payload.content))
+                            if (payload.content != undefined) contents.push(escapeHTML(payload.content))
 
                             if (payload.embeds && payload.embeds.length > 0) {
                                 let textEmbed = []
@@ -179,7 +218,7 @@ async function main() {
                                     if (embed.footer && embed.footer.text) textEmbed.push(embed.footer.text)
                                 })
 
-                                contents.push(format(textEmbed.join('\n')))
+                                contents.push(escapeHTML(textEmbed.join('\n')))
                             }
                             return contents
                         }
@@ -197,7 +236,7 @@ async function main() {
 
             let user = {
                 send: async () => msg,
-                displayAvatarURL: () => 'https://cdn.discordapp.com/attachments/760223418968047629/975040060741263400/unknown.png',
+                displayAvatarURL: () => 'https://cdn.discordapp.com/embed/avatars/0.png',
                 createDM: async () => channel,
                 username: 'User',
                 tag: 'User',

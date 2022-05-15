@@ -2472,7 +2472,7 @@ class Poopy {
                     }
                 },
                 {
-                    regexp: /<a?:.+?:\d+>/g,
+                    regexp: /<a?:[a-zA-Z\d_]+?:\d+>/g,
                     func: async function (demoji) {
                         var demojiidmatch = demoji.match(/\d+/g)
                         var demojiid = demojiidmatch[demojiidmatch.length - 1]
@@ -2888,7 +2888,7 @@ class Poopy {
 
                 if (!type) {
                     var body = poopy.modules.fs.readFileSync(path).toString()
-                    type = { mime: body.match(/<[a-z]>(.*?)<\/[a-z]>/g) ? 'text/html' : 'text/plain', ext: body.match(/<[a-z]>(.*?)<\/[a-z]>/g) ? 'html' : 'plain' }
+                    type = { mime: body.match(/<[a-z][\s\S]*>([\s\S]*)<\/[a-z][\s\S]*>/g) ? 'text/html' : 'text/plain', ext: body.match(/<[a-z][\s\S]*>([\s\S]*)<\/[a-z][\s\S]*>/g) ? 'html' : 'plain' }
                 }
 
                 var info = {
@@ -2987,6 +2987,7 @@ class Poopy {
                     shortpixfmt: shortpixfmt,
                     name: names[names.length - 1],
                     info: info,
+                    path: path,
                     buffer: poopy.modules.fs.readFileSync(path)
                 })
             })
@@ -3155,6 +3156,7 @@ class Poopy {
                     shortpixfmt: shortpixfmt,
                     name: name,
                     info: info,
+                    path: url,
                     buffer: bufferresponse.data
                 })
             })
