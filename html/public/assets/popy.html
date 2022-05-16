@@ -3,7 +3,7 @@
 
 <head>
     <title>your command sir</title>
-    <link rel="stylesheet" href="/assets/discord.css">
+    <link rel="stylesheet" href="./discord.css">
     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/highlight.min.js"></script>
     <script>
         var noParse = ['iframe', 'noframes', 'noscript', 'script', 'select', 'style', 'textarea', 'pre', 'code', 'img']
@@ -20,58 +20,7 @@
         function format(value) {
             var formatters = [
                 {
-                    globalMatch: /^\s*>>> [\s\S]+/gm,
-                    format: (s) => `${s.match(/^\s*/)[0]}<div class="blockquoteContainer"><div class="blockquoteDivider"></div><blockquote>${s.replace(/^\s*>>> /, '')}</blockquote></div>`
-                },
-                {
-                    globalMatch: /^\s*> [^\n\r]+/gm,
-                    format: (s) => `${s.match(/^\s*/)[0]}<div class="blockquoteContainer"><div class="blockquoteDivider"></div><blockquote>${s.replace(/^\s*> /, '')}</blockquote></div>`
-                },
-                {
-                    twemoji: true
-                },
-                {
-                    match: /<a?:[a-zA-Z\d_]+?:\d+>/,
-                    format: (demoji) => {
-                        var demojiidmatch = demoji.match(/\d+/g)
-                        var demojiid = demojiidmatch[demojiidmatch.length - 1]
-                        return `<img class="emoji" alt="${demoji}" src="https://cdn.discordapp.com/emojis/${demojiid}.${demoji.startsWith('<a') ? 'gif' : 'png'}?size=1024">`
-                    }
-                },
-                {
-                    match: /\[[\s\S]+]\((http|https):\/\/[^\s`"]+\)/,
-                    format: (hyperlink) => {
-                        var hypername = hyperlink.match(/\[[^<`]+]/)[0]
-                        var hyperurl = hyperlink.match(/\((http|https):\/\/[^\s`"]+\)/)[0]
-                        return `<a href="${hyperurl.substring(1, hyperurl.length - 1)}" target="_blank">${hypername.substring(1, hypername.length - 1)}</a>`
-                    }
-                },
-                {
-                    match: /~{2}[\s\S]+~{2}/,
-                    format: (s) => `<s>${s.substring(2, s.length - 2)}</s>`
-                },
-                {
-                    match: /_{2}[\s\S]+_{2}/,
-                    format: (s) => `<u>${s.substring(2, s.length - 2)}</u>`
-                },
-                {
-                    match: /_[\s\S]+_/,
-                    format: (s) => `<i>${s.substring(1, s.length - 1)}</i>`
-                },
-                {
-                    match: /\*{3}[\s\S]+\*{3}/,
-                    format: (s) => `<i><b>${s.substring(3, s.length - 3)}</b></i>`
-                },
-                {
-                    match: /\*{2}[\s\S]+\*{2}/,
-                    format: (s) => `<b>${s.substring(2, s.length - 2)}</b>`
-                },
-                {
-                    match: /\*[\s\S]+\*/,
-                    format: (s) => `<i>${s.substring(1, s.length - 1)}</i>`
-                },
-                {
-                    match: /(`{3}[^\n]+`{3})|(`{3}\n[\s\S]+`{3})|\n(`{3}[^\n]*\n[\s\S]+`{3})/,
+                    wholeMatch: /(`{3}[^\n]+`{3})|(`{3}\n[\s\S]+`{3})|\n(`{3}[^\n]*\n[\s\S]+`{3})/,
                     format: (s) => {
                         var language = ''
                         var split = s.substring(s.startsWith('\n') ? 4 : 3, s.length - 3).split('\n')
@@ -93,99 +42,138 @@
                     }
                 },
                 {
-                    match: /`[\s\S]+`/,
+                    match: /`/,
                     format: (s) => `<code class="inline">${s.substring(1, s.length - 1)}</code>`
+                },
+                {
+                    globalMatch: /^\s*>>> [\s\S]+/gm,
+                    format: (s) => `${s.match(/^\s*/)[0]}<div class="blockquoteContainer"><div class="blockquoteDivider"></div><blockquote>${s.replace(/^\s*>>> /, '')}</blockquote></div>`
+                },
+                {
+                    globalMatch: /^\s*> [^\n\r]+/gm,
+                    format: (s) => `${s.match(/^\s*/)[0]}<div class="blockquoteContainer"><div class="blockquoteDivider"></div><blockquote>${s.replace(/^\s*> /, '')}</blockquote></div>`
+                },
+                {
+                    twemoji: true
+                },
+                {
+                    wholeMatch: /<a?:[a-zA-Z\d_]+?:\d+>/,
+                    format: (demoji) => {
+                        var demojiidmatch = demoji.match(/\d+/g)
+                        var demojiid = demojiidmatch[demojiidmatch.length - 1]
+                        return `<img class="emoji" alt="${demoji}" src="https://cdn.discordapp.com/emojis/${demojiid}.${demoji.startsWith('<a') ? 'gif' : 'png'}?size=1024">`
+                    }
+                },
+                {
+                    wholeMatch: /\[[\s\S]+]\((http|https):\/\/[^\s`"]+\)/,
+                    format: (hyperlink) => {
+                        var hypername = hyperlink.match(/\[[^<`]+]/)[0]
+                        var hyperurl = hyperlink.match(/\((http|https):\/\/[^\s`"]+\)/)[0]
+                        return `<a href="${hyperurl.substring(1, hyperurl.length - 1)}" target="_blank">${hypername.substring(1, hypername.length - 1)}</a>`
+                    }
+                },
+                {
+                    match: /~{2}/,
+                    format: (s) => `<s>${s.substring(2, s.length - 2)}</s>`
+                },
+                {
+                    match: /_{3}/,
+                    format: (s) => `<i><u>${s.substring(2, s.length - 2)}</u></i>`
+                },
+                {
+                    match: /_{2}/,
+                    format: (s) => `<u>${s.substring(2, s.length - 2)}</u>`
+                },
+                {
+                    match: /_/,
+                    format: (s) => `<i>${s.substring(1, s.length - 1)}</i>`
+                },
+                {
+                    match: /\*{3}/,
+                    format: (s) => `<i><b>${s.substring(3, s.length - 3)}</b></i>`
+                },
+                {
+                    match: /\*{2}/,
+                    format: (s) => `<b>${s.substring(2, s.length - 2)}</b>`
+                },
+                {
+                    match: /\*/,
+                    format: (s) => `<i>${s.substring(1, s.length - 1)}</i>`
                 }
             ]
 
-            function formatAllNodes(element, formatter) {
-                element.childNodes.forEach((node) => {
-                    if (node.data != undefined) {
-                        if (formatter.globalMatch) {
-                            node.data = node.data.replace(formatter.globalMatch, formatter.format)
-                        }
-
-                        if (formatter.twemoji) {
-                            node.data = twemoji.replace(node.data, (emoji) => `<img class="emoji" alt="${emoji}" src="https://twemoji.maxcdn.com/v/14.0.2/svg/${twemoji.convert.toCodePoint(emoji)}.svg">`)
-                        }
-
-                        if (formatter.match) {
-                            var i = 0
-
-                            while (i < node.data.length) {
-                                var current = node.data.substring(i)
-
-                                var match = current.match(new RegExp(`^${formatter.match.source}`))
-
-                                if (match) {
-                                    node.data = node.data.replace(match[0], formatter.format(match[0]))
-                                    i += match[0].length
-                                    continue
-                                }
-
-                                i++
-                            }
-                        }
-                    } else if (!noParse.find(no => (node.tagName ?? '').toLowerCase() == no)) formatAllNodes(node, formatter)
-                })
-            }
-
             formatters.forEach(formatter => {
                 var doc = parser.parseFromString(value, 'text/html').body
+                var matchIndex = -1
+                var matchNodeLevel = 0
+                var nodeLevel = 0
+    
+                function formatAllNodes(element, formatter) {
+                    nodeLevel++
+                    element.childNodes.forEach((node) => {
+                        if (node.data != undefined) {
+                            if (formatter.globalMatch) {
+                                node.data = node.data.replace(formatter.globalMatch, formatter.format)
+                            }
+    
+                            if (formatter.twemoji) {
+                                node.data = twemoji.replace(node.data, (emoji) => `<img class="emoji" alt="${emoji}" src="https://twemoji.maxcdn.com/v/14.0.2/svg/${twemoji.convert.toCodePoint(emoji)}.svg">`)
+                            }
+    
+                            if (formatter.match || formatter.wholeMatch) {
+                                var i = 0
+    
+                                while (i < node.data.length) {
+                                    var current = node.data.substring(i)
+    
+                                    if (formatter.wholeMatch) {
+                                        var match = current.match(new RegExp(`^${formatter.wholeMatch.source}`))
+        
+                                        if (match) {
+                                            node.data = node.data.replace(match[0], formatter.format(match[0]))
+                                            i += match[0].length
+                                            continue
+                                        }
+                                    } else {
+                                        var match = current.match(new RegExp(`^${formatter.match.source}`))
+        
+                                        if (match) {
+                                            if (matchIndex > -1 && matchNodeLevel == nodeLevel) {
+                                                var replace = node.data.substring(matchIndex, i + match[0].length)
+                                                node.data = node.data.replace(replace, formatter.format(replace))
+                                                matchIndex = -1
+                                            } else {
+                                                matchNodeLevel = nodeLevel
+                                                matchIndex = i
+                                            }
+
+                                            i += match[0].length
+                                            continue
+                                        }
+                                    }
+    
+                                    i++
+                                }
+                            }
+                        } else if (!noParse.find(no => (node.tagName ?? '').toLowerCase() == no)) formatAllNodes(node, formatter)
+                        alert(node.data)
+                    })
+                    nodeLevel--
+                }
 
                 formatAllNodes(doc, formatter)
 
-                value = doc.innerHTML
+                value = htmlDecode(doc.innerHTML)
             })
 
             return value
-            //return twemoji
-            //    .replace(value
-            //        .replace(/^>>> [^<`]+/gm, (s) => `<div class="blockquoteContainer"><div class="blockquoteDivider"></div><blockquote>${s.substring(4)}</blockquote></div>`)
-            //        .replace(/^> [^\n]+/gm, (s) => `<div class="blockquoteContainer"><div class="blockquoteDivider"></div><blockquote>${s.substring(2)}</blockquote></div>`),
-            //        (emoji) => `<img class="emoji" alt="${emoji}" src="https://twemoji.maxcdn.com/v/14.0.2/svg/${twemoji.convert.toCodePoint(emoji)}.svg">`)
-            //    .replace(/<a?:[a-zA-Z\d_]+?:\d+>/g, (demoji) => {
-            //        var demojiidmatch = demoji.match(/\d+/g)
-            //        var demojiid = demojiidmatch[demojiidmatch.length - 1]
-            //        return `<img class="emoji" alt="${demoji}" src="https://cdn.discordapp.com/emojis/${demojiid}.${demoji.startsWith('<a') ? 'gif' : 'png'}?size=1024">`
-            //    })
-            //    .replace(/\[[^<`]+]\((http|https):\/\/[^\s<`"]+\)/g, (hyperlink) => {
-            //        var hypername = hyperlink.match(/\[[^<`]+]/)[0]
-            //        var hyperurl = hyperlink.match(/\((http|https):\/\/[^\s`"]+\)/)[0]
-            //        return `<a href="${hyperurl.substring(1, hyperurl.length - 1)}" target="_blank">${hypername.substring(1, hypername.length - 1)}</a>`
-            //    })
-            //    .replace(/~{2}[^<`]+~{2}/g, (s) => `<s>${s.substring(2, s.length - 2)}</s>`)
-            //    .replace(/_{2}[^<`]+_{2}/g, (s) => `<u>${s.substring(2, s.length - 2)}</u>`)
-            //    .replace(/_[^<`]+_/g, (s) => `<i>${s.substring(1, s.length - 1)}</i>`)
-            //    .replace(/\*{2}[^<`]+\*{2}/g, (s) => `<b>${s.substring(2, s.length - 2)}</b>`)
-            //    .replace(/\*[^<`]+\*/g, (s) => `<i>${s.substring(1, s.length - 1)}</i>`)
-            //    .replace(/(`{3}[^\n]+`{3})|(`{3}\n[\s\S]+`{3})|\n(`{3}[^\n]*\n[\s\S]+`{3})/g, (s) => {
-            //        var language = ''
-            //        var split = s.substring(s.startsWith('\n') ? 4 : 3, s.length - 3).split('\n')
-
-            //        if (split[0] && split[0] != '\n' && s.includes('\n')) {
-            //            language = split[0]
-            //            split.splice(0, 1)
-            //        }
-
-            //        var text = split.join('\n')
-
-            //        if (language) {
-            //            text = hljs.highlight(text, {
-            //                language: language
-            //            }).value
-            //        }
-
-            //        return `<pre><code class="hljs">${text}</code></pre>`
-            //    })
-            //    .replace(/`[^<]+`/g, (s) => `<code class="inline">${s.substring(1, s.length - 1)}</code>`)*/
         }
 
         document.addEventListener('DOMContentLoaded', () => {
             var elements = document.querySelectorAll('div.message div.contents')
 
             elements.forEach((el) => {
-                el.innerHTML = htmlDecode(format(el.textContent))
+                el.innerHTML = format(el.textContent)
             })
         })
     </script>
@@ -194,7 +182,9 @@
 <body class="theme-dark">
     <div class="message">
         <div class="contents">Undertale...? 🤨 &lt;:________________________________:852811697974804501>
-            > [I hate](https://discord.com)
+            > [~~***__I hate__***~~](https://discord.com)
+            ```
+            niggus``` > haha
         </div>
     </div>
 </body>
