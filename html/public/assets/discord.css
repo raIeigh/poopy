@@ -272,7 +272,7 @@
 
 body {
     background: var(--background-primary);
-    font-family: Whitney;
+    font-family: Whitney, system-ui;
     font-size: 1rem;
     line-height: 1.375rem;
     color: var(--text-normal);
@@ -663,6 +663,40 @@ pre {
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
     text-indent: 0;
+}
+
+.spoilerText {
+    border-radius: 3px;
+    -webkit-transition: all .1s ease;
+    transition: all .1s ease;
+    background-color: hsla(0,0%,100%,.1);
+}
+
+.spoilerText.hidden {
+    cursor: pointer;
+    background-color: #202225;
+}
+
+.spoilerText.hidden:hover {
+    background-color: rgba(32,34,37,.8);
+}
+
+.inlineContent {
+    opacity: 1;
+    -webkit-transition: all .1s ease;
+    transition: all .1s ease;
+}
+
+.spoilerText.hidden .inlineContent {
+    cursor: pointer;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.timestamp {
+    background-color: var(--background-modifier-accent);
+    border-radius: 3px;
+    padding: 0 2px;
 }
 
 .container {
