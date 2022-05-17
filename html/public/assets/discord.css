@@ -607,7 +607,6 @@ textarea {
 pre {
     border-radius: 4px;
     padding: 0;
-    font-family: Consolas, Andale Mono WT, Andale Mono, Lucida Console, Lucida Sans Typewriter, DejaVu Sans Mono, Bitstream Vera Sans Mono, Liberation Mono, Nimbus Mono L, Monaco, Courier New, Courier, monospace;
     font-size: 0.75rem;
     line-height: 1rem;
     margin-top: 6px;
@@ -616,7 +615,7 @@ pre {
 }
 
 code {
-    font-family: Consolas, Andale Mono WT, Andale Mono, Lucida Console, Lucida Sans Typewriter, DejaVu Sans Mono, Bitstream Vera Sans Mono, Liberation Mono, Nimbus Mono L, Monaco, Courier New, Courier, monospace;
+    font-family: Consolas, monospace;
     font-size: 0.875rem;
     line-height: 1.125rem;
     text-indent: 0;
@@ -632,7 +631,6 @@ code.inline {
     margin: -0.2em 0;
     border-radius: 3px;
     font-size: 85%;
-    font-family: Consolas;
     text-indent: 0;
     border: none;
     white-space: pre-wrap;
