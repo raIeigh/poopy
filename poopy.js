@@ -2930,9 +2930,11 @@ class Poopy {
                     shortext = type.ext
                     shortpixfmt = 'unk'
                 }
+                
+                var buffer = poopy.modules.fs.readFileSync(path)
 
-                info.size = poopy.modules.fs.readFileSync(path).length / 1048576
-                info.realsize = poopy.modules.fs.readFileSync(path).length
+                info.size = buffer.length / 1048576
+                info.realsize = buffer.length
 
                 var json = await poopy.functions.execPromise(`ffprobe -of json -show_streams -show_format ${path}`)
                 if (json) {
@@ -2987,8 +2989,8 @@ class Poopy {
                     shortpixfmt: shortpixfmt,
                     name: names[names.length - 1],
                     info: info,
-                    path: path,
-                    buffer: poopy.modules.fs.readFileSync(path)
+                    path: `data:${fileinfo.type.mime};base64,${buffer.toString('base64')}`,
+                    buffer: buffer
                 })
             })
         }
