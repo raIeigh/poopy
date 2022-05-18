@@ -63,7 +63,7 @@ async function main() {
                 return res.status(400).send('You need a command name.')
             }
 
-            let messages = []
+            let messages = [`<div class="message"><div class="contents">It works surely</div></div>`]
 
             let msg = {
                 content: `${mainPoopy.config.globalPrefix}${req.body.command}${req.body.args != undefined ? ` ${req.body.args}` : ''}`,
