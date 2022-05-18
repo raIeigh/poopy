@@ -2930,7 +2930,7 @@ class Poopy {
                     shortext = type.ext
                     shortpixfmt = 'unk'
                 }
-                
+
                 var buffer = poopy.modules.fs.readFileSync(path)
 
                 info.size = buffer.length / 1048576

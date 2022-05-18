@@ -18,6 +18,17 @@ async function main() {
     app.use(cors())
     app.use(bp.json())
     app.use(bp.urlencoded({ extended: true }))
+    app.use(function (req, res, next) {
+        const isNotSecure = (!req.get('x-forwarded-port') && req.protocol !== 'https') ||
+            parseInt(req.get('x-forwarded-port'), 10) !== 443 &&
+            (parseInt(req.get('x-forwarded-port'), 10) === parseInt(req.get('x-forwarded-port'), 10))
+
+        if (isNotSecure) {
+            return res.redirect(301, `https://${req.get('host')}${req.url}`)
+        }
+
+        next()
+    })
 
     function sleep(ms) {
         return new Promise(resolve => setTimeout(resolve, ms))
@@ -165,139 +176,139 @@ async function main() {
             }
 
             const send = async function (payload) {
-                    if (sent) return
+                if (sent) return
 
-                    if (typeof (payload) == 'string') {
-                        var message = `<div class="message"><div class="contents">${escapeHTML(payload)}</div></div>`
-                        messages.push(message)
-                        return message
-                    } else {
-                        var contents = []
-                        var container = []
+                if (typeof (payload) == 'string') {
+                    var message = `<div class="message"><div class="contents">${escapeHTML(payload)}</div></div>`
+                    messages.push(message)
+                    return message
+                } else {
+                    var contents = []
+                    var container = []
 
-                        if (payload.content != undefined) contents.push(escapeHTML(payload.content))
+                    if (payload.content != undefined) contents.push(escapeHTML(payload.content))
 
-                        if (payload.embeds && payload.embeds.length > 0) {
-                            let textEmbed = []
+                    if (payload.embeds && payload.embeds.length > 0) {
+                        let textEmbed = []
 
-                            payload.embeds.forEach(embed => {
-                                if (embed.thumbnail && embed.thumbnail.url) textEmbed.push(`<img src="${escapeHTML(embed.thumbnail.url)}" align="right">`)
-                                if (embed.author && embed.author.name) textEmbed.push(escapeHTML(embed.author.name))
-                                if (embed.title) textEmbed.push(escapeHTML(embed.title))
-                                if (embed.description) textEmbed.push(escapeHTML(embed.description))
-                                if (embed.fields && embed.fields.length > 0) textEmbed.push(embed.fields.map(field => escapeHTML(`${field.name ?? ''}\n${field.value ?? ''}`)).join('\n'))
-                                if (embed.image && embed.image.url) textEmbed.push(`<img src="${escapeHTML(embed.thumbnail.url)}">`)
-                                if (embed.footer && embed.footer.text) textEmbed.push(escapeHTML(embed.footer.text))
-                            })
+                        payload.embeds.forEach(embed => {
+                            if (embed.thumbnail && embed.thumbnail.url) textEmbed.push(`<img src="${escapeHTML(embed.thumbnail.url)}" align="right">`)
+                            if (embed.author && embed.author.name) textEmbed.push(escapeHTML(embed.author.name))
+                            if (embed.title) textEmbed.push(escapeHTML(embed.title))
+                            if (embed.description) textEmbed.push(escapeHTML(embed.description))
+                            if (embed.fields && embed.fields.length > 0) textEmbed.push(embed.fields.map(field => escapeHTML(`${field.name ?? ''}\n${field.value ?? ''}`)).join('\n'))
+                            if (embed.image && embed.image.url) textEmbed.push(`<img src="${escapeHTML(embed.thumbnail.url)}">`)
+                            if (embed.footer && embed.footer.text) textEmbed.push(escapeHTML(embed.footer.text))
+                        })
 
-                            contents.push(textEmbed.join('\n'))
-                        }
-
-                        if (payload.files && payload.files.length > 0) {
-                            for (var i in payload.files) {
-                                var attachment = payload.files[i].attachment
-    
-                                function wrapImage(fileinfo) {
-                                    var width = fileinfo.info.width
-                                    var height = fileinfo.info.height
-    
-                                    var embedWidth = width
-                                    var embedHeight = height
-    
-                                    if (width == height && width > 300 && height > 300) {
-                                        embedWidth = 300
-                                        embedHeight = 300
-                                    }
-    
-                                    if (width > 400) {
-                                        embedWidth = 400
-                                        embedHeight /= width / 400
-                                    }
-    
-                                    if (height > 300) {
-                                        embedWidth /= height / 300
-                                        embedHeight = 300
-                                    }
-    
-                                    return `<a href="${fileinfo.path}" target="_blank"><img alt="Image" src="${fileinfo.path}" style="width: ${embedWidth}px; height: ${embedHeight}px;"></a>`
-                                }
-    
-                                function wrapVideo(fileinfo) {
-                                    var width = fileinfo.info.width
-                                    var height = fileinfo.info.height
-    
-                                    var embedWidth = width
-                                    var embedHeight = height
-    
-                                    if (width == height && width > 300 && height > 300) {
-                                        embedWidth = 300
-                                        embedHeight = 300
-                                    }
-    
-                                    if (width > 400) {
-                                        embedWidth = 400
-                                        embedHeight /= width / 400
-                                    }
-    
-                                    if (height > 300) {
-                                        embedWidth /= height / 300
-                                        embedHeight = 300
-                                    }
-    
-                                    return `<video controls height="${embedHeight}" width="${embedWidth}" src="${fileinfo.path}"></video>`
-                                }
-    
-                                function wrapAudio(fileinfo) {
-                                    return `<audio controls src="${fileinfo.path}"></audio>`
-                                }
-    
-                                var fileinfo
-    
-                                if (mainPoopy.vars.validUrl.test(attachment)) {
-                                    fileinfo = await poopy.functions.validateFile(attachment, 'very true').catch(() => { })
-                                } else {
-                                    fileinfo = await poopy.functions.validateFileFromPath(attachment, 'very true').catch(() => { })
-                                }
-
-                                if (!fileinfo) continue
-    
-                                var attachHtml
-    
-                                switch (fileinfo.type.mime) {
-                                    case 'image':
-                                        attachHtml = wrapImage(fileinfo)
-                                        break;
-
-                                    case 'video':
-                                        attachHtml = wrapVideo(fileinfo)
-                                        break;
-
-                                    case 'audio':
-                                        attachHtml = wrapAudio(fileinfo)
-                                        break;
-
-                                    case 'text':
-                                        attachHtml = escapeHTML(fileinfo.buffer.toString())
-                                        break;
-
-                                    default:
-                                        attachHtml = `<a href="${fileinfo.path}">${fileinfo.name}</a>`
-                                        break;
-                                }
-
-                                container.push(attachHtml)
-                            }
-                        }
-
-                        message.push(`<div class="contents">${contents.join('\n')}</div>`)
-                        message.push(`<div class="container">${container.join('\n')}</div>`)
-                        message = `<div class="message">${message.join('\n')}</div>`
-
-                        messages.push(message)
-
-                        return message
+                        contents.push(textEmbed.join('\n'))
                     }
+
+                    if (payload.files && payload.files.length > 0) {
+                        for (var i in payload.files) {
+                            var attachment = payload.files[i].attachment
+
+                            function wrapImage(fileinfo) {
+                                var width = fileinfo.info.width
+                                var height = fileinfo.info.height
+
+                                var embedWidth = width
+                                var embedHeight = height
+
+                                if (width == height && width > 300 && height > 300) {
+                                    embedWidth = 300
+                                    embedHeight = 300
+                                }
+
+                                if (width > 400) {
+                                    embedWidth = 400
+                                    embedHeight /= width / 400
+                                }
+
+                                if (height > 300) {
+                                    embedWidth /= height / 300
+                                    embedHeight = 300
+                                }
+
+                                return `<a href="${fileinfo.path}" target="_blank"><img alt="Image" src="${fileinfo.path}" style="width: ${embedWidth}px; height: ${embedHeight}px;"></a>`
+                            }
+
+                            function wrapVideo(fileinfo) {
+                                var width = fileinfo.info.width
+                                var height = fileinfo.info.height
+
+                                var embedWidth = width
+                                var embedHeight = height
+
+                                if (width == height && width > 300 && height > 300) {
+                                    embedWidth = 300
+                                    embedHeight = 300
+                                }
+
+                                if (width > 400) {
+                                    embedWidth = 400
+                                    embedHeight /= width / 400
+                                }
+
+                                if (height > 300) {
+                                    embedWidth /= height / 300
+                                    embedHeight = 300
+                                }
+
+                                return `<video controls height="${embedHeight}" width="${embedWidth}" src="${fileinfo.path}"></video>`
+                            }
+
+                            function wrapAudio(fileinfo) {
+                                return `<audio controls src="${fileinfo.path}"></audio>`
+                            }
+
+                            var fileinfo
+
+                            if (mainPoopy.vars.validUrl.test(attachment)) {
+                                fileinfo = await poopy.functions.validateFile(attachment, 'very true').catch(() => { })
+                            } else {
+                                fileinfo = await poopy.functions.validateFileFromPath(attachment, 'very true').catch(() => { })
+                            }
+
+                            if (!fileinfo) continue
+
+                            var attachHtml
+
+                            switch (fileinfo.type.mime) {
+                                case 'image':
+                                    attachHtml = wrapImage(fileinfo)
+                                    break;
+
+                                case 'video':
+                                    attachHtml = wrapVideo(fileinfo)
+                                    break;
+
+                                case 'audio':
+                                    attachHtml = wrapAudio(fileinfo)
+                                    break;
+
+                                case 'text':
+                                    attachHtml = escapeHTML(fileinfo.buffer.toString())
+                                    break;
+
+                                default:
+                                    attachHtml = `<a href="${fileinfo.path}">${fileinfo.name}</a>`
+                                    break;
+                            }
+
+                            container.push(attachHtml)
+                        }
+                    }
+
+                    message.push(`<div class="contents">${contents.join('\n')}</div>`)
+                    message.push(`<div class="container">${container.join('\n')}</div>`)
+                    message = `<div class="message">${message.join('\n')}</div>`
+
+                    messages.push(message)
+
+                    return message
                 }
+            }
 
             channel.send = send
             channel.edit = send
@@ -380,7 +391,7 @@ async function main() {
                     mainPoopy.data['bot-data']['filecount'] = mainPoopy.vars.filecount
                     if (!sent) {
                         sent = true
-                        res.type('html').send(`<!DOCTYPE html><html><head><title>your command sir</title><link rel="stylesheet" href="/assets/discord.css"><script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/highlight.min.js"></script><script src="/assets/discord.js"></script></head><body class="theme-dark">${messages.join('\n'))}</body></html>`)
+                        res.type('html').send(`<!DOCTYPE html><html><head><title>your command sir</title><link rel="stylesheet" href="/assets/discord.css"><script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/highlight.min.js"></script><script src="/assets/discord.js"></script></head><body class="theme-dark">${messages.join('\n')}</body></html>`)
                     }
                 } else if (localCommand) {
                     mainPoopy.vars.cps++
@@ -396,7 +407,7 @@ async function main() {
                     if (!sent) {
                         sent = true
                         messages.push(`<div class="message"><div class="contents">${escapeHTML(phrase)}</div></div>`)
-                        res.type('html').send(`<!DOCTYPE html><html><head><title>your command sir</title><link rel="stylesheet" href="/assets/discord.css"><script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/highlight.min.js"></script><script src="/assets/discord.js"></script></head><body class="theme-dark">${messages.join('\n'))}</body></html>`)
+                        res.type('html').send(`<!DOCTYPE html><html><head><title>your command sir</title><link rel="stylesheet" href="/assets/discord.css"><script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/highlight.min.js"></script><script src="/assets/discord.js"></script></head><body class="theme-dark">${messages.join('\n')}</body></html>`)
                     }
                 }
             } else {
