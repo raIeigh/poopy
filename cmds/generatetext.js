@@ -8,7 +8,7 @@ module.exports = {
         if (args[1] === undefined) {
             await msg.channel.send('What is the text to generate?!').catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
-            return;
+            return
         }
         if (poopy.vars.validUrl.test(saidMessage)) {
             await msg.channel.send('URLs in this command will break it.').catch(() => { })

@@ -265,9 +265,9 @@ async function main() {
                             var fileinfo
 
                             if (mainPoopy.vars.validUrl.test(attachment)) {
-                                fileinfo = await poopy.functions.validateFile(attachment, 'very true').catch(() => { })
+                                fileinfo = await mainPoopy.functions.validateFile(attachment, 'very true').catch(() => { })
                             } else {
-                                fileinfo = await poopy.functions.validateFileFromPath(attachment, 'very true').catch(() => { })
+                                fileinfo = await mainPoopy.functions.validateFileFromPath(attachment, 'very true').catch(() => { })
                             }
 
                             if (!fileinfo) continue
@@ -391,7 +391,9 @@ async function main() {
                     mainPoopy.data['bot-data']['filecount'] = mainPoopy.vars.filecount
                     if (!sent) {
                         sent = true
-                        res.type('html').send(`<!DOCTYPE html><html><head><title>your command sir</title><link rel="stylesheet" href="/assets/discord.css"><script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/highlight.min.js"></script><script src="/assets/discord.js"></script></head><body class="theme-dark">${messages.join('\n')}</body></html>`)
+                        var doc = `<!DOCTYPE html><html><head><title>your command sir</title><link rel="stylesheet" href="/assets/discord.css"><script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/highlight.min.js"></script><script src="/assets/discord.js"></script></head><body class="theme-dark">${messages.join('\n')}</body></html>`
+                        console.log(doc)
+                        res.type('html').send(doc)
                     }
                 } else if (localCommand) {
                     mainPoopy.vars.cps++
@@ -407,7 +409,9 @@ async function main() {
                     if (!sent) {
                         sent = true
                         messages.push(`<div class="message"><div class="contents">${escapeHTML(phrase)}</div></div>`)
-                        res.type('html').send(`<!DOCTYPE html><html><head><title>your command sir</title><link rel="stylesheet" href="/assets/discord.css"><script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/highlight.min.js"></script><script src="/assets/discord.js"></script></head><body class="theme-dark">${messages.join('\n')}</body></html>`)
+                        var doc = `<!DOCTYPE html><html><head><title>your command sir</title><link rel="stylesheet" href="/assets/discord.css"><script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/highlight.min.js"></script><script src="/assets/discord.js"></script></head><body class="theme-dark">${messages.join('\n')}</body></html>`
+                        console.log(doc)
+                        res.type('html').send(doc)
                     }
                 }
             } else {
