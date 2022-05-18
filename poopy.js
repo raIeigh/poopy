@@ -184,7 +184,7 @@ class Poopy {
         ])
         poopy.modules.discordModals(poopy.bot)
         poopy.vars.msgcooldown = false
-        poopy.vars.validUrl = /(http|https):\/\/[^\s`"]+/
+        poopy.vars.validUrl = /(http|https):\/\/([!#$&-;=?-[\]_a-z~]|%[0-9a-fA-F]{2})+/
         poopy.vars.emojiRegex = require('emoji-regex')()
         poopy.vars.Catbox = new poopy.modules.catbox.Catbox()
         poopy.vars.youtube = poopy.modules.google.youtube({
@@ -2989,7 +2989,7 @@ class Poopy {
                     shortpixfmt: shortpixfmt,
                     name: names[names.length - 1],
                     info: info,
-                    path: `data:${fileinfo.type.mime};base64,${buffer.toString('base64')}`,
+                    path: `data:${type.mime};base64,${buffer.toString('base64')}`,
                     buffer: buffer
                 })
             })

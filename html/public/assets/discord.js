@@ -6,6 +6,150 @@ var emojiRegex = /(?:\ud83d\udc68\ud83c\udffb\u200d\u2764\ufe0f\u200d\ud83d\udc8
 /*! Copyright Twitter Inc. and other contributors. Licensed under MIT */
 var twemoji = function () { "use strict"; var twemoji = { base: "https://twemoji.maxcdn.com/v/14.0.2/", ext: ".png", size: "72x72", className: "emoji", convert: { fromCodePoint: fromCodePoint, toCodePoint: toCodePoint }, onerror: function onerror() { if (this.parentNode) { this.parentNode.replaceChild(createText(this.alt, false), this) } }, parse: parse, replace: replace, test: test }, escaper = { "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&apos;", '"': "&quot;" }, re = new RegExp(emojiRegex, 'g'), UFE0Fg = /\uFE0F/g, U200D = String.fromCharCode(8205), rescaper = /[&<>'"]/g, shouldntBeParsed = new RegExp(`^(?:${noParse.join('|')})$`), fromCharCode = String.fromCharCode; return twemoji; function createText(text, clean) { return document.createTextNode(clean ? text.replace(UFE0Fg, "") : text) } function escapeHTML(s) { return s.replace(rescaper, replacer) } function defaultImageSrcGenerator(icon, options) { return "".concat(options.base, options.size, "/", icon, options.ext) } function grabAllTextNodes(node, allText) { var childNodes = node.childNodes, length = childNodes.length, subnode, nodeType; while (length--) { subnode = childNodes[length]; nodeType = subnode.nodeType; if (nodeType === 3) { allText.push(subnode) } else if (nodeType === 1 && !("ownerSVGElement" in subnode) && !shouldntBeParsed.test(subnode.nodeName.toLowerCase())) { grabAllTextNodes(subnode, allText) } } return allText } function grabTheRightIcon(rawText) { return toCodePoint(rawText.indexOf(U200D) < 0 ? rawText.replace(UFE0Fg, "") : rawText) } function parseNode(node, options) { var allText = grabAllTextNodes(node, []), length = allText.length, attrib, attrname, modified, fragment, subnode, text, match, i, index, img, rawText, iconId, src; while (length--) { modified = false; fragment = document.createDocumentFragment(); subnode = allText[length]; text = subnode.nodeValue; i = 0; while (match = re.exec(text)) { index = match.index; if (index !== i) { fragment.appendChild(createText(text.slice(i, index), true)) } rawText = match[0]; iconId = grabTheRightIcon(rawText); i = index + rawText.length; src = options.callback(iconId, options); if (iconId && src) { img = new Image; img.onerror = options.onerror; img.setAttribute("draggable", "false"); attrib = options.attributes(rawText, iconId); for (attrname in attrib) { if (attrib.hasOwnProperty(attrname) && attrname.indexOf("on") !== 0 && !img.hasAttribute(attrname)) { img.setAttribute(attrname, attrib[attrname]) } } img.className = options.className; img.alt = rawText; img.src = src; modified = true; fragment.appendChild(img) } if (!img) fragment.appendChild(createText(rawText, false)); img = null } if (modified) { if (i < text.length) { fragment.appendChild(createText(text.slice(i), true)) } subnode.parentNode.replaceChild(fragment, subnode) } } return node } function parseString(str, options) { return replace(str, function (rawText) { var ret = rawText, iconId = grabTheRightIcon(rawText), src = options.callback(iconId, options), attrib, attrname; if (iconId && src) { ret = "<img ".concat('class="', options.className, '" ', 'draggable="false" ', 'alt="', rawText, '"', ' src="', src, '"'); attrib = options.attributes(rawText, iconId); for (attrname in attrib) { if (attrib.hasOwnProperty(attrname) && attrname.indexOf("on") !== 0 && ret.indexOf(" " + attrname + "=") === -1) { ret = ret.concat(" ", attrname, '="', escapeHTML(attrib[attrname]), '"') } } ret = ret.concat("/>") } return ret }) } function replacer(m) { return escaper[m] } function returnNull() { return null } function toSizeSquaredAsset(value) { return typeof value === "number" ? value + "x" + value : value } function fromCodePoint(codepoint) { var code = typeof codepoint === "string" ? parseInt(codepoint, 16) : codepoint; if (code < 65536) { return fromCharCode(code) } code -= 65536; return fromCharCode(55296 + (code >> 10), 56320 + (code & 1023)) } function parse(what, how) { if (!how || typeof how === "function") { how = { callback: how } } return (typeof what === "string" ? parseString : parseNode)(what, { callback: how.callback || defaultImageSrcGenerator, attributes: typeof how.attributes === "function" ? how.attributes : returnNull, base: typeof how.base === "string" ? how.base : twemoji.base, ext: how.ext || twemoji.ext, size: how.folder || toSizeSquaredAsset(how.size || twemoji.size), className: how.className || twemoji.className, onerror: how.onerror || twemoji.onerror }) } function replace(text, callback) { return String(text).replace(re, callback) } function test(text) { re.lastIndex = 0; var result = re.test(text); re.lastIndex = 0; return result } function toCodePoint(unicodeSurrogates, sep) { var r = [], c = 0, p = 0, i = 0; while (i < unicodeSurrogates.length) { c = unicodeSurrogates.charCodeAt(i++); if (p) { r.push((65536 + (p - 55296 << 10) + (c - 56320)).toString(16)); p = 0 } else if (55296 <= c && c <= 56319) { p = c } else { r.push(c.toString(16)) } } return r.join(sep || "-") } }();
 
+var formatters = [
+    {
+        lineMatch: /\s*&gt;&gt;&gt; [\s\S]+/,
+        format: (s) => `<div class="blockquoteContainer"><div class="blockquoteDivider"></div><blockquote>${s.replace(/^\s*&gt;&gt;&gt; /, '')}</blockquote></div>`
+    },
+    {
+        lineMatch: /\s*&gt; [^\n\r]+/,
+        format: (s) => `<div class="blockquoteContainer"><div class="blockquoteDivider"></div><blockquote>${s.replace(/^\s*&gt; /, '')}</blockquote></div>`
+    },
+    {
+        match: /`{3}/,
+        format: (s) => {
+            var language = ''
+            var split = s.substring(3, s.length - 3).split('\n')
+            if (!split[split.length - 1]) split.splice(split.length - 1, 1)
+            var codeBlock = split.length > 1
+
+            if (codeBlock) {
+                if (split[0]) {
+                    language = split[0]
+                }
+                split.splice(0, 1)
+            }
+
+            var text = split.join('\n')
+
+            if (language) {
+                text = hljs.highlight(unescapeHTML(text), {
+                    language: language
+                }).value
+            }
+
+            return `<pre><code class="hljs">${text}</code></pre>`
+        }
+    },
+    {
+        match: /`/,
+        format: (s) => `<code class="inline">${s.substring(1, s.length - 1)}</code>`
+    },
+    {
+        wholeMatch: emojiRegex,
+        format: (emoji) => {
+            return `<img class="emoji" alt="${emoji}" src="https://twemoji.maxcdn.com/v/14.0.2/svg/${twemoji.convert.toCodePoint(emoji)}.svg">`
+        }
+    },
+    {
+        wholeMatch: /&lt;a?:[a-zA-Z\d_]+?:\d+&gt;/,
+        format: (demoji) => {
+            var demojiidmatch = demoji.match(/\d+/g)
+            var demojiid = demojiidmatch[demojiidmatch.length - 1]
+            return `<img class="emoji" alt="${demoji}" src="https://cdn.discordapp.com/emojis/${demojiid}.${demoji.startsWith('<a') ? 'gif' : 'png'}?size=1024">`
+        }
+    },
+    {
+        wholeMatch: /&lt;t:-?\d+:[tTdDfFR]&gt;/,
+        format: (timestamp) => {
+            var args = timestamp.substring(4, timestamp.length - 4).split(':')
+
+            var selectedDate = Number(args[1]) * 1000
+            var stampText
+
+            function automaticRelativeDifference(d) {
+                var diff = -((Date.now() - d) / 1000) | 0
+                var absDiff = Math.abs(diff)
+                if (absDiff > 86400 * 30 * 10) {
+                    return { duration: Math.round(diff / (86400 * 365)), unit: 'years' }
+                }
+                if (absDiff > 86400 * 25) {
+                    return { duration: Math.round(diff / (86400 * 30)), unit: 'months' }
+                }
+                if (absDiff > 3600 * 21) {
+                    return { duration: Math.round(diff / 86400), unit: 'days' }
+                }
+                if (absDiff > 60 * 44) {
+                    return { duration: Math.round(diff / 3600), unit: 'hours' }
+                }
+                if (absDiff > 30) {
+                    return { duration: Math.round(diff / 60), unit: 'minutes' }
+                }
+                return { duration: diff, unit: 'seconds' }
+            }
+
+            if (args[2] == 'R') {
+                var formatter = new Intl.RelativeTimeFormat('en', args[2])
+                var format = automaticRelativeDifference(selectedDate)
+                stampText = formatter.format(format.duration, format.unit)
+            } else {
+                var formatter = new Intl.DateTimeFormat('en', args[2])
+                stampText = formatter.format(selectedDate)
+            }
+
+            return `<span class="timestamp">${stampText}</span>`
+        }
+    },
+    {
+        match: [/\[/, /\]\((http|https):\/\/([!#$&-;=?-[\]_a-z~]|%[0-9a-fA-F]{2})+\)/],
+        format: (hyperlink) => {
+            var hypername = hyperlink.match(/\[[\s\S]+]/)[0]
+            var hyperurl = hyperlink.match(/\((http|https):\/\/([!#$&-;=?-[\]_a-z~]|%[0-9a-fA-F]{2})+\)/)[0]
+            return `<a href="${hyperurl.substring(1, hyperurl.length - 1)}" target="_blank">${hypername.substring(1, hypername.length - 1)}</a>`
+        }
+    },
+    {
+        match: /\|{2}/,
+        format: (s) => `<span class="spoilerText hidden"><span class="inlineContent">${s.substring(2, s.length - 2)}</span></span>`
+    },
+    {
+        match: /~{2}/,
+        format: (s) => `<s>${s.substring(2, s.length - 2)}</s>`
+    },
+    {
+        match: /_{3}/,
+        format: (s) => `<i><u>${s.substring(2, s.length - 2)}</u></i>`
+    },
+    {
+        match: /_{2}/,
+        format: (s) => `<u>${s.substring(2, s.length - 2)}</u>`
+    },
+    {
+        match: /_/,
+        format: (s) => `<i>${s.substring(1, s.length - 1)}</i>`
+    },
+    {
+        match: /\*{3}/,
+        format: (s) => `<i><b>${s.substring(3, s.length - 3)}</b></i>`
+    },
+    {
+        match: /\*{2}/,
+        format: (s) => `<b>${s.substring(2, s.length - 2)}</b>`
+    },
+    {
+        match: /\*/,
+        format: (s) => `<i>${s.substring(1, s.length - 1)}</i>`
+    },
+    {
+        wholeMatch: [/&lt;(http|https):\/\/([!#$&-;=?-[\]_a-z~]|%[0-9a-fA-F]{2})+&gt;/],
+        format: (s) => s.substring(4, s.length - 4)
+    },
+    {
+        globalMatch: /\\[^a-zA-Z\d]/,
+        format: (s) => s.substring(1)
+    }
+]
+
 function escapeHTML(value) {
     return value
         .replace(/&/g, '&amp;')
@@ -25,142 +169,6 @@ function unescapeHTML(value) {
 }
 
 function format(value) {
-    var formatters = [
-        {
-            globalMatch: /^\s*&gt;&gt;&gt; [\s\S]+/gm,
-            format: (s) => `${s.match(/^\s*/)[0]}<div class="blockquoteContainer"><div class="blockquoteDivider"></div><blockquote>${s.replace(/^\s*&gt;&gt;&gt; /, '')}</blockquote></div>`
-        },
-        {
-            globalMatch: /^\s*&gt; [^\n\r]+[\n\r]?/gm,
-            format: (s) => `${s.match(/^\s*/)[0]}<div class="blockquoteContainer"><div class="blockquoteDivider"></div><blockquote>${s.replace(/^\s*&gt; /, '').replace(/[\n\r]$/, '')}</blockquote></div>`
-        },
-        {
-            match: /`{3}/,
-            format: (s) => {
-                var language = ''
-                var split = s.substring(3, s.length - 3).split('\n')
-                if (!split[split.length - 1]) split.splice(split.length - 1, 1)
-                var codeBlock = split.length > 1
-
-                if (codeBlock) {
-                    if (split[0]) {
-                        language = split[0]
-                    }
-                    split.splice(0, 1)
-                }
-
-                var text = split.join('\n')
-
-                if (language) {
-                    text = hljs.highlight(unescapeHTML(text), {
-                        language: language
-                    }).value
-                }
-
-                return `<pre><code class="hljs">${text}</code></pre>`
-            }
-        },
-        {
-            match: /`/,
-            format: (s) => `<code class="inline">${s.substring(1, s.length - 1)}</code>`
-        },
-        {
-            globalMatch: emojiRegex,
-            format: (emoji) => {
-                return `<img class="emoji" alt="${emoji}" src="https://twemoji.maxcdn.com/v/14.0.2/svg/${twemoji.convert.toCodePoint(emoji)}.svg">`
-            }
-        },
-        {
-            globalMatch: /&lt;a?:[a-zA-Z\d_]+?:\d+&gt;/g,
-            format: (demoji) => {
-                var demojiidmatch = demoji.match(/\d+/g)
-                var demojiid = demojiidmatch[demojiidmatch.length - 1]
-                return `<img class="emoji" alt="${demoji}" src="https://cdn.discordapp.com/emojis/${demojiid}.${demoji.startsWith('<a') ? 'gif' : 'png'}?size=1024">`
-            }
-        },
-        {
-            wholeMatch: /&lt;t:-?\d+:[tTdDfFR]&gt;/,
-            format: (timestamp) => {
-                var args = timestamp.substring(4, timestamp.length - 4).split(':')
-
-                var selectedDate = new Date(args[1])
-                var stampText
-
-                function automaticRelativeDifference(d) {
-                    var diff = -((new Date().getTime() - d.getTime()) / 1000) | 0
-                    var absDiff = Math.abs(diff)
-                    if (absDiff > 86400 * 30 * 10) {
-                        return { duration: Math.round(diff / (86400 * 365)), unit: 'years' }
-                    }
-                    if (absDiff > 86400 * 25) {
-                        return { duration: Math.round(diff / (86400 * 30)), unit: 'months' }
-                    }
-                    if (absDiff > 3600 * 21) {
-                        return { duration: Math.round(diff / 86400), unit: 'days' }
-                    }
-                    if (absDiff > 60 * 44) {
-                        return { duration: Math.round(diff / 3600), unit: 'hours' }
-                    }
-                    if (absDiff > 30) {
-                        return { duration: Math.round(diff / 60), unit: 'minutes' }
-                    }
-                    return { duration: diff, unit: 'seconds' }
-                }
-
-                if (['R'].includes(args[2])) {
-                    var formatter = new Intl.RelativeTimeFormat('en', args[2])
-                    var format = automaticRelativeDifference(selectedDate)
-                    stampText = formatter.format(format.duration, format.unit)
-                } else {
-                    var formatter = new Intl.DateTimeFormat('en', args[2])
-                    stampText = formatter.format(selectedDate)
-                }
-
-                return `<span class="timestamp">${stampText}</span>`
-            }
-        },
-        {
-            match: [/\[/, /\]\((http|https):\/\/[^\s`"]+\)/],
-            format: (hyperlink) => {
-                var hypername = hyperlink.match(/\[[\s\S]+]/)[0]
-                var hyperurl = hyperlink.match(/\((http|https):\/\/[^\s`"]+\)/)[0]
-                return `<a href="${hyperurl.substring(1, hyperurl.length - 1)}" target="_blank">${hypername.substring(1, hypername.length - 1)}</a>`
-            }
-        },
-        {
-            match: /\|{2}/,
-            format: (s) => `<span class="spoilerText hidden"><span class="inlineContent">${s.substring(2, s.length - 2)}</span></span>`
-        },
-        {
-            match: /~{2}/,
-            format: (s) => `<s>${s.substring(2, s.length - 2)}</s>`
-        },
-        {
-            match: /_{3}/,
-            format: (s) => `<i><u>${s.substring(2, s.length - 2)}</u></i>`
-        },
-        {
-            match: /_{2}/,
-            format: (s) => `<u>${s.substring(2, s.length - 2)}</u>`
-        },
-        {
-            match: /_/,
-            format: (s) => `<i>${s.substring(1, s.length - 1)}</i>`
-        },
-        {
-            match: /\*{3}/,
-            format: (s) => `<i><b>${s.substring(3, s.length - 3)}</b></i>`
-        },
-        {
-            match: /\*{2}/,
-            format: (s) => `<b>${s.substring(2, s.length - 2)}</b>`
-        },
-        {
-            match: /\*/,
-            format: (s) => `<i>${s.substring(1, s.length - 1)}</i>`
-        }
-    ]
-
     formatters.forEach(formatter => {
         var doc = parser.parseFromString(value, 'text/html').body
 
@@ -184,39 +192,51 @@ function format(value) {
                         datas[n] = datas[n].replace(formatter.globalMatch, formatter.format)
                     }
 
-                    if (formatter.match || formatter.wholeMatch) {
+                    if (formatter.match || formatter.wholeMatch || formatter.lineMatch) {
                         var i = 0
 
                         while (i < datas[n].length) {
                             var current = datas[n].substring(i)
 
-                            if (formatter.wholeMatch) {
-                                var match = current.match(new RegExp(`^${formatter.wholeMatch.source}`))
+                            if (formatter.lineMatch && (i <= 0 || current.match(/^[\n\r]/))) {
+                                var match = current.match(new RegExp(`^(${formatter.lineMatch.source})`))
 
-                                if (match) {
-                                    datas[n] = datas[n].replace(match[0], formatter.format(match[0]))
-                                    i += match[0].length
+                                if (match && datas[n][i - 1] != '\\') {
+                                    var formatted = formatter.format(match[0])
+                                    datas[n] = datas[n].substring(0, i) + current.replace(match[0], formatted)
+                                    i += formatted.length
+                                    continue
+                                }
+                            } else if (formatter.wholeMatch) {
+                                var match = current.match(new RegExp(`^(${formatter.wholeMatch.source})`))
+
+                                if (match && datas[n][i - 1] != '\\') {
+                                    var formatted = formatter.format(match[0])
+                                    datas[n] = datas[n].substring(0, i) + current.replace(match[0], formatted)
+                                    i += formatted.length
                                     continue
                                 }
                             } else if (formatter.match) {
-                                var match = current.match(new RegExp(`^${formatterMatch(formatter.match).source}`))
+                                var match = current.match(new RegExp(`^(${formatterMatch(formatter.match).source})`))
 
-                                if (match) {
+                                if (match && datas[n][i - 1] != '\\') {
                                     if (matchIndex > -1 && nmatch > -1) {
                                         var slice = datas.slice(nmatch, n).join('')
                                         var allString = slice + datas[n]
                                         var replace = allString.substring(matchIndex, slice.length + i + match[0].length)
-                                        datas.splice(nmatch, n - nmatch + 1, allString.replace(replace, formatter.format(replace)))
+                                        var replacer = formatter.format(replace)
+                                        var replaced = allString.replace(replace, replacer)
+                                        datas.splice(nmatch, n - nmatch + 1, replaced)
 
                                         n = nmatch
                                         matchIndex = -1
                                         nmatch = -1
+                                        i += replacer.length - matchIndex
                                     } else {
                                         matchIndex = i
                                         nmatch = n
+                                        i += match[0].length
                                     }
-
-                                    i += match[0].length
                                     continue
                                 }
                             }

@@ -8,12 +8,17 @@
   
   <body>
     Today, and today, you can execute the poopy command right here.
-    <br>
+    <br><br>
     <form action="/api/command" method="POST">
-      <label for="command">command:</label>
-      <input type="text" id="command" placeholder="spam" name="command"><br><br>
       <label for="args">arguments:</label>
-      <textarea id="args" rows="4" cols="50" placeholder="25 shit -tts" name="args"></textarea><br><br>
+      <textarea id="args" rows="4" cols="50" placeholder="spam 25 shit -tts" name="args"></textarea><br><br>
+      <label for="json">response type:</label><br>
+      <input type="radio" id="html" name="restype" value="html">
+      <label for="html">html</label><br>
+      <input type="radio" id="raw" name="restype" value="raw">
+      <label for="raw">raw</label><br>
+      <input type="radio" id="json" name="restype" value="json">
+      <label for="json">json</label><br><br>
       <input type="submit" value="execute">
     </form>
   </body>

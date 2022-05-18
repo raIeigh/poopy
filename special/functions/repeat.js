@@ -1,7 +1,7 @@
 module.exports = {
   helpf: '(phrase | times | separator)',
   desc: "Repeats the phrase by the times specified. If the separator is specified, it'll separate each repetition with the separator.",
-  func: async function (matches) {
+  func: async function (matches, msg) {
     let poopy = this
 
     var word = matches[1]
