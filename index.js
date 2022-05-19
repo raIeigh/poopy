@@ -345,10 +345,17 @@ async function main() {
             }
 
             for (var i in contents) {
+                var valid = 0
                 contents[i] = await mainPoopy.functions.replaceAsync(contents[i], new RegExp(mainPoopy.vars.validUrl, 'g'), async (url) => {
-                    const attachEmbed = await createEmbed(url, true)
-                    if (attachEmbed) container.push(attachEmbed)
-                    return `<a href="${url}">${url}</a>`
+                    if (valid < 10) {
+                        const attachEmbed = await createEmbed(url, true)
+                        if (attachEmbed) {
+                            container.push(attachEmbed)
+                            valid++
+                        }
+                    }
+
+                    return `<a href="${url}" target="_blank">${url}</a>`
                 })
             }
 
