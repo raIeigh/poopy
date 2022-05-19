@@ -2525,9 +2525,11 @@ class Poopy {
 
             var urlregex = new RegExp(regexes.map(regex => `(${regex.regexp.source})`).join('|'), 'g')
 
+            console.log('matching')
             var matches = string.match(urlregex)
             if (matches) {
-                var matchesr = matches.reverse()
+                console.log('matched')
+                var matchesr = matches.reverse().slice(0, 10)
                 for (var i in matchesr) {
                     var match = matchesr[i]
                     var matched = []
@@ -2545,7 +2547,6 @@ class Poopy {
                     if (url) {
                         urls = [url].concat(urls)
                     }
-                    if (urls >= 25) break
                 }
             }
 

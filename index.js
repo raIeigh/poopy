@@ -74,6 +74,7 @@ async function main() {
         }
 
         let messages = []
+        let createdEmbeds = {}
 
         let msg = {
             content: `${mainPoopy.config.globalPrefix}${req.body.args}`,
