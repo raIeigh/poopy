@@ -45,7 +45,7 @@ module.exports = {
         if (rejected && response.data) {
             await msg.channel.send({
                 content: response.data,
-                allowedMentions = {
+                allowedMentions: {
                     parse: (!who.permissions.has('ADMINISTRATOR') &&
                         !who.permissions.has('MENTION_EVERYONE') &&
                         who.id !== channel.guild.ownerID) ?
