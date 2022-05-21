@@ -2454,7 +2454,7 @@ class Poopy {
         poopy.functions.getUrls = async function (msg, options = {}) {
             if (!msg) return []
             var string = (options.string ?? msg.content ?? '').replace(/"([\s\S]*?)"/g, '')
-            var prefixFound = string.toLowerCase().includes(poopy.data['guild-data'][msg.guild.id]['prefix'].toLowerCase())
+            var prefixFound = options.prefix ?? string.toLowerCase().includes(poopy.data['guild-data'][msg.guild.id]['prefix'].toLowerCase())
             var urls = []
             var regexes = [
                 {

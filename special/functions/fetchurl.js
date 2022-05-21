@@ -5,7 +5,7 @@ module.exports = {
     let poopy = this
 
     var word = matches[1]
-    var urls = await poopy.functions.getUrls(msg, { string: string }).catch(() => { }) ?? []
+    var urls = await poopy.functions.getUrls(msg, { string: string, prefix: true }).catch(() => { }) ?? []
     var number = isNaN(Number(word)) ? 0 : Number(word) <= 0 ? 0 : Number(word) >= urls.length - 1 ? urls.length - 1 : Math.round(Number(word)) || 0
     return urls[number] ?? ''
   }

@@ -34,12 +34,24 @@ module.exports = {
             responseType: 'arraybuffer'
         }).catch((err) => {
             rejected = true
-            err.response.data = JSON.parse(err.response.data)
+            try {
+                err.response.data = JSON.parse(err.response.data).detail
+            } catch (_) {
+                err.response.data = err.response.data.toString()
+            }
             return err.response
         })
 
-        if (rejected && response.data.detail) {
-            await msg.channel.send(response.data.detail).catch(() => { })
+        if (rejected && response.data) {
+            await msg.channel.send({
+                content: response.data,
+                allowedMentions = {
+                    parse: (!who.permissions.has('ADMINISTRATOR') &&
+                        !who.permissions.has('MENTION_EVERYONE') &&
+                        who.id !== channel.guild.ownerID) ?
+                        ['users'] : ['users', 'everyone', 'roles']
+                }
+            }).catch(() => { })
             return;
         }
 
