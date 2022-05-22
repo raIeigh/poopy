@@ -1,5 +1,5 @@
 /*
-    if you got access to this module, wow congratulations!!!!!!!!!!!!
+    if you got access to this module, wow congrats on hacking me!!!!!
     just be warned though, poopy needs a lot of environment variables
     for the commands to work, so i'll list them here because why not:
 
