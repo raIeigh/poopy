@@ -9,7 +9,7 @@ module.exports = {
     var array = poopy.tempdata[msg.author.id]['arrays'][word]
     if (!array) return ''
 
-    array.reverse()
+    array = array.reverse()
 
     return ''
   }
