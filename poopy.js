@@ -1562,7 +1562,7 @@ class Poopy {
                 })
             }
 
-            var resultEmbed = await pageFunc(page)
+            var resultEmbed = await pageFunc(page).catch(() => { })
             var sendObject = {
                 components: components.slice()
             }
@@ -1630,7 +1630,7 @@ class Poopy {
 
                             page = newpage
 
-                            var resultEmbed = await pageFunc(page)
+                            var resultEmbed = await pageFunc(page).catch(() => { })
                             var sendObject = {
                                 components: components.slice()
                             }
@@ -1681,7 +1681,7 @@ class Poopy {
 
                             page = newpage
 
-                            var resultEmbed = await pageFunc(page)
+                            var resultEmbed = await pageFunc(page).catch(() => { })
                             var sendObject = {
                                 components: components.slice()
                             }
@@ -1712,7 +1712,7 @@ class Poopy {
                 })
 
                 collector.on('end', async (_, reason) => {
-                    var resultEmbed = await pageFunc(page)
+                    var resultEmbed = await pageFunc(page).catch(() => { })
                     var sendObject = {
                         components: []
                     }
@@ -2525,10 +2525,8 @@ class Poopy {
 
             var urlregex = new RegExp(regexes.map(regex => `(${regex.regexp.source})`).join('|'), 'g')
 
-            console.log('matching')
             var matches = string.match(urlregex)
             if (matches) {
-                console.log('matched')
                 var matchesr = matches.reverse().slice(0, 10)
                 for (var i in matchesr) {
                     var match = matchesr[i]
