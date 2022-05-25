@@ -2,7 +2,7 @@ module.exports = {
     desc: 'Returns a random compliment.', func: async function () {
         let poopy = this
 
-        var insults = [
+        var compliments = [
             'awesome',
             'cool',
             'fantastic',
@@ -18,9 +18,13 @@ module.exports = {
             'strong',
             'kind',
             'brave',
-            'caring'
+            'caring',
+            'brilliant',
+            'great',
+            'happy',
+            'funny'
         ]
 
-        return insults[Math.floor(Math.random() * insults.length)]
+        return compliments[Math.floor(Math.random() * compliments.length)]
     }
 }

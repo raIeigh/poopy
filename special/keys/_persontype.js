@@ -3,13 +3,14 @@ module.exports = {
   func: async function () {
     let poopy = this
 
-    var insults = [
-      'gay',
+    var type = [
+      'male',
+      'female',
+      'homosexual',
       'lesbian',
       'catboy',
-      'catboy maid',
       'maid',
-      'trans',
+      'transexual',
       'bisexual',
       'pedophile',
       'zoophile',
@@ -17,19 +18,28 @@ module.exports = {
       'femboy',
       'furry',
       'tomboy',
-      'horny',
       'racist',
       'underaged',
       'gamer',
-      'oder',
-      'gangster',
-      'male',
-      'female',
+      'gangsta',
+      'r34 artist',
+      'discord mod',
+      'moderator',
+      'reddit mod',
+      'twitter user',
+      'cryptopunk',
+      'r63 artist',
+      'twitch streamer',
+      'political',
+      'toxic',
+      'programmer',
+      '4chan user',
+      'rr34 modeller',
+      'game developer',
       'homophobic',
-      'xenobic',
       'transphobic'
     ]
 
-    return insults[Math.floor(Math.random() * insults.length)]
+    return type[Math.floor(Math.random() * type.length)]
   }
 }
