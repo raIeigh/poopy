@@ -2971,7 +2971,7 @@ class Poopy {
                             var param = info[paramName]
                             var rejectMessage = rejectMessages ? rejectMessages[paramName] : limitObject[paramName]['message']
 
-                            if (param >= limitObject[paramName][shorttype]) {
+                            if (param > limitObject[paramName][shorttype]) {
                                 reject(rejectMessage.replace('{param}', limitObject[paramName][shorttype]))
                                 return
                             }
@@ -3140,7 +3140,7 @@ class Poopy {
                             var param = info[paramName]
                             var rejectMessage = rejectMessages ? rejectMessages[paramName] : limitObject[paramName]['message']
 
-                            if (param >= limitObject[paramName][shorttype]) {
+                            if (param > limitObject[paramName][shorttype]) {
                                 reject(rejectMessage.replace('{param}', limitObject[paramName][shorttype]))
                                 return
                             }

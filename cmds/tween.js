@@ -27,14 +27,14 @@ module.exports = {
         var startsize = [100, 100]
         var startsizeindex = args.indexOf('-startsize')
         if (startsizeindex > -1) {
-            startsize[0] = isNaN(Number(args[startsizeindex + 1])) ? 100 : Number(args[startsizeindex + 1]) <= 1 ? 1 : Number(args[startsizeindex + 1]) || 100
-            startsize[1] = isNaN(Number(args[startsizeindex + 2])) ? 100 : Number(args[startsizeindex + 2]) <= 1 ? 1 : Number(args[startsizeindex + 2]) || 100
+            startsize[0] = isNaN(Number(args[startsizeindex + 1])) ? 100 : Number(args[startsizeindex + 1]) <= 1 ? 1 : Number(args[startsizeindex + 1]) >= 3000 ? 3000 : Number(args[startsizeindex + 1]) || 100
+            startsize[1] = isNaN(Number(args[startsizeindex + 2])) ? 100 : Number(args[startsizeindex + 2]) <= 1 ? 1 : Number(args[startsizeindex + 1]) >= 3000 ? 3000 : Number(args[startsizeindex + 2]) || 100
         }
         var endsize = [startsize[0], startsize[1]]
         var endsizeindex = args.indexOf('-endsize')
         if (endsizeindex > -1) {
-            endsize[0] = isNaN(Number(args[endsizeindex + 1])) ? endsize[0] : Number(args[endsizeindex + 2]) <= 1 ? 1 : Number(args[endsizeindex + 1]) || endsize[0]
-            endsize[1] = isNaN(Number(args[endsizeindex + 2])) ? endsize[1] : Number(args[endsizeindex + 2]) <= 1 ? 1 : Number(args[endsizeindex + 2]) || endsize[1]
+            endsize[0] = isNaN(Number(args[endsizeindex + 1])) ? endsize[0] : Number(args[endsizeindex + 2]) <= 1 ? 1 : Number(args[endsizeindex + 1]) >= 3000 ? 3000 : Number(args[endsizeindex + 1]) || endsize[0]
+            endsize[1] = isNaN(Number(args[endsizeindex + 2])) ? endsize[1] : Number(args[endsizeindex + 2]) <= 1 ? 1 : Number(args[endsizeindex + 1]) >= 3000 ? 3000 : Number(args[endsizeindex + 2]) || endsize[1]
         }
         var easings = {
             linear: `'lerp({start},{end},(t/${duration}))'`,

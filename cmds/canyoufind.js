@@ -12,7 +12,7 @@ module.exports = {
         var size = 150
         var sizeindex = args.indexOf('-size')
         if (sizeindex > -1) {
-            size = isNaN(Number(args[sizeindex + 1])) ? 1 : Number(args[sizeindex + 1]) <= 1 ? 1 : Number(args[sizeindex + 1]) || 1
+            size = isNaN(Number(args[sizeindex + 1])) ? 150 : Number(args[sizeindex + 1]) <= 1 ? 1 : Number(args[sizeindex + 1]) >= 3000 ? 3000 : Number(args[sizeindex + 1]) || 150
         }
         var currenturl = poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl'] || args[1]
         var currenturl2 = poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl2'] || args[2]

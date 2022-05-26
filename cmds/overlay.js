@@ -124,7 +124,7 @@ module.exports = {
             if (percentage) {
                 args[widthindex + 1] = args[widthindex + 1].substring(0, args[widthindex + 1].length - 1)
             }
-            size[0] = (percentage ? width : 1) * ((isNaN(Number(args[widthindex + 1])) ? 0 : Number(args[widthindex + 1]) <= 0 ? 0 : Number(args[widthindex + 1]) || 0) / (percentage ? 100 : 1))
+            size[0] = (percentage ? width : 1) * ((isNaN(Number(args[widthindex + 1])) ? size[0] : Number(args[widthindex + 1]) <= 1 ? 1 : Number(args[widthindex + 1]) >= 3000 ? 3000 : Number(args[widthindex + 1]) || size[0]) / (percentage ? 100 : 1))
             size[1] = -1
         }
 
@@ -134,7 +134,7 @@ module.exports = {
             if (percentage) {
                 args[heightindex + 1] = args[heightindex + 1].substring(0, args[heightindex + 1].length - 1)
             }
-            size[1] = (percentage ? height : 1) * ((isNaN(Number(args[heightindex + 1])) ? 0 : Number(args[heightindex + 1]) <= 0 ? 0 : Number(args[heightindex + 1]) || 0) / (percentage ? 100 : 1))
+            size[1] = (percentage ? height : 1) * ((isNaN(Number(args[heightindex + 1])) ? size[1] : Number(args[heightindex + 1]) <= 1 ? 1 : Number(args[heightindex + 1]) >= 3000 ? 3000 : Number(args[heightindex + 1]) || size[1]) / (percentage ? 100 : 1))
         }
 
         if ((filetype.mime.startsWith('image') && !(poopy.vars.gifFormats.find(f => f === filetype.ext))) && (filetype2.mime.startsWith('image') && !(poopy.vars.gifFormats.find(f => f === filetype2.ext)))) {
