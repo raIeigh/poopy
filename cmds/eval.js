@@ -1,6 +1,6 @@
 module.exports = {
     name: ['eval', 'execute'],
-    execute: async function (msg, args) {
+    execute: async function (msg, args, opts) {
         let poopy = this
 
         var ownerid = (poopy.config.ownerids.find(id => id == msg.author.id));

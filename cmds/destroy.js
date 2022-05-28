@@ -1,6 +1,6 @@
 module.exports = {
     name: ['destroy', 'kill', 'shutdown'],
-    execute: async function (msg) {
+    execute: async function (msg, _, opts) {
         let poopy = this
 
         var ownerid = poopy.config.ownerids.find(id => id == msg.author.id);
