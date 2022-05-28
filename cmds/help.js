@@ -66,6 +66,7 @@ module.exports = {
             }
             return
         }
+
         var jsonid = poopy.config.ownerids.find(id => id == msg.author.id) || poopy.config.jsoning.find(id => id == msg.author.id);
         var ownerid = poopy.config.ownerids.find(id => id == msg.author.id);
 

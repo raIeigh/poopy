@@ -1,7 +1,7 @@
 module.exports = {
     helpf: '(name | arguments) (manage messages only)',
     desc: 'Allows you to execute any command!',
-    func: async function (matches, msg, isBot, string) {
+    func: async function (matches, msg, isBot, string, opts) {
         let poopy = this
 
         var f = matches[0]
@@ -58,7 +58,7 @@ module.exports = {
 
                         poopy.functions.infoPost(`Command \`${commandname}\` used`)
                         await poopy.functions.waitMessageCooldown()
-                        await command.execute.call(this, msgclone, [commandname].concat(args.split(' '))).catch(err => {
+                        await command.execute.call(this, msgclone, [commandname].concat(args.split(' ')), { ownermode: opts.ownermode }).catch(err => {
                             error = err.stack
                         })
                         poopy.data['bot-data']['filecount'] = poopy.vars.filecount
@@ -70,7 +70,7 @@ module.exports = {
                             clearTimeout(t)
                         }, 60000)
                         poopy.functions.infoPost(`Command \`${commandname}\` used`)
-                        var phrase = await poopy.functions.getKeywordsFor(localCommand.phrase, msgclone, true).catch(() => { }) ?? 'error'
+                        var phrase = await poopy.functions.getKeywordsFor(localCommand.phrase, msgclone, true, { ownermode: opts.ownermode }).catch(() => { }) ?? 'error'
                         poopy.data['bot-data']['filecount'] = poopy.vars.filecount
                         return phrase
                     }

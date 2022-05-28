@@ -1,7 +1,9 @@
 module.exports = {
     name: ['meme3', 'caption'],
-    execute: async function (msg, args, pathObject) {
+    execute: async function (msg, args, opts) {
         let poopy = this
+
+        var pathObject = opts.pathObject
 
         await msg.channel.sendTyping().catch(() => { })
         if (poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl'] === undefined && poopy.vars.validUrl.test(args[args.length - 1]) === false) {

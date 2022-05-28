@@ -4,11 +4,19 @@ module.exports = {
         let poopy = this
 
         await msg.channel.sendTyping().catch(() => { })
+
         if (args[1] === undefined) {
-            await msg.channel.send('What is the voice?! A list can be found at https://uberduck.ai/quack-help').catch(() => { })
+            await msg.channel.send('What is the voice?! A list can be found at https://poopies-for-you.herokuapp.com/ubervoices').catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
         }
+
+        if (!poopy.vars.ubervoices.find(vc => vc.name == args[1])) {
+            await msg.channel.send('Invalid voice. A list can be found at https://poopies-for-you.herokuapp.com/ubervoices').catch(() => { })
+            await msg.channel.sendTyping().catch(() => { })
+            return
+        }
+
         if (args[2] === undefined) {
             await msg.channel.send('What is the text?!').catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
@@ -46,9 +54,9 @@ module.exports = {
             await msg.channel.send({
                 content: response.data,
                 allowedMentions: {
-                    parse: (!who.permissions.has('ADMINISTRATOR') &&
-                        !who.permissions.has('MENTION_EVERYONE') &&
-                        who.id !== channel.guild.ownerID) ?
+                    parse: (!msg.member.permissions.has('ADMINISTRATOR') &&
+                        !msg.member.permissions.has('MENTION_EVERYONE') &&
+                        msg.member.id !== msg.guild.ownerID) ?
                         ['users'] : ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })

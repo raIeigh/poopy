@@ -1,7 +1,8 @@
 /*
     if you got access to this module, wow congrats on hacking me!!!!!
+    some cmd code is outdated, don't blame me if it takes 21389 lines
     just be warned though, poopy needs a lot of environment variables
-    for the commands to work, so i'll list them here because why not:
+    for all the commands to work, you need to get all of these below:
 
     - TOKEN (it's just the discord bot token, you can just put a random name like POOPYTOKEN, accessed at https://discord.com/developers/applications/<app-id>/bot)
     - CLEVERBOTCOOKIE (the XVIS cookie from https://cleverbot.com, go to developer console (F12) and access Application -> Cookies)
@@ -1307,7 +1308,10 @@ class Poopy {
 
         poopy.functions.yesno = async function (channel, content, who) {
             return new Promise(async (resolve) => {
-                if (poopy.config.forcetrue) resolve(true)
+                if (poopy.config.forcetrue) {
+                    resolve(true)
+                    return
+                }
 
                 var sendObject = {
                     content: content
@@ -1389,6 +1393,7 @@ class Poopy {
                                 content: 'No response.'
                             }).catch(() => { })
                             yesnoMsg.reactions.removeAll().catch(() => { })
+                            resolve(false)
                         } else {
                             yesnoMsg.delete().catch(() => { })
                         }
@@ -1422,11 +1427,79 @@ class Poopy {
                                 content: 'No response.',
                                 components: []
                             }).catch(() => { })
+                            resolve(false)
                         } else {
                             yesnoMsg.delete().catch(() => { })
                         }
                     })
                 }
+            })
+        }
+
+        poopy.functions.selectMenu = async function (channel, content, placeholder, options, exception, who) {
+            return new Promise(async (resolve) => {
+                if (poopy.config.useReactions) {
+                    resolve(exception)
+                    return
+                }
+
+                var sendObject = {
+                    content: content
+                }
+
+                if (typeof (who) != 'string') {
+                    sendObject.allowedMentions = {
+                        parse: (!who.permissions.has('ADMINISTRATOR') &&
+                            !who.permissions.has('MENTION_EVERYONE') &&
+                            who.id !== channel.guild.ownerID) ?
+                            ['users'] : ['users', 'everyone', 'roles']
+                    }
+                    who = who.id
+                }
+
+                var menuRow = new poopy.modules.Discord.MessageActionRow()
+                var menu = new poopy.modules.Discord.MessageSelectMenu()
+                    .setCustomId('selectmenu')
+                    .setPlaceholder(placeholder)
+                    .addOptions(options)
+
+                menuRow.addComponents([menu])
+                sendObject.components = [menuRow]
+
+                await poopy.functions.waitMessageCooldown()
+                var selectMsg = await channel.send(sendObject).catch(() => { })
+
+                if (!selectMsg) {
+                    resolve(exception)
+                    return
+                }
+
+                var collector = selectMsg.createMessageComponentCollector({ time: 60_000 })
+
+                collector.on('collect', (option) => {
+                    option.deferUpdate().catch(() => { })
+
+                    if (!(option.user.id === who && ((option.user.id !== poopy.bot.user.id && !option.user.bot) || poopy.config.allowbotusage))) {
+                        return
+                    }
+
+                    console.log(option)
+
+                    collector.stop()
+                    resolve(option.values[0])
+                })
+
+                collector.on('end', (_, reason) => {
+                    if (reason == 'time') {
+                        selectMsg.edit({
+                            content: 'No response.',
+                            components: []
+                        }).catch(() => { })
+                        resolve(exception)
+                    } else {
+                        selectMsg.delete().catch(() => { })
+                    }
+                })
             })
         }
 
@@ -2586,7 +2659,7 @@ class Poopy {
             return urls
         }
 
-        poopy.functions.getKeywordsFor = async function (string, msg, isBot, { extrakeys = {}, extrafuncs = {}, resetattempts = false } = {}) {
+        poopy.functions.getKeywordsFor = async function (string, msg, isBot, { extrakeys = {}, extrafuncs = {}, resetattempts = false, ownermode = false } = {}) {
             if (!poopy.tempdata[msg.author.id]) {
                 poopy.tempdata[msg.author.id] = {}
             }
@@ -2625,7 +2698,7 @@ class Poopy {
                     case 'key':
                         var key = poopy.specialkeys.keys[keydata.match] || extrakeys[keydata.match]
                         poopy.tempdata[msg.author.id]['keyattempts'] += key.attemptvalue ?? 1
-                        var change = await key.func.call(poopy, msg, isBot, string).catch(() => { }) ?? ''
+                        var change = await key.func.call(poopy, msg, isBot, string, { ownermode: ownermode }).catch(() => { }) ?? ''
                         string = typeof (change) === 'object' && change[1] === true ? change[0] : string.replace(new RegExp(poopy.functions.regexClean(keydata.match), 'i'), change)
                         break
 
@@ -2635,13 +2708,13 @@ class Poopy {
                         poopy.tempdata[msg.author.id]['keyattempts'] += func.attemptvalue ?? 1
                         var m = match
                         if (!func.raw) {
-                            match = await poopy.functions.getKeywordsFor(match, msg, isBot, { extrakeys: extrakeys, extrafuncs: extrafuncs }).catch(() => { }) ?? m
+                            match = await poopy.functions.getKeywordsFor(match, msg, isBot, { extrakeys: extrakeys, extrafuncs: extrafuncs, ownermode: ownermode }).catch(() => { }) ?? m
                         }
                         match = match.replace(/\\\)/g, ')')
                         if (!func.raw) {
                             string = string.replace(m, match)
                         }
-                        var change = await func.func.call(poopy, [funcName, match], msg, isBot, string).catch(() => { }) ?? ''
+                        var change = await func.func.call(poopy, [funcName, match], msg, isBot, string, { ownermode: ownermode }).catch(() => { }) ?? ''
                         string = typeof (change) === 'object' && change[1] === true ? change[0] : string.replace(new RegExp(poopy.functions.regexClean(`${funcName}(${match})`), 'i'), change)
                         break
                 }
@@ -3702,7 +3775,7 @@ class Poopy {
                                     clearTimeout(t)
                                 }, 60000)
                                 poopy.functions.infoPost(`Command \`${args[0].toLowerCase()}\` used`)
-                                var p = await findCmd.execute.call(this, msg, args, pathObject).catch(async err => {
+                                var p = await findCmd.execute.call(this, msg, args, { pathObject: pathObject }).catch(async err => {
                                     try {
                                         await poopy.functions.waitMessageCooldown()
                                         await msg.channel.send({
@@ -3728,7 +3801,7 @@ class Poopy {
                                 clearTimeout(t)
                             }, 60000)
                             poopy.functions.infoPost(`Command \`${args[0].toLowerCase()}\` used`)
-                            var phrase = await poopy.functions.getKeywordsFor(findLocalCmd.phrase, msg, true, { resetattempts: true }).catch(() => { }) ?? 'error'
+                            var phrase = await poopy.functions.getKeywordsFor(findLocalCmd.phrase, msg, true, { resetattempts: true, ownermode: findLocalCmd.ownermode }).catch(() => { }) ?? 'error'
                             if (poopy.tempdata[msg.guild.id][msg.channel.id]['shut']) break
                             await poopy.functions.waitMessageCooldown()
                             await msg.channel.send({
@@ -3759,7 +3832,7 @@ class Poopy {
                                             clearTimeout(t)
                                         }, 1000)
                                         poopy.functions.infoPost(`Command \`${similarCmds[0].name}\` used`)
-                                        var p = await findCmd.execute.call(this, msg, args, pathObject).catch(async err => {
+                                        var p = await findCmd.execute.call(this, msg, args, { pathObject: pathObject }).catch(async err => {
                                             try {
                                                 await poopy.functions.waitMessageCooldown()
                                                 await msg.channel.send({
@@ -3785,7 +3858,7 @@ class Poopy {
                                         clearTimeout(t)
                                     }, 60000)
                                     poopy.functions.infoPost(`Command \`${similarCmds[0].name}\` used`)
-                                    var phrase = findLocalCmd ? (await poopy.functions.getKeywordsFor(findLocalCmd.phrase, msg, true, { resetattempts: true }).catch(() => { }) ?? 'error') : 'error'
+                                    var phrase = findLocalCmd ? (await poopy.functions.getKeywordsFor(findLocalCmd.phrase, msg, true, { resetattempts: true, ownermode: findLocalCmd.ownermode }).catch(() => { }) ?? 'error') : 'error'
                                     if (poopy.tempdata[msg.guild.id][msg.channel.id]['shut']) return
                                     await poopy.functions.waitMessageCooldown()
                                     await msg.channel.send({
@@ -4371,7 +4444,36 @@ class Poopy {
         }
 
         await poopy.functions.infoPost(`Finishing extra steps...`)
+        var voiceResponse = await poopy.modules.axios.request({
+            method: 'GET',
+            url: 'https://api.uberduck.ai/voices?mode=tts-basic',
+            headers: {
+                Accept: 'application/json',
+                Authorization: `Basic ${btoa(`${process.env.UBERDUCKKEY}:${process.env.UBERDUCKSECRET}`)}`
+            }
+        }).catch(() => { })
+        poopy.vars.ubervoices = voiceResponse.data
+        poopy.vars.ubervoices.sort((va, vb) => {
+            var x = va.display_name.toLowerCase()
+            var y = vb.display_name.toLowerCase()
+            if (x < y) return -1
+            if (x > y) return 1
+            return 0
+        })
+        poopy.vars.ubercategories = []
+        for (var i in poopy.vars.ubervoices) {
+            var voice = poopy.vars.ubervoices[i]
 
+            if (!poopy.vars.ubercategories.find(category => category.name == voice.category)) poopy.vars.ubercategories.push({ name: voice.category, voices: [] })
+            poopy.vars.ubercategories.find(category => category.name == voice.category).voices.push(voice)
+        }
+        poopy.vars.ubercategories.sort((ca, cb) => {
+            var x = ca.name.toLowerCase()
+            var y = cb.name.toLowerCase()
+            if (x < y) return -1
+            if (x > y) return 1
+            return 0
+        })
         await poopy.modules.noblox.setCookie(process.env.ROBLOXCOOKIE).catch(() => { })
         poopy.json.emojiJSON = await poopy.functions.getEmojis().catch(() => { })
         console.log('emojis')

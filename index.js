@@ -62,6 +62,20 @@ async function main() {
         res.type('json').send(globalData())
     })
 
+    app.get('/ubervoices', async function (req, res) {
+        while (!poopyStarted) await sleep(1000)
+        var listings = [[], [], []]
+        var li = 0
+
+        for (var i in mainPoopy.vars.ubercategories) {
+            var category = mainPoopy.vars.ubercategories[i]
+            listings[li % listings.length].push(category)
+            li++
+        }
+
+        res.type('html').send(`<!DOCTYPE html><html><head><title>uberduck voices</title><link rel="icon" href="https://uberduck.ai/favicon.ico"><meta property="og:image" content="https://uberduck.ai/uberduck-circle.png"><meta property="og:title" content="uberudcucking"><meta property="og:description" content="make sure to copy the name after the &quot;--->&quot; arrow"></head><body style="font-family: monospace; display: grid; grid-template-columns: ${listings.map(() => 'auto').join(' ')};">${listings.map(listing => `<div>${listing.map(category => `<div style="background-color: #efefef; border: 1px solid #ccc; border-radius: 10px; padding: 10px; margin: 10px 5px;"><h2 style="margin: 0;">${escapeHTML(category.name)}</h2><br>${category.voices.map(vc => `${escapeHTML(vc.display_name)} ---&gt; <b>${escapeHTML(vc.name)}</b>`).join('<br>')}</div>`).join('')}</div>`).join('')}</body></html>`)
+    })
+
     app.post('/api/command', async function (req, res) {
         while (!poopyStarted) await sleep(1000)
 
@@ -74,7 +88,6 @@ async function main() {
         }
 
         let messages = []
-        let createdEmbeds = {}
 
         let msg = {
             content: `${mainPoopy.config.globalPrefix}${req.body.args}`,

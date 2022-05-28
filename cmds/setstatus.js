@@ -1,10 +1,10 @@
 module.exports = {
     name: ['setstatus', 'ss'],
-    execute: async function (msg, args) {
+    execute: async function (msg, args, opts) {
         let poopy = this
 
         var ownerid = poopy.config.ownerids.find(id => id == msg.author.id);
-        if (ownerid === undefined) {
+        if (ownerid === undefined && !opts.ownermode) {
             await msg.channel.send('Owner only!').catch(() => { })
             return
         }
