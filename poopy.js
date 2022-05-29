@@ -813,9 +813,15 @@ class Poopy {
                     poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id] = {}
                 }
 
+                if (!poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['messages']) {
+                    poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['messages'] = 0
+                }
+
                 if (!poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown']) {
                     poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] = false
                 }
+                
+                poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['messages']++
 
                 poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['username'] = msg.author.username
             }

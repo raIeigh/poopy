@@ -1,5 +1,5 @@
 module.exports = {
-  desc: "Returns a random member's id from the server.",
+  desc: "Returns a random member's ID from the server.",
   func: async function (msg) {
     let poopy = this
 
