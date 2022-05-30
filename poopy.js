@@ -2630,7 +2630,9 @@ class Poopy {
             if (msg.attachments.size) {
                 var attachmentsR = []
                 msg.attachments.forEach(attachment => {
+                    if (options.update && attachment.fetched) return
                     attachmentsR.push(attachment.url)
+                    if (options.update && !attachment.fetched) attachment.fetched = true
                 })
                 attachmentsR.reverse()
                 attachmentsR.forEach(attachment => {
@@ -2652,11 +2654,13 @@ class Poopy {
                 for (var i in urlsr) {
                     var url = urlsr[i]
 
-                    poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl2'] = poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl']
-                    poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl'] = url
-                    var lastUrls = [url].concat(poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrls'])
-                    lastUrls.splice(100)
-                    poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrls'] = lastUrls
+                    if (url) {
+                        poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl2'] = poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl']
+                        poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl'] = url
+                        var lastUrls = [url].concat(poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrls'])
+                        lastUrls.splice(100)
+                        poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrls'] = lastUrls
+                    }
                 }
             }
 

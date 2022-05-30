@@ -50,7 +50,13 @@ module.exports = {
       'hacker',
       'exploiter',
       'meth addict',
-      'speedrunner'
+      'speedrunner',
+      'white',
+      'liberal',
+      'autistic',
+      'young',
+      'black',
+      ''
     ]
 
     return type[Math.floor(Math.random() * type.length)]
