@@ -1,5 +1,5 @@
 module.exports = {
-  desc: "Returns a random type of person. (i honestly don't know what to call it)",
+  desc: "Returns a random type of person you'd see on the internet, I guess. (this is a crime against humanity)",
   func: async function () {
     let poopy = this
 
@@ -37,7 +37,20 @@ module.exports = {
       'rr34 modeller',
       'game developer',
       'homophobic',
-      'transphobic'
+      'transphobic',
+      'weeb',
+      'troller',
+      'porn addict',
+      'whore',
+      'loli',
+      'shota',
+      'criminal',
+      'pirate',
+      'drug addict',
+      'hacker',
+      'exploiter',
+      'meth addict',
+      'speedrunner'
     ]
 
     return type[Math.floor(Math.random() * type.length)]
