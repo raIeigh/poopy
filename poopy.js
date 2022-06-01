@@ -18,11 +18,10 @@
     - UBERDUCKKEY, UBERDUCKSECRET (credentials from uberduck ai, generated at https://app.uberduck.ai/account/manage)
 */
 
-const Discord = require('discord.js')
-
 class Poopy {
     constructor(config = {}) {
         // setting up options
+
         let poopy = this
 
         poopy.config = {
@@ -41,7 +40,7 @@ class Poopy {
             mongodatabase: 'poopydata',
             globalPrefix: 'p:',
             stfu: false,
-            intents: Object.values(Discord.Intents.FLAGS),
+            intents: Object.values(require('discord.js').Intents.FLAGS),
             ownerids: ['464438783866175489', '454732245425455105', '613501149282172970'],
             jsoning: ['411624455194804224', '395947826690916362', '486845950200119307'],
             shit: [''],
@@ -118,7 +117,7 @@ class Poopy {
         poopy.procs = []
 
         // module trash
-        poopy.modules.Discord = Discord
+        poopy.modules.Discord = require(`discord.js${poopy.config.self ? '-selfbot-v13' : ''}`)
         poopy.modules.discordModals = require('discord-modals')
         poopy.modules.REST = require('@discordjs/rest').REST
         poopy.modules.Routes = require('discord-api-types/v9').Routes

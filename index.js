@@ -538,23 +538,37 @@ async function main() {
     const tokens = []
 
     if (__dirname.includes('app')) {
-        tokens.push({
-            TOKEN: process.env.POOPYTOKEN,
-            config: {
-                testing: false,
-                globalPrefix: 'p:',
-                quitOnDestroy: true
+        tokens = [
+            {
+                TOKEN: process.env.POOPYTOKEN,
+                config: {
+                    globalPrefix: 'p:',
+                    quitOnDestroy: true
+                }
+            },
+            {
+                TOKEN: process.env.INDIATOKEN,
+                config: {
+                    globalPrefix: 'i:',
+                    mongodatabase: 'racist',
+                    msgcooldown: 3000,
+                    useReactions: true,
+                    textEmbeds: true,
+                    ownerids: ['464438783866175489']
+                }
             }
-        })
+        ]
     } else {
-        tokens.push({
-            TOKEN: process.env.POOPYTOKEN2,
-            config: {
-                testing: true,
-                globalPrefix: '2p:',
-                quitOnDestroy: true
+        tokens = [
+            {
+                TOKEN: process.env.POOPYTOKEN2,
+                config: {
+                    testing: true,
+                    globalPrefix: '2p:',
+                    quitOnDestroy: true
+                }
             }
-        })
+        ]
     }
 
     for (var i in tokens) {
