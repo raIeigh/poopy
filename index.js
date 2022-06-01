@@ -549,6 +549,7 @@ async function main() {
             {
                 TOKEN: process.env.INDIATOKEN,
                 config: {
+                    self: true,
                     globalPrefix: 'i:',
                     mongodatabase: 'racist',
                     msgcooldown: 3000,
