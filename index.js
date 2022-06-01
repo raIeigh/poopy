@@ -535,7 +535,7 @@ async function main() {
 
     const Poopy = require('./poopy')
 
-    const tokens = []
+    let tokens = []
 
     if (__dirname.includes('app')) {
         tokens = [
