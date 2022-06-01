@@ -14,7 +14,7 @@ module.exports = {
 
         var sayori = await poopy.bot.users.fetch('758638862590803968')
 
-        var option = poopy.function.generateSayori.call(poopy, msg, fixedchoice)
+        var option = poopy.functions.generateSayori.call(poopy, msg, fixedchoice)
         var optiontext
         if (option['pings'] === true) {
             optiontext = '<@' + msg.author.id + '> ' + option['text']

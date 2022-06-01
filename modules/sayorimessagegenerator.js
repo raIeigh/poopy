@@ -11,6 +11,11 @@ module.exports = function(msg, fixedchoice) {
         return nounJSON.data[Math.floor(Math.random() * nounJSON.data.length)].noun
     }
 
+    function adj() {
+        var adjJSON = poopy.json.adjJSON
+        return adjJSON.data[Math.floor(Math.random() * adjJSON.data.length)].adjective
+    }
+
     function sentence() {
         var sentenceJSON = poopy.json.sentenceJSON
         return sentenceJSON.data[Math.floor(Math.random() * sentenceJSON.data.length)].sentence
@@ -160,7 +165,7 @@ module.exports = function(msg, fixedchoice) {
             { text: 'the ' + poopy.arrays.arabDictionary[Math.floor(Math.random() * poopy.arrays.arabDictionary.length)].toLowerCase() + ' fandom is dying' },
             { text: 'THE VS ' + poopy.arrays.arabDictionary[Math.floor(Math.random() * poopy.arrays.arabDictionary.length)].toUpperCase() + ' MOD' },
             { text: 'WHAT A ' + poopy.arrays.arabDictionary[Math.floor(Math.random() * poopy.arrays.arabDictionary.length)].toUpperCase() },
-            { text: message.toLowerCase().replace(/[.!,']/g) },
+            { text: message().toLowerCase().replace(/[.!,']/g) },
             { text: 'they added the ' + poopy.arrays.arabDictionary[Math.floor(Math.random() * poopy.arrays.arabDictionary.length)].toLowerCase() + ' big ass' },
             { text: 'the ' + poopy.arrays.arabDictionary[Math.floor(Math.random() * poopy.arrays.arabDictionary.length)].toLowerCase() },
             { text: 'not ' + poopy.arrays.arabDictionary[Math.floor(Math.random() * poopy.arrays.arabDictionary.length)].toLowerCase() + ' fetish' },
@@ -191,7 +196,7 @@ module.exports = function(msg, fixedchoice) {
             { text: 'yoo ' + food() },
             { text: 'IM NOT' },
             { text: 'wtf' },
-            { text: country.toLowerCase() },
+            { text: country().toLowerCase() },
             { text: 'wow' },
             { text: `i dont likr ${members[Math.floor(Math.random() * members.length)].toLowerCase()}s ${animal()}` },
             { text: 'no' },
@@ -219,6 +224,7 @@ module.exports = function(msg, fixedchoice) {
             { text: 'i like porn 🥲 🥲 🥲 🥲 🥲 🥲' },
             { text: verb() },
             { text: noun() },
+            { text: adj() },
             { pings: true, text: 'stupid ' + msg.author.username.toLowerCase() },
             { text: 'not ' + msg.author.username.toLowerCase() },
             { text: 'wth ' + msg.author.username.toLowerCase() },
