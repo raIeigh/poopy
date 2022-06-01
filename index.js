@@ -546,6 +546,7 @@ async function main() {
                     quitOnDestroy: true
                 }
             },
+
             {
                 TOKEN: process.env.INDIATOKEN,
                 config: {
@@ -572,9 +573,7 @@ async function main() {
         ]
     }
 
-    for (var i in tokens) {
-        const tokendata = tokens[i]
-
+    tokens.forEach(async tokendata => {
         let poopy
         if (typeof tokendata == 'string') {
             poopy = new Poopy()
@@ -584,10 +583,12 @@ async function main() {
 
         await poopy.start(tokendata.TOKEN)
 
-        if (!mainPoopy) mainPoopy = poopy
-    }
+        if (!mainPoopy) {
+            mainPoopy = poopy
+            poopyStarted = true
+        }
+    })
 
-    poopyStarted = true
     eventEmitter.emit('poopystarted')
 }
 
