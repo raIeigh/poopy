@@ -27,10 +27,12 @@ class Poopy {
         poopy.config = {
             testing: false,
             poosonia: false,
+            self: false,
             forcetrue: false,
             useReactions: false,
             textEmbeds: false,
             notSave: false,
+            noInfoPost: false,
             apiMode: false,
             poosoniablacklist: ['dm', 'tdms', 'spam', 'eval', 'leave', 'shutup'],
             poosoniakeywordblacklist: [],
@@ -1005,7 +1007,7 @@ class Poopy {
             return res.data.AIResponse*/
         }
 
-        poopy.functions.infoPost = async function (message) {
+        poopy.functions.infoPost = poopy.config.noInfoPost ? async () => { } : async function (message) {
             if (poopy.config.stfu) return
 
             var avatar = poopy.bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' })

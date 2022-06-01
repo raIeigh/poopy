@@ -556,6 +556,7 @@ async function main() {
                     msgcooldown: 3000,
                     useReactions: true,
                     textEmbeds: true,
+                    noInfoPost: true,
                     ownerids: ['464438783866175489']
                 }
             }

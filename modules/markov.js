@@ -56,5 +56,5 @@ module.exports = function (phrases) {
     };
 
     if (phrases) phrases.forEach(phrase => markovTrain(getCleanWordArray(phrase)));
-    markovMakeSentence(5);
+    return markovMakeSentence(5);
 }
