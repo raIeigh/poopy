@@ -190,6 +190,7 @@ class Poopy {
         poopy.vars.validUrl = /(http|https):\/\/([!#$&-;=?-[\]_a-z~]|%[0-9a-fA-F]{2})+/
         poopy.vars.emojiRegex = require('emoji-regex')()
         poopy.vars.Catbox = new poopy.modules.catbox.Catbox()
+        poopy.vars.Litterbox = new poopy.modules.catbox.Litterbox()
         poopy.vars.youtube = poopy.modules.google.youtube({
             version: 'v3',
             auth: process.env.GOOGLEKEY
@@ -2895,7 +2896,7 @@ class Poopy {
 
             if (extraOptions.catbox || extraOptions.nosend) {
                 poopy.functions.infoPost(`Uploading file to catbox.moe`)
-                var fileLink = await poopy.vars.Catbox.upload(`${filepath}/${filename}`).catch(() => { })
+                var fileLink = await poopy.vars[extraOptions.nosend ? 'Litterbox' : 'Catbox'].upload(`${filepath}/${filename}`).catch(() => { })
                 if (fileLink) {
                     var isUrl = poopy.vars.validUrl.test(fileLink)
 
