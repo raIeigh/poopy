@@ -838,6 +838,15 @@ class Poopy {
                 poopy.data['guild-data'][msg.guild.id]['messages'] = []
             }
 
+            if (typeof poopy.data['guild-data'][msg.guild.id]['messages'][0] == 'string') {
+                poopy.data['guild-data'][msg.guild.id]['messages'] = poopy.data['guild-data'][msg.guild.id]['messages'].map(m => {
+                    return {
+                        author: poopy.bot.user.id,
+                        content: m
+                    }
+                })
+            }
+
             if (!poopy.tempdata[msg.guild.id]) {
                 poopy.tempdata[msg.guild.id] = {}
             }
@@ -3550,8 +3559,11 @@ class Poopy {
                 var cleanMessage = poopy.modules.Discord.Util.cleanContent(msg.content, msg).replace(/\@/g, '@‌')
 
                 if (!(cleanMessage.match(/nigg|https?\:\/\/.*(rule34|e621|pornhub|hentaihaven|xxx|iplogger)|discord\.(gift|gg)\/[\d\w]+\/?$/ig) || cleanMessage.includes(prefix.toLowerCase())) && !(poopy.data['guild-data'][msg.guild.id]['messages'].find(message => message.toLowerCase() === cleanMessage.toLowerCase()))) {
-                    var messages = [cleanMessage].concat(poopy.data['guild-data'][msg.guild.id]['messages'])
-                    messages.splice(1000)
+                    var messages = [{
+                        author: msg.author.id,
+                        content: cleanMessage
+                    }].concat(poopy.data['guild-data'][msg.guild.id]['messages'])
+                    messages.splice(10000)
                     poopy.data['guild-data'][msg.guild.id]['messages'] = messages
                 }
             }

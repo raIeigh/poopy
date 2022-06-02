@@ -6,7 +6,7 @@ module.exports = {
 
         var word = matches[1]
 
-        var messages = poopy.data['guild-data'][msg.guild.id]['messages'].slice()
+        var messages = poopy.data['guild-data'][msg.guild.id]['messages'].slice().map(m => m.content)
         if (messages.length <= 0) {
             messages = poopy.json.sentenceJSON.data.map(s => s.sentence).concat(poopy.arrays.psPasta)
         }

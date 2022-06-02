@@ -10,7 +10,7 @@ module.exports = {
         var randomsentences = poopy.functions.getOption(args, 'randomsentences', { dft: false, splice: true, n: 0, join: true })
 
         var saidMessage = args.join(' ').substring((args[0] || '').length + 1)
-        var messages = poopy.data['guild-data'][msg.guild.id]['messages'].slice()
+        var messages = poopy.data['guild-data'][msg.guild.id]['messages'].slice().map(m => m.content)
         if (messages.length <= 0 || randomsentences) {
             messages = poopy.json.sentenceJSON.data.map(s => s.sentence).concat(poopy.arrays.psPasta)
         }

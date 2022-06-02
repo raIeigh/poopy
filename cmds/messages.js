@@ -9,7 +9,7 @@ module.exports = {
                 poopy.vars.filecount++
                 var filepath = `temp/${poopy.config.mongodatabase}/file${currentcount}`
                 poopy.modules.fs.mkdirSync(`${filepath}`)
-                poopy.modules.fs.writeFileSync(`${filepath}/messagelist.txt`, poopy.data['guild-data'][msg.guild.id]['messages'].join('\n\n-----------------------------------------------\n\n') || 'lmao theres nothing')
+                poopy.modules.fs.writeFileSync(`${filepath}/messagelist.txt`, poopy.data['guild-data'][msg.guild.id]['messages'].map(m => `Author: ${m.author}\n${m.content}`).join('\n\n-----------------------------------------------\n\n') || 'lmao theres nothing')
                 await msg.channel.send({
                     files: [new poopy.modules.Discord.MessageAttachment(`${filepath}/messagelist.txt`)]
                 }).catch(() => { })
@@ -27,20 +27,20 @@ module.exports = {
                 var results = []
 
                 poopy.data['guild-data'][msg.guild.id]['messages'].forEach(message => {
-                    if (message.toLowerCase().includes(cleanMessage.toLowerCase())) {
+                    if (message.content.toLowerCase().includes(cleanMessage.toLowerCase())) {
                         results.push(message)
                     }
                 })
 
                 if (results.length) {
-                    results.sort((a, b) => Math.abs(1 - poopy.functions.similarity(a.toLowerCase(), cleanMessage.toLowerCase())) - Math.abs(1 - poopy.functions.similarity(b.toLowerCase(), cleanMessage.toLowerCase())))
+                    results.sort((a, b) => Math.abs(1 - poopy.functions.similarity(a.content.toLowerCase(), cleanMessage.toLowerCase())) - Math.abs(1 - poopy.functions.similarity(b.content.toLowerCase(), cleanMessage.toLowerCase())))
                 }
 
                 var currentcount = poopy.vars.filecount
                 poopy.vars.filecount++
                 var filepath = `temp/${poopy.config.mongodatabase}/file${currentcount}`
                 poopy.modules.fs.mkdirSync(`${filepath}`)
-                poopy.modules.fs.writeFileSync(`${filepath}/messagelist.txt`, results.join('\n\n-----------------------------------------------\n\n') || 'lmao theres nothing')
+                poopy.modules.fs.writeFileSync(`${filepath}/messagelist.txt`, results.map(m => `Author: ${m.author}\n${m.content}`).join('\n\n-----------------------------------------------\n\n') || 'lmao theres nothing')
                 await msg.channel.send({
                     files: [new poopy.modules.Discord.MessageAttachment(`${filepath}/messagelist.txt`)]
                 }).catch(() => { })
@@ -48,7 +48,7 @@ module.exports = {
             },
 
             random: async (msg) => {
-                await msg.channel.send(poopy.data['guild-data'][msg.guild.id]['messages'][Math.floor(Math.random() * poopy.data['guild-data'][msg.guild.id]['messages'].length)]).catch(() => { })
+                await msg.channel.send(poopy.data['guild-data'][msg.guild.id]['messages'][Math.floor(Math.random() * poopy.data['guild-data'][msg.guild.id]['messages'].length)].content).catch(() => { })
             },
 
             add: async (msg, args) => {
@@ -59,7 +59,7 @@ module.exports = {
 
                 var saidMessage = args.join(' ').substring(args[0].length + 1)
                 var cleanMessage = poopy.modules.Discord.Util.cleanContent(saidMessage, msg).replace(/\@/g, '@‌')
-                var findMessage = poopy.data['guild-data'][msg.guild.id]['messages'].find(message => message.toLowerCase() === cleanMessage.toLowerCase())
+                var findMessage = poopy.data['guild-data'][msg.guild.id]['messages'].find(message => message.content.toLowerCase() === cleanMessage.toLowerCase())
 
                 if (findMessage) {
                     await msg.channel.send(`That message already exists.`).catch(() => { })
@@ -71,8 +71,11 @@ module.exports = {
                         send = await poopy.functions.yesno(msg.channel, 'That message looks dangerous, are you sure about this?', msg.member.id).catch(() => { }) ?? false
                     }
 
-                    var messages = [cleanMessage].concat(poopy.data['guild-data'][msg.guild.id]['messages'])
-                    messages.splice(1000)
+                    var messages = [{
+                        author: msg.author.id,
+                        content: cleanMessage
+                    }].concat(poopy.data['guild-data'][msg.guild.id]['messages'])
+                    messages.splice(10000)
                     poopy.data['guild-data'][msg.guild.id]['messages'] = messages
 
                     await msg.channel.send({
@@ -92,7 +95,7 @@ module.exports = {
 
                 var saidMessage = args.join(' ').substring(args[0].length + 1)
                 var cleanMessage = poopy.modules.Discord.Util.cleanContent(saidMessage, msg).replace(/\@/g, '@‌')
-                var findMessage = poopy.data['guild-data'][msg.guild.id]['messages'].findIndex(message => message.toLowerCase() === cleanMessage.toLowerCase())
+                var findMessage = poopy.data['guild-data'][msg.guild.id]['messages'].findIndex(message => message.content.toLowerCase() === cleanMessage.toLowerCase())
 
                 if (findMessage > -1) {
                     poopy.data['guild-data'][msg.guild.id]['messages'].splice(findMessage, 1)
@@ -180,7 +183,7 @@ module.exports = {
     },
     help: {
         name: 'messages <option>',
-        value: "Allows you to see or manage the server's message database. Used by the `_message` keyword and has a 1000 messages limit. Use the command alone for more info."
+        value: "Allows you to see or manage the server's message database. Used by the `_message` keyword and has a 10k messages limit. Use the command alone for more info."
     },
     cooldown: 2500,
     type: 'Unique'

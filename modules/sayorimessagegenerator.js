@@ -124,7 +124,7 @@ module.exports = function(msg, fixedchoice) {
 
     function message() {
         var messages = poopy.data['guild-data'][msg.guild.id]['messages']
-        return messages.length ? messages[Math.floor(Math.random() * messages.length)].replace(/\@/g, '@‌') : ''
+        return messages.length ? messages[Math.floor(Math.random() * messages.length)].content.replace(/\@/g, '@‌') : ''
     }
 
     function phraseword(phrase) {

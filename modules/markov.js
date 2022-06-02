@@ -1,21 +1,6 @@
 // Markov Model from https://www.soliantconsulting.com/blog/2013/02/title-generator-using-markov-chains
 
 module.exports = function (phrases) {
-    var getCleanWordArray = function (inputText) {
-        function lowercaseFirstLetter(string) {
-            return string.charAt(0).toLowerCase() + string.slice(1);
-        }
-
-        var sentences = inputText.split('.');
-        for (var i = 0; i < sentences.length; i++) {
-            sentences[i] = lowercaseFirstLetter(sentences[i]);
-        }
-        inputText = sentences.join('. ').trim();
-        inputText = inputText.replace(/\. /g, ' . ');
-        inputText = inputText.replace(/[\n\t,–—?;:`!@#$€%^&§°*<>()\[\]\{\}_\+=\/\|\\]/g, '');
-        return inputText.split(' ');
-    };
-
     var markovTerminals = {};
     var markovStartWords = [];
     var markovWordStats = {};
@@ -26,8 +11,7 @@ module.exports = function (phrases) {
         for (var j = 0; j < words.length - 1; j++) {
             if (markovWordStats.hasOwnProperty(words[j])) {
                 markovWordStats[words[j]].push(words[j + 1]);
-            }
-            else {
+            } else {
                 markovWordStats[words[j]] = [words[j + 1]];
             }
         }
@@ -55,6 +39,6 @@ module.exports = function (phrases) {
         return sentence.join(' ');
     };
 
-    if (phrases) phrases.forEach(phrase => markovTrain(getCleanWordArray(phrase)));
+    if (phrases) phrases.forEach(phrase => markovTrain(phrase.split(' ')));
     return markovMakeSentence(5);
 }
