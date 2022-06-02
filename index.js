@@ -557,7 +557,7 @@ async function main() {
                     useReactions: true,
                     textEmbeds: true,
                     noInfoPost: true,
-                    ownerids: ['464438783866175489']
+                    illKillYouIfYouUseEval: []
                 }
             }
         ]

@@ -32,6 +32,8 @@ class Poopy {
             textEmbeds: false,
             notSave: false,
             apiMode: false,
+            self: false,
+            noInfoPost: false,
             poosoniablacklist: ['dm', 'tdms', 'spam', 'eval', 'leave', 'shutup'],
             poosoniakeywordblacklist: [],
             poosoniafunctionblacklist: ['messagecollector', 'stopcollector', 'stopallcollectors'],
@@ -1015,7 +1017,7 @@ class Poopy {
             return res.data.AIResponse*/
         }
 
-        poopy.functions.infoPost = async function (message) {
+        poopy.functions.infoPost = poopy.config.noInfoPost ? async () => { } : async function (message) {
             if (poopy.config.stfu) return
 
             var avatar = poopy.bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' })
@@ -3558,7 +3560,7 @@ class Poopy {
             if (msg.content && ((!(msg.author.bot) && msg.author.id != poopy.bot.user.id) || poopy.config.allowbotusage) && poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['read']) {
                 var cleanMessage = poopy.modules.Discord.Util.cleanContent(msg.content, msg).replace(/\@/g, '@‌')
 
-                if (!(cleanMessage.match(/nigg|https?\:\/\/.*(rule34|e621|pornhub|hentaihaven|xxx|iplogger)|discord\.(gift|gg)\/[\d\w]+\/?$/ig) || cleanMessage.includes(prefix.toLowerCase())) && !(poopy.data['guild-data'][msg.guild.id]['messages'].find(message => message.toLowerCase() === cleanMessage.toLowerCase()))) {
+                if (!(cleanMessage.match(/nigg|https?\:\/\/.*(rule34|e621|pornhub|hentaihaven|xxx|iplogger)|discord\.(gift|gg)\/[\d\w]+\/?$/ig) || cleanMessage.includes(prefix.toLowerCase())) && !(poopy.data['guild-data'][msg.guild.id]['messages'].find(message => message.content.toLowerCase() === cleanMessage.toLowerCase()))) {
                     var messages = [{
                         author: msg.author.id,
                         content: cleanMessage
