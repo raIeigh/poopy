@@ -32,6 +32,17 @@ module.exports = function(msg, fixedchoice) {
         return cityJSON[Math.floor(Math.random() * cityJSON.length)].name
     }
 
+    function restaurant() {
+        var restaurantJSON = poopy.json.restaurantJSON
+        return restaurantJSON[Math.floor(Math.random() * restaurantJSON.length)].restaurant
+    }
+
+    function restaurantfood() {
+        var restaurantJSON = poopy.json.restaurantJSON
+    var restaurant = restaurantJSON[Math.floor(Math.random() * restaurantJSON.length)]
+    return restaurant.foodItems[Math.floor(Math.random() * restaurant.foodItems.length)].foodName
+    }
+
     function animal() {
         var animals = ["meerkat", "aardvark", "addax", "alligator", "alpaca", "anteater", "antelope", "aoudad", "ape", "argali", "armadillo", "baboon", "badger", "basilisk", "bat", "bear", "beaver", "bighorn", "bison", "boar", "budgerigar", "buffalo", "bull", "bunny", "burro", "camel", "canary", "capybara", "cat", "chameleon", "chamois", "cheetah", "chimpanzee", "chinchilla", "chipmunk", "civet", "coati", "colt", "cougar", "cow", "coyote", "crocodile", "crow", "deer", "dingo", "doe", "dung beetle", "dog", "donkey", "dormouse", "dromedary", "duckbill platypus", "dugong", "eland", "elephant", "elk", "ermine", "ewe", "fawn", "ferret", "finch", "fish", "fox", "frog", "gazelle", "gemsbok", "gila monster", "giraffe", "gnu", "goat", "gopher", "gorilla", "grizzly bear", "ground hog", "guanaco", "guinea pig", "hamster", "hare", "hartebeest", "hedgehog", "highland cow", "hippopotamus", "hog", "horse", "hyena", "ibex", "iguana", "impala", "jackal", "jaguar", "jerboa", "kangaroo", "kitten", "koala", "lamb", "lemur", "leopard", "lion", "lizard", "llama", "lovebird", "lynx", "mandrill", "mare", "marmoset", "marten", "mink", "mole", "mongoose", "monkey", "moose", "mountain goat", "mouse", "mule", "musk deer", "musk-ox", "muskrat", "mustang", "mynah bird", "newt", "ocelot", "okapi", "opossum", "orangutan", "oryx", "otter", "ox", "panda", "panther", "parakeet", "parrot", "peccary", "pig", "octopus", "thorny devil", "starfish", "blue crab", "snowy owl", "chicken", "rooster", "bumble bee", "eagle owl", "polar bear", "pony", "porcupine", "porpoise", "prairie dog", "pronghorn", "puma", "puppy", "quagga", "rabbit", "raccoon", "ram", "rat", "reindeer", "rhinoceros", "salamander", "seal", "sheep", "shrew", "silver fox", "skunk", "sloth", "snake", "springbok", "squirrel", "stallion", "steer", "tapir", "tiger", "toad", "turtle", "vicuna", "walrus", "warthog", "waterbuck", "weasel", "whale", "wildcat", "bald eagle", "wolf", "wolverine", "wombat", "woodchuck", "yak", "zebra", "zebu"]
         return animals[Math.floor(Math.random() * animals.length)]
@@ -122,6 +133,66 @@ module.exports = function(msg, fixedchoice) {
         return insults[Math.floor(Math.random() * insults.length)]
     }
 
+    function persontype() {
+        var type = [
+          'male',
+          'female',
+          'homosexual',
+          'lesbian',
+          'catboy',
+          'maid',
+          'transexual',
+          'bisexual',
+          'pedophile',
+          'zoophile',
+          'degenerate',
+          'femboy',
+          'furry',
+          'tomboy',
+          'racist',
+          'underaged',
+          'gamer',
+          'gangsta',
+          'r34 artist',
+          'discord mod',
+          'moderator',
+          'reddit mod',
+          'twitter user',
+          'cryptopunk',
+          'r63 artist',
+          'twitch streamer',
+          'political',
+          'toxic',
+          'programmer',
+          '4chan user',
+          'rr34 modeller',
+          'game developer',
+          'homophobic',
+          'transphobic',
+          'weeb',
+          'troller',
+          'porn addict',
+          'whore',
+          'loli',
+          'shota',
+          'criminal',
+          'pirate',
+          'drug addict',
+          'hacker',
+          'exploiter',
+          'meth addict',
+          'speedrunner',
+          'white',
+          'liberal',
+          'autistic',
+          'young',
+          'black',
+          ''
+        ]
+    
+        return type[Math.floor(Math.random() * type.length)]
+    }
+
     function message() {
         var messages = poopy.data['guild-data'][msg.guild.id]['messages']
         return messages.length ? messages[Math.floor(Math.random() * messages.length)].content.replace(/\@/g, '@‌') : ''
@@ -142,9 +213,11 @@ module.exports = function(msg, fixedchoice) {
         var sayoriAdjectives = ['HORNY', 'FARTING', 'RACIST', 'STUPID', 'FEMBOY', 'GAY', 'TRANS', 'UNDERAGED', 'RETARD', 'BITCH', 'ASSHOLE', 'MOTHERFUCKER']
         var adjectives = ['is trans', 'the femboy', 'the futa', 'the idiot', 'the stalker', 'the impostor', 'now sus', 'the nutter', 'the shitter', 'the burger', 'is very annoying', 'big', 'fat', 'is thin', 'is small', 'what', 'is funny', 'noob', 'wtf', 'with pp', 'peed his pants', 'is amongla', 'looks at porn lolololol', 'angry'];
         var shipAdjectives = ['likes', 'you like', 'loves', 'you love', 'you are in love with', 'you should marry', 'with', 'hug', 'your game is now poopoo for'];
-        var fnf = ['dad', 'gf', 'pico', 'skid and pump', 'monster', 'mom', 'senpai', 'tankman', 'whitty', 'carol', 'hex', 'ruv', 'sarvente', 'miku', 'tricky', 'zardy', 'matt', 'garcello', 'shaggy', 'annie', 'cheeky', 'bob', 'tabi', 'agoti', 'kapi', 'neon', 'nene', 'monika', 'cg5', 'updike', 'selever', 'tord', 'impostor', 'trollge', 'tree']
+        var characters = ['dad', 'gf', 'pico', 'skid and pump', 'monster', 'mom', 'senpai', 'tankman', 'whitty', 'carol', 'hex', 'ruv', 'sarvente', 'miku', 'tricky', 'zardy', 'matt', 'garcello', 'shaggy', 'annie', 'cheeky', 'bob', 'tabi', 'agoti', 'kapi', 'neon', 'nene', 'monika', 'selever', 'tord', 'impostor', 'trollge', 'tree', 'nonsense', 'hypno', 'sonic.exe', 'sonic.exe', 'sonic.exe', 'sonic.exe', 'morbius', 'deinx', 'ralsei', 'kris', 'susie', 'berdly', 'nikocado', 'ness', 'giygas', 'tails doll', 'lord x', 'tbh', 'sans', 'cuphead', 'bendy', 'niko', 'joe biden', 'sprigatito']
+        var locations = ['home', 'bedroom', 'car', 'bus', 'garden', 'museum', 'hotel', 'festival', 'fair', 'park', 'kitchen', 'toilet', 'farm', 'cinema', 'restaurant', 'school', 'plane', 'train', 'store', 'shopping', 'elevator', 'forest', 'swamp', 'mountain', 'desert', 'island', 'heaven', 'hell']
         var consoles = ['pc', 'mobile', 'tablet', 'xbox', 'nintendo switch', 'nintendo 3ds', 'nintendo 2ds', 'psp', 'ps1', 'ps2', 'gamecube', 'ps3', 'ps4', 'ps5', 'wii', 'xbox 360', 'xbox one', 'gameboy', 'nintendo 64', 'sega genesis', 'wii u']
         var options = [
+            { text: 'im in a ' + locations[Math.floor(Math.random() * locations.length)] },
             { text: 'lol https://tenor.com/view/sus-suspect-among-us-gif-18663592' },
             { text: 'https://tenor.com/view/madness-hank-new-grounds-jump-gif-17044581' },
             { text: 'https://tenor.com/view/friday-night-funkin-hey-boyfriend-gif-21180248' },
@@ -159,21 +232,34 @@ module.exports = function(msg, fixedchoice) {
             { text: 'not ' + poopy.arrays.arabDictionary[Math.floor(Math.random() * poopy.arrays.arabDictionary.length)].toLowerCase() },
             { text: poopy.arrays.arabDictionary[Math.floor(Math.random() * poopy.arrays.arabDictionary.length)].toLowerCase() },
             { text: poopy.arrays.funnygifs[Math.floor(Math.random() * poopy.arrays.funnygifs.length)] },
-            { text: poopy.arrays.psFiles[Math.floor(Math.random() * poopy.arrays.psFiles.length)] },
+            { text: poopy.arrays.funnygifs[Math.floor(Math.random() * poopy.arrays.funnygifs.length)] + ' lmap' },
+            { text: poopy.arrays.psFiles[Math.floor(Math.random() * poopy.arrays.psFiles.length)] + ' this is ' + members[Math.floor(Math.random() * members.length)].toLowerCase() },
+            { text: members[Math.floor(Math.random() * members.length)].toLowerCase() + ' is a ' + persontype() },
+            { text: members[Math.floor(Math.random() * members.length)].toLowerCase() + ' is a ' + insult() },
+            { text: members[Math.floor(Math.random() * members.length)].toLowerCase() + ' is ' + compliment() },
             { text: poopy.arrays.arabDictionary[Math.floor(Math.random() * poopy.arrays.arabDictionary.length)].toLowerCase() + '.' },
+            { text: persontype() },
             { text: `${Math.floor(Math.random() * 256)}.${Math.floor(Math.random() * 256)}.${Math.floor(Math.random() * 256)}.${Math.floor(Math.random() * 256)}`, edit: 'e' },
+            { text: 'i love ' + restaurant().toLowerCase() },
             { text: 'the ' + poopy.arrays.arabDictionary[Math.floor(Math.random() * poopy.arrays.arabDictionary.length)].toLowerCase() + ' fandom is dying' },
             { text: 'THE VS ' + poopy.arrays.arabDictionary[Math.floor(Math.random() * poopy.arrays.arabDictionary.length)].toUpperCase() + ' MOD' },
             { text: 'WHAT A ' + poopy.arrays.arabDictionary[Math.floor(Math.random() * poopy.arrays.arabDictionary.length)].toUpperCase() },
             { text: message().toLowerCase().replace(/[.!,']/g) },
             { text: 'they added the ' + poopy.arrays.arabDictionary[Math.floor(Math.random() * poopy.arrays.arabDictionary.length)].toLowerCase() + ' big ass' },
+            { text: 'they added the ' + poopy.arrays.arabDictionary[Math.floor(Math.random() * poopy.arrays.arabDictionary.length)].toLowerCase() },
+            { text: 'THEY ADDED ' + poopy.arrays.arabDictionary[Math.floor(Math.random() * poopy.arrays.arabDictionary.length)].toUpperCase() },
             { text: 'the ' + poopy.arrays.arabDictionary[Math.floor(Math.random() * poopy.arrays.arabDictionary.length)].toLowerCase() },
             { text: 'not ' + poopy.arrays.arabDictionary[Math.floor(Math.random() * poopy.arrays.arabDictionary.length)].toLowerCase() + ' fetish' },
+            { text: 'im eating ' + restaurantfood().toLowerCase() },
             { text: 'finally a ' + poopy.arrays.arabDictionary[Math.floor(Math.random() * poopy.arrays.arabDictionary.length)].toLowerCase() + ' game to ' + consoles[Math.floor(Math.random() * consoles.length)] },
+            { text: 'someone draw ' + members[Math.floor(Math.random() * members.length)].toLowerCase() + ' as ' + characters[Math.floor(Math.random() * characters.length)] },
+            { text: 'ayo its ' + members[Math.floor(Math.random() * members.length)].toLowerCase() },
+            { text: 'ayo its ' + characters[Math.floor(Math.random() * characters.length)] },
             { text: poopy.arrays.arabDictionary[Math.floor(Math.random() * poopy.arrays.arabDictionary.length)].toLowerCase() + ' was made in ' + (Math.floor(Math.random() * (year - 1980)) + 1980) + ' xd' },
             { text: 'this will be ' + poopy.arrays.arabDictionary[Math.floor(Math.random() * poopy.arrays.arabDictionary.length)].toLowerCase() + ' in ' + (Math.floor(Math.random() * (year - 2000)) + 2000) },
             { text: 'YOU DONT KILL ' + (poopy.arrays.arabDictionary[Math.floor(Math.random() * poopy.arrays.arabDictionary.length)].toUpperCase() + ' ').repeat(2) + 'KILLS YOU!!!!!!!!!!!!!!!!' },
-            { text: poopy.arrays.arabDictionary[Math.floor(Math.random() * poopy.arrays.arabDictionary.length)].toLowerCase() + ' is in the ' + fnf[Math.floor(Math.random() * fnf.length)] + ' week' },
+            { text: poopy.arrays.arabDictionary[Math.floor(Math.random() * poopy.arrays.arabDictionary.length)].toLowerCase() + ' is in the ' + characters[Math.floor(Math.random() * characters.length)] + ' week' },
+            { text: members[Math.floor(Math.random() * members.length)].toLowerCase() + ' = ' + characters[Math.floor(Math.random() * characters.length)] },
             { text: 'no not big ass ' + poopy.arrays.arabDictionary[Math.floor(Math.random() * poopy.arrays.arabDictionary.length)].toLowerCase() },
             { pings: true, text: 'snat' },
             { pings: true, text: 'remove ' + noun() + ' from me pls' },
@@ -194,7 +280,10 @@ module.exports = function(msg, fixedchoice) {
             { text: 'why' },
             { text: 'GOD HELP ME' },
             { text: 'yoo ' + food() },
-            { text: 'IM NOT' },
+            { text: 'im eating ' + food() },
+            { text: 'FUCK YOU' },
+            { text: 'ayo' },
+            { text: String.fromCodePoint(Math.floor(Math.random() * 26) + 97) },
             { text: 'wtf' },
             { text: country().toLowerCase() },
             { text: 'wow' },
@@ -205,7 +294,7 @@ module.exports = function(msg, fixedchoice) {
             { text: 'im ' + sayoriAdjectives[Math.floor(Math.random() * sayoriAdjectives.length)].toLowerCase() },
             { text: 'nooooo' },
             { text: 'stol', edit: 'stop' },
-            { text: 'Hope you realize that people can become not cringe. Maybe. Juuuust maybe. I have stopped doing shit with the "gay chains". If you tried not dwelling on the past maybe you could actually realize how annoying you are. Now let me guess youll respond with a short answer, not answer, respond with what I did, or completely change the topic.' },
+            { text: poopy.arrays.psPasta[Math.floor(Math.random() * poopy.arrays.psPasta.length)] },
             { text: city().toLowerCase() },
             { pings: true, text: 'no' },
             { text: 'gay' },
@@ -214,6 +303,7 @@ module.exports = function(msg, fixedchoice) {
             { pings: true, text: '' },
             { text: msg.author.username.toUpperCase() + ' WHY' },
             { text: 'BRUH' },
+            { text: msg.content },
             { text: 'SUS' },
             { text: sentence().toLowerCase().replace(/[.,!?":;]/g) },
             { text: 'im underaged' },
@@ -233,7 +323,7 @@ module.exports = function(msg, fixedchoice) {
             { text: msg.author.username.toLowerCase() + ': ' + poopy.arrays.arabDictionary[Math.floor(Math.random() * poopy.arrays.arabDictionary.length)].toLowerCase() },
             { text: 'no not ' + msg.author.username.toLowerCase() + ' with ' + poopy.arrays.arabDictionary[Math.floor(Math.random() * poopy.arrays.arabDictionary.length)].toLowerCase() },
             { text: 'ahhhhhhhhhh' },
-            { text: 'school suuucks' },
+            { text: locations[Math.floor(Math.random() * locations.length)] +;' suuucks' },
             { text: 'why am i a bot' },
             { text: msg.author.username.toLowerCase() + ' ' + shipAdjectives[Math.floor(Math.random() * shipAdjectives.length)] + ' ' + members[Math.floor(Math.random() * members.length)].toLowerCase() },
             { text: 'is ' + members[Math.floor(Math.random() * members.length)].toLowerCase() + ' hot' },
@@ -242,6 +332,7 @@ module.exports = function(msg, fixedchoice) {
             { text: members[Math.floor(Math.random() * members.length)].toLowerCase() + ' with the ' + noun() },
             { text: members[Math.floor(Math.random() * members.length)].toLowerCase() + ' living in ' + country().toLowerCase() },
             { text: members[Math.floor(Math.random() * members.length)].toLowerCase() + 'e' },
+            { text: adj() + 'e ' + members[Math.floor(Math.random() * members.length)].toLowerCase() + 'e' },
             { text: members[Math.floor(Math.random() * members.length)].toUpperCase() + ' IS THE ' + sayoriAdjectives[Math.floor(Math.random() * sayoriAdjectives.length)] + ' ' + sayoriAdjectives[Math.floor(Math.random() * sayoriAdjectives.length)] + ' ' + sayoriAdjectives[Math.floor(Math.random() * sayoriAdjectives.length)] + ' ' + sayoriAdjectives[Math.floor(Math.random() * sayoriAdjectives.length)] },
             { text: msg.author.username.toLowerCase() }
         ]
