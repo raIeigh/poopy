@@ -47,6 +47,14 @@ class Poopy {
             jsoning: ['411624455194804224', '395947826690916362', '486845950200119307'],
             shit: [''],
             illKillYouIfYouUseEval: ['535467581881188354'],
+            guildfilter: {
+                blacklist: true,
+                ids: []
+            },
+            channelfilter: {
+                blacklist: true,
+                ids: []
+            },
             msgcooldown: 0,
             limits: {
                 size: {
@@ -3550,7 +3558,16 @@ class Poopy {
 
             await poopy.functions.gatherData(msg).catch(() => { })
 
-            if (!msg.guild || !msg.channel || poopy.tempdata[msg.guild.id][msg.channel.id]['shut']) return
+            var guildfilter = poopy.config.guildfilter
+            var channelfilter = poopy.config.channelfilter
+
+            if (!msg.guild ||
+                !msg.channel ||
+                poopy.tempdata[msg.guild.id][msg.channel.id]['shut'] ||
+                ((guildfilter.blacklist && guildfilter.ids.includes(msg.guild.id)) ||
+                (!guildfilter.blacklist && !guildfilter.ids.includes(msg.guild.id)))
+                ((channelfilter.blacklist && channelfilter.ids.includes(msg.channel.id)) ||
+                (!channelfilter.blacklist && !channelfilter.ids.includes(msg.channel.id)))) return
 
             var prefix = poopy.data['guild-data'][msg.guild.id]['prefix']
             var ignored = ['eval', 'execute', 'localcommands', 'localcmds', 'servercommands', 'servercmds', 'commandtemplates', 'cmdtemplates', 'messages']
