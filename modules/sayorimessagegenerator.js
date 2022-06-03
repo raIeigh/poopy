@@ -323,7 +323,7 @@ module.exports = function(msg, fixedchoice) {
             { text: msg.author.username.toLowerCase() + ': ' + poopy.arrays.arabDictionary[Math.floor(Math.random() * poopy.arrays.arabDictionary.length)].toLowerCase() },
             { text: 'no not ' + msg.author.username.toLowerCase() + ' with ' + poopy.arrays.arabDictionary[Math.floor(Math.random() * poopy.arrays.arabDictionary.length)].toLowerCase() },
             { text: 'ahhhhhhhhhh' },
-            { text: locations[Math.floor(Math.random() * locations.length)] +;' suuucks' },
+            { text: locations[Math.floor(Math.random() * locations.length)] + ' suuucks' },
             { text: 'why am i a bot' },
             { text: msg.author.username.toLowerCase() + ' ' + shipAdjectives[Math.floor(Math.random() * shipAdjectives.length)] + ' ' + members[Math.floor(Math.random() * members.length)].toLowerCase() },
             { text: 'is ' + members[Math.floor(Math.random() * members.length)].toLowerCase() + ' hot' },
