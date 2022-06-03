@@ -53,6 +53,7 @@ class Poopy {
             },
             channelfilter: {
                 blacklist: true,
+                gids: [],
                 ids: []
             },
             msgcooldown: 0,
@@ -1026,8 +1027,8 @@ class Poopy {
             return res.data.AIResponse*/
         }
 
-        poopy.functions.infoPost = poopy.config.noInfoPost ? async () => { } : async function (message) {
-            if (poopy.config.stfu) return
+        poopy.functions.infoPost = async function (message) {
+            if (poopy.config.stfu || poopy.config.noInfoPost) return
 
             var avatar = poopy.bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' })
             var color = await poopy.functions.averageColor(avatar)
@@ -3566,8 +3567,9 @@ class Poopy {
                 poopy.tempdata[msg.guild.id][msg.channel.id]['shut'] ||
                 (guildfilter.blacklist && guildfilter.ids.includes(msg.guild.id)) ||
                 (!(guildfilter.blacklist) && !(guildfilter.ids.includes(msg.guild.id))) ||
+                (channelfilter.gids.includes(msg.guild.id) &&
                 (channelfilter.blacklist && channelfilter.ids.includes(msg.channel.id)) ||
-                (!(channelfilter.blacklist) && !(channelfilter.ids.includes(msg.channel.id)))) return
+                (!(channelfilter.blacklist) && !(channelfilter.ids.includes(msg.channel.id))))) return
 
             var prefix = poopy.data['guild-data'][msg.guild.id]['prefix']
             var ignored = ['eval', 'execute', 'localcommands', 'localcmds', 'servercommands', 'servercmds', 'commandtemplates', 'cmdtemplates', 'messages']

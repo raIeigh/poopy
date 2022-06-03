@@ -11,7 +11,7 @@ module.exports = {
             return;
         }
 
-        if (!poopy.vars.ubervoices.find(vc => vc.name == args[1])) {
+        if (!poopy.vars.ubervoices.find(vc => vc.name == args[1].toLowerCase())) {
             await msg.channel.send('Invalid voice. A list can be found at https://poopies-for-you.herokuapp.com/ubervoices').catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return
@@ -23,7 +23,7 @@ module.exports = {
             return;
         }
 
-        var saidVoice = args[1]
+        var saidVoice = args[1].toLowerCase()
         var saidMessage = args.join(' ').substring(args[0].length + args[1].length + 2).replace(/'/g, '’').replace(/"/g, '\\"')
 
         var rejected = false
