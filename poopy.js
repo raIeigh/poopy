@@ -3564,10 +3564,10 @@ class Poopy {
             if (!msg.guild ||
                 !msg.channel ||
                 poopy.tempdata[msg.guild.id][msg.channel.id]['shut'] ||
-                ((guildfilter.blacklist && guildfilter.ids.includes(msg.guild.id)) ||
-                (!guildfilter.blacklist && !guildfilter.ids.includes(msg.guild.id)))
-                ((channelfilter.blacklist && channelfilter.ids.includes(msg.channel.id)) ||
-                (!channelfilter.blacklist && !channelfilter.ids.includes(msg.channel.id)))) return
+                (guildfilter.blacklist && guildfilter.ids.includes(msg.guild.id)) ||
+                (!(guildfilter.blacklist) && !(guildfilter.ids.includes(msg.guild.id))) ||
+                (channelfilter.blacklist && channelfilter.ids.includes(msg.channel.id)) ||
+                (!(channelfilter.blacklist) && !(channelfilter.ids.includes(msg.channel.id)))) return
 
             var prefix = poopy.data['guild-data'][msg.guild.id]['prefix']
             var ignored = ['eval', 'execute', 'localcommands', 'localcmds', 'servercommands', 'servercmds', 'commandtemplates', 'cmdtemplates', 'messages']
