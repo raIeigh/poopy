@@ -200,7 +200,7 @@ module.exports = function(msg, fixedchoice) {
 
     function phraseword(phrase) {
         var words = phrase.split(' ')
-        return words[Math.floor(Math.random() * words.length)].replace(/[.,!?:;"{}[\]()]/g)
+        return words[Math.floor(Math.random() * words.length)].replace(/[.,!?:;"{}[\]()]/g, '')
     }
 
         var datamembers = poopy.data['guild-data'][msg.guild.id]['members'];
@@ -244,7 +244,7 @@ module.exports = function(msg, fixedchoice) {
             { text: 'the ' + poopy.arrays.arabDictionary[Math.floor(Math.random() * poopy.arrays.arabDictionary.length)].toLowerCase() + ' fandom is dying' },
             { text: 'THE VS ' + poopy.arrays.arabDictionary[Math.floor(Math.random() * poopy.arrays.arabDictionary.length)].toUpperCase() + ' MOD' },
             { text: 'WHAT A ' + poopy.arrays.arabDictionary[Math.floor(Math.random() * poopy.arrays.arabDictionary.length)].toUpperCase() },
-            { text: message().toLowerCase().replace(/[.!,']/g) },
+            { text: message().toLowerCase().replace(/[.!,']/g, '') },
             { text: 'they added the ' + poopy.arrays.arabDictionary[Math.floor(Math.random() * poopy.arrays.arabDictionary.length)].toLowerCase() + ' big ass' },
             { text: 'they added the ' + poopy.arrays.arabDictionary[Math.floor(Math.random() * poopy.arrays.arabDictionary.length)].toLowerCase() },
             { text: 'THEY ADDED ' + poopy.arrays.arabDictionary[Math.floor(Math.random() * poopy.arrays.arabDictionary.length)].toUpperCase() },
@@ -305,7 +305,7 @@ module.exports = function(msg, fixedchoice) {
             { text: 'BRUH' },
             { text: msg.content },
             { text: 'SUS' },
-            { text: sentence().toLowerCase().replace(/[.,!?":;]/g) },
+            { text: sentence().toLowerCase().replace(/[.,!?":;]/g, '') },
             { text: 'im underaged' },
             { pings: true, text: 'YOU SUSSY' },
             { text: 'AMOGUS' },
