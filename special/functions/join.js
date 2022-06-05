@@ -12,9 +12,11 @@ module.exports = {
     var array = poopy.tempdata[msg.author.id]['arrays'][name]
     if (!array) return ''
 
-    var asyncArray = await Promise.all(array.map(async val => {
+    var keyValues = array.map(async val => {
       return await poopy.functions.getKeywordsFor(val, msg, isBot, opts).catch(() => { }) ?? ''
-    })).catch(() => { }) ?? []
+    })
+
+    var asyncArray = await Promise.all(keyValues).catch(() => { }) ?? []
 
     return asyncArray.join(separator)
   }
