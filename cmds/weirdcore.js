@@ -34,7 +34,7 @@ module.exports = {
     },
     help: {
         name: 'weirdcore/text2img/text2image/t2i <message>',
-        value: 'Generates a picture depending on what the text is. Can look eerie sometimes.'
+        value: 'Generates a picture depending on what the text is with DeepAI.'
     },
     cooldown: 2500,
     type: 'Generation'

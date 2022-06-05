@@ -29,24 +29,26 @@ module.exports = {
             await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} ${filepath}/frames/frame_%04d.png`)
             var output = poopy.modules.fs.createWriteStream(`${filepath}/output.zip`)
             var archive = poopy.modules.archiver('zip')
+
             output.on('finish', async () => {
                 var frames = poopy.modules.fs.readdirSync(`${filepath}/frames`)
                 var catboxframes = {}
 
-                await poopy.functions.navigateEmbed(msg.channel, async (page) => {
-                    if (!catboxframes[frames[page - 1]]) {
-                        var frameurl = await poopy.vars.Litterbox.upload(`${filepath}/frames/${frames[page - 1]}`).catch(() => { }) ?? ''
+                await poopy.functions.navigateEmbed(msg.channel, async (page, ended) => {
+                    var frameurl = ended ? await poopy.vars.Catbox.upload(`${filepath}/frames/${frames[page - 1]}`).catch(() => { }) : catboxframes[frames[page - 1]]
+
+                    if (!frameurl && !ended) {
+                        frameurl = await poopy.vars.Litterbox.upload(`${filepath}/frames/${frames[page - 1]}`).catch(() => { }) ?? ''
                         catboxframes[frames[page - 1]] = frameurl
                     }
 
-                    if (poopy.config.textEmbeds) return `${catboxframes[frames[page - 1]]}\n\nFrame ${page}/${frames.length}`
+                    if (poopy.config.textEmbeds) return `${frameurl}\n\nFrame ${page}/${frames.length}`
                     else return {
                         "title": fileinfo.name,
-                        "description": "This is temporary.",
                         "url": currenturl,
                         "color": 0x472604,
                         "image": {
-                            "url": catboxframes[frames[page - 1]]
+                            "url": frameurl
                         },
                         "footer": {
                             "icon_url": poopy.bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
@@ -72,7 +74,7 @@ module.exports = {
             });
 
             archive.pipe(output)
-            archive.directory(`${filepath}/frames`, false);
+            archive.directory(`${filepath}/frames`, false)
             archive.finalize()
         } else {
             await msg.channel.send({

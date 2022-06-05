@@ -160,7 +160,7 @@ module.exports = {
     },
     help: {
         name: 'undertale/deltarune "{text}" [-mode <mode (regular or darkworld)>] [-boxstyle <style (read description)>] [-font <font (read description)>] [(-boxcolor | -asteriskcolor) <r> <g> <b>] [-no(file/asterisk)] [-small] <file>',
-        value: 'story of undertale!!! A list of available box styles are undertale, deltarune, earthbound, underswap, underfell, octagonal, shadedground, tubertale, stubertale, fnastale and derp. Fonts are determination, sans, papyrus, earthbound and wingdings. More info on https://www.demirramon.com/help/undertale_text_box_generator'
+        value: 'story of undertale!!! A list of available box styles are undertale, deltarune, earthbound, underswap, underfell, octagonal, shadedground, tubertale, stubertale, fnastale and derp. Fonts are determination, sans, papyrus, earthbound and wingdings. More info on https://www.demirramon.com/help/undertale_text_box_generator. Try it yourself at https://www.demirramon.com/generators/undertale_text_box_generator'
     },
     cooldown: 2500,
     type: 'Memes'

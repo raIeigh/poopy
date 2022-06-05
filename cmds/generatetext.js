@@ -37,7 +37,7 @@ module.exports = {
     },
     help: {
         name: 'generatetext/predicttext <message>',
-        value: 'Tries to predict subsequent text from the specified message.'
+        value: 'Tries to predict subsequent text from the specified message with DeepAI.'
     },
     type: 'Text'
 }

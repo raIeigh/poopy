@@ -97,7 +97,7 @@ module.exports = {
     },
     help: {
         name: 'cleverbot/respond {message} [-once]',
-        value: "Poopy responds to your messages with Cleverbot's AI."
+        value: "Poopy responds to your messages with Cleverbot's AI. Try it yourself at https://www.cleverbot.com/"
     },
     type: 'Text'
 }

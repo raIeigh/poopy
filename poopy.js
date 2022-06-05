@@ -832,7 +832,7 @@ class Poopy {
                 if (!poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown']) {
                     poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] = false
                 }
-                
+
                 poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['messages']++
 
                 poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['username'] = msg.author.username
@@ -1747,8 +1747,18 @@ class Poopy {
                 })
 
                 collector.on('end', async (_, reason) => {
+                    var resultEmbed = await pageFunc(page, true).catch(() => { })
+                    var sendObject = {}
+
+                    if (allowedMentions) sendObject.allowedMentions = allowedMentions
+
+                    if (poopy.config.textEmbeds) sendObject.content = resultEmbed
+                    else sendObject.embeds = [resultEmbed]
+
+                    resultsMsg.edit(sendObject).catch(() => { })
+
                     resultsMsg.reactions.removeAll().catch(() => { })
-                    if (endFunc) endFunc(reason)
+                    if (endFunc) endFunc(reason, page, resultsMsg)
                 })
 
                 for (var i in buttonsData) {
@@ -1812,7 +1822,7 @@ class Poopy {
                 })
 
                 collector.on('end', async (_, reason) => {
-                    var resultEmbed = await pageFunc(page).catch(() => { })
+                    var resultEmbed = await pageFunc(page, true).catch(() => { })
                     var sendObject = {
                         components: []
                     }
@@ -1824,7 +1834,7 @@ class Poopy {
 
                     resultsMsg.edit(sendObject).catch(() => { })
 
-                    if (endFunc) endFunc(reason)
+                    if (endFunc) endFunc(reason, page, resultsMsg)
                 })
             }
         }
@@ -2723,51 +2733,55 @@ class Poopy {
                 poopy.tempdata[msg.author.id]['startTime'] = Date.now()
             }
 
-            extrakeys = { ...extrakeys, ...poopy.tempdata[msg.author.id]['keydeclared'] }
-            extrafuncs = { ...extrafuncs, ...poopy.tempdata[msg.author.id]['funcdeclared'] }
+            var extradkeys = { ...extrakeys, ...poopy.tempdata[msg.author.id]['keydeclared'] }
+            var extradfuncs = { ...extrafuncs, ...poopy.tempdata[msg.author.id]['funcdeclared'] }
 
-            while (poopy.functions.getKeyFunc(string, { extrakeys: extrakeys, extrafuncs: extrafuncs }) !== false && poopy.tempdata[msg.author.id]['return'] == undefined) {
+            while (poopy.functions.getKeyFunc(string, { extrakeys: extradkeys, extrafuncs: extradfuncs }) !== false && poopy.tempdata[msg.author.id]['return'] == undefined) {
                 if (poopy.tempdata[msg.author.id]['keyattempts'] >= poopy.config.keyLimit) {
                     poopy.functions.infoPost(`Keyword attempts value exceeded`)
                     return 'Keyword attempts value exceeded.'
                 }
 
-                var keydata = poopy.functions.getKeyFunc(string, { extrakeys: extrakeys, extrafuncs: extrafuncs })
+                var keydata = poopy.functions.getKeyFunc(string, { extrakeys: extradkeys, extrafuncs: extradfuncs })
 
                 poopy.tempdata[msg.author.id]['keywordsExecuted'].push(typeof (keydata.match) == 'object' ? keydata.match[0] : keydata.match)
 
                 switch (keydata.type) {
                     case 'key':
-                        var key = poopy.special.keys[keydata.match] || extrakeys[keydata.match]
-                        
+                        var key = poopy.special.keys[keydata.match] || extradkeys[keydata.match]
+
                         var change
-                        if (key.func.constructor.name == 'AsyncFunction') change = await key.func.call(poopy, msg, isBot, string, { extrakeys: extrakeys, extrafuncs: extrafuncs, ownermode: ownermode }).catch(() => { }) ?? ''
-                        else change = key.func.call(poopy, msg, isBot, string, { extrakeys: extrakeys, extrafuncs: extrafuncs, ownermode: ownermode })
-                        
+                        if (key.func.constructor.name == 'AsyncFunction') change = await key.func.call(poopy, msg, isBot, string, { extrakeys: extradkeys, extrafuncs: extradfuncs, ownermode: ownermode }).catch(() => { }) ?? ''
+                        else change = key.func.call(poopy, msg, isBot, string, { extrakeys: extradkeys, extrafuncs: extradfuncs, ownermode: ownermode })
+
                         string = typeof (change) === 'object' && change[1] === true ? change[0] : string.replace(new RegExp(poopy.functions.regexClean(keydata.match), 'i'), change)
                         poopy.tempdata[msg.author.id]['keyattempts'] += key.attemptvalue ?? 1
                         break
 
                     case 'func':
                         var [funcName, match] = keydata.match
-                        var func = poopy.special.functions[funcName] || extrafuncs[funcName]
+                        var func = poopy.special.functions[funcName] || extradfuncs[funcName]
                         var m = match
                         if (!func.raw) {
-                            match = await poopy.functions.getKeywordsFor(match, msg, isBot, { extrakeys: extrakeys, extrafuncs: extrafuncs, ownermode: ownermode }).catch(() => { }) ?? m
+                            match = await poopy.functions.getKeywordsFor(match, msg, isBot, { extrakeys: extradkeys, extrafuncs: extradfuncs, ownermode: ownermode }).catch(() => { }) ?? m
                         }
+
                         match = match.replace(/\\\)/g, ')')
                         if (!func.raw) {
                             string = string.replace(m, match)
                         }
-                        
+
                         var change
-                        if (func.func.constructor.name == 'AsyncFunction') change = await func.func.call(poopy, [funcName, match], msg, isBot, string, { extrakeys: extrakeys, extrafuncs: extrafuncs, ownermode: ownermode }).catch(() => { }) ?? ''
-                        else change = func.func.call(poopy, [funcName, match], msg, isBot, string, { extrakeys: extrakeys, extrafuncs: extrafuncs, ownermode: ownermode })
-                        
+                        if (func.func.constructor.name == 'AsyncFunction') change = await func.func.call(poopy, [funcName, match], msg, isBot, string, { extrakeys: extradkeys, extrafuncs: extradfuncs, ownermode: ownermode }).catch(() => { }) ?? ''
+                        else change = func.func.call(poopy, [funcName, match], msg, isBot, string, { extrakeys: extradkeys, extrafuncs: extradfuncs, ownermode: ownermode })
+
                         string = typeof (change) === 'object' && change[1] === true ? change[0] : string.replace(new RegExp(poopy.functions.regexClean(`${funcName}(${match})`), 'i'), change)
                         poopy.tempdata[msg.author.id]['keyattempts'] += func.attemptvalue ?? 1
                         break
                 }
+
+                extradkeys = { ...extrakeys, ...poopy.tempdata[msg.author.id]['keydeclared'] }
+                extradfuncs = { ...extrafuncs, ...poopy.tempdata[msg.author.id]['funcdeclared'] }
             }
 
             if (resetattempts) {
@@ -3588,8 +3602,8 @@ class Poopy {
                 (guildfilter.blacklist && guildfilter.ids.includes(msg.guild.id)) ||
                 (!(guildfilter.blacklist) && !(guildfilter.ids.includes(msg.guild.id))) ||
                 (channelfilter.gids.includes(msg.guild.id) &&
-                ((channelfilter.blacklist && channelfilter.ids.includes(msg.channel.id)) ||
-                (!(channelfilter.blacklist) && !(channelfilter.ids.includes(msg.channel.id)))))
+                    ((channelfilter.blacklist && channelfilter.ids.includes(msg.channel.id)) ||
+                        (!(channelfilter.blacklist) && !(channelfilter.ids.includes(msg.channel.id)))))
             ) return
 
             var prefix = poopy.data['guild-data'][msg.guild.id]['prefix']
