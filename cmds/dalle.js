@@ -96,7 +96,7 @@ module.exports = {
         archive.finalize()
     },
     help: {
-        name: '<:newpoopy:839191885310066729> dalle/getframes <prompt>',
+        name: '<:newpoopy:839191885310066729> dalle/text2images <prompt>',
         value: 'Creates 9 images from the text prompt using DALL·E. Try it yourself at https://huggingface.co/spaces/dalle-mini/dalle-mini'
     },
     cooldown: 5000,
