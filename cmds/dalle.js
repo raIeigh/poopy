@@ -50,7 +50,7 @@ module.exports = {
         var archive = poopy.modules.archiver('zip')
 
         output.on('finish', async () => {
-            var frames = poopy.modules.fs.readdirSync(`${filepath}`)
+            var frames = poopy.modules.fs.readdirSync(`${filepath}/images`)
             var catboxframes = {}
 
             await poopy.functions.navigateEmbed(msg.channel, async (page, ended) => {
@@ -61,7 +61,7 @@ module.exports = {
                     catboxframes[frames[page - 1]] = frameurl
                 }
 
-                if (poopy.config.textEmbeds) return `${frameurl}\n\nFrame ${page}/${frames.length}`
+                if (poopy.config.textEmbeds) return `${frameurl}\n\nImage ${page}/${frames.length}`
                 else return {
                     "title": `DALL·E results for ${text}`,
                     "color": 0x472604,
@@ -70,7 +70,7 @@ module.exports = {
                     },
                     "footer": {
                         "icon_url": poopy.bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
-                        "text": `Frame ${page}/${frames.length}`
+                        "text": `Image ${page}/${frames.length}`
                     },
                 }
             }, frames.length, msg.member, [
