@@ -1,5 +1,5 @@
 module.exports = {
-    name: ['commandtemplates', 'cmdtemplates'],
+    name: ['commandassets', 'cmdassets'],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -508,12 +508,12 @@ module.exports = {
         }
 
         if (!args[1]) {
-            if (poopy.config.textEmbeds) msg.channel.send("**list** - Sends a navigable embed with a list of all command templates made by the users of Poopy.\n\n**search** <query> - Searches for every command in the command database that matches the query.\n\n**register**/**add** <name> <phrase> {-description <text>} [-image <url>] [-syntax <text>] - Registers the command with the respective name, description and syntax (if supplied), it'll then be assigned an ID that can be used to import it via the `localcmds` command.\n\n**edit** <id> [-name <text>] [-phrase <text>] [-description <text>] [-image <url>] [-syntax <text>] - Allows you to edit the command with the respective ID in the database, if it exists and you made it.\n\n**delete** <id> - Permanently deletes the command from the database with the respective ID, if it exists and YOU made it.").catch(() => { })
+            if (poopy.config.textEmbeds) msg.channel.send("**list** - Sends a navigable embed with a list of all command assets made by the users of Poopy.\n\n**search** <query> - Searches for every command in the command database that matches the query.\n\n**register**/**add** <name> <phrase> {-description <text>} [-image <url>] [-syntax <text>] - Registers the command with the respective name, description and syntax (if supplied), it'll then be assigned an ID that can be used to import it via the `localcmds` command.\n\n**edit** <id> [-name <text>] [-phrase <text>] [-description <text>] [-image <url>] [-syntax <text>] - Allows you to edit the command with the respective ID in the database, if it exists and you made it.\n\n**delete** <id> - Permanently deletes the command from the database with the respective ID, if it exists and YOU made it.").catch(() => { })
             else msg.channel.send({
                 embeds: [
                     {
                         "title": "Available Options",
-                        "description": "**list** - Sends a navigable embed with a list of all command templates made by the users of Poopy.\n\n**search** <query> - Searches for every command in the command database that matches the query.\n\n**register**/**add** <name> <phrase> {-description <text>} [-image <url>] [-syntax <text>] - Registers the command with the respective name, description and syntax (if supplied), it'll then be assigned an ID that can be used to import it via the `localcmds` command.\n\n**edit** <id> [-name <text>] [-phrase <text>] [-description <text>] [-image <url>] [-syntax <text>] - Allows you to edit the command with the respective ID in the database, if it exists and you made it.\n\n**delete** <id> - Permanently deletes the command from the database with the respective ID, if it exists and YOU made it.",
+                        "description": "**list** - Sends a navigable embed with a list of all command assets made by the users of Poopy.\n\n**search** <query> - Searches for every command in the command database that matches the query.\n\n**register**/**add** <name> <phrase> {-description <text>} [-image <url>] [-syntax <text>] - Registers the command with the respective name, description and syntax (if supplied), it'll then be assigned an ID that can be used to import it via the `localcmds` command.\n\n**edit** <id> [-name <text>] [-phrase <text>] [-description <text>] [-image <url>] [-syntax <text>] - Allows you to edit the command with the respective ID in the database, if it exists and you made it.\n\n**delete** <id> - Permanently deletes the command from the database with the respective ID, if it exists and YOU made it.",
                         "color": 0x472604,
                         "footer": {
                             "icon_url": poopy.bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
@@ -533,8 +533,8 @@ module.exports = {
         await options[args[1].toLowerCase()](msg, args.slice(1))
     },
     help: {
-        name: 'commandtemplates/cmdtemplates <option>',
-        value: 'Gives you access to a global database of command templates you can use in your servers! Anyone can contribute to it. Use the command alone for more info.'
+        name: 'commandassets/cmdassets <option>',
+        value: 'Gives you access to a global database of command assets you can use in your servers! Anyone can contribute to it. Use the command alone for more info.'
     },
     cooldown: 5000,
     type: 'Unique'

@@ -36,12 +36,12 @@ module.exports = {
             })
             var filename = `input.${fileinfo.shortext}`
 
-            var gotham = await poopy.modules.Jimp.loadFont(`templates/fonts/Gotham/Gotham.fnt`)
-            var bloxys = await poopy.modules.Jimp.read('templates/bloxys.png')
+            var gotham = await poopy.modules.Jimp.loadFont(`assets/fonts/Gotham/Gotham.fnt`)
+            var bloxys = await poopy.modules.Jimp.read('assets/bloxys.png')
             await bloxys.print(gotham, 88, 190, { text: poopy.modules.Discord.Util.cleanContent(text, msg), alignmentX: poopy.modules.Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: poopy.modules.Jimp.VERTICAL_ALIGN_TOP }, 221, 33)
             await bloxys.writeAsync(`${filepath}/bloxy.png`)
 
-            await poopy.functions.execPromise(`ffmpeg -stream_loop -1 -i ${filepath}/${filename} -i ${filepath}/bloxy.png -i templates/bloxys.mp3 -filter_complex "[0:v]scale=219:124[frame];[1:v][frame]overlay=x=89:y=64:format=auto[oout];[oout]scale=ceil(iw/2)*2:ceil(ih/2)*2[out]" -shortest -map "[out]" -preset ${poopy.functions.findpreset(args)} -map 2:a:0 -c:v libx264 -pix_fmt yuv420p -t 00:00:07.05 -y ${filepath}/output.mp4`)
+            await poopy.functions.execPromise(`ffmpeg -stream_loop -1 -i ${filepath}/${filename} -i ${filepath}/bloxy.png -i assets/bloxys.mp3 -filter_complex "[0:v]scale=219:124[frame];[1:v][frame]overlay=x=89:y=64:format=auto[oout];[oout]scale=ceil(iw/2)*2:ceil(ih/2)*2[out]" -shortest -map "[out]" -preset ${poopy.functions.findpreset(args)} -map 2:a:0 -c:v libx264 -pix_fmt yuv420p -t 00:00:07.05 -y ${filepath}/output.mp4`)
             await poopy.functions.sendFile(msg, filepath, `output.mp4`)
         } else {
             await msg.channel.send({

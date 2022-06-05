@@ -162,8 +162,8 @@ module.exports = {
         var filepath = `temp/${poopy.config.mongodatabase}/file${currentcount}`
         poopy.modules.fs.mkdirSync(`${filepath}`)
 
-        var iceberg = await poopy.modules.Jimp.read(`templates/iceberg.png`)
-        var arialr = await poopy.modules.Jimp.loadFont(`templates/fonts/ArialRed/ArialRed.fnt`)
+        var iceberg = await poopy.modules.Jimp.read(`assets/iceberg.png`)
+        var arialr = await poopy.modules.Jimp.loadFont(`assets/fonts/ArialRed/ArialRed.fnt`)
 
         for (var i in stageimages) {
             var imageurl = stageimages[i]

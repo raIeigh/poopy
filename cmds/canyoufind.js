@@ -80,8 +80,8 @@ module.exports = {
         poopy.modules.fs.mkdirSync(`${filepath}`)
         var frame = await poopy.modules.Jimp.read(currenturl)
         var frame2 = await poopy.modules.Jimp.read(currenturl2)
-        var canyoufind = await poopy.modules.Jimp.read(`templates/canyoufind.png`)
-        var transparent = await poopy.modules.Jimp.read(`templates/transparent.png`)
+        var canyoufind = await poopy.modules.Jimp.read(`assets/canyoufind.png`)
+        var transparent = await poopy.modules.Jimp.read(`assets/transparent.png`)
         var squareS = { value: ((frame.bitmap.height === frame.bitmap.width) && frame.bitmap.width) || ((frame.bitmap.height > frame.bitmap.width) && frame.bitmap.height) || frame.bitmap.width, constraint: ((frame.bitmap.height === frame.bitmap.width) && 'both') || ((frame.bitmap.height > frame.bitmap.width) && 'height') || 'width' }
         frame2.resize(squareS.constraint === 'width' || squareS.constraint === 'both' ? size : poopy.modules.Jimp.AUTO, squareS.constraint === 'height' || squareS.constraint === 'both' ? size : poopy.modules.Jimp.AUTO)
         var frame2stretched = frame2.clone()

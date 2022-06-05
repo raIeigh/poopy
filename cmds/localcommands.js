@@ -199,12 +199,12 @@ module.exports = {
         }
 
         if (!args[1]) {
-            if (poopy.config.textEmbeds) msg.channel.send("**list** - Gets a list of local commands.\n**phrase** <commandname> - Displays the phrase of a specific command.\n**add** <commandname> <phrase> (admin only) - Adds a new local command, if the name is available for use.\n**import** <id> [name] (admin only) - Imports a new local command from Poopy's command template database (`commandtemplates` command) by ID.\n**edit** <commandname> <phrase> (admin only) - Edits the local command, if it exists.\n**delete** <commandname> (admin only) - Deletes the local command, if it exists.").catch(() => { })
+            if (poopy.config.textEmbeds) msg.channel.send("**list** - Gets a list of local commands.\n**phrase** <commandname> - Displays the phrase of a specific command.\n**add** <commandname> <phrase> (admin only) - Adds a new local command, if the name is available for use.\n**import** <id> [name] (admin only) - Imports a new local command from Poopy's command template database (`commandassets` command) by ID.\n**edit** <commandname> <phrase> (admin only) - Edits the local command, if it exists.\n**delete** <commandname> (admin only) - Deletes the local command, if it exists.").catch(() => { })
             else msg.channel.send({
                 embeds: [
                     {
                         "title": "Available Options",
-                        "description": "**list** - Gets a list of local commands.\n**phrase** <commandname> - Displays the phrase of a specific command.\n**add** <commandname> <phrase> (admin only) - Adds a new local command, if the name is available for use.\n**import** <id> [name] (admin only) - Imports a new local command from Poopy's command template database (`commandtemplates` command) by ID.\n**edit** <commandname> <phrase> (admin only) - Edits the local command, if it exists.\n**delete** <commandname> (admin only) - Deletes the local command, if it exists.",
+                        "description": "**list** - Gets a list of local commands.\n**phrase** <commandname> - Displays the phrase of a specific command.\n**add** <commandname> <phrase> (admin only) - Adds a new local command, if the name is available for use.\n**import** <id> [name] (admin only) - Imports a new local command from Poopy's command template database (`commandassets` command) by ID.\n**edit** <commandname> <phrase> (admin only) - Edits the local command, if it exists.\n**delete** <commandname> (admin only) - Deletes the local command, if it exists.",
                         "color": 0x472604,
                         "footer": {
                             "icon_url": poopy.bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),

@@ -42,8 +42,8 @@ module.exports = {
             var filename = `input.png`
             var width = fileinfo.info.width
             var height = fileinfo.info.height
-            var transparent = await poopy.modules.Jimp.read('templates/transparent.png')
-            var coolvetica = await poopy.modules.Jimp.loadFont('templates/fonts/CoolveticaCondensed/CoolveticaCondensed.fnt')
+            var transparent = await poopy.modules.Jimp.read('assets/transparent.png')
+            var coolvetica = await poopy.modules.Jimp.loadFont('assets/fonts/CoolveticaCondensed/CoolveticaCondensed.fnt')
             transparent.resize(width, height)
             transparent.resize(Math.round(2000 / size), poopy.modules.Jimp.AUTO)
             await transparent.print(coolvetica, 80, 80, { text: poopy.modules.Discord.Util.cleanContent(text, msg), alignmentX: poopy.modules.Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: poopy.modules.Jimp.VERTICAL_ALIGN_MIDDLE }, transparent.bitmap.width - 160, transparent.bitmap.height - 160)
@@ -59,8 +59,8 @@ module.exports = {
             var filename = `input.mp4`
             var width = fileinfo.info.width
             var height = fileinfo.info.height
-            var transparent = await poopy.modules.Jimp.read('templates/transparent.png')
-            var coolvetica = await poopy.modules.Jimp.loadFont('templates/fonts/CoolveticaCondensed/CoolveticaCondensed.fnt')
+            var transparent = await poopy.modules.Jimp.read('assets/transparent.png')
+            var coolvetica = await poopy.modules.Jimp.loadFont('assets/fonts/CoolveticaCondensed/CoolveticaCondensed.fnt')
             transparent.resize(width, height)
             transparent.resize(Math.round(2000 / size), poopy.modules.Jimp.AUTO)
             await transparent.print(coolvetica, 80, 80, { text: poopy.modules.Discord.Util.cleanContent(text, msg), alignmentX: poopy.modules.Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: poopy.modules.Jimp.VERTICAL_ALIGN_MIDDLE }, transparent.bitmap.width - 160, transparent.bitmap.height - 160)
@@ -76,8 +76,8 @@ module.exports = {
             var filename = `input.gif`
             var width = fileinfo.info.width
             var height = fileinfo.info.height
-            var transparent = await poopy.modules.Jimp.read('templates/transparent.png')
-            var coolvetica = await poopy.modules.Jimp.loadFont('templates/fonts/CoolveticaCondensed/CoolveticaCondensed.fnt')
+            var transparent = await poopy.modules.Jimp.read('assets/transparent.png')
+            var coolvetica = await poopy.modules.Jimp.loadFont('assets/fonts/CoolveticaCondensed/CoolveticaCondensed.fnt')
             transparent.resize(width, height)
             transparent.resize(Math.round(2000 / size), poopy.modules.Jimp.AUTO)
             await transparent.print(coolvetica, 80, 80, { text: poopy.modules.Discord.Util.cleanContent(text, msg), alignmentX: poopy.modules.Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: poopy.modules.Jimp.VERTICAL_ALIGN_MIDDLE }, transparent.bitmap.width - 160, transparent.bitmap.height - 160)

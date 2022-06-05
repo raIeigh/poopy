@@ -47,9 +47,9 @@ module.exports = {
             })
             var filename = `input.png`
 
-            var game = await poopy.modules.Jimp.read(`templates/game.png`)
-            var gothamed = await poopy.modules.Jimp.loadFont('templates/fonts/GothamMedium/GothamMedium.fnt')
-            var gothasm = await poopy.modules.Jimp.loadFont('templates/fonts/GothamSmall/GothamSmall.fnt')
+            var game = await poopy.modules.Jimp.read(`assets/game.png`)
+            var gothamed = await poopy.modules.Jimp.loadFont('assets/fonts/GothamMedium/GothamMedium.fnt')
+            var gothasm = await poopy.modules.Jimp.loadFont('assets/fonts/GothamSmall/GothamSmall.fnt')
             await game.print(gothamed, 5, 165, { text: poopy.modules.Discord.Util.cleanContent(name, msg), alignmentX: poopy.modules.Jimp.HORIZONTAL_ALIGN_LEFT, alignmentY: poopy.modules.Jimp.VERTICAL_ALIGN_TOP }, 150, 35)
             await game.print(gothasm, 22, 211, { text: poopy.modules.Discord.Util.cleanContent(likepercentage, msg), alignmentX: poopy.modules.Jimp.HORIZONTAL_ALIGN_LEFT, alignmentY: poopy.modules.Jimp.VERTICAL_ALIGN_MIDDLE }, 138, 17)
             await game.print(gothasm, 79, 211, { text: poopy.modules.Discord.Util.cleanContent(playercount, msg), alignmentX: poopy.modules.Jimp.HORIZONTAL_ALIGN_LEFT, alignmentY: poopy.modules.Jimp.VERTICAL_ALIGN_MIDDLE }, 81, 17)
@@ -60,7 +60,7 @@ module.exports = {
 
             var squareS = { value: ((height === width) && width) || ((height > width) && height) || width, constraint: ((height === width) && 'both') || ((height > width) && 'height') || 'width' }
 
-            await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -i ${filepath}/game.png -i templates/gamebg.png -filter_complex "[2:v][1:v]scale2ref[bg][game];${squareS.constraint !== 'both' ? `[0:v]crop=x=${squareS.constraint === 'height' ? 0 : 'iw/2-ih/2'}:y=${squareS.constraint === 'width' ? 0 : 'ih/2-iw/2'}:w=${squareS.constraint === 'width' ? 'ih' : 'iw'}:h=${squareS.constraint === 'height' ? 'iw' : 'ih'}[cframe];` : ''}[${squareS.constraint !== 'both' ? 'cframe' : '0:v'}]scale=150:150[frame];[bg][frame]overlay=x=5:y=4:format=auto[bframe];[bframe][game]overlay=x=0:y=0:format=auto[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} ${filepath}/output.png`)
+            await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -i ${filepath}/game.png -i assets/gamebg.png -filter_complex "[2:v][1:v]scale2ref[bg][game];${squareS.constraint !== 'both' ? `[0:v]crop=x=${squareS.constraint === 'height' ? 0 : 'iw/2-ih/2'}:y=${squareS.constraint === 'width' ? 0 : 'ih/2-iw/2'}:w=${squareS.constraint === 'width' ? 'ih' : 'iw'}:h=${squareS.constraint === 'height' ? 'iw' : 'ih'}[cframe];` : ''}[${squareS.constraint !== 'both' ? 'cframe' : '0:v'}]scale=150:150[frame];[bg][frame]overlay=x=5:y=4:format=auto[bframe];[bframe][game]overlay=x=0:y=0:format=auto[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} ${filepath}/output.png`)
             await poopy.functions.sendFile(msg, filepath, `output.png`)
         } else if (type.mime.startsWith('video')) {
             var filepath = await poopy.functions.downloadFile(currenturl, `input.mp4`, {
@@ -68,9 +68,9 @@ module.exports = {
             })
             var filename = `input.mp4`
 
-            var game = await poopy.modules.Jimp.read(`templates/game.png`)
-            var gothamed = await poopy.modules.Jimp.loadFont('templates/fonts/GothamMedium/GothamMedium.fnt')
-            var gothasm = await poopy.modules.Jimp.loadFont('templates/fonts/GothamSmall/GothamSmall.fnt')
+            var game = await poopy.modules.Jimp.read(`assets/game.png`)
+            var gothamed = await poopy.modules.Jimp.loadFont('assets/fonts/GothamMedium/GothamMedium.fnt')
+            var gothasm = await poopy.modules.Jimp.loadFont('assets/fonts/GothamSmall/GothamSmall.fnt')
             await game.print(gothamed, 5, 165, { text: poopy.modules.Discord.Util.cleanContent(name, msg), alignmentX: poopy.modules.Jimp.HORIZONTAL_ALIGN_LEFT, alignmentY: poopy.modules.Jimp.VERTICAL_ALIGN_TOP }, 150, 35)
             await game.print(gothasm, 22, 211, { text: poopy.modules.Discord.Util.cleanContent(likepercentage, msg), alignmentX: poopy.modules.Jimp.HORIZONTAL_ALIGN_LEFT, alignmentY: poopy.modules.Jimp.VERTICAL_ALIGN_MIDDLE }, 138, 17)
             await game.print(gothasm, 79, 211, { text: poopy.modules.Discord.Util.cleanContent(playercount, msg), alignmentX: poopy.modules.Jimp.HORIZONTAL_ALIGN_LEFT, alignmentY: poopy.modules.Jimp.VERTICAL_ALIGN_MIDDLE }, 81, 17)
@@ -81,15 +81,15 @@ module.exports = {
 
             var squareS = { value: ((height === width) && width) || ((height > width) && height) || width, constraint: ((height === width) && 'both') || ((height > width) && 'height') || 'width' }
 
-            await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -i ${filepath}/game.png -i templates/gamebg.png -map 0:a? -filter_complex "[2:v][1:v]scale2ref[bg][game];${squareS.constraint !== 'both' ? `[0:v]crop=x=${squareS.constraint === 'height' ? 0 : 'iw/2-ih/2'}:y=${squareS.constraint === 'width' ? 0 : 'ih/2-iw/2'}:w=${squareS.constraint === 'width' ? 'ih' : 'iw'}:h=${squareS.constraint === 'height' ? 'iw' : 'ih'}[cframe];` : ''}[${squareS.constraint !== 'both' ? 'cframe' : '0:v'}]scale=150:150[frame];[bg][frame]overlay=x=5:y=4:format=auto[bframe];[bframe][game]overlay=x=0:y=0:format=auto[oout];[oout]scale=ceil(iw/2)*2:ceil(ih/2)*2[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} -aspect ${game.bitmap.width}:${game.bitmap.height} -c:v libx264 -pix_fmt yuv420p ${filepath}/output.mp4`)
+            await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -i ${filepath}/game.png -i assets/gamebg.png -map 0:a? -filter_complex "[2:v][1:v]scale2ref[bg][game];${squareS.constraint !== 'both' ? `[0:v]crop=x=${squareS.constraint === 'height' ? 0 : 'iw/2-ih/2'}:y=${squareS.constraint === 'width' ? 0 : 'ih/2-iw/2'}:w=${squareS.constraint === 'width' ? 'ih' : 'iw'}:h=${squareS.constraint === 'height' ? 'iw' : 'ih'}[cframe];` : ''}[${squareS.constraint !== 'both' ? 'cframe' : '0:v'}]scale=150:150[frame];[bg][frame]overlay=x=5:y=4:format=auto[bframe];[bframe][game]overlay=x=0:y=0:format=auto[oout];[oout]scale=ceil(iw/2)*2:ceil(ih/2)*2[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} -aspect ${game.bitmap.width}:${game.bitmap.height} -c:v libx264 -pix_fmt yuv420p ${filepath}/output.mp4`)
             await poopy.functions.sendFile(msg, filepath, `output.mp4`)
         } else if (type.mime.startsWith('image') && poopy.vars.gifFormats.find(f => f === type.ext)) {
             var filepath = await poopy.functions.downloadFile(currenturl, `input.gif`)
             var filename = `input.gif`
 
-            var game = await poopy.modules.Jimp.read(`templates/game.png`)
-            var gothamed = await poopy.modules.Jimp.loadFont('templates/fonts/GothamMedium/GothamMedium.fnt')
-            var gothasm = await poopy.modules.Jimp.loadFont('templates/fonts/GothamSmall/GothamSmall.fnt')
+            var game = await poopy.modules.Jimp.read(`assets/game.png`)
+            var gothamed = await poopy.modules.Jimp.loadFont('assets/fonts/GothamMedium/GothamMedium.fnt')
+            var gothasm = await poopy.modules.Jimp.loadFont('assets/fonts/GothamSmall/GothamSmall.fnt')
             await game.print(gothamed, 5, 165, { text: poopy.modules.Discord.Util.cleanContent(name, msg), alignmentX: poopy.modules.Jimp.HORIZONTAL_ALIGN_LEFT, alignmentY: poopy.modules.Jimp.VERTICAL_ALIGN_TOP }, 150, 35)
             await game.print(gothasm, 22, 211, { text: poopy.modules.Discord.Util.cleanContent(likepercentage, msg), alignmentX: poopy.modules.Jimp.HORIZONTAL_ALIGN_LEFT, alignmentY: poopy.modules.Jimp.VERTICAL_ALIGN_MIDDLE }, 138, 17)
             await game.print(gothasm, 79, 211, { text: poopy.modules.Discord.Util.cleanContent(playercount, msg), alignmentX: poopy.modules.Jimp.HORIZONTAL_ALIGN_LEFT, alignmentY: poopy.modules.Jimp.VERTICAL_ALIGN_MIDDLE }, 81, 17)
@@ -100,7 +100,7 @@ module.exports = {
 
             var squareS = { value: ((height === width) && width) || ((height > width) && height) || width, constraint: ((height === width) && 'both') || ((height > width) && 'height') || 'width' }
 
-            await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -i ${filepath}/game.png -i templates/gamebg.png -filter_complex "[2:v][1:v]scale2ref[bg][game];${squareS.constraint !== 'both' ? `[0:v]crop=x=${squareS.constraint === 'height' ? 0 : 'iw/2-ih/2'}:y=${squareS.constraint === 'width' ? 0 : 'ih/2-iw/2'}:w=${squareS.constraint === 'width' ? 'ih' : 'iw'}:h=${squareS.constraint === 'height' ? 'iw' : 'ih'}[cframe];` : ''}[${squareS.constraint !== 'both' ? 'cframe' : '0:v'}]scale=150:150[frame];[bg][frame]overlay=x=5:y=4:format=auto[bframe];[bframe][game]overlay=x=0:y=0:format=auto[oout];[oout]split[pout][ppout];[ppout]palettegen=reserve_transparent=1[palette];[pout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} -aspect ${game.bitmap.width}:${game.bitmap.height} -gifflags -offsetting ${filepath}/output.gif`)
+            await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -i ${filepath}/game.png -i assets/gamebg.png -filter_complex "[2:v][1:v]scale2ref[bg][game];${squareS.constraint !== 'both' ? `[0:v]crop=x=${squareS.constraint === 'height' ? 0 : 'iw/2-ih/2'}:y=${squareS.constraint === 'width' ? 0 : 'ih/2-iw/2'}:w=${squareS.constraint === 'width' ? 'ih' : 'iw'}:h=${squareS.constraint === 'height' ? 'iw' : 'ih'}[cframe];` : ''}[${squareS.constraint !== 'both' ? 'cframe' : '0:v'}]scale=150:150[frame];[bg][frame]overlay=x=5:y=4:format=auto[bframe];[bframe][game]overlay=x=0:y=0:format=auto[oout];[oout]split[pout][ppout];[ppout]palettegen=reserve_transparent=1[palette];[pout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} -aspect ${game.bitmap.width}:${game.bitmap.height} -gifflags -offsetting ${filepath}/output.gif`)
             await poopy.functions.sendFile(msg, filepath, `output.gif`)
         } else {
             await msg.channel.send({

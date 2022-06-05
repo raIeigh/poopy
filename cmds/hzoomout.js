@@ -73,21 +73,21 @@ module.exports = {
                 fileinfo: fileinfo
             })
             var filename = `input.png`
-            await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -i templates/transparent.png -filter_complex "[1:v][0:v]scale2ref[background][input];[input]scale=round(iw/${multiplier}):ih${flag ? `:flags=${flag}` : ''}[overlay];[background][overlay]overlay=x=${originx}:y=${originy}:format=auto[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} -aspect ${fileinfo.info.width}:${fileinfo.info.height} ${filepath}/output.png`)
+            await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -i assets/transparent.png -filter_complex "[1:v][0:v]scale2ref[background][input];[input]scale=round(iw/${multiplier}):ih${flag ? `:flags=${flag}` : ''}[overlay];[background][overlay]overlay=x=${originx}:y=${originy}:format=auto[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} -aspect ${fileinfo.info.width}:${fileinfo.info.height} ${filepath}/output.png`)
             await poopy.functions.sendFile(msg, filepath, `output.png`)
         } else if (type.mime.startsWith('video')) {
             var filepath = await poopy.functions.downloadFile(currenturl, `input.mp4`, {
                 fileinfo: fileinfo
             })
             var filename = `input.mp4`
-            await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -i templates/transparent.png -map 0:a? -filter_complex "[1:v][0:v]scale2ref[background][input];[input]scale=round(iw/${multiplier}):ih${flag ? `:flags=${flag}` : ''}[overlay];[background][overlay]overlay=x=${originx}:y=${originy}:format=auto,scale=ceil(iw/2)*2:ceil(ih/2)*2${flag ? `:flags=${flag}` : ''}[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} -aspect ${fileinfo.info.width}:${fileinfo.info.height} -c:v libx264 -pix_fmt yuv420p ${filepath}/output.mp4`)
+            await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -i assets/transparent.png -map 0:a? -filter_complex "[1:v][0:v]scale2ref[background][input];[input]scale=round(iw/${multiplier}):ih${flag ? `:flags=${flag}` : ''}[overlay];[background][overlay]overlay=x=${originx}:y=${originy}:format=auto,scale=ceil(iw/2)*2:ceil(ih/2)*2${flag ? `:flags=${flag}` : ''}[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} -aspect ${fileinfo.info.width}:${fileinfo.info.height} -c:v libx264 -pix_fmt yuv420p ${filepath}/output.mp4`)
             await poopy.functions.sendFile(msg, filepath, `output.mp4`)
         } else if (type.mime.startsWith('image') && poopy.vars.gifFormats.find(f => f === type.ext)) {
             var filepath = await poopy.functions.downloadFile(currenturl, `input.gif`, {
                 fileinfo: fileinfo
             })
             var filename = `input.gif`
-            await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -i templates/transparent.png -filter_complex "[1:v][0:v]scale2ref[background][input];[input]scale=round(iw/${multiplier}):ih${flag ? `:flags=${flag}` : ''}[overlay];[background][overlay]overlay=x=${originx}:y=${originy}:format=auto,split[pout][ppout];[ppout]palettegen=reserve_transparent=1[palette];[pout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} -aspect ${fileinfo.info.width}:${fileinfo.info.height} -gifflags -offsetting ${filepath}/output.gif`)
+            await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -i assets/transparent.png -filter_complex "[1:v][0:v]scale2ref[background][input];[input]scale=round(iw/${multiplier}):ih${flag ? `:flags=${flag}` : ''}[overlay];[background][overlay]overlay=x=${originx}:y=${originy}:format=auto,split[pout][ppout];[ppout]palettegen=reserve_transparent=1[palette];[pout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} -aspect ${fileinfo.info.width}:${fileinfo.info.height} -gifflags -offsetting ${filepath}/output.gif`)
             await poopy.functions.sendFile(msg, filepath, `output.gif`)
         } else {
             await msg.channel.send({

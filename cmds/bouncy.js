@@ -24,7 +24,7 @@ module.exports = {
                 fileinfo: fileinfo
             })
             var filename = `input.${fileinfo.shortext}`
-            await poopy.functions.execPromise(`ffmpeg -stream_loop -1 -t 0.25 -i ${filepath}/${filename} -r 50 -stream_loop -1 -t 0.25 -i templates/transparent.png -filter_complex "[0:v]fps=50,scale=100:100:force_original_aspect_ratio=decrease[overlay];[1:v]scale=300:300[transparent];[transparent][overlay]overlay=x=((W-w)/2)-cos(PI/2*(t*8))*100:y=((H-h)/2)-sin(PI/2*(t*8))*100:format=auto[overlayed];[overlayed]split[normal][reverse];[reverse]reverse[reversed];[normal][reversed]concat,crop=300:200:0:0,split[pout][ppout];[ppout]palettegen=reserve_transparent=1[palette];[pout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} -gifflags -offsetting -r 50 -t 0.5 ${filepath}/output.gif`)
+            await poopy.functions.execPromise(`ffmpeg -stream_loop -1 -t 0.25 -i ${filepath}/${filename} -r 50 -stream_loop -1 -t 0.25 -i assets/transparent.png -filter_complex "[0:v]fps=50,scale=100:100:force_original_aspect_ratio=decrease[overlay];[1:v]scale=300:300[transparent];[transparent][overlay]overlay=x=((W-w)/2)-cos(PI/2*(t*8))*100:y=((H-h)/2)-sin(PI/2*(t*8))*100:format=auto[overlayed];[overlayed]split[normal][reverse];[reverse]reverse[reversed];[normal][reversed]concat,crop=300:200:0:0,split[pout][ppout];[ppout]palettegen=reserve_transparent=1[palette];[pout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} -gifflags -offsetting -r 50 -t 0.5 ${filepath}/output.gif`)
             await poopy.functions.sendFile(msg, filepath, `output.gif`)
         } else {
             await msg.channel.send({

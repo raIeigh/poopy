@@ -29,7 +29,7 @@ module.exports = {
             if (audio) {
                 await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -vn -map_metadata -1 -c:a libvorbis -b:a 64k -ar 44100 -preset ${poopy.functions.findpreset(args)} ${filepath}/44100.ogg`)
 
-                await poopy.functions.execPromise(`cat templates/donotplaytwice.ogg ${filepath}/44100.ogg templates/silence.ogg > ${filepath}/output.ogg`)
+                await poopy.functions.execPromise(`cat assets/donotplaytwice.ogg ${filepath}/44100.ogg assets/silence.ogg > ${filepath}/output.ogg`)
 
                 await poopy.functions.sendFile(msg, filepath, `output.ogg`)
             } else {
@@ -44,7 +44,7 @@ module.exports = {
             var filename = `input.mp3`
             await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -vn -map_metadata -1 -c:a libvorbis -b:a 64k -ar 44100 -preset ${poopy.functions.findpreset(args)} ${filepath}/44100.ogg`)
 
-            await poopy.functions.execPromise(`cat templates/donotplaytwice.ogg ${filepath}/44100.ogg templates/silence.ogg > ${filepath}/output.ogg`)
+            await poopy.functions.execPromise(`cat assets/donotplaytwice.ogg ${filepath}/44100.ogg assets/silence.ogg > ${filepath}/output.ogg`)
 
             await poopy.functions.sendFile(msg, filepath, `output.ogg`)
         } else {

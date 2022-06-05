@@ -27,7 +27,7 @@ module.exports = {
         if (type.mime.startsWith('image') && !(poopy.vars.gifFormats.find(f => f === type.ext))) {
             var filepath = await poopy.functions.downloadFile(currenturl, 'input.png')
             var filename = 'input.png'
-            poopy.modules.fs.copyFileSync(`templates/trollfaced.jar`, `${filepath}/trollfaced.jar`)
+            poopy.modules.fs.copyFileSync(`assets/trollfaced.jar`, `${filepath}/trollfaced.jar`)
 
             await poopy.functions.execPromise(`cd ${filepath} && java -jar trollfaced.jar --file ${filename} --lines ${resolution}`)
 

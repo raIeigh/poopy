@@ -32,7 +32,7 @@ module.exports = {
 
             var squareS = { value: ((height === width) && width) || ((height > width) && height) || width, constraint: ((height === width) && 'both') || ((height > width) && 'height') || 'width' }
 
-            await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -i templates/redcircle.png -filter_complex "[1:v]scale=${random ? `${(width + height) / 5}:-1` : `${squareS.constraint === 'width' ? -1 : width}:${squareS.constraint === 'height' ? -1 : height}`}[circle];[0:v][circle]overlay=x=${random ? (Math.floor(Math.random() * (width + 1)) - 1) + '-w/2' : 'W/2-w/2'}:y=${random ? (Math.floor(Math.random() * (height + 1)) - 1) + '-h/2' : 'H/2-h/2'}:format=auto[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} ${filepath}/output.png`)
+            await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -i assets/redcircle.png -filter_complex "[1:v]scale=${random ? `${(width + height) / 5}:-1` : `${squareS.constraint === 'width' ? -1 : width}:${squareS.constraint === 'height' ? -1 : height}`}[circle];[0:v][circle]overlay=x=${random ? (Math.floor(Math.random() * (width + 1)) - 1) + '-w/2' : 'W/2-w/2'}:y=${random ? (Math.floor(Math.random() * (height + 1)) - 1) + '-h/2' : 'H/2-h/2'}:format=auto[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} ${filepath}/output.png`)
             await poopy.functions.sendFile(msg, filepath, `output.png`)
         } else if (type.mime.startsWith('video')) {
             var filepath = await poopy.functions.downloadFile(currenturl, `input.mp4`, {
@@ -44,7 +44,7 @@ module.exports = {
 
             var squareS = { value: ((height === width) && width) || ((height > width) && height) || width, constraint: ((height === width) && 'both') || ((height > width) && 'height') || 'width' }
 
-            await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -i templates/redcircle.png -map 0:a? -filter_complex "[1:v]scale=${random ? `${(width + height) / 5}:-1` : `${squareS.constraint === 'width' ? -1 : width}:${squareS.constraint === 'height' ? -1 : height}`}[circle];[0:v][circle]overlay=x=${random ? (Math.floor(Math.random() * (width + 1)) - 1) + '-w/2' : 'W/2-w/2'}:y=${random ? (Math.floor(Math.random() * (height + 1)) - 1) + '-h/2' : 'H/2-h/2'}:format=auto[oout];[oout]scale=ceil(iw/2)*2:ceil(ih/2)*2[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} -c:v libx264 -pix_fmt yuv420p ${filepath}/output.mp4`)
+            await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -i assets/redcircle.png -map 0:a? -filter_complex "[1:v]scale=${random ? `${(width + height) / 5}:-1` : `${squareS.constraint === 'width' ? -1 : width}:${squareS.constraint === 'height' ? -1 : height}`}[circle];[0:v][circle]overlay=x=${random ? (Math.floor(Math.random() * (width + 1)) - 1) + '-w/2' : 'W/2-w/2'}:y=${random ? (Math.floor(Math.random() * (height + 1)) - 1) + '-h/2' : 'H/2-h/2'}:format=auto[oout];[oout]scale=ceil(iw/2)*2:ceil(ih/2)*2[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} -c:v libx264 -pix_fmt yuv420p ${filepath}/output.mp4`)
             await poopy.functions.sendFile(msg, filepath, `output.mp4`)
         } else if (type.mime.startsWith('image') && poopy.vars.gifFormats.find(f => f === type.ext)) {
             var filepath = await poopy.functions.downloadFile(currenturl, `input.gif`, {
@@ -56,7 +56,7 @@ module.exports = {
 
             var squareS = { value: ((height === width) && width) || ((height > width) && height) || width, constraint: ((height === width) && 'both') || ((height > width) && 'height') || 'width' }
 
-            await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -i templates/redcircle.png -filter_complex "[1:v]scale=${random ? `${(width + height) / 5}:-1` : `${squareS.constraint === 'width' ? -1 : width}:${squareS.constraint === 'height' ? -1 : height}`}[circle];[0:v][circle]overlay=x=${random ? (Math.floor(Math.random() * (width + 1)) - 1) + '-w/2' : 'W/2-w/2'}:y=${random ? (Math.floor(Math.random() * (height + 1)) - 1) + '-h/2' : 'H/2-h/2'}:format=auto[oout];[oout]split[pout][ppout];[ppout]palettegen=reserve_transparent=1[palette];[pout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} -gifflags -offsetting ${filepath}/output.gif`)
+            await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -i assets/redcircle.png -filter_complex "[1:v]scale=${random ? `${(width + height) / 5}:-1` : `${squareS.constraint === 'width' ? -1 : width}:${squareS.constraint === 'height' ? -1 : height}`}[circle];[0:v][circle]overlay=x=${random ? (Math.floor(Math.random() * (width + 1)) - 1) + '-w/2' : 'W/2-w/2'}:y=${random ? (Math.floor(Math.random() * (height + 1)) - 1) + '-h/2' : 'H/2-h/2'}:format=auto[oout];[oout]split[pout][ppout];[ppout]palettegen=reserve_transparent=1[palette];[pout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} -gifflags -offsetting ${filepath}/output.gif`)
             await poopy.functions.sendFile(msg, filepath, `output.gif`)
         } else {
             await msg.channel.send({

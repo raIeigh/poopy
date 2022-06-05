@@ -329,7 +329,7 @@ module.exports = {
 
             {
                 edit: async function (frame) {
-                    var stripes = await poopy.modules.Jimp.read('templates/stripes.png')
+                    var stripes = await poopy.modules.Jimp.read('assets/stripes.png')
                     frame.greyscale()
                     stripes.resize(frame.bitmap.width, frame.bitmap.height)
                     frame.composite(stripes, 0, 0)
@@ -345,7 +345,7 @@ module.exports = {
 
             {
                 edit: async function (frame) {
-                    var jail = await poopy.modules.Jimp.read('templates/jailed.png')
+                    var jail = await poopy.modules.Jimp.read('assets/jailed.png')
                     jail.resize(frame.bitmap.width, frame.bitmap.height)
                     frame.composite(jail, 0, 0)
                 },
@@ -390,9 +390,9 @@ module.exports = {
             for (var i = 0; i < gifframes.length; i++) {
                 var framedata = gifframes[i]
                 var frame = await poopy.modules.Jimp.read(`${filepath}/${filename}`)
-                var white = await poopy.modules.Jimp.read(`templates/white.png`)
-                var arialsmall = await poopy.modules.Jimp.loadFont('templates/fonts/ArialSmall/ArialSmall.fnt')
-                var arialbig = await poopy.modules.Jimp.loadFont('templates/fonts/ArialBig/ArialBig.fnt')
+                var white = await poopy.modules.Jimp.read(`assets/white.png`)
+                var arialsmall = await poopy.modules.Jimp.loadFont('assets/fonts/ArialSmall/ArialSmall.fnt')
+                var arialbig = await poopy.modules.Jimp.loadFont('assets/fonts/ArialBig/ArialBig.fnt')
                 var squareS = { value: ((frame.bitmap.height === frame.bitmap.width) && frame.bitmap.width) || ((frame.bitmap.height > frame.bitmap.width) && frame.bitmap.height) || frame.bitmap.width, constraint: ((frame.bitmap.height === frame.bitmap.width) && 'both') || ((frame.bitmap.height > frame.bitmap.width) && 'height') || 'width' }
                 frame.resize(squareS.constraint === 'width' || squareS.constraint === 'both' ? 180 : poopy.modules.Jimp.AUTO, squareS.constraint === 'height' || squareS.constraint === 'both' ? 180 : poopy.modules.Jimp.AUTO)
                 white.resize(304, 361)
@@ -419,9 +419,9 @@ module.exports = {
             for (var i = 0; i < gifframes.length; i++) {
                 var framedata = gifframes[i]
                 var frame = await poopy.modules.Jimp.read(`${filepath}/output.png`)
-                var white = await poopy.modules.Jimp.read(`templates/white.png`)
-                var arialsmall = await poopy.modules.Jimp.loadFont('templates/fonts/ArialSmall/ArialSmall.fnt')
-                var arialbig = await poopy.modules.Jimp.loadFont('templates/fonts/ArialBig/ArialBig.fnt')
+                var white = await poopy.modules.Jimp.read(`assets/white.png`)
+                var arialsmall = await poopy.modules.Jimp.loadFont('assets/fonts/ArialSmall/ArialSmall.fnt')
+                var arialbig = await poopy.modules.Jimp.loadFont('assets/fonts/ArialBig/ArialBig.fnt')
                 var squareS = { value: ((frame.bitmap.height === frame.bitmap.width) && frame.bitmap.width) || ((frame.bitmap.height > frame.bitmap.width) && frame.bitmap.height) || frame.bitmap.width, constraint: ((frame.bitmap.height === frame.bitmap.width) && 'both') || ((frame.bitmap.height > frame.bitmap.width) && 'height') || 'width' }
                 frame.resize(squareS.constraint === 'width' || squareS.constraint === 'both' ? 180 : poopy.modules.Jimp.AUTO, squareS.constraint === 'height' || squareS.constraint === 'both' ? 180 : poopy.modules.Jimp.AUTO)
                 white.resize(304, 361)

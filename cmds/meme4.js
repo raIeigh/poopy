@@ -59,8 +59,8 @@ module.exports = {
             var filename = `input.png`
             var width = fileinfo.info.width
             var height = fileinfo.info.height
-            var transparent = await poopy.modules.Jimp.read('templates/transparent.png')
-            var ubuntu = await poopy.modules.Jimp.loadFont('templates/fonts/Ubuntu/Ubuntu.fnt')
+            var transparent = await poopy.modules.Jimp.read('assets/transparent.png')
+            var ubuntu = await poopy.modules.Jimp.loadFont('assets/fonts/Ubuntu/Ubuntu.fnt')
             transparent.resize(width, height)
             transparent.resize(Math.round(2000 / size), poopy.modules.Jimp.AUTO)
             var transparent2 = transparent.clone()
@@ -80,8 +80,8 @@ module.exports = {
             var filename = `input.mp4`
             var width = fileinfo.info.width
             var height = fileinfo.info.height
-            var transparent = await poopy.modules.Jimp.read('templates/transparent.png')
-            var ubuntu = await poopy.modules.Jimp.loadFont('templates/fonts/Ubuntu/Ubuntu.fnt')
+            var transparent = await poopy.modules.Jimp.read('assets/transparent.png')
+            var ubuntu = await poopy.modules.Jimp.loadFont('assets/fonts/Ubuntu/Ubuntu.fnt')
             transparent.resize(width, height)
             transparent.resize(Math.round(2000 / size), poopy.modules.Jimp.AUTO)
             var transparent2 = transparent.clone()
@@ -101,8 +101,8 @@ module.exports = {
             var filename = `input.gif`
             var width = fileinfo.info.width
             var height = fileinfo.info.height
-            var transparent = await poopy.modules.Jimp.read('templates/transparent.png')
-            var ubuntu = await poopy.modules.Jimp.loadFont('templates/fonts/Ubuntu/Ubuntu.fnt')
+            var transparent = await poopy.modules.Jimp.read('assets/transparent.png')
+            var ubuntu = await poopy.modules.Jimp.loadFont('assets/fonts/Ubuntu/Ubuntu.fnt')
             transparent.resize(width, height)
             transparent.resize(Math.round(2000 / size), poopy.modules.Jimp.AUTO)
             var transparent2 = transparent.clone()

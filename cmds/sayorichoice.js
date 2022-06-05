@@ -22,8 +22,8 @@ module.exports = {
     poopy.vars.filecount++
     var filepath = `temp/${poopy.config.mongodatabase}/file${currentcount}`
     poopy.modules.fs.mkdirSync(`${filepath}`)
-    var sayori = await poopy.modules.Jimp.read(`templates/sayori.png`)
-    var bangers = await poopy.modules.Jimp.loadFont('templates/fonts/Bangers/Bangers.fnt')
+    var sayori = await poopy.modules.Jimp.read(`assets/sayori.png`)
+    var bangers = await poopy.modules.Jimp.loadFont('assets/fonts/Bangers/Bangers.fnt')
     await sayori.print(bangers, 52, 35, { text: poopy.modules.Discord.Util.cleanContent(bchoice, msg), alignmentX: poopy.modules.Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: poopy.modules.Jimp.VERTICAL_ALIGN_MIDDLE }, 176, 62)
     await sayori.print(bangers, 487, 38, { text: poopy.modules.Discord.Util.cleanContent(rchoice, msg), alignmentX: poopy.modules.Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: poopy.modules.Jimp.VERTICAL_ALIGN_MIDDLE }, 228, 72)
     await sayori.writeAsync(`${filepath}/output.png`)

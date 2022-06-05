@@ -80,8 +80,8 @@ module.exports = {
             var width = fileinfo.info.width
             var height = fileinfo.info.height
 
-            var white = await poopy.modules.Jimp.read('templates/white.png')
-            var futura = await poopy.modules.Jimp.loadFont('templates/fonts/FuturaCondensed/FuturaCondensed.fnt')
+            var white = await poopy.modules.Jimp.read('assets/white.png')
+            var futura = await poopy.modules.Jimp.loadFont('assets/fonts/FuturaCondensed/FuturaCondensed.fnt')
             white.resize(width, height)
             white.resize(Math.round(2000 / size), poopy.modules.Jimp.AUTO)
             var textheight = poopy.modules.Jimp.measureTextHeight(futura, text, white.bitmap.width - Math.round(160 / size))
@@ -131,8 +131,8 @@ module.exports = {
             var height = fileinfo.info.height
             var fps = fileinfo.info.fps
 
-            var white = await poopy.modules.Jimp.read('templates/white.png')
-            var futura = await poopy.modules.Jimp.loadFont('templates/fonts/FuturaCondensed/FuturaCondensed.fnt')
+            var white = await poopy.modules.Jimp.read('assets/white.png')
+            var futura = await poopy.modules.Jimp.loadFont('assets/fonts/FuturaCondensed/FuturaCondensed.fnt')
             white.resize(width, height)
             white.resize(Math.round(2000 / size), poopy.modules.Jimp.AUTO)
             var textheight = poopy.modules.Jimp.measureTextHeight(futura, text, white.bitmap.width - Math.round(160 / size))
@@ -182,8 +182,8 @@ module.exports = {
             var height = fileinfo.info.height
             var fps = fileinfo.info.fps
 
-            var white = await poopy.modules.Jimp.read('templates/white.png')
-            var futura = await poopy.modules.Jimp.loadFont('templates/fonts/FuturaCondensed/FuturaCondensed.fnt')
+            var white = await poopy.modules.Jimp.read('assets/white.png')
+            var futura = await poopy.modules.Jimp.loadFont('assets/fonts/FuturaCondensed/FuturaCondensed.fnt')
             white.resize(width, height)
             white.resize(Math.round(2000 / size), poopy.modules.Jimp.AUTO)
             var textheight = poopy.modules.Jimp.measureTextHeight(futura, text, white.bitmap.width - Math.round(160 / size))

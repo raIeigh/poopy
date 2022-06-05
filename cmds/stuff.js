@@ -36,10 +36,10 @@ module.exports = {
             })
             var filename = `input.png`
             var width = fileinfo.info.width
-            var stuff = await poopy.modules.Jimp.read('templates/stuff.png')
+            var stuff = await poopy.modules.Jimp.read('assets/stuff.png')
             var caption = stuff
-            var white = await poopy.modules.Jimp.read('templates/white.png')
-            var tnr = await poopy.modules.Jimp.loadFont('templates/fonts/TimesNewRomanBlack/TimesNewRomanBlack.fnt')
+            var white = await poopy.modules.Jimp.read('assets/white.png')
+            var tnr = await poopy.modules.Jimp.loadFont('assets/fonts/TimesNewRomanBlack/TimesNewRomanBlack.fnt')
             var textheight = poopy.modules.Jimp.measureTextHeight(tnr, text, 643)
             if (textheight > stuff.bitmap.height - 120) {
                 caption = white
@@ -61,10 +61,10 @@ module.exports = {
 
             var width = fileinfo.info.width
 
-            var stuff = await poopy.modules.Jimp.read('templates/stuff.png')
+            var stuff = await poopy.modules.Jimp.read('assets/stuff.png')
             var caption = stuff
-            var white = await poopy.modules.Jimp.read('templates/white.png')
-            var tnr = await poopy.modules.Jimp.loadFont('templates/fonts/TimesNewRomanBlack/TimesNewRomanBlack.fnt')
+            var white = await poopy.modules.Jimp.read('assets/white.png')
+            var tnr = await poopy.modules.Jimp.loadFont('assets/fonts/TimesNewRomanBlack/TimesNewRomanBlack.fnt')
             var textheight = poopy.modules.Jimp.measureTextHeight(tnr, text, 643)
             if (textheight > stuff.bitmap.height - 120) {
                 caption = white
@@ -86,10 +86,10 @@ module.exports = {
 
             var width = fileinfo.info.width
 
-            var stuff = await poopy.modules.Jimp.read('templates/stuff.png')
+            var stuff = await poopy.modules.Jimp.read('assets/stuff.png')
             var caption = stuff
-            var white = await poopy.modules.Jimp.read('templates/white.png')
-            var tnr = await poopy.modules.Jimp.loadFont('templates/fonts/TimesNewRomanBlack/TimesNewRomanBlack.fnt')
+            var white = await poopy.modules.Jimp.read('assets/white.png')
+            var tnr = await poopy.modules.Jimp.loadFont('assets/fonts/TimesNewRomanBlack/TimesNewRomanBlack.fnt')
             var textheight = poopy.modules.Jimp.measureTextHeight(tnr, text, 643)
             if (textheight > stuff.bitmap.height - 120) {
                 caption = white

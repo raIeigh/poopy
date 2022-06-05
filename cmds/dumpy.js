@@ -33,7 +33,7 @@ module.exports = {
         if (type.mime.startsWith('image') && !(poopy.vars.gifFormats.find(f => f === type.ext))) {
             var filepath = await poopy.functions.downloadFile(currenturl, 'input.png')
             var filename = 'input.png'
-            poopy.modules.fs.copyFileSync(`templates/amongUs.jar`, `${filepath}/amongUs.jar`)
+            poopy.modules.fs.copyFileSync(`assets/amongUs.jar`, `${filepath}/amongUs.jar`)
 
             await poopy.functions.execPromise(`cd ${filepath} && java -jar amongUs.jar --file ${filename} --lines ${resolution}`)
 

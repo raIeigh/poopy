@@ -184,7 +184,7 @@ module.exports = {
                         var vidfilter = vidfilters.join(';')
                         var audiofilter = audiofilters.join(';')
 
-                        await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} ${audiofilter.includes('afir') ? '-i templates/church.mp3 ' : ''}-t ${clipduration} -ss ${clipduration * i} -filter_complex "${vidfilter}${vidfilter ? `;[v${vid}]` : '[0:v]'}scale=ceil(iw/2)*2:ceil(ih/2)*2[out]${audiofilter ? `;${audiofilter}` : ''}" -map "[out]" -map ${audiofilter ? `"[a${audio}]"` : '0:a'} -preset ${poopy.functions.findpreset(args)} -c:v libx264 -pix_fmt yuv420p ${filepath}/clips/${clipsmade + 1}.mp4`)
+                        await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} ${audiofilter.includes('afir') ? '-i assets/church.mp3 ' : ''}-t ${clipduration} -ss ${clipduration * i} -filter_complex "${vidfilter}${vidfilter ? `;[v${vid}]` : '[0:v]'}scale=ceil(iw/2)*2:ceil(ih/2)*2[out]${audiofilter ? `;${audiofilter}` : ''}" -map "[out]" -map ${audiofilter ? `"[a${audio}]"` : '0:a'} -preset ${poopy.functions.findpreset(args)} -c:v libx264 -pix_fmt yuv420p ${filepath}/clips/${clipsmade + 1}.mp4`)
 
                         clipsmade++
                     }
@@ -347,7 +347,7 @@ module.exports = {
 
                     var audiofilter = audiofilters.join(';')
 
-                    await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} ${audiofilter.includes('afir') ? '-i templates/church.mp3 ' : ''}-t ${clipduration} -ss ${clipduration * i} ${audiofilter ? `-filter_complex ${audiofilter} -map "[a${audio}]" ` : ''}-preset ${poopy.functions.findpreset(args)} ${filepath}/clips/${clipsmade + 1}.mp3`)
+                    await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} ${audiofilter.includes('afir') ? '-i assets/church.mp3 ' : ''}-t ${clipduration} -ss ${clipduration * i} ${audiofilter ? `-filter_complex ${audiofilter} -map "[a${audio}]" ` : ''}-preset ${poopy.functions.findpreset(args)} ${filepath}/clips/${clipsmade + 1}.mp3`)
 
                     clipsmade++
                 }

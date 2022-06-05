@@ -25,7 +25,7 @@ module.exports = {
                     fileinfo: fileinfo
                 })
                 var filename = `input.${fileinfo.shortext}`
-                poopy.modules.fs.copyFileSync(`templates/crash.webm`, `${filepath}/crash.webm`)
+                poopy.modules.fs.copyFileSync(`assets/crash.webm`, `${filepath}/crash.webm`)
 
                 await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -pix_fmt yuv444p -preset ${poopy.functions.findpreset(args)} ${filepath}/webm.webm`)
                 poopy.modules.fs.writeFileSync(`${filepath}/concat.txt`, `file 'webm.webm'\nfile 'crash.webm'`)

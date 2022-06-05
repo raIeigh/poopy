@@ -42,8 +42,8 @@ module.exports = {
             var filename = `input.png`
             var width = fileinfo.info.width
             var height = fileinfo.info.height
-            var snapchat = await poopy.modules.Jimp.read('templates/snapchat.png')
-            var helvetica = await poopy.modules.Jimp.loadFont('templates/fonts/Helvetica/Helvetica.fnt')
+            var snapchat = await poopy.modules.Jimp.read('assets/snapchat.png')
+            var helvetica = await poopy.modules.Jimp.loadFont('assets/fonts/Helvetica/Helvetica.fnt')
             snapchat.resize(width, height)
             snapchat.resize(poopy.modules.Jimp.AUTO, Math.round(2000 / size))
             var textheight = poopy.modules.Jimp.measureTextHeight(helvetica, text, snapchat.bitmap.width - Math.round(100 / size))
@@ -61,8 +61,8 @@ module.exports = {
             var filename = `input.mp4`
             var width = fileinfo.info.width
             var height = fileinfo.info.height
-            var snapchat = await poopy.modules.Jimp.read('templates/snapchat.png')
-            var helvetica = await poopy.modules.Jimp.loadFont('templates/fonts/Helvetica/Helvetica.fnt')
+            var snapchat = await poopy.modules.Jimp.read('assets/snapchat.png')
+            var helvetica = await poopy.modules.Jimp.loadFont('assets/fonts/Helvetica/Helvetica.fnt')
             snapchat.resize(width, height)
             snapchat.resize(poopy.modules.Jimp.AUTO, Math.round(2000 / size))
             var textheight = poopy.modules.Jimp.measureTextHeight(helvetica, text, snapchat.bitmap.width - Math.round(100 / size))
@@ -80,8 +80,8 @@ module.exports = {
             var filename = `input.gif`
             var width = fileinfo.info.width
             var height = fileinfo.info.height
-            var snapchat = await poopy.modules.Jimp.read('templates/snapchat.png')
-            var helvetica = await poopy.modules.Jimp.loadFont('templates/fonts/Helvetica/Helvetica.fnt')
+            var snapchat = await poopy.modules.Jimp.read('assets/snapchat.png')
+            var helvetica = await poopy.modules.Jimp.loadFont('assets/fonts/Helvetica/Helvetica.fnt')
             snapchat.resize(width, height)
             snapchat.resize(poopy.modules.Jimp.AUTO, Math.round(2000 / size))
             var textheight = poopy.modules.Jimp.measureTextHeight(helvetica, text, snapchat.bitmap.width - Math.round(100 / size))

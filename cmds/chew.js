@@ -20,8 +20,8 @@ module.exports = {
                 chewoffset: { x: Math.floor(Math.random() * 61) - 30, y: Math.floor(Math.random() * 61) - 30 },
                 repetitions: Math.floor(Math.random() * 9) + 1,
                 chew: async (frame, maskpos, masksize, maskangle, chewoffset) => {
-                    var patchmask = await poopy.modules.Jimp.read(`templates/chewmask.png`)
-                    var black = await poopy.modules.Jimp.read(`templates/black.png`)
+                    var patchmask = await poopy.modules.Jimp.read(`assets/chewmask.png`)
+                    var black = await poopy.modules.Jimp.read(`assets/black.png`)
                     frame2 = frame.clone()
                     patchmask.resize(frame2.bitmap.width / masksize.x, frame2.bitmap.height / masksize.y)
                     patchmask.rotate(maskangle)

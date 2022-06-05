@@ -490,18 +490,18 @@ class Poopy {
 
         // objects and arrays for things like the arab dictionary
         poopy.json = {
-            wordJSON: JSON.parse(poopy.modules.fs.readFileSync('./templates/json/words.json')),
-            continentJSON: JSON.parse(poopy.modules.fs.readFileSync('./templates/json/continents.json')),
-            countryJSON: JSON.parse(poopy.modules.fs.readFileSync('./templates/json/countries.json')),
-            languageJSON: JSON.parse(poopy.modules.fs.readFileSync('./templates/json/languages.json')),
-            cityJSON: JSON.parse(poopy.modules.fs.readFileSync('./templates/json/cities.json')),
-            restaurantJSON: JSON.parse(poopy.modules.fs.readFileSync('./templates/json/foods.json')),
-            sentenceJSON: JSON.parse(poopy.modules.fs.readFileSync('./templates/json/sentences.json')),
-            nounJSON: JSON.parse(poopy.modules.fs.readFileSync('./templates/json/nouns.json')),
-            verbJSON: JSON.parse(poopy.modules.fs.readFileSync('./templates/json/verbs.json')),
-            adjJSON: JSON.parse(poopy.modules.fs.readFileSync('./templates/json/adjectives.json')),
-            imageJSON: JSON.parse(poopy.modules.fs.readFileSync('./templates/json/images.json')),
-            nameJSON: JSON.parse(poopy.modules.fs.readFileSync('./templates/json/names.json')),
+            wordJSON: JSON.parse(poopy.modules.fs.readFileSync('./assets/json/words.json')),
+            continentJSON: JSON.parse(poopy.modules.fs.readFileSync('./assets/json/continents.json')),
+            countryJSON: JSON.parse(poopy.modules.fs.readFileSync('./assets/json/countries.json')),
+            languageJSON: JSON.parse(poopy.modules.fs.readFileSync('./assets/json/languages.json')),
+            cityJSON: JSON.parse(poopy.modules.fs.readFileSync('./assets/json/cities.json')),
+            restaurantJSON: JSON.parse(poopy.modules.fs.readFileSync('./assets/json/foods.json')),
+            sentenceJSON: JSON.parse(poopy.modules.fs.readFileSync('./assets/json/sentences.json')),
+            nounJSON: JSON.parse(poopy.modules.fs.readFileSync('./assets/json/nouns.json')),
+            verbJSON: JSON.parse(poopy.modules.fs.readFileSync('./assets/json/verbs.json')),
+            adjJSON: JSON.parse(poopy.modules.fs.readFileSync('./assets/json/adjectives.json')),
+            imageJSON: JSON.parse(poopy.modules.fs.readFileSync('./assets/json/images.json')),
+            nameJSON: JSON.parse(poopy.modules.fs.readFileSync('./assets/json/names.json')),
             emojiJSON: []
         }
         poopy.arrays = {
@@ -3593,7 +3593,7 @@ class Poopy {
             ) return
 
             var prefix = poopy.data['guild-data'][msg.guild.id]['prefix']
-            var ignored = ['eval', 'execute', 'localcommands', 'localcmds', 'servercommands', 'servercmds', 'commandtemplates', 'cmdtemplates', 'messages']
+            var ignored = ['eval', 'execute', 'localcommands', 'localcmds', 'servercommands', 'servercmds', 'commandassets', 'cmdassets', 'messages']
             var webhook = await msg.fetchWebhook().catch(() => { })
 
             if (!msg.guild || !msg.channel) return

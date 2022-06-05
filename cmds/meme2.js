@@ -40,9 +40,9 @@ module.exports = {
             var filename = `input.png`
             var width = fileinfo.info.width
             var height = fileinfo.info.height
-            var black = await poopy.modules.Jimp.read('templates/black.png')
-            var tnr = await poopy.modules.Jimp.loadFont('templates/fonts/TimesNewRomanBig/TimesNewRomanBig.fnt')
-            var arial = await poopy.modules.Jimp.loadFont('templates/fonts/ArialSmallWhite/ArialSmallWhite.fnt')
+            var black = await poopy.modules.Jimp.read('assets/black.png')
+            var tnr = await poopy.modules.Jimp.loadFont('assets/fonts/TimesNewRomanBig/TimesNewRomanBig.fnt')
+            var arial = await poopy.modules.Jimp.loadFont('assets/fonts/ArialSmallWhite/ArialSmallWhite.fnt')
             black.resize(width, height)
             black.resize(400, poopy.modules.Jimp.AUTO)
             var whiteborder = black.clone()
@@ -81,9 +81,9 @@ module.exports = {
             var filename = `input.mp4`
             var width = fileinfo.info.width
             var height = fileinfo.info.height
-            var black = await poopy.modules.Jimp.read('templates/black.png')
-            var tnr = await poopy.modules.Jimp.loadFont('templates/fonts/TimesNewRomanBig/TimesNewRomanBig.fnt')
-            var arial = await poopy.modules.Jimp.loadFont('templates/fonts/ArialSmallWhite/ArialSmallWhite.fnt')
+            var black = await poopy.modules.Jimp.read('assets/black.png')
+            var tnr = await poopy.modules.Jimp.loadFont('assets/fonts/TimesNewRomanBig/TimesNewRomanBig.fnt')
+            var arial = await poopy.modules.Jimp.loadFont('assets/fonts/ArialSmallWhite/ArialSmallWhite.fnt')
             black.resize(width, height)
             black.resize(400, poopy.modules.Jimp.AUTO)
             var whiteborder = black.clone()
@@ -122,9 +122,9 @@ module.exports = {
             var filename = `input.gif`
             var width = fileinfo.info.width
             var height = fileinfo.info.height
-            var black = await poopy.modules.Jimp.read('templates/black.png')
-            var tnr = await poopy.modules.Jimp.loadFont('templates/fonts/TimesNewRomanBig/TimesNewRomanBig.fnt')
-            var arial = await poopy.modules.Jimp.loadFont('templates/fonts/ArialSmallWhite/ArialSmallWhite.fnt')
+            var black = await poopy.modules.Jimp.read('assets/black.png')
+            var tnr = await poopy.modules.Jimp.loadFont('assets/fonts/TimesNewRomanBig/TimesNewRomanBig.fnt')
+            var arial = await poopy.modules.Jimp.loadFont('assets/fonts/ArialSmallWhite/ArialSmallWhite.fnt')
             black.resize(width, height)
             black.resize(400, poopy.modules.Jimp.AUTO)
             var whiteborder = black.clone()

@@ -70,10 +70,10 @@ module.exports = {
             for (var i = 0; i < rapping.length; i++) {
                 var rapFrame = rapping[i]
                 var frame = await poopy.modules.Jimp.read(currenturl)
-                var rap = await poopy.modules.Jimp.read(`templates/rapping/${rapFrame.name}.png`)
-                var rapm = await poopy.modules.Jimp.read(`templates/rappingmask/${rapFrame.name}.png`)
-                var stage = await poopy.modules.Jimp.read(`templates/stage.png`)
-                var transparent = await poopy.modules.Jimp.read(`templates/transparent.png`)
+                var rap = await poopy.modules.Jimp.read(`assets/rapping/${rapFrame.name}.png`)
+                var rapm = await poopy.modules.Jimp.read(`assets/rappingmask/${rapFrame.name}.png`)
+                var stage = await poopy.modules.Jimp.read(`assets/stage.png`)
+                var transparent = await poopy.modules.Jimp.read(`assets/transparent.png`)
                 var squareS = { value: ((frame.bitmap.height === frame.bitmap.width) && frame.bitmap.width) || ((frame.bitmap.height > frame.bitmap.width) && frame.bitmap.height) || frame.bitmap.width, constraint: ((frame.bitmap.height === frame.bitmap.width) && 'both') || ((frame.bitmap.height > frame.bitmap.width) && 'height') || 'width' }
                 frame.resize(squareS.constraint === 'width' || squareS.constraint === 'both' ? 70 : poopy.modules.Jimp.AUTO, squareS.constraint === 'height' || squareS.constraint === 'both' ? 70 : poopy.modules.Jimp.AUTO)
                 frame.rotate(rapFrame.angle)
@@ -97,10 +97,10 @@ module.exports = {
             for (var i = 0; i < rapping.length; i++) {
                 var rapFrame = rapping[i]
                 var frame = await poopy.modules.Jimp.read(`${filepath}/output.png`)
-                var rap = await poopy.modules.Jimp.read(`templates/rapping/${rapFrame.name}.png`)
-                var rapm = await poopy.modules.Jimp.read(`templates/rappingmask/${rapFrame.name}.png`)
-                var stage = await poopy.modules.Jimp.read(`templates/stage.png`)
-                var transparent = await poopy.modules.Jimp.read(`templates/transparent.png`)
+                var rap = await poopy.modules.Jimp.read(`assets/rapping/${rapFrame.name}.png`)
+                var rapm = await poopy.modules.Jimp.read(`assets/rappingmask/${rapFrame.name}.png`)
+                var stage = await poopy.modules.Jimp.read(`assets/stage.png`)
+                var transparent = await poopy.modules.Jimp.read(`assets/transparent.png`)
                 var squareS = { value: ((frame.bitmap.height === frame.bitmap.width) && frame.bitmap.width) || ((frame.bitmap.height > frame.bitmap.width) && frame.bitmap.height) || frame.bitmap.width, constraint: ((frame.bitmap.height === frame.bitmap.width) && 'both') || ((frame.bitmap.height > frame.bitmap.width) && 'height') || 'width' }
                 frame.resize(squareS.constraint === 'width' || squareS.constraint === 'both' ? 70 : poopy.modules.Jimp.AUTO, squareS.constraint === 'height' || squareS.constraint === 'both' ? 70 : poopy.modules.Jimp.AUTO)
                 frame.rotate(rapFrame.angle)

@@ -28,7 +28,7 @@ module.exports = {
             var width = fileinfo.info.width
             var height = fileinfo.info.height
 
-            await poopy.functions.execPromise(`ffmpeg -i templates/phexoutro.mp4 -filter_complex "[0:v]scale=-1:ceil(${height}/2)*2[vid];[0:v]scale=ceil(${width}/2)*2:ceil(${height}/2)*2,gblur=sigma=5:steps=6[bg];[bg][vid]overlay=x=W/2-w/2:y=H/2-h/2:format=auto[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} -map 0:a -aspect ${width}:${height} -pix_fmt yuv420p ${filepath}/phexoutro2.mp4`)
+            await poopy.functions.execPromise(`ffmpeg -i assets/phexoutro.mp4 -filter_complex "[0:v]scale=-1:ceil(${height}/2)*2[vid];[0:v]scale=ceil(${width}/2)*2:ceil(${height}/2)*2,gblur=sigma=5:steps=6[bg];[bg][vid]overlay=x=W/2-w/2:y=H/2-h/2:format=auto[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} -map 0:a -aspect ${width}:${height} -pix_fmt yuv420p ${filepath}/phexoutro2.mp4`)
             await poopy.functions.execPromise(`ffmpeg -i ${filepath}/phexoutro2.mp4 -preset ${poopy.functions.findpreset(args)} -c:v copy -bsf:v h264_mp4toannexb -f mpegts -video_track_timescale 30k -c:a aac -ac 6 -ar 44100 ${filepath}/phexoutro.ts`)
             await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -vf "scale=ceil(${width}/2)*2:ceil(${height}/2)*2" -preset ${poopy.functions.findpreset(args)} -aspect ${width}:${height} -pix_fmt yuv420p ${filepath}/input2.mp4`)
             await poopy.functions.execPromise(`ffmpeg -i ${filepath}/input2.mp4 -preset ${poopy.functions.findpreset(args)} -c:v copy -bsf:v h264_mp4toannexb -f mpegts -video_track_timescale 30k -c:a aac -ac 6 -ar 44100 ${filepath}/input.ts`)

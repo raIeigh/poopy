@@ -4,7 +4,7 @@ module.exports = {
         let poopy = this
 
         await msg.channel.sendTyping().catch(() => { })
-        var fonts = poopy.modules.fs.readdirSync('templates/fonts')
+        var fonts = poopy.modules.fs.readdirSync('assets/fonts')
         if (!args[1]) {
             await msg.channel.send(`No font specified. A valid list of fonts is ${fonts.join(', ')}`).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
@@ -114,8 +114,8 @@ module.exports = {
         var filepath = `temp/${poopy.config.mongodatabase}/file${currentcount}`
         poopy.modules.fs.mkdirSync(`${filepath}`)
 
-        var transparent = await poopy.modules.Jimp.read('templates/transparent.png')
-        var loadedfont = await poopy.modules.Jimp.loadFont(`templates/fonts/${font}/${font}.fnt`)
+        var transparent = await poopy.modules.Jimp.read('assets/transparent.png')
+        var loadedfont = await poopy.modules.Jimp.loadFont(`assets/fonts/${font}/${font}.fnt`)
         var defaultheight = loadedfont.common.lineHeight
         var textwidth = maxwidth || poopy.modules.Jimp.measureText(loadedfont, text)
         var textheight = poopy.modules.Jimp.measureTextHeight(loadedfont, text, maxwidth || textwidth)

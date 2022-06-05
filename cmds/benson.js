@@ -36,8 +36,8 @@ module.exports = {
             })
             var filename = `input.png`
 
-            var benson = await poopy.modules.Jimp.read(`templates/benson.png`)
-            var consolas = await poopy.modules.Jimp.loadFont('templates/fonts/Consolas/Consolas.fnt')
+            var benson = await poopy.modules.Jimp.read(`assets/benson.png`)
+            var consolas = await poopy.modules.Jimp.loadFont('assets/fonts/Consolas/Consolas.fnt')
             await benson.print(consolas, 3, 4, { text: poopy.modules.Discord.Util.cleanContent(text, msg), alignmentX: poopy.modules.Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: poopy.modules.Jimp.VERTICAL_ALIGN_MIDDLE }, 94, 33)
             await benson.writeAsync(`${filepath}/benson.png`)
 
@@ -54,8 +54,8 @@ module.exports = {
             })
             var filename = `input.mp4`
 
-            var benson = await poopy.modules.Jimp.read(`templates/benson.png`)
-            var consolas = await poopy.modules.Jimp.loadFont('templates/fonts/Consolas/Consolas.fnt')
+            var benson = await poopy.modules.Jimp.read(`assets/benson.png`)
+            var consolas = await poopy.modules.Jimp.loadFont('assets/fonts/Consolas/Consolas.fnt')
             await benson.print(consolas, 3, 4, { text: poopy.modules.Discord.Util.cleanContent(text, msg), alignmentX: poopy.modules.Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: poopy.modules.Jimp.VERTICAL_ALIGN_MIDDLE }, 94, 33)
             await benson.writeAsync(`${filepath}/benson.png`)
 
@@ -70,8 +70,8 @@ module.exports = {
             var filepath = await poopy.functions.downloadFile(currenturl, `input.gif`)
             var filename = `input.gif`
 
-            var benson = await poopy.modules.Jimp.read(`templates/benson.png`)
-            var consolas = await poopy.modules.Jimp.loadFont('templates/fonts/Consolas/Consolas.fnt')
+            var benson = await poopy.modules.Jimp.read(`assets/benson.png`)
+            var consolas = await poopy.modules.Jimp.loadFont('assets/fonts/Consolas/Consolas.fnt')
             await benson.print(consolas, 3, 4, { text: poopy.modules.Discord.Util.cleanContent(text, msg), alignmentX: poopy.modules.Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: poopy.modules.Jimp.VERTICAL_ALIGN_MIDDLE }, 94, 33)
             await benson.writeAsync(`${filepath}/benson.png`)
 

@@ -37,8 +37,8 @@ module.exports = {
             var filename = `input.png`
             var width = fileinfo.info.width
             var height = fileinfo.info.height
-            var transparent = await poopy.modules.Jimp.read('templates/transparent.png')
-            var brushscript = await poopy.modules.Jimp.loadFont('templates/fonts/BrushScript/BrushScript.fnt')
+            var transparent = await poopy.modules.Jimp.read('assets/transparent.png')
+            var brushscript = await poopy.modules.Jimp.loadFont('assets/fonts/BrushScript/BrushScript.fnt')
             transparent.resize(width, height)
             transparent.resize(500, poopy.modules.Jimp.AUTO)
             await transparent.print(brushscript, 50, 50, { text: poopy.modules.Discord.Util.cleanContent(text, msg), alignmentX: poopy.modules.Jimp.HORIZONTAL_ALIGN_RIGHT, alignmentY: poopy.modules.Jimp.VERTICAL_ALIGN_BOTTOM }, transparent.bitmap.width - 100, transparent.bitmap.height - 100)
@@ -53,8 +53,8 @@ module.exports = {
             var filename = `input.mp4`
             var width = fileinfo.info.width
             var height = fileinfo.info.height
-            var transparent = await poopy.modules.Jimp.read('templates/transparent.png')
-            var brushscript = await poopy.modules.Jimp.loadFont('templates/fonts/BrushScript/BrushScript.fnt')
+            var transparent = await poopy.modules.Jimp.read('assets/transparent.png')
+            var brushscript = await poopy.modules.Jimp.loadFont('assets/fonts/BrushScript/BrushScript.fnt')
             transparent.resize(width, height)
             transparent.resize(500, poopy.modules.Jimp.AUTO)
             await transparent.print(brushscript, 50, 50, { text: poopy.modules.Discord.Util.cleanContent(text, msg), alignmentX: poopy.modules.Jimp.HORIZONTAL_ALIGN_RIGHT, alignmentY: poopy.modules.Jimp.VERTICAL_ALIGN_BOTTOM }, transparent.bitmap.width - 100, transparent.bitmap.height - 100)
@@ -69,8 +69,8 @@ module.exports = {
             var filename = `input.gif`
             var width = fileinfo.info.width
             var height = fileinfo.info.height
-            var transparent = await poopy.modules.Jimp.read('templates/transparent.png')
-            var brushscript = await poopy.modules.Jimp.loadFont('templates/fonts/BrushScript/BrushScript.fnt')
+            var transparent = await poopy.modules.Jimp.read('assets/transparent.png')
+            var brushscript = await poopy.modules.Jimp.loadFont('assets/fonts/BrushScript/BrushScript.fnt')
             transparent.resize(width, height)
             transparent.resize(500, poopy.modules.Jimp.AUTO)
             await transparent.print(brushscript, 50, 50, { text: poopy.modules.Discord.Util.cleanContent(text, msg), alignmentX: poopy.modules.Jimp.HORIZONTAL_ALIGN_RIGHT, alignmentY: poopy.modules.Jimp.VERTICAL_ALIGN_BOTTOM }, transparent.bitmap.width - 100, transparent.bitmap.height - 100)
