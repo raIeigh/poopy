@@ -1,7 +1,7 @@
 module.exports = {
   helpf: '(name)',
   desc: 'Fetches the ID of the emoji from name.',
-  func: async function (matches, msg) {
+  func: function (matches, msg) {
     let poopy = this
 
     var word = matches[1]

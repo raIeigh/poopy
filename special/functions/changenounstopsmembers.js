@@ -16,8 +16,8 @@ module.exports = {
         var nounRegex = new RegExp(`${nounsR.join('|')}`, 'i')
         var words = word.split(' ')
         for (var i in words) {
-            if (words[i].match(nounRegex)) words[i] = await poopy.functions.replaceAsync(words[i], nounRegex, async (word) => {
-                var psmember = await poopy.specialkeys.keys._psmember.func()
+            if (words[i].match(nounRegex)) words[i] = await words[i].replace(nounRegex, (word) => {
+                var psmember = poopy.special.keys._psmember.func.call(poopy)
                 if (word.substring(0, 1) === word.substring(0, 1).toLowerCase()) return psmember
                 else if (word.substring(0, 2) === (word.substring(0, 1).toUpperCase() + word.substring(1, 2).toLowerCase())) return psmember.substring(0, 1).toUpperCase() + psmember.substring(1).toLowerCase()
                 else return psmember.toUpperCase()

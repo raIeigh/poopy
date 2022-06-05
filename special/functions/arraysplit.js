@@ -1,7 +1,7 @@
 module.exports = {
   helpf: '(arrayName | separator | phrase)',
   desc: `Creates a new array by splitting the phrase by the separator. If it already exists, it'll be replaced.`,
-  func: async function (matches, msg, _, string) {
+  func: function (matches, msg, _, string) {
     let poopy = this
 
     var word = matches[1]

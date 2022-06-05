@@ -1,7 +1,7 @@
 module.exports = {
     helpf: '(phrase)',
     desc: 'sWAPS ALL THE CASES IN THE PHRASE INSIDE THE FUNCTION!',
-    func: async function (matches) {
+    func: function (matches) {
         let poopy = this
 
         var word = matches[1]

@@ -1,7 +1,7 @@
 module.exports = {
   helpf: '(phrase)',
   desc: 'Makes the phrase inside the function start with a capital.',
-  func: async function (matches) {
+  func: function (matches) {
     let poopy = this
 
     var word = matches[1]

@@ -17,7 +17,7 @@ module.exports = {
         var words = word.split(' ')
         for (var i in words) {
             if (words[i].match(nounRegex)) words[i] = poopy.functions.replaceAsync(words[i], nounRegex, async (word) => {
-                var member = await poopy.specialkeys.keys._member.func(msg)
+                var member = await poopy.special.keys._member.func(msg)
                 if (word === word.toUpperCase()) return member.toUpperCase()
                 else return member
             })

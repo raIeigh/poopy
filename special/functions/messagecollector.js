@@ -5,14 +5,14 @@ module.exports = {
         "**resettimer()** - Resets the collector's timer\n" +
         "**stop(sendFinishPhrase)** - Stops the collector from running, sends the finishPhrase if sendFinishPhrase isn't blank.\n" +
         '**_collected** - Used when the collector stops running, containing all collected messages separated with the separator.',
-    func: async function (matches, msg, isBot) {
+    func: async function (matches, msg, isBot, _, opts) {
         let poopy = this
 
         var word = matches[1]
         var split = poopy.functions.splitKeyFunc(word, { args: 5 })
         var filterString = split[0] ?? ''
         var collectphrase = split[1] ?? ''
-        split[2] = await poopy.functions.getKeywordsFor(split[2] ?? '', msg, isBot).catch(() => { }) || ''
+        split[2] = await poopy.functions.getKeywordsFor(split[2] ?? '', msg, isBot, opts).catch(() => { }) || ''
         var timeout = isNaN(Number(split[2])) ? 10 : Number(split[2]) <= 1 ? 1 : Number(split[2]) >= 60 ? 60 : Number(split[2]) || 10
         var finishphrase = split[3] ?? ''
         var separator = split[4] ?? ''
@@ -38,43 +38,31 @@ module.exports = {
                     if (poopy.tempdata[msg.guild.id][msg.channel.id]['shut']) return
                     var content = await poopy.functions.getKeywordsFor(m.content ?? '', m, false).catch(() => { }) ?? m.content
 
-                    var filterStringM = await poopy.functions.getKeywordsFor(filterString, m, true, {
-                        extrakeys: {
-                            _msg: {
-                                func: async () => {
-                                    return content
-                                }
-                            }
+                    var valOpts = { ...opts }
+                    valOpts.extrakeys._msg = {
+                        func: async () => {
+                            return content
                         }
-                    }).catch(() => { }) ?? filterString
+                    }
+
+                    var filterStringM = await poopy.functions.getKeywordsFor(filterString, m, true, valOpts).catch(() => { }) ?? filterString
 
                     if (filterStringM) {
-                        var collect = await poopy.functions.getKeywordsFor(collectphrase, m, true, {
-                            extrakeys: {
-                                _msg: {
-                                    func: async () => {
-                                        return content
-                                    }
-                                }
-                            },
-
-                            extrafuncs: {
-                                resettimer: {
-                                    func: async () => {
-                                        collector.resetTimer()
-                                        return ''
-                                    }
-                                },
-
-                                stop: {
-                                    func: async (matches) => {
-                                        var word = matches[1]
-                                        collector.stop(word ? 'time' : 'user')
-                                        return ''
-                                    }
-                                },
+                        valOpts.extrafuncs.resettimer = {
+                            func: async () => {
+                                collector.resetTimer()
+                                return ''
                             }
-                        }).catch(() => { }) ?? ''
+                        }
+                        valOpts.extrafuncs.stop = {
+                            func: async (matches) => {
+                                var word = matches[1]
+                                collector.stop(word ? 'time' : 'user')
+                                return ''
+                            }
+                        }
+
+                        var collect = await poopy.functions.getKeywordsFor(collectphrase, m, true, valOpts).catch(() => { }) ?? ''
 
                         collected.push(content)
 
@@ -99,15 +87,14 @@ module.exports = {
                     if (poopy.tempdata[msg.guild.id][msg.channel.id]['shut']) return
                     delete poopy.tempdata[guildid][channelid][authorid].messageCollector
                     if (reason === 'time') {
-                        var finishphrasek = await poopy.functions.getKeywordsFor(finishphrase, msg, isBot, {
-                            extrakeys: {
-                                _collected: {
-                                    func: async () => {
-                                        return collected.join(separator)
-                                    }
-                                }
+                        var valOpts = { ...opts }
+                        valOpts.extrakeys._collected = {
+                            func: async () => {
+                                return collected.join(separator)
                             }
-                        }).catch(() => { }) ?? ''
+                        }
+
+                        var finishphrasek = await poopy.functions.getKeywordsFor(finishphrase, msg, isBot, valOpts).catch(() => { }) ?? ''
 
                         await poopy.functions.waitMessageCooldown(true)
                         var finishMsg = await channel.send({

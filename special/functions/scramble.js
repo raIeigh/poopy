@@ -1,7 +1,7 @@
 module.exports = {
     helpf: '(phrase)',
     desc: 'the phrase Scrambles the function. inside',
-    func: async function (matches) {
+    func: function (matches) {
         let poopy = this
 
         var word = matches[1]

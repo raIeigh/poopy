@@ -1,5 +1,5 @@
 module.exports = {
-    desc: 'Returns a random sentence.', func: async function () {
+    desc: 'Returns a random sentence.', func: function () {
         let poopy = this
 
         var sentenceJSON = poopy.json.sentenceJSON

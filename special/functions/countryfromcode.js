@@ -1,7 +1,7 @@
 module.exports = {
   helpf: '(countrycode)',
   desc: 'Returns the name of the country that matches the country code.',
-  func: async function (matches) {
+  func: function (matches) {
     let poopy = this
 
     var word = matches[1]

@@ -1,7 +1,7 @@
 module.exports = {
     helpf: '(name | value)',
-    desc: 'Declares a variable with the name and value specified. Variables can be used by typing in {variablename}.',
-    func: async function (matches, msg, isBot, string) {
+    desc: 'Declares a variable with the name and value specified. Variables can be used by typing in {variableName}.',
+    func: function (matches, msg, _, string) {
         let poopy = this
 
         var word = matches[1]
@@ -12,15 +12,12 @@ module.exports = {
         var value = split.slice(1).length ? split.slice(1).join(' | ') : ''
         var phrase = string.replace(new RegExp(`${poopy.functions.regexClean(fullword)}\\s*`, 'i'), '')
         poopy.tempdata[msg.author.id]['declared'][`{${name}}`] = value.replace(new RegExp(`\\{${name}\\}`, 'ig'), poopy.tempdata[msg.author.id]['declared'][`{${name}}`] || '')
-        var extrakeys = {}
-        extrakeys[`{${name}}`] = {
+        poopy.tempdata[msg.author.id]['keydeclared'][`{${name}}`] = {
             func: async () => {
                 return value.replace(new RegExp(`\\{${name}\\}`, 'ig'), poopy.tempdata[msg.author.id]['declared'][`{${name}}`] || '')
             }
         }
-        return [await poopy.functions.getKeywordsFor(phrase, msg, isBot, {
-            extrakeys: extrakeys
-        }).catch(() => { }) ?? string, true]
+        return [phrase, true]
     },
     attemptvalue: 5
 }

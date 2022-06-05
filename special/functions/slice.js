@@ -1,7 +1,7 @@
 module.exports = {
   helpf: '(arrayName | start | end)',
   desc: 'Slices the array from the start index and the end index.',
-  func: async function (matches, msg) {
+  func: function (matches, msg) {
     let poopy = this
 
     var word = matches[1]

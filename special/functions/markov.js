@@ -1,7 +1,7 @@
 module.exports = {
     helpf: '(phrase)',
     desc: 'The markov chain generated AND THE Last Messages. turn on',
-    func: async function (matches, msg) {
+    func: function (matches, msg) {
         let poopy = this
 
         var word = matches[1]

@@ -70,7 +70,7 @@ module.exports = {
                             clearTimeout(t)
                         }, 60000)
                         poopy.functions.infoPost(`Command \`${commandname}\` used`)
-                        var phrase = await poopy.functions.getKeywordsFor(localCommand.phrase, msgclone, true, { ownermode: opts.ownermode }).catch(() => { }) ?? 'error'
+                        var phrase = await poopy.functions.getKeywordsFor(localCommand.phrase, msgclone, true, opts).catch(() => { }) ?? 'error'
                         poopy.data['bot-data']['filecount'] = poopy.vars.filecount
                         return phrase
                     }

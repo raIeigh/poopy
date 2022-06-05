@@ -1,7 +1,7 @@
 module.exports = {
     helpf: '(arrayName | index)',
     desc: 'Gets the value in the array with that index.',
-    func: async function (matches, msg, isBot) {
+    func: async function (matches, msg, isBot, _, opts) {
         let poopy = this
 
         var word = matches[1]
@@ -12,7 +12,7 @@ module.exports = {
         var array = poopy.tempdata[msg.author.id]['arrays'][name]
         if (!array) return ''
 
-        return await poopy.functions.getKeywordsFor(array[index], msg, isBot).catch(() => { }) ?? ''
+        return await poopy.functions.getKeywordsFor(array[index], msg, isBot, opts).catch(() => { }) ?? ''
     },
     attemptvalue: 5
 }

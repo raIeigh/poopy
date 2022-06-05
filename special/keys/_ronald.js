@@ -1,6 +1,6 @@
 module.exports = {
   desc: 'Returns a random Ronald McDonald GIF.',
-  func: async function () {
+  func: function () {
     let poopy = this
 
     var ronald = [

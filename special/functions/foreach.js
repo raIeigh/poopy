@@ -1,7 +1,7 @@
 module.exports = {
     helpf: '(arrayName | function<_index|_val>)',
     desc: "For each value in that array, it'll execute the function.",
-    func: async function (matches, msg, isBot) {
+    func: async function (matches, msg, isBot, _, opts) {
         let poopy = this
 
         var word = matches[1]
@@ -14,21 +14,19 @@ module.exports = {
 
         for (var index in array) {
             var val = array[index]
-            await poopy.functions.getKeywordsFor(func, msg, isBot, {
-                extrakeys: {
-                    _index: {
-                        func: async () => {
-                            return index
-                        }
-                    },
-
-                    _val: {
-                        func: async () => {
-                            return val
-                        }
-                    },
+            var valOpts = { ...opts }
+            valOpts.extrakeys._val = {
+                func: async () => {
+                    return val
                 }
-            }).catch(() => { })
+            }
+            valOpts.extrakeys._index = {
+                func: async () => {
+                    return index
+                }
+            }
+
+            await poopy.functions.getKeywordsFor(func, msg, isBot, valOpts).catch(() => { })
         }
 
         return ''

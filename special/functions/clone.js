@@ -1,7 +1,7 @@
 module.exports = {
   helpf: '(arrayName | cloneName)',
   desc: "Clones a new array from an existing one, giving it a new name. If it doesn't exist, it'll just create a new one.",
-  func: async function (matches, msg, _, string) {
+  func: function (matches, msg, _, string) {
     let poopy = this
 
     var word = matches[1]

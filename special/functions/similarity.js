@@ -1,7 +1,7 @@
 module.exports = {
   helpf: '(phrase1 | phrase2)',
   desc: 'Checks the similarity between the 2 phrases.',
-  func: async function (matches) {
+  func: function (matches) {
     let poopy = this
 
     var word = matches[1]

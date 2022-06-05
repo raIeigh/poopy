@@ -1,6 +1,6 @@
 module.exports = {
   desc: "Returns a random type of person you'd see on the internet, I guess. (this is a crime against humanity)",
-  func: async function () {
+  func: function () {
     let poopy = this
 
     var type = [

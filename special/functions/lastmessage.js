@@ -1,7 +1,7 @@
 module.exports = {
   helpf: '(index)',
   desc: 'Returns the content of the last message in the channel. If index is specified, it returns the content of the message with that index.',
-  func: async function (matches, msg, isBot) {
+  func: async function (matches, msg, isBot, _, opts) {
     let poopy = this
 
     var f = matches[0]
@@ -12,7 +12,7 @@ module.exports = {
 
     var index = poopy.functions.parseNumber(word, { dft: 0, min: 0, max: messages.size - 1, round: true })
 
-    return await poopy.functions.getKeywordsFor(([...messages.values()][index].content ?? '').replace(new RegExp(`${f}\\(([\\s\\S]*?)\\)`, 'ig'), ''), msg, isBot).catch(() => { }) ?? ''
+    return await poopy.functions.getKeywordsFor(([...messages.values()][index].content ?? '').replace(new RegExp(`${f}\\(([\\s\\S]*?)\\)`, 'ig'), ''), msg, isBot, opts).catch(() => { }) ?? ''
   },
   attemptvalue: 10
 }

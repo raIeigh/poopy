@@ -1,6 +1,6 @@
 module.exports = {
   desc: 'Returns a random Phexonia Studios related video.',
-  func: async function () {
+  func: function () {
     let poopy = this
 
     var psVideos = []

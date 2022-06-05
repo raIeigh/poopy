@@ -1,6 +1,6 @@
 module.exports = {
   desc: 'Returns a random message from the server. Requires permission for the bot to read messages within the channel.',
-  func: async function (msg) {
+  func: function (msg) {
     let poopy = this
 
     var messages = poopy.data['guild-data'][msg.guild.id]['messages']

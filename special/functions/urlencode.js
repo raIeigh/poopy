@@ -1,7 +1,7 @@
 module.exports = {
   helpf: '(phrase)',
   desc: "Encodes the phrase so it's supported by URL components.",
-  func: async function (matches) {
+  func: function (matches) {
     let poopy = this
 
     var word = matches[1]

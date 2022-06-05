@@ -1,6 +1,6 @@
 module.exports = {
   desc: 'Returns a random member from the server.',
-  func: async function (msg) {
+  func: function (msg) {
     let poopy = this
 
     var datamembers = poopy.data['guild-data'][msg.guild.id]['members'];

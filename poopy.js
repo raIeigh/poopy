@@ -1101,8 +1101,8 @@ class Poopy {
             var potentialindexes = []
             var rawMatch
 
-            var keylist = poopy.specialkeys.keys
-            var funclist = poopy.specialkeys.functions
+            var keylist = { ...poopy.special.keys }
+            var funclist = { ...poopy.special.functions }
             var pfunclist = []
 
             for (var k in keylist) {
@@ -1237,7 +1237,7 @@ class Poopy {
             var barfound = 0
             var split = []
 
-            var funclist = poopy.specialkeys.functions
+            var funclist = { ...poopy.special.functions }
             var pfunclist = []
 
             for (var f in funclist) {
@@ -2707,6 +2707,14 @@ class Poopy {
                 poopy.tempdata[msg.author.id]['declared'] = {}
             }
 
+            if (!poopy.tempdata[msg.author.id]['keydeclared']) {
+                poopy.tempdata[msg.author.id]['keydeclared'] = {}
+            }
+
+            if (!poopy.tempdata[msg.author.id]['funcdeclared']) {
+                poopy.tempdata[msg.author.id]['funcdeclared'] = {}
+            }
+
             if (!poopy.tempdata[msg.author.id]['keywordsExecuted']) {
                 poopy.tempdata[msg.author.id]['keywordsExecuted'] = []
             }
@@ -2714,6 +2722,9 @@ class Poopy {
             if (!poopy.tempdata[msg.author.id]['startTime']) {
                 poopy.tempdata[msg.author.id]['startTime'] = Date.now()
             }
+
+            extrakeys = { ...extrakeys, ...poopy.tempdata[msg.author.id]['keydeclared'] }
+            extrafuncs = { ...extrafuncs, ...poopy.tempdata[msg.author.id]['funcdeclared'] }
 
             while (poopy.functions.getKeyFunc(string, { extrakeys: extrakeys, extrafuncs: extrafuncs }) !== false && poopy.tempdata[msg.author.id]['return'] == undefined) {
                 if (poopy.tempdata[msg.author.id]['keyattempts'] >= poopy.config.keyLimit) {
@@ -2727,16 +2738,19 @@ class Poopy {
 
                 switch (keydata.type) {
                     case 'key':
-                        var key = poopy.specialkeys.keys[keydata.match] || extrakeys[keydata.match]
-                        poopy.tempdata[msg.author.id]['keyattempts'] += key.attemptvalue ?? 1
-                        var change = await key.func.call(poopy, msg, isBot, string, { ownermode: ownermode }).catch(() => { }) ?? ''
+                        var key = poopy.special.keys[keydata.match] || extrakeys[keydata.match]
+                        
+                        var change
+                        if (key.func.constructor.name == 'AsyncFunction') change = await key.func.call(poopy, msg, isBot, string, { extrakeys: extrakeys, extrafuncs: extrafuncs, ownermode: ownermode }).catch(() => { }) ?? ''
+                        else change = key.func.call(poopy, msg, isBot, string, { extrakeys: extrakeys, extrafuncs: extrafuncs, ownermode: ownermode })
+                        
                         string = typeof (change) === 'object' && change[1] === true ? change[0] : string.replace(new RegExp(poopy.functions.regexClean(keydata.match), 'i'), change)
+                        poopy.tempdata[msg.author.id]['keyattempts'] += key.attemptvalue ?? 1
                         break
 
                     case 'func':
                         var [funcName, match] = keydata.match
-                        var func = poopy.specialkeys.functions[funcName] || extrafuncs[funcName]
-                        poopy.tempdata[msg.author.id]['keyattempts'] += func.attemptvalue ?? 1
+                        var func = poopy.special.functions[funcName] || extrafuncs[funcName]
                         var m = match
                         if (!func.raw) {
                             match = await poopy.functions.getKeywordsFor(match, msg, isBot, { extrakeys: extrakeys, extrafuncs: extrafuncs, ownermode: ownermode }).catch(() => { }) ?? m
@@ -2745,8 +2759,13 @@ class Poopy {
                         if (!func.raw) {
                             string = string.replace(m, match)
                         }
-                        var change = await func.func.call(poopy, [funcName, match], msg, isBot, string, { ownermode: ownermode }).catch(() => { }) ?? ''
+                        
+                        var change
+                        if (func.func.constructor.name == 'AsyncFunction') change = await func.func.call(poopy, [funcName, match], msg, isBot, string, { extrakeys: extrakeys, extrafuncs: extrafuncs, ownermode: ownermode }).catch(() => { }) ?? ''
+                        else change = func.func.call(poopy, [funcName, match], msg, isBot, string, { extrakeys: extrakeys, extrafuncs: extrafuncs, ownermode: ownermode })
+                        
                         string = typeof (change) === 'object' && change[1] === true ? change[0] : string.replace(new RegExp(poopy.functions.regexClean(`${funcName}(${match})`), 'i'), change)
+                        poopy.tempdata[msg.author.id]['keyattempts'] += func.attemptvalue ?? 1
                         break
                 }
             }
@@ -3299,7 +3318,7 @@ class Poopy {
             poopy.functions.infoPost(`Data saved`)
         }
 
-        poopy.specialkeys = {
+        poopy.special = {
             keys: {},
             functions: {}
         }
@@ -3307,18 +3326,18 @@ class Poopy {
         poopy.modules.fs.readdirSync('special/keys').forEach(name => {
             var key = name.replace(/\.js$/, '')
             if (!(poopy.config.poosonia && poopy.config.poosoniakeywordblacklist.find(keyname => keyname == key))) {
-                poopy.specialkeys.keys[key] = require(`./special/keys/${key}`)
+                poopy.special.keys[key] = require(`./special/keys/${key}`)
             }
         })
 
         poopy.modules.fs.readdirSync('special/functions').forEach(name => {
             var func = name.replace(/\.js$/, '')
             if (!(poopy.config.poosonia && poopy.config.poosoniafunctionblacklist.find(funcname => funcname == func))) {
-                poopy.specialkeys.functions[func] = require(`./special/functions/${name}`)
+                poopy.special.functions[func] = require(`./special/functions/${name}`)
             }
         })
 
-        poopy.vars.chunkkeyfields = poopy.functions.chunkObject(poopy.specialkeys.keys, 10)
+        poopy.vars.chunkkeyfields = poopy.functions.chunkObject(poopy.special.keys, 10)
         poopy.vars.keyfields = []
 
         for (var kg in poopy.vars.chunkkeyfields) {
@@ -3333,7 +3352,7 @@ class Poopy {
             }
         }
 
-        poopy.vars.chunkfuncfields = poopy.functions.chunkObject(poopy.specialkeys.functions, 10)
+        poopy.vars.chunkfuncfields = poopy.functions.chunkObject(poopy.special.functions, 10)
         poopy.vars.funcfields = []
 
         for (var fg in poopy.vars.chunkfuncfields) {

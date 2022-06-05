@@ -1,7 +1,7 @@
 module.exports = {
     helpf: '(arrayName | function<_val>)',
     desc: 'Finds the key of the value in the array that matches the function.',
-    func: async function (matches, msg, isBot) {
+    func: async function (matches, msg, isBot, _, opts) {
         let poopy = this
 
         var word = matches[1]
@@ -13,15 +13,14 @@ module.exports = {
         if (!array) return ''
 
         return await poopy.functions.findIndexAsync(array, async (val) => {
-            var found = await poopy.functions.getKeywordsFor(func, msg, isBot, {
-                extrakeys: {
-                    _val: {
-                        func: async () => {
-                            return val
-                        }
-                    },
+            var valOpts = { ...opts }
+            valOpts.extrakeys._val = {
+                func: async () => {
+                    return val
                 }
-            }).catch(() => { }) ?? ''
+            }
+
+            var found = await poopy.functions.getKeywordsFor(func, msg, isBot, valOpts).catch(() => { }) ?? ''
 
             return found
         }).catch(() => { }) ?? ''

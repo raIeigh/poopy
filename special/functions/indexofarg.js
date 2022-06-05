@@ -1,7 +1,7 @@
 module.exports = {
   helpf: '(text)',
   desc: 'Returns the index of the argument in the message that matches the text inside the function.',
-  func: async function (matches, msg, isBot, string) {
+  func: function (matches, msg, isBot, string) {
     let poopy = this
 
     var f = matches[0]

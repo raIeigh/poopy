@@ -1,7 +1,7 @@
 module.exports = {
     helpf: '(name | function<_val>)',
     desc: 'Declares a function with the name and function specified. Functions can be used by typing in [functionname].',
-    func: async function (matches, msg, isBot, string) {
+    func: async function (matches, msg, isBot, string, opts) {
         let poopy = this
 
         var word = matches[1]
@@ -12,16 +12,13 @@ module.exports = {
         var value = split.slice(1).length ? split.slice(1).join(' | ') : ''
         var phrase = string.replace(new RegExp(`${poopy.functions.regexClean(fullword)}\\s*`, 'i'), '')
         poopy.tempdata[msg.author.id]['declared'][`[${name}]`] = value
-        var extrafuncs = {}
-        extrafuncs[`[${name}]`] = {
+        poopy.tempdata[msg.author.id]['funcdeclared'][`[${name}]`] = {
             func: async (matches) => {
                 var word = matches[1]
-                return await poopy.functions.getKeywordsFor(value.replace(new RegExp(`\\[${name}\\]\\(([\\s\\S]*?)\\)`, 'ig'), poopy.tempdata[msg.author.id]['declared'][`[${name}]`] || '').replace(/_val/, word), msg, isBot).catch(() => { }) ?? ''
+                return await poopy.functions.getKeywordsFor(value.replace(new RegExp(`\\[${name}\\]\\(([\\s\\S]*?)\\)`, 'ig'), poopy.tempdata[msg.author.id]['declared'][`[${name}]`] || '').replace(/_val/, word), msg, isBot, opts).catch(() => { }) ?? ''
             }
         }
-        return [await poopy.functions.getKeywordsFor(phrase, msg, isBot, {
-            extrafuncs: extrafuncs
-        }).catch(() => { }) ?? string, true]
+        return [phrase, true]
     },
     raw: true,
     parentheses: true,

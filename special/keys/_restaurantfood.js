@@ -1,6 +1,6 @@
 module.exports = {
   desc: 'Returns a random food from a restaurant.',
-  func: async function () {
+  func: function () {
     let poopy = this
 
     var restaurantJSON = poopy.json.restaurantJSON

@@ -1,7 +1,7 @@
 module.exports = {
   helpf: '(arrayName | index | deleteCount)',
   desc: 'Removes n elements in the array starting from the index.',
-  func: async function (matches, msg) {
+  func: function (matches, msg) {
     let poopy = this
 
     var word = matches[1]

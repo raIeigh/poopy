@@ -1,5 +1,5 @@
 module.exports = {
-    desc: 'Returns a random adjective.', func: async function () {
+    desc: 'Returns a random adjective.', func: function () {
         let poopy = this
 
         var adjJSON = poopy.json.adjJSON

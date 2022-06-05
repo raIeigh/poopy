@@ -1,13 +1,13 @@
 module.exports = {
   desc: 'Returns a random keyword.',
-  func: async function (msg) {
+  func: function (msg) {
     let poopy = this
 
     var keys = []
-    for (var k in poopy.specialkeys.keys) {
+    for (var k in poopy.special.keys) {
       keys.push(k)
     }
-    return poopy.specialkeys.keys[keys[Math.floor(Math.random() * keys.length)]].func(msg)
+    return poopy.special.keys[keys[Math.floor(Math.random() * keys.length)]].func(msg)
   },
   attemptvalue: 2
 }

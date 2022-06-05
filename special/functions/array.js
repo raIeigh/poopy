@@ -1,7 +1,7 @@
 module.exports = {
   helpf: '(arrayName)',
   desc: "Creates a new array with the specified name. If it already exists, it'll be cleared.",
-  func: async function (matches, msg, _, string) {
+  func: function (matches, msg, _, string) {
     let poopy = this
 
     var word = matches[1]

@@ -1,7 +1,7 @@
 module.exports = {
   helpf: '(number1 | number2)',
   desc: 'Returns true if number1 is bigger than number2.',
-  func: async function (matches) {
+  func: function (matches) {
     let poopy = this
 
     var word = matches[1]

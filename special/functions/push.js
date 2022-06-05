@@ -1,7 +1,7 @@
 module.exports = {
   helpf: '(arrayName | value)',
   desc: 'Pushes a new value to an array.',
-  func: async function (matches, msg) {
+  func: function (matches, msg) {
     let poopy = this
 
     var word = matches[1]

@@ -1,7 +1,7 @@
 module.exports = {
   helpf: '(city)',
   desc: 'Returns the longitude of the city specified.',
-  func: async function (matches) {
+  func: function (matches) {
     let poopy = this
 
     var word = matches[1]

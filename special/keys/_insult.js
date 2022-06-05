@@ -1,5 +1,5 @@
 module.exports = {
-    desc: 'Returns a random insult.', func: async function () {
+    desc: 'Returns a random insult.', func: function () {
         let poopy = this
 
         var insults = [

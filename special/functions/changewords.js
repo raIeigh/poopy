@@ -1,7 +1,7 @@
 module.exports = {
     helpf: '(phrase)',
     desc: 'Replaces all of the words in the phrase with different ones.',
-    func: async function (matches) {
+    func: function (matches) {
         let poopy = this
 
         var word = matches[1]

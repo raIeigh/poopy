@@ -1,5 +1,5 @@
 module.exports = {
-    desc: 'Returns a random Poopy funny.', func: async function (msg) {
+    desc: 'Returns a random Poopy funny.', func: function (msg) {
         let poopy = this
 
         return poopy.arrays.poopPhrases[Math.floor(Math.random() * poopy.arrays.poopPhrases.length)]
