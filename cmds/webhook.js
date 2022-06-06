@@ -12,27 +12,26 @@ module.exports = {
 
             if (!userMention) {
                 async function getUser(id) {
-                    var user = await msg.guild.members.fetch(id).catch(async () => {
+                    var member = await msg.guild.members.fetch(id).catch(async () => {
                         await msg.channel.send({
-                            content: 'Invalid user ID: **' + user + '**',
+                            content: 'Invalid user ID: **' + id + '**',
                             allowedMentions: {
                                 parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                             }
                         }).catch(() => { })
                     })
 
-                    if (user) {
-
+                    if (member) {
                         if (!poopy.data['guild-data'][msg.guild.id]) {
                             poopy.data['guild-data'][msg.guild.id] = {}
                         }
-                        if (!poopy.data['guild-data'][msg.guild.id]['members'][user.id]) {
-                            poopy.data['guild-data'][msg.guild.id]['members'][user.id] = {}
+                        if (!poopy.data['guild-data'][msg.guild.id]['members'][member.id]) {
+                            poopy.data['guild-data'][msg.guild.id]['members'][member.id] = {}
                         }
-                        if (!poopy.data['guild-data'][msg.guild.id]['members'][user.id]['custom']) {
-                            poopy.data['guild-data'][msg.guild.id]['members'][user.id]['custom'] = false
+                        if (!poopy.data['guild-data'][msg.guild.id]['members'][member.id]['custom']) {
+                            poopy.data['guild-data'][msg.guild.id]['members'][member.id]['custom'] = false
                         }
-                        if (poopy.data['guild-data'][msg.guild.id]['members'][user.id]['custom'] === false) {
+                        if (poopy.data['guild-data'][msg.guild.id]['members'][member.id]['custom'] === false) {
                             var saidMessage = args.join(' ').substring(args[0].length + 1)
                             var symbolReplacedMessage
                             poopy.vars.symbolreplacements.forEach(symbolReplacement => {
@@ -82,24 +81,24 @@ module.exports = {
                             }
                             var avatar = args[args.length - 1]
 
-                            poopy.data['guild-data'][msg.guild.id]['members'][user.id]['custom'] = {
+                            poopy.data['guild-data'][msg.guild.id]['members'][member.id]['custom'] = {
                                 name: allBlank ? '⠀' : name,
                                 avatar: avatar
                             }
                             await msg.channel.send({
-                                content: user.user.username + ` is now ${name}.`,
+                                content: member.user.username + ` is now ${name}.`,
                                 allowedMentions: {
                                     parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                                 }
                             }).catch(() => { })
                         } else {
                             await msg.channel.send({
-                                content: user.user.username + ` is not ${poopy.data['guild-data'][msg.guild.id]['members'][user.id]['custom']['name']}.`,
+                                content: member.user.username + ` is not ${poopy.data['guild-data'][msg.guild.id]['members'][member.id]['custom']['name']}.`,
                                 allowedMentions: {
                                     parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                                 }
                             }).catch(() => { })
-                            poopy.data['guild-data'][msg.guild.id]['members'][user.id]['custom'] = false
+                            poopy.data['guild-data'][msg.guild.id]['members'][member.id]['custom'] = false
                         }
                     }
                 }

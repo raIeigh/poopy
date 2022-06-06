@@ -5,8 +5,6 @@
     for all the commands to work, you need to get all of these below:
 
     - TOKEN (it's just the discord bot token, you can just put a random name like POOPYTOKEN, accessed at https://discord.com/developers/applications/<app-id>/bot)
-    - CLEVERBOTCOOKIE (the XVIS cookie from https://cleverbot.com, go to developer console (F12) and access Application -> Cookies)
-    - CLEVERBOTUSERAGENT (can just be the user agent you used to go to cleverbot)
     - DEEPAIKEY (key generated when you sign up in deepai, accessed at https://deepai.org/dashboard/profile)
     - GAMERKEY (key that was used for a cleverbot alternative, generated at https://api-info.pgamerx.com/manage-key)
     - GOOGLEKEY (key from google cloud you can generate at https://console.cloud.google.com/apis/credentials?project=<project-name>)
@@ -757,6 +755,27 @@ class Poopy {
             })
         }
 
+        poopy.functions.request = async function (options) {
+            return new Promise((resolve, reject) => {
+                poopy.modules.request(options, function (error, response, body) {
+                    if (error) {
+                        reject(error)
+                        return
+                    }
+
+                    try {
+                        body = JSON.parse(body)
+                    } catch (_) { }
+
+                    resolve({
+                        status: response.statusCode,
+                        statusText: response.statusMessage,
+                        data: body
+                    })
+                })
+            })
+        }
+
         poopy.functions.gatherData = async function (msg) {
             var webhook = await msg.fetchWebhook().catch(() => { })
 
@@ -957,15 +976,13 @@ class Poopy {
                 return escape(f)
             }
 
-            var jar = process.env.CLEVERBOTCOOKIE
-            var UA = process.env.CLEVERBOTUSERAGENT
+            var UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.127 Safari/537.36'
+            if (!poopy.vars.cleverJar) poopy.vars.cleverJar = await poopy.modules.axios.get("https://www.cleverbot.com/extras/conversation-social-min.js", { headers: { "User-Agent": UA } }).then(res => res.headers['set-cookie'][0].split(";")[0]).catch(() => { })
 
             var context = id
             if (!Array.isArray(id)) {
                 context = poopy.vars.clevercontexts[id] || (poopy.vars.clevercontexts[id] = [])
             }
-
-            //if (!jar) jar = await fetch("https://www.cleverbot.com/", { headers: { "User-Agent": UA } }).then(a => a.headers.raw()['set-cookie'][0].split(";")[0])
 
             var payload = `stimulus=${encodeForSending(stim)}`
             if (context.length > 10) context.splice(0, context.length - 10)
@@ -981,7 +998,7 @@ class Poopy {
                 data: payload,
                 headers: {
                     "Content-Type": "text/plain",
-                    Cookie: jar,
+                    Cookie: poopy.vars.cleverJar,
                     "User-Agent": UA
                 }
             })

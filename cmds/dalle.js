@@ -85,6 +85,18 @@ module.exports = {
                         poopy.functions.sendFile(msg, filepath, `output.zip`)
                     },
                     page: false
+                },
+
+                {
+                    emoji: '874406183933444156',
+                    reactemoji: '❌',
+                    customid: 'delete',
+                    style: 'DANGER',
+                    function: async (_, __, resultsMsg, collector) => {
+                        collector.stop()
+                        resultsMsg.delete().catch(() => { })
+                    },
+                    page: false
                 }
             ], undefined, undefined, undefined, (reason) => {
                 if (reason == 'time') poopy.modules.fs.rmSync(filepath, { force: true, recursive: true })

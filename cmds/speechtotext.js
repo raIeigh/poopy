@@ -19,20 +19,6 @@ module.exports = {
         if (!fileinfo) return
         var type = fileinfo.type
 
-        async function postAudio(options) {
-            return new Promise((resolve, reject) => {
-                poopy.modules.request(options, function (error, response, body) {
-                    if (error) reject()
-        
-                    resolve({
-                        status: response.statusCode,
-                        statusText: response.statusMessage,
-                        data: JSON.parse(body)
-                    })
-                })
-            })
-        }
-
         if (type.mime.startsWith('video')) {
             var filepath = await poopy.functions.downloadFile(currenturl, `input.mp4`, {
                 fileinfo: fileinfo
@@ -60,13 +46,13 @@ module.exports = {
                     },
                     formData: {
                         sound: {
-                            value: poopy.modules.fs.createReadStream(`${filepath}/input.mp3`),
+                            value: poopy.modules.fs.readFileSync(`${filepath}/input.mp3`),
                             options: { filename: 'input.mp3', contentType: 'application/octet-stream' }
                         }
                     }
                 }
 
-                var response = await postAudio(options).catch(async () => {
+                var response = await poopy.functions.request(options).catch(async () => {
                     await msg.channel.send('Error recognizing speech in audio.').catch(() => { })
                 })
 
@@ -130,13 +116,13 @@ module.exports = {
                 },
                 formData: {
                     sound: {
-                        value: poopy.modules.fs.createReadStream(`${filepath}/input.mp3`),
+                        value: poopy.modules.fs.readFileSync(`${filepath}/input.mp3`),
                         options: { filename: 'input.mp3', contentType: 'application/octet-stream' }
                     }
                 }
             }
 
-            var response = await postAudio(options).catch(async () => {
+            var response = await poopy.functions.request(options).catch(async () => {
                 await msg.channel.send('Error recognizing speech in audio.').catch(() => { })
             })
 
