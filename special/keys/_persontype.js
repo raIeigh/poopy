@@ -66,7 +66,7 @@ module.exports = {
       'prime minister',
       'youtuber',
       'nerd'
-    ],
+    ]
 
     return type[Math.floor(Math.random() * type.length)]
   }
