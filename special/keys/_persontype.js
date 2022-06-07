@@ -21,6 +21,7 @@ module.exports = {
       'racist',
       'underaged',
       'gamer',
+      'clown',
       'gangsta',
       'r34 artist',
       'discord mod',
@@ -55,9 +56,17 @@ module.exports = {
       'liberal',
       'autistic',
       'young',
+      'terrorist',
       'black',
-      ''
-    ]
+      'artist',
+      'futa',
+      'twitter artist',
+      'president',
+      'skin walker',
+      'prime minister',
+      'youtuber',
+      'nerd'
+    ],
 
     return type[Math.floor(Math.random() * type.length)]
   }

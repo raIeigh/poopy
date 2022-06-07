@@ -24,9 +24,6 @@ module.exports = {
         var token = intromakerresponse.data.match(new RegExp(`${poopy.functions.regexClean(tokenMatch[0])}.+${poopy.functions.regexClean(tokenMatch[1])}`))[0]
         token = token.substring(tokenMatch[0].length, token.length - tokenMatch[1].length)
 
-        console.log(cookies)
-        console.log(token)
-
         var response = await poopy.functions.request({
             url: 'https://intromaker.com/render',
             method: 'POST',
@@ -50,8 +47,6 @@ module.exports = {
         })
 
         if (!response) return
-
-        console.log(response.data)
 
         /*await msg.channel.send({
             files: [new poopy.modules.Discord.MessageAttachment(response.data.renderLocation)]
