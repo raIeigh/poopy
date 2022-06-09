@@ -17,5 +17,6 @@ module.exports = {
     }
     return repeat.join(separator)
   },
-  raw: true
+  raw: true,
+  limit: 5
 }

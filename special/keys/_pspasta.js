@@ -5,5 +5,6 @@ module.exports = {
 
     return poopy.arrays.psPasta[Math.floor(Math.random() * poopy.arrays.psPasta.length)]
   },
-  attemptvalue: 5
+  attemptvalue: 5,
+  limit: 5
 }

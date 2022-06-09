@@ -9,5 +9,6 @@ module.exports = {
     await poopy.functions.sleep((waitTime * 1000) > 60000 ? 60000 : waitTime * 1000)
     return ''
   },
-  attemptvalue: 10
+  attemptvalue: 10,
+  limit: 5
 }

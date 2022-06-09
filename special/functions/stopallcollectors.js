@@ -1,7 +1,7 @@
 module.exports = {
     helpf: '(sendFinishPhrase) (manage messages permission only)',
     desc: 'Stops all message collectors that are still active in the channel.',
-    func: function (matches, msg) {
+    func: function (matches, msg, isBot) {
         let poopy = this
 
         var word = matches[1]

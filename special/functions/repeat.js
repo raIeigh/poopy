@@ -16,5 +16,6 @@ module.exports = {
       if (poopy.tempdata[msg.author.id]['keyattempts'] >= poopy.config.keyLimit) break
     }
     return repeat.join(separator)
-  }
+  },
+  limit: 5
 }

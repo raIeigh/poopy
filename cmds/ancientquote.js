@@ -7,22 +7,21 @@ module.exports = {
         var saidMessage = args.join(' ').substring(args[0].length + 1)
         if (args[1] === undefined) {
             await msg.channel.send('What is the text?!').catch(() => { })
-            await msg.channel.sendTyping().catch(() => { })
-            return;
+            return
         }
 
-        var intromakerresponse = await poopy.modules.axios.get('https://intromaker.com/intro/408/ancient-quote/editor').catch(async () => {
+        var introeditorresponse = await poopy.modules.axios.get('https://intromaker.com/intro/408/ancient-quote/editor').catch(async () => {
             await msg.channel.send('Error generating video.').catch(() => { })
         })
 
-        if (!intromakerresponse) return
+        if (!introeditorresponse) return
 
-        console.log(intromakerresponse)
+        console.log(introeditorresponse.headers)
 
-        var cookies = intromakerresponse.headers['set-cookie'].map(cookie => cookie.split(';')[0]).join('; ')
-        var tokenMatch = [`<input type="hidden" name="_token" value="`, `">`]
-        var token = intromakerresponse.data.match(new RegExp(`${poopy.functions.regexClean(tokenMatch[0])}.+${poopy.functions.regexClean(tokenMatch[1])}`))[0]
-        token = token.substring(tokenMatch[0].length, token.length - tokenMatch[1].length)
+        var $ = poopy.modules.cheerio.load(introeditorresponse.data)
+        var editorScript = $('script#editor')[0]
+        $ = poopy.modules.cheerio.load(editorScript.children[0].data)
+        var token = $('input[name=_token]')[0].attribs.value
 
         var response = await poopy.functions.request({
             url: 'https://intromaker.com/render',
@@ -39,14 +38,17 @@ module.exports = {
                 }
             },
             headers: {
-                'content-type': 'multipart/form-data; boundary=----WebKitFormBoundaryjpCPuuBx600e5htA',
-                cookie: cookies
-            }
+                cookie: introeditorresponse.headers['set-cookie'].map(cookie => cookie.split(';')[0]).join('; '),
+                'content-type': 'multipart/form-data; boundary=---011000010111000001101001'
+            },
+            followAllRedirects: true
         }).catch(async () => {
             await msg.channel.send('Error generating video.').catch(() => { })
         })
 
         if (!response) return
+
+        console.log(response)
 
         /*await msg.channel.send({
             files: [new poopy.modules.Discord.MessageAttachment(response.data.renderLocation)]

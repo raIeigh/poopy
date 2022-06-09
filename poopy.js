@@ -770,6 +770,8 @@ class Poopy {
                     resolve({
                         status: response.statusCode,
                         statusText: response.statusMessage,
+                        headers: response.headers,
+                        url: response.request.href,
                         data: body
                     })
                 })
@@ -1348,6 +1350,12 @@ class Poopy {
             if (str == undefined || str === '') return dft
             var query = upper ? str.toUpperCase() : lower ? str.toLowerCase() : str
             return validList.find(q => q == query) || dft
+        }
+
+        poopy.functions.equalValues = function (arr, val) {
+            var count = 0
+            arr.forEach(v => v == val && count++)
+            return count
         }
 
         poopy.functions.yesno = async function (channel, content, who) {
@@ -1949,9 +1957,8 @@ class Poopy {
             return final
         }
 
-        poopy.functions.generateId = function (unique) {
+        poopy.functions.generateId = function (unique, length = 10) {
             var charset = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_'
-            var length = 10
             var id = ''
 
             for (var i = 0; i < length; i++) {
@@ -2760,12 +2767,18 @@ class Poopy {
                 }
 
                 var keydata = poopy.functions.getKeyFunc(string, { extrakeys: extradkeys, extrafuncs: extradfuncs })
-
-                poopy.tempdata[msg.author.id]['keywordsExecuted'].push(typeof (keydata.match) == 'object' ? keydata.match[0] : keydata.match)
+                var keyName = typeof (keydata.match) == 'object' ? keydata.match[0] : keydata.match
 
                 switch (keydata.type) {
                     case 'key':
                         var key = poopy.special.keys[keydata.match] || extradkeys[keydata.match]
+
+                        if (key.limit != undefined && poopy.functions.equalValues(poopy.tempdata[msg.author.id]['keywordsExecuted'], keyName) >= key.limit) {
+                            string = string.replace(new RegExp(poopy.functions.regexClean(keydata.match), 'i'), '')
+                            break
+                        }
+
+                        poopy.tempdata[msg.author.id]['keywordsExecuted'].push(keyName)
 
                         var change
                         if (key.func.constructor.name == 'AsyncFunction') change = await key.func.call(poopy, msg, isBot, string, { extrakeys: extradkeys, extrafuncs: extradfuncs, ownermode: ownermode }).catch(() => { }) ?? ''
@@ -2779,9 +2792,13 @@ class Poopy {
                         var [funcName, match] = keydata.match
                         var func = poopy.special.functions[funcName] || extradfuncs[funcName]
                         var m = match
-                        if (!func.raw) {
-                            match = await poopy.functions.getKeywordsFor(match, msg, isBot, { extrakeys: extradkeys, extrafuncs: extradfuncs, ownermode: ownermode }).catch(() => { }) ?? m
+
+                        if (func.limit != undefined && poopy.functions.equalValues(poopy.tempdata[msg.author.id]['keywordsExecuted'], keyName) >= func.limit) {
+                            string = string.replace(new RegExp(poopy.functions.regexClean(`${funcName}(${match})`), 'i'), '')
+                            break
                         }
+
+                        poopy.tempdata[msg.author.id]['keywordsExecuted'].push(keyName)
 
                         match = match.replace(/\\\)/g, ')')
                         if (!func.raw) {

@@ -1,14 +1,10 @@
 module.exports = {
     helpf: '(name | arguments) (manage messages only)',
     desc: 'Allows you to execute any command!',
-    func: async function (matches, msg, isBot, string, opts) {
+    func: async function (matches, msg, isBot, _, opts) {
         let poopy = this
 
-        var f = matches[0]
         var word = matches[1]
-
-        var commandMatch = string.match(new RegExp(`${f}\\(([\\s\\S]*?)\\)`, 'ig'))
-        if (commandMatch ? commandMatch.length > poopy.config.commandLimit : false) return `Can't use the command function more than ${poopy.config.commandLimit} times.`
         var split = poopy.functions.splitKeyFunc(word)
         var commandname = (split[0] ?? '').toLowerCase()
         var args = split.slice(1).length ? split.slice(1).join(' | ') : ''
@@ -84,5 +80,6 @@ module.exports = {
 
         return error
     },
-    attemptvalue: 10
+    attemptvalue: 10,
+    limit: 10
 }

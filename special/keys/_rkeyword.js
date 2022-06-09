@@ -12,5 +12,6 @@ module.exports = {
     if (func.constructor.name == 'AsyncFunction') return await func.call(poopy, msg).catch(() => { }) ?? ''
     else return func.call(poopy, msg)
   },
-  attemptvalue: 2
+  attemptvalue: 2,
+  limit: 5
 }

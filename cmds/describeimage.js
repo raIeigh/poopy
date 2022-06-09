@@ -1,5 +1,5 @@
 module.exports = {
-    name: ['ocr', 'recognizetext'],
+    name: ['describeimage'],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -21,17 +21,10 @@ module.exports = {
 
         if (type.mime.startsWith('image')) {
             var options = {
+                url: 'https://hf.space/embed/Salesforce/BLIP/+/api/predict/',
                 method: 'POST',
-                url: 'https://microsoft-computer-vision3.p.rapidapi.com/ocr',
-                params: { detectOrientation: 'true', language: 'unk' },
-                headers: {
-                    'content-type': 'application/json',
-                    'x-rapidapi-host': 'microsoft-computer-vision3.p.rapidapi.com',
-                    'x-rapidapi-key': poopy.functions.randomKey('RAPIDAPIKEY')
-                },
-                data: {
-                    url: currenturl
-                }
+                data: { data: [`data:${type.mime};base64,${fileinfo.buffer.toString('base64')}`, "Image Captioning", "None", "Nucleus sampling"] },
+                headers: { 'Content-Type': 'application/json' }
             }
 
             var response = await poopy.modules.axios.request(options).catch(async () => {
@@ -40,33 +33,12 @@ module.exports = {
 
             if (!response) return
 
-            var body = response.data
-            var regions = body.regions
-
-            if (regions.length <= 0) {
-                await msg.channel.send(`No text detected.`).catch(() => { })
-                return
-            }
-
-            var result = regions.map(region => region.lines.map(line => line.words.map(word => word.text).join(' ')).join('\n')).join('\n\n')
-
             await msg.channel.send({
-                content: `Language: \`${body.language}\`\n\`\`\`\n${result}\n\`\`\``,
+                content: response.data.data[0].replace('caption: ', ''),
                 allowedMentions: {
                     parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
-            }).catch(async () => {
-                var currentcount = poopy.vars.filecount
-                poopy.vars.filecount++
-                var filepath = `temp/${poopy.config.mongodatabase}/file${currentcount}`
-                poopy.modules.fs.mkdirSync(`${filepath}`)
-                poopy.modules.fs.writeFileSync(`${filepath}/ocr.txt`, result)
-                await msg.channel.send({
-                    content: `Language: \`${body.language}\``,
-                    files: [new poopy.modules.Discord.MessageAttachment(`${filepath}/ocr.txt`)]
-                }).catch(() => { })
-                poopy.modules.fs.rmSync(`${filepath}`, { force: true, recursive: true })
-            })
+            }).catch(() => { })
         } else {
             await msg.channel.send({
                 content: `Unsupported file: \`${currenturl}\``,
@@ -79,8 +51,8 @@ module.exports = {
         }
     },
     help: {
-        name: 'ocr/recognizetext <image>',
-        value: "Recognizes text within an image with Microsoft's Computer Vision."
+        name: '<:newpoopy:839191885310066729> describeimage <image>',
+        value: "Describes the contents of an image. Try it yourself at https://huggingface.co/spaces/OFA-Sys/OFA-Image_Caption"
     },
     cooldown: 2500,
     type: 'Text'
