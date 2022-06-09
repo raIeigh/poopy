@@ -63,11 +63,10 @@ module.exports = {
             return;
         }
 
-        var filepath = await poopy.functions.downloadFile(response.data, `output.mp3`, {
-            buffer: true,
-            convert: true
+        var filepath = await poopy.functions.downloadFile(response.data, `output.wav`, {
+            buffer: true
         })
-        await poopy.functions.sendFile(msg, filepath, `output.mp3`)
+        await poopy.functions.sendFile(msg, filepath, `output.wav`)
     },
     help: {
         name: 'uberduck/tts <voice> <text>',
