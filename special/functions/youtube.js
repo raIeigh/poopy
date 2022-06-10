@@ -8,7 +8,13 @@ module.exports = {
         var split = poopy.functions.splitKeyFunc(word, { args: 2 })
         var query = poopy.functions.getIndexOption(split, 0)[0]
         var page = poopy.functions.getIndexOption(split, 1, { n: Infinity }).join(' | ')
-        var res = await poopy.modules.axios.request(`https://g.tenor.com/v1/search?q=${encodeURIComponent(query)}&key=${process.env.TENORKEY}&limit=100&contentfilter=${msg.channel.nsfw ? 'off' : 'medium'}`).catch(() => { })
+        var res = await poopy.vars.youtube.search.list({
+            type: 'video',
+            q: search,
+            part: 'snippet',
+            maxResults: 50,
+            safeSearch: msg.channel.nsfw ? 'none' : 'strict'
+        }).catch(() => { })
         
         if (!res) return word
 
