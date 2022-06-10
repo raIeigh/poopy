@@ -1,5 +1,5 @@
 module.exports = {
-    name: ['generatemusic'],
+    name: ['compose', 'generatemusic'],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -85,7 +85,7 @@ module.exports = {
         await poopy.functions.sendFile(msg, filepath, `output.wav`)
     },
     help: {
-        name: '<:newpoopy:839191885310066729> generatemusic [-style <musicStyle>] [-density <value (from 0 to 2)>] [-temperature <value (from 0 to 3))>]',
+        name: '<:newpoopy:839191885310066729> compose/generatemusic [-style <musicStyle>] [-density <value (from 0 to 2)>] [-temperature <value (from 0 to 3))>]',
         value: 'Generates a random music from AI. Available music styles are piano, chamber, rock_and_metal, synth, church, timpani_strings_harp, country, and reggae. Try it yourself at https://huggingface.co/spaces/ai-guru/composer'
     },
     type: 'Generation'

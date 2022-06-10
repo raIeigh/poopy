@@ -1555,7 +1555,7 @@ class Poopy {
             })
         }
 
-        poopy.functions.navigateEmbed = async function (channel, pageFunc, results, who, extraButtons, page, selectMenu, errOnFail, endFunc) {
+        poopy.functions.navigateEmbed = async function (channel, pageFunc, results, who, extraButtons, page, selectMenu, errOnFail, endFunc, reply) {
             page = page ?? 1
 
             var buttonsData = [
@@ -1721,7 +1721,7 @@ class Poopy {
             else sendObject.embeds = [resultEmbed]
 
             await poopy.functions.waitMessageCooldown()
-            var resultsMsg = await channel.send(sendObject).catch(() => { })
+            var resultsMsg = await (reply ?? channel)[reply ? 'reply' : 'send'](sendObject).catch(() => { })
 
             if (!resultsMsg) {
                 if (errOnFail) throw new Error(`Couldn't send navigable embed to channel`)

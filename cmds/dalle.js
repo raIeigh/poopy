@@ -11,25 +11,43 @@ module.exports = {
 
         var text = args.slice(1).join(' ')
 
+        var waitMsg = await msg.channel.send(`Haha... This might take a century`).catch(() => { })
+
         var processInterval = setInterval(async () => {
             await msg.channel.sendTyping().catch(() => { })
         }, 5000)
-        var waitMsg = await msg.channel.send('Haha... this might take a century...').catch(() => { })
         await msg.channel.sendTyping().catch(() => { })
 
-        var imageRes = await poopy.modules.axios.request({
-            url: 'https://bf.dallemini.ai/generate',
-            method: 'POST',
-            data: { prompt: text }
-        }).catch(() => { })
+        var retries = 0
 
-        if (waitMsg) waitMsg.delete().catch(() => { })
-        clearInterval(processInterval)
+        async function dalleRequest() {
+            var imageRes = await poopy.modules.axios.request({
+                url: 'https://bf.dallemini.ai/generate',
+                method: 'POST',
+                data: { prompt: text }
+            }).catch(() => { })
 
-        if (!imageRes) {
-            await msg.channel.send('Too much traffic, try again later.').catch(() => { })
-            return
+            if (!imageRes) {
+                retries++
+                if (retries >= 5) {
+                    clearInterval(processInterval)
+                    if (waitMsg) waitMsg.edit('Too much traffic, try again later.').catch(() => { })
+                    throw new Error('Too much traffic')
+                }
+
+                if (waitMsg) waitMsg.edit(`Haha... This might take a century (attempt ${retries})`).catch(() => { })
+                await poopy.functions.sleep(2000)
+                return await dalleRequest()
+            }
+
+            clearInterval(processInterval)
+            waitMsg.delete().catch(() => { })
+
+            return imageRes
         }
+
+        var imageRes = await dalleRequest().catch(() => { })
+        if (!imageRes) return
 
         var images = imageRes.data.images
 
@@ -100,7 +118,7 @@ module.exports = {
                 }
             ], undefined, undefined, undefined, (reason) => {
                 if (reason == 'time') poopy.modules.fs.rmSync(filepath, { force: true, recursive: true })
-            })
+            }, msg)
         })
 
         archive.pipe(output)
