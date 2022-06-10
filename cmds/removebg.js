@@ -51,7 +51,7 @@ module.exports = {
                 return
             };
 
-            await poopy.functions.downloadFile(response.data, `output.png`, {
+            await poopy.functions.downloadFile(Buffer.from(response.data), `output.png`, {
                 buffer: true,
                 filepath: filepath
             })
