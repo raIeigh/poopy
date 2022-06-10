@@ -12,7 +12,7 @@ module.exports = {
         }
 
         var response = await poopy.functions.request({
-            url: 'https://cooltext.com/PostChange',
+            url: 'http://cooltext.com/PostChange',
             method: 'POST',
             formData: {
                 LogoID: 4,
@@ -33,9 +33,9 @@ module.exports = {
         if (!response) return
 
         await msg.channel.send({
-            files: [new poopy.modules.Discord.MessageAttachment(response.data.renderLocation)]
+            files: [new poopy.modules.Discord.MessageAttachment(response.data.renderLocation.replace('https', 'http'))]
         }).catch(async () => {
-            await msg.channel.send(response.data.renderLocation).catch(() => { })
+            await msg.channel.send(response.data.renderLocation.replace('https', 'http')).catch(() => { })
         })
     },
     help: {
