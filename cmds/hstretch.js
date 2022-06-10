@@ -10,7 +10,7 @@ module.exports = {
             return;
         };
         var currenturl = poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl']
-        var multiplier = isNaN(Number(args[1])) ? 2 : Number(args[1]) <= 1 ? 1 : Number(args[1]) >= 2 ? 2 : Number(args[1]) || 2
+        var multiplier = isNaN(Number(args[1])) ? 2 : Number(args[1]) <= 1 ? 1 : Number(args[1]) >= 6 ? 6 : Number(args[1]) || 2
         var flags = [
             'fast_bilinear',
             'bilinear',
@@ -87,7 +87,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'hstretch [multiplier (from 1 to 2)] <file> [-flags <algorithm>]',
+        name: 'hstretch [multiplier (from 1 to 6)] <file> [-flags <algorithm>]',
         value: 'Stretches the file horizontally. A list of flags can be found at https://ffmpeg.org/ffmpeg-scaler.html#Scaler-Options'
     },
     cooldown: 2500,
