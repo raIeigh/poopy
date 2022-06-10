@@ -154,7 +154,7 @@ class Poopy {
         poopy.modules.whatwg = require('whatwg-url')
         poopy.modules.deepai = require('deepai')
         poopy.modules.noblox = require('noblox.js')
-        poopy.modules.youtubedl = require('youtube-dl-exec')
+        poopy.modules.youtubedl = require('yt-dlp-exec')
         poopy.modules.google = require('googleapis').google
         //poopy.modules.Twitter = require('twitter')
         poopy.modules.gis = require('g-i-s')
