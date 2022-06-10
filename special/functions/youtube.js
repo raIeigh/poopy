@@ -10,7 +10,7 @@ module.exports = {
         var page = poopy.functions.getIndexOption(split, 1, { n: Infinity }).join(' | ')
         var res = await poopy.vars.youtube.search.list({
             type: 'video',
-            q: search,
+            q: query,
             part: 'snippet',
             maxResults: 50,
             safeSearch: msg.channel.nsfw ? 'none' : 'strict'
