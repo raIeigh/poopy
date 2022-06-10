@@ -12,7 +12,7 @@ module.exports = {
         
         if (!res) return word
 
-        var urls = res.data.results.map(result => `https://www.youtube.com/watch?v=${result.id.videoId}`)
+        var urls = res.data.items.map(result => `https://www.youtube.com/watch?v=${result.id.videoId}`)
         
         if (!urls || !urls.length) return word
 
