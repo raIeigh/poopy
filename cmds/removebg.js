@@ -25,33 +25,41 @@ module.exports = {
             })
             var filename = `input.png`
 
-            var response = await poopy.functions.request({
+            var form = new poopy.modules.FormData()
+            form.append('size', 'auto')
+            form.append('image_file', poopy.modules.fs.readFileSync(`${filepath}/${filename}`), filename)
+
+            var rejected = false
+            var response = await poopy.modules.axios.request({
                 url: 'https://api.remove.bg/v1.0/removebg',
                 method: 'POST',
-                formData: {
-                    size: 'auto',
-                    image_file: {
-                        value: poopy.modules.fs.readFileSync(`${filepath}/${filename}`),
-                        options: { filename: filename, contentType: 'application/octet-stream' }
-                    }
-                },
+                data: form,
                 headers: {
-                    'content-type': 'multipart/form-data; boundary=---011000010111000001101001',
+                    ...form.getHeaders(),
                     'X-Api-Key': poopy.functions.randomKey('REMOVEBGKEY')
+                },
+                encoding: null,
+                responseType: 'arraybuffer'
+            }).catch((err) => {
+                rejected = true
+                try {
+                    err.response.data = JSON.parse(err.response.data).detail
+                } catch (_) {
+                    err.response.data = err.response.data.toString()
                 }
-            }).catch(() => { })
+                return err.response
+            })
 
-            if (response.status != 200) {
+            if (rejected && response.data) {
                 var m = response.data.errors[0].title
                 var code = response.status
 
                 await msg.channel.send(m + (code == 402 ? '. You can go to https://www.remove.bg/ and upload an image manually though.' : '')).catch(() => { })
-                await msg.channel.sendTyping().catch(() => { })
                 poopy.modules.fs.rmSync(`${filepath}`, { force: true, recursive: true })
                 return
-            };
+            }
 
-            await poopy.functions.downloadFile(Buffer.from(response.data), `output.png`, {
+            await poopy.functions.downloadFile(response.data, `output.png`, {
                 buffer: true,
                 filepath: filepath
             })

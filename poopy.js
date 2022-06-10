@@ -138,6 +138,7 @@ class Poopy {
         poopy.modules.fileType = require('file-type')
         poopy.modules.axios = require('axios').default
         poopy.modules.request = require('request')
+        poopy.modules.FormData = require('form-data')
         poopy.modules.cheerio = require('cheerio')
         poopy.modules.util = require('util')
         poopy.modules.md5 = require('md5')
