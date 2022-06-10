@@ -20,30 +20,30 @@ module.exports = {
         var type = fileinfo.type
 
         if (type.mime.startsWith('image') && !(poopy.vars.gifFormats.find(f => f === type.ext))) {
-            /*var res = await poopy.modules.axios.request({
-                method: 'GET',
-                url: 'https://api.remove.bg/v1.0/account',
-                headers: {
-                    'X-Api-Key': poopy.functions.randomKey('REMOVEBGKEY')
-                }
-            })
- 
-            var body = res.data
-            var free_calls = Number(body.data.attributes.api.free_calls)*/
-
             var filepath = await poopy.functions.downloadFile(currenturl, `input.png`, {
                 fileinfo: fileinfo
             })
             var filename = `input.png`
 
-            var response = await poopy.functions.execPromise(`cd ${filepath} && removebg --api-key ${poopy.functions.randomKey('REMOVEBGKEY')} ${filename}`)
-            var level = response.match(/level=[^ ]+/)[0].substring(6)
+            var response = await poopy.functions.request({
+                url: 'https://api.remove.bg/v1.0/removebg',
+                method: 'POST',
+                formData: {
+                    size: 'auto',
+                    image_file: {
+                        value: poopy.modules.fs.readFileSync(`${filepath}/${filename}`),
+                        options: { filename: filename, contentType: 'application/octet-stream' }
+                    }
+                },
+                headers: {
+                    'content-type': 'multipart/form-data; boundary=---011000010111000001101001',
+                    'X-Api-Key': poopy.functions.randomKey('REMOVEBGKEY')
+                }
+            }).catch(() => { })
 
-            if (level === 'error') {
-                var m = response.match(/msg="([\s\S]*?)"/)[0].substring(4)
-                m = m.substring(1, m.length - 1)
-                var code = m.match(/\d+/)
-                m = m.replace(/\d+: /, '')
+            if (response.status != 200) {
+                var m = response.data.errors[0].title
+                var code = response.status
 
                 await msg.channel.send(m + (code == 402 ? '. You can go to https://www.remove.bg/ and upload an image manually though.' : '')).catch(() => { })
                 await msg.channel.sendTyping().catch(() => { })
@@ -51,17 +51,11 @@ module.exports = {
                 return
             };
 
-            try {
-                poopy.modules.fs.renameSync(`${filepath}/input-removebg.png`, `${filepath}/output.png`)
-            } catch (_) {
-                await msg.channel.send('Couldn\'t send file.').catch(() => { })
-                await msg.channel.sendTyping().catch(() => { })
-                poopy.modules.fs.rmSync(`${filepath}`, { force: true, recursive: true })
-                return
-            }
-            await poopy.functions.sendFile(msg, filepath, `output.png`/*, {
-                        content: `Available command usages: **${free_calls - 1}**`
-                    }*/)
+            await poopy.functions.downloadFile(response.data, `output.png`, {
+                buffer: true,
+                filepath: filepath
+            })
+            await poopy.functions.sendFile(msg, filepath, `output.png`)
         } else {
             await msg.channel.send({
                 content: `Unsupported file: \`${currenturl}\``,
