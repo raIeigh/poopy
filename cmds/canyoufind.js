@@ -4,7 +4,7 @@ module.exports = {
         let poopy = this
 
         await msg.channel.sendTyping().catch(() => { })
-        if (poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl2'] === undefined && args[2] === undefined) {
+        if (poopy.functions.lastUrl(msg.guild.id, msg.channel.id, 1) === undefined && args[2] === undefined) {
             await msg.channel.send('What are the files?!').catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
@@ -14,8 +14,8 @@ module.exports = {
         if (sizeindex > -1) {
             size = isNaN(Number(args[sizeindex + 1])) ? 150 : Number(args[sizeindex + 1]) <= 1 ? 1 : Number(args[sizeindex + 1]) >= 3000 ? 3000 : Number(args[sizeindex + 1]) || 150
         }
-        var currenturl = poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl'] || args[1]
-        var currenturl2 = poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl2'] || args[2]
+        var currenturl = poopy.functions.lastUrl(msg.guild.id, msg.channel.id, 0) || args[1]
+        var currenturl2 = poopy.functions.lastUrl(msg.guild.id, msg.channel.id, 1) || args[2]
         var urls = await poopy.functions.getUrls(msg).catch(() => { }) ?? []
         if (urls.length < 2) {
             var c = currenturl

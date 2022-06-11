@@ -4,7 +4,7 @@ module.exports = {
         let poopy = this
 
         await msg.channel.sendTyping().catch(() => { })
-        if (poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl'] === undefined && args[2] === undefined) {
+        if (poopy.functions.lastUrl(msg.guild.id, msg.channel.id, 0) === undefined && args[2] === undefined) {
             await msg.channel.send('What is the file?!').catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
@@ -14,7 +14,7 @@ module.exports = {
         if (durationindex > -1) {
             duration = isNaN(Number(args[durationindex + 1])) ? 1 : Number(args[durationindex + 1]) <= 0.1 ? 0.1 : Number(args[durationindex + 1]) >= 10 ? 10 : Number(args[durationindex + 1]) || 1
         }
-        var currenturl = poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl']
+        var currenturl = poopy.functions.lastUrl(msg.guild.id, msg.channel.id, 0)
         var fileinfo = await poopy.functions.validateFile(currenturl).catch(async error => {
             await msg.channel.send(error).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })

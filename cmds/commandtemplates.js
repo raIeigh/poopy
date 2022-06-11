@@ -68,7 +68,7 @@ module.exports = {
                 await msg.channel.send(`You've already created a command with that name! (ID: \`${findCommand.id}\`)`).catch(() => { })
                 return
             } else {
-                var id = poopy.functions.generateId(true)
+                var id = poopy.functions.generateId(poopy.functions.globalData()['bot-data']['commandTemplates'].map(c => c.id))
 
                 var commands = [{
                     name: name,

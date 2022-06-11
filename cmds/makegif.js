@@ -4,7 +4,7 @@ module.exports = {
         let poopy = this
 
         await msg.channel.sendTyping().catch(() => { })
-        if (args[1] === undefined && msg.attachments.size <= 0 && !(poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrls'].length)) {
+        if (args[1] === undefined && msg.attachments.size <= 0 && !(poopy.functions.lastUrls(msg.guild.id, msg.channel.id).length)) {
             await msg.channel.send('What are the frames?!').catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
@@ -67,8 +67,8 @@ module.exports = {
                 return true
             }
 
-            for (var i in poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrls']) {
-                var url = poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrls'][i]
+            for (var i in poopy.functions.lastUrls(msg.guild.id, msg.channel.id)) {
+                var url = poopy.functions.lastUrls(msg.guild.id, msg.channel.id)[i]
                 var success = await inspect(url).catch(() => { })
                 if (success) validfilecount += 1
                 if (validfilecount >= framenumber) break

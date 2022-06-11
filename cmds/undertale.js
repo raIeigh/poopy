@@ -75,7 +75,7 @@ module.exports = {
         }
 
         var nopic = false
-        var currenturl = !(saidMessage.includes('-nofile')) ? (poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl'] || args[1]) : undefined
+        var currenturl = !(saidMessage.includes('-nofile')) ? (poopy.functions.lastUrl(msg.guild.id, msg.channel.id, 0) || args[1]) : undefined
         if (!currenturl) nopic = true
 
         if (nopic) {

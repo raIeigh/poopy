@@ -4,12 +4,12 @@ module.exports = {
         let poopy = this
 
         await msg.channel.sendTyping().catch(() => { })
-        if (poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl'] === undefined && args[2] === undefined) {
+        if (poopy.functions.lastUrl(msg.guild.id, msg.channel.id, 0) === undefined && args[2] === undefined) {
             await msg.channel.send('What is the file?!').catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
         };
-        var currenturl = poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl']
+        var currenturl = poopy.functions.lastUrl(msg.guild.id, msg.channel.id, 0)
         var width = isNaN(Number(args[1])) ? undefined : Number(args[1]) <= 1 ? 1 : Number(args[1]) >= 3000 ? 3000 : Number(args[1]) || undefined
         if (width === undefined) {
             await msg.channel.send('What is the width?!').catch(() => { })
@@ -108,7 +108,7 @@ module.exports = {
     },
     help: {
         name: 'scale/rescale <width> <height> <file> [-flags <algorithm>]',
-        value: 'Rescales the file to correspond to the specified width and height.'
+        value: 'Rescales the file to correspond to the specified width and height. A list of flags can be found at https://ffmpeg.org/ffmpeg-scaler.html#Scaler-Options'
     },
     cooldown: 2500,
     type: 'Resizing'

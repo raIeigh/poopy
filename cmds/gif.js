@@ -41,11 +41,11 @@ module.exports = {
             if (number < 1) number = 1
 
             await poopy.functions.navigateEmbed(msg.channel, async (page) => {
-                poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl2'] = poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl']
-                poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl'] = urls[page - 1]
-                var lastUrls = [urls[page - 1]].concat(poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrls'])
+                undefined = poopy.functions.lastUrl(msg.guild.id, msg.channel.id, 0)
+                undefined = urls[page - 1]
+                var lastUrls = [urls[page - 1]].concat(poopy.functions.lastUrls(msg.guild.id, msg.channel.id))
                 lastUrls.splice(100)
-                poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrls'] = lastUrls
+                undefined = lastUrls
 
                 if (poopy.config.textEmbeds) return `${urls[page - 1]}\n\nGIF ${page}/${urls.length}`
                 else return {

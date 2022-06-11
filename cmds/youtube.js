@@ -58,11 +58,11 @@ module.exports = {
                     'get-url': ''
                 }).catch(() => { })
                 if (youtubeurl) {
-                    poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl2'] = poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl']
-                    poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl'] = youtubeurl
-                    var lastUrls = [youtubeurl].concat(poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrls'])
+                    undefined = poopy.functions.lastUrl(msg.guild.id, msg.channel.id, 0)
+                    undefined = youtubeurl
+                    var lastUrls = [youtubeurl].concat(poopy.functions.lastUrls(msg.guild.id, msg.channel.id))
                     lastUrls.splice(100)
-                    poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrls'] = lastUrls
+                    undefined = lastUrls
                 }
 
                 var thumbresponse = await poopy.modules.axios.request(urls[page - 1].thumb.replace('hqdefault', 'hq720')).catch(() => { })

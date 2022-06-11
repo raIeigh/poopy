@@ -124,6 +124,7 @@ class Poopy {
         poopy.data = {}
         poopy.tempdata = {}
         poopy.procs = []
+        poopy.tempfiles = {}
 
         // module trash
         poopy.modules.Discord = require(`discord.js${poopy.config.self ? '-selfbot-v13' : ''}`)
@@ -820,14 +821,6 @@ class Poopy {
 
             if (!poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]) {
                 poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id] = {}
-            }
-
-            if (!poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl']) {
-                poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl'] = undefined
-            }
-
-            if (!poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl2']) {
-                poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl2'] = undefined
             }
 
             if (!poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrls']) {
@@ -1958,7 +1951,7 @@ class Poopy {
             return final
         }
 
-        poopy.functions.generateId = function (unique, length = 10) {
+        poopy.functions.generateId = function (existing, length = 10) {
             var charset = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_'
             var id = ''
 
@@ -1966,13 +1959,7 @@ class Poopy {
                 id += charset[Math.floor(Math.random() * charset.length)]
             }
 
-            if (unique) {
-                var cmdTemplates = poopy.functions.globalData()['bot-data']['commandTemplates']
-
-                if (cmdTemplates.length ? cmdTemplates.find(cmd => cmd.id === id) : false) {
-                    return poopy.functions.generateId(unique)
-                }
-            }
+            if (existing && existing.includes(id)) return poopy.functions.generateId(existing, length)
 
             return id
         }
@@ -2711,11 +2698,7 @@ class Poopy {
                     var url = urlsr[i]
 
                     if (url) {
-                        poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl2'] = poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl']
-                        poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl'] = url
-                        var lastUrls = [url].concat(poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrls'])
-                        lastUrls.splice(100)
-                        poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrls'] = lastUrls
+                        poopy.functions.addLastUrl(msg.guild.id, msg.channel.id, url)
                     }
                 }
             }
@@ -2723,6 +2706,45 @@ class Poopy {
             if (urls.length > 0) poopy.functions.infoPost(`Found ${urls.length} URL${urls.length > 1 ? 's' : ''} in message`)
 
             return urls
+        }
+
+        poopy.functions.lastUrl = function (g, c, i) {
+            var url = poopy.data['guild-data'][g]['channels'][c]['lastUrls'][i]
+
+            if (url.startsWith('temp:')) {
+                var id = url.substring(5)
+                var tempfile = poopy.tempfiles[id]
+                if (!tempfile) {
+                    poopy.data['guild-data'][g]['channels'][c]['lastUrls'].splice(i, 1)
+                    url = poopy.data['guild-data'][g]['channels'][c]['lastUrls'][i]
+                }
+            }
+
+            return url
+        }
+
+        poopy.functions.lastUrls = function (g, c) {
+            var urls = poopy.data['guild-data'][g]['channels'][c]['lastUrls']
+            
+            for (var i in urls) {
+                var url = poopy.data['guild-data'][g]['channels'][c]['lastUrls'][i]
+    
+                if (url.startsWith('temp:')) {
+                    var id = url.substring(5)
+                    var tempfile = poopy.tempfiles[id]
+                    if (!tempfile) {
+                        poopy.data['guild-data'][g]['channels'][c]['lastUrls'].splice(i, 1)
+                    }
+                }
+            }
+
+            return urls
+        }
+
+        poopy.functions.addLastUrl = function (g, c, url) {
+            var lastUrls = [url].concat(poopy.functions.lastUrls(g, c))
+            lastUrls.splice(100)
+            poopy.data['guild-data'][g]['channels'][c]['lastUrls'] = lastUrls
         }
 
         poopy.functions.getKeywordsFor = async function (string, msg, isBot, { extrakeys = {}, extrafuncs = {}, resetattempts = false, ownermode = false } = {}) {
@@ -2914,6 +2936,11 @@ class Poopy {
                 }
             }
 
+            if (url.startsWith('temp:')) {
+                options.buffer = true
+                url = poopy.tempfiles[url.substring(5)].fileinfo.buffer
+            }
+
             if (options.buffer) {
                 poopy.functions.infoPost(`Downloading file through buffer with name \`${filename}\``)
                 poopy.modules.fs.writeFileSync(`${filepath}/${filename}`, url)
@@ -2962,6 +2989,11 @@ class Poopy {
                 await msg.channel.send('Couldn\'t send file.').catch(() => { })
                 poopy.functions.infoPost(`Couldn\'t send file`)
                 await msg.channel.sendTyping().catch(() => { })
+                
+                if (extraOptions.keep ||
+                    filepath == undefined ||
+                    filepath == 'tempfiles') return
+                
                 poopy.modules.fs.rmSync(filepath, { force: true, recursive: true })
                 return
             }
@@ -2971,7 +3003,34 @@ class Poopy {
                 filename = extraOptions.name
             }
 
-            if (extraOptions.catbox || extraOptions.nosend) {
+            if (extraOptions.nosend) {
+                poopy.functions.infoPost(`Saving file temporarily`)
+
+                var id = poopy.functions.generateId(poopy.modules.fs.readdirSync('tempfiles').map(file => {
+                    var name = file.split('.')
+                    if (name.length > 1) name = name.slice(0, name.length - 1)
+                    else name = name[0]
+                    return name
+                }))
+
+                var ext = filename.split('.')
+                if (ext.length > 1) ext = `.${ext[ext.length - 1]}`
+                else ext = ''
+
+                poopy.modules.fs.copyFileSync(`${filepath}/${filename}`, `tempfiles/${id}${ext}`)
+                
+                poopy.tempfiles[id] = {
+                    name: `${id}${ext}`,
+                    fileinfo: await validateFileFromPath(`tempfiles/${id}${ext}`, 'very true'),
+                    oname: filename,
+                    opath: filepath
+                }
+                
+                setTimeout(() => {
+                    poopy.modules.fs.rmSync(`tempfiles/${id}${ext}`, { force: true, recursive: true })
+                    delete poopy.tempfiles[id]
+                }, 600000)
+            } else if (extraOptions.catbox) {
                 poopy.functions.infoPost(`Uploading file to catbox.moe`)
                 var fileLink = await poopy.vars[extraOptions.nosend ? 'Litterbox' : 'Catbox'].upload(`${filepath}/${filename}`).catch(() => { })
                 if (fileLink) {
@@ -2979,11 +3038,7 @@ class Poopy {
 
                     if (extraOptions.nosend) {
                         if (isUrl) {
-                            poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl2'] = poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl']
-                            poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrl'] = fileLink
-                            var lastUrls = [fileLink].concat(poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrls'])
-                            lastUrls.splice(100)
-                            poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrls'] = lastUrls
+                            poopy.functions.addLastUrl(msg.guild.id, msg.channel.id, fileLink)
                         } else {
                             await poopy.functions.waitMessageCooldown()
                             await msg.channel.send(fileLink.includes('retard') ? 'ok so what happened right here is i tried to upload a gif with a size bigger than 20 mb to catbox.moe but apparently you cant do it so uhhhhhh haha no link for you' : fileLink).catch(() => { })
@@ -3034,21 +3089,23 @@ class Poopy {
 
             await msg.channel.sendTyping().catch(() => { })
 
-            if (!extraOptions.keep && filepath !== undefined) {
-                poopy.functions.infoPost(`Deleting \`${filepath}/${filename}\` and its folder`)
-                poopy.modules.fs.rmSync(filepath, { force: true, recursive: true })
-            }
+            if (extraOptions.keep ||
+                filepath == undefined ||
+                filepath == 'tempfiles') return
+
+            poopy.functions.infoPost(`Deleting \`${filepath}/${filename}\` and its folder`)
+            poopy.modules.fs.rmSync(filepath, { force: true, recursive: true })
         }
 
         poopy.functions.validateFileFromPath = async function (path, exception, rejectMessages) {
             return new Promise(async (resolve, reject) => {
-                poopy.functions.infoPost(`Validating file from path`)
-
                 var rej = reject
                 reject = function (val) {
                     poopy.functions.infoPost(`File can't be processed, reason:\n\`${val}\``)
                     rej(val)
                 }
+                
+                poopy.functions.infoPost(`Validating file from path`)
 
                 if ((process.memoryUsage().rss / 1024 / 1024) <= poopy.config.memLimit) {
                     reject('No resources available.')
@@ -3168,17 +3225,23 @@ class Poopy {
 
         poopy.functions.validateFile = async function (url, exception, rejectMessages) {
             return new Promise(async (resolve, reject) => {
-                poopy.functions.infoPost(`Validating file from URL`)
-
+                url = url || ' '
                 var rej = reject
                 reject = function (val) {
                     poopy.functions.infoPost(`File can't be processed, reason:\n\`${val}\``)
                     rej(val)
                 }
+                
+                poopy.functions.infoPost(`Validating file from URL`)
 
-                url = url || ' '
                 if ((process.memoryUsage().rss / 1024 / 1024) <= poopy.config.memLimit) {
                     reject('No resources available.')
+                    return
+                }
+
+                if (url.startsWith('temp:')) {
+                    if (poopy.tempfiles[url.substring(5)]) resolve(poopy.tempfiles[url.substring(5)].fileinfo)
+                    else reject('No temp file available.')
                     return
                 }
 
@@ -4596,6 +4659,9 @@ class Poopy {
         }
         if (!poopy.modules.fs.existsSync(`temp/${poopy.config.mongodatabase}`)) {
             poopy.modules.fs.mkdirSync(`temp/${poopy.config.mongodatabase}`)
+        }
+        if (!poopy.modules.fs.existsSync('tempfiles')) {
+            poopy.modules.fs.mkdirSync('tempfiles')
         }
         await poopy.functions.updateSlashCommands()
         poopy.functions.save()
