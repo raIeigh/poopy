@@ -20,9 +20,10 @@ module.exports = {
                 return `Calm down! Wait more ${(poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] - Date.now()) / 1000} seconds.`
             } else {
                 poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] = false
-                poopy.tempdata[msg.author.id]['cooler'] = msg.id
             }
         }
+
+        poopy.tempdata[msg.author.id]['cooler'] = msg.id
 
         if (poopy.config.shit.find(id => id === msg.author.id)) {
             return 'shit'

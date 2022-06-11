@@ -3900,15 +3900,18 @@ class Poopy {
                         }
 
                         if (poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown']) {
-                            if ((poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] - Date.now()) > 0 && poopy.tempdata[msg.author.id]['cooler'] !== msg.id) {
+                            if ((poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] - Date.now()) > 0 &&
+                                poopy.tempdata[msg.author.id]['cooler'] !== msg.id) {
                                 await poopy.functions.waitMessageCooldown()
                                 await msg.channel.send(`Calm down! Wait more ${(poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] - Date.now()) / 1000} seconds.`).catch(() => { })
                                 return
                             } else {
                                 poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] = false
-                                poopy.tempdata[msg.author.id]['cooler'] = msg.id
+                                delete poopy.tempdata[msg.author.id]['cooler']
                             }
                         }
+
+                        poopy.tempdata[msg.author.id]['cooler'] = msg.id
 
                         var args = msg.content.substring(prefix.toLowerCase().length).split(' ')
                         var findCmd = poopy.functions.findCommand(args[0].toLowerCase())
