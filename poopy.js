@@ -3021,7 +3021,7 @@ class Poopy {
                 
                 poopy.tempfiles[id] = {
                     name: `${id}${ext}`,
-                    fileinfo: await validateFileFromPath(`tempfiles/${id}${ext}`, 'very true'),
+                    fileinfo: await poopy.functions.validateFileFromPath(`tempfiles/${id}${ext}`, 'very true'),
                     oname: filename,
                     opath: filepath
                 }
