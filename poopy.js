@@ -3025,7 +3025,9 @@ class Poopy {
                     oname: filename,
                     opath: filepath
                 }
-                
+
+                poopy.functions.addLastUrl(msg.guild.id, msg.channel.id, `temp:${id}`)
+
                 setTimeout(() => {
                     poopy.modules.fs.rmSync(`tempfiles/${id}${ext}`, { force: true, recursive: true })
                     delete poopy.tempfiles[id]
