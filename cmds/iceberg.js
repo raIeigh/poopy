@@ -9,7 +9,7 @@ module.exports = {
             await msg.channel.sendTyping().catch(() => { })
             return;
         };
-        var saidMessage = args.join(' ').substring(args[0].length + 1)
+        var saidMessage = args.slice(1).join(' ')
         var stages = 10
         var stageindex = args.indexOf('-stages')
         if (stageindex > -1) {

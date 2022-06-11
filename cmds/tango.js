@@ -8,7 +8,7 @@ module.exports = {
             return
         }
 
-        var saidMessage = args.join(' ').substring(args[0].length + 1)
+        var saidMessage = args.slice(1).join(' ')
         var rulesChannel = msg.guild.channels.cache.find(channel => channel.name === 'rules' || channel.name.includes('rule'))
         var tangoEmbed = {
             "author": {

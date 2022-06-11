@@ -15,7 +15,7 @@ module.exports = {
             args.splice(anonIndex, 1)
             anon = true
         }
-        var saidMessage = args.join(' ').substring(args[0].length + args[1].length + 2)
+        var saidMessage = args.slice(2).join(' ')
         var attachments = []
         msg.attachments.forEach(attachment => {
             attachments.push(new poopy.modules.Discord.MessageAttachment(attachment.url))

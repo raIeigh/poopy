@@ -22,7 +22,7 @@ module.exports = {
                     return
                 }
 
-                var saidMessage = args.join(' ').substring(args[0].length + 1)
+                var saidMessage = args.slice(1).join(' ')
                 var cleanMessage = poopy.modules.Discord.Util.cleanContent(saidMessage, msg).replace(/\@/g, '@‌')
                 var results = []
 
@@ -57,7 +57,7 @@ module.exports = {
                     return
                 }
 
-                var saidMessage = args.join(' ').substring(args[0].length + 1)
+                var saidMessage = args.slice(1).join(' ')
                 var cleanMessage = poopy.modules.Discord.Util.cleanContent(saidMessage, msg).replace(/\@/g, '@‌')
                 var findMessage = poopy.data['guild-data'][msg.guild.id]['messages'].find(message => message.content.toLowerCase() === cleanMessage.toLowerCase())
 
@@ -93,7 +93,7 @@ module.exports = {
                     return
                 }
 
-                var saidMessage = args.join(' ').substring(args[0].length + 1)
+                var saidMessage = args.slice(1).join(' ')
                 var cleanMessage = poopy.modules.Discord.Util.cleanContent(saidMessage, msg).replace(/\@/g, '@‌')
                 var findMessage = poopy.data['guild-data'][msg.guild.id]['messages'].findIndex(message => message.content.toLowerCase() === cleanMessage.toLowerCase())
 

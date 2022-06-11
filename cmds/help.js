@@ -3,7 +3,7 @@ module.exports = {
     execute: async function (msg, args) {
         let poopy = this
 
-        var saidMessage = args.join(' ').substring(args[0].length + 1)
+        var saidMessage = args.slice(1).join(' ')
         if (saidMessage) {
             var fCmds = []
 

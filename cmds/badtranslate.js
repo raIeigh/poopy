@@ -56,7 +56,7 @@ module.exports = {
         }
         var maxlength = Math.round(2000 / repeat)
 
-        var saidMessage = args.join(' ').substring(args[0].length + 1)
+        var saidMessage = args.slice(1).join(' ')
 
         if (saidMessage.length > maxlength) {
             await msg.channel.send(`The input length must be smaller or equal to 2000 divided by the number of repetitions. (in this case ${maxlength} characters)`)

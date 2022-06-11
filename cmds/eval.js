@@ -8,7 +8,7 @@ module.exports = {
             await msg.channel.send('Owner only!').catch(() => { })
             return
         }
-        var saidMessage = args.join(' ').substring(args[0].length + 1)
+        var saidMessage = args.slice(1).join(' ')
         var no = poopy.config.illKillYouIfYouUseEval.find(id => id === msg.guild.id || saidMessage.includes(id))
         if (no) {
             await msg.channel.send('<:YouIdiot:735259116737658890>').catch(() => { })

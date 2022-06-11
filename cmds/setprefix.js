@@ -14,7 +14,7 @@ module.exports = {
                     args.splice(i, 1)
                 }
             }
-            var saidMessage = args.join(' ').substring(args[0].length + 1).split(/[\s]+/).join(' ')
+            var saidMessage = args.slice(1).join(' ').split(/[\s]+/).join(' ')
             if (saidMessage.length > 20) {
                 await msg.channel.send('The prefix can\'t be bigger than 20 characters.').catch(() => { })
                 return

@@ -6,7 +6,7 @@ module.exports = {
 
         var word = matches[1]
         var split = poopy.functions.splitKeyFunc(word, { args: 2 })
-        var name = await poopy.functions.getKeywordsFor(split[0] ?? '', msg, isBot).catch(() => { }) ?? ''
+        var name = await poopy.functions.getKeywordsFor(split[0] ?? '', msg, isBot, opts).catch(() => { }) ?? ''
         var func = split[1] ?? ''
 
         var array = poopy.tempdata[msg.author.id]['arrays'][name]

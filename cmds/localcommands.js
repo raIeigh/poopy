@@ -67,7 +67,7 @@ module.exports = {
                         return
                     }
 
-                    var saidMessage = args.join(' ').substring(args[0].length + args[1].length + 2)
+                    var saidMessage = args.slice(2).join(' ')
                     var findCommand = poopy.commands.find(cmd => cmd.name.find(n => n === args[1].toLowerCase())) || poopy.data['guild-data'][msg.guild.id]['localcmds'].find(cmd => cmd.name === args[1].toLowerCase())
 
                     if (findCommand) {
@@ -144,7 +144,7 @@ module.exports = {
                         return
                     }
 
-                    var saidMessage = args.join(' ').substring(args[0].length + args[1].length + 2)
+                    var saidMessage = args.slice(2).join(' ')
                     var findCommand = poopy.data['guild-data'][msg.guild.id]['localcmds'].findIndex(cmd => cmd.name === args[1].toLowerCase())
 
                     if (findCommand > -1) {

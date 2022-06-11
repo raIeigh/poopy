@@ -24,7 +24,7 @@ module.exports = {
         }
 
         var saidVoice = args[1].toLowerCase()
-        var saidMessage = args.join(' ').substring(args[0].length + args[1].length + 2).replace(/'/g, '’').replace(/"/g, '\\"')
+        var saidMessage = args.slice(2).join(' ').replace(/'/g, '’').replace(/"/g, '\\"')
 
         var rejected = false
         var response = await poopy.modules.axios.request({

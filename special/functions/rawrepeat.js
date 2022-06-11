@@ -12,8 +12,8 @@ module.exports = {
     var repeat = []
     for (var i = 0; i < times; i++) {
       repeat.push(await poopy.functions.getKeywordsFor(phrase, msg, isBot, opts).catch(() => { }) ?? '')
-      poopy.tempdata[msg.author.id]['keyattempts']++
-      if (poopy.tempdata[msg.author.id]['keyattempts'] >= poopy.config.keyLimit) break
+      poopy.tempdata[msg.author.id][msg.id]['keyattempts']++
+      if (poopy.tempdata[msg.author.id][msg.id]['keyattempts'] >= poopy.config.keyLimit) break
     }
     return repeat.join(separator)
   },

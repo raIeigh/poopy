@@ -13,6 +13,5 @@ module.exports = {
         if (!array) return ''
 
         return await poopy.functions.getKeywordsFor(array[index], msg, isBot, opts).catch(() => { }) ?? ''
-    },
-    attemptvalue: 5
+    }
 }

@@ -14,7 +14,7 @@ module.exports = {
         if (sizeindex > -1) {
             size = isNaN(Number(args[sizeindex + 1])) ? 1 : Number(args[sizeindex + 1]) <= 0.5 ? 0.5 : Number(args[sizeindex + 1]) >= 5 ? 5 : Number(args[sizeindex + 1]) || 1
         }
-        var saidMessage = args.join(' ').substring(args[0].length + 1).replace(/’/g, '\'')
+        var saidMessage = args.slice(1).join(' ').replace(/’/g, '\'')
         poopy.vars.symbolreplacements.forEach(symbolReplacement => {
             symbolReplacement.target.forEach(target => {
                 saidMessage = saidMessage.replace(new RegExp(target, 'ig'), symbolReplacement.replacement)

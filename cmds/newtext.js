@@ -97,7 +97,7 @@ module.exports = {
             originy = origins.y[args[originindex + 2]] || poopy.modules.Jimp.VERTICAL_ALIGN_MIDDLE
         }
 
-        var saidMessage = args.join(' ').substring(args[0].length + 1).replace(/’/g, '\'')
+        var saidMessage = args.slice(1).join(' ').replace(/’/g, '\'')
         poopy.vars.symbolreplacements.forEach(symbolReplacement => {
             symbolReplacement.target.forEach(target => {
                 saidMessage = saidMessage.replace(new RegExp(target, 'ig'), symbolReplacement.replacement)

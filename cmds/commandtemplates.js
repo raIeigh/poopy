@@ -28,7 +28,7 @@ module.exports = {
                 }
             }
 
-            var saidMessage = args.join(' ').substring(args[0].length + args[1].length + 2)
+            var saidMessage = args.slice(2).join(' ')
 
             var optionIndex = args.findIndex(arg => arg.match(/-(description|syntax|image)/))
             var argmatches = saidMessage.match(/-(description|syntax)/g)
@@ -443,7 +443,7 @@ module.exports = {
                         }
                     }
 
-                    var saidMessage = args.join(' ').substring(args[0].length + args[1].length + 2)
+                    var saidMessage = args.slice(2).join(' ')
 
                     var argmatches = saidMessage.match(/-(phrase|description|syntax)/g)
                     if (argmatches) {

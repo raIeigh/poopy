@@ -4,7 +4,7 @@ module.exports = {
     let poopy = this
 
     await msg.channel.sendTyping().catch(() => { })
-    var saidMessage = args.join(' ').substring(args[0].length + 1)
+    var saidMessage = args.slice(1).join(' ')
     if (args[1] === undefined) {
       await msg.channel.send('What is the message?!').catch(() => { })
       await msg.channel.sendTyping().catch(() => { })

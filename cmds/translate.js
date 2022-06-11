@@ -48,7 +48,7 @@ module.exports = {
             args.splice(targetindex, 2)
         }
 
-        var saidMessage = args.join(' ').substring(args[0].length + 1)
+        var saidMessage = args.slice(1).join(' ')
 
         var options = {
             method: 'POST',

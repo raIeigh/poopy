@@ -13,7 +13,7 @@ module.exports = {
         var guildid = msg.guild.id
         var channelid = channel.id
         var authorid = msg.author.id
-        var saidMessage = args.join(' ').substring(args[0].length + 1)
+        var saidMessage = args.slice(1).join(' ')
         if (saidMessage) {
             var resp = await poopy.functions.cleverbot(saidMessage, channelid).catch(err => {
                 channel.send({

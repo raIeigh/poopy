@@ -26,7 +26,7 @@ module.exports = {
                 await msg.channel.send('Not a JSON type.').catch(() => { })
                 return
             }
-            var saidMessage = args.join(' ').substring(args[0].length + args[1].length + 2)
+            var saidMessage = args.slice(2).join(' ')
 
             if (!poopy.functions.globalData()['bot-data'][type].find(v => v === saidMessage)) {
                 await msg.channel.send('Does not exist.').catch(() => { })

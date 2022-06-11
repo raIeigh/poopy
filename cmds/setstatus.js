@@ -23,7 +23,7 @@ module.exports = {
             }
             if (args[1] === 'false' || args[1] === 'true') {
                 if (args[2] === 'PLAYING' || args[2] === 'LISTENING' || args[2] === 'WATCHING' || args[2] === 'STREAMING' || args[2] === 'COMPETING') {
-                    var saidMessage = args.join(' ').substring(args[0].length + args[1].length + args[2].length + 3)
+                    var saidMessage = args.slice(3).join(' ')
                     await msg.channel.sendTyping().catch(() => { })
                     poopy.functions.infoPost(`Status changed to ${args[2].toLowerCase() + ' ' + ((args[2] === "COMPETING" && 'in ') || (args[2] === "LISTENING" && 'to ') || '') + saidMessage}`)
                     poopy.bot.user.setPresence({

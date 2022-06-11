@@ -32,7 +32,7 @@ module.exports = {
                             poopy.data['guild-data'][msg.guild.id]['members'][member.id]['custom'] = false
                         }
                         if (poopy.data['guild-data'][msg.guild.id]['members'][member.id]['custom'] === false) {
-                            var saidMessage = args.join(' ').substring(args[0].length + 1)
+                            var saidMessage = args.slice(1).join(' ')
                             var symbolReplacedMessage
                             poopy.vars.symbolreplacements.forEach(symbolReplacement => {
                                 symbolReplacement.target.forEach(target => {
@@ -115,7 +115,7 @@ module.exports = {
                     poopy.data['guild-data'][msg.guild.id]['members'][userMention.id]['custom'] = false
                 }
                 if (poopy.data['guild-data'][msg.guild.id]['members'][userMention.id]['custom'] === false) {
-                    var saidMessage = args.join(' ').substring(args[0].length + 1)
+                    var saidMessage = args.slice(1).join(' ')
                     var symbolReplacedMessage
                     poopy.vars.symbolreplacements.forEach(symbolReplacement => {
                         symbolReplacement.target.forEach(target => {
