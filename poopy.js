@@ -2936,7 +2936,7 @@ class Poopy {
                 }
             }
 
-            if (url.startsWith('temp:')) {
+            if (!options.buffer && url.startsWith('temp:')) {
                 options.buffer = true
                 url = poopy.tempfiles[url.substring(5)].fileinfo.buffer
             }
