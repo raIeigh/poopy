@@ -2950,7 +2950,7 @@ class Poopy {
 
             if (!options.buffer && url.startsWith('temp:')) {
                 options.buffer = true
-                url = poopy.tempfiles[url.substring(5)].fileinfo.buffer
+                url = poopy.modules.fs.readFileSync(`tempfiles/${poopy.tempfiles[url.substring(5)].name}`)
             }
 
             if (options.buffer) {
@@ -3033,7 +3033,6 @@ class Poopy {
                 
                 poopy.tempfiles[id] = {
                     name: `${id}${ext}`,
-                    fileinfo: await poopy.functions.validateFileFromPath(`tempfiles/${id}${ext}`, 'very true'),
                     oname: filename,
                     opath: filepath
                 }
@@ -3254,7 +3253,9 @@ class Poopy {
                 }
 
                 if (url.startsWith('temp:')) {
-                    if (poopy.tempfiles[url.substring(5)]) resolve(poopy.tempfiles[url.substring(5)].fileinfo)
+                    if (poopy.tempfiles[url.substring(5)]) await poopy.functions.validateFileFromPath(`tempfiles/${poopy.tempfiles[url.substring(5)].name}`)
+                        .then(res => resolve(res))
+                        .catch(res => reject(res))
                     else reject('No temp file available.')
                     return
                 }
