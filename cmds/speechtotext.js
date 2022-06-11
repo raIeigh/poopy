@@ -170,9 +170,9 @@ module.exports = {
         }
     },
     help: {
-        name: '<:newpoopy:839191885310066729> speechtotext/speechrecognize <video/audio>',
+        name: 'speechtotext/speechrecognize <video/audio>',
         value: 'Tries to recognize the speech inside the audio of a file and convert it to text. Maximum duration is 1 minute.'
     },
     cooldown: 2500,
-    type: 'Conversion'
+    type: 'Text'
 }

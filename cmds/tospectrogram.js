@@ -40,7 +40,7 @@ module.exports = {
             var filepath = `temp/${poopy.config.mongodatabase}/file${currentcount}`
             poopy.modules.fs.mkdirSync(`${filepath}`)
 
-            var spectrogramData = await poopy.functions.spectrogram(currenturl, {
+            var spectrogramData = await poopy.functions.spectrogram(currenturl.startsWith('temp:') ? `tempfiles/${poopy.tempfiles[currenturl.substring(5)].name}` : currenturl, {
                 o_length: duration,
                 o_freq: frequency,
                 o_factor: density

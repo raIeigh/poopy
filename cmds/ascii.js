@@ -23,7 +23,7 @@ module.exports = {
         var type = fileinfo.type
 
         if (type.mime.startsWith('image') && !(poopy.vars.gifFormats.find(f => f === type.ext))) {
-            var brailleText = await poopy.functions.braille(currenturl, negative)
+            var brailleText = await poopy.functions.braille(currenturl.startsWith('temp:') ? `tempfiles/${poopy.tempfiles[currenturl.substring(5)].name}` : currenturl, negative)
             await msg.channel.send({
                 content: brailleText,
                 allowedMentions: {

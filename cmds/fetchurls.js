@@ -23,7 +23,7 @@ module.exports = {
     await msg.channel.sendTyping().catch(() => { })
   },
   help: {
-    name: 'fetchurls/geturls <message> [-nodelete] [-tts]',
+    name: 'fetchurls/geturls <message>',
     value: 'Fetches the file URLs in the message and returns them.'
   },
   cooldown: 2500,
