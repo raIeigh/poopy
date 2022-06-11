@@ -42,7 +42,7 @@ module.exports = {
             if (y >= height - 1) y = height - 1
             if (h >= height - y) h = height - y
 
-            await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -map 0:a? -filter_complex "[0:v]crop=x=0:y=0:w=iw:h=${y}[top];[0:v]crop=x=0:y=${y + h}:w=iw:h=${height - (y + h)}[bottom];[top][bottom]hstack,scale=ceil(iw/2)*2:ceil(ih/2)*2[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} -c:v libx264 -pix_fmt yuv420p ${filepath}/output.mp4`)
+            await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -map 0:a? -filter_complex "[0:v]crop=x=0:y=0:w=iw:h=${y}[top];[0:v]crop=x=0:y=${y + h}:w=iw:h=${height - (y + h)}[bottom];[top][bottom]vstack,scale=ceil(iw/2)*2:ceil(ih/2)*2[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} -c:v libx264 -pix_fmt yuv420p ${filepath}/output.mp4`)
 
             await poopy.functions.sendFile(msg, filepath, `output.mp4`)
         } else if (type.mime.startsWith('image') && !(poopy.vars.gifFormats.find(f => f === type.ext))) {
@@ -56,7 +56,7 @@ module.exports = {
             if (y >= height - 1) y = height - 1
             if (h >= height - y) h = height - y
 
-            await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -filter_complex "[0:v]crop=x=0:y=0:w=iw:h=${y}[top];[0:v]crop=x=0:y=${y + h}:w=iw:h=${height - (y + h)}[bottom];[top][bottom]hstack[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} ${filepath}/output.png`)
+            await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -filter_complex "[0:v]crop=x=0:y=0:w=iw:h=${y}[top];[0:v]crop=x=0:y=${y + h}:w=iw:h=${height - (y + h)}[bottom];[top][bottom]vstack[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} ${filepath}/output.png`)
 
             await poopy.functions.sendFile(msg, filepath, `output.png`)
         } else if (type.mime.startsWith('image') && poopy.vars.gifFormats.find(f => f === type.ext)) {
@@ -70,7 +70,7 @@ module.exports = {
             if (y >= height - 1) y = height - 1
             if (h >= height - y) h = height - y
 
-            await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -filter_complex "[0:v]crop=x=0:y=0:w=iw:h=${y}[top];[0:v]crop=x=0:y=${y + h}:w=iw:h=${height - (y + h)}[bottom];[top][bottom]hstack,split[pout][ppout];[ppout]palettegen=reserve_transparent=1[palette];[pout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} -gifflags -offsetting ${filepath}/${object.name}`)
+            await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -filter_complex "[0:v]crop=x=0:y=0:w=iw:h=${y}[top];[0:v]crop=x=0:y=${y + h}:w=iw:h=${height - (y + h)}[bottom];[top][bottom]vstack,split[pout][ppout];[ppout]palettegen=reserve_transparent=1[palette];[pout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} -gifflags -offsetting ${filepath}/${object.name}`)
 
             await poopy.functions.sendFile(msg, filepath, `output.gif`)
         } else {
