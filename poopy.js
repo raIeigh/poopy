@@ -2856,7 +2856,7 @@ class Poopy {
 
             if (resetattempts) {
                 if (poopy.tempdata[msg.author.id][msg.id]['keywordsExecuted'].length) {
-                    poopy.functions.infoPost(`Took ${(Date.now() - startTime) / 1000} seconds to execute keywords/functions: ${poopy.tempdata[msg.author.id]['keywordsExecuted'].map(k => `\`${k}\``).join(', ')}`)
+                    poopy.functions.infoPost(`Took ${(Date.now() - startTime) / 1000} seconds to execute keywords/functions: ${poopy.tempdata[msg.author.id][msg.id]['keywordsExecuted'].map(k => `\`${k}\``).join(', ')}`)
                 }
                 poopy.tempdata[msg.author.id][msg.id]['keywordsExecuted'] = []
             }
