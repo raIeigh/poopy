@@ -107,7 +107,7 @@ class Poopy {
                     message: `the height of that file exceeds the exception limit of {param} hahahaha there's nothing you can do`
                 }
             },
-            commandLimit: 5,
+            commandLimit: 10,
             keyLimit: 500,
             memLimit: 0,
             quitOnDestroy: false
@@ -896,6 +896,18 @@ class Poopy {
 
             if (!poopy.tempdata[msg.author.id]) {
                 poopy.tempdata[msg.author.id] = {}
+            }
+
+            if (!poopy.tempdata[msg.author.id][msg.id]) {
+                poopy.tempdata[msg.author.id][msg.id] = {}
+            }
+
+            if (!poopy.tempdata[msg.author.id][msg.id]['execCount']) {
+                poopy.tempdata[msg.author.id][msg.id]['execCount'] = 0
+            }
+
+            if (!poopy.tempdata[msg.author.id]['cooler']) {
+                poopy.tempdata[msg.author.id]['cooler'] = msg.id
             }
 
             if (!poopy.tempdata[msg.author.id]['keyattempts']) {
@@ -3031,7 +3043,7 @@ class Poopy {
                 setTimeout(() => {
                     poopy.modules.fs.rmSync(`tempfiles/${id}${ext}`, { force: true, recursive: true })
                     delete poopy.tempfiles[id]
-                }, 600000)
+                }, 60000)
             } else if (extraOptions.catbox) {
                 poopy.functions.infoPost(`Uploading file to catbox.moe`)
                 var fileLink = await poopy.vars[extraOptions.nosend ? 'Litterbox' : 'Catbox'].upload(`${filepath}/${filename}`).catch(() => { })
@@ -3888,25 +3900,14 @@ class Poopy {
                         }
 
                         if (poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown']) {
-                            if ((poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] - Date.now()) > 0 && !usedCommand) {
+                            if ((poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] - Date.now()) > 0 && poopy.tempdata[msg.author.id]['cooler'] !== msg.id) {
                                 await poopy.functions.waitMessageCooldown()
                                 await msg.channel.send(`Calm down! Wait more ${(poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] - Date.now()) / 1000} seconds.`).catch(() => { })
                                 return
                             } else {
                                 poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] = false
+                                poopy.tempdata[msg.author.id]['cooler'] = msg.id
                             }
-                        }
-
-                        if (cmds.length > 1 && poopy.data['guild-data'][msg.guild.id]['chaincommands'] == false) {
-                            await poopy.functions.waitMessageCooldown()
-                            await msg.channel.send('You can\'t chain commands in this server.').catch(() => { })
-                            return
-                        }
-
-                        if (cmds.length > poopy.config.commandLimit) {
-                            await poopy.functions.waitMessageCooldown()
-                            await msg.channel.send(`Number of commands to run at the same time must be smaller or equal to **${poopy.config.commandLimit}**!`).catch(() => { })
-                            return
                         }
 
                         var args = msg.content.substring(prefix.toLowerCase().length).split(' ')
@@ -3944,9 +3945,28 @@ class Poopy {
                                 await poopy.functions.waitMessageCooldown()
                                 await msg.channel.send('This command is disabled in this server.').catch(() => { })
                             } else {
+                                var increaseCount = !findCmd.execute.toString().includes('sendFile')
+
+                                if (increaseCount) {
+                                    if (poopy.tempdata[msg.author.id][msg.id]['execCount'] >= 1 && poopy.data['guild-data'][msg.guild.id]['chaincommands'] == false) {
+                                        await poopy.functions.waitMessageCooldown()
+                                        await msg.channel.send('You can\'t chain commands in this server.').catch(() => { })
+                                        return
+                                    }
+            
+                                    if (poopy.tempdata[msg.author.id][msg.id]['execCount'] >= poopy.config.commandLimit) {
+                                        await poopy.functions.waitMessageCooldown()
+                                        await msg.channel.send(`Number of commands to run at the same time must be smaller or equal to **${poopy.config.commandLimit}**!`).catch(() => { })
+                                        return
+                                    }
+
+                                    poopy.tempdata[msg.author.id][msg.id]['execCount']++
+                                }
+                                
                                 if (findCmd.cooldown) {
                                     poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] = (poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] || Date.now()) + findCmd.cooldown / ((msg.member.permissions.has('MANAGE_GUILD') || msg.member.roles.cache.find(role => role.name.match(/mod|dev|admin|owner|creator|founder|staff/ig)) || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID) && (findCmd.type === 'Text' || findCmd.type === 'Main') ? 5 : 1)
                                 }
+
                                 poopy.vars.cps++
                                 poopy.data['bot-data']['commands']++
                                 var t = setTimeout(() => {
@@ -3981,6 +4001,25 @@ class Poopy {
                             }, 60000)
                             poopy.functions.infoPost(`Command \`${args[0].toLowerCase()}\` used`)
                             var phrase = await poopy.functions.getKeywordsFor(findLocalCmd.phrase, msg, true, { resetattempts: true, ownermode: findLocalCmd.ownermode }).catch(() => { }) ?? 'error'
+
+                            var increaseCount = !!phrase
+
+                            if (increaseCount) {
+                                if (poopy.tempdata[msg.author.id][msg.id]['execCount'] >= 1 && poopy.data['guild-data'][msg.guild.id]['chaincommands'] == false) {
+                                    await poopy.functions.waitMessageCooldown()
+                                    await msg.channel.send('You can\'t chain commands in this server.').catch(() => { })
+                                    return
+                                }
+            
+                                if (poopy.tempdata[msg.author.id][msg.id]['execCount'] >= poopy.config.commandLimit) {
+                                    await poopy.functions.waitMessageCooldown()
+                                    await msg.channel.send(`Number of commands to run at the same time must be smaller or equal to **${poopy.config.commandLimit}**!`).catch(() => { })
+                                    return
+                                }
+
+                                poopy.tempdata[msg.author.id][msg.id]['execCount']++
+                            }
+
                             if (poopy.tempdata[msg.guild.id][msg.channel.id]['shut']) break
                             await poopy.functions.waitMessageCooldown()
                             await msg.channel.send({
@@ -4001,9 +4040,29 @@ class Poopy {
                                         await msg.channel.send('This command is disabled in this server.').catch(() => { })
                                     } else {
                                         var findCmd = poopy.functions.findCommand(similarCmds[0].name)
+
+                                        var increaseCount = !findCmd.execute.toString().includes('sendFile')
+
+                                        if (increaseCount) {
+                                            if (poopy.tempdata[msg.author.id][msg.id]['execCount'] >= 1 && poopy.data['guild-data'][msg.guild.id]['chaincommands'] == false) {
+                                                await poopy.functions.waitMessageCooldown()
+                                                await msg.channel.send('You can\'t chain commands in this server.').catch(() => { })
+                                                return
+                                            }
+
+                                            if (poopy.tempdata[msg.author.id][msg.id]['execCount'] >= poopy.config.commandLimit) {
+                                                await poopy.functions.waitMessageCooldown()
+                                                await msg.channel.send(`Number of commands to run at the same time must be smaller or equal to **${poopy.config.commandLimit}**!`).catch(() => { })
+                                                return
+                                            }
+
+                                            poopy.tempdata[msg.author.id][msg.id]['execCount']++
+                                        }
+
                                         if (findCmd.cooldown) {
                                             poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] = (poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] || Date.now()) + findCmd.cooldown / ((msg.member.permissions.has('MANAGE_GUILD') || msg.member.roles.cache.find(role => role.name.match(/mod|dev|admin|owner|creator|founder|staff/ig)) || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID) && (findCmd.type === 'Text' || findCmd.type === 'Main') ? 5 : 1)
                                         }
+                                        
                                         poopy.vars.cps++
                                         poopy.data['bot-data']['commands']++
                                         var t = setTimeout(() => {
@@ -4038,7 +4097,27 @@ class Poopy {
                                     }, 60000)
                                     poopy.functions.infoPost(`Command \`${similarCmds[0].name}\` used`)
                                     var phrase = findLocalCmd ? (await poopy.functions.getKeywordsFor(findLocalCmd.phrase, msg, true, { resetattempts: true, ownermode: findLocalCmd.ownermode }).catch(() => { }) ?? 'error') : 'error'
+                                    
+                                    var increaseCount = !!phrase
+        
+                                    if (increaseCount) {
+                                        if (poopy.tempdata[msg.author.id][msg.id]['execCount'] >= 1 && poopy.data['guild-data'][msg.guild.id]['chaincommands'] == false) {
+                                            await poopy.functions.waitMessageCooldown()
+                                            await msg.channel.send('You can\'t chain commands in this server.').catch(() => { })
+                                            return
+                                        }
+                    
+                                        if (poopy.tempdata[msg.author.id][msg.id]['execCount'] >= poopy.config.commandLimit) {
+                                            await poopy.functions.waitMessageCooldown()
+                                            await msg.channel.send(`Number of commands to run at the same time must be smaller or equal to **${poopy.config.commandLimit}**!`).catch(() => { })
+                                            return
+                                        }
+        
+                                        poopy.tempdata[msg.author.id][msg.id]['execCount']++
+                                    }
+                                    
                                     if (poopy.tempdata[msg.guild.id][msg.channel.id]['shut']) return
+                                    
                                     await poopy.functions.waitMessageCooldown()
                                     await msg.channel.send({
                                         content: phrase,

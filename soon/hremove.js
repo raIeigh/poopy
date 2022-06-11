@@ -12,7 +12,7 @@ module.exports = {
         var currenturl = poopy.functions.lastUrl(msg.guild.id, msg.channel.id, 0)
         var x = isNaN(Number(args[1])) ? undefined : Number(args[1]) <= 0 ? 0 : Number(args[1]) ?? undefined
         if (x === undefined) {
-            await msg.channel.send('What is the X axis?!').catch(() => { })
+            await msg.channel.send('What is the X coordinate?!').catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
         }
