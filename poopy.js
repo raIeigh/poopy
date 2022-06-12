@@ -3735,8 +3735,8 @@ class Poopy {
                 var parent = msg.channel.parent
     
                 if (parent) {
-                    if (poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['custom']) {
-                        if (typeof (poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['custom']) === 'object' && (msg.content || msg.attachments.size) && !(parent.isText())) {
+                    if (poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['custom'] && (msg.content || msg.attachments.size || msg.embeds.length) && !(parent.isText())) {
+                        if (typeof (poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['custom']) === 'object') {
                             var attachments = []
                             var embeds = []
                             msg.attachments.forEach(attachment => {
@@ -3794,7 +3794,7 @@ class Poopy {
                             }
                         }
                     } else if (poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['impostor']) {
-                        if (poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['impostor'] === true && (msg.content || msg.attachments.size) && !(parent.isText())) {
+                        if (poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['impostor'] === true) {
                             var attachments = []
                             var embeds = []
                             msg.attachments.forEach(attachment => {
