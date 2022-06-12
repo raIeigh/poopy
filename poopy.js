@@ -3738,8 +3738,12 @@ class Poopy {
                     if (poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['custom']) {
                         if (typeof (poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['custom']) === 'object' && (msg.content || msg.attachments.size) && !(parent.isText())) {
                             var attachments = []
+                            var embeds = []
                             msg.attachments.forEach(attachment => {
                                 attachments.push(new poopy.modules.Discord.MessageAttachment(attachment.url))
+                            })
+                            msg.embeds.forEach(embed => {
+                                if (embed.type === 'rich') embeds.push(embed)
                             })
                             var name = poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['custom']['name']
                             var randomindex = Math.floor(Math.random() * name.length)
@@ -3748,6 +3752,7 @@ class Poopy {
                                 username: name.substring(0, 32),
                                 avatarURL: poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['custom']['avatar'],
                                 files: attachments,
+                                embeds: embeds,
                                 allowedMentions: {
                                     parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                                 }
@@ -3791,13 +3796,18 @@ class Poopy {
                     } else if (poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['impostor']) {
                         if (poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['impostor'] === true && (msg.content || msg.attachments.size) && !(parent.isText())) {
                             var attachments = []
+                            var embeds = []
                             msg.attachments.forEach(attachment => {
                                 attachments.push(new poopy.modules.Discord.MessageAttachment(attachment.url))
+                            })
+                            msg.embeds.forEach(embed => {
+                                if (embed.type === 'rich') embeds.push(embed)
                             })
                             var sendObject = {
                                 username: msg.member.nickname || msg.author.username,
                                 avatarURL: 'https://cdn.discordapp.com/attachments/760223418968047629/835923486668750888/imposter.jpg',
                                 files: attachments,
+                                embeds: embeds,
                                 allowedMentions: {
                                     parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                                 }
