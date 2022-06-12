@@ -3018,13 +3018,12 @@ class Poopy {
                 await poopy.functions.waitMessageCooldown()
                 await msg.channel.send('Couldn\'t send file.').catch(() => { })
                 poopy.functions.infoPost(`Couldn\'t send file`)
-                await msg.channel.sendTyping().catch(() => { })
-                
+
                 if (extraOptions.keep ||
                     filepath == undefined ||
                     filepath == 'tempfiles') return
                 
-                poopy.modules.fs.rmSync(filepath, { force: true, recursive: true })
+                poopy.modules.fs.rm(filepath, { force: true, recursive: true })
                 return
             }
 
@@ -3118,14 +3117,12 @@ class Poopy {
                 }
             }
 
-            await msg.channel.sendTyping().catch(() => { })
-
             if (extraOptions.keep ||
                 filepath == undefined ||
                 filepath == 'tempfiles') return
 
             poopy.functions.infoPost(`Deleting \`${filepath}/${filename}\` and its folder`)
-            poopy.modules.fs.rmSync(filepath, { force: true, recursive: true })
+            poopy.modules.fs.rm(filepath, { force: true, recursive: true })
         }
 
         poopy.functions.validateFileFromPath = async function (path, exception, rejectMessages) {
@@ -4110,7 +4107,7 @@ class Poopy {
                                             clearTimeout(t)
                                         }, 1000)
                                         poopy.functions.infoPost(`Command \`${similarCmds[0].name}\` used`)
-                                        await findCmd.execute.call(this, msg, args, { pathObject: pathObject }).catch(async err => {
+                                        await findCmd.execute.call(this, msg, args, { }).catch(async err => {
                                             try {
                                                 await poopy.functions.waitMessageCooldown()
                                                 await msg.channel.send({
