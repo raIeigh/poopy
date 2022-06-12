@@ -3,6 +3,6 @@ module.exports = {
   func: function (msg) {
     let poopy = this
 
-    return poopy.tempdata[msg.author.id]['keyattempts']
+    return poopy.tempdata[msg.author.id][msg.id]['keyattempts']
   }
 }

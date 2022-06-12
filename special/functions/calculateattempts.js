@@ -5,11 +5,11 @@ module.exports = {
         let poopy = this
 
         var word = matches[1]
-        var currentAttempts = poopy.tempdata[msg.author.id]['keyattempts']
+        var currentAttempts = poopy.tempdata[msg.author.id][msg.id]['keyattempts']
 
         await poopy.functions.getKeywordsFor(word, msg, isBot, opts).catch(() => { })
 
-        return poopy.tempdata[msg.author.id]['keyattempts'] - currentAttempts
+        return poopy.tempdata[msg.author.id][msg.id]['keyattempts'] - currentAttempts
     },
     raw: true
 }
