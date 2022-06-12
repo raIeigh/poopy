@@ -3848,6 +3848,8 @@ class Poopy {
 
                 for (var i in cmds) {
                     var cmd = cmds[i]
+                    
+                    msg.oldcontent = cmd
 
                     if (!(ignored.find(name => cmd.toLowerCase().includes(`${prefix}${name}`.toLowerCase()))) && ((!msg.author.bot && msg.author.id != poopy.bot.user.id) || poopy.config.allowbotusage)) {
                         var change = await poopy.functions.getKeywordsFor(cmd, msg, false, { resetattempts: true }).catch(async err => {
@@ -3860,8 +3862,9 @@ class Poopy {
                             }).catch(() => { })
                         }) ?? 'error'
 
-                        msg.oldcontent = cmd
                         msg.content = change
+                    } else {
+                        msg.content = cmd
                     }
 
                     if (!msg.guild || !msg.channel) return
@@ -3869,8 +3872,10 @@ class Poopy {
                     allcontents.push(msg.content)
 
                     if (allcontents.length >= cmds.length && !webhooked) {
+                        var content = msg.content
                         msg.content = allcontents.join(' -|- ')
                         await webhookify().catch(() => { })
+                        msg.content = content
                     }
 
                     await poopy.functions.getUrls(msg, {
