@@ -99,8 +99,10 @@ module.exports = {
                 return true
             }
 
-            for (var i in poopy.functions.lastUrls(msg.guild.id, msg.channel.id)) {
-                var url = poopy.functions.lastUrls(msg.guild.id, msg.channel.id)[i]
+            var lastUrls = poopy.functions.lastUrls(msg.guild.id, msg.channel.id)
+
+            for (var i in lastUrls) {
+                var url = lastUrls[i]
                 var success = await inspect(url).catch(() => { })
                 if (success) validfilecount += 1
                 if (validfilecount >= stages) break

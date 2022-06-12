@@ -4,12 +4,12 @@ module.exports = {
         let poopy = this
 
         await msg.channel.sendTyping().catch(() => { })
-        if (poopy.functions.lastUrl(msg.guild.id, msg.channel.id, 0) === undefined && args[1] === undefined) {
+        if (poopy.functions.lastUrl(msg.guild.id, msg.channel.id, 0, true) === undefined && args[1] === undefined) {
             await msg.channel.send('What is the image to asciify?!').catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
         };
-        var currenturl = poopy.functions.lastUrl(msg.guild.id, msg.channel.id, 0) || args[1]
+        var currenturl = poopy.functions.lastUrl(msg.guild.id, msg.channel.id, 0, true) || args[1]
         var saidMessage = args.slice(1).join(' ')
         var negative = false
         if (saidMessage.includes('-negative')) negative = true
@@ -23,7 +23,7 @@ module.exports = {
         var type = fileinfo.type
 
         if (type.mime.startsWith('image') && !(poopy.vars.gifFormats.find(f => f === type.ext))) {
-            var brailleText = await poopy.functions.braille(currenturl.startsWith('temp:') ? `tempfiles/${poopy.tempfiles[currenturl.substring(5)].name}` : currenturl, negative)
+            var brailleText = await poopy.functions.braille(currenturl, negative)
             await msg.channel.send({
                 content: brailleText,
                 allowedMentions: {

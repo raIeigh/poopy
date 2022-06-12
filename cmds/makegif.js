@@ -31,8 +31,9 @@ module.exports = {
         var filetypes = {}
         var infos = {}
 
+        var fetched = await poopy.functions.getUrls(msg, { tempdir: true }).catch(() => { }) ?? []
         var nofiles = false
-        if (msg.attachments.size <= 0 && !(args.find(arg => poopy.vars.validUrl.test(arg)))) nofiles = true
+        if (fetched.length <= 0) nofiles = true
 
         if (nofiles) {
             var validfilecount = 0
@@ -67,8 +68,10 @@ module.exports = {
                 return true
             }
 
-            for (var i in poopy.functions.lastUrls(msg.guild.id, msg.channel.id)) {
-                var url = poopy.functions.lastUrls(msg.guild.id, msg.channel.id)[i]
+            var lastUrls = poopy.functions.lastUrls(msg.guild.id, msg.channel.id, true)
+
+            for (var i in lastUrls) {
+                var url = lastUrls[i]
                 var success = await inspect(url).catch(() => { })
                 if (success) validfilecount += 1
                 if (validfilecount >= framenumber) break
@@ -76,12 +79,8 @@ module.exports = {
             
             clearInterval(frameeditinterval)
             if (framemessage) framemessage.delete().catch(() => { })
-        } else if (msg.attachments.size) {
-            var attachments = msg.attachments.map(attachment => attachment.url)
-            for (var i in attachments) frameurls[Number(i) + 1] = attachments[i]
         } else {
-            var split = saidMessage.split(' ')
-            for (var i in split) frameurls[Number(i) + 1] = split[i]
+            for (var i in fetched) frameurls[Number(i) + 1] = fetched[i]
         }
 
         if (nofiles && lasturlserror) {

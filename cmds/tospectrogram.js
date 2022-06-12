@@ -4,7 +4,7 @@ module.exports = {
         let poopy = this
 
         await msg.channel.sendTyping().catch(() => { })
-        if (poopy.functions.lastUrl(msg.guild.id, msg.channel.id, 0) === undefined && args[2] === undefined) {
+        if (poopy.functions.lastUrl(msg.guild.id, msg.channel.id, 0, true) === undefined && args[2] === undefined) {
             await msg.channel.send('What is the file?!').catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
@@ -24,7 +24,7 @@ module.exports = {
         if (densityindex > -1) {
             density = isNaN(Number(args[densityindex + 1])) ? 1 : Number(args[densityindex + 1]) <= 1 ? 1 : Number(args[densityindex + 1]) >= 10 ? 10 : Number(args[densityindex + 1]) || 1
         }
-        var currenturl = poopy.functions.lastUrl(msg.guild.id, msg.channel.id, 0)
+        var currenturl = poopy.functions.lastUrl(msg.guild.id, msg.channel.id, 0, true)
         var fileinfo = await poopy.functions.validateFile(currenturl).catch(async error => {
             await msg.channel.send(error).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
@@ -40,7 +40,7 @@ module.exports = {
             var filepath = `temp/${poopy.config.mongodatabase}/file${currentcount}`
             poopy.modules.fs.mkdirSync(`${filepath}`)
 
-            var spectrogramData = await poopy.functions.spectrogram(currenturl.startsWith('temp:') ? `tempfiles/${poopy.tempfiles[currenturl.substring(5)].name}` : currenturl, {
+            var spectrogramData = await poopy.functions.spectrogram(currenturl, {
                 o_length: duration,
                 o_freq: frequency,
                 o_factor: density

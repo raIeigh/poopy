@@ -2642,6 +2642,18 @@ class Poopy {
                     }
                 },
                 {
+                    regexp: /temp:[a-zA-Z0-9_-]{10}/g,
+                    func: async function (url) {
+                        var id = url.substring(5)
+                        var tempfile = poopy.tempfiles[id]
+
+                        if (tempfile) {
+                            poopy.functions.infoPost(`Tempfile detected`)
+                            return options.tempdir ? `tempfiles/${tempfile.name}` : url
+                        }
+                    }
+                },
+                {
                     regexp: poopy.vars.validUrl,
                     func: async function (url) {
                         var correctedurl = await poopy.functions.correctUrl(url).catch(() => { }) ?? url
@@ -2720,32 +2732,40 @@ class Poopy {
             return urls
         }
 
-        poopy.functions.lastUrl = function (g, c, i) {
-            var url = poopy.data['guild-data'][g]['channels'][c]['lastUrls'][i]
+        poopy.functions.lastUrl = function (g, c, i, tempdir) {
+            var urls = poopy.data['guild-data'][g]['channels'][c]['lastUrls']
+            var url = urls[i]
 
             if (url.startsWith('temp:')) {
                 var id = url.substring(5)
                 var tempfile = poopy.tempfiles[id]
                 if (!tempfile) {
+                    urls.splice(i, 1)
                     poopy.data['guild-data'][g]['channels'][c]['lastUrls'].splice(i, 1)
-                    url = poopy.data['guild-data'][g]['channels'][c]['lastUrls'][i]
+                    return poopy.functions.lastUrl(g, c, i, tempdir)
+                } else if (tempdir) {
+                    url = `tempfiles/${tempfile.name}`
                 }
             }
 
             return url
         }
 
-        poopy.functions.lastUrls = function (g, c) {
-            var urls = poopy.data['guild-data'][g]['channels'][c]['lastUrls']
+        poopy.functions.lastUrls = function (g, c, tempdir) {
+            var urls = poopy.data['guild-data'][g]['channels'][c]['lastUrls'].slice()
             
-            for (var i in urls) {
-                var url = poopy.data['guild-data'][g]['channels'][c]['lastUrls'][i]
+            for (var i = 0; i < urls.length; i++) {
+                var url = urls[i]
     
                 if (url.startsWith('temp:')) {
                     var id = url.substring(5)
                     var tempfile = poopy.tempfiles[id]
                     if (!tempfile) {
+                        urls.splice(i, 1)
                         poopy.data['guild-data'][g]['channels'][c]['lastUrls'].splice(i, 1)
+                        i--
+                    } else if (tempdir) {
+                        urls[i] = `tempfiles/${tempfile.name}`
                     }
                 }
             }
@@ -3255,6 +3275,13 @@ class Poopy {
                         .then(res => resolve(res))
                         .catch(res => reject(res))
                     else reject('No temp file available.')
+                    return
+                }
+
+                if (!poopy.vars.validUrl.test(url)) {
+                    await poopy.functions.validateFileFromPath(url)
+                        .then(res => resolve(res))
+                        .catch(res => reject(res))
                     return
                 }
 
