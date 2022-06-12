@@ -3268,15 +3268,15 @@ class Poopy {
                 }
 
                 if (url.startsWith('temp:')) {
-                    if (poopy.tempfiles[url.substring(5)]) await poopy.functions.validateFileFromPath(`tempfiles/${poopy.tempfiles[url.substring(5)].name}`)
+                    if (poopy.tempfiles[url.substring(5)]) await poopy.functions.validateFileFromPath(`tempfiles/${poopy.tempfiles[url.substring(5)].name}`, exception, rejectMessages)
                         .then(res => resolve(res))
                         .catch(res => reject(res))
-                    else reject('No temp file available.')
+                    else reject('Tempfile unavailable.')
                     return
                 }
 
                 if (!poopy.vars.validUrl.test(url)) {
-                    await poopy.functions.validateFileFromPath(url)
+                    await poopy.functions.validateFileFromPath(url, exception, rejectMessages)
                         .then(res => resolve(res))
                         .catch(res => reject(res))
                     return
