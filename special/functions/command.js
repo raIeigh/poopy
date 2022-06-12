@@ -5,9 +5,9 @@ module.exports = {
         let poopy = this
 
         var word = matches[1]
-        var split = poopy.functions.splitKeyFunc(word)
+        var split = poopy.functions.splitKeyFunc(word, { args: 2 })
         var commandname = (split[0] ?? '').toLowerCase()
-        var args = split.slice(1).length ? split.slice(1).join(' | ') : ''
+        var args = split[1] ?? ''
         var command = poopy.commands.find(fcmd => fcmd.name.find(fcmdname => fcmdname === commandname))
         var localCommand = poopy.data['guild-data'][msg.guild.id]['localcmds'].find(cmd => cmd.name === commandname)
         var error = ''
@@ -44,7 +44,7 @@ module.exports = {
                     }).catch(() => { })
 
                     if (command) {
-                        var increaseCount = !command.execute.toString().includes('sendFile')
+                        var increaseCount = !(command.execute.toString().includes('sendFile') && args.includes('-nosend'))
 
                         if (increaseCount) {
                             if (poopy.tempdata[msg.author.id][msg.id]['execCount'] >= 1 && poopy.data['guild-data'][msg.guild.id]['chaincommands'] == false && !(msg.member.permissions.has('MANAGE_GUILD') || msg.member.roles.cache.find(role => role.name.match(/mod|dev|admin|owner|creator|founder|staff/ig)) || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || isBot)) return 'You can\'t chain commands in this server.'

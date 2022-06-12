@@ -3985,7 +3985,7 @@ class Poopy {
                                 await poopy.functions.waitMessageCooldown()
                                 await msg.channel.send('This command is disabled in this server.').catch(() => { })
                             } else {
-                                var increaseCount = !findCmd.execute.toString().includes('sendFile')
+                                var increaseCount = !(findCmd.execute.toString().includes('sendFile') && args.includes('-nosend'))
 
                                 if (increaseCount) {
                                     if (poopy.tempdata[msg.author.id][msg.id]['execCount'] >= 1 && poopy.data['guild-data'][msg.guild.id]['chaincommands'] == false) {
@@ -4078,7 +4078,7 @@ class Poopy {
                                     } else {
                                         var findCmd = poopy.functions.findCommand(similarCmds[0].name)
 
-                                        var increaseCount = !findCmd.execute.toString().includes('sendFile')
+                                        var increaseCount = !(findCmd.execute.toString().includes('sendFile') && args.includes('-nosend'))
 
                                         if (increaseCount) {
                                             if (poopy.tempdata[msg.author.id][msg.id]['execCount'] >= 1 && poopy.data['guild-data'][msg.guild.id]['chaincommands'] == false) {

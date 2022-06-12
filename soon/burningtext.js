@@ -44,7 +44,7 @@ module.exports = {
             args.splice(originindex, 3)
         }
 
-        var saidMessage = args.slice(3).join(' ')
+        var saidMessage = args.slice(1).join(' ')
         if (args[1] === undefined) {
             await msg.channel.send('What is the text?!').catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
