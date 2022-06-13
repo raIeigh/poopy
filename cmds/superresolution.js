@@ -62,7 +62,7 @@ module.exports = {
         }
     },
     help: {
-        name: '<:newpoopy:839191885310066729> superresolution <image>',
+        name: 'superresolution <image>',
         value: 'Upscales the image and reduces its noise with DeepAI\'s super resolution API.'
     },
     cooldown: 2500,

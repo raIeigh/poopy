@@ -3140,6 +3140,11 @@ class Poopy {
                     return
                 }
 
+                if (!poopy.modules.fs.existsSync(path)) {
+                    reject('File not found.')
+                    return
+                }
+
                 var type = await poopy.modules.fileType.fromFile(path).catch(() => { })
 
                 if (!type) {

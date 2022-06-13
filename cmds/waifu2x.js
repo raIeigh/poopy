@@ -62,7 +62,7 @@ module.exports = {
         }
     },
     help: {
-        name: '<:newpoopy:839191885310066729> waifu2x <image>',
+        name: 'waifu2x <image>',
         value: 'Upscales the image and reduces its noise with Waifu2x. Try it yourself at http://waifu2x.udp.jp/'
     },
     cooldown: 2500,
