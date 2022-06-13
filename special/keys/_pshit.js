@@ -14,7 +14,9 @@ module.exports = {
             "charleh",
             "nitra_dev",
             "rukifox",
-            "euth"
+            "euth",
+            "kirbo",
+            "viper"
         ]
         return members[Math.floor(Math.random() * members.length)]
     }

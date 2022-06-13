@@ -10,13 +10,13 @@ module.exports = {
             return;
         };
         var currenturl = poopy.functions.lastUrl(msg.guild.id, msg.channel.id, 0)
-        var x = isNaN(Number(args[1])) ? undefined : Number(args[1]) <= 1 ? 1 : Number(args[1]) >= 3000 ? 3000 : Number(args[1]) || undefined
+        var x = isNaN(Number(args[1])) ? undefined : Number(args[1]) || undefined
         if (x === undefined) {
             await msg.channel.send('What is the X coordinate?!').catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
         }
-        var y = isNaN(Number(args[2])) ? undefined : Number(args[2]) <= 1 ? 1 : Number(args[2]) >= 3000 ? 3000 : Number(args[2]) || undefined
+        var y = isNaN(Number(args[2])) ? undefined : Number(args[2]) || undefined
         if (y === undefined) {
             await msg.channel.send('What is the Y coordinate?!').catch(() => { })
             await msg.channel.sendTyping().catch(() => { })

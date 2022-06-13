@@ -55,7 +55,7 @@ module.exports = {
       'white',
       'liberal',
       'autistic',
-      'young',
+      'child',
       'terrorist',
       'black',
       'artist',

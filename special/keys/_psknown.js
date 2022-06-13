@@ -43,10 +43,12 @@ module.exports = {
       "henryguy",
       "kleio",
       "diep",
-      "welch",
-      "alexandrfrol",
+      "kirbo",
       "fizzy",
-      "kurbee"
+      "kurbee",
+      "viper",
+      "carlito",
+      "goober"
     ]
     return members[Math.floor(Math.random() * members.length)]
   }
