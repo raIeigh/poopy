@@ -1,5 +1,5 @@
 module.exports = {
-    name: ['color2'],
+    name: ['color2', 'colordark'],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -55,7 +55,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'color2 [r] [g] [b] <file>',
+        name: 'color2/colordark [r] [g] [b] <file>',
         value: 'Gives the file a new color depending on the RGB values, focusing more on darker tones.'
     },
     cooldown: 2500,

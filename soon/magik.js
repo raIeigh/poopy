@@ -1,5 +1,5 @@
 module.exports = {
-    name: ['setcrf'],
+    name: ['magik', 'liquidrescale'],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -9,11 +9,10 @@ module.exports = {
             await msg.channel.sendTyping().catch(() => { })
             return;
         };
-        var crf = isNaN(Number(args[1])) ? undefined : Number(args[1]) <= 0 ? 0 : Number(args[1]) >= 51 ? 51 : Math.round(Number(args[1])) || undefined
-        if (crf === undefined) {
-            await msg.channel.send('What is the CRF?!').catch(() => { })
-            await msg.channel.sendTyping().catch(() => { })
-            return;
+        var scale = 75
+        var scaleindex = args.indexOf('-scale')
+        if (scaleindex > -1) {
+            scale = 100 / (isNaN(Number(args[scaleindex + 1])) ? (1 / .75) : Number(args[scaleindex + 1]) <= 1 ? 1 : Number(args[scaleindex + 1]) >= 6 ? 6 : Number(args[scaleindex + 1]) || (1 / .75))
         }
         var currenturl = poopy.functions.lastUrl(msg.guild.id, msg.channel.id, 0) || args[1]
         var fileinfo = await poopy.functions.validateFile(currenturl, true).catch(async error => {
@@ -30,23 +29,27 @@ module.exports = {
                 fileinfo: fileinfo
             })
             var filename = `input.mp4`
-            await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -crf ${crf} -vf "scale=ceil(iw/2)*2:ceil(ih/2)*2" -preset ${poopy.functions.findpreset(args)} -c:v libx264 -pix_fmt yuv420p ${filepath}/output.mp4`)
+            var fps = fileinfo.info.fps.includes('0/0') ? '50' : fileinfo.info.fps
+            poopy.modules.fs.mkdirSync(`${filepath}/frames`)
+            await poopy.functions.execPromise(`magick ${filepath}/${filename} -liquid-rescale ${scale}% ${filepath}/frames/frame_%d.png`)
+            await poopy.functions.execPromise(`ffmpeg -r ${fps} -i ${filepath}/frames/frame_%d.jpg -i ${filepath}/${filename} -map 1:a? -filter_complex "[0:v]scale=ceil(iw/2)*2:ceil(ih/2)*2[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} -c:v libx264 -pix_fmt yuv420p ${filepath}/output.mp4`)
             await poopy.functions.sendFile(msg, filepath, `output.mp4`)
         } else if (type.mime.startsWith('image') && !(poopy.vars.gifFormats.find(f => f === type.ext))) {
             var filepath = await poopy.functions.downloadFile(currenturl, `input.png`, {
                 fileinfo: fileinfo
             })
             var filename = `input.png`
-            await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -crf ${crf} -vf "scale=ceil(iw/2)*2:ceil(ih/2)*2" -preset ${poopy.functions.findpreset(args)} -c:v libx264 -pix_fmt yuv420p ${filepath}/converted.mp4`)
-            await poopy.functions.execPromise(`ffmpeg -i ${filepath}/converted.mp4 -preset ${poopy.functions.findpreset(args)} -vframes 1 ${filepath}/output.png`)
+            await poopy.functions.execPromise(`magick ${filepath}/${filename} -liquid-rescale ${scale}% ${filepath}/output.png`)
             await poopy.functions.sendFile(msg, filepath, `output.png`)
         } else if (type.mime.startsWith('image') && poopy.vars.gifFormats.find(f => f === type.ext)) {
             var filepath = await poopy.functions.downloadFile(currenturl, `input.gif`, {
                 fileinfo: fileinfo
             })
             var filename = `input.gif`
-            await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -crf ${crf} -vf "scale=ceil(iw/2)*2:ceil(ih/2)*2" -preset ${poopy.functions.findpreset(args)} -c:v libx264 -pix_fmt yuv420p ${filepath}/converted.mp4`)
-            await poopy.functions.execPromise(`ffmpeg -i ${filepath}/converted.mp4 -filter_complex "[0:v]split[pout][ppout];[ppout]palettegen=reserve_transparent=1[palette];[pout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} -gifflags -offsetting ${filepath}/output.gif`)
+            var fps = fileinfo.info.fps.includes('0/0') ? '50' : fileinfo.info.fps
+            poopy.modules.fs.mkdirSync(`${filepath}/frames`)
+            await poopy.functions.execPromise(`magick ${filepath}/${filename} -liquid-rescale ${scale}% ${filepath}/frames/frame_%d.png`)
+            await poopy.functions.execPromise(`ffmpeg -r ${fps} -i ${filepath}/frames/frame_%d.png -filter_complex "[0:v]split[pout][ppout];[ppout]palettegen=reserve_transparent=1[palette];[pout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} -vsync 0 -gifflags -offsetting ${filepath}/output.gif`)
             await poopy.functions.sendFile(msg, filepath, `output.gif`)
         } else {
             await msg.channel.send({
@@ -60,9 +63,9 @@ module.exports = {
         }
     },
     help: {
-        name: 'setcrf <crf (from 0 to 51)> <file>',
-        value: "Sets the file's CRF to <crf>. A higher CRF means worse quality."
+        name: '<:newpoopy:839191885310066729> magik/liquidrescale <file> [-scale <multiplier (from 1 to 6)>]',
+        value: "Distorts the file by liquid-rescaling it."
     },
     cooldown: 2500,
-    type: 'Compression'
+    type: 'Effects'
 }

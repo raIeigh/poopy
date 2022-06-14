@@ -3122,7 +3122,7 @@ class Poopy {
                 filepath == 'tempfiles') return
 
             poopy.functions.infoPost(`Deleting \`${filepath}/${filename}\` and its folder`)
-            poopy.modules.fs.rm(filepath, { force: true, recursive: true })
+            //poopy.modules.fs.rm(filepath, { force: true, recursive: true })
         }
 
         poopy.functions.validateFileFromPath = async function (path, exception, rejectMessages) {
