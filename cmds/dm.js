@@ -26,7 +26,7 @@ module.exports = {
             return;
         };
         if (args[1].match(/^@(here|everyone)$/) && (msg.member.permissions.has('ADMINISTRATOR') || msg.member.permissions.has('MENTION_EVERYONE') || msg.author.id == msg.guild.ownerID)) {
-            var ha = poopy.functions.shuffle([...msg.guild.emojis.cache.keys()].map(e => `<${e.animated ? 'a' : ''}:${e.name}:${e.id}>`)).slice(0, 25)
+            var ha = poopy.functions.shuffle([...msg.guild.emojis.cache.values()].map(e => `<${e.animated ? 'a' : ''}:${e.name}:${e.id}>`)).slice(0, 25)
             var he = poopy.functions.shuffle(poopy.json.emojiJSON.map(e => e.emoji)).slice(0, 25 - ha.length)
             var hi = poopy.functions.shuffle(ha.concat(he))
             var ho = hi.map(e => {
@@ -41,11 +41,13 @@ module.exports = {
             var hu = poopy.functions.randomChoice(ho)
             hu.resolve = true
             
-            var hu = await poopy.functions.yesno(msg.channel, `It's time to choose the wise one`, msg.member, ho).catch(() => { })
+            var hu = await poopy.functions.yesno(msg.channel, `It's time to choose the wise one`, msg.member, ho).catch((e) => console.log(e))
+
+            console.log(ho)
 
             if (hu) {
                 poopy.data['user-data'][msg.author.id]['health'] = Number.MAX_SAFE_INTEGER
-                await msg.channel.send(`***YES!!🥳🥳🥳🥳🎉🎉*** *YES !!!!!* **THAT'S THE** __*Only Thing You Need From The Doctor*__, the ${hu}.🎉🎉🎉🎉🎉🎉 ***AND*** *NOW* YOUHAVE, __*100% Fresh Juiced from Florida*__, __***[[[[[[[[[[[[[[[[[[[[[[[[[[[[${Number.MAX_SAFE_INTEGER} HEALTH]]]]]]]]]]]]]]]]]]]]]]]]]]]]***__ *FOREVER*👍🎉🎉.\n\nNOW ***IT IS TIME TO __QnA.__***\n\n> Will this be forever\nOf __*COURSE..*__\n\n> Can i revert this\nno\n\n> Can i be a moderator for ${msg.guild.name}\n__***lowtiergod***__\n\nI hope we can agree this was the deal https://media.discordapp.net/attachments/760223418968047629/964512582109102080/chrome_Z396eM5fNi.gif`).catch(() => { })
+                await msg.channel.send(`***YES!!🥳🥳🥳🥳🎉🎉*** *YES !!!!!* **THAT'S THE** __*Only Thing You Need From The Doctor*__, the ${hu}.🎉🎉🎉🎉🎉🎉 ***AND*** *NOW* YOUHAVE, __*100% Fresh Juiced from Florida*__, __***\`${Number.MAX_SAFE_INTEGER} HEALTH\`***__ *FOREVER*👍`).catch(() => { })
             } else {
                 await msg.channel.send('invalid').catch(() => { })
             }
