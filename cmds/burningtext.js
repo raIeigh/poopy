@@ -73,7 +73,7 @@ module.exports = {
             return
         }
 
-        var fileinfo = await poopy.functions.validateFile(response.data.renderLocation.replace('https', 'http'), true).catch(async error => {
+        var fileinfo = await poopy.functions.validateFile(response.data.renderLocation.replace('https', 'http'), 'very true').catch(async error => {
             await msg.channel.send(error).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return
