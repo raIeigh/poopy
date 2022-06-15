@@ -128,7 +128,6 @@ class Poopy {
 
         // module trash
         poopy.modules.Discord = require(`discord.js${poopy.config.self ? '-selfbot-v13' : ''}`)
-        poopy.modules.discordModals = require('discord-modals')
         poopy.modules.REST = require('@discordjs/rest').REST
         poopy.modules.Routes = require('discord-api-types/v9').Routes
         poopy.modules.DiscordBuilders = require('@discordjs/builders')
@@ -143,14 +142,7 @@ class Poopy {
         poopy.modules.cheerio = require('cheerio')
         poopy.modules.util = require('util')
         poopy.modules.md5 = require('md5')
-
-        // because i improved the print() function in jimp, i need to replace the original with the new one before requiring() it
-        if (poopy.modules.fs.existsSync('node_modules/@jimp/plugin-print')) {
-            poopy.modules.fs.rmSync('node_modules/@jimp/plugin-print', { force: true, recursive: true })
-        }
-        poopy.modules.fs.copySync('modules/plugin-print', 'node_modules/@jimp/plugin-print', { recursive: true })
         poopy.modules.Jimp = require('jimp')
-
         //poopy.modules.selenium = require('selenium-webdriver')
         //poopy.modules.chrome = require('selenium-webdriver/chrome')
         poopy.modules.whatwg = require('whatwg-url')
@@ -185,16 +177,6 @@ class Poopy {
         })
         poopy.package = JSON.parse(poopy.modules.fs.readFileSync('package.json'))
 
-        poopy.modules.discordModals.InteractionResponses.applyToClass(poopy.modules.discordModals.ModalSubmitInteraction, [
-            'deferReply',
-            'reply',
-            'fetchReply',
-            'editReply',
-            'deleteReply',
-            'followUp',
-            'update',
-        ])
-        poopy.modules.discordModals(poopy.bot)
         poopy.vars.msgcooldown = false
         poopy.vars.validUrl = /(http|https):\/\/([!#$&-;=?-[\]_a-z~]|%[0-9a-fA-F]{2})+/
         poopy.vars.emojiRegex = require('emoji-regex')()
@@ -790,7 +772,7 @@ class Poopy {
 
                 poopy.data['user-data'][msg.author.id]['username'] = msg.author.username
 
-                if (!poopy.data['user-data'][msg.author.id]['health']) {
+                if (poopy.data['user-data'][msg.author.id]['health'] === undefined) {
                     poopy.data['user-data'][msg.author.id]['health'] = 100
                 }
             }
@@ -1364,7 +1346,25 @@ class Poopy {
             return count
         }
 
-        poopy.functions.yesno = async function (channel, content, who) {
+        poopy.functions.randomChoice = function (arr) {
+            return arr[Math.floor(Math.random() * arr.length)]
+        }
+
+        poopy.functions.shuffle = function (array) {
+            var currentIndex = array.length, randomIndex
+
+            while (currentIndex != 0) {
+                randomIndex = Math.floor(Math.random() * currentIndex);
+                currentIndex--
+
+                [array[currentIndex], array[randomIndex]] = [
+                    array[randomIndex], array[currentIndex]]
+            }
+
+            return array
+        }
+
+        poopy.functions.yesno = async function (channel, content, who, btdata) {
             return new Promise(async (resolve) => {
                 if (poopy.config.forcetrue) {
                     resolve(true)
@@ -1385,7 +1385,7 @@ class Poopy {
                     who = who.id
                 }
 
-                var buttonsData = [
+                var buttonsData = btdata ?? [
                     {
                         emoji: '874406154619469864',
                         reactemoji: '✅',
@@ -1404,21 +1404,29 @@ class Poopy {
                 ]
 
                 if (!poopy.config.useReactions) {
-                    var buttonRow = new poopy.modules.Discord.MessageActionRow()
-                    var buttons = []
+                    var components = []
 
-                    buttonsData.forEach(bdata => {
-                        var button = new poopy.modules.Discord.MessageButton()
-                            .setStyle(bdata.style)
-                            .setEmoji(bdata.emoji)
-                            .setCustomId(bdata.customid)
+                    var chunkButtonData = poopy.functions.chunkArray(buttonsData, 5)
 
-                        buttons.push(button)
+                    chunkButtonData.forEach(buttonsData => {
+                        var buttonRow = new poopy.modules.Discord.MessageActionRow()
+                        var buttons = []
+
+                        buttonsData.forEach(bdata => {
+                            var button = new poopy.modules.Discord.MessageButton()
+                                .setStyle(bdata.style)
+                                .setEmoji(bdata.emoji)
+                                .setCustomId(bdata.customid)
+
+                            buttons.push(button)
+                        })
+
+                        buttonRow.addComponents(buttons)
+
+                        components.push(buttonRow)
                     })
 
-                    buttonRow.addComponents(buttons)
-
-                    sendObject.components = [buttonRow]
+                    sendObject.components = components
                 }
 
                 await poopy.functions.waitMessageCooldown()
@@ -1620,27 +1628,28 @@ class Poopy {
                                 resolve(newpage)
                             })
                         } else {
-                            var pageModal = new poopy.modules.discordModals.Modal()
+                            var pageModal = new poopy.modules.Discord.Modal()
                                 .setCustomId('page-modal')
                                 .setTitle('Select your page...')
                                 .addComponents(
-                                    new poopy.modules.discordModals.TextInputComponent()
-                                        .setCustomId('page-num')
-                                        .setLabel('Page')
-                                        .setStyle('SHORT')
-                                        .setMinLength(1)
-                                        .setMaxLength(String(results).length)
-                                        .setPlaceholder(`1-${results}`)
-                                        .setRequired(true)
+                                    new poopy.modules.Discord.MessageActionRow().addComponents(
+                                        new poopy.modules.Discord.TextInputComponent()
+                                            .setCustomId('page-num')
+                                            .setLabel('Page')
+                                            .setStyle('SHORT')
+                                            .setMinLength(1)
+                                            .setMaxLength(String(results).length)
+                                            .setPlaceholder(`1-${results}`)
+                                            .setRequired(true)
+                                    )
                                 )
 
-                            poopy.modules.discordModals.showModal(pageModal, {
-                                client: poopy.bot,
-                                interaction: interaction
-                            }).then(() => {
+                            interaction.showModal(pageModal).then(() => {
                                 var done = false
 
                                 var modalCallback = (modal) => {
+                                    if (!modal.isModalSubmit()) return
+
                                     if (modal.deferUpdate) modal.deferUpdate().catch(() => { })
 
                                     if (!(modal.user.id === who && ((modal.user.id !== poopy.bot.user.id && !modal.user.bot) || poopy.config.allowbotusage)) || done) {
@@ -1648,7 +1657,7 @@ class Poopy {
                                     }
 
                                     done = true
-                                    newpage = poopy.functions.parseNumber(modal.getTextInputValue('page-num'), { dft: page, min: 1, max: results, round: true })
+                                    newpage = poopy.functions.parseNumber(modal.fields.getTextInputValue('page-num'), { dft: page, min: 1, max: results, round: true })
                                     clearTimeout(modalTimeout)
                                     resolve(newpage)
                                 }
@@ -1656,12 +1665,12 @@ class Poopy {
                                 var modalTimeout = setTimeout(() => {
                                     if (!done) {
                                         done = true
-                                        poopy.bot.removeListener('modalSubmit', modalCallback)
+                                        poopy.bot.removeListener('interactionCreate', modalCallback)
                                         resolve(newpage)
                                     }
                                 }, 30000)
 
-                                poopy.bot.once('modalSubmit', modalCallback)
+                                poopy.bot.once('interactionCreate', modalCallback)
                             }).catch(() => resolve(newpage))
                         }
                     }),
@@ -2589,6 +2598,7 @@ class Poopy {
             if (!msg) return []
             var string = (options.string ?? msg.content ?? '').replace(/"([\s\S]*?)"/g, '')
             var prefixFound = options.prefix ?? string.toLowerCase().includes(poopy.data['guild-data'][msg.guild.id]['prefix'].toLowerCase())
+            var max = options.max ?? Infinity
             var urls = []
             var regexes = [
                 {
@@ -2691,6 +2701,7 @@ class Poopy {
                     if (url) {
                         urls = [url].concat(urls)
                     }
+                    if (urls.length >= max) break
                 }
             }
 
@@ -2702,16 +2713,20 @@ class Poopy {
                     if (options.update && !attachment.fetched) attachment.fetched = true
                 })
                 attachmentsR.reverse()
-                attachmentsR.forEach(attachment => {
+                for (var i in attachmentsR) {
+                    var attachment = attachmentsR[i]
                     urls = [attachment].concat(urls)
-                })
+                    if (urls.length >= max) break
+                }
             }
 
             var reply = await msg.fetchReference().catch(() => { })
             if (reply && !options.replied) {
                 if (reply.guild) {
                     urls = urls.concat(await poopy.functions.getUrls(reply, {
-                        replied: true
+                        replied: true,
+                        max: max - urls.length,
+                        tempdir: options.tempdir
                     }) ?? [])
                 }
             }
@@ -2753,10 +2768,10 @@ class Poopy {
 
         poopy.functions.lastUrls = function (g, c, tempdir) {
             var urls = poopy.data['guild-data'][g]['channels'][c]['lastUrls'].slice()
-            
+
             for (var i = 0; i < urls.length; i++) {
                 var url = urls[i]
-    
+
                 if (url.startsWith('temp:')) {
                     var id = url.substring(5)
                     var tempfile = poopy.tempfiles[id]
@@ -2783,7 +2798,7 @@ class Poopy {
             if (!poopy.tempdata[msg.author.id]) {
                 poopy.tempdata[msg.author.id] = {}
             }
-            
+
             if (!poopy.tempdata[msg.author.id][msg.id]) {
                 poopy.tempdata[msg.author.id][msg.id] = {}
             }
@@ -3022,7 +3037,7 @@ class Poopy {
                 if (extraOptions.keep ||
                     filepath == undefined ||
                     filepath == 'tempfiles') return
-                
+
                 poopy.modules.fs.rm(filepath, { force: true, recursive: true })
                 return
             }
@@ -3047,7 +3062,7 @@ class Poopy {
                 else ext = ''
 
                 poopy.modules.fs.copyFileSync(`${filepath}/${filename}`, `tempfiles/${id}${ext}`)
-                
+
                 poopy.tempfiles[id] = {
                     name: `${id}${ext}`,
                     oname: filename,
@@ -3122,7 +3137,7 @@ class Poopy {
                 filepath == 'tempfiles') return
 
             poopy.functions.infoPost(`Deleting \`${filepath}/${filename}\` and its folder`)
-            //poopy.modules.fs.rm(filepath, { force: true, recursive: true })
+            poopy.modules.fs.rm(filepath, { force: true, recursive: true })
         }
 
         poopy.functions.validateFileFromPath = async function (path, exception, rejectMessages) {
@@ -3132,7 +3147,7 @@ class Poopy {
                     poopy.functions.infoPost(`File can't be processed, reason:\n\`${val}\``)
                     rej(val)
                 }
-                
+
                 poopy.functions.infoPost(`Validating file from path`)
 
                 if ((process.memoryUsage().rss / 1024 / 1024) <= poopy.config.memLimit) {
@@ -3264,7 +3279,7 @@ class Poopy {
                     poopy.functions.infoPost(`File can't be processed, reason:\n\`${val}\``)
                     rej(val)
                 }
-                
+
                 poopy.functions.infoPost(`Validating file from URL`)
 
                 if ((process.memoryUsage().rss / 1024 / 1024) <= poopy.config.memLimit) {
@@ -3527,6 +3542,10 @@ class Poopy {
             poopy.commands.push(require(`./cmds/${name}`))
         })
 
+        if (poopy.config.testing) poopy.modules.fs.readdirSync('soon').forEach(name => {
+            poopy.commands.push(require(`./soon/${name}`))
+        })
+
         poopy.commands.sort((a, b) => {
             if (a.name[0] > b.name[0]) {
                 return 1
@@ -3758,11 +3777,11 @@ class Poopy {
             var oldcontent = msg.content
             var allcontents = []
             var webhooked = false
-            
+
             async function webhookify() {
                 webhooked = true
                 var parent = msg.channel.parent
-    
+
                 if (parent) {
                     if (poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['custom'] && (msg.content || msg.attachments.size || msg.embeds.length) && !(parent.isText())) {
                         if (typeof (poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['custom']) === 'object') {
@@ -3852,7 +3871,7 @@ class Poopy {
                                     await findWebhook.send(sendObject).then(() => {
                                         msg.delete().catch(() => { })
                                     }).catch(() => { })
-    
+
                                 } else {
                                     var createdWebhook = await msg.channel.createWebhook('Poopyhook', { avatar: 'https://cdn.discordapp.com/attachments/760223418968047629/835923489834664056/poopy2.png' }).catch(() => { })
                                     if (!createdWebhook) {
@@ -3887,7 +3906,7 @@ class Poopy {
 
                 for (var i in cmds) {
                     var cmd = cmds[i]
-                    
+
                     msg.oldcontent = cmd
 
                     if (!(ignored.find(name => cmd.toLowerCase().includes(`${prefix}${name}`.toLowerCase()))) && ((!msg.author.bot && msg.author.id != poopy.bot.user.id) || poopy.config.allowbotusage)) {
@@ -3998,7 +4017,7 @@ class Poopy {
                                         await msg.channel.send('You can\'t chain commands in this server.').catch(() => { })
                                         return
                                     }
-            
+
                                     if (poopy.tempdata[msg.author.id][msg.id]['execCount'] >= poopy.config.commandLimit * ((msg.member.permissions.has('MANAGE_GUILD') || msg.member.roles.cache.find(role => role.name.match(/mod|dev|admin|owner|creator|founder|staff/ig)) || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID) ? 5 : 1)) {
                                         await poopy.functions.waitMessageCooldown()
                                         await msg.channel.send(`Number of commands to run at the same time must be smaller or equal to **${poopy.config.commandLimit * ((msg.member.permissions.has('MANAGE_GUILD') || msg.member.roles.cache.find(role => role.name.match(/mod|dev|admin|owner|creator|founder|staff/ig)) || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID) ? 5 : 1)}**!`).catch(() => { })
@@ -4007,7 +4026,7 @@ class Poopy {
 
                                     poopy.tempdata[msg.author.id][msg.id]['execCount']++
                                 }
-                                
+
                                 if (findCmd.cooldown) {
                                     poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] = (poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] || Date.now()) + findCmd.cooldown / ((msg.member.permissions.has('MANAGE_GUILD') || msg.member.roles.cache.find(role => role.name.match(/mod|dev|admin|owner|creator|founder|staff/ig)) || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID) && (findCmd.type === 'Text' || findCmd.type === 'Main') ? 5 : 1)
                                 }
@@ -4019,7 +4038,7 @@ class Poopy {
                                     clearTimeout(t)
                                 }, 60000)
                                 poopy.functions.infoPost(`Command \`${args[0].toLowerCase()}\` used`)
-                                await findCmd.execute.call(this, msg, args, { }).catch(async err => {
+                                await findCmd.execute.call(this, msg, args, {}).catch(async err => {
                                     try {
                                         await poopy.functions.waitMessageCooldown()
                                         await msg.channel.send({
@@ -4052,7 +4071,7 @@ class Poopy {
                                     await msg.channel.send('You can\'t chain commands in this server.').catch(() => { })
                                     return
                                 }
-            
+
                                 if (poopy.tempdata[msg.author.id][msg.id]['execCount'] >= poopy.config.commandLimit * ((msg.member.permissions.has('MANAGE_GUILD') || msg.member.roles.cache.find(role => role.name.match(/mod|dev|admin|owner|creator|founder|staff/ig)) || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID) ? 5 : 1)) {
                                     await poopy.functions.waitMessageCooldown()
                                     await msg.channel.send(`Number of commands to run at the same time must be smaller or equal to **${poopy.config.commandLimit * ((msg.member.permissions.has('MANAGE_GUILD') || msg.member.roles.cache.find(role => role.name.match(/mod|dev|admin|owner|creator|founder|staff/ig)) || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID) ? 5 : 1)}**!`).catch(() => { })
@@ -4104,7 +4123,7 @@ class Poopy {
                                         if (findCmd.cooldown) {
                                             poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] = (poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] || Date.now()) + findCmd.cooldown / ((msg.member.permissions.has('MANAGE_GUILD') || msg.member.roles.cache.find(role => role.name.match(/mod|dev|admin|owner|creator|founder|staff/ig)) || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID) && (findCmd.type === 'Text' || findCmd.type === 'Main') ? 5 : 1)
                                         }
-                                        
+
                                         poopy.vars.cps++
                                         poopy.data['bot-data']['commands']++
                                         var t = setTimeout(() => {
@@ -4112,7 +4131,7 @@ class Poopy {
                                             clearTimeout(t)
                                         }, 1000)
                                         poopy.functions.infoPost(`Command \`${similarCmds[0].name}\` used`)
-                                        await findCmd.execute.call(this, msg, args, { }).catch(async err => {
+                                        await findCmd.execute.call(this, msg, args, {}).catch(async err => {
                                             try {
                                                 await poopy.functions.waitMessageCooldown()
                                                 await msg.channel.send({
@@ -4136,27 +4155,27 @@ class Poopy {
                                     }, 60000)
                                     poopy.functions.infoPost(`Command \`${similarCmds[0].name}\` used`)
                                     var phrase = findLocalCmd ? (await poopy.functions.getKeywordsFor(findLocalCmd.phrase, msg, true, { resetattempts: true, ownermode: findLocalCmd.ownermode }).catch(() => { }) ?? 'error') : 'error'
-                                    
+
                                     var increaseCount = !!phrase
-        
+
                                     if (increaseCount) {
                                         if (poopy.tempdata[msg.author.id][msg.id]['execCount'] >= 1 && poopy.data['guild-data'][msg.guild.id]['chaincommands'] == false) {
                                             await poopy.functions.waitMessageCooldown()
                                             await msg.channel.send('You can\'t chain commands in this server.').catch(() => { })
                                             return
                                         }
-                    
+
                                         if (poopy.tempdata[msg.author.id][msg.id]['execCount'] >= poopy.config.commandLimit * ((msg.member.permissions.has('MANAGE_GUILD') || msg.member.roles.cache.find(role => role.name.match(/mod|dev|admin|owner|creator|founder|staff/ig)) || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID) ? 5 : 1)) {
                                             await poopy.functions.waitMessageCooldown()
                                             await msg.channel.send(`Number of commands to run at the same time must be smaller or equal to **${poopy.config.commandLimit * ((msg.member.permissions.has('MANAGE_GUILD') || msg.member.roles.cache.find(role => role.name.match(/mod|dev|admin|owner|creator|founder|staff/ig)) || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID) ? 5 : 1)}**!`).catch(() => { })
                                             return
                                         }
-        
+
                                         poopy.tempdata[msg.author.id][msg.id]['execCount']++
                                     }
-                                    
+
                                     if (poopy.tempdata[msg.guild.id][msg.channel.id]['shut']) return
-                                    
+
                                     await poopy.functions.waitMessageCooldown()
                                     await msg.channel.send({
                                         content: phrase,
@@ -4171,7 +4190,7 @@ class Poopy {
                         }
                     }
                 }
-                
+
                 return notExecuted
             })().catch(async (e) => await msg.channel.send(e.message).catch(() => { })))
 
@@ -4191,6 +4210,8 @@ class Poopy {
                     poopy.data['guild-data'][msg.guild.id]['messages'] = messages
                 }
             }
+
+            setTimeout(() => { delete poopy.tempdata[msg.author.id][msg.id] }, 60000)
 
             if (!msg.guild || !msg.channel || poopy.tempdata[msg.guild.id][msg.channel.id]['shut']) return
 

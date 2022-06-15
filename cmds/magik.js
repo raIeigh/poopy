@@ -1,5 +1,5 @@
 module.exports = {
-    name: ['magik', 'liquidrescale'],
+    name: ['magik', 'awareshrink', 'liquidshrink'],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -24,15 +24,30 @@ module.exports = {
         if (!fileinfo) return
         var type = fileinfo.type
 
+        if (fileinfo.info.width > 1000 || fileinfo.info.height > 1000) {
+            await msg.channel.send(`That file has width or height higher than 1000 pixels, time to blow.`).catch(() => { })
+            poopy.modules.fs.rmSync(filepath, { force: true, recursive: true })
+            return
+        }
+
         if (type.mime.startsWith('video')) {
             var filepath = await poopy.functions.downloadFile(currenturl, `input.mp4`, {
                 fileinfo: fileinfo
             })
             var filename = `input.mp4`
+            var frames = fileinfo.info.frames
             var fps = fileinfo.info.fps.includes('0/0') ? '50' : fileinfo.info.fps
+
+            if (frames > 150) {
+                await msg.channel.send(`That video has more than 150 frames, time to blow.`).catch(() => { })
+                poopy.modules.fs.rmSync(filepath, { force: true, recursive: true })
+                return
+            }
+
             poopy.modules.fs.mkdirSync(`${filepath}/frames`)
-            await poopy.functions.execPromise(`magick ${filepath}/${filename} -liquid-rescale ${scale}% ${filepath}/frames/frame_%d.png`)
-            await poopy.functions.execPromise(`ffmpeg -r ${fps} -i ${filepath}/frames/frame_%d.jpg -i ${filepath}/${filename} -map 1:a? -filter_complex "[0:v]scale=ceil(iw/2)*2:ceil(ih/2)*2[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} -c:v libx264 -pix_fmt yuv420p ${filepath}/output.mp4`)
+
+            await poopy.functions.execPromise(`magick ${filepath}/${filename} -coalesce -liquid-rescale ${scale}% ${filepath}/frames/frame_%d.png`)
+            await poopy.functions.execPromise(`ffmpeg -r ${fps} -i ${filepath}/frames/frame_%d.png -i ${filepath}/${filename} -map 1:a? -filter_complex "[0:v]scale=ceil(iw/2)*2:ceil(ih/2)*2[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} -c:v libx264 -pix_fmt yuv420p ${filepath}/output.mp4`)
             await poopy.functions.sendFile(msg, filepath, `output.mp4`)
         } else if (type.mime.startsWith('image') && !(poopy.vars.gifFormats.find(f => f === type.ext))) {
             var filepath = await poopy.functions.downloadFile(currenturl, `input.png`, {
@@ -46,9 +61,18 @@ module.exports = {
                 fileinfo: fileinfo
             })
             var filename = `input.gif`
+            var frames = fileinfo.info.frames
             var fps = fileinfo.info.fps.includes('0/0') ? '50' : fileinfo.info.fps
+
+            if (frames > 150) {
+                await msg.channel.send(`That GIF has more than 150 frames, time to blow.`).catch(() => { })
+                poopy.modules.fs.rmSync(filepath, { force: true, recursive: true })
+                return
+            }
+
             poopy.modules.fs.mkdirSync(`${filepath}/frames`)
-            await poopy.functions.execPromise(`magick ${filepath}/${filename} -liquid-rescale ${scale}% ${filepath}/frames/frame_%d.png`)
+
+            await poopy.functions.execPromise(`magick ${filepath}/${filename} -coalesce -liquid-rescale ${scale}% ${filepath}/frames/frame_%d.png`)
             await poopy.functions.execPromise(`ffmpeg -r ${fps} -i ${filepath}/frames/frame_%d.png -filter_complex "[0:v]split[pout][ppout];[ppout]palettegen=reserve_transparent=1[palette];[pout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} -vsync 0 -gifflags -offsetting ${filepath}/output.gif`)
             await poopy.functions.sendFile(msg, filepath, `output.gif`)
         } else {
@@ -63,9 +87,9 @@ module.exports = {
         }
     },
     help: {
-        name: '<:newpoopy:839191885310066729> magik/liquidrescale <file> [-scale <multiplier (from 1 to 6)>]',
-        value: "Distorts the file by liquid-rescaling it."
+        name: '<:newpoopy:839191885310066729> magik/awareshrink/liquidshrink <file> [-scale <multiplier (from 1 to 6)>]',
+        value: "Shrinks the file by liquid-rescaling it."
     },
     cooldown: 2500,
-    type: 'Effects'
+    type: 'Resizing'
 }

@@ -1,4 +1,4 @@
-async function main() {
+async function start() {
     let poopyStarted = false
     let mainPoopy
     const express = require('express')
@@ -573,6 +573,11 @@ async function main() {
             }
         ]
     }
+    
+    if (fs.existsSync('node_modules/@jimp/plugin-print')) {
+        fs.rmSync('node_modules/@jimp/plugin-print', { force: true, recursive: true })
+        fs.copySync('modules/plugin-print', 'node_modules/@jimp/plugin-print', { recursive: true })
+    }
 
     tokens.forEach(async tokendata => {
         let poopy
@@ -593,4 +598,4 @@ async function main() {
     eventEmitter.emit('poopystarted')
 }
 
-main()
+start()

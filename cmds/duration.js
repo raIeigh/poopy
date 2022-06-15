@@ -38,9 +38,12 @@ module.exports = {
                 var smult = iduration / duration
                 var speedfilter = []
 
-                while (smult < 0.5) {
+                if (smult < 0.5) while (smult < 0.5) {
                     smult *= 2
                     speedfilter.push(`atempo=0.5`)
+                } else if (smult > 2) while (smult > 2) {
+                    smult /= 2
+                    speedfilter.push(`atempo=2`)
                 }
 
                 speedfilter.push(`atempo=${smult}`)
@@ -59,9 +62,12 @@ module.exports = {
             var smult = iduration / duration
             var speedfilter = []
 
-            while (smult < 0.5) {
+            if (smult < 0.5) while (smult < 0.5) {
                 smult *= 2
                 speedfilter.push(`atempo=0.5`)
+            } else if (smult > 2) while (smult > 2) {
+                smult /= 2
+                speedfilter.push(`atempo=2`)
             }
 
             speedfilter.push(`atempo=${smult}`)

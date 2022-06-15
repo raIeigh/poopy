@@ -23,8 +23,6 @@ module.exports = {
             args.splice(framesindex, 2)
         }
 
-        var saidMessage = args.slice(1, fpsIsLastArg ? args.length - 1 : args.length).join(' ')
-
         var lasturlserror = ''
 
         var frameurls = {}
@@ -58,7 +56,7 @@ module.exports = {
                 var filetype = fileinfo.type
                 if (!filetype || !(filetype.mime.startsWith('image') && !(poopy.vars.gifFormats.find(f => f === filetype.ext)) && poopy.vars.jimpFormats.find(f => f === filetype.ext))) {
                     lasturlerror = error
-                    lasturlserror = `Unsupported file: ${url}`
+                    lasturlserror = `Unsupported file: \`${url}\``
                     return false
                 }
                 frameurls[validfilecount + 1] = url

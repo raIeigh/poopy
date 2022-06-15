@@ -24,6 +24,12 @@ module.exports = {
         if (!fileinfo) return
         var type = fileinfo.type
 
+        if (fileinfo.info.width > 1000 || fileinfo.info.height > 1000) {
+            await msg.channel.send(`That file has width or height higher than 1000 pixels, time to blow.`).catch(() => { })
+            poopy.modules.fs.rmSync(filepath, { force: true, recursive: true })
+            return
+        }
+
         if (type.mime.startsWith('video')) {
             var filepath = await poopy.functions.downloadFile(currenturl, `input.mp4`, {
                 fileinfo: fileinfo
@@ -31,7 +37,7 @@ module.exports = {
             var filename = `input.mp4`
             var fps = fileinfo.info.fps.includes('0/0') ? '50' : fileinfo.info.fps
             poopy.modules.fs.mkdirSync(`${filepath}/frames`)
-            await poopy.functions.execPromise(`magick ${filepath}/${filename} -quality ${quality} ${filepath}/frames/frame_%d.jpg`)
+            await poopy.functions.execPromise(`magick ${filepath}/${filename} -coalesce -quality ${quality} ${filepath}/frames/frame_%d.jpg`)
             await poopy.functions.execPromise(`ffmpeg -r ${fps} -i ${filepath}/frames/frame_%d.jpg -i ${filepath}/${filename} -map 1:a? -b:a 10k -filter_complex "[0:v]scale=ceil(iw/2)*2:ceil(ih/2)*2[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} -c:v libx264 -pix_fmt yuv420p ${filepath}/output.mp4`)
             await poopy.functions.sendFile(msg, filepath, `output.mp4`)
         } else if (type.mime.startsWith('image') && !(poopy.vars.gifFormats.find(f => f === type.ext))) {
@@ -50,8 +56,8 @@ module.exports = {
             poopy.modules.fs.mkdirSync(`${filepath}/frames`)
             poopy.modules.fs.mkdirSync(`${filepath}/mframes`)
             await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -filter_complex "[0:v]alphaextract,split[pout][ppout];[ppout]palettegen=reserve_transparent=1[palette];[pout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} -gifflags -offsetting ${filepath}/mask.gif`)
-            await poopy.functions.execPromise(`magick ${filepath}/${filename} -quality ${quality} ${filepath}/frames/frame_%d.jpg`)
-            await poopy.functions.execPromise(`magick ${filepath}/mask.gif -quality ${quality} ${filepath}/mframes/mframe_%d.jpg`)
+            await poopy.functions.execPromise(`magick ${filepath}/${filename} -coalesce -quality ${quality} ${filepath}/frames/frame_%d.jpg`)
+            await poopy.functions.execPromise(`magick ${filepath}/mask.gif -coalesce -quality ${quality} ${filepath}/mframes/mframe_%d.jpg`)
             await poopy.functions.execPromise(`ffmpeg -r ${fps} -i ${filepath}/frames/frame_%d.jpg -r ${fps} -i ${filepath}/mframes/mframe_%d.jpg -filter_complex "[0:v][1:v]alphamerge,split[pout][ppout];[ppout]palettegen=reserve_transparent=1[palette];[pout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} -vsync 0 -gifflags -offsetting ${filepath}/output.gif`)
             await poopy.functions.sendFile(msg, filepath, `output.gif`)
         } else {
