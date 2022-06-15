@@ -24,13 +24,13 @@ module.exports = {
         if (!fileinfo) return
         var type = fileinfo.type
 
-        if (fileinfo.info.width > 1000 || fileinfo.info.height > 1000) {
-            await msg.channel.send(`That file has width or height higher than 1000 pixels, time to blow.`).catch(() => { })
-            poopy.modules.fs.rmSync(filepath, { force: true, recursive: true })
-            return
-        }
-
         if (type.mime.startsWith('video')) {
+            if (fileinfo.info.width > 1000 || fileinfo.info.height > 1000) {
+                await msg.channel.send(`That file has width or height higher than 1000 pixels, time to blow.`).catch(() => { })
+                poopy.modules.fs.rmSync(filepath, { force: true, recursive: true })
+                return
+            }
+
             var filepath = await poopy.functions.downloadFile(currenturl, `input.mp4`, {
                 fileinfo: fileinfo
             })
