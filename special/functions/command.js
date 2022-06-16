@@ -25,10 +25,6 @@ module.exports = {
 
         poopy.tempdata[msg.author.id]['cooler'] = msg.id
 
-        if (poopy.config.shit.find(id => id === msg.author.id)) {
-            return 'shit'
-        }
-
         if (msg.member.permissions.has('MANAGE_GUILD') || msg.member.roles.cache.find(role => role.name.match(/mod|dev|admin|owner|creator|founder|staff/ig)) || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || poopy.config.ownerids.find(id => id == msg.author.id) || isBot) {
             if (command || localCommand) {
                 if (poopy.data['guild-data'][msg.guild.id]['disabled'].find(cmd => cmd.find(n => n === commandname))) {

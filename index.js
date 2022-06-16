@@ -407,6 +407,10 @@ async function start() {
         msg.channel = channel
         msg.guild = guild
 
+        if (globalData()['bot-data']['shit'].find(id => id === msg.author.id)) {
+            return res.type('text').status(400).send('shit')
+        }
+
         await mainPoopy.functions.gatherData(msg).catch(() => { })
 
         if (mainPoopy.tempdata[msg.guild.id][msg.channel.id]['shut']) {
@@ -419,10 +423,6 @@ async function start() {
             } else {
                 mainPoopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] = false
             }
-        }
-
-        if (mainPoopy.config.shit.find(id => id === msg.author.id)) {
-            return res.type('text').status(400).send('shit')
         }
 
         const change = await mainPoopy.functions.getKeywordsFor(msg.content, msg, false, { resetattempts: true }).catch(() => { }) ?? 'error'

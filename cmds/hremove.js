@@ -70,7 +70,7 @@ module.exports = {
             if (x >= width - 1) x = width - 1
             if (w >= width - x) w = width - x
 
-            await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -filter_complex "[0:v]crop=x=0:y=0:w=${x}:h=ih[left];[0:v]crop=x=${x + w}:y=0:w=${width - (x + w)}:h=ih[right];[left][right]hstack,split[pout][ppout];[ppout]palettegen=reserve_transparent=1[palette];[pout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} -gifflags -offsetting ${filepath}/${object.name}`)
+            await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -filter_complex "[0:v]crop=x=0:y=0:w=${x}:h=ih[left];[0:v]crop=x=${x + w}:y=0:w=${width - (x + w)}:h=ih[right];[left][right]hstack,split[pout][ppout];[ppout]palettegen=reserve_transparent=1[palette];[pout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} -gifflags -offsetting ${filepath}/output.gif`)
 
             await poopy.functions.sendFile(msg, filepath, `output.gif`)
         } else {

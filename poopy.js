@@ -43,7 +43,6 @@ class Poopy {
             intents: Object.values(require('discord.js').Intents.FLAGS),
             ownerids: ['464438783866175489', '454732245425455105', '613501149282172970'],
             jsoning: ['411624455194804224', '395947826690916362', '486845950200119307'],
-            shit: [''],
             illKillYouIfYouUseEval: ['535467581881188354'],
             guildfilter: {
                 blacklist: true,
@@ -2831,6 +2830,10 @@ class Poopy {
             var extradkeys = { ...extrakeys, ...poopy.tempdata[msg.author.id]['keydeclared'] }
             var extradfuncs = { ...extrafuncs, ...poopy.tempdata[msg.author.id]['funcdeclared'] }
 
+            if (poopy.functions.globalData()['bot-data']['shit'].find(id => id === msg.author.id)) {
+                return string
+            }
+
             while (poopy.functions.getKeyFunc(string, { extrakeys: extradkeys, extrafuncs: extradfuncs }) !== false && poopy.tempdata[msg.author.id][msg.id]['return'] == undefined) {
                 if (poopy.tempdata[msg.author.id][msg.id]['keyattempts'] >= poopy.config.keyLimit) {
                     poopy.functions.infoPost(`Keyword attempts value exceeded`)
@@ -3750,6 +3753,7 @@ class Poopy {
             }
 
             await poopy.functions.gatherData(msg).catch(() => { })
+            setTimeout(() => { delete poopy.tempdata[msg.author.id][msg.id] }, 600000)
 
             var guildfilter = poopy.config.guildfilter
             var channelfilter = poopy.config.channelfilter
@@ -3769,12 +3773,9 @@ class Poopy {
             var ignored = ['eval', 'execute', 'localcommands', 'localcmds', 'servercommands', 'servercmds', 'commandassets', 'cmdassets', 'messages']
             var webhook = await msg.fetchWebhook().catch(() => { })
 
-            if (!msg.guild || !msg.channel) return
-
             if (webhook || !msg.guild || !msg.channel) return
 
             var cmds = poopy.data['guild-data'][msg.guild.id]['chaincommands'] == true ? msg.content.split(/ ?-\|- ?/) : [msg.content]
-            var oldcontent = msg.content
             var allcontents = []
             var webhooked = false
 
@@ -3954,7 +3955,7 @@ class Poopy {
                     if (poopy.tempdata[msg.guild.id][msg.channel.id]['shut']) break
 
                     if (msg.content.toLowerCase().startsWith(prefix.toLowerCase()) && ((!msg.author.bot && msg.author.id != poopy.bot.user.id) || poopy.config.allowbotusage)) {
-                        if (poopy.config.shit.find(id => id === msg.author.id)) {
+                        if (poopy.functions.globalData()['bot-data']['shit'].find(id => id === msg.author.id)) {
                             await poopy.functions.waitMessageCooldown()
                             await msg.channel.send('shit').catch(() => { })
                             return
@@ -4196,6 +4197,12 @@ class Poopy {
 
             msg.content = allcontents.length > 0 ? allcontents.join(' -|- ') : msg.content
 
+            if (poopy.functions.globalData()['bot-data']['shit'].find(id => id === msg.author.id)) {
+                await poopy.functions.waitMessageCooldown()
+                await msg.channel.send('shit').catch(() => { })
+                return
+            }
+
             if (!webhooked) await webhookify().catch(() => { })
 
             if (msg.content && ((!(msg.author.bot) && msg.author.id != poopy.bot.user.id) || poopy.config.allowbotusage) && poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['read']) {
@@ -4210,8 +4217,6 @@ class Poopy {
                     poopy.data['guild-data'][msg.guild.id]['messages'] = messages
                 }
             }
-
-            setTimeout(() => { delete poopy.tempdata[msg.author.id][msg.id] }, 60000)
 
             if (!msg.guild || !msg.channel || poopy.tempdata[msg.guild.id][msg.channel.id]['shut']) return
 
@@ -4528,6 +4533,10 @@ class Poopy {
 
         if (!poopy.functions.globalData()['bot-data']['commandTemplates']) {
             poopy.functions.globalData()['bot-data']['commandTemplates'] = []
+        }
+
+        if (!poopy.functions.globalData()['bot-data']['shit']) {
+            poopy.functions.globalData()['bot-data']['shit'] = []
         }
 
         if (!poopy.functions.globalData()['bot-data']['psfiles']) {
