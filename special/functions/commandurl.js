@@ -1,6 +1,6 @@
 module.exports = {
     helpf: '(name | arguments) (manage messages only)',
-    desc: 'Allows you to execute any command!',
+    desc: 'Allows you to execute any command! Unlike normal command() function, this one returns the URL of the output file when executed (if it exists)',
     func: async function (matches, msg, isBot, _, opts) {
         let poopy = this
 
@@ -61,10 +61,11 @@ module.exports = {
 
                         poopy.functions.infoPost(`Command \`${commandname}\` used`)
                         await poopy.functions.waitMessageCooldown()
-                        await command.execute.call(poopy, msgclone, [commandname].concat(args.split(' ')), { ownermode: opts.ownermode }).catch(err => {
+                        var url = await command.execute.call(poopy, msgclone, [commandname].concat(args.split(' ')), { ownermode: opts.ownermode }).catch(err => {
                             error = err.stack
                         })
                         poopy.data['bot-data']['filecount'] = poopy.vars.filecount
+                        return url ?? error
                     } else if (localCommand) {
                         poopy.vars.cps++
                         poopy.data['bot-data']['commands']++
