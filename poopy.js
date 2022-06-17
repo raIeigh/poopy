@@ -2914,7 +2914,10 @@ class Poopy {
                 poopy.tempdata[msg.author.id][msg.id]['keywordsExecuted'] = []
             }
 
-            if (poopy.tempdata[msg.author.id][msg.id]['return'] != undefined) string = poopy.tempdata[msg.author.id][msg.id]['return']
+            if (poopy.tempdata[msg.author.id][msg.id]['return'] != undefined) {
+                string = poopy.tempdata[msg.author.id][msg.id]['return']
+                delete poopy.tempdata[msg.author.id][msg.id]['return']
+            }
 
             return string
         }
