@@ -49,7 +49,7 @@ module.exports = {
                 var duration = Number(fileinfo.info.duration)
 
                 await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -filter_complex "[0:a]${echoescode}[audio];[0:v]scale=ceil(iw/2)*2:ceil(ih/2)*2[video]" -map "[video]" -map "[audio]" -t ${duration} -c:v libx264 -pix_fmt yuv420p ${filepath}/output.mp4`)
-                await poopy.functions.sendFile(msg, filepath, `output.mp4`)
+                return await poopy.functions.sendFile(msg, filepath, `output.mp4`)
             } else {
                 await msg.channel.send('No audio stream detected.').catch(() => { })
                 await msg.channel.sendTyping().catch(() => { })
@@ -61,7 +61,7 @@ module.exports = {
             })
             var filename = `input.mp3`
             await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -filter_complex "[0:a]${echoescode}[audio]" -map "[audio]" ${filepath}/output.mp3`)
-            await poopy.functions.sendFile(msg, filepath, `output.mp3`)
+            return await poopy.functions.sendFile(msg, filepath, `output.mp3`)
         } else {
             await msg.channel.send({
                 content: `Unsupported file: \`${currenturl}\``,

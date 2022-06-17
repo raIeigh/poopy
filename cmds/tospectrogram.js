@@ -48,7 +48,7 @@ module.exports = {
 
             poopy.modules.fs.writeFileSync(`${filepath}/output.wav`, spectrogramData)
 
-            await poopy.functions.sendFile(msg, filepath, `output.wav`)
+            return await poopy.functions.sendFile(msg, filepath, `output.wav`)
         } else {
             await msg.channel.send({
                 content: `Unsupported file: \`${currenturl}\``,

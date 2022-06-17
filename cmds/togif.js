@@ -37,7 +37,7 @@ module.exports = {
             var iduration = Number(fileinfo.info.duration.includes('N/A') ? '0' : fileinfo.info.duration)
 
             await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -filter_complex "[0:v]scale='min(400,iw)':min'(400,ih)':force_original_aspect_ratio=decrease,split[pout][ppout];[ppout]palettegen=reserve_transparent=1[palette];[pout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} -t ${duration >= iduration ? iduration : duration} -r ${fps} -gifflags -offsetting ${filepath}/output.gif`)
-            await poopy.functions.sendFile(msg, filepath, `output.gif`)
+            return await poopy.functions.sendFile(msg, filepath, `output.gif`)
         } else if (type.mime.startsWith('image') && !(poopy.vars.gifFormats.find(f => f === type.ext))) {
             var filepath = await poopy.functions.downloadFile(currenturl, `input.png`, {
                 fileinfo: fileinfo
@@ -45,7 +45,7 @@ module.exports = {
             var filename = `input.png`
 
             await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -filter_complex "[0:v]scale='min(400,iw)':min'(400,ih)':force_original_aspect_ratio=decrease,split[pout][ppout];[ppout]palettegen=reserve_transparent=1[palette];[pout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} -gifflags -offsetting ${filepath}/output.gif`)
-            await poopy.functions.sendFile(msg, filepath, `output.gif`)
+            return await poopy.functions.sendFile(msg, filepath, `output.gif`)
         } else {
             await msg.channel.send({
                 content: `Unsupported file: \`${currenturl}\``,

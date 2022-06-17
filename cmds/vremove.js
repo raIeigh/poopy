@@ -44,7 +44,7 @@ module.exports = {
 
             await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -map 0:a? -filter_complex "[0:v]crop=x=0:y=0:w=iw:h=${y}[top];[0:v]crop=x=0:y=${y + h}:w=iw:h=${height - (y + h)}[bottom];[top][bottom]vstack,scale=ceil(iw/2)*2:ceil(ih/2)*2[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} -c:v libx264 -pix_fmt yuv420p ${filepath}/output.mp4`)
 
-            await poopy.functions.sendFile(msg, filepath, `output.mp4`)
+            return await poopy.functions.sendFile(msg, filepath, `output.mp4`)
         } else if (type.mime.startsWith('image') && !(poopy.vars.gifFormats.find(f => f === type.ext))) {
             var filepath = await poopy.functions.downloadFile(currenturl, `input.png`, {
                 fileinfo: fileinfo
@@ -58,7 +58,7 @@ module.exports = {
 
             await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -filter_complex "[0:v]crop=x=0:y=0:w=iw:h=${y}[top];[0:v]crop=x=0:y=${y + h}:w=iw:h=${height - (y + h)}[bottom];[top][bottom]vstack[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} ${filepath}/output.png`)
 
-            await poopy.functions.sendFile(msg, filepath, `output.png`)
+            return await poopy.functions.sendFile(msg, filepath, `output.png`)
         } else if (type.mime.startsWith('image') && poopy.vars.gifFormats.find(f => f === type.ext)) {
             var filepath = await poopy.functions.downloadFile(currenturl, `input.gif`, {
                 fileinfo: fileinfo
@@ -72,7 +72,7 @@ module.exports = {
 
             await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -filter_complex "[0:v]crop=x=0:y=0:w=iw:h=${y}[top];[0:v]crop=x=0:y=${y + h}:w=iw:h=${height - (y + h)}[bottom];[top][bottom]vstack,split[pout][ppout];[ppout]palettegen=reserve_transparent=1[palette];[pout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} -gifflags -offsetting ${filepath}/output.gif`)
 
-            await poopy.functions.sendFile(msg, filepath, `output.gif`)
+            return await poopy.functions.sendFile(msg, filepath, `output.gif`)
         } else {
             await msg.channel.send({
                 content: `Unsupported file: \`${currenturl}\``,

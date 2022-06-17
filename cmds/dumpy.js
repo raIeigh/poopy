@@ -45,7 +45,7 @@ module.exports = {
                 poopy.modules.fs.rmSync(`${filepath}`, { force: true, recursive: true })
                 return
             }
-            await poopy.functions.sendFile(msg, filepath, `output.gif`)
+            return await poopy.functions.sendFile(msg, filepath, `output.gif`)
         } else {
             await msg.channel.send({
                 content: `Unsupported file: \`${currenturl}\``,

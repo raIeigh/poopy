@@ -25,7 +25,7 @@ module.exports = {
             })
             var filename = `input.gif`
             await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -filter_complex "[0:v]split[pout][ppout];[ppout]palettegen=reserve_transparent=1[palette];[pout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} -loop -1 -gifflags -offsetting ${filepath}/output.gif`)
-            await poopy.functions.sendFile(msg, filepath, `output.gif`)
+            return await poopy.functions.sendFile(msg, filepath, `output.gif`)
         } else {
             await msg.channel.send({
                 content: `Unsupported file: \`${currenturl}\``,

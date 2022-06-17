@@ -45,7 +45,7 @@ module.exports = {
                 poopy.modules.fs.rmSync(`${filepath}`, { force: true, recursive: true })
                 return
             }
-            await poopy.functions.sendFile(msg, filepath, `output.png`)
+            return await poopy.functions.sendFile(msg, filepath, `output.png`)
         } else if (type.mime.startsWith('image') && type.ext === 'gif') {
             var filepath = await poopy.functions.downloadFile(currenturl, `input.gif`, {
                 fileinfo: fileinfo
@@ -62,7 +62,7 @@ module.exports = {
                 poopy.modules.fs.rmSync(`${filepath}`, { force: true, recursive: true })
                 return
             }
-            await poopy.functions.sendFile(msg, filepath, `output.png`)
+            return await poopy.functions.sendFile(msg, filepath, `output.png`)
         } else {
             await msg.channel.send({
                 content: `Unsupported file: \`${currenturl}\``,

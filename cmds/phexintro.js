@@ -33,7 +33,7 @@ module.exports = {
             await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -vf "scale=ceil(${width}/2)*2:ceil(${height}/2)*2" -preset ${poopy.functions.findpreset(args)} -aspect ${width}:${height} -pix_fmt yuv420p -shortest ${filepath}/input2.mp4`)
             await poopy.functions.execPromise(`ffmpeg -i ${filepath}/input2.mp4 -preset ${poopy.functions.findpreset(args)} -c:v copy -bsf:v h264_mp4toannexb -f mpegts -video_track_timescale 30k -c:a aac -ac 6 -ar 44100 ${filepath}/input.ts`)
             await poopy.functions.execPromise(`ffmpeg -i "concat:${filepath}/phexintro.ts|${filepath}/input.ts" -c copy -preset ${poopy.functions.findpreset(args)} -bsf:a aac_adtstoasc ${filepath}/output.mp4`)
-            await poopy.functions.sendFile(msg, filepath, `output.mp4`)
+            return await poopy.functions.sendFile(msg, filepath, `output.mp4`)
         } else {
             await msg.channel.send({
                 content: `Unsupported file: \`${currenturl}\``,

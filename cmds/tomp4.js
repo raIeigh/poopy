@@ -25,7 +25,7 @@ module.exports = {
             })
             var filename = `input.${fileinfo.shortext}`
             await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -vf "scale='min(1000,iw)':min'(1000,ih)':force_original_aspect_ratio=decrease,scale=ceil(iw/2)*2:ceil(ih/2)*2" -preset ${poopy.functions.findpreset(args)} -c:v libx264 -pix_fmt yuv420p ${filepath}/output.mp4`)
-            await poopy.functions.sendFile(msg, filepath, `output.mp4`)
+            return await poopy.functions.sendFile(msg, filepath, `output.mp4`)
         } else {
             await msg.channel.send({
                 content: `Unsupported file: \`${currenturl}\``,

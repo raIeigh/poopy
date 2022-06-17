@@ -28,7 +28,7 @@ module.exports = {
 
             if (audio) {
                 await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -map 0:a -preset ${poopy.functions.findpreset(args)} ${filepath}/output.mp3`)
-                await poopy.functions.sendFile(msg, filepath, `output.mp3`)
+                return await poopy.functions.sendFile(msg, filepath, `output.mp3`)
             } else {
                 await msg.channel.send('No audio stream detected.').catch(() => { })
                 await msg.channel.sendTyping().catch(() => { })

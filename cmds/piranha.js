@@ -32,7 +32,7 @@ module.exports = {
             var width = fileinfo.info.width
             var height = fileinfo.info.height
             await poopy.functions.execPromise(`ffmpeg -r 50 -stream_loop -1 -t ${duration} -i ${filepath}/${filename} -r 50 -stream_loop -1 -t ${duration} -i assets/transparent.png -filter_complex "[1:v][0:v]scale2ref[transparent][overlay];[transparent][overlay]overlay=x=(W-w)/2:y=H/2+cos(PI/2*(t*4/${duration}))*h/2:format=auto,scale='min(400,iw)':min'(400,ih)':force_original_aspect_ratio=decrease,split[pout][ppout];[ppout]palettegen=reserve_transparent=1[palette];[pout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -aspect ${width}:${height} -preset ${poopy.functions.findpreset(args)} -gifflags -offsetting -r 50 -t ${duration} ${filepath}/output.gif`)
-            await poopy.functions.sendFile(msg, filepath, `output.gif`)
+            return await poopy.functions.sendFile(msg, filepath, `output.gif`)
         } else {
             await msg.channel.send({
                 content: `Unsupported file: \`${currenturl}\``,

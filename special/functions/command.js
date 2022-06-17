@@ -61,10 +61,11 @@ module.exports = {
 
                         poopy.functions.infoPost(`Command \`${commandname}\` used`)
                         await poopy.functions.waitMessageCooldown()
-                        await command.execute.call(this, msgclone, [commandname].concat(args.split(' ')), { ownermode: opts.ownermode }).catch(err => {
+                        var url = await command.execute.call(this, msgclone, [commandname].concat(args.split(' ')), { ownermode: opts.ownermode }).catch(err => {
                             error = err.stack
                         })
                         poopy.data['bot-data']['filecount'] = poopy.vars.filecount
+                        return url ?? error
                     } else if (localCommand) {
                         poopy.vars.cps++
                         poopy.data['bot-data']['commands']++

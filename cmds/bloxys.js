@@ -42,7 +42,7 @@ module.exports = {
             await bloxys.writeAsync(`${filepath}/bloxy.png`)
 
             await poopy.functions.execPromise(`ffmpeg -stream_loop -1 -i ${filepath}/${filename} -i ${filepath}/bloxy.png -i assets/bloxys.mp3 -filter_complex "[0:v]scale=219:124[frame];[1:v][frame]overlay=x=89:y=64:format=auto[oout];[oout]scale=ceil(iw/2)*2:ceil(ih/2)*2[out]" -shortest -map "[out]" -preset ${poopy.functions.findpreset(args)} -map 2:a:0 -c:v libx264 -pix_fmt yuv420p -t 00:00:07.05 -y ${filepath}/output.mp4`)
-            await poopy.functions.sendFile(msg, filepath, `output.mp4`)
+            return await poopy.functions.sendFile(msg, filepath, `output.mp4`)
         } else {
             await msg.channel.send({
                 content: `Unsupported file: \`${currenturl}\``,

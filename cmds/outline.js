@@ -65,7 +65,7 @@ module.exports = {
             var filename = `input.png`
 
             await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -filter_complex "[0:v]split[input][blur];[blur]boxblur=luma_radius=${radius}:luma_power=${power}:chroma_radius=${radius}:chroma_power=${power}:alpha_radius=${radius}:alpha_power=${power},curves=r='0/1 1/1':g='0/1 1/1':b='0/1 1/1',curves=r='0/0 1/${rgb.r / 255}':g='0/0 1/${rgb.g / 255}':b='0/0 1/${rgb.b / 255}',split=${overlayrepeat}${bordersplit.join('')};${overlays.join(';')}[greatborder];[greatborder][input]overlay=x=0:y=0:format=auto[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} ${filepath}/output.png`)
-            await poopy.functions.sendFile(msg, filepath, `output.png`)
+            return await poopy.functions.sendFile(msg, filepath, `output.png`)
         } else if (type.mime.startsWith('image') && poopy.vars.gifFormats.find(f => f === type.ext)) {
             var filepath = await poopy.functions.downloadFile(currenturl, `input.gif`, {
                 fileinfo: fileinfo
@@ -73,7 +73,7 @@ module.exports = {
             var filename = `input.gif`
 
             await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -filter_complex "[0:v]split[input][blur];[blur]boxblur=luma_radius=${radius}:luma_power=${power}:chroma_radius=${radius}:chroma_power=${power}:alpha_radius=${radius}:alpha_power=${power},curves=r='0/1 1/1':g='0/1 1/1':b='0/1 1/1',curves=r='0/0 1/${rgb.r / 255}':g='0/0 1/${rgb.g / 255}':b='0/0 1/${rgb.b / 255}',split=${overlayrepeat}${bordersplit.join('')};${overlays.join(';')}[greatborder];[greatborder][input]overlay=x=0:y=0:format=auto,split[pout][ppout];[ppout]palettegen=reserve_transparent=1[palette];[pout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} -gifflags -offsetting ${filepath}/output.gif`)
-            await poopy.functions.sendFile(msg, filepath, `output.gif`)
+            return await poopy.functions.sendFile(msg, filepath, `output.gif`)
         } else if (type.mime.startsWith('video')) {
             await msg.channel.send(`videos have no alpha channel + cry about it + stay mad + get real + L + mald seethe cope harder + don't care + didn't ask + hoes mad + basic + skill issue + ratio + you fell off + the audacity + triggered + any askers + redpilled + get a life + ok and? + cringe + touch grass + donowalled + not based + your're a (insert stereotype) + not funny didn't laugh + you're* + grammar issue + go outside + get good + reported + ad hominem + GG! + ur mom`).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })

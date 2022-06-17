@@ -105,7 +105,7 @@ module.exports = {
             }
 
             await poopy.functions.execPromise(filetype.mime.startsWith('image') ? `ffmpeg -stream_loop -1 -i ${filepath}/${filename} -itsoffset ${offset} -i ${filepath}/${filename2} -filter_complex "[0:v]scale=ceil(iw/2)*2:ceil(ih/2)*2[v]" -map "[v]" -map 1:a -preset ${poopy.functions.findpreset(args)} -c:v libx264 -tune stillimage -c:a aac -pix_fmt yuv420p -shortest -t ${duration2 + offset} ${filepath}/output.mp4` : !audio ? `ffmpeg -i ${filepath}/${filename} -itsoffset ${offset} -i ${filepath}/${filename2} -filter_complex "[0:v]scale=ceil(iw/2)*2:ceil(ih/2)*2[v]" -map "[v]" -map 1:a -c:v libx264 -tune stillimage -c:a aac -pix_fmt yuv420p -shortest -t ${duration} ${filepath}/output.mp4` : `ffmpeg -y -i ${filepath}/${filename} -itsoffset ${offset} -i ${filepath}/${filename2} -filter_complex "[0:a][1:a]amix=inputs=2:duration=longest[a]" ${!(filetype.mime.startsWith('audio')) ? '-map 0:v ' : ''}-map "[a]" -preset ${poopy.functions.findpreset(args)} ${!(filetype.mime.startsWith('audio')) ? '-c:v libx264 -pix_fmt yuv420p ' : ''} -shortest -t ${duration} ${filepath}/output.${!(filetype.mime.startsWith('audio')) ? 'mp4' : 'mp3'}`)
-            await poopy.functions.sendFile(msg, filepath, `output.${!(filetype.mime.startsWith('audio')) ? 'mp4' : 'mp3'}`)
+            return await poopy.functions.sendFile(msg, filepath, `output.${!(filetype.mime.startsWith('audio')) ? 'mp4' : 'mp3'}`)
         } else {
             await msg.channel.send('No audio stream detected.').catch(() => { })
             await msg.channel.sendTyping().catch(() => { })

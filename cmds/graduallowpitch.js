@@ -58,7 +58,7 @@ module.exports = {
                 }
 
                 await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -filter_complex "${gradual.map(g => g.filter).join(';')};${gradual.map(g => g.audio).join('')}concat=n=${n}:a=1:v=0,atempo[a]" -map 0:v -map "[a]" -preset ${poopy.functions.findpreset(args)} -c:v libx264 -pix_fmt yuv420p ${filepath}/output.mp4`)
-                await poopy.functions.sendFile(msg, filepath, `output.mp4`)
+                return await poopy.functions.sendFile(msg, filepath, `output.mp4`)
             } else {
                 await msg.channel.send({
                     content: `No audio stream detected.`,
@@ -89,7 +89,7 @@ module.exports = {
             }
 
             await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -filter_complex "${gradual.map(g => g.filter).join(';')};${gradual.map(g => g.audio).join('')}concat=n=${n}:a=1:v=0,atempo[a]" -map "[a]" -preset ${poopy.functions.findpreset(args)} ${filepath}/output.mp3`)
-            await poopy.functions.sendFile(msg, filepath, `output.mp3`)
+            return await poopy.functions.sendFile(msg, filepath, `output.mp3`)
         } else {
             await msg.channel.send({
                 content: `Unsupported file: \`${currenturl}\``,

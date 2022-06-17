@@ -43,7 +43,7 @@ module.exports = {
 
             await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -vf "scale=66:66" -preset ${poopy.functions.findpreset(args)} -c:v libx264 -pix_fmt yuv420p ${filepath}/scaled.mp4`)
             await poopy.functions.execPromise(`ffmpeg -stream_loop -1 -i ${filepath}/scaled.mp4 -i ${filepath}/caption.png -i assets/countdown.mp4 -filter_complex "[2:v][0:v]overlay=shortest=1:x=2:y=3:format=auto[image];[image][1:v]overlay=x=89:y=4:format=auto[oout];[oout]scale=ceil(iw/2)*2:ceil(ih/2)*2[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} -c:v libx264 -pix_fmt yuv420p ${filepath}/output.mp4`)
-            await poopy.functions.sendFile(msg, filepath, `output.mp4`)
+            return await poopy.functions.sendFile(msg, filepath, `output.mp4`)
         } else if (type.mime.startsWith('image') && !(poopy.vars.gifFormats.find(f => f === type.ext))) {
             var filepath = await poopy.functions.downloadFile(currenturl, `input.png`, {
                 fileinfo: fileinfo
@@ -57,7 +57,7 @@ module.exports = {
 
             await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -vf "scale=66:66" -preset ${poopy.functions.findpreset(args)} ${filepath}/scaled.png`)
             await poopy.functions.execPromise(`ffmpeg -stream_loop -1 -i ${filepath}/scaled.png -i ${filepath}/caption.png -i assets/countdown.mp4 -filter_complex "[2:v][0:v]overlay=shortest=1:x=2:y=3:format=auto[image];[image][1:v]overlay=x=89:y=4:format=auto[oout];[oout]scale=ceil(iw/2)*2:ceil(ih/2)*2[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} -c:v libx264 -pix_fmt yuv420p ${filepath}/output.mp4`)
-            await poopy.functions.sendFile(msg, filepath, `output.mp4`)
+            return await poopy.functions.sendFile(msg, filepath, `output.mp4`)
         } else if (type.mime.startsWith('image') && poopy.vars.gifFormats.find(f => f === type.ext)) {
             var filepath = await poopy.functions.downloadFile(currenturl, `input.gif`, {
                 fileinfo: fileinfo
@@ -71,7 +71,7 @@ module.exports = {
 
             await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -filter_complex "[0:v]scale=66:66,split[gnout][gpout];[gpout]palettegen=reserve_transparent=1[palette];[gnout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} -gifflags -offsetting ${filepath}/scaled.gif`)
             await poopy.functions.execPromise(`ffmpeg -stream_loop -1 -i ${filepath}/scaled.gif -i ${filepath}/caption.png -i assets/countdown.mp4 -filter_complex "[2:v][0:v]overlay=shortest=1:x=2:y=3:format=auto[image];[image][1:v]overlay=x=89:y=4:format=auto[oout];[oout]scale=ceil(iw/2)*2:ceil(ih/2)*2[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} -c:v libx264 -pix_fmt yuv420p ${filepath}/output.mp4`)
-            await poopy.functions.sendFile(msg, filepath, `output.mp4`)
+            return await poopy.functions.sendFile(msg, filepath, `output.mp4`)
         } else {
             await msg.channel.send({
                 content: `Unsupported file: \`${currenturl}\``,

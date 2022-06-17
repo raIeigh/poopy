@@ -63,7 +63,7 @@ module.exports = {
                 buffer: true,
                 filepath: filepath
             })
-            await poopy.functions.sendFile(msg, filepath, `output.png`)
+            return await poopy.functions.sendFile(msg, filepath, `output.png`)
         } else {
             await msg.channel.send({
                 content: `Unsupported file: \`${currenturl}\``,

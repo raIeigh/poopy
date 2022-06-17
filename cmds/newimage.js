@@ -23,7 +23,7 @@ module.exports = {
     poopy.modules.fs.mkdirSync(`${filepath}`)
 
     await poopy.functions.execPromise(`ffmpeg -f lavfi -i "color=0x${r}${g}${b}${a}:s=${width}x${height},format=rgba" ${filepath}/output.png`)
-    await poopy.functions.sendFile(msg, filepath, `output.png`)
+    return await poopy.functions.sendFile(msg, filepath, `output.png`)
   },
   help: {
     name: 'newimage/makeimage <width (max 2000)> <height (max 2000)> <r> <g> <b> [a]',

@@ -28,7 +28,7 @@ module.exports = {
 
             if (audio) {
                 await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -filter_complex "[0:v]scale=ceil(iw/2)*2:ceil(ih/2)*2[out]" -map "[out]" -an -preset ${poopy.functions.findpreset(args)} -c:v libx264 -pix_fmt yuv420p ${filepath}/output.mp4`)
-                await poopy.functions.sendFile(msg, filepath, `output.mp4`)
+                return await poopy.functions.sendFile(msg, filepath, `output.mp4`)
             } else {
                 await msg.channel.send('That has no audio already...').catch(() => { })
                 await msg.channel.sendTyping().catch(() => { })

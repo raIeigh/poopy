@@ -30,7 +30,7 @@ module.exports = {
             })
             var filename = `input.gif`
             await poopy.functions.execPromise(`gifsicle -O3 --lossy=${lossy} -o ${filepath}/output.gif ${filepath}/${filename}`)
-            await poopy.functions.sendFile(msg, filepath, `output.gif`)
+            return await poopy.functions.sendFile(msg, filepath, `output.gif`)
         } else {
             await msg.channel.send({
                 content: `Unsupported file: \`${currenturl}\``,

@@ -68,7 +68,7 @@ module.exports = {
                 var gduration = gradualinfo.info.duration
                 var gaduration = gradualinfo.info.aduration
                 await poopy.functions.execPromise(`ffmpeg -i ${filepath}/gradual.mp4 -filter_complex "[0:v]setpts=PTS/(${Number(gduration)}/${Number(gaduration)})/${ratio}[v]" -map "[v]" -map 0:a -preset ${poopy.functions.findpreset(args)} -c:v libx264 -pix_fmt yuv420p ${filepath}/output.mp4`)
-                await poopy.functions.sendFile(msg, filepath, `output.mp4`)
+                return await poopy.functions.sendFile(msg, filepath, `output.mp4`)
             } else {
                 await msg.channel.send({
                     content: `File has no audio stream, maybe you should just use \`gradualspeedup\` for that.`,
@@ -99,7 +99,7 @@ module.exports = {
             }
 
             await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -filter_complex "${gradual.map(g => g.filter).join(';')};${gradual.map(g => g.audio).join('')}concat=n=${n}:a=1:v=0,atempo[a]" -map "[a]" -preset ${poopy.functions.findpreset(args)} ${filepath}/output.mp3`)
-            await poopy.functions.sendFile(msg, filepath, `output.mp3`)
+            return await poopy.functions.sendFile(msg, filepath, `output.mp3`)
         } else if (type.mime.startsWith('image') && poopy.vars.gifFormats.find(f => f === type.ext)) {
             await msg.channel.send({
                 content: `Maybe you should just use \`gradualspeedup\` for that.`,

@@ -68,13 +68,13 @@ module.exports = {
                 var gduration = gradualinfo.info.duration
                 var gaduration = gradualinfo.info.aduration
                 await poopy.functions.execPromise(`ffmpeg -i ${filepath}/gradual.mp4 -filter_complex "[0:v]setpts=PTS/(${Number(gduration)}/${Number(gaduration)})/${ratio}[v]" -map "[v]" -map 0:a -preset ${poopy.functions.findpreset(args)} -c:v libx264 -pix_fmt yuv420p ${filepath}/output.mp4`)
-                await poopy.functions.sendFile(msg, filepath, `output.mp4`)
+                return await poopy.functions.sendFile(msg, filepath, `output.mp4`)
             } else {
                 var fps = fileinfo.info.fps
                 var duration = Number(fileinfo.info.duration.includes('N/A') ? '0' : fileinfo.info.duration)
 
                 await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -filter_complex "[0:v]fps=fps='min(60,${fps.includes('0/0') ? '60' : fps}*${speed})',setpts='(1/lerp(1,${speed},T/${duration}))*PTS'[v]" -map "[v]" -preset ${poopy.functions.findpreset(args)} -c:v libx264 -pix_fmt yuv420p ${filepath}/output.mp4`)
-                await poopy.functions.sendFile(msg, filepath, `output.mp4`)
+                return await poopy.functions.sendFile(msg, filepath, `output.mp4`)
             }
         } else if (type.mime.startsWith('audio')) {
             var filepath = await poopy.functions.downloadFile(currenturl, `input.mp3`, {
@@ -97,7 +97,7 @@ module.exports = {
             }
 
             await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -filter_complex "${gradual.map(g => g.filter).join(';')};${gradual.map(g => g.audio).join('')}concat=n=${n}:a=1:v=0,atempo[a]" -map "[a]" -preset ${poopy.functions.findpreset(args)} ${filepath}/output.mp3`)
-            await poopy.functions.sendFile(msg, filepath, `output.mp3`)
+            return await poopy.functions.sendFile(msg, filepath, `output.mp3`)
         } else if (type.mime.startsWith('image') && poopy.vars.gifFormats.find(f => f === type.ext)) {
             var filepath = await poopy.functions.downloadFile(currenturl, `input.gif`, {
                 fileinfo: fileinfo
@@ -107,7 +107,7 @@ module.exports = {
             var duration = Number(fileinfo.info.duration.includes('N/A') ? '0' : fileinfo.info.duration)
 
             await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -filter_complex "[0:v]fps=fps='min(50,${fps.includes('0/0') ? '50' : fps}*${speed})',setpts='(1/lerp(1,${speed},T/${duration}))*PTS',split[pout][ppout];[ppout]palettegen=reserve_transparent=1[palette];[pout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} -gifflags -offsetting ${filepath}/output.gif`)
-            await poopy.functions.sendFile(msg, filepath, `output.gif`)
+            return await poopy.functions.sendFile(msg, filepath, `output.gif`)
         } else {
             await msg.channel.send({
                 content: `Unsupported file: \`${currenturl}\``,

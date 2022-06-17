@@ -57,7 +57,7 @@ module.exports = {
                 }
             }
             await frame.writeAsync(`${filepath}/output.png`);
-            await poopy.functions.sendFile(msg, filepath, `output.png`)
+            return await poopy.functions.sendFile(msg, filepath, `output.png`)
         } else {
             await msg.channel.send({
                 content: `Unsupported file: \`${currenturl}\``,

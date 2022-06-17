@@ -26,7 +26,7 @@ module.exports = {
             })
             var filename = `input.png`
             await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -filter_complex "[0:v]geq=r='r(X,Y)':a='${opacity / 255}*alpha(X,Y)'[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} ${filepath}/output.png`)
-            await poopy.functions.sendFile(msg, filepath, `output.png`)
+            return await poopy.functions.sendFile(msg, filepath, `output.png`)
         } else if (type.mime.startsWith('video') || type.mime.startsWith('image') && poopy.vars.gifFormats.find(f => f === type.ext)) {
             await msg.channel.send(`you can go to montenegro`).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })

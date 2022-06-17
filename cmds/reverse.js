@@ -28,10 +28,10 @@ module.exports = {
             var audio = fileinfo.info.audio
             if (audio) {
                 await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -filter_complex "[0:v]reverse,scale=ceil(iw/2)*2:ceil(ih/2)*2[v];[0:a]areverse[a]" -map "[v]" -map "[a]" -preset ${poopy.functions.findpreset(args)} -c:v libx264 -pix_fmt yuv420p ${filepath}/output.mp4`)
-                await poopy.functions.sendFile(msg, filepath, `output.mp4`)
+                return await poopy.functions.sendFile(msg, filepath, `output.mp4`)
             } else {
                 await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -filter_complex "[0:v]reverse,scale=ceil(iw/2)*2:ceil(ih/2)*2[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} -c:v libx264 -pix_fmt yuv420p ${filepath}/output.mp4`)
-                await poopy.functions.sendFile(msg, filepath, `output.mp4`)
+                return await poopy.functions.sendFile(msg, filepath, `output.mp4`)
             }
         } else if (type.mime.startsWith('image') && poopy.vars.gifFormats.find(f => f === type.ext)) {
             var filepath = await poopy.functions.downloadFile(currenturl, `input.gif`, {
@@ -39,14 +39,14 @@ module.exports = {
             })
             var filename = `input.gif`
             await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -filter_complex "[0:v]reverse,split[pout][ppout];[ppout]palettegen=reserve_transparent=1[palette];[pout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} -gifflags -offsetting ${filepath}/output.gif`)
-            await poopy.functions.sendFile(msg, filepath, `output.gif`)
+            return await poopy.functions.sendFile(msg, filepath, `output.gif`)
         } else if (type.mime.startsWith('audio')) {
             var filepath = await poopy.functions.downloadFile(currenturl, `input.mp3`, {
                 fileinfo: fileinfo
             })
             var filename = `input.mp3`
             await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -filter_complex "[0:a]areverse[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} ${filepath}/output.mp3`)
-            await poopy.functions.sendFile(msg, filepath, `output.mp3`)
+            return await poopy.functions.sendFile(msg, filepath, `output.mp3`)
         } else {
             await msg.channel.send({
                 content: `Unsupported file: \`${currenturl}\``,

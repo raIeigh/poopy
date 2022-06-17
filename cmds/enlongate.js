@@ -31,7 +31,7 @@ module.exports = {
             var subarray2 = videohex.subarray(subarray1.length + enlongate.length, videohex.length)
             var newvideohex = Buffer.concat([subarray1, enlongate, subarray2])
             poopy.modules.fs.writeFileSync(`${filepath}/output.mp4`, newvideohex)
-            await poopy.functions.sendFile(msg, filepath, `output.mp4`)
+            return await poopy.functions.sendFile(msg, filepath, `output.mp4`)
         } else {
             await msg.channel.send({
                 content: `Unsupported file: \`${currenturl}\``,

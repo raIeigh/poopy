@@ -30,7 +30,7 @@ module.exports = {
                 await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -pix_fmt yuv444p -preset ${poopy.functions.findpreset(args)} ${filepath}/webm.webm`)
                 poopy.modules.fs.writeFileSync(`${filepath}/concat.txt`, `file 'webm.webm'\nfile 'crash.webm'`)
                 await poopy.functions.execPromise(`ffmpeg -f concat -i ${filepath}/concat.txt -codec copy -preset ${poopy.functions.findpreset(args)} ${filepath}/output.webm`)
-                await poopy.functions.sendFile(msg, filepath, `output.webm`)
+                return await poopy.functions.sendFile(msg, filepath, `output.webm`)
             } else {
                 await msg.channel.send({
                     content: `Unsupported file: \`${currenturl}\``,

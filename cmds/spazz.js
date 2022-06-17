@@ -37,7 +37,7 @@ module.exports = {
             var width = fileinfo.info.width
             var height = fileinfo.info.height
             await poopy.functions.execPromise(`ffmpeg ${!(poopy.vars.gifFormats.find(f => f === type.ext)) ? `-r 50 -stream_loop -1 -t 2 ` : ''}-i ${filepath}/${filename} ${!(poopy.vars.gifFormats.find(f => f === type.ext)) ? `-r 50 -stream_loop -1 -t 2 ` : ''}-i assets/transparent.png -filter_complex "[1:v][0:v]scale2ref${args.find(arg => arg === '-rescale') ? `=w=iw+${radius}:h=ih+${radius}` : ''}[transparent][overlay];[transparent][overlay]overlay=x=(W-w)/2+${radius / 2}-random(t*(random(0)*${seed}))*${radius}:y=(H-h)/2+${radius / 2}-random(t*(random(0)*${seed}))*${radius}:format=auto,scale='min(400,iw)':min'(400,ih)':force_original_aspect_ratio=decrease,split[pout][ppout];[ppout]palettegen=reserve_transparent=1[palette];[pout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -aspect ${width}:${height} -preset ${poopy.functions.findpreset(args)} -gifflags -offsetting ${filepath}/output.gif`)
-            await poopy.functions.sendFile(msg, filepath, `output.gif`)
+            return await poopy.functions.sendFile(msg, filepath, `output.gif`)
         } else if (type.mime.startsWith('video')) {
             var filepath = await poopy.functions.downloadFile(currenturl, `input.mp4`, {
                 fileinfo: fileinfo
@@ -46,7 +46,7 @@ module.exports = {
             var width = fileinfo.info.width
             var height = fileinfo.info.height
             await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -i assets/transparent.png -filter_complex "[1:v][0:v]scale2ref${args.find(arg => arg === '-rescale') ? `=w=iw+${radius}:h=ih+${radius}` : ''}[transparent][overlay];[transparent][overlay]overlay=x=(W-w)/2+${radius / 2}-random(t*(random(0)*${seed}))*${radius}:y=(H-h)/2+${radius / 2}-random(t*(random(0)*${seed}))*${radius}:format=auto[out]" -map "[out]" -map 0:a? -c:v libx264 -pix_fmt yuv420p -aspect ${width}:${height} -preset ${poopy.functions.findpreset(args)} ${filepath}/output.mp4`)
-            await poopy.functions.sendFile(msg, filepath, `output.mp4`)
+            return await poopy.functions.sendFile(msg, filepath, `output.mp4`)
         } else {
             await msg.channel.send({
                 content: `Unsupported file: \`${currenturl}\``,

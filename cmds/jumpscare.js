@@ -38,7 +38,7 @@ module.exports = {
             var height = fileinfo.info.height
 
             await poopy.functions.execPromise(`ffmpeg -stream_loop -1 -t ${zoomtime} -i ${filepath}/${filename} -f lavfi -stream_loop -1 -t ${zoomtime} -r 50 -i "color=0x00000000:s=${width}x${height},format=rgba" -filter_complex "[0:v]fps=50,scale=${width}*(t/${zoomtime})*${zoomsize}:${height}*(t/${zoomtime})*${zoomsize}:eval=frame[overlay];[1:v][overlay]overlay=x=(W-w)/2:y=(H-h)/2:format=auto,scale='min(400,iw)':min'(400,ih)':force_original_aspect_ratio=decrease,split[pout][ppout];[ppout]palettegen=reserve_transparent=1[palette];[pout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} -y -shortest -gifflags -offsetting ${filepath}/output.gif`)
-            await poopy.functions.sendFile(msg, filepath, `output.gif`)
+            return await poopy.functions.sendFile(msg, filepath, `output.gif`)
         } else {
             await msg.channel.send({
                 content: `Unsupported file: \`${currenturl}\``,

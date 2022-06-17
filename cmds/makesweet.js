@@ -110,7 +110,7 @@ module.exports = {
             buffer: true,
             filepath: filepath
         })
-        await poopy.functions.sendFile(msg, filepath, `output.gif`)
+        return await poopy.functions.sendFile(msg, filepath, `output.gif`)
     },
     help: {
         name: '<:newpoopy:839191885310066729> makesweet/heartlocket "{text1}"... {file1}... [-textfirst] [-template <name>]',

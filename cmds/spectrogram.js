@@ -78,7 +78,7 @@ module.exports = {
 
             if (audio) {
                 await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -lavfi "showspectrumpic=size=1280x512:mode=separate:color=${color}:scale=${scale}:saturation=${saturation}" ${filepath}/output.png`)
-                await poopy.functions.sendFile(msg, filepath, `output.png`)
+                return await poopy.functions.sendFile(msg, filepath, `output.png`)
             } else {
                 await msg.channel.send('No audio stream detected.').catch(() => { })
                 await msg.channel.sendTyping().catch(() => { })
@@ -91,7 +91,7 @@ module.exports = {
             var filename = `input.mp3`
 
             await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -lavfi "showspectrumpic=size=1280x512:mode=separate:color=${color}:scale=${scale}:saturation=${saturation}" ${filepath}/output.png`)
-            await poopy.functions.sendFile(msg, filepath, `output.png`)
+            return await poopy.functions.sendFile(msg, filepath, `output.png`)
         } else {
             await msg.channel.send({
                 content: `Unsupported file: \`${currenturl}\``,

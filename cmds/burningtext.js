@@ -82,7 +82,7 @@ module.exports = {
         if (!fileinfo) return
 
         var filepath = await poopy.functions.downloadFile(response.data.renderLocation.replace('https', 'http'), `output.${fileinfo.type.ext}`)
-        await poopy.functions.sendFile(msg, filepath, `output.${fileinfo.type.ext}`)
+        return await poopy.functions.sendFile(msg, filepath, `output.${fileinfo.type.ext}`)
     },
     help: {
         name: '<:newpoopy:839191885310066729> burningtext/flamingtext/cooltext <prompt> [-fontsize <pixels>] [-origin <x (left/center/right)> <y (top/middle/bottom)>] [-id <number (default 4)>]',

@@ -31,7 +31,7 @@ module.exports = {
 
                 await poopy.functions.execPromise(`cat assets/donotplaytwice.ogg ${filepath}/44100.ogg assets/silence.ogg > ${filepath}/output.ogg`)
 
-                await poopy.functions.sendFile(msg, filepath, `output.ogg`)
+                return await poopy.functions.sendFile(msg, filepath, `output.ogg`)
             } else {
                 await msg.channel.send('No audio stream detected.').catch(() => { })
                 await msg.channel.sendTyping().catch(() => { })
@@ -46,7 +46,7 @@ module.exports = {
 
             await poopy.functions.execPromise(`cat assets/donotplaytwice.ogg ${filepath}/44100.ogg assets/silence.ogg > ${filepath}/output.ogg`)
 
-            await poopy.functions.sendFile(msg, filepath, `output.ogg`)
+            return await poopy.functions.sendFile(msg, filepath, `output.ogg`)
         } else {
             await msg.channel.send({
                 content: `Unsupported file: \`${currenturl}\``,

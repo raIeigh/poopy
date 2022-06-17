@@ -27,7 +27,7 @@ module.exports = {
     await sayori.print(bangers, 52, 35, { text: poopy.modules.Discord.Util.cleanContent(bchoice, msg), alignmentX: poopy.modules.Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: poopy.modules.Jimp.VERTICAL_ALIGN_MIDDLE }, 176, 62)
     await sayori.print(bangers, 487, 38, { text: poopy.modules.Discord.Util.cleanContent(rchoice, msg), alignmentX: poopy.modules.Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: poopy.modules.Jimp.VERTICAL_ALIGN_MIDDLE }, 228, 72)
     await sayori.writeAsync(`${filepath}/output.png`)
-    await poopy.functions.sendFile(msg, filepath, `output.png`)
+    return await poopy.functions.sendFile(msg, filepath, `output.png`)
   },
   help: {
     name: 'sayorichoice/schoice "{blueChoice}" "{redChoice}"',

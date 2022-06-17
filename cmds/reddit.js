@@ -43,7 +43,7 @@ module.exports = {
 
             await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -filter_complex "[0:v]scale=${reddittop.bitmap.width}:-1[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} ${filepath}/scaled.png`)
             await poopy.functions.execPromise(`ffmpeg -i ${filepath}/top.png -i ${filepath}/scaled.png -i assets/redditbottom.png -i assets/redditbg.png -filter_complex "vstack=inputs=3[transparent];[3:v][transparent]scale2ref[bg][transparent2];[bg][transparent2]overlay=x=0:y=0:format=auto[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} ${filepath}/output.png`)
-            await poopy.functions.sendFile(msg, filepath, `output.png`)
+            return await poopy.functions.sendFile(msg, filepath, `output.png`)
         } else if (type.mime.startsWith('video')) {
             var filepath = await poopy.functions.downloadFile(currenturl, `input.mp4`, {
                 fileinfo: fileinfo
@@ -65,7 +65,7 @@ module.exports = {
             var height = Number(scale[1])
 
             await poopy.functions.execPromise(`ffmpeg -r ${fps.includes('0/0') ? '50' : fps} -i ${filepath}/top.png -r ${fps.includes('0/0') ? '50' : fps} -i ${filepath}/scaled.mp4 -r ${fps.includes('0/0') ? '50' : fps} -i assets/redditbottom.png -i assets/redditbg.png -map 1:a? -filter_complex "vstack=inputs=3[transparent];[3:v][transparent]scale2ref[bg][transparent2];[bg][transparent2]overlay=x=0:y=0:format=auto[oout];[oout]scale=ceil(iw/2)*2:ceil(ih/2)*2[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} -aspect ${width}:${reddittop.bitmap.height + height + redditbottom.bitmap.height} -c:v libx264 -pix_fmt yuv420p ${filepath}/output.mp4`)
-            await poopy.functions.sendFile(msg, filepath, `output.mp4`)
+            return await poopy.functions.sendFile(msg, filepath, `output.mp4`)
         } else if (type.mime.startsWith('image') && poopy.vars.gifFormats.find(f => f === type.ext)) {
             var filepath = await poopy.functions.downloadFile(currenturl, `input.gif`)
             var filename = `input.gif`
@@ -84,7 +84,7 @@ module.exports = {
             var height = Number(scale[1])
 
             await poopy.functions.execPromise(`ffmpeg -r ${fps.includes('0/0') ? '50' : fps} -i ${filepath}/top.png -r ${fps.includes('0/0') ? '50' : fps} -i ${filepath}/scaled.gif -r ${fps.includes('0/0') ? '50' : fps} -i assets/redditbottom.png -i assets/redditbg.png -filter_complex "vstack=inputs=3[transparent];[3:v][transparent]scale2ref[bg][transparent2];[bg][transparent2]overlay=x=0:y=0:format=auto[oout];[oout]split[pout][ppout];[ppout]palettegen=reserve_transparent=1[palette];[pout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} -aspect ${width}:${reddittop.bitmap.height + height + redditbottom.bitmap.height} -gifflags -offsetting ${filepath}/output.gif`)
-            await poopy.functions.sendFile(msg, filepath, `output.gif`)
+            return await poopy.functions.sendFile(msg, filepath, `output.gif`)
         } else {
             await msg.channel.send({
                 content: `Unsupported file: \`${currenturl}\``,

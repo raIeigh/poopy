@@ -93,7 +93,7 @@ module.exports = {
         transparent.composite(canyoufind, 0, 0)
         transparent.composite(frame, 0, canyoufind.bitmap.height)
         await transparent.writeAsync(`${filepath}/output.png`);
-        await poopy.functions.sendFile(msg, filepath, `output.png`)
+        return await poopy.functions.sendFile(msg, filepath, `output.png`)
     },
     help: {
         name: 'canyoufind/find <background> <tofind> [-size <pixels>]',

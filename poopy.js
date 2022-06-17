@@ -2704,6 +2704,21 @@ class Poopy {
                 }
             }
 
+            if (msg.embeds.length) {
+                var embedsR = []
+                msg.embeds.forEach(embed => {
+                    if ((options.update && embed.fetched) || embed.type != 'rich' || !embed.image || !embed.image.url) return
+                    embedsR.push(embed.image.url)
+                    if (options.update && !embed.fetched) embed.fetched = true
+                })
+                embedsR.reverse()
+                for (var i in embedsR) {
+                    var embed = embedsR[i]
+                    urls = [embed].concat(urls)
+                    if (urls.length >= max) break
+                }
+            }
+
             if (msg.attachments.size) {
                 var attachmentsR = []
                 msg.attachments.forEach(attachment => {
@@ -3019,6 +3034,8 @@ class Poopy {
         poopy.functions.sendFile = async function (msg, filepath, filename, extraOptions) {
             extraOptions = extraOptions || {}
 
+            var returnUrl
+
             var prefix = poopy.data['guild-data'][msg.guild.id]['prefix']
             var args = msg.content.substring(prefix.toLowerCase().length).split(' ')
 
@@ -3074,6 +3091,8 @@ class Poopy {
 
                 poopy.functions.addLastUrl(msg.guild.id, msg.channel.id, `temp:${id}`)
 
+                returnUrl = `temp:${id}`
+
                 setTimeout(() => {
                     poopy.modules.fs.rmSync(`tempfiles/${id}${ext}`, { force: true, recursive: true })
                     delete poopy.tempfiles[id]
@@ -3099,6 +3118,8 @@ class Poopy {
                             poopy.functions.infoPost(`Couldn\'t upload catbox.moe file, reason:\n\`${fileLink.includes('retard') ? 'ok so what happened right here is i tried to upload a gif with a size bigger than 20 mb to catbox.moe but apparently you cant do it so uhhhhhh haha no link for you' : fileLink}\``)
                         }
                     }
+
+                    if (isUrl) returnUrl = fileLink
                 } else {
                     await msg.channel.send('Couldn\'t send file.').catch(() => { })
                     poopy.functions.infoPost(`Couldn\'t upload catbox.moe file`)
@@ -3126,18 +3147,18 @@ class Poopy {
 
                         if (!isUrl) {
                             poopy.functions.infoPost(`Couldn\'t upload catbox.moe file, reason:\n\`${fileLink.includes('retard') ? 'ok so what happened right here is i tried to upload a gif with a size bigger than 20 mb to catbox.moe but apparently you cant do it so uhhhhhh haha no link for you' : fileLink}\``)
-                        }
+                        } else returnUrl = fileLink
                     } else {
                         await poopy.functions.waitMessageCooldown()
                         await msg.channel.send('Couldn\'t send file.').catch(() => { })
                         poopy.functions.infoPost(`Couldn\'t upload catbox.moe file`)
                     }
-                }
+                } else returnUrl = fileMsg.attachments.first().url
             }
 
             if (extraOptions.keep ||
                 filepath == undefined ||
-                filepath == 'tempfiles') return
+                filepath == 'tempfiles') return returnUrl
 
             poopy.functions.infoPost(`Deleting \`${filepath}/${filename}\` and its folder`)
             poopy.modules.fs.rm(filepath, { force: true, recursive: true })

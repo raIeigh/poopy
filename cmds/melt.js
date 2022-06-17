@@ -32,7 +32,7 @@ module.exports = {
             var iduration = Number(fileinfo.info.duration.includes('N/A') ? '0' : fileinfo.info.duration)
 
             await poopy.functions.execPromise(args.indexOf('-loop') > -1 ? `ffmpeg -stream_loop 1 -i ${filepath}/${filename} -map 0:a? -filter_complex "[0:v]lagfun=decay=${decay / 100},scale=ceil(iw/2)*2:ceil(ih/2)*2[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} -c:v libx264 -pix_fmt yuv420p -ss ${iduration} ${filepath}/output.mp4` : `ffmpeg -i ${filepath}/${filename} -map 0:a? -filter_complex "[0:v]lagfun=decay=${decay / 100},scale=ceil(iw/2)*2:ceil(ih/2)*2[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} -c:v libx264 -pix_fmt yuv420p ${filepath}/output.mp4`)
-            await poopy.functions.sendFile(msg, filepath, `output.mp4`)
+            return await poopy.functions.sendFile(msg, filepath, `output.mp4`)
         } else if (type.mime.startsWith('image') && poopy.vars.gifFormats.find(f => f === type.ext)) {
             var filepath = await poopy.functions.downloadFile(currenturl, `input.gif`, {
                 fileinfo: fileinfo
@@ -41,7 +41,7 @@ module.exports = {
             var iduration = Number(fileinfo.info.duration.includes('N/A') ? '0' : fileinfo.info.duration)
 
             await poopy.functions.execPromise(args.indexOf('-loop') > -1 ? `ffmpeg -stream_loop 1 -i ${filepath}/${filename} -i assets/black.png -filter_complex "[1:v][0:v]scale2ref[black][gif];[black]split[blackw][blackn];[gif]hue=b=10[white];[blackw][white]overlay=x=0:y=0:format=auto,lagfun=decay=${decay / 100}[meltalpha];[blackn][0:v]overlay=x=0:y=0:format=auto,lagfun=decay=${decay / 100}[melt];[melt][meltalpha]alphamerge,split[pout][ppout];[ppout]palettegen=reserve_transparent=1[palette];[pout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} -gifflags -offsetting -ss ${iduration} ${filepath}/output.gif` : `ffmpeg -i ${filepath}/${filename} -i assets/black.png -filter_complex "[1:v][0:v]scale2ref[black][gif];[black]split[blackw][blackn];[gif]hue=b=10[white];[blackw][white]overlay=x=0:y=0:format=auto,lagfun=decay=${decay / 100}[meltalpha];[blackn][0:v]overlay=x=0:y=0:format=auto,lagfun=decay=${decay / 100}[melt];[melt][meltalpha]alphamerge,split[pout][ppout];[ppout]palettegen=reserve_transparent=1[palette];[pout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} -gifflags -offsetting ${filepath}/output.gif`)
-            await poopy.functions.sendFile(msg, filepath, `output.gif`)
+            return await poopy.functions.sendFile(msg, filepath, `output.gif`)
         } else {
             await msg.channel.send({
                 content: `Unsupported file: \`${currenturl}\``,

@@ -82,7 +82,7 @@ module.exports = {
         var filepath = await poopy.functions.downloadFile(musicData, `output.wav`, {
             buffer: true
         })
-        await poopy.functions.sendFile(msg, filepath, `output.wav`)
+        return await poopy.functions.sendFile(msg, filepath, `output.wav`)
     },
     help: {
         name: '<:newpoopy:839191885310066729> compose/generatemusic [-style <musicStyle>] [-density <value (from 0 to 2)>] [-temperature <value (from 0 to 3))>]',

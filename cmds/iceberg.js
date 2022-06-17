@@ -201,7 +201,7 @@ module.exports = {
 
         await iceberg.writeAsync(`${filepath}/output.png`)
 
-        await poopy.functions.sendFile(msg, filepath, `output.png`)
+        return await poopy.functions.sendFile(msg, filepath, `output.png`)
     },
     help: {
         name: 'iceberg {-stage<stagenumber>words <word1 | word2 | ...>} {-stage<stagenumber>image <image>} [-stages <stagenumber (from 1 to 10)>]',

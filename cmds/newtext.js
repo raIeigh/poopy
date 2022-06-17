@@ -156,7 +156,7 @@ module.exports = {
         await transparent.writeAsync(`${filepath}/caption.png`)
 
         await poopy.functions.execPromise(`ffmpeg -i ${filepath}/caption.png -f lavfi -i "color=0x${rgba.r.toString(16).padStart(2, '0')}${rgba.g.toString(16).padStart(2, '0')}${rgba.b.toString(16).padStart(2, '0')}${rgba.a.toString(16).padStart(2, '0')}:s=${width}x${height},format=rgba" -filter_complex "[1:v][0:v]overlay=x=0:y=0:format=auto[out]" -map "[out]" ${filepath}/output.png`)
-        await poopy.functions.sendFile(msg, filepath, `output.png`, {
+        return await poopy.functions.sendFile(msg, filepath, `output.png`, {
             content: `Font Height: **${defaultheight} pixels**`
         })
     },
