@@ -3162,6 +3162,8 @@ class Poopy {
 
             poopy.functions.infoPost(`Deleting \`${filepath}/${filename}\` and its folder`)
             poopy.modules.fs.rm(filepath, { force: true, recursive: true })
+
+            return returnUrl
         }
 
         poopy.functions.validateFileFromPath = async function (path, exception, rejectMessages) {
