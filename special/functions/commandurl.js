@@ -83,7 +83,6 @@ module.exports = {
             } else {
                 return 'Invalid command.'
             }
-        }
 
         return error
     },
