@@ -3,7 +3,7 @@ module.exports = {
     execute: async function (msg, args) {
         let poopy = this
 
-        if (msg.member.permissions.has('MANAGE_WEBHOOKS') || msg.member.permissions.has('ADMINISTRATOR') || msg.member.permissions.has('MANAGE_GUILD') || msg.member.roles.cache.find(role => role.name.match(/mod|dev|admin|owner|creator|founder|staff/ig)) || msg.author.id === msg.guild.ownerID || poopy.config.ownerids.find(id => id == msg.author.id)) {
+        if (msg.member.permissions.has('MANAGE_WEBHOOKS') || msg.member.permissions.has('ADMINISTRATOR') || msg.member.permissions.has('MANAGE_GUILD') || msg.member.permissions.has('MANAGE_MESSAGES') || msg.author.id === msg.guild.ownerID || poopy.config.ownerids.find(id => id == msg.author.id)) {
             var user = args[1]
             if (args[1] === undefined || (args[1] ? (args[1].startsWith('"') || poopy.vars.validUrl.test(args[1])) : false)) {
                 user = msg.author.id
@@ -172,15 +172,15 @@ module.exports = {
                 }
             }
         } else {
-            await msg.channel.send('You need to have the manage webhooks permission to execute that!').catch(() => { })
+            await msg.channel.send('You need to have the manage webhooks/messages permission to execute that!').catch(() => { })
             return;
         };
     },
     help: {
-        name: 'webhook/customhook/customwebhook [user] "<text>" <image> (manage webhooks permission only)',
+        name: 'webhook/customhook/customwebhook [user] "<text>" <image> (manage webhooks/messages permission only)',
         value: 'Turns someone into the webhook you specified.'
     },
     cooldown: 2500,
-    perms: ['ADMINISTRATOR', 'MANAGE_WEBHOOKS'],
+    perms: ['ADMINISTRATOR', 'MANAGE_WEBHOOKS', 'MANAGE_MESSAGES'],
     type: 'Webhook'
 }

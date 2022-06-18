@@ -61,7 +61,7 @@ module.exports = {
                 poopy.data['guild-data'][msg.guild.id]['members'][msg.mentions.members.first().id]['impostor'] = false
             }
             if (poopy.data['guild-data'][msg.guild.id]['members'][msg.mentions.members.first().id]['impostor'] === false) {
-                if (msg.member.permissions.has('MANAGE_GUILD') || msg.member.roles.cache.find(role => role.name.match(/mod|dev|admin|owner|creator|founder|staff/ig)) || msg.member.permissions.has('MANAGE_WEBHOOKS') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || poopy.config.ownerids.find(id => id == msg.author.id)) {
+                if (msg.member.permissions.has('MANAGE_GUILD') || msg.member.permissions.has('MANAGE_WEBHOOKS') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || poopy.config.ownerids.find(id => id == msg.author.id)) {
                     poopy.data['guild-data'][msg.guild.id]['members'][msg.mentions.members.first().id]['impostor'] = true
                     await msg.channel.send({
                         content: msg.mentions.members.first().user.username + ' is now the Impostor.',
@@ -70,7 +70,7 @@ module.exports = {
                         }
                     }).catch(() => { })
                 } else {
-                    await msg.channel.send('You need to have the manage webhooks permission to execute that!').catch(() => { })
+                    await msg.channel.send('You need to have the manage webhooks/messages permission to execute that!').catch(() => { })
                     return;
                 };
             } else {
@@ -85,10 +85,10 @@ module.exports = {
         }
     },
     help: {
-        name: 'impostor/imposter/sus [user] (manage webhooks permission only)',
+        name: 'impostor/imposter/sus [user] (manage webhooks/messages permission only)',
         value: 'Trap someone in the impostor forcefully'
     },
     cooldown: 2500,
-    perms: ['ADMINISTRATOR', 'MANAGE_WEBHOOKS'],
+    perms: ['ADMINISTRATOR', 'MANAGE_MESSAGES'],
     type: 'Webhook'
 }

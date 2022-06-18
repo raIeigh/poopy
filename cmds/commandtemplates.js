@@ -191,7 +191,7 @@ module.exports = {
                         customid: 'import',
                         style: 'PRIMARY',
                         function: async (page, button) => {
-                            if (msg.member.permissions.has('MANAGE_GUILD') || msg.member.roles.cache.find(role => role.name.match(/mod|dev|admin|owner|creator|founder|staff/ig)) || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || poopy.config.ownerids.find(id => id == msg.author.id)) {
+                            if (msg.member.permissions.has('MANAGE_GUILD') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || poopy.config.ownerids.find(id => id == msg.author.id)) {
                                 var findCommandTemplate = dcmdTemplates[page - 1]
 
                                 if (findCommandTemplate) {
@@ -352,7 +352,7 @@ module.exports = {
                         customid: 'import',
                         style: 'PRIMARY',
                         function: async (page, button) => {
-                            if (msg.member.permissions.has('MANAGE_GUILD') || msg.member.roles.cache.find(role => role.name.match(/mod|dev|admin|owner|creator|founder|staff/ig)) || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || poopy.config.ownerids.find(id => id == msg.author.id)) {
+                            if (msg.member.permissions.has('MANAGE_GUILD') || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || poopy.config.ownerids.find(id => id == msg.author.id)) {
                                 var findCommandTemplate = dcmdTemplates[page - 1]
 
                                 if (findCommandTemplate) {
@@ -388,9 +388,9 @@ module.exports = {
                                     }).catch(() => { })
                                 }
                             } else {
-                                if (poopy.config.useReactions) msg.channel.send('You need to be an administrator to execute that!').catch(() => { })
+                                if (poopy.config.useReactions) msg.channel.send('You need to be a moderator to execute that!').catch(() => { })
                                 else button.reply({
-                                    content: 'You need to be an administrator to execute that!',
+                                    content: 'You need to be a moderator to execute that!',
                                     ephemeral: true
                                 }).catch(() => { })
                             }

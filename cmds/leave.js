@@ -3,7 +3,7 @@ module.exports = {
     execute: async function (msg) {
         let poopy = this
 
-        if (msg.member.permissions.has('MANAGE_GUILD') || msg.member.roles.cache.find(role => role.name.match(/dev|admin|owner|creator|founder|staff/ig)) || msg.member.permissions.has('MANAGE_WEBHOOKS') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || poopy.config.ownerids.find(id => id == msg.author.id)) {
+        if (msg.member.permissions.has('MANAGE_GUILD') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || poopy.config.ownerids.find(id => id == msg.author.id)) {
             var phrases = [
                 'idiot',
                 'the salt',
@@ -50,11 +50,11 @@ module.exports = {
                 msg.guild.leave().catch(() => { })
             }
         } else {
-            await msg.channel.send('You need to be an admin to execute that!').catch(() => { })
+            await msg.channel.send('You need the manage server permission to execute that!').catch(() => { })
             return
         }
     },
-    help: { name: 'leave (admin only)', value: 'good' },
-    perms: ['ADMINISTRATOR'],
+    help: { name: 'leave (manage server only)', value: 'good' },
+    perms: ['ADMINISTRATOR', 'MANAGE_GUILD'],
     type: 'Annoying'
 }

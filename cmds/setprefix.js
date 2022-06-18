@@ -3,7 +3,7 @@ module.exports = {
     execute: async function (msg, args) {
         let poopy = this
 
-        if (msg.member.permissions.has('MANAGE_GUILD') || msg.member.roles.cache.find(role => role.name.match(/mod|dev|admin|owner|creator|founder|staff/ig)) || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || poopy.config.ownerids.find(id => id == msg.author.id)) {
+        if (msg.member.permissions.has('MANAGE_GUILD') || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || poopy.config.ownerids.find(id => id == msg.author.id)) {
             if (args[1] === undefined) {
                 await msg.channel.send('You must specify a prefix!').catch(() => { })
                 return
@@ -22,16 +22,16 @@ module.exports = {
             poopy.data['guild-data'][msg.guild.id]['prefix'] = saidMessage
             await msg.channel.send(`The prefix was set to \`${saidMessage}\` (if this is wrong, mention me with "reset prefix")`).catch(() => { })
         } else {
-            await msg.channel.send('You need to be an administrator to execute that!').catch(() => { })
+            await msg.channel.send('You need to be a moderator to execute that!').catch(() => { })
             return;
         };
     },
     help: {
-        name: 'setprefix <prefix> (admin only)',
+        name: 'setprefix <prefix> (moderator only)',
         value: "Set Poopy's prefix to anything you want.\n" +
             'Pro Tip: mentioning Poopy with "reset prefix" will reset it to his default prefix.'
     },
     cooldown: 5000,
-    perms: ['ADMINISTRATOR'],
+    perms: ['ADMINISTRATOR', 'MANAGE_MESSAGES'],
     type: 'Settings'
 }

@@ -37,7 +37,7 @@ module.exports = {
             },
 
             toggle: async (msg, args) => {
-                if (msg.member.permissions.has('MANAGE_GUILD') || msg.member.roles.cache.find(role => role.name.match(/mod|dev|admin|owner|creator|founder|staff/ig)) || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || (poopy.config.ownerids.find(id => id == msg.author.id))) {
+                if (msg.member.permissions.has('MANAGE_GUILD') || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || (poopy.config.ownerids.find(id => id == msg.author.id))) {
                     if (!args[2]) {
                         await msg.channel.send('You gotta specify a command!')
                         return
@@ -73,7 +73,7 @@ module.exports = {
                         return
                     }
                 } else {
-                    await msg.channel.send('You need to be an administrator to execute that!').catch(() => { })
+                    await msg.channel.send('You need to be a moderator to execute that!').catch(() => { })
                     return;
                 };
             },
@@ -81,7 +81,7 @@ module.exports = {
 
         if (!args[1]) {
             if (poopy.config.textEmbeds) msg.channel.send({
-                content: "**list** - Gets a list of disabled commands.\n**toggle** <command> (admin only) - Disables/enables a command, if it exists.",
+                content: "**list** - Gets a list of disabled commands.\n**toggle** <command> (moderator only) - Disables/enables a command, if it exists.",
                 allowedMentions: {
                     parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
@@ -90,7 +90,7 @@ module.exports = {
                 embeds: [
                     {
                         "title": "Available Options",
-                        "description": "**list** - Gets a list of disabled commands.\n**toggle** <command> (admin only) - Disables/enables a command, if it exists.",
+                        "description": "**list** - Gets a list of disabled commands.\n**toggle** <command> (moderator only) - Disables/enables a command, if it exists.",
                         "color": 0x472604,
                         "footer": {
                             "icon_url": poopy.bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),

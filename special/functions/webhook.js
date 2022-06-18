@@ -1,5 +1,5 @@
 module.exports = {
-    helpf: '(name | avatar | message) (manage webhooks only)',
+    helpf: '(name | avatar | message) (manage webhooks/messages only)',
     desc: 'Creates a webhook with the name and avatar specified that will send the desired message.',
     func: async function (matches, msg, isBot) {
         let poopy = this
@@ -21,7 +21,13 @@ module.exports = {
             }
         }
 
-        poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] = (poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] || Date.now()) + 2500 / ((msg.member.permissions.has('MANAGE_GUILD') || msg.member.roles.cache.find(role => role.name.match(/mod|dev|admin|owner|creator|founder|staff/ig)) || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID) ? 5 : 1)
+        poopy.tempdata[msg.author.id]['cooler'] = msg.id
+        
+        if (poopy.tempdata[msg.author.id][msg.id]['execCount'] >= 1 && poopy.data['guild-data'][msg.guild.id]['chaincommands'] == false && !(msg.member.permissions.has('MANAGE_GUILD') || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || isBot)) return 'You can\'t chain commands in this server.'
+        if (poopy.tempdata[msg.author.id][msg.id]['execCount'] >= poopy.config.commandLimit * ((msg.member.permissions.has('MANAGE_GUILD') || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || isBot) ? 5 : 1)) return `Number of commands to run at the same time must be smaller or equal to **${poopy.config.commandLimit * ((msg.member.permissions.has('MANAGE_GUILD') || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || isBot) ? 5 : 1)}**!`
+        poopy.tempdata[msg.author.id][msg.id]['execCount']++
+
+        poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] = (poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] || Date.now()) + 2500 / ((msg.member.permissions.has('MANAGE_GUILD') || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID) ? 5 : 1)
 
         if (msg.channel.parent) {
             if (msg.channel.parent.isText()) {
@@ -57,7 +63,7 @@ module.exports = {
             return 'Invalid avatar.'
         }
 
-        if (msg.member.permissions.has('MANAGE_WEBHOOKS') || msg.member.permissions.has('ADMINISTRATOR') || msg.member.permissions.has('MANAGE_GUILD') || msg.member.roles.cache.find(role => role.name.match(/mod|dev|admin|owner|creator|founder|staff/ig)) || msg.author.id === msg.guild.ownerID || poopy.config.ownerids.find(id => id == msg.author.id) || isBot) {
+        if (msg.member.permissions.has('MANAGE_WEBHOOKS') || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.member.permissions.has('MANAGE_GUILD') || msg.author.id === msg.guild.ownerID || poopy.config.ownerids.find(id => id == msg.author.id) || isBot) {
             var webhooks = await msg.channel.fetchWebhooks().catch(() => { })
             if (webhooks ? webhooks.size : undefined) {
                 var findWebhook = webhooks.find(webhook => poopy.bot.user === webhook.owner)
@@ -74,7 +80,7 @@ module.exports = {
                 } else {
                     var createdWebhook = await msg.channel.createWebhook('Poopyhook', { avatar: 'https://cdn.discordapp.com/attachments/760223418968047629/835923489834664056/poopy2.png' }).catch(() => { })
                     if (!createdWebhook) {
-                        return 'I need admin for this command!'
+                        return 'I need the manage webhooks permission for this command!'
                     } else {
                         await poopy.functions.waitMessageCooldown()
                         await createdWebhook.send({
@@ -90,7 +96,7 @@ module.exports = {
             } else {
                 var createdWebhook = await msg.channel.createWebhook('Poopyhook', { avatar: 'https://cdn.discordapp.com/attachments/760223418968047629/835923489834664056/poopy2.png' }).catch(() => { })
                 if (!createdWebhook) {
-                    return 'I need admin for this command!'
+                    return 'I need the manage webhooks permission for this command!'
                 } else {
                     await poopy.functions.waitMessageCooldown()
                     await createdWebhook.send({
@@ -104,7 +110,7 @@ module.exports = {
                 }
             }
         } else {
-            return 'You need to have the manage webhooks permission to execute that!'
+            return 'You need to have the manage webhooks/messages permission to execute that!'
         }
 
         return ''

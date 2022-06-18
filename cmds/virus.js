@@ -3,7 +3,7 @@ module.exports = {
     execute: async function (msg, args) {
         let poopy = this
 
-        if (msg.member.permissions.has('MANAGE_GUILD') || msg.member.roles.cache.find(role => role.name.match(/mod|dev|admin|owner|creator|founder|staff/ig)) || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || poopy.config.ownerids.find(id => id == msg.author.id)) {
+        if (msg.member.permissions.has('MANAGE_GUILD') || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || poopy.config.ownerids.find(id => id == msg.author.id)) {
             await msg.channel.sendTyping().catch(() => { })
             if (poopy.functions.lastUrl(msg.guild.id, msg.channel.id, 0) === undefined && args[1] === undefined) {
                 await msg.channel.send('What is the file?!').catch(() => { })
@@ -28,15 +28,15 @@ module.exports = {
             poopy.modules.fs.writeFileSync(`${filepath}/output.${type.ext}`, newfilehex)
             return await poopy.functions.sendFile(msg, filepath, `output.${type.ext}`)
         } else {
-            await msg.channel.send('You need to be an administrator to execute that! (you can do it in another server though I won\'t stop you)').catch(() => { })
+            await msg.channel.send('You need to be a moderator to execute that! (you can do it in another server though I won\'t stop you)').catch(() => { })
             return;
         }
     },
     help: {
-        name: 'virus <file> (admin only)',
+        name: 'virus <file> (moderator only)',
         value: `Manipulates the file's Hex Code to make it a "virus".`
     },
     cooldown: 2500,
-    perms: ['ADMINISTRATOR'],
+    perms: ['ADMINISTRATOR', 'MANAGE_MESSAGES'],
     type: 'Hex Manipulation'
 }

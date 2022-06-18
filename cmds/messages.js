@@ -68,7 +68,7 @@ module.exports = {
                     var send = true
 
                     if (cleanMessage.match(/nigg|https?\:\/\/.*(rule34|e621|pornhub|hentaihaven|xxx|iplogger|discord\.gg\/[\d\w]+\/?$|discord\.gift)/ig)) {
-                        send = await poopy.functions.yesno(msg.channel, 'That message looks dangerous, are you sure about this?', msg.member.id).catch(() => { }) ?? false
+                        send = await poopy.functions.yesno(msg.channel, 'That message looks nasty, are you sure about this?', msg.member.id).catch(() => { }) ?? false
                     }
 
                     var messages = [{
@@ -107,7 +107,7 @@ module.exports = {
             },
 
             clear: async (msg) => {
-                if (msg.member.permissions.has('MANAGE_GUILD') || msg.member.roles.cache.find(role => role.name.match(/mod|dev|admin|owner|creator|founder|staff/ig)) || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || poopy.config.ownerids.find(id => id == msg.author.id)) {
+                if (msg.member.permissions.has('MANAGE_GUILD') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || poopy.config.ownerids.find(id => id == msg.author.id)) {
                     var confirm = await poopy.functions.yesno(msg.channel, 'are you sure about this', msg.member).catch(() => { })
 
                     if (confirm) {
@@ -116,24 +116,24 @@ module.exports = {
                         await msg.channel.send(`✅ All the messages from the database have been cleared.`).catch(() => { })
                     }
                 } else {
-                    await msg.channel.send('You need to be an administrator to execute that!').catch(() => { })
+                    await msg.channel.send('You need the manage server permission to execute that!').catch(() => { })
                 };
             },
 
             read: async (msg) => {
-                if (msg.member.permissions.has('MANAGE_GUILD') || msg.member.roles.cache.find(role => role.name.match(/mod|dev|admin|owner|creator|founder|staff/ig)) || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || poopy.config.ownerids.find(id => id == msg.author.id)) {
+                if (msg.member.permissions.has('MANAGE_GUILD') || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || poopy.config.ownerids.find(id => id == msg.author.id)) {
                     poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['read'] = !(poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['read'])
 
                     var read = poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['read']
                     await msg.channel.send(`I **can${!read ? '\'t' : ''} read** messages from the channel now.`).catch(() => { })
                 } else {
-                    await msg.channel.send('You need to be an administrator to execute that!').catch(() => { })
+                    await msg.channel.send('You need to be a moderator to execute that!').catch(() => { })
                     return;
                 };
             },
 
             readall: async (msg) => {
-                if (msg.member.permissions.has('MANAGE_GUILD') || msg.member.roles.cache.find(role => role.name.match(/mod|dev|admin|owner|creator|founder|staff/ig)) || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || poopy.config.ownerids.find(id => id == msg.author.id)) {
+                if (msg.member.permissions.has('MANAGE_GUILD') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || poopy.config.ownerids.find(id => id == msg.author.id)) {
                     poopy.data['guild-data'][msg.guild.id]['read'] = !(poopy.data['guild-data'][msg.guild.id]['read'])
                     var channels = msg.guild.channels.cache
 
@@ -150,19 +150,19 @@ module.exports = {
                     var read = poopy.data['guild-data'][msg.guild.id]['read']
                     await msg.channel.send(`I **can${!read ? '\'t' : ''} read** messages from all channels now.`).catch(() => { })
                 } else {
-                    await msg.channel.send('You need to be an administrator to execute that!').catch(() => { })
+                    await msg.channel.send('You need the manage server permission to execute that!').catch(() => { })
                     return;
                 };
             },
         }
 
         if (!args[1]) {
-            if (poopy.config.textEmbeds) msg.channel.send("**list** - Sends a text file with a list of all messages that exist within the guild's message database.\n\n**search** <query> - Searches for every message in the server that matches the query.\n\n**random** - Sends a random message from the database to the channel.\n\n**add** <message> - Adds a new message to the guild's database, if it is available for use.\n\n**delete** <message> - Deletes the message, if it exists.\n\n**clear** (admin only) - Clears ALL the messages from the database.\n\n**read** (admin only) - Toggles whether the bot can read the messages from the channel or not.\n\n**readall** (admin only) - Toggles whether the bot can read the messages from all channels or not.").catch(() => { })
+            if (poopy.config.textEmbeds) msg.channel.send("**list** - Sends a text file with a list of all messages that exist within the guild's message database.\n\n**search** <query> - Searches for every message in the server that matches the query.\n\n**random** - Sends a random message from the database to the channel.\n\n**add** <message> - Adds a new message to the guild's database, if it is available for use.\n\n**delete** <message> - Deletes the message, if it exists.\n\n**clear** (manage server only) - Clears ALL the messages from the database.\n\n**read** (moderator only) - Toggles whether the bot can read the messages from the channel or not.\n\n**readall** (manage server only) - Toggles whether the bot can read the messages from all channels or not.").catch(() => { })
             else msg.channel.send({
                 embeds: [
                     {
                         "title": "Available Options",
-                        "description": "**list** - Sends a text file with a list of all messages that exist within the guild's message database.\n\n**search** <query> - Searches for every message in the server that matches the query.\n\n**random** - Sends a random message from the database to the channel.\n\n**add** <message> - Adds a new message to the guild's database, if it is available for use.\n\n**delete** <message> - Deletes the message, if it exists.\n\n**clear** (admin only) - Clears ALL the messages from the database.\n\n**read** (admin only) - Toggles whether the bot can read the messages from the channel or not.\n\n**readall** (admin only) - Toggles whether the bot can read the messages from all channels or not.",
+                        "description": "**list** - Sends a text file with a list of all messages that exist within the guild's message database.\n\n**search** <query> - Searches for every message in the server that matches the query.\n\n**random** - Sends a random message from the database to the channel.\n\n**add** <message> - Adds a new message to the guild's database, if it is available for use.\n\n**delete** <message> - Deletes the message, if it exists.\n\n**clear** (manage server only) - Clears ALL the messages from the database.\n\n**read** (moderator only) - Toggles whether the bot can read the messages from the channel or not.\n\n**readall** (manage server only) - Toggles whether the bot can read the messages from all channels or not.",
                         "color": 0x472604,
                         "footer": {
                             "icon_url": poopy.bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
