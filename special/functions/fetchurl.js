@@ -1,12 +1,15 @@
 module.exports = {
-  helpf: '(number)',
-  desc: "Returns the first URL in the message. If <number> is supplied, it'll return the URL in the message with index <number>.",
-  func: async function (matches, msg, _, string) {
+  helpf: '(phrase | number)',
+  desc: "Returns the first URL in the phrase. If <number> is supplied, it'll return the URL in the phrase with index <number>.",
+  func: async function (matches, msg) {
     let poopy = this
 
     var word = matches[1]
-    var urls = await poopy.functions.getUrls(msg, { string: string, prefix: true }).catch(() => { }) ?? []
-    var number = isNaN(Number(word)) ? 0 : Number(word) <= 0 ? 0 : Number(word) >= urls.length - 1 ? urls.length - 1 : Math.round(Number(word)) || 0
+    var split = poopy.functions.splitKeyFunc(word, { args: 2 })
+    var phrase = split[0] ?? ''
+    var number = split[1] ?? '0'
+    var urls = await poopy.functions.getUrls(msg, { string: phrase, prefix: true }).catch(() => { }) ?? []
+    number = isNaN(Number(number)) ? 0 : Number(number) <= 0 ? 0 : Number(number) >= urls.length - 1 ? urls.length - 1 : Math.round(Number(number)) || 0
     return urls[number] ?? ''
   }
 }
