@@ -35,7 +35,6 @@ module.exports = {
             if (message) {
                 return message.id
             }
-        }
 
         return ''
     },
