@@ -142,8 +142,7 @@ class Poopy {
         poopy.modules.util = require('util')
         poopy.modules.md5 = require('md5')
         poopy.modules.Jimp = require('jimp')
-        //poopy.modules.selenium = require('selenium-webdriver')
-        //poopy.modules.chrome = require('selenium-webdriver/chrome')
+        poopy.modules.puppeteer = require('puppeteer')
         poopy.modules.whatwg = require('whatwg-url')
         poopy.modules.deepai = require('deepai')
         poopy.modules.noblox = require('noblox.js')
@@ -751,6 +750,7 @@ class Poopy {
                     } catch (_) { }
 
                     resolve({
+                        request: options,
                         status: response.statusCode,
                         statusText: response.statusMessage,
                         headers: response.headers,
@@ -4840,6 +4840,7 @@ class Poopy {
         await poopy.modules.noblox.setCookie(process.env.ROBLOXCOOKIE).catch(() => { })
         poopy.json.emojiJSON = await poopy.functions.getEmojis().catch(() => { })
         console.log('emojis')
+        poopy.vars.browser = await poopy.modules.puppeteer.launch({ headless: false })
         if (!poopy.modules.fs.existsSync('temp')) {
             poopy.modules.fs.mkdirSync('temp')
         }
@@ -4899,6 +4900,7 @@ class Poopy {
         poopy.bot.destroy()
         delete poopy.data
         delete poopy.tempdata
+        await poopy.vars.browser.close()
         for (var type in poopy.functions.globalData()) delete poopy.functions.globalData()[type]
     }
 }

@@ -8,10 +8,10 @@ module.exports = {
     var split = poopy.functions.splitKeyFunc(word, { args: 3 })
     var phrase = split[0] ?? ''
     var times = Math.min(Number(await poopy.functions.getKeywordsFor(split[1] ?? '', msg, isBot, opts).catch(() => { })), 100)
-    var separator = await poopy.functions.getKeywordsFor(split[2] ?? '', msg, isBot).catch(() => { }) ?? ''
+    var separator = await poopy.functions.getKeywordsFor(split[2] ?? '', msg, isBot, opts).catch(() => { }) ?? ''
     var repeat = []
     for (var i = 0; i < times; i++) {
-      repeat.push(phrase)
+      repeat.push(await poopy.functions.getKeywordsFor(phrase, msg, isBot, opts).catch(() => { }) ?? '')
       poopy.tempdata[msg.author.id][msg.id]['keyattempts']++
       if (poopy.tempdata[msg.author.id][msg.id]['keyattempts'] >= poopy.config.keyLimit) break
     }

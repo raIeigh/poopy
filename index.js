@@ -547,7 +547,7 @@ async function start() {
                 }
             },
 
-            {
+            /*{
                 TOKEN: process.env.INDIATOKEN,
                 config: {
                     self: true,
@@ -559,7 +559,7 @@ async function start() {
                     noInfoPost: true,
                     illKillYouIfYouUseEval: []
                 }
-            }
+            }*/
         ]
     } else {
         tokens = [
