@@ -4,7 +4,7 @@ module.exports = {
     let poopy = this
 
     await msg.channel.sendTyping().catch(() => { })
-    await msg.channel.send(`Bot invite link: https://poopies-for-you.herokuapp.com/invite\nOfficial Discord server link: https://poopies-for-you.herokuapp.com/discord`).catch(() => { })
+    await msg.channel.send(`Bot invite link: <https://poopies-for-you.herokuapp.com/invite>\nDiscord server link: <https://poopies-for-you.herokuapp.com/discord>`).catch(() => { })
     await msg.channel.sendTyping().catch(() => { })
   },
   help: {
