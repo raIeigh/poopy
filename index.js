@@ -512,7 +512,7 @@ async function start() {
         }
     })
 
-    app.get('/psfile', function (req, res) {
+    app.get('/psfile', function (_, res) {
         if (poopyStarted) {
             const psfiles = globalData()['bot-data']['psfiles']
             res.redirect(psfiles[Math.floor(Math.random() * psfiles.length)])
@@ -521,9 +521,17 @@ async function start() {
         }
     })
 
+    app.get('/invite', function (_, res) {
+        res.redirect(`https://discord.com/oauth2/authorize?client_id=789189158639501312&scope=bot%20applications.commands&permissions=275415166152`)
+    })
+
+    app.get('/discord', function (_, res) {
+        res.redirect(`https://discord.gg/R4nEBP5Ymf`)
+    })
+
     app.use(express.static('html/public'))
 
-    app.use(function (req, res) {
+    app.use(function (_, res) {
         res.status(404).sendFile(`${__dirname}/html/errorpages/404.html`)
     })
 
