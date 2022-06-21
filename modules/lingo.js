@@ -18,6 +18,7 @@ var ordering2 = ['']
 function numRules() {
     return phrases1.length + phrases2.length + words1.length + words2.length + intraword1.length + intraword2.length + prefixes1.length + prefixes2.length + suffixes1.length + suffixes2.length + regex1.length + regex2.length + rev_regex1.length + rev_regex2.length + ordering1.length + ordering2.length;
 }
+
 var doneToken = "����}�";
 var sentenceCount = 0;
 var useWebWorker = false;
@@ -1081,34 +1082,6 @@ function shuffleArray(array) {
 function randomElement(a) {
     return a[Math.floor(Math.random() * a.length)];
 }
-
-/*function idk(e) {
-    var o = "object" == typeof exports && exports,
-        r = "object" == typeof module && module && module.exports == o && module,
-        n = "object" == typeof global && global;
-    (n.global === n || n.window === n) && (e = n);
-    var t = /(<%= allExceptCombiningMarks %>)(<%= combiningMarks %>+)/g,
-        i = /([\uD800-\uDBFF])([\uDC00-\uDFFF])/g,
-        f = function(e) {
-            e = e.replace(t, function(e, o, r) {
-                return f(r) + o
-            }).replace(i, "$2$1");
-            for (var o = "", r = e.length; r--;) o += e.charAt(r);
-            return o
-        },
-        l = {
-            version: "<%= version %>",
-            reverse: f
-        };
-    if ("function" == typeof define && "object" == typeof define.amd && define.amd) define(function() {
-        return l
-    });
-    else if (o && !o.nodeType)
-        if (r) r.exports = l;
-        else
-            for (var a in l) l.hasOwnProperty(a) && (o[a] = l[a]);
-    else e.esrever = l
-}*/
 
 function esrever(e) {
     e = e.replace(/(<%= allExceptCombiningMarks %>)(<%= combiningMarks %>+)/g, function (e, o, r) {
