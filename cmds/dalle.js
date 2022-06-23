@@ -1,5 +1,5 @@
 module.exports = {
-    name: ['dalle', 'text2images'],
+    name: ['dalle', 'craiyon', 'text2images'],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -22,7 +22,7 @@ module.exports = {
 
         async function dalleRequest() {
             var imageRes = await poopy.modules.axios.request({
-                url: 'https://bf.dallemini.ai/generate',
+                url: 'https://backend.craiyon.com/generate',
                 method: 'POST',
                 data: { prompt: text }
             }).catch(() => { })
@@ -126,8 +126,8 @@ module.exports = {
         archive.finalize()
     },
     help: {
-        name: 'dalle/text2images <prompt>',
-        value: 'Generates 9 images from the text prompt using DALL·E. Try it yourself at https://huggingface.co/spaces/dalle-mini/dalle-mini'
+        name: 'dalle/craiyon/text2images <prompt>',
+        value: 'Generates 9 images from the text prompt using DALL·E mini. Try it yourself at https://huggingface.co/spaces/dalle-mini/dalle-mini'
     },
     cooldown: 5000,
     type: 'Generation'

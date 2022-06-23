@@ -171,7 +171,8 @@ class Poopy {
         // bot and variables now
         poopy.bot = new poopy.modules.Discord.Client({
             intents: poopy.config.intents,
-            partials: ['CHANNEL']
+            partials: ['CHANNEL'],
+            failIfNotExists: false
         })
         poopy.package = JSON.parse(poopy.modules.fs.readFileSync('package.json'))
 
@@ -471,6 +472,7 @@ class Poopy {
         // objects and arrays for things like the arab dictionary
         poopy.json = {
             wordJSON: JSON.parse(poopy.modules.fs.readFileSync('./assets/json/words.json')),
+            fakeWordJSON: JSON.parse(poopy.modules.fs.readFileSync('./assets/json/fakeWords.json')),
             continentJSON: JSON.parse(poopy.modules.fs.readFileSync('./assets/json/continents.json')),
             countryJSON: JSON.parse(poopy.modules.fs.readFileSync('./assets/json/countries.json')),
             languageJSON: JSON.parse(poopy.modules.fs.readFileSync('./assets/json/languages.json')),
@@ -4837,6 +4839,20 @@ class Poopy {
             if (x > y) return 1
             return 0
         })
+        var lresponse = await poopy.modules.axios.request({
+            method: 'GET',
+            url: 'https://microsoft-translator-text.p.rapidapi.com/languages',
+            params: { 'api-version': '3.0' },
+            headers: {
+                'x-rapidapi-host': 'microsoft-translator-text.p.rapidapi.com',
+                'x-rapidapi-key': poopy.functions.randomKey('RAPIDAPIKEY')
+            }
+        }).catch(() => { })
+        poopy.vars.languages = Object.values(lresponse.data.translation)
+        for (var i in lresponse.data.translation) {
+            lresponse.data.translation[i].language = i
+            poopy.vars.languages.push(lresponse.data.translation[i])
+        }
         await poopy.modules.noblox.setCookie(process.env.ROBLOXCOOKIE).catch(() => { })
         poopy.json.emojiJSON = await poopy.functions.getEmojis().catch(() => { })
         console.log('emojis')
