@@ -1,35 +1,5 @@
-var phrases1 = ['']
-var phrases2 = ['']
-var words1 = ['']
-var words2 = ['']
-var intraword1 = ['']
-var intraword2 = ['']
-var prefixes1 = ['']
-var prefixes2 = ['']
-var suffixes1 = ['']
-var suffixes2 = ['']
-var regex1 = ['']
-var regex2 = ['']
-var rev_regex1 = ['']
-var rev_regex2 = ['']
-var ordering1 = ['']
-var ordering2 = ['']
-
-function numRules() {
-    return phrases1.length + phrases2.length + words1.length + words2.length + intraword1.length + intraword2.length + prefixes1.length + prefixes2.length + suffixes1.length + suffixes2.length + regex1.length + regex2.length + rev_regex1.length + rev_regex2.length + ordering1.length + ordering2.length;
-}
-
 var doneToken = "����}�";
-var sentenceCount = 0;
-var useWebWorker = false;
 var doApplySentenceCase = undefined;
-var worker;
-var workerStarted = false;
-var waitingForTypingToFinish = false;
-var translationInQueue = false;
-var queuedTranslationDirection = false;
-var translationInProgress = false;
-var workerInitStarted = false;
 
 function applySentenceCase(str) {
     return str.replace(/.+?[\.\?\!](\s|$)/g, function (txt) {
@@ -257,18 +227,7 @@ function makeArrayClone(existingArray) {
 var luni = new Lunicode();
 luni.tools.creepify.options.maxHeight = 10;
 
-function createMap(chars) {
-    var alphanum = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
-    var i = 0;
-    var map = {};
-    for (var c of chars) {
-        map[alphanum[i]] = c;
-        i++;
-    }
-    return JSON.stringify(map);
-}
-
-function forward(text) {
+function fancify(text) {
     text = text.trim();
     if (text === "") {
         return "";
@@ -1124,12 +1083,6 @@ function randInt(min, max) {
     return min + Math.floor(Math.random() * (max - min + 1));
 }
 
-evenUpSizes(phrases1, phrases2);
-evenUpSizes(words1, words2);
-evenUpSizes(intraword1, intraword2);
-evenUpSizes(prefixes1, prefixes2);
-evenUpSizes(suffixes1, suffixes2);
-
 function evenUpSizes(a, b) {
     if (a.length > b.length) {
         while (a.length > b.length) b.push("");
@@ -1138,10 +1091,17 @@ function evenUpSizes(a, b) {
     }
 }
 
-handleDuplicates(words1, words2);
-
-module.exports = function(text) {
+module.exports = function(text, { phrases1 = [''], phrases2 = [''], words1 = [''], words2 = [''], intraword1 = [''], intraword2 = [''], prefixes1 = [''], prefixes2 = [''], suffixes1 = [''], suffixes2 = [''], regex1 = [''], regex2 = [''], rev_regex1 = [''], rev_regex2 = [''], ordering1 = [''], ordering2 = [''] } = {}, fancy) {
     if (text == "") return "";
+
+    evenUpSizes(phrases1, phrases2);
+    evenUpSizes(words1, words2);
+    evenUpSizes(intraword1, intraword2);
+    evenUpSizes(prefixes1, prefixes2);
+    evenUpSizes(suffixes1, suffixes2);
+
+    handleDuplicates(words1, words2);
+
     var translatedText = "";
     if (!([].concat(phrases1, phrases2, words1, words2, intraword1, intraword2, prefixes1, prefixes2, suffixes1, suffixes2, regex1, regex2, rev_regex1, rev_regex2, ordering1, ordering2).join("").length === 0)) {
         sentenceCount = 0;
@@ -1203,8 +1163,8 @@ module.exports = function(text) {
     } else {
         translatedText = text;
     }
-    if (typeof forward === "function") {
-        translatedText = forward(translatedText);
+    if (fancy) {
+        translatedText = fancify(translatedText);
     }
     return translatedText;
 }

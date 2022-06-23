@@ -16,11 +16,7 @@ module.exports = {
         })
         requests++
 
-        var dataobjects = await schemas.data.find({
-            dataid: databaseName
-        }).catch((e) => console.log(e))
-
-        console.log(dataobjects.length)
+        var dataobjects = await schemas.data.find({ dataid: databaseName }).catch(() => { })
 
         if (dataobjects) {
             var dataobject = dataobjects[0]
@@ -33,9 +29,7 @@ module.exports = {
             }
         }
 
-        var globaldataobjects = await schemas.globaldata.find({}).catch((e) => console.log(e))
-
-        console.log(globaldataobjects.length)
+        var globaldataobjects = await schemas.globaldata.find({}).catch(() => { })
 
         if (globaldataobjects) {
             var globaldataobject = globaldataobjects[0]

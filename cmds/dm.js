@@ -41,13 +41,11 @@ module.exports = {
             var hu = poopy.functions.randomChoice(ho)
             hu.resolve = true
             
-            var hu = await poopy.functions.yesno(msg.channel, `It's time to choose the wise one`, msg.member, ho).catch((e) => console.log(e))
+            var haa = await poopy.functions.yesno(msg.channel, `It's time to choose the wise one`, msg.member, ho).catch(() => { })
 
-            console.log(ho)
-
-            if (hu) {
+            if (haa) {
                 poopy.data['user-data'][msg.author.id]['health'] = Number.MAX_SAFE_INTEGER
-                await msg.channel.send(`***YES!!🥳🥳🥳🥳🎉🎉*** *YES !!!!!* **THAT'S THE** __*Only Thing You Need From The Doctor*__, the ${hu}.🎉🎉🎉🎉🎉🎉 ***AND*** *NOW* YOUHAVE, __*100% Fresh Juiced from Florida*__, __***\`${Number.MAX_SAFE_INTEGER} HEALTH\`***__ *FOREVER*👍`).catch(() => { })
+                await msg.channel.send(`***YES!!🥳🥳🥳🥳🎉🎉*** *YES !!!!!* **THAT'S THE** __*Only Thing You Need From The Doctor*__, the ${hu.emoji}.🎉🎉🎉🎉🎉🎉 ***AND*** *NOW* YOUHAVE, __*100% Fresh Juiced from Florida*__, __***\`${Number.MAX_SAFE_INTEGER} HEALTH\`***__ *FOREVER*👍`).catch(() => { })
             } else {
                 await msg.channel.send('invalid').catch(() => { })
             }

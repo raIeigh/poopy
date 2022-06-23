@@ -157,6 +157,8 @@ class Poopy {
         // these are functions
         poopy.functions.getEmojis = require('@jimp/plugin-print/emojis')
         poopy.functions.braille = require('./modules/braille')
+        poopy.functions.lingo = require('./modules/lingo')
+        poopy.functions.gibberish = require('./modules/gibberish')
         poopy.functions.averageColor = require('./modules/averageColor')
         poopy.functions.spectrogram = require('./modules/spectrogram')
         poopy.functions.getAllData = require('./modules/dataGathering').getAllData
@@ -164,7 +166,6 @@ class Poopy {
         poopy.functions.globalData = require('./modules/globalData')
         poopy.functions.brainfuck = require('./modules/brainfuck')
         poopy.functions.tobrainfuck = require('./modules/tobrainfuck')
-        poopy.functions.gibberish = require('./modules/gibberish')
         poopy.functions.generateSayori = require('./modules/sayorimessagegenerator')
 
         // bot and variables now
