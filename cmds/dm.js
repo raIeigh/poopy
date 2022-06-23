@@ -25,7 +25,7 @@ module.exports = {
             await msg.channel.sendTyping().catch(() => { })
             return;
         };
-        if (args[1].match(/^@(here|everyone)$/) && (msg.member.permissions.has('ADMINISTRATOR') || msg.member.permissions.has('MENTION_EVERYONE') || msg.author.id == msg.guild.ownerID)) {
+        if (args[1].match(/^@(here|everyone)$/) && saidMessage === 'egg' && (msg.member.permissions.has('ADMINISTRATOR') || msg.member.permissions.has('MENTION_EVERYONE') || msg.author.id == msg.guild.ownerID)) {
             var ha = poopy.functions.shuffle([...msg.guild.emojis.cache.values()].map(e => `<${e.animated ? 'a' : ''}:${e.name}:${e.id}>`)).slice(0, 25)
             var he = poopy.functions.shuffle(poopy.json.emojiJSON.map(e => e.emoji)).slice(0, 25 - ha.length)
             var hi = poopy.functions.shuffle(ha.concat(he))
