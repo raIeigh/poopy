@@ -42,7 +42,7 @@ module.exports = {
             var pvz = await poopy.modules.Jimp.read(`assets/pvz.png`)
             var dwarven = await poopy.modules.Jimp.loadFont('assets/fonts/Dwarven/Dwarven.fnt')
             var brianne = await poopy.modules.Jimp.loadFont('assets/fonts/Brianne/Brianne.fnt')
-            await pvz.print(dwarven, 155, 197, { text: poopy.modules.Discord.Util.cleanContent(plantname, msg), alignmentX: poopy.modules.Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: poopy.modules.Jimp.VERTICAL_ALIGN_MIDDLE }, 189, 27)
+            await pvz.print(dwarven, 155, 186, { text: poopy.modules.Discord.Util.cleanContent(plantname, msg), alignmentX: poopy.modules.Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: poopy.modules.Jimp.VERTICAL_ALIGN_MIDDLE }, 189, 27)
             await pvz.print(brianne, 166, 223, { text: poopy.modules.Discord.Util.cleanContent(plantdescription, msg), alignmentX: poopy.modules.Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: poopy.modules.Jimp.VERTICAL_ALIGN_MIDDLE }, 166, 66)
             await pvz.writeAsync(`${filepath}/pvz.png`)
 
@@ -62,7 +62,7 @@ module.exports = {
             var pvz = await poopy.modules.Jimp.read(`assets/pvz.png`)
             var dwarven = await poopy.modules.Jimp.loadFont('assets/fonts/Dwarven/Dwarven.fnt')
             var brianne = await poopy.modules.Jimp.loadFont('assets/fonts/Brianne/Brianne.fnt')
-            await pvz.print(dwarven, 155, 197, { text: poopy.modules.Discord.Util.cleanContent(plantname, msg), alignmentX: poopy.modules.Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: poopy.modules.Jimp.VERTICAL_ALIGN_MIDDLE }, 189, 27)
+            await pvz.print(dwarven, 155, 186, { text: poopy.modules.Discord.Util.cleanContent(plantname, msg), alignmentX: poopy.modules.Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: poopy.modules.Jimp.VERTICAL_ALIGN_MIDDLE }, 189, 27)
             await pvz.print(brianne, 166, 223, { text: poopy.modules.Discord.Util.cleanContent(plantdescription, msg), alignmentX: poopy.modules.Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: poopy.modules.Jimp.VERTICAL_ALIGN_MIDDLE }, 166, 66)
             await pvz.writeAsync(`${filepath}/pvz.png`)
 
@@ -80,7 +80,7 @@ module.exports = {
             var pvz = await poopy.modules.Jimp.read(`assets/pvz.png`)
             var dwarven = await poopy.modules.Jimp.loadFont('assets/fonts/Dwarven/Dwarven.fnt')
             var brianne = await poopy.modules.Jimp.loadFont('assets/fonts/Brianne/Brianne.fnt')
-            await pvz.print(dwarven, 155, 197, { text: poopy.modules.Discord.Util.cleanContent(plantname, msg), alignmentX: poopy.modules.Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: poopy.modules.Jimp.VERTICAL_ALIGN_MIDDLE }, 189, 27)
+            await pvz.print(dwarven, 155, 186, { text: poopy.modules.Discord.Util.cleanContent(plantname, msg), alignmentX: poopy.modules.Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: poopy.modules.Jimp.VERTICAL_ALIGN_MIDDLE }, 189, 27)
             await pvz.print(brianne, 166, 223, { text: poopy.modules.Discord.Util.cleanContent(plantdescription, msg), alignmentX: poopy.modules.Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: poopy.modules.Jimp.VERTICAL_ALIGN_MIDDLE }, 166, 66)
             await pvz.writeAsync(`${filepath}/pvz.png`)
 

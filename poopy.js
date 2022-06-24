@@ -1070,6 +1070,40 @@ class Poopy {
             return str.replace(/[\\^$.|?*+()[{]/g, (match) => `\\${match}`)
         }
 
+        poopy.functions.parMatch = function (string) {
+            var lastParenthesesIndex = -1
+            var llastParenthesesIndex = -1
+            var parindex = 0
+
+            for (var i in string) {
+                var char = string[i]
+
+                switch (char) {
+                    case '(':
+                        if (parindex <= 0) lastParenthesesIndex = Number(i) // set the index of the last parentheses
+                        parindex++ // open parentheses found
+                        break
+
+                    case ')':
+                        if (string[i - 1] !== '\\') {
+                            parindex-- // closed parentheses found
+                            llastParenthesesIndex = Number(i) + 1
+                            if (parindex <= 0) {
+                                return string.substring(lastParenthesesIndex, Number(i) + 1)
+                            }
+                        }
+                        break
+                }
+            }
+
+            if (llastParenthesesIndex > -1) {
+                lastParenthesesIndex++
+                return string.substring(lastParenthesesIndex, llastParenthesesIndex)
+            }
+
+            return null
+        }
+
         poopy.functions.matchLongestKey = function (str, keys) {
             if (keys.length <= 0) return ['']
             var longest = ['']
@@ -1144,12 +1178,12 @@ class Poopy {
 
                 switch (char) {
                     case '(':
-                        var funcmatch = poopy.functions.matchLongestFunc(string.substring(0, i), funcs)
-                        var pfuncmatch = poopy.functions.matchLongestFunc(string.substring(0, i), parenthesesGoal.length <= 0 ? pfuncs : [''])
+                        var funcmatch = poopy.functions.matchLongestFunc(string.substring(0, i), funcs) // get real function
+                        var pfuncmatch = poopy.functions.matchLongestFunc(string.substring(0, i), parenthesesGoal.length <= 0 ? pfuncs : ['']) // get probable functions (like resettimer())
 
                         if (funcmatch) {
-                            parindex++
-                            lastParenthesesIndex = i
+                            parindex++ // open parentheses found
+                            lastParenthesesIndex = i // set the index of the last parentheses
                             if (!rawMatch) {
                                 var func = funclist[funcmatch[0].toLowerCase()]
                                 if (func) {
@@ -1157,16 +1191,17 @@ class Poopy {
                                         rawParenthesesIndex = i
                                         rawrequired++
                                         rawMatch = funcmatch[0].toLowerCase()
-                                    }
+                                    } // if the function is raw, activate raw setting
+
                                     if (func.parentheses) {
                                         parenthesesGoal.push(parindex - 1)
-                                    }
+                                    } // if the function uses parentheses inside, activate whole parentheses setting
                                 }
                             } else {
                                 rawrequired++
-                            }
+                            } // if the function isnt inside a raw one, execute it like normal, else add a requirement for raw parentheses
                         } else if (pfuncmatch || pfuncmatch == '') {
-                            parindex++
+                            parindex++ // open parentheses found
                             potentialindexes.push(parindex)
                         }
                         break
@@ -1199,7 +1234,7 @@ class Poopy {
                                     }
                                 }
                             }
-                            parindex--
+                            parindex-- // closed parentheses found
                         }
                         break
                 }
@@ -3798,7 +3833,7 @@ class Poopy {
             ) return
 
             var prefix = poopy.data['guild-data'][msg.guild.id]['prefix']
-            var ignored = ['eval', 'execute', 'localcommands', 'localcmds', 'servercommands', 'servercmds', 'commandassets', 'cmdassets', 'messages']
+            var ignored = ['eval', 'execute', 'localcommands', 'localcmds', 'servercommands', 'servercmds', 'commandtemplates', 'cmdtemplates', 'messages']
             var webhook = await msg.fetchWebhook().catch(() => { })
 
             if (webhook || !msg.guild || !msg.channel) return

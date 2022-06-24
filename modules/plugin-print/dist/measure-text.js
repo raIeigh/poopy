@@ -29,7 +29,7 @@ function measureText(font, text) {
           x += (font.chars[char.grapheme].xadvance || 0) + kerning;
         } else {
           var unkkerning = font.kernings['?'] && font.kernings['?'][nextchar && nextchar.grapheme] ? font.kernings['?'][nextchar && nextchar.grapheme] : 0;
-          x += (font.chars['?'].xadvance || 0) + unkkerning;
+          x += ((font.chars['?'] ? font.chars['?']['xadvance'] : 0) || 0) + unkkerning;
         }
       }
     }
