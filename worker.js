@@ -101,7 +101,7 @@ function start() {
 
   ffmpegQueue.process(maxJobsPerWorker, async (job, jobDone) => {
     await execPromise(`ffmpeg -y -i assets/${job.data.name} -vf pseudocolor out.png`)
-    jobDone(fs.readFileSync('out.png'))
+    return fs.readFileSync('out.png')
   });
 }
 
