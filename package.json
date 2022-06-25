@@ -2,7 +2,7 @@
   "name": "poopy",
   "version": "0.38.20",
   "description": "Ballfish",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -17,6 +17,7 @@
     "archiver": "^5.3.0",
     "axios": "^0.25.0",
     "body-parser": "^1.20.0",
+    "bull": "^4.8.4",
     "canvas": "^2.8.0",
     "catbox.moe": "^1.0.2",
     "cheerio": "^1.0.0-rc.10",

@@ -9,11 +9,14 @@ async function start() {
     const fileType = require('file-type')
     const axios = require('axios')
     const md5 = require('md5')
+    const Queue = require('bull')
     let globalData = require('./modules/globalData')
 
     const PORT = process.env.PORT || 8080
+    const REDIS_URL = process.env.REDIS_URL || 'redis://127.0.0.1:6379'
     const app = express()
     const eventEmitter = new EventEmitter()
+    let ffmpegQueue = new Queue('ffmpeg', REDIS_URL)
 
     app.use(cors())
     app.use(bp.json())
@@ -51,6 +54,11 @@ async function start() {
             .replace(/&quot;/g, '"')
             .replace(/&apos;/g, '\'')
     }
+
+    app.get('/api/ffmpegTest', async function (req, res) {
+        let job = await ffmpegQueue.add();
+        res.type('json').send(job)
+    })
 
     app.get('/api/waitPoopyStart', async function (req, res) {
         while (!poopyStarted) await sleep(1000)
@@ -540,6 +548,10 @@ async function start() {
     setInterval(function () {
         axios.get(`https://poopies-for-you.herokuapp.com`).catch(() => { })
     }, 300000)
+    
+    ffmpegQueue.on('global:completed', (jobId, result) => {
+        console.log(`Job completed with result ${result}`);
+    });
 
     const Poopy = require('./poopy')
 

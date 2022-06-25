@@ -1,6 +1,7 @@
 /*
     if you got access to this module, wow congrats on hacking me!!!!!
-    some cmd code is outdated, don't blame me if it takes 21389 lines
+    some cmd code is outdated, don't blame me if it uses 213789 lines
+    relating to that, im also planning to move some code into modules
     just be warned though, poopy needs a lot of environment variables
     for all the commands to work, you need to get all of these below:
 

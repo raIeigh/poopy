@@ -13,21 +13,20 @@ module.exports = {
         var phrase = string.replace(new RegExp(`${poopy.functions.regexClean(fullword)}\\s*`, 'i'), '')
         poopy.tempdata[msg.author.id]['declared'][`[${name}]`] = value
         poopy.tempdata[msg.author.id]['funcdeclared'][`[${name}]`] = {
-            func: async (matches, msg, isBot, _, opts) => {
+            func: async function (matches, msg, isBot, _, opts) {
                 var word = matches[1]
                 var split = poopy.functions.splitKeyFunc(word)
+                console.log(split)
+
                 var valOpts = { ...opts }
                 valOpts.extrafunctions.val = {
                     func: async function (matches, msg, isBot, _, opts) {
-                        let poopy = this
-                    
-                        var f = matches[0]
                         var word = matches[1]
                         var index = Number(word.replace(/\+/g, '')) <= 0 ? 0 : Math.round(Number(word.replace(/\+/g, ''))) || 0
 
                         if (word.endsWith('+')) return await poopy.functions.getKeywordsFor(split.slice(index).join(' ') || '', msg, isBot, opts).catch(() => { }) || ''
                         return await poopy.functions.getKeywordsFor(split[index] || '', msg, isBot, opts).catch(() => { }) || ''
-                      }
+                    }
                 }
 
                 return await poopy.functions.getKeywordsFor(value.replace(new RegExp(`\\[${name}\\]\\(([\\s\\S]*?)\\)`, 'ig'), poopy.tempdata[msg.author.id]['declared'][`[${name}]`] || ''), msg, isBot, valOpts).catch(() => { }) ?? ''

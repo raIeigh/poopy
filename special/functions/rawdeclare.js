@@ -13,7 +13,7 @@ module.exports = {
         var phrase = string.replace(new RegExp(`${poopy.functions.regexClean(fullword)}\\s*`, 'i'), '')
         poopy.tempdata[msg.author.id]['declared'][`{${name}}`] = value.replace(new RegExp(`\\{${name}\\}`, 'ig'), poopy.tempdata[msg.author.id]['declared'][`{${name}}`] || '')
         poopy.tempdata[msg.author.id]['keydeclared'][`{${name}}`] = {
-            func: async () => {
+            func: async function (_, msg, isBot, __, opts) {
                 return await poopy.functions.getKeywordsFor(value.replace(new RegExp(`\\{${name}\\}`, 'ig'), poopy.tempdata[msg.author.id]['declared'][`{${name}}`] || ''), msg, isBot, opts).catch(() => { }) ?? ''
             }
         }
