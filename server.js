@@ -57,8 +57,8 @@ async function start() {
 
     app.get('/api/ffmpegTest', async function (req, res) {
         let job = await ffmpegQueue.add({ name: req.query.name ?? 'babis.png' });
-        let result = await job.finished()
-        res.type('png').send(result)
+        let result = await job.finished().catch(() => { })
+        res.type('text').send(result ?? 'negored')
     })
 
     app.get('/api/ffmpegTest/:id', async function (req, res) {
