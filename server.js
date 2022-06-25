@@ -57,7 +57,18 @@ async function start() {
 
     app.get('/api/ffmpegTest', async function (req, res) {
         let job = await ffmpegQueue.add();
-        res.type('json').send(job)
+        res.type('text').send(job.id)
+    })
+
+    app.get('/api/ffmpegTest/:id', async function (req, res) {
+        let id = req.params.id;
+        let job = await ffmpegQueue.getJob(id);
+        
+        if (job === null) {
+            res.status(404).end();
+        } else {
+            res.json(job);
+        }
     })
 
     app.get('/api/waitPoopyStart', async function (req, res) {
