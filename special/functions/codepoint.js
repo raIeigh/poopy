@@ -1,6 +1,6 @@
 module.exports = {
-  helpf: '(phrase)',
-  desc: 'Removes any spaces or breaks at the start or end of phrase.',
+  helpf: '(integer)',
+  desc: 'Returns the Unicode character at the codepoint specified.',
   func: function (matches) {
     let poopy = this
 
