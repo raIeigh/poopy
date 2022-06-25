@@ -58,7 +58,7 @@ async function start() {
     app.get('/api/ffmpegTest', async function (req, res) {
         let job = await ffmpegQueue.add({ name: req.query.name ?? 'babis.png' });
         let result = await job.finished()
-        res.type('png').send(result.buffer)
+        res.type('png').send(Buffer.from(result.buffer, 'base64'))
     })
 
     app.get('/api/waitPoopyStart', async function (req, res) {

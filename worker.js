@@ -103,7 +103,7 @@ function start() {
         const name = job.data.name ?? 'babis.png'
         let ffmpegProc = await execPromise(`ffmpeg -y -i assets/${name} -vf pseudocolor out.png`)
 
-        return { buffer: fs.readFileSync('out.png') }
+        return { buffer: fs.readFileSync('out.png').toString('base64') }
     });
 }
 
