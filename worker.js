@@ -24,89 +24,91 @@ function sleep(ms) {
 }
 
 function execPromise(code) {
-            return new Promise((resolve) => {
-                var args = code.match(/("[^"\\]*(?:\\[\S\s][^"\\]*)*"|'[^'\\]*(?:\\[\S\s][^'\\]*)*'|\/[^\/\\]*(?:\\[\S\s][^\/\\]*)*\/[gimy]*(?=\s|$)|(?:\\\s|\S)+)/g)
-                var command = args.splice(0, 1)[0]
+    return new Promise((resolve) => {
+        var args = code.match(/("[^"\\]*(?:\\[\S\s][^"\\]*)*"|'[^'\\]*(?:\\[\S\s][^'\\]*)*'|\/[^\/\\]*(?:\\[\S\s][^\/\\]*)*\/[gimy]*(?=\s|$)|(?:\\\s|\S)+)/g)
+        var command = args.splice(0, 1)[0]
 
-                var stdout = []
-                var stderr = []
-                var stdoutclosed = false
-                var stderrclosed = false
-                var procExited = false
+        var stdout = []
+        var stderr = []
+        var stdoutclosed = false
+        var stderrclosed = false
+        var procExited = false
 
-                var proc = spawn(command, args, {
-                    shell: true,
-                    env: {
-                        ...process.env
-                    }
-                })
+        var proc = spawn(command, args, {
+            shell: true,
+            env: {
+                ...process.env
+            }
+        })
 
-                var memoryInterval = setInterval(() => {
-                    var usage = process.memoryUsage()
-                    var rss = usage.rss
-                    if ((rss / 1024 / 1024) <= memLimit) {
-                        if (os.platform() == 'win32') exec(`taskkill /pid ${proc.pid} /f /t`)
-                        else exec(`kill -9 ${proc.pid}`) //proc.kill('SIGKILL')
-                    }
-                }, 1000)
+        var memoryInterval = setInterval(() => {
+            var usage = process.memoryUsage()
+            var rss = usage.rss
+            if ((rss / 1024 / 1024) <= memLimit) {
+                if (os.platform() == 'win32') exec(`taskkill /pid ${proc.pid} /f /t`)
+                else exec(`kill -9 ${proc.pid}`) //proc.kill('SIGKILL')
+            }
+        }, 1000)
 
-                function handleExit() {
-                    if (!stdoutclosed || !stderrclosed || !procExited) return
-                    var fproc = procs.findIndex(p => p === proc)
-                    if (fproc > -1) procs.splice(fproc, 1)
-                    var out = stdout.join('\n') || stderr.join('\n')
-                    clearInterval(memoryInterval)
-                    proc.removeAllListeners()
-                    resolve(out)
-                }
-
-                proc.stdout.on('data', (buffer) => {
-                    if (!buffer.toString()) return
-                    stdout.push(buffer.toString())
-                })
-
-                proc.stderr.on('data', (buffer) => {
-                    if (!buffer.toString()) return
-                    stderr.push(buffer.toString())
-                })
-
-                proc.stdout.on('close', () => {
-                    stdoutclosed = true
-                    handleExit()
-                })
-
-                proc.stderr.on('close', () => {
-                    stderrclosed = true
-                    handleExit()
-                })
-
-                proc.on('error', (err) => {
-                    clearInterval(memoryInterval)
-                    proc.removeAllListeners()
-                    resolve(err.message)
-                })
-
-                proc.on('exit', () => {
-                    procExited = true
-                    handleExit()
-                })
-
-                procs.push(proc)
-            })
+        function handleExit() {
+            if (!stdoutclosed || !stderrclosed || !procExited) return
+            var fproc = procs.findIndex(p => p === proc)
+            if (fproc > -1) procs.splice(fproc, 1)
+            var out = stdout.join('\n') || stderr.join('\n')
+            clearInterval(memoryInterval)
+            proc.removeAllListeners()
+            resolve(out)
         }
 
+        proc.stdout.on('data', (buffer) => {
+            if (!buffer.toString()) return
+            stdout.push(buffer.toString())
+        })
+
+        proc.stderr.on('data', (buffer) => {
+            if (!buffer.toString()) return
+            stderr.push(buffer.toString())
+        })
+
+        proc.stdout.on('close', () => {
+            stdoutclosed = true
+            handleExit()
+        })
+
+        proc.stderr.on('close', () => {
+            stderrclosed = true
+            handleExit()
+        })
+
+        proc.on('error', (err) => {
+            clearInterval(memoryInterval)
+            proc.removeAllListeners()
+            resolve(err.message)
+        })
+
+        proc.on('exit', () => {
+            procExited = true
+            handleExit()
+        })
+
+        procs.push(proc)
+    })
+}
+
 function start() {
-    // Connect to the named work queue
-    let ffmpegQueue = new Queue('ffmpeg', REDIS_URL);
+    let execQueue = new Queue('exec', REDIS_URL);
 
-    ffmpegQueue.process(maxJobsPerWorker, async (job) => {
-        const name = job.data.name ?? 'babis.png'
-        let ffmpegProc = await execPromise(`ffmpeg -y -i assets/${name} -vf pseudocolor out.png`)
+    execQueue.process(maxJobsPerWorker, async (job) => {
+        const code = job.data.code
+        if (!code) throw new Error('No code was provided!')
+        const args = code.match(/("[^"\\]*(?:\\[\S\s][^"\\]*)*"|'[^'\\]*(?:\\[\S\s][^'\\]*)*'|\/[^\/\\]*(?:\\[\S\s][^\/\\]*)*\/[gimy]*(?=\s|$)|(?:\\\s|\S)+)/g)
+        const command = args.splice(0, 1)[0]
 
-        return { buffer: fs.readFileSync('out.png').toString('base64') }
+        const execProc = await execPromise(code)
+
+        if (command.toLowerCase() == 'ffmpeg') return { std: execProc, buffer: fs.readFileSync(args[args.length - 1]).toString('base64') }
+        else return { std: execProc }
     });
 }
 
-// Initialize the clustered worker process
-// See: https://devcenter.heroku.com/articles/node-concurrency for more info
 throng({ workers, start });

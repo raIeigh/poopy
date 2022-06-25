@@ -16,7 +16,7 @@ async function start() {
     const REDIS_URL = process.env.REDIS_URL || 'redis://127.0.0.1:6379'
     const app = express()
     const eventEmitter = new EventEmitter()
-    let ffmpegQueue = new Queue('ffmpeg', REDIS_URL)
+    const execQueue = new Queue('exec', REDIS_URL)
 
     app.use(cors())
     app.use(bp.json())
@@ -55,10 +55,14 @@ async function start() {
             .replace(/&apos;/g, '\'')
     }
 
-    app.get('/api/ffmpegTest', async function (req, res) {
-        let job = await ffmpegQueue.add({ name: req.query.name ?? 'babis.png' });
-        let result = await job.finished()
-        res.type('png').send(Buffer.from(result.buffer, 'base64'))
+    app.get('/api/demoncore', async function (req, res) {
+        let job = await execQueue.add({
+            code: 'ffmpeg -i assets/demoncore.webm -preset ultrafast -c:v libx264 -pix_fmt yuv420p demoncore.mp4'
+        });
+        let result = await job.finished().catch(() => { })
+
+        if (result) res.type('mp4').send(Buffer.from(result.buffer, 'base64'))
+        else res.status(500).send('it died')
     })
 
     app.get('/api/waitPoopyStart', async function (req, res) {
