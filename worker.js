@@ -99,17 +99,10 @@ function start() {
   // Connect to the named work queue
   let ffmpegQueue = new Queue('ffmpeg', REDIS_URL);
 
-  ffmpegQueue.process(maxJobsPerWorker, async (job, done) => {
-    // This is an example job that just slowly reports on progress
-    // while doing no work. Replace this with your own job logic.
-    await execPromise(`ffmpeg -y -i assets/babis.png -vf pseudocolor out.png`)
-
-    job.progress(100)
-    console.log(job)
-
-    // A job can return values that will be stored in Redis as JSON
-    // This return value is unused in this demo application.
-    done(fs.readFileSync('out.png'))
+  ffmpegQueue.process(maxJobsPerWorker, async (job, jobDone) => {
+    await execPromise(`ffmpeg -y -i assets/${job.data.name} -vf pseudocolor out.png`)
+    queue.close()
+    jobDone(fs.readFileSync('out.png'))
   });
 }
 
