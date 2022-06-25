@@ -100,7 +100,9 @@ function start() {
   let ffmpegQueue = new Queue('ffmpeg', REDIS_URL);
 
   ffmpegQueue.process(maxJobsPerWorker, async (job, jobDone) => {
-    await execPromise(`ffmpeg -y -i assets/${job.data.name ?? 'babis.png'} -vf pseudocolor out.png`)
+      const name = job.data.name ?? 'babis.png'
+      console.log(name)
+    await execPromise(`ffmpeg -y -i assets/${name} -vf pseudocolor out.png`).catch((e) => console.log(e))
     jobDone('fs.readFileSync(')
   });
 }
