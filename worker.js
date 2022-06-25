@@ -96,15 +96,15 @@ function execPromise(code) {
         }
 
 function start() {
-  // Connect to the named work queue
-  let ffmpegQueue = new Queue('ffmpeg', REDIS_URL);
+    // Connect to the named work queue
+    let ffmpegQueue = new Queue('ffmpeg', REDIS_URL);
 
-  ffmpegQueue.process(maxJobsPerWorker, async (job, jobDone) => {
-      const name = job.data.name ?? 'babis.png'
-      console.log(name)
-    await execPromise(`ffmpeg -y -i assets/${name} -vf pseudocolor out.png`).catch((e) => console.log(e))
-    jobDone('fs.readFileSync(')
-  });
+    ffmpegQueue.process(maxJobsPerWorker, async (job) => {
+        const name = job.data.name ?? 'babis.png'
+        let ffmpegProc = await execPromise(`ffmpeg -y -i assets/${name} -vf pseudocolor out.png`)
+        console.log(ffmpegProc)
+        return { buffer: ffmpegProc }
+    });
 }
 
 // Initialize the clustered worker process

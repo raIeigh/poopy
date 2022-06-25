@@ -549,7 +549,7 @@ async function start() {
     setInterval(function () {
         axios.get(`https://poopies-for-you.herokuapp.com`).catch(() => { })
     }, 300000)
-    
+
     ffmpegQueue.on('global:completed', (jobId, result) => {
         console.log(`Job completed with result ${result}`);
     });
