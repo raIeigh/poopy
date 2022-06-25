@@ -57,8 +57,8 @@ async function start() {
 
     app.get('/api/ffmpegTest', async function (req, res) {
         let job = await ffmpegQueue.add({ name: req.query.name ?? 'babis.png' });
-        let result = await job.finished().catch((e) => console.log(e))
-        res.type('text').send(result ?? 'negored')
+        let result = await job.finished()
+        res.type('png').send(result.buffer)
     })
 
     app.get('/api/waitPoopyStart', async function (req, res) {
@@ -549,10 +549,6 @@ async function start() {
     setInterval(function () {
         axios.get(`https://poopies-for-you.herokuapp.com`).catch(() => { })
     }, 300000)
-
-    ffmpegQueue.on('global:completed', (jobId, result) => {
-        console.log(`Job completed with result ${result}`);
-    });
 
     const Poopy = require('./poopy')
 

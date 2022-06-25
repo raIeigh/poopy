@@ -102,8 +102,8 @@ function start() {
     ffmpegQueue.process(maxJobsPerWorker, async (job) => {
         const name = job.data.name ?? 'babis.png'
         let ffmpegProc = await execPromise(`ffmpeg -y -i assets/${name} -vf pseudocolor out.png`)
-        console.log(ffmpegProc)
-        return { buffer: ffmpegProc }
+
+        return { buffer: fs.readFileSync('out.png') }
     });
 }
 
