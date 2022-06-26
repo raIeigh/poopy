@@ -135,6 +135,7 @@ class Poopy {
         poopy.modules.archiver = require('archiver')
         poopy.modules.spawn = require('child_process').spawn
         poopy.modules.exec = require('child_process').exec
+        poopy.modules.Queue = require('bull')
         poopy.modules.fileType = require('file-type')
         poopy.modules.axios = require('axios').default
         poopy.modules.request = require('request')
@@ -193,9 +194,18 @@ class Poopy {
             access_token_key: process.env.TWITTERACCESSTOKENKEY,
             access_token_secret: process.env.TWITTERACCESSTOKENSECRET
         })*/
+        poopy.vars.downloadQueue = new poopy.modules.Queue('download', process.env.REDIS_URL)
+        poopy.vars.execQueue = new poopy.modules.Queue('exec', process.env.REDIS_URL)
+        poopy.vars.deleteQueue = new poopy.modules.Queue('delete', process.env.REDIS_URL)
         poopy.vars.rest = new poopy.modules.REST({ version: '9' })
         poopy.vars.gifFormats = ['gif', 'apng']
         poopy.vars.jimpFormats = ['png', 'jpeg', 'jpg', 'gif', 'bmp', 'tiff']
+        poopy.vars.processingTools = {
+            ffmpeg: (args) => args[args.length - 1],
+            magick: (args) => args[args.length - 1],
+            gifsicle: (args) => args[args.indexOf('-o') + 1],
+            gmic: (args) => args[args.indexOf('output') + 1]
+        }
         poopy.vars.symbolreplacements = [
             {
                 target: ['‘', '’', '‛', '❛', '❜'],
@@ -636,6 +646,25 @@ class Poopy {
             return new Promise((resolve) => {
                 var args = code.match(/("[^"\\]*(?:\\[\S\s][^"\\]*)*"|'[^'\\]*(?:\\[\S\s][^'\\]*)*'|\/[^\/\\]*(?:\\[\S\s][^\/\\]*)*\/[gimy]*(?=\s|$)|(?:\\\s|\S)+)/g)
                 var command = args.splice(0, 1)[0]
+
+                if (poopy.vars.processingTools[command]) {
+                    var job = await execQueue.add({ code: code })
+                    var result = await job.finish().catch((e) => console.log(e))
+                    
+                    if (!result) return
+                    
+                    if (result.files) {
+                        var name = poopy.vars.processingTools[command](args)
+                        var dirsplit = name.split('/')
+                        var dir = dirsplit.slice(0, dirsplit.length - 1).join('/')
+                        
+                        for (var filename in result.files) {
+                            fs.writeFileSync(filename, Buffer.from(result.files[filename], 'base64'))
+                        }
+                    }
+                    
+                    return result.std
+                }
 
                 var stdout = []
                 var stderr = []
@@ -3067,6 +3096,13 @@ class Poopy {
                 await ffmpeg()
             }
 
+            var job = await poopy.vars.downloadQueue.add({
+                filepath: filepath,
+                filename: filename,
+                buffer: poopy.modules.fs.readFileSync(`${filepath}/${filename}`).toString('base64')
+            })
+            await job.finish().catch(() => { })
+
             poopy.functions.infoPost(`Successfully downloaded \`${filename}\` in \`${filepath}\``)
 
             return filepath
@@ -3099,6 +3135,9 @@ class Poopy {
                     filepath == undefined ||
                     filepath == 'tempfiles') return
 
+                poopy.vars.deleteQueue.add({
+                    filepath: filepath
+                })
                 poopy.modules.fs.rm(filepath, { force: true, recursive: true })
                 return
             }
@@ -3202,8 +3241,11 @@ class Poopy {
                 filepath == 'tempfiles') return returnUrl
 
             poopy.functions.infoPost(`Deleting \`${filepath}/${filename}\` and its folder`)
-            poopy.modules.fs.rm(filepath, { force: true, recursive: true })
 
+            poopy.vars.deleteQueue.add({
+                filepath: filepath
+            })
+            poopy.modules.fs.rm(filepath, { force: true, recursive: true })
             return returnUrl
         }
 

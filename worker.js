@@ -1,7 +1,7 @@
 let throng = require('throng');
 let Queue = require("bull");
 let os = require('os');
-let fs = require('fs-extra')
+let fs = require('fs-extra');
 let { exec, spawn } = require('child_process');
 
 // Connect to a local redis instance locally, and the Heroku-provided URL in production
@@ -19,8 +19,33 @@ let workers = process.env.WEB_CONCURRENCY || 2;
 // to be much lower.
 let maxJobsPerWorker = 50;
 
-function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
+if (!fs.existsSync('temp')) fs.mkdirSync('temp')
+
+function regexClean(str) {
+    return str.replace(/[\\^$.|?*+()[{]/g, (match) => `\\${match}`)
+}
+
+function digitRegex(filename) {
+    filename = regexClean(filename)
+    
+    var digregName = filename.replace(/%(0\d)?d/g, (dmatch) => {
+        dmatch = dmatch.substring(1)
+        if (dmatch.substring(0, dmatch.length - 1)) return `\\d{${dmatch.substring(1, dmatch.length - 1)}}`
+        else return `\\d`
+    })
+    
+    return new RegExp(digregName)
+}
+
+let processingTools = {
+    ffmpeg: (args) => args[args.length - 1],
+    magick: (args) => args[args.length - 1],
+    gifsicle: (args) => args[args.indexOf('-o') + 1],
+    gmic: (args) => args[args.indexOf('output') + 1]
+}
+
+let processingNames = {
+    gmic: 'python assets/gmic.py'
 }
 
 function execPromise(code) {
@@ -95,20 +120,73 @@ function execPromise(code) {
     })
 }
 
+function mkdirs(filepath) {
+    var folders = filepath.split('/')
+    var levels = []
+
+    folders.forEach(folder => {
+        var dir = levels.length > 0 ?
+            `${levels.join('/')}/${folder}` :
+            folder
+
+        if (!fs.existsSync(dir)) fs.mkdirSync(dir)
+        levels.push(folder)
+    })
+}
+
 function start() {
+    let downloadQueue = new Queue('download', REDIS_URL);
     let execQueue = new Queue('exec', REDIS_URL);
+    let deleteQueue = new Queue('delete', REDIS_URL);
+
+    downloadQueue.process(maxJobsPerWorker, async (job) => {
+        var data = job.data
+
+        var buffer = data.buffer
+        var filename = data.filename
+        var filepath = data.filepath
+
+        mkdirs(filepath)
+
+        fs.writeFileSync(`${filepath}/${filename}`, Buffer.from(buffer, 'base64'))
+
+        return filepath
+    })
 
     execQueue.process(maxJobsPerWorker, async (job) => {
         const code = job.data.code
         if (!code) throw new Error('No code was provided!')
-        const args = code.match(/("[^"\\]*(?:\\[\S\s][^"\\]*)*"|'[^'\\]*(?:\\[\S\s][^'\\]*)*'|\/[^\/\\]*(?:\\[\S\s][^\/\\]*)*\/[gimy]*(?=\s|$)|(?:\\\s|\S)+)/g)
-        const command = args.splice(0, 1)[0]
+        let args = code.match(/("[^"\\]*(?:\\[\S\s][^"\\]*)*"|'[^'\\]*(?:\\[\S\s][^'\\]*)*'|\/[^\/\\]*(?:\\[\S\s][^\/\\]*)*\/[gimy]*(?=\s|$)|(?:\\\s|\S)+)/g)
+        let command = args.splice(0, 1)[0]
+        let execCommand = processingNames[command] ?? command
 
-        const execProc = await execPromise(code)
+        const execProc = await execPromise(`${execCommand} ${args}`)
 
-        if (command.toLowerCase() == 'ffmpeg') return { std: execProc, buffer: fs.readFileSync(args[args.length - 1]).toString('base64') }
-        else return { std: execProc }
+        if (processingTools[command]) {
+            var name = processingTools[command](args)
+            var nameregex = digitRegex(name)
+    
+            var dirsplit = name.split('/')
+            var dir = dirsplit.slice(0, dirsplit.length - 1).join('/')
+            var files = {}
+            
+            fs.readdirSync(dir).forEach(file => {
+                if (file.match(nameregex)) files[file] = fs.readFileSync(`${dir}/${file}`).toString('base64')
+            })
+            
+            return { std: execProc, files: files }
+        } else return { std: execProc }
     });
+
+    deleteQueue.process(maxJobsPerWorker, async (job) => {
+        var data = job.data
+
+        var filepath = options.filepath
+
+        fs.rmSync(filepath, { force: true, recursive: true })
+
+        return filepath
+    })
 }
 
 throng({ workers, start });

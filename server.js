@@ -55,16 +55,6 @@ async function start() {
             .replace(/&apos;/g, '\'')
     }
 
-    app.get('/api/demoncore', async function (req, res) {
-        let job = await execQueue.add({
-            code: 'ffmpeg -i assets/demoncore.webm -preset ultrafast -c:v libx264 -pix_fmt yuv420p demoncore.mp4'
-        });
-        let result = await job.finished().catch(() => { })
-
-        if (result) res.type('mp4').send(Buffer.from(result.buffer, 'base64'))
-        else res.status(500).send('it died')
-    })
-
     app.get('/api/waitPoopyStart', async function (req, res) {
         while (!poopyStarted) await sleep(1000)
         res.end()
