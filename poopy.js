@@ -135,7 +135,6 @@ class Poopy {
         poopy.modules.archiver = require('archiver')
         poopy.modules.spawn = require('child_process').spawn
         poopy.modules.exec = require('child_process').exec
-        poopy.modules.Queue = require('bull')
         poopy.modules.fileType = require('file-type')
         poopy.modules.axios = require('axios').default
         poopy.modules.request = require('request')
@@ -194,16 +193,11 @@ class Poopy {
             access_token_key: process.env.TWITTERACCESSTOKENKEY,
             access_token_secret: process.env.TWITTERACCESSTOKENSECRET
         })*/
-        poopy.vars.workQueue = new poopy.modules.Queue('work', process.env.REDIS_URL)
+        poopy.vars.workQueue = require('./modules/workQueue')
         poopy.vars.rest = new poopy.modules.REST({ version: '9' })
         poopy.vars.gifFormats = ['gif', 'apng']
         poopy.vars.jimpFormats = ['png', 'jpeg', 'jpg', 'gif', 'bmp', 'tiff']
-        poopy.vars.processingTools = {
-            ffmpeg: (args) => args[args.length - 1],
-            magick: (args) => args[args.length - 1],
-            gifsicle: (args) => args[args.indexOf('-o') + 1],
-            gmic: (args) => args[args.indexOf('output') + 1]
-        }
+        poopy.vars.processingTools = require('./modules/processingTools').args
         poopy.vars.symbolreplacements = [
             {
                 target: ['‘', '’', '‛', '❛', '❜'],

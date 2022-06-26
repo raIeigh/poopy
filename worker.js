@@ -1,11 +1,10 @@
 let throng = require('throng');
-let Queue = require("bull");
+let workQueue = require('./modules/workQueue');
 let os = require('os');
 let fs = require('fs-extra');
 let { exec, spawn } = require('child_process');
 
 // Connect to a local redis instance locally, and the Heroku-provided URL in production
-let REDIS_URL = process.env.REDIS_URL || "redis://127.0.0.1:6379";
 let memLimit = 0;
 let procs = [];
 
@@ -37,16 +36,7 @@ function digitRegex(filename) {
     return new RegExp(digregName)
 }
 
-let processingTools = {
-    ffmpeg: (args) => args[args.length - 1],
-    magick: (args) => args[args.length - 1],
-    gifsicle: (args) => args[args.indexOf('-o') + 1],
-    gmic: (args) => args[args.indexOf('output') + 1]
-}
-
-let processingNames = {
-    gmic: 'python assets/gmic.py'
-}
+let processingTools = require('./modules/processingTools')
 
 function execPromise(code) {
     return new Promise((resolve) => {
@@ -156,17 +146,21 @@ function start() {
         if (!code) throw new Error('No code was provided!')
         let args = code.match(/("[^"\\]*(?:\\[\S\s][^"\\]*)*"|'[^'\\]*(?:\\[\S\s][^'\\]*)*'|\/[^\/\\]*(?:\\[\S\s][^\/\\]*)*\/[gimy]*(?=\s|$)|(?:\\\s|\S)+)/g)
         let command = args.splice(0, 1)[0]
-        let execCommand = processingNames[command] ?? command
+        let execCommand = processingTools.names[command] ?? command
 
         const execProc = await execPromise(`${execCommand} ${args}`)
 
-        if (processingTools[command]) {
-            var name = processingTools[command](args)
+        if (processingTools.args[command]) {
+            var name = processingTools.args[command](args)
             var nameregex = digitRegex(name)
     
             var dirsplit = name.split('/')
             var dir = dirsplit.slice(0, dirsplit.length - 1).join('/')
             var files = {}
+            
+            mkdirs(dir)
+            console.log(dir)
+            console.log(nameregex)
             
             fs.readdirSync(dir).forEach(file => {
                 if (file.match(nameregex)) files[file] = fs.readFileSync(`${dir}/${file}`).toString('base64')

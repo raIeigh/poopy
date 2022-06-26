@@ -15,6 +15,7 @@ module.exports = function (msg, fixedchoice) {
     const characters = ['dad', 'gf', 'pico', 'skid and pump', 'monster', 'mom', 'senpai', 'tankman', 'whitty', 'carol', 'hex', 'ruv', 'sarvente', 'miku', 'tricky', 'zardy', 'matt', 'garcello', 'shaggy', 'annie', 'cheeky', 'bob', 'tabi', 'agoti', 'kapi', 'neon', 'nene', 'monika', 'selever', 'tord', 'impostor', 'trollge', 'tree', 'nonsense', 'hypno', 'sonic.exe', 'sonic.exe', 'sonic.exe', 'sonic.exe', 'morbius', 'deinx', 'ralsei', 'kris', 'susie', 'berdly', 'nikocado', 'ness', 'giygas', 'tails doll', 'lord x', 'tbh', 'sans', 'cuphead', 'bendy', 'niko', 'joe biden', 'sprigatito']
     const locations = ['home', 'bedroom', 'car', 'bus', 'garden', 'museum', 'hotel', 'festival', 'fair', 'park', 'kitchen', 'toilet', 'farm', 'cinema', 'restaurant', 'school', 'plane', 'train', 'store', 'shopping', 'elevator', 'forest', 'swamp', 'mountain', 'desert', 'island', 'heaven', 'hell']
     const consoles = ['pc', 'mobile', 'tablet', 'xbox', 'nintendo switch', 'nintendo 3ds', 'nintendo 2ds', 'psp', 'ps1', 'ps2', 'gamecube', 'ps3', 'ps4', 'ps5', 'wii', 'xbox 360', 'xbox one', 'gameboy', 'nintendo 64', 'sega genesis', 'wii u']
+    const what = ['boobs', 'breasts', 'cleavage', 'bosoms', 'pussy', 'vagina', 'ass', 'ass', 'ass', 'ass', 'ass', 'butt', 'buttocks', 'bum', 'bussy', 'boy pussy', 'penis', 'cock', 'dick', 'balls', 'testicles', 'scrotum', 'perineum', 'thighs', 'legs', 'mouth', 'feet', 'cum', 'foreskin', 'pubes', 'tits', 'titties', 'areolas', 'milkers']
     const options = [
         { text: `im in a ${locations[Math.floor(Math.random() * locations.length)]}` },
         { text: 'lol https://tenor.com/view/sus-suspect-among-us-gif-18663592' },
@@ -73,6 +74,8 @@ module.exports = function (msg, fixedchoice) {
         { pings: true, text: `they hit the ${keys._animal.func.call(poopy)}` },
         { text: 'WHU', edit: 'WHY' },
         { text: 'nopw', edit: 'nope' },
+        { text: `${keys._persontype.func.call(poopy)}  I ate your ${what[Math.floor(Math.random() * what.length)]}` },
+        { text: `u like ${characters[Math.floor(Math.random() * characters.length)]}s ${what[Math.floor(Math.random() * what.length)]}` },
         { pings: true, text: 'WHY' },
         { pings: true, text: `you are ${keys._insult.func.call(poopy)}` },
         { pings: true, text: `you are ${keys._compliment.func.call(poopy)}` },
