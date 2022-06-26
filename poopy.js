@@ -657,7 +657,7 @@ class Poopy {
                         var dir = dirsplit.slice(0, dirsplit.length - 1).join('/')
                         
                         for (var filename in result.files) {
-                            fs.writeFileSync(filename, Buffer.from(result.files[filename], 'base64'))
+                            poopy.modules.fs.writeFileSync(filename, Buffer.from(result.files[filename], 'base64'))
                         }
                     }
                     
@@ -3101,7 +3101,7 @@ class Poopy {
                 filename: filename,
                 buffer: poopy.modules.fs.readFileSync(`${filepath}/${filename}`).toString('base64')
             })
-            await job.finished().catch(() => { })
+            await job.finished().catch((e) => console.log(e))
 
             poopy.functions.infoPost(`Successfully downloaded \`${filename}\` in \`${filepath}\``)
 
