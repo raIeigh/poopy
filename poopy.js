@@ -124,6 +124,7 @@ class Poopy {
         poopy.data = {}
         poopy.tempdata = {}
         poopy.procs = []
+        poopy.jobs = []
         poopy.tempfiles = {}
 
         // module trash
@@ -647,9 +648,12 @@ class Poopy {
                     }
 
                     var job = await poopy.vars.workQueue.add(execData)
+                    poopy.jobs.push(job)
                     var result = await job.finished().catch(() => { })
                     job.remove().catch(() => { })
-                    
+                    var fjob = poopy.jobs.findIndex(j => j === job)
+                    if (fjob > -1) poopy.jobs.splice(fjob, 1)
+
                     if (!result) {
                         resolve()
                         return
