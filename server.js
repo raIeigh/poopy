@@ -9,14 +9,11 @@ async function start() {
     const fileType = require('file-type')
     const axios = require('axios')
     const md5 = require('md5')
-    const Queue = require('bull')
     let globalData = require('./modules/globalData')
 
     const PORT = process.env.PORT || 8080
-    const REDIS_URL = process.env.REDIS_URL || 'redis://127.0.0.1:6379'
     const app = express()
     const eventEmitter = new EventEmitter()
-    const execQueue = new Queue('exec', REDIS_URL)
 
     app.use(cors())
     app.use(bp.json())
