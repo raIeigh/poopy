@@ -137,15 +137,18 @@ function start() {
 
         fs.writeFileSync(`${filepath}/${filename}`, Buffer.from(buffer, 'base64'))
 
-        return filepath
+        return { filepath: filepath }
     }
 
     let execJob = async (job) => {
         let code = job.data.code
         if (!code) throw new Error('No code was provided!')
+        
         let args = code.split(' ')
         let command = args[0] = processingTools.names[args[0]] ?? args[0]
         code = args.join(' ')
+
+        console.log(code)
 
         const execProc = await execPromise(code)
 
@@ -166,6 +169,8 @@ function start() {
                 if (file.match(nameregex)) files[file] = fs.readFileSync(`${dir}/${file}`).toString('base64')
             })
             
+            console.log(execProc)
+            
             return { std: execProc, files: files }
         } else return { std: execProc }
     }
@@ -177,7 +182,7 @@ function start() {
 
         fs.rmSync(filepath, { force: true, recursive: true })
 
-        return filepath
+        return { filepath: filepath }
     }
 
     workQueue.process(maxJobsPerWorker, async (job) => {
