@@ -132,6 +132,7 @@ class Poopy {
         poopy.modules.Routes = require('discord-api-types/v9').Routes
         poopy.modules.DiscordBuilders = require('@discordjs/builders')
         poopy.modules.fs = require('fs-extra')
+        poopy.modules.nodefs = require('fs')
         poopy.modules.archiver = require('archiver')
         poopy.modules.spawn = require('child_process').spawn
         poopy.modules.exec = require('child_process').exec
@@ -223,7 +224,29 @@ class Poopy {
         poopy.vars.statusChanges = 'true'
         poopy.vars.filecount = 0
         poopy.vars.cps = 0
-        //poopy.vars.chromeWindow = false
+
+        // we're making these work with redis now
+        var jimpwrite = poopy.modules.util.promisify(poopy.modules.Jimp.prototype.write)
+        poopy.modules.Jimp.prototype.write = function (path, cb) {
+            var img = this
+            
+            return (async function() {
+                await jimpwrite.call(img, path, cb)
+                
+                var dirsplit = path.split('/')
+                
+                var name = dirsplit.splice(dirsplit.length - 1, 1)[0]
+                var dir = dirsplit.join('/')
+                
+                var job = await poopy.vars.workQueue.add({
+                    type: 'download',
+                    filepath: dir,
+                    filename: name,
+                    buffer: poopy.modules.fs.readFileSync(path).toString('base64')
+                })
+                await job.finished().catch(() => { })
+            })()
+        }
 
         poopy.statuses = [
             {
@@ -3076,6 +3099,14 @@ class Poopy {
             if (options.buffer) {
                 poopy.functions.infoPost(`Downloading file through buffer with name \`${filename}\``)
                 poopy.modules.fs.writeFileSync(`${filepath}/${filename}`, url)
+
+                var job = await poopy.vars.workQueue.add({
+                    type: 'download',
+                    filepath: filepath,
+                    filename: filename,
+                    buffer: url.toString('base64')
+                })
+                await job.finished().catch(() => { })
             } else if (((!(options.fileinfo) ? true : ((options.fileinfo.shortext === options.fileinfo.type.ext) && (options.fileinfo.shortpixfmt === options.fileinfo.info.pixfmt))) || options.http) && !(options.ffmpeg)) {
                 poopy.functions.infoPost(`Downloading file through URL with name \`${filename}\``)
                 var response = await poopy.modules.axios.request({
@@ -3086,6 +3117,14 @@ class Poopy {
 
                 if (response) {
                     poopy.modules.fs.writeFileSync(`${filepath}/${filename}`, response.data)
+
+                    var job = await poopy.vars.workQueue.add({
+                        type: 'download',
+                        filepath: filepath,
+                        filename: filename,
+                        buffer: response.data.toString('base64')
+                    })
+                    await job.finished().catch(() => { })
                 }
             } else {
                 await ffmpeg()
@@ -3094,14 +3133,6 @@ class Poopy {
             if (options.convert && !ffmpegUsed) {
                 await ffmpeg()
             }
-
-            var job = await poopy.vars.workQueue.add({
-                type: 'download',
-                filepath: filepath,
-                filename: filename,
-                buffer: poopy.modules.fs.readFileSync(`${filepath}/${filename}`).toString('base64')
-            })
-            await job.finished().catch((e) => console.log(e))
 
             poopy.functions.infoPost(`Successfully downloaded \`${filename}\` in \`${filepath}\``)
 

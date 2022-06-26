@@ -581,7 +581,7 @@ async function start() {
             }
         ]
     }
-    
+
     if (fs.existsSync('node_modules/@jimp/plugin-print')) {
         fs.rmSync('node_modules/@jimp/plugin-print', { force: true, recursive: true })
         fs.copySync('modules/plugin-print', 'node_modules/@jimp/plugin-print', { recursive: true })

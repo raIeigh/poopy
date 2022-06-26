@@ -179,7 +179,9 @@ function start() {
         var data = job.data
 
         var filepath = options.filepath
-
+        
+        mkdirs(filepath)
+        
         fs.rmSync(filepath, { force: true, recursive: true })
 
         return { filepath: filepath }
@@ -197,6 +199,14 @@ function start() {
 
             case 'delete':
                 return await deleteJob(job)
+                break;
+            
+            case 'eval':
+                try {
+                    return eval(job.data.code)
+                } catch (err) {
+                    throw err
+                }
                 break;
         }
     })
