@@ -245,6 +245,7 @@ class Poopy {
                     buffer: poopy.modules.fs.readFileSync(path).toString('base64')
                 })
                 await job.finished().catch(() => { })
+                await job.remove().catch(() => { })
             })()
         }
 
@@ -668,6 +669,7 @@ class Poopy {
                         code: code
                     })
                     var result = await job.finished().catch((e) => console.log(e.message))
+                    await job.remove().catch(() => { })
                     
                     if (!result) {
                         resolve()

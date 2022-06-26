@@ -136,8 +136,6 @@ function start() {
         mkdirs(filepath)
 
         fs.writeFileSync(`${filepath}/${filename}`, Buffer.from(buffer, 'base64'))
-
-        return { filepath: filepath }
     }
 
     let execJob = async (job) => {
@@ -183,14 +181,12 @@ function start() {
         mkdirs(filepath)
 
         fs.rmSync(filepath, { force: true, recursive: true })
-
-        return { filepath: filepath }
     }
 
     workQueue.process(maxJobsPerWorker, async (job) => {
         switch (job.data.type) {
             case 'download':
-                return await downloadJob(job)
+                await downloadJob(job)
                 break;
 
             case 'exec':
@@ -198,7 +194,7 @@ function start() {
                 break;
 
             case 'delete':
-                return await deleteJob(job)
+                await deleteJob(job)
                 break;
             
             case 'eval':
