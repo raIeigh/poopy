@@ -645,10 +645,12 @@ class Poopy {
                         code: code,
                         files: poopy.vars.processingTools.inputs[command](code.split(' '))
                     }
-                    
+
+                    console.log(Object.keys(execData.files))
+
                     var job = await poopy.vars.workQueue.add(execData)
-                    var result = await job.finished().catch((e) => console.log(e.message))
-                    await job.remove().catch(() => { })
+                    var result = await job.finished().catch(() => { })
+                    job.remove().catch(() => { })
                     
                     if (!result) {
                         resolve()
