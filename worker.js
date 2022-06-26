@@ -143,11 +143,11 @@ function start() {
     let execJob = async (job) => {
         const code = job.data.code
         if (!code) throw new Error('No code was provided!')
-        let args = code.match(/("[^"\\]*(?:\\[\S\s][^"\\]*)*"|'[^'\\]*(?:\\[\S\s][^'\\]*)*'|\/[^\/\\]*(?:\\[\S\s][^\/\\]*)*\/[gimy]*(?=\s|$)|(?:\\\s|\S)+)/g)
-        let command = args.splice(0, 1)[0]
-        let execCommand = processingTools.names[command] ?? command
+        let args = code.split(' ')
+        let command = args[0] = processingTools.names[args[0]] ?? args[0]
+        code = args.join(' ')
 
-        const execProc = await execPromise(`${execCommand} ${args}`)
+        const execProc = await execPromise(code)
 
         if (processingTools.args[command]) {
             var filedir = processingTools.args[command](args)
@@ -165,8 +165,6 @@ function start() {
             fs.readdirSync(dir).forEach(file => {
                 if (file.match(nameregex)) files[file] = fs.readFileSync(`${dir}/${file}`).toString('base64')
             })
-            
-            console.log(execProc)
             
             return { std: execProc, files: files }
         } else return { std: execProc }
