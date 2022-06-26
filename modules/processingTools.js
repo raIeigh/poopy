@@ -6,13 +6,13 @@ function regexClean(str) {
 
 function digitRegex(filename) {
     filename = regexClean(filename)
-    
+
     var digregName = filename.replace(/%(0\d)?d/g, (dmatch) => {
         dmatch = dmatch.substring(1)
         if (dmatch.substring(0, dmatch.length - 1)) return `\\d{${dmatch.substring(1, dmatch.length - 1)}}`
         else return `\\d`
     })
-    
+
     return new RegExp(digregName)
 }
 
@@ -27,14 +27,14 @@ function dir_name(filedir) {
 module.exports = {
     inputs: {
         ffmpeg: (args) => {
-            var inputs = []
+            var inputs = {}
 
             for (var i in args) {
                 var arg = args[i]
-                
+
                 if (arg == '-i') {
                     var file = args[Number(i) + 1]
-                    
+
                     if (file.startsWith('temp/')) {
                         var [dir, name] = dir_name(file)
                         var nameregex = digitRegex(name)
@@ -61,7 +61,7 @@ module.exports = {
             }
             return inputs
         },
-        
+
         magick: (args) => {
             var inputs = []
 
@@ -82,11 +82,11 @@ module.exports = {
             }
             return inputs
         },
-        
+
         gifsicle: (args) => {
             return args[args.length - 1]
         },
-        
+
         gmic: (args) => {
             var inputs = []
 
@@ -115,7 +115,7 @@ module.exports = {
         gifsicle: (args) => args[args.indexOf('-o') + 1],
         gmic: (args) => args[args.indexOf('output') + 1]
     },
-    
+
     names: {
         gmic: 'python assets/gmic.py'
     }

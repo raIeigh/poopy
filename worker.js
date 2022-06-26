@@ -140,6 +140,7 @@ function start(id) {
     }
 
     let execJob = async (job) => {
+        console.log(job.files)
         let code = job.data.code
         if (!code) throw new Error('No code was provided!')
 
@@ -184,7 +185,7 @@ function start(id) {
     let deleteJob = async (job) => {
         var data = job.data
 
-        var filepath = options.filepath
+        var filepath = data.filepath
 
         mkdirs(filepath)
 
@@ -198,8 +199,7 @@ function start(id) {
                 break;
 
             case 'exec':
-                return await execJob(job)
-                break;
+                return await execJob(job);
 
             case 'delete':
                 await deleteJob(job)
@@ -210,10 +210,11 @@ function start(id) {
                     return { value: eval(job.data.code) }
                 } catch (err) {
                     throw { err: err.stack }
-                }
-                break;
+                };
         }
     })
+
+    console.log(`worker ${id} started`)
 }
 
 throng({ workers, start });
