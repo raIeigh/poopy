@@ -644,7 +644,7 @@ class Poopy {
                         type: 'exec',
                         code: code
                     })
-                    var result = await job.finished().catch(() => { })
+                    var result = await job.finished().catch((e) => console.log(e))
                     
                     if (!result) {
                         resolve()

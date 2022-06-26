@@ -166,8 +166,6 @@ function start() {
                 if (file.match(nameregex)) files[file] = fs.readFileSync(`${dir}/${file}`).toString('base64')
             })
             
-            console.log(files)
-            
             return { std: execProc, files: files }
         } else return { std: execProc }
     }
@@ -183,6 +181,7 @@ function start() {
     }
 
     workQueue.process(maxJobsPerWorker, async (job) => {
+        console.log(job.data.type)
         switch (job.data.type) {
             case 'download':
                 return await downloadJob(job)
