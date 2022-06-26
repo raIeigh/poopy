@@ -1,5 +1,4 @@
 let throng = require('throng');
-let workQueue = require('./modules/workQueue');
 let os = require('os');
 let fs = require('fs-extra');
 let { exec, spawn } = require('child_process');
@@ -125,7 +124,7 @@ function mkdirs(filepath) {
 }
 
 function start() {
-    let workQueue = new Queue('work', REDIS_URL);
+    let workQueue = require('./modules/workQueue');
 
     let downloadJob = async (job) => {
         var data = job.data
