@@ -643,7 +643,7 @@ class Poopy {
         }
 
         poopy.functions.execPromise = function (code) {
-            return new Promise((resolve) => {
+            return new Promise(async (resolve) => {
                 var args = code.match(/("[^"\\]*(?:\\[\S\s][^"\\]*)*"|'[^'\\]*(?:\\[\S\s][^'\\]*)*'|\/[^\/\\]*(?:\\[\S\s][^\/\\]*)*\/[gimy]*(?=\s|$)|(?:\\\s|\S)+)/g)
                 var command = args.splice(0, 1)[0]
 
@@ -651,7 +651,10 @@ class Poopy {
                     var job = await execQueue.add({ code: code })
                     var result = await job.finish().catch((e) => console.log(e))
                     
-                    if (!result) return
+                    if (!result) {
+                        resolve()
+                        return
+                    }
                     
                     if (result.files) {
                         var name = poopy.vars.processingTools[command](args)
@@ -663,7 +666,8 @@ class Poopy {
                         }
                     }
                     
-                    return result.std
+                    resolve(result.std)
+                    return
                 }
 
                 var stdout = []
