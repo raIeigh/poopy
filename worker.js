@@ -122,12 +122,20 @@ function execPromise(code) {
     })
 }
 
+async function master() {
+    let workQueue = require('./modules/workQueue')();
+
+    var waiting = await workQueue.getWaiting().catch(() => { })
+
+    console.log(waiting)
+
+    await workQueue.obliterate({ force: true }).catch(() => { })
+
+    workQueue.close()
+}
 
 async function start(id) {
     let workQueue = require('./modules/workQueue')();
-    if (id == 1) {
-        await workQueue.obliterate({ force: true }).catch(() => { })
-    }
 
     let downloadJob = async (job) => {
         var data = job.data
@@ -218,4 +226,4 @@ async function start(id) {
     console.log(`worker ${id} started`)
 }
 
-throng({ workers, start });
+throng({ workers, master, start });
