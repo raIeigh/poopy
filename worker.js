@@ -135,11 +135,9 @@ function mkdirs(filepath) {
 }
 
 function start() {
-    let downloadQueue = new Queue('download', REDIS_URL);
-    let execQueue = new Queue('exec', REDIS_URL);
-    let deleteQueue = new Queue('delete', REDIS_URL);
+    let workQueue = new Queue('work', REDIS_URL);
 
-    downloadQueue.process(maxJobsPerWorker, async (job) => {
+    let downloadJob = async (job) => {
         var data = job.data
 
         var buffer = data.buffer
@@ -151,9 +149,9 @@ function start() {
         fs.writeFileSync(`${filepath}/${filename}`, Buffer.from(buffer, 'base64'))
 
         return filepath
-    })
+    }
 
-    execQueue.process(maxJobsPerWorker, async (job) => {
+    let execJob = async (job) => {
         const code = job.data.code
         if (!code) throw new Error('No code was provided!')
         let args = code.match(/("[^"\\]*(?:\\[\S\s][^"\\]*)*"|'[^'\\]*(?:\\[\S\s][^'\\]*)*'|\/[^\/\\]*(?:\\[\S\s][^\/\\]*)*\/[gimy]*(?=\s|$)|(?:\\\s|\S)+)/g)
@@ -176,9 +174,9 @@ function start() {
             
             return { std: execProc, files: files }
         } else return { std: execProc }
-    });
+    }
 
-    deleteQueue.process(maxJobsPerWorker, async (job) => {
+    let deleteJob = async (job) => {
         var data = job.data
 
         var filepath = options.filepath
@@ -186,6 +184,22 @@ function start() {
         fs.rmSync(filepath, { force: true, recursive: true })
 
         return filepath
+    }
+
+    workQueue.process(maxJobsPerWorker, async (job) => {
+        switch (job.data.type) {
+            case 'download':
+                return await downloadJob(job)
+                break;
+
+            case 'exec':
+                return await execJob(job)
+                break;
+
+            case 'delete':
+                return await deleteJob(job)
+                break;
+        }
     })
 }
 

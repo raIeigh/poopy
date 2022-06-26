@@ -194,9 +194,7 @@ class Poopy {
             access_token_key: process.env.TWITTERACCESSTOKENKEY,
             access_token_secret: process.env.TWITTERACCESSTOKENSECRET
         })*/
-        poopy.vars.downloadQueue = new poopy.modules.Queue('download', process.env.REDIS_URL)
-        poopy.vars.execQueue = new poopy.modules.Queue('exec', process.env.REDIS_URL)
-        poopy.vars.deleteQueue = new poopy.modules.Queue('delete', process.env.REDIS_URL)
+        poopy.vars.workQueue = new poopy.modules.Queue('work', process.env.REDIS_URL)
         poopy.vars.rest = new poopy.modules.REST({ version: '9' })
         poopy.vars.gifFormats = ['gif', 'apng']
         poopy.vars.jimpFormats = ['png', 'jpeg', 'jpg', 'gif', 'bmp', 'tiff']
@@ -648,7 +646,10 @@ class Poopy {
                 var command = args.splice(0, 1)[0]
 
                 if (poopy.vars.processingTools[command]) {
-                    var job = await poopy.vars.execQueue.add({ code: code })
+                    var job = await poopy.vars.workQueue.add({
+                        type: 'exec',
+                        code: code
+                    })
                     var result = await job.finished().catch((e) => console.log(e))
                     
                     if (!result) {
@@ -3100,7 +3101,8 @@ class Poopy {
                 await ffmpeg()
             }
 
-            var job = await poopy.vars.downloadQueue.add({
+            var job = await poopy.vars.workQueue.add({
+                type: 'download',
                 filepath: filepath,
                 filename: filename,
                 buffer: poopy.modules.fs.readFileSync(`${filepath}/${filename}`).toString('base64')
@@ -3139,7 +3141,8 @@ class Poopy {
                     filepath == undefined ||
                     filepath == 'tempfiles') return
 
-                poopy.vars.deleteQueue.add({
+                poopy.vars.workQueue.add({
+                    type: 'delete',
                     filepath: filepath
                 })
                 poopy.modules.fs.rm(filepath, { force: true, recursive: true })
@@ -3246,7 +3249,8 @@ class Poopy {
 
             poopy.functions.infoPost(`Deleting \`${filepath}/${filename}\` and its folder`)
 
-            poopy.vars.deleteQueue.add({
+            poopy.vars.workQueue.add({
+                type: 'delete',
                 filepath: filepath
             })
             poopy.modules.fs.rm(filepath, { force: true, recursive: true })
