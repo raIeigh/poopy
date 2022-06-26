@@ -123,9 +123,11 @@ function execPromise(code) {
 }
 
 
-function start(id) {
+async function start(id) {
     let workQueue = require('./modules/workQueue')();
-    if (id == 1) workQueue.obliterate().catch(() => { })
+    if (id == 1) {
+        await workQueue.obliterate({ force: true }).catch(() => { })
+    }
 
     let downloadJob = async (job) => {
         var data = job.data
