@@ -141,7 +141,7 @@ function start() {
     }
 
     let execJob = async (job) => {
-        const code = job.data.code
+        let code = job.data.code
         if (!code) throw new Error('No code was provided!')
         let args = code.split(' ')
         let command = args[0] = processingTools.names[args[0]] ?? args[0]
@@ -181,7 +181,6 @@ function start() {
     }
 
     workQueue.process(maxJobsPerWorker, async (job) => {
-        console.log(job.data.type)
         switch (job.data.type) {
             case 'download':
                 return await downloadJob(job)
