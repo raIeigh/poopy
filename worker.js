@@ -150,20 +150,23 @@ function start() {
         const execProc = await execPromise(`${execCommand} ${args}`)
 
         if (processingTools.args[command]) {
-            var name = processingTools.args[command](args)
-            var nameregex = digitRegex(name)
+            var filedir = processingTools.args[command](args)
     
-            var dirsplit = name.split('/')
-            var dir = dirsplit.slice(0, dirsplit.length - 1).join('/')
+            var dirsplit = filedir.split('/')
+            
+            var name = dirsplit.splice(dirsplit.length - 1, 1)[0]
+            var nameregex = digitRegex(name)
+            
+            var dir = dirplit.join('/')
             var files = {}
             
             mkdirs(dir)
-            console.log(dir)
-            console.log(nameregex)
             
             fs.readdirSync(dir).forEach(file => {
                 if (file.match(nameregex)) files[file] = fs.readFileSync(`${dir}/${file}`).toString('base64')
             })
+            
+            console.log(files)
             
             return { std: execProc, files: files }
         } else return { std: execProc }
