@@ -124,7 +124,7 @@ function execPromise(code) {
 
 
 function start(id) {
-    let workQueue = require('./modules/workQueue');
+    let workQueue = require('./modules/workQueue')();
     if (id == 1) workQueue.obliterate().catch(() => { })
 
     let downloadJob = async (job) => {
@@ -140,7 +140,6 @@ function start(id) {
     }
 
     let execJob = async (job) => {
-        console.log(job.files)
         let code = job.data.code
         if (!code) throw new Error('No code was provided!')
 

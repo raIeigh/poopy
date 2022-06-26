@@ -194,7 +194,7 @@ class Poopy {
             access_token_key: process.env.TWITTERACCESSTOKENKEY,
             access_token_secret: process.env.TWITTERACCESSTOKENSECRET
         })*/
-        poopy.vars.workQueue = require('./modules/workQueue')
+        poopy.vars.workQueue = require('./modules/workQueue')()
         poopy.vars.rest = new poopy.modules.REST({ version: '9' })
         poopy.vars.gifFormats = ['gif', 'apng']
         poopy.vars.jimpFormats = ['png', 'jpeg', 'jpg', 'gif', 'bmp', 'tiff']
