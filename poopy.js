@@ -674,15 +674,13 @@ class Poopy {
                         return
                     }
                     
-                    console.log(result)
-                    
                     if (result.files) {
                         var name = poopy.vars.processingTools[command](args)
                         var dirsplit = name.split('/')
                         var dir = dirsplit.slice(0, dirsplit.length - 1).join('/')
                         
                         for (var filename in result.files) {
-                            poopy.modules.fs.writeFileSync(filename, Buffer.from(result.files[filename], 'base64'))
+                            poopy.modules.fs.writeFileSync(`${dir}/${filename}`, Buffer.from(result.files[filename], 'base64'))
                         }
                     }
                     
