@@ -148,36 +148,40 @@ function start() {
         let command = args[0] = processingTools.names[args[0]] ?? args[0]
         code = args.join(' ')
 
-        const execProc = await execPromise(code)
-
         if (processingTools.args[command]) {
             var filedir = processingTools.args[command](args)
     
             var dirsplit = filedir.split('/')
-            
+
             var name = dirsplit.splice(dirsplit.length - 1, 1)[0]
             var nameregex = digitRegex(name)
-            
+
             var dir = dirsplit.join('/')
             var files = {}
-            
+
             mkdirs(dir)
+
+            const execProc = await execPromise(code)
 
             fs.readdirSync(dir).forEach(file => {
                 if (file.match(nameregex)) files[file] = fs.readFileSync(`${dir}/${file}`).toString('base64')
             })
 
             return { std: execProc, files: files }
-        } else return { std: execProc }
+        } else {
+            const execProc = await execPromise(code)
+
+            return { std: execProc }
+        }
     }
 
     let deleteJob = async (job) => {
         var data = job.data
 
         var filepath = options.filepath
-        
+
         mkdirs(filepath)
-        
+
         fs.rmSync(filepath, { force: true, recursive: true })
 
         return { filepath: filepath }
