@@ -198,7 +198,7 @@ class Poopy {
         poopy.vars.rest = new poopy.modules.REST({ version: '9' })
         poopy.vars.gifFormats = ['gif', 'apng']
         poopy.vars.jimpFormats = ['png', 'jpeg', 'jpg', 'gif', 'bmp', 'tiff']
-        poopy.vars.processingTools = require('./modules/processingTools').args
+        poopy.vars.processingTools = require('./modules/processingTools')
         poopy.vars.symbolreplacements = [
             {
                 target: ['‘', '’', '‛', '❛', '❜'],
@@ -224,30 +224,6 @@ class Poopy {
         poopy.vars.statusChanges = 'true'
         poopy.vars.filecount = 0
         poopy.vars.cps = 0
-
-        // we're making these work with redis now
-        var jimpwrite = poopy.modules.util.promisify(poopy.modules.Jimp.prototype.write)
-        poopy.modules.Jimp.prototype.write = function (path, cb) {
-            var img = this
-            
-            return (async function() {
-                await jimpwrite.call(img, path, cb)
-                
-                var dirsplit = path.split('/')
-                
-                var name = dirsplit.splice(dirsplit.length - 1, 1)[0]
-                var dir = dirsplit.join('/')
-                
-                var job = await poopy.vars.workQueue.add({
-                    type: 'download',
-                    filepath: dir,
-                    filename: name,
-                    buffer: poopy.modules.fs.readFileSync(path).toString('base64')
-                })
-                await job.finished().catch(() => { })
-                await job.remove().catch(() => { })
-            })()
-        }
 
         poopy.statuses = [
             {
@@ -663,11 +639,14 @@ class Poopy {
                 var args = code.match(/("[^"\\]*(?:\\[\S\s][^"\\]*)*"|'[^'\\]*(?:\\[\S\s][^'\\]*)*'|\/[^\/\\]*(?:\\[\S\s][^\/\\]*)*\/[gimy]*(?=\s|$)|(?:\\\s|\S)+)/g)
                 var command = args.splice(0, 1)[0]
 
-                if (poopy.vars.processingTools[command]) {
-                    var job = await poopy.vars.workQueue.add({
+                if (poopy.vars.processingTools.inputs[command]) {
+                    var execData = {
                         type: 'exec',
-                        code: code
-                    })
+                        code: code,
+                        files: poopy.vars.processingTools.inputs[command](code.split(' '))
+                    }
+                    
+                    var job = await poopy.vars.workQueue.add(execData)
                     var result = await job.finished().catch((e) => console.log(e.message))
                     await job.remove().catch(() => { })
                     
@@ -677,7 +656,7 @@ class Poopy {
                     }
                     
                     if (result.files) {
-                        var name = poopy.vars.processingTools[command](args)
+                        var name = poopy.vars.processingTools.outputs[command](args)
                         var dirsplit = name.split('/')
                         var dir = dirsplit.slice(0, dirsplit.length - 1).join('/')
                         
@@ -1239,12 +1218,12 @@ class Poopy {
                             parindex++ // open parentheses found
                             lastParenthesesIndex = i // set the index of the last parentheses
                             if (!rawMatch) {
-                                var func = funclist[funcmatch[0].toLowerCase()]
+                                var func = funclist[funcmatch[0]]
                                 if (func) {
                                     if (func.raw) {
                                         rawParenthesesIndex = i
                                         rawrequired++
-                                        rawMatch = funcmatch[0].toLowerCase()
+                                        rawMatch = funcmatch[0]
                                     } // if the function is raw, activate raw setting
 
                                     if (func.parentheses) {
@@ -1273,7 +1252,7 @@ class Poopy {
                                 if (!rawMatch) {
                                     lastParenthesesIndex++
                                     return {
-                                        match: [funcmatch[0].toLowerCase(), string.substring(lastParenthesesIndex, i)],
+                                        match: [funcmatch[0], string.substring(lastParenthesesIndex, i)],
                                         type: 'func'
                                     }
                                 } else {
@@ -1297,7 +1276,7 @@ class Poopy {
                 if (keymatch) {
                     keyindex = i
                     if (rawrequired <= 0) return {
-                        match: keymatch[0].toLowerCase(),
+                        match: keymatch[0],
                         type: 'key'
                     }
                 }
@@ -1308,7 +1287,7 @@ class Poopy {
 
                 lastParenthesesIndex++
                 return {
-                    match: [funcmatch[0].toLowerCase(), string.substring(lastParenthesesIndex, llastParenthesesIndex)],
+                    match: [funcmatch[0], string.substring(lastParenthesesIndex, llastParenthesesIndex)],
                     type: 'func'
                 }
             }
@@ -1317,7 +1296,7 @@ class Poopy {
                 var keymatch = poopy.functions.matchLongestKey(string.substring(keyindex), keys)
 
                 return {
-                    match: keymatch[0].toLowerCase(),
+                    match: keymatch[0],
                     type: 'key'
                 }
             }
@@ -1362,7 +1341,7 @@ class Poopy {
                         if (funcmatch) {
                             lastParenthesesIndex = i
                             parenthesesrequired++
-                            var func = funclist[funcmatch[0].toLowerCase()]
+                            var func = funclist[funcmatch[0]]
                             if (func) {
                                 if (func.parentheses) {
                                     parenthesesGoal.push(parenthesesrequired - 1)
@@ -3101,14 +3080,6 @@ class Poopy {
             if (options.buffer) {
                 poopy.functions.infoPost(`Downloading file through buffer with name \`${filename}\``)
                 poopy.modules.fs.writeFileSync(`${filepath}/${filename}`, url)
-
-                var job = await poopy.vars.workQueue.add({
-                    type: 'download',
-                    filepath: filepath,
-                    filename: filename,
-                    buffer: url.toString('base64')
-                })
-                await job.finished().catch((e) => console.log(e.message))
             } else if (((!(options.fileinfo) ? true : ((options.fileinfo.shortext === options.fileinfo.type.ext) && (options.fileinfo.shortpixfmt === options.fileinfo.info.pixfmt))) || options.http) && !(options.ffmpeg)) {
                 poopy.functions.infoPost(`Downloading file through URL with name \`${filename}\``)
                 var response = await poopy.modules.axios.request({
@@ -3119,14 +3090,6 @@ class Poopy {
 
                 if (response) {
                     poopy.modules.fs.writeFileSync(`${filepath}/${filename}`, response.data)
-
-                    var job = await poopy.vars.workQueue.add({
-                        type: 'download',
-                        filepath: filepath,
-                        filename: filename,
-                        buffer: response.data.toString('base64')
-                    })
-                    await job.finished().catch((e) => console.log(e.message))
                 }
             } else {
                 await ffmpeg()
@@ -3168,10 +3131,6 @@ class Poopy {
                     filepath == undefined ||
                     filepath == 'tempfiles') return
 
-                poopy.vars.workQueue.add({
-                    type: 'delete',
-                    filepath: filepath
-                })
                 poopy.modules.fs.rm(filepath, { force: true, recursive: true })
                 return
             }
@@ -3276,10 +3235,6 @@ class Poopy {
 
             poopy.functions.infoPost(`Deleting \`${filepath}/${filename}\` and its folder`)
 
-            poopy.vars.workQueue.add({
-                type: 'delete',
-                filepath: filepath
-            })
             poopy.modules.fs.rm(filepath, { force: true, recursive: true })
             return returnUrl
         }

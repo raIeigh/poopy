@@ -3,18 +3,9 @@ let os = require('os');
 let fs = require('fs-extra');
 let { exec, spawn } = require('child_process');
 
-// Connect to a local redis instance locally, and the Heroku-provided URL in production
 let memLimit = 0;
 let procs = [];
-
-// Spin up multiple processes to handle jobs to take advantage of more CPU cores
-// See: https://devcenter.heroku.com/articles/node-concurrency for more info
 let workers = process.env.WEB_CONCURRENCY || 2;
-
-// The maximum number of jobs each worker should process at once. This will need
-// to be tuned for your application. If each job is mostly waiting on network 
-// responses it can be much higher. If each job is CPU-intensive, it might need
-// to be much lower.
 let maxJobsPerWorker = 50;
 
 if (!fs.existsSync('temp')) fs.mkdirSync('temp')
@@ -33,6 +24,28 @@ function digitRegex(filename) {
     })
     
     return new RegExp(digregName)
+}
+
+function mkdirs(filepath) {
+    var folders = filepath.split('/')
+    var levels = []
+
+    folders.forEach(folder => {
+        var dir = levels.length > 0 ?
+            `${levels.join('/')}/${folder}` :
+            folder
+
+        if (!fs.existsSync(dir)) fs.mkdirSync(dir)
+        levels.push(folder)
+    })
+}
+
+function dir_name(filedir) {
+    var dirsplit = filedir.split('/')
+    var name = dirsplit.splice(dirsplit.length - 1, 1)[0]
+    var dir = dirsplit.join('/')
+
+    return [dir, name]
 }
 
 let processingTools = require('./modules/processingTools')
@@ -109,22 +122,10 @@ function execPromise(code) {
     })
 }
 
-function mkdirs(filepath) {
-    var folders = filepath.split('/')
-    var levels = []
 
-    folders.forEach(folder => {
-        var dir = levels.length > 0 ?
-            `${levels.join('/')}/${folder}` :
-            folder
-
-        if (!fs.existsSync(dir)) fs.mkdirSync(dir)
-        levels.push(folder)
-    })
-}
-
-function start() {
+function start(id) {
     let workQueue = require('./modules/workQueue');
+    if (id == 1) workQueue.obliterate().catch(() => { })
 
     let downloadJob = async (job) => {
         var data = job.data
@@ -141,23 +142,30 @@ function start() {
     let execJob = async (job) => {
         let code = job.data.code
         if (!code) throw new Error('No code was provided!')
-        
+
         let args = code.split(' ')
-        let command = args[0] = processingTools.names[args[0]] ?? args[0]
-        code = args.join(' ')
+        let command = args[0]
 
-        if (processingTools.args[command]) {
-            var filedir = processingTools.args[command](args)
-    
-            var dirsplit = filedir.split('/')
+        if (processingTools.inputs[command]) {
+            for (var filedir in job.data.files) {
+                var [dir, name] = dir_name(filedir)
 
-            var name = dirsplit.splice(dirsplit.length - 1, 1)[0]
+                mkdirs(dir)
+
+                fs.writeFileSync(filedir, Buffer.from(job.data.files[filedir], 'base64'))
+            }
+
+            var filedir = processingTools.outputs[command](args)
+
+            var [dir, name] = dir_name(filedir)
+
             var nameregex = digitRegex(name)
-
-            var dir = dirsplit.join('/')
             var files = {}
 
             mkdirs(dir)
+
+            command = args[0] = processingTools.names[args[0]] ?? args[0]
+            code = args.join(' ')
 
             const execProc = await execPromise(code)
 
