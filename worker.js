@@ -127,7 +127,9 @@ async function master() {
 
     var waiting = await workQueue.getWaiting().catch(() => { })
 
-    console.log(waiting)
+    for (var i in waiting) {
+        await waiting[i].moveToFailed({ message: 'Memory quota exceeded, causing to crash' }).catch(() => { })
+    }
 
     await workQueue.obliterate({ force: true }).catch(() => { })
 
