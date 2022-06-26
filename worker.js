@@ -140,7 +140,6 @@ function start(id) {
     }
 
     let execJob = async (job) => {
-        console.log(job.data)
         let code = job.data.code
         if (!code) throw new Error('No code was provided!')
 

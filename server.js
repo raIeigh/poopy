@@ -530,6 +530,7 @@ async function start() {
     })
 
     app.use(express.static('html/public'))
+    app.use(express.static('temp'))
 
     app.use(function (_, res) {
         res.status(404).sendFile(`${__dirname}/html/errorpages/404.html`)
