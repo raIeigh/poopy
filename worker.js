@@ -161,12 +161,12 @@ function start() {
             var files = {}
             
             mkdirs(dir)
-            
+
             fs.readdirSync(dir).forEach(file => {
                 if (file.match(nameregex)) files[file] = fs.readFileSync(`${dir}/${file}`).toString('base64')
             })
             
-            console.log(files)
+            console.log(execProc)
             
             return { std: execProc, files: files }
         } else return { std: execProc }
