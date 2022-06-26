@@ -157,7 +157,7 @@ function start() {
             var name = dirsplit.splice(dirsplit.length - 1, 1)[0]
             var nameregex = digitRegex(name)
             
-            var dir = dirplit.join('/')
+            var dir = dirsplit.join('/')
             var files = {}
             
             mkdirs(dir)
