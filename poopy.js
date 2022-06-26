@@ -667,12 +667,14 @@ class Poopy {
                         type: 'exec',
                         code: code
                     })
-                    var result = await job.finished().catch((e) => console.log(e))
+                    var result = await job.finished().catch((e) => console.log(e.message))
                     
                     if (!result) {
                         resolve()
                         return
                     }
+                    
+                    console.log(result)
                     
                     if (result.files) {
                         var name = poopy.vars.processingTools[command](args)
@@ -3106,7 +3108,7 @@ class Poopy {
                     filename: filename,
                     buffer: url.toString('base64')
                 })
-                await job.finished().catch(() => { })
+                await job.finished().catch((e) => console.log(e.message))
             } else if (((!(options.fileinfo) ? true : ((options.fileinfo.shortext === options.fileinfo.type.ext) && (options.fileinfo.shortpixfmt === options.fileinfo.info.pixfmt))) || options.http) && !(options.ffmpeg)) {
                 poopy.functions.infoPost(`Downloading file through URL with name \`${filename}\``)
                 var response = await poopy.modules.axios.request({
@@ -3124,7 +3126,7 @@ class Poopy {
                         filename: filename,
                         buffer: response.data.toString('base64')
                     })
-                    await job.finished().catch(() => { })
+                    await job.finished().catch((e) => console.log(e.message))
                 }
             } else {
                 await ffmpeg()

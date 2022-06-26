@@ -148,8 +148,6 @@ function start() {
         let command = args[0] = processingTools.names[args[0]] ?? args[0]
         code = args.join(' ')
 
-        console.log(code)
-
         const execProc = await execPromise(code)
 
         if (processingTools.args[command]) {
@@ -168,9 +166,7 @@ function start() {
             fs.readdirSync(dir).forEach(file => {
                 if (file.match(nameregex)) files[file] = fs.readFileSync(`${dir}/${file}`).toString('base64')
             })
-            
-            console.log(execProc)
-            
+
             return { std: execProc, files: files }
         } else return { std: execProc }
     }
@@ -203,9 +199,9 @@ function start() {
             
             case 'eval':
                 try {
-                    return eval(job.data.code)
+                    return { value: eval(job.data.code) }
                 } catch (err) {
-                    throw err
+                    throw { err: err.stack }
                 }
                 break;
         }
