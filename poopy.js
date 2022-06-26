@@ -648,7 +648,7 @@ class Poopy {
                 var command = args.splice(0, 1)[0]
 
                 if (poopy.vars.processingTools[command]) {
-                    var job = await execQueue.add({ code: code })
+                    var job = await poopy.vars.execQueue.add({ code: code })
                     var result = await job.finish().catch((e) => console.log(e))
                     
                     if (!result) {
