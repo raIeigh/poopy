@@ -140,6 +140,7 @@ function start(id) {
     }
 
     let execJob = async (job) => {
+        console.log(job.data)
         let code = job.data.code
         if (!code) throw new Error('No code was provided!')
 
@@ -148,7 +149,6 @@ function start(id) {
 
         if (processingTools.inputs[command]) {
             for (var filedir in job.data.files) {
-                console.log(filedir)
                 var [dir, name] = dir_name(filedir)
 
                 mkdirs(dir)

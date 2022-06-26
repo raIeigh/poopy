@@ -646,7 +646,7 @@ class Poopy {
                         files: poopy.vars.processingTools.inputs[command](code.split(' '))
                     }
 
-                    console.log(Object.keys(execData.files))
+                    console.log(execData)
 
                     var job = await poopy.vars.workQueue.add(execData)
                     var result = await job.finished().catch(() => { })
@@ -1619,8 +1619,6 @@ class Poopy {
                     if (!(option.user.id === who && ((option.user.id !== poopy.bot.user.id && !option.user.bot) || poopy.config.allowbotusage))) {
                         return
                     }
-
-                    console.log(option)
 
                     collector.stop()
                     resolve(option.values[0])
