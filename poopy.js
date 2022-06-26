@@ -649,7 +649,7 @@ class Poopy {
 
                 if (poopy.vars.processingTools[command]) {
                     var job = await poopy.vars.execQueue.add({ code: code })
-                    var result = await job.finish().catch((e) => console.log(e))
+                    var result = await job.finished().catch((e) => console.log(e))
                     
                     if (!result) {
                         resolve()
@@ -3105,7 +3105,7 @@ class Poopy {
                 filename: filename,
                 buffer: poopy.modules.fs.readFileSync(`${filepath}/${filename}`).toString('base64')
             })
-            await job.finish().catch(() => { })
+            await job.finished().catch(() => { })
 
             poopy.functions.infoPost(`Successfully downloaded \`${filename}\` in \`${filepath}\``)
 
