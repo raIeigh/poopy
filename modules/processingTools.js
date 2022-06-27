@@ -59,6 +59,7 @@ module.exports = {
                     }
                 }
             }
+
             return inputs
         },
 
@@ -80,11 +81,14 @@ module.exports = {
                 }
                 else break
             }
+
             return inputs
         },
 
         gifsicle: (args) => {
-            return args[args.length - 1]
+            return {
+                [args[args.length - 1]]: fs.readFileSync(args[args.length - 1]).toString('base64')
+            }
         },
 
         gmic: (args) => {
@@ -105,6 +109,7 @@ module.exports = {
                 }
                 else break
             }
+
             return inputs
         }
     },

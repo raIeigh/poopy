@@ -154,19 +154,21 @@ async function start(id) {
     }
 
     let execJob = async (job) => {
-        let code = job.data.code
+        let data = job.data
+
+        let code = data.code
         if (!code) throw new Error('No code was provided!')
 
         let args = code.split(' ')
         let command = args[0]
 
         if (processingTools.inputs[command]) {
-            for (var filedir in job.data.files) {
+            for (var filedir in data.files) {
                 var [dir, name] = dir_name(filedir)
 
                 mkdirs(dir)
 
-                fs.writeFileSync(filedir, Buffer.from(job.data.files[filedir], 'base64'))
+                fs.writeFileSync(filedir, Buffer.from(data.files[filedir], 'base64'))
             }
 
             var filedir = processingTools.outputs[command](args)
@@ -180,6 +182,9 @@ async function start(id) {
 
             command = args[0] = processingTools.names[args[0]] ?? args[0]
             code = args.join(' ')
+
+            console.log(data)
+            console.log(code)
 
             const execProc = await execPromise(code)
 
