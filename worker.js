@@ -137,7 +137,7 @@ async function master() {
         await job.moveToFailed('Stalled jobs clean').catch(() => { })
     }
 
-    await sleep(10000)
+    await sleep(5000)
 
     await workQueue.obliterate({ force: true }).catch(() => { })
 
@@ -167,6 +167,8 @@ async function start(id) {
 
         let args = code.split(' ')
         let command = args[0]
+
+        console.log(command)
 
         let delfolder
 

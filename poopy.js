@@ -3476,8 +3476,7 @@ class Poopy {
                     shortpixfmt = 'unk'
                 }
 
-                var nameurl = headers['Location'] || headers['location'] || url
-                var parsedurl = poopy.modules.whatwg.parseURL(nameurl)
+                var parsedurl = poopy.modules.whatwg.parseURL(url)
                 name = parsedurl.path[parsedurl.path.length - 1]
                 var contentdisposition = headers['content-disposition']
                 if (contentdisposition) {
