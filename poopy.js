@@ -3602,7 +3602,7 @@ class Poopy {
                 poopy.modules.fs.writeFileSync(`data/globaldata.json`, JSON.stringify(poopy.functions.globalData()))
             } else {
                 await poopy.functions.updateAllData(poopy.config.mongodatabase, { data: poopy.data, globaldata: poopy.functions.globalData() }).catch(() => { })
-                await workQueue.add({
+                await poopy.vars.workQueue.add({
                     type: 'datasave',
                     mongodatabase: poopy.config.mongodatabase,
                     data: { data: poopy.data, globaldata: poopy.functions.globalData() }
