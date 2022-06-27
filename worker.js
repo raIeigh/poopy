@@ -10,6 +10,10 @@ let maxJobsPerWorker = 50;
 
 if (!fs.existsSync('temp')) fs.mkdirSync('temp')
 
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms))
+}
+
 function regexClean(str) {
     return str.replace(/[\\^$.|?*+()[{]/g, (match) => `\\${match}`)
 }
@@ -127,11 +131,13 @@ async function master() {
 
     let workQueue = require('./modules/workQueue')();
 
-    var waiting = await workQueue.getWaiting().catch(() => { })
+    var jobs = await workQueue.getJobs('active').catch(() => { })
 
-    for (var i in waiting) {
-        await waiting[i].moveToFailed({ message: 'Memory quota exceeded, causing to crash' }).catch(() => { })
+    for (var job of (jobs ?? [])) {
+        await job.moveToFailed('Stalled jobs clean').catch(() => { })
     }
+
+    await sleep(10000)
 
     await workQueue.obliterate({ force: true }).catch(() => { })
 
@@ -162,48 +168,59 @@ async function start(id) {
         let args = code.split(' ')
         let command = args[0]
 
-        if (processingTools.inputs[command]) {
-            for (var filedir in data.files) {
-                var [dir, name] = dir_name(filedir)
+        let delfolder
 
-                mkdirs(dir)
-
-                fs.writeFileSync(filedir, Buffer.from(data.files[filedir], 'base64'))
-            }
-
-            var filedir = processingTools.outputs[command](args)
-
+        for (var filedir in (data.files ?? {})) {
             var [dir, name] = dir_name(filedir)
 
+            mkdirs(dir)
+
+            fs.writeFileSync(filedir, Buffer.from(data.files[filedir], 'base64'))
+
+            if (!delfolder) delfolder = dir.split('/').slice(0, 3).join('/')
+        }
+
+        let filedir = processingTools.outputs[command] &&
+            processingTools.outputs[command](args)
+        let dir, name
+        let nameregex
+
+        if (filedir) {
+            [dir, name] = dir_name(filedir)
             if (command == 'gmic' && args.includes('morph')) {
                 var namesplit = name.split('.')
                 name = `${namesplit.slice(0, namesplit.length - 1).join('.')}_%06d.${namesplit[namesplit.length - 1]}`
             }
 
-            var nameregex = digitRegex(name)
-            var files = {}
+            nameregex = digitRegex(name)
 
             mkdirs(dir)
 
-            command = args[0] = processingTools.names[args[0]] ?? args[0]
-            code = args.join(' ')
+            if (!delfolder) delfolder = dir.split('/').slice(0, 3).join('/')
+        }
 
-            const execProc = await execPromise(code)
+        let exargs = args.slice()
+        let excommand = exargs[0]
+        excommand = exargs[0] = processingTools.names[exargs[0]] ?? exargs[0]
+        code = exargs.join(' ')
+
+        const execProc = await execPromise(code)
+
+        let output = {
+            std: execProc
+        }
+
+        if (dir && nameregex) {
+            output.files = {}
 
             fs.readdirSync(dir).forEach(file => {
-                if (file.match(nameregex)) files[file] = fs.readFileSync(`${dir}/${file}`).toString('base64')
+                if (file.match(nameregex)) output.files[file] = fs.readFileSync(`${dir}/${file}`).toString('base64')
             })
-
-            var dirsplit = dir.split('/')
-
-            fs.rmSync(dirsplit.slice(0, 2).join('/'), { force: true, recursive: true })
-
-            return { std: execProc, files: files }
-        } else {
-            const execProc = await execPromise(code)
-
-            return { std: execProc }
         }
+
+        if (delfolder) fs.rmSync(delfolder, { force: true, recursive: true })
+
+        return output
     }
 
     let deleteJob = async (job) => {

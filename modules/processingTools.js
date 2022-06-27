@@ -63,6 +63,13 @@ module.exports = {
             return inputs
         },
 
+        ffprobe: (args) => {
+            if (args[args.length - 1].includes('"')) return {}
+            return {
+                [args[args.length - 1]]: fs.readFileSync(args[args.length - 1]).toString('base64')
+            }
+        },
+
         magick: (args) => {
             var inputs = {}
 
