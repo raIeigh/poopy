@@ -638,7 +638,7 @@ class Poopy {
                 var args = code.match(/("[^"\\]*(?:\\[\S\s][^"\\]*)*"|'[^'\\]*(?:\\[\S\s][^'\\]*)*'|\/[^\/\\]*(?:\\[\S\s][^\/\\]*)*\/[gimy]*(?=\s|$)|(?:\\\s|\S)+)/g)
                 var command = args.splice(0, 1)[0]
 
-                if (poopy.vars.processingTools.inputs[command] && !poopy.config.testing) {
+                /*if (poopy.vars.processingTools.inputs[command] && !poopy.config.testing) {
                     var execData = {
                         type: 'exec',
                         code: code,
@@ -652,7 +652,7 @@ class Poopy {
                         return
                     }
 
-                    var result = await /*(new Promise((resolve) => {
+                    var result = await (new Promise((resolve) => {
                         var result = { std: 'The process has crashed.' } 
                         var validStates = ['completed', 'failed', 'stuck']
 
@@ -669,7 +669,7 @@ class Poopy {
                         job.finished().then((r) => {
                             result = r
                         }).catch(() => { })
-                    })).catch(() => { })*/ job.finished().catch(() => { })
+                    })).catch(() => { }) job.finished().catch(() => { })
 
                     job.remove().catch(() => { })
 
@@ -690,7 +690,7 @@ class Poopy {
 
                     resolve(result.std)
                     return
-                }
+                }*/
 
                 var stdout = []
                 var stderr = []
@@ -4584,17 +4584,24 @@ class Poopy {
 
                 return data
             } else {
+                console.log('gathering from worker')
                 var job = await poopy.vars.workQueue.add({
                     type: 'dataget',
                     mongodatabase: poopy.config.mongodatabase,
-                    global: Object.keys(poopy.functions.globalData()).length <= 0
+                    global: poopy.config.quitOnDestroy
                 }).catch(() => { })
 
-                if (!job) return await poopy.functions.getAllData(poopy.config.mongodatabase, Object.keys(poopy.functions.globalData()).length <= 0)
+                if (!job) {
+                    console.log('nvm gathering from mongodb')
+                    return await poopy.functions.getAllData(poopy.config.mongodatabase, poopy.config.quitOnDestroy)
+                }
 
                 var result = await job.finished().catch(() => { })
 
-                if (!result || !result.data || (Object.keys(poopy.functions.globalData()).length <= 0 && !result.globaldata)) return await poopy.functions.getAllData(poopy.config.mongodatabase, Object.keys(poopy.functions.globalData()).length <= 0)
+                if (!result || !result.data || (poopy.config.quitOnDestroy && !result.globaldata)) {
+                    console.log('nvm gathering from mongodb')
+                    return await poopy.functions.getAllData(poopy.config.mongodatabase, poopy.config.quitOnDestroy)
+                }
 
                 return result
             }

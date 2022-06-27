@@ -157,6 +157,8 @@ async function start(id) {
         var mongodatabase = data.mongodatabase
         var global = data.global
 
+        console.log(mongodatabase)
+
         var returndata = {}
 
         if (datastores[mongodatabase]) {
