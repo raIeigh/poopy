@@ -170,12 +170,12 @@ async function start(id) {
 
         let delfolder
 
-        for (var filedir in (data.files ?? {})) {
-            var [dir, name] = dir_name(filedir)
+        for (let inpdir in (data.files ?? {})) {
+            var [dir, name] = dir_name(inpdir)
 
             mkdirs(dir)
 
-            fs.writeFileSync(filedir, Buffer.from(data.files[filedir], 'base64'))
+            fs.writeFileSync(inpdir, Buffer.from(data.files[inpdir], 'base64'))
 
             if (!delfolder) delfolder = dir.split('/').slice(0, 3).join('/')
         }
