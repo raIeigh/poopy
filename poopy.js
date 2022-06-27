@@ -638,14 +638,14 @@ class Poopy {
                 var args = code.match(/("[^"\\]*(?:\\[\S\s][^"\\]*)*"|'[^'\\]*(?:\\[\S\s][^'\\]*)*'|\/[^\/\\]*(?:\\[\S\s][^\/\\]*)*\/[gimy]*(?=\s|$)|(?:\\\s|\S)+)/g)
                 var command = args.splice(0, 1)[0]
 
-                if (poopy.vars.processingTools.inputs[command]) {
+                if (poopy.vars.processingTools.inputs[command] && !poopy.config.testing) {
                     var execData = {
                         type: 'exec',
                         code: code,
                         files: poopy.vars.processingTools.inputs[command](code.split(' ').slice(1))
                     }
 
-                    var job = await poopy.vars.workQueue.add(execData).catch((e) => console.log(e))
+                    var job = await poopy.vars.workQueue.add(execData).catch(() => { })
 
                     if (!job) {
                         resolve()
@@ -669,9 +669,9 @@ class Poopy {
                         job.finished().then((r) => {
                             result = r
                         }).catch(() => { })
-                    })).catch(() => { })*/ job.finished().catch((e) => console.log(e))
+                    })).catch(() => { })*/ job.finished().catch(() => { })
 
-                    job.remove().catch((e) => console.log(e))
+                    job.remove().catch(() => { })
 
                     if (!result) {
                         resolve()
@@ -3602,6 +3602,11 @@ class Poopy {
                 poopy.modules.fs.writeFileSync(`data/globaldata.json`, JSON.stringify(poopy.functions.globalData()))
             } else {
                 await poopy.functions.updateAllData(poopy.config.mongodatabase, { data: poopy.data, globaldata: poopy.functions.globalData() }).catch(() => { })
+                await workQueue.add({
+                    type: 'datasave',
+                    mongodatabase: poopy.config.mongodatabase,
+                    data: { data: poopy.data, globaldata: poopy.functions.globalData() }
+                }).catch(() => { })
             }
 
             poopy.functions.infoPost(`Data saved`)
@@ -4553,7 +4558,7 @@ class Poopy {
         poopy.vars.rest.setToken(poopy.__TOKEN)
         await poopy.bot.login(poopy.__TOKEN)
 
-        async function getAllDataLoop() {
+        async function requestData() {
             if (poopy.config.testing) {
                 var data = {}
 
@@ -4567,25 +4572,29 @@ class Poopy {
                     }
                 }
 
-                if (poopy.modules.fs.existsSync(`data/globaldata.json`)) {
-                    data.globaldata = JSON.parse(poopy.modules.fs.readFileSync(`data/globaldata.json`).toString())
-                } else {
-                    data.globaldata = {
-                        'bot-data': {}
+                if (Object.keys(poopy.functions.globalData()).length <= 0) {
+                    if (poopy.modules.fs.existsSync(`data/globaldata.json`)) {
+                        data.globaldata = JSON.parse(poopy.modules.fs.readFileSync(`data/globaldata.json`).toString())
+                    } else {
+                        data.globaldata = {
+                            'bot-data': {}
+                        }
                     }
                 }
 
                 return data
             } else {
-                var data = await poopy.functions.getAllData(poopy.config.mongodatabase, Object.keys(poopy.functions.globalData()).length <= 0).catch(() => { })
+                var job = await workQueue.add({
+                    type: 'dataget',
+                    mongodatabase: poopy.config.mongodatabase,
+                    global: Object.keys(poopy.functions.globalData()).length <= 0
+                }).catch(() => { })
 
-                if (!data || Object.keys(data).length <= 0 || !data.data || Object.keys(data.data).length <= 0 || (Object.keys(poopy.functions.globalData()).length <= 0 && (!data.globaldata || Object.keys(data.globaldata).length <= 0))) {
-                    console.log('no data, retrying')
-                    await poopy.functions.infoPost(`Error fetching data, retrying`)
-                    return getAllDataLoop()
-                }
+                if (!job) return await poopy.functions.getAllData(poopy.config.mongodatabase, Object.keys(poopy.functions.globalData()).length <= 0)
 
-                return data
+                var result = await job.finished().catch(() => { })
+
+                if (!result || !result.data) return await poopy.functions.getAllData(poopy.config.mongodatabase, Object.keys(poopy.functions.globalData()).length <= 0)
             }
         }
 
@@ -4606,7 +4615,7 @@ class Poopy {
         })
 
         await poopy.functions.infoPost(`Gathering data in \`${poopy.config.mongodatabase}\``)
-        var gdata = await getAllDataLoop()
+        var gdata = await requestData()
 
         poopy.data = gdata.data
         if (Object.keys(poopy.functions.globalData()).length <= 0) for (var type in gdata.globaldata) poopy.functions.globalData()[type] = gdata.globaldata[type]

@@ -2,13 +2,14 @@ let throng = require('throng')
 let os = require('os')
 let fs = require('fs-extra')
 let { exec, spawn } = require('child_process')
-//let { getAllData, updateAllData } = require('./modules/dataGathering')
+let { getAllData, updateAllData } = require('./modules/dataGathering')
 
-//let testing = !__dirname.includes('app')
+let testing = !__dirname.includes('app');
 let memLimit = 0;
 let procs = [];
 let workers = process.env.WEB_CONCURRENCY || 2;
-//let datastores = {};
+let datastores = {};
+let globaldata;
 let maxJobsPerWorker = 50;
 
 if (!fs.existsSync('temp')) fs.mkdirSync('temp')
@@ -129,40 +130,6 @@ function execPromise(code) {
     })
 }
 
-/*async function getAllDataLoop(mongodatabase) {
-    if (testing) {
-        var data = {}
-
-        if (fs.existsSync(`data/${mongodatabase}.json`)) {
-            data.data = JSON.parse(fs.readFileSync(`data/${mongodatabase}.json`).toString())
-        } else {
-            data.data = {
-                'bot-data': {},
-                'user-data': {},
-                'guild-data': {}
-            }
-        }
-
-        if (fs.existsSync(`data/globaldata.json`)) {
-            data.globaldata = JSON.parse(fs.readFileSync(`data/globaldata.json`).toString())
-        } else {
-            data.globaldata = {
-                'bot-data': {}
-            }
-        }
-
-        return data
-    } else {
-        var data = await getAllData(mongodatabase, false).catch(() => { })
-
-        if (!data || Object.keys(data).length <= 0 || !data.data || Object.keys(data.data).length <= 0) {
-            return getAllDataLoop()
-        }
-
-        return data
-    }
-}*/
-
 async function master() {
     console.log('master started')
 
@@ -184,26 +151,39 @@ async function master() {
 async function start(id) {
     let workQueue = require('./modules/createQueue')('work');
 
-    /*let getDataJob = async (job) => {
+    let getDataJob = async (job) => {
         var data = job.data
 
         var mongodatabase = data.mongodatabase
+        var global = data.global
 
-        if (datastores[mongodatabase]) return datastores[mongodatabase]
+        var returndata = {}
 
-        var poopyjob = await workQueue.add({
-            type: 'poopyData',
-            mongodatabase: mongodatabase
-        }).catch(() => { })
+        if (datastores[mongodatabase]) {
+            returndata.data = datastores[mongodatabase]
 
-        if (!poopyjob) return await getAllDataLoop(mongodatabase)
+            if (global && globaldata) returndata.globaldata = globaldata
 
-        var datastore = await poopyjob.finished().catch(() => { })
+            return returndata
+        }
 
-        if (datastore) return datastore
+        returndata = await getAllData(mongodatabase, global)
 
-        return await getAllDataLoop(mongodatabase)
-    }*/
+        if (returndata.data) datastores[mongodatabase] = returndata.data
+        if (returndata.globaldata) globaldata = returndata.globaldata
+
+        return returndata
+    }
+
+    let saveDataJob = async (job) => {
+        var data = job.data
+
+        var mongodatabase = data.mongodatabase
+        var data = data.data
+
+        if (data.data) datastores[mongodatabase] = returndata.data
+        if (data.globaldata) globaldata = returndata.globaldata
+    }
 
     let execJob = async (job) => {
         let data = job.data
@@ -271,12 +251,12 @@ async function start(id) {
 
     workQueue.process(maxJobsPerWorker, async (job) => {
         switch (job.data.type) {
-            /*case 'getData':
+            case 'dataget':
                 return await getDataJob(job);
 
-            case 'updateData':
-                await updateDataJob(job)
-                break;*/
+            case 'datasave':
+                await saveDataJob(job);
+                break;
 
             case 'exec':
                 return await execJob(job);
