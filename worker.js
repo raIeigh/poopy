@@ -175,6 +175,11 @@ async function start(id) {
 
             var [dir, name] = dir_name(filedir)
 
+            if (command == 'gmic' && args.includes('morph')) {
+                var namesplit = name.split('.')
+                name = `${namesplit.slice(0, namesplit.length - 1).join('.')}_%06d.${namesplit[namesplit.length - 1]}`
+            }
+
             var nameregex = digitRegex(name)
             var files = {}
 
@@ -182,9 +187,6 @@ async function start(id) {
 
             command = args[0] = processingTools.names[args[0]] ?? args[0]
             code = args.join(' ')
-
-            console.log(data)
-            console.log(code)
 
             const execProc = await execPromise(code)
 
