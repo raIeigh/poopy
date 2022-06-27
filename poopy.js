@@ -3407,7 +3407,9 @@ class Poopy {
                     method: 'GET',
                     url: url,
                     responseType: 'stream',
-                    validateStatus: () => true
+                    validateStatus: () => true,
+                    maxBodyLength: 1024 * 1024 * 200,
+                    maxContentLength: 1024 * 1024 * 200
                 }).catch((err) => {
                     reject(err.message)
                 })
@@ -3415,7 +3417,10 @@ class Poopy {
                 var bufferresponse = await poopy.modules.axios.request({
                     method: 'GET',
                     url: url,
-                    responseType: 'arraybuffer'
+                    responseType: 'arraybuffer',
+                    validateStatus: () => true,
+                    maxBodyLength: 1024 * 1024 * 200,
+                    maxContentLength: 1024 * 1024 * 200
                 }).catch(() => { }) ?? { data: '' }
 
                 if (!response) {
