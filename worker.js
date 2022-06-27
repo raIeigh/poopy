@@ -171,13 +171,13 @@ async function start(id) {
         let delfolder
 
         for (let inpdir in (data.files ?? {})) {
-            var [dir, name] = dir_name(inpdir)
+            let [idir, iname] = dir_name(inpdir)
 
-            mkdirs(dir)
+            mkdirs(idir)
 
             fs.writeFileSync(inpdir, Buffer.from(data.files[inpdir], 'base64'))
 
-            if (!delfolder) delfolder = dir.split('/').slice(0, 3).join('/')
+            if (!delfolder) delfolder = idir.split('/').slice(0, 3).join('/')
         }
 
         let filedir = processingTools.outputs[command] &&
