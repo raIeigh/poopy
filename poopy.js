@@ -4584,7 +4584,7 @@ class Poopy {
 
                 return data
             } else {
-                console.log('gathering from worker')
+                console.log(`${poopy.bot.user.username}: gathering from worker`)
                 var job = await poopy.vars.workQueue.add({
                     type: 'dataget',
                     mongodatabase: poopy.config.mongodatabase,
@@ -4592,14 +4592,14 @@ class Poopy {
                 }).catch(() => { })
 
                 if (!job) {
-                    console.log('nvm gathering from mongodb')
+                    console.log(`${poopy.bot.user.username}: nvm gathering from mongodb`)
                     return await poopy.functions.getAllData(poopy.config.mongodatabase, poopy.config.quitOnDestroy)
                 }
 
                 var result = await job.finished().catch(() => { })
 
                 if (!result || !result.data || (poopy.config.quitOnDestroy && !result.globaldata)) {
-                    console.log('nvm gathering from mongodb')
+                    console.log(`${poopy.bot.user.username}: nvm gathering from mongodb`)
                     return await poopy.functions.getAllData(poopy.config.mongodatabase, poopy.config.quitOnDestroy)
                 }
 
@@ -4629,7 +4629,7 @@ class Poopy {
         poopy.data = gdata.data
         if (Object.keys(poopy.functions.globalData()).length <= 0) for (var type in gdata.globaldata) poopy.functions.globalData()[type] = gdata.globaldata[type]
 
-        console.log('all data gathered!!!')
+        console.log(`${poopy.bot.user.username}: all data gathered!!!`)
         await poopy.functions.infoPost(`All data gathered`)
 
         if (!poopy.data['bot-data']) {
@@ -4962,7 +4962,7 @@ class Poopy {
         }
         await poopy.modules.noblox.setCookie(process.env.ROBLOXCOOKIE).catch(() => { })
         poopy.json.emojiJSON = await poopy.functions.getEmojis().catch(() => { })
-        console.log('emojis')
+        console.log(`${poopy.bot.user.username}: emojis`)
         if (!poopy.modules.fs.existsSync('temp')) {
             poopy.modules.fs.mkdirSync('temp')
         }
@@ -4977,7 +4977,7 @@ class Poopy {
         poopy.vars.saveInterval = setInterval(function () {
             poopy.functions.save()
         }, 120000)
-        console.log('all done, he\'s actually online now')
+        console.log(`${poopy.bot.user.username}: all done, he's actually online now`)
         await poopy.functions.infoPost(`Reboot ${poopy.data['bot-data']['reboots']} succeeded, he's up now`)
         poopy.functions.changeStatus()
         poopy.vars.statusInterval = setInterval(function () {
