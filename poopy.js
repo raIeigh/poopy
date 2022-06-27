@@ -4584,7 +4584,7 @@ class Poopy {
 
                 return data
             } else {
-                var job = await workQueue.add({
+                var job = await poopy.vars.workQueue.add({
                     type: 'dataget',
                     mongodatabase: poopy.config.mongodatabase,
                     global: Object.keys(poopy.functions.globalData()).length <= 0
