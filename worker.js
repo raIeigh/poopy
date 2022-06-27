@@ -206,8 +206,6 @@ async function start(id) {
     }
 
     workQueue.process(maxJobsPerWorker, async (job) => {
-        console.log(job)
-
         switch (job.data.type) {
             case 'download':
                 await downloadJob(job)
