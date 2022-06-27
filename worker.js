@@ -167,12 +167,12 @@ async function start(id) {
             return returndata
         }
 
-        returndata = await getAllData(mongodatabase, global)
+        /*returndata = await getAllData(mongodatabase, global)
 
         if (returndata.data) datastores[mongodatabase] = returndata.data
         if (returndata.globaldata) globaldata = returndata.globaldata
 
-        return returndata
+        return returndata*/
     }
 
     let saveDataJob = async (job) => {
