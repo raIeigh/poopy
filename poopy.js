@@ -4597,6 +4597,7 @@ class Poopy {
                 }
 
                 var result = await job.finished().catch(() => { })
+                job.remove().catch(() => { })
 
                 if (!result || !result.data || (poopy.config.quitOnDestroy && !result.globaldata)) {
                     console.log(`${poopy.bot.user.username}: nvm gathering from mongodb`)

@@ -2,9 +2,7 @@ let throng = require('throng')
 let os = require('os')
 let fs = require('fs-extra')
 let { exec, spawn } = require('child_process')
-let { getAllData, updateAllData } = require('./modules/dataGathering')
 
-let testing = !__dirname.includes('app');
 let memLimit = 0;
 let procs = [];
 let workers = process.env.WEB_CONCURRENCY || 2;
@@ -137,7 +135,7 @@ async function processJob(job) {
         var mongodatabase = data.mongodatabase
         var global = data.global
 
-        console.log(mongodatabase)
+        console.log(`${mongodatabase} get`)
 
         var returndata = {}
 
@@ -156,8 +154,10 @@ async function processJob(job) {
         var mongodatabase = data.mongodatabase
         var data = data.data
 
-        if (data.data) datastores[mongodatabase] = returndata.data
-        if (data.globaldata) globaldata = returndata.globaldata
+        console.log(`${mongodatabase} save`)
+
+        if (data.data) datastores[mongodatabase] = data.data
+        if (data.globaldata) globaldata = data.globaldata
     }
 
     let execJob = async (job) => {
