@@ -660,6 +660,7 @@ class Poopy {
                             var state = await job.getState().catch(() => { })
 
                             if (validStates.includes(state)) {
+                                console.log(state)
                                 clearInterval(stuckInterval)
                                 resolve(result)
                             }
@@ -667,8 +668,9 @@ class Poopy {
 
                         job.finished().then((r) => {
                             result = r
-                        }).catch((e) => console.log(e))
-                    })).catch((e) => console.log(e))
+                        }).catch(() => { })
+                    })).catch(() => { })
+                    console.log(result)
 
                     job.remove().catch(() => { })
 
