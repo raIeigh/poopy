@@ -130,27 +130,7 @@ function execPromise(code) {
     })
 }
 
-async function master() {
-    console.log('master started')
-
-    let workQueue = require('./modules/createQueue')('work');
-
-    var jobs = await workQueue.getJobs('active').catch(() => { })
-
-    for (var job of (jobs ?? [])) {
-        await job.moveToFailed('Stalled jobs clean').catch(() => { })
-    }
-
-    await sleep(5000)
-
-    await workQueue.obliterate({ force: true }).catch(() => { })
-
-    workQueue.close()
-}
-
-async function start(id) {
-    let workQueue = require('./modules/createQueue')('work');
-
+async function processJob(job) {
     let getDataJob = async (job) => {
         var data = job.data
 
@@ -168,13 +148,6 @@ async function start(id) {
 
             return returndata
         }
-
-        /*returndata = await getAllData(mongodatabase, global)
-
-        if (returndata.data) datastores[mongodatabase] = returndata.data
-        if (returndata.globaldata) globaldata = returndata.globaldata
-
-        return returndata*/
     }
 
     let saveDataJob = async (job) => {
@@ -228,8 +201,7 @@ async function start(id) {
         }
 
         let exargs = args.slice()
-        let excommand = exargs[0]
-        excommand = exargs[0] = processingTools.names[exargs[0]] ?? exargs[0]
+        exargs[0] = processingTools.names[exargs[0]] ?? exargs[0]
         code = exargs.join(' ')
 
         const execProc = await execPromise(code)
@@ -251,25 +223,65 @@ async function start(id) {
         return output
     }
 
+    switch (job.data.type) {
+        case 'dataget':
+            return await getDataJob(job);
+
+        case 'datasave':
+            await saveDataJob(job);
+            break;
+
+        case 'exec':
+            return await execJob(job);
+
+        case 'eval':
+            try {
+                return { value: eval(job.data.code) }
+            } catch (err) {
+                throw { err: err.stack }
+            };
+    }
+}
+
+async function master() {
+    console.log('master started')
+
+    let workQueue = require('./modules/createQueue')('work');
+
+    var jobs = await workQueue.getJobs('active').catch(() => { }) ?? []
+
     workQueue.process(maxJobsPerWorker, async (job) => {
-        switch (job.data.type) {
-            case 'dataget':
-                return await getDataJob(job);
+        return await processJob(job)
+    })
 
-            case 'datasave':
-                await saveDataJob(job);
-                break;
+    var promises = []
 
-            case 'exec':
-                return await execJob(job);
+    console.log(`${jobs.length} jobs are pending`)
 
-            case 'eval':
-                try {
-                    return { value: eval(job.data.code) }
-                } catch (err) {
-                    throw { err: err.stack }
-                };
-        }
+    for (var job of jobs) {
+        promises.push(async () => {
+            if (job.data.type == 'exec') {
+                await job.moveToFailed('Stalled jobs clean').catch(() => { })
+            } else {
+                await job.retry().catch(() => { })
+            }
+        })
+    }
+
+    await Promise.all(promises).catch(() => { })
+
+    await sleep(5000)
+
+    await workQueue.obliterate({ force: true }).catch(() => { })
+
+    workQueue.close()
+}
+
+async function start(id) {
+    let workQueue = require('./modules/createQueue')('work');
+
+    workQueue.process(maxJobsPerWorker, async (job) => {
+        return await processJob(job)
     })
 
     console.log(`worker ${id} started`)
