@@ -191,10 +191,7 @@ async function start(id) {
             const execProc = await execPromise(code)
 
             fs.readdirSync(dir).forEach(file => {
-                if (file.match(nameregex)) {
-                    console.log(`good ${file}`)
-                    files[file] = fs.readFileSync(`${dir}/${file}`).toString('base64')
-                } else console.log(`bad ${file}`)
+                if (file.match(nameregex)) files[file] = fs.readFileSync(`${dir}/${file}`).toString('base64')
             })
 
             var dirsplit = dir.split('/')

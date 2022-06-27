@@ -649,7 +649,7 @@ class Poopy {
 
                     var job = await poopy.vars.workQueue.add(execData)
                     poopy.jobs.push(job)
-                    var result = await job.finished().catch((e) => console.log(e))
+                    var result = await job.finished().catch(() => { })
                     job.remove().catch(() => { })
                     var fjob = poopy.jobs.findIndex(j => j === job)
                     if (fjob > -1) poopy.jobs.splice(fjob, 1)
