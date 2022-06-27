@@ -1,6 +1,7 @@
 async function start() {
     let poopyStarted = false
     let mainPoopy
+    let poopyList = {}
     const express = require('express')
     const cors = require('cors')
     const bp = require('body-parser')
@@ -13,6 +14,7 @@ async function start() {
 
     const PORT = process.env.PORT || 8080
     const app = express()
+    //const workQueue = require('./modules/createQueue')('work')
     const eventEmitter = new EventEmitter()
 
     app.use(cors())
@@ -587,6 +589,29 @@ async function start() {
         fs.copySync('modules/plugin-print', 'node_modules/@jimp/plugin-print', { recursive: true })
     }
 
+    /*let getDataJob = async (job) => {
+        var data = job.data
+
+        var mongodatabase = data.mongodatabase
+
+        if (datastores[mongodatabase]) return datastores[mongodatabase]
+
+        var poopyjob = await workQueue.add({
+            type: 'poopyData',
+            mongodatabase: mongodatabase
+        }).catch(() => { })
+
+        if (!poopyjob) return await getAllDataLoop(mongodatabase)
+
+        var datastore = await poopyjob.finished().catch(() => { })
+
+        if (datastore) return datastore
+
+        return await getAllDataLoop(mongodatabase)
+    }
+
+    workQueue.process()*/
+
     tokens.forEach(async tokendata => {
         let poopy
         if (typeof tokendata == 'string') {
@@ -595,9 +620,11 @@ async function start() {
             poopy = new Poopy(tokendata.config)
         }
 
+        poopyList[poopy.config.mongodatabase] = poopy
+
         await poopy.start(tokendata.TOKEN)
 
-        if (!mainPoopy) {
+        if (poopy.config.quitOnDestroy) {
             mainPoopy = poopy
             poopyStarted = true
         }

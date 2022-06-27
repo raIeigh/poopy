@@ -3,10 +3,9 @@ const schemas = require('./schemas')
 let requests = 0
 
 module.exports = {
-    getAllData: async (databaseName) => {
+    getAllData: async (databaseName, global) => {
         var data = {
-            data: {},
-            globaldata: {}
+            data: {}
         }
 
         var url = process.env.MONGOOSEURL
@@ -29,15 +28,19 @@ module.exports = {
             }
         }
 
-        var globaldataobjects = await schemas.globaldata.find({}).catch(() => { })
+        if (global) {
+            data.globaldata = {}
 
-        if (globaldataobjects) {
-            var globaldataobject = globaldataobjects[0]
-            for (var k in globaldataobject) {
-                var value = globaldataobject[k]
+            var globaldataobjects = await schemas.globaldata.find({}).catch(() => { })
     
-                if (k != 'dataid' && k != 'toString' && schemas.globaldata.prototype.schema.obj[k]) {
-                    data.globaldata[k] = value
+            if (globaldataobjects) {
+                var globaldataobject = globaldataobjects[0]
+                for (var k in globaldataobject) {
+                    var value = globaldataobject[k]
+        
+                    if (k != 'dataid' && k != 'toString' && schemas.globaldata.prototype.schema.obj[k]) {
+                        data.globaldata[k] = value
+                    }
                 }
             }
         }

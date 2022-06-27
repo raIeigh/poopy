@@ -1,12 +1,15 @@
-let throng = require('throng');
-let os = require('os');
-let fs = require('fs-extra');
-let { exec, spawn } = require('child_process');
+let throng = require('throng')
+let os = require('os')
+let fs = require('fs-extra')
+let { exec, spawn } = require('child_process')
+//let { getAllData, updateAllData } = require('./modules/dataGathering')
 
+//let testing = !__dirname.includes('app')
 let memLimit = 0;
 let procs = [];
 let workers = process.env.WEB_CONCURRENCY || 2;
-let maxJobsPerWorker = 50;
+//let datastores = {};
+let maxJobsPerWorker = 5;
 
 if (!fs.existsSync('temp')) fs.mkdirSync('temp')
 
@@ -20,13 +23,13 @@ function regexClean(str) {
 
 function digitRegex(filename) {
     filename = regexClean(filename)
-    
+
     var digregName = filename.replace(/%(0\d)?d/g, (dmatch) => {
         dmatch = dmatch.substring(1)
         if (dmatch.substring(0, dmatch.length - 1)) return `\\d{${dmatch.substring(1, dmatch.length - 1)}}`
         else return `\\d`
     })
-    
+
     return new RegExp(digregName)
 }
 
@@ -126,10 +129,44 @@ function execPromise(code) {
     })
 }
 
+/*async function getAllDataLoop(mongodatabase) {
+    if (testing) {
+        var data = {}
+
+        if (fs.existsSync(`data/${mongodatabase}.json`)) {
+            data.data = JSON.parse(fs.readFileSync(`data/${mongodatabase}.json`).toString())
+        } else {
+            data.data = {
+                'bot-data': {},
+                'user-data': {},
+                'guild-data': {}
+            }
+        }
+
+        if (fs.existsSync(`data/globaldata.json`)) {
+            data.globaldata = JSON.parse(fs.readFileSync(`data/globaldata.json`).toString())
+        } else {
+            data.globaldata = {
+                'bot-data': {}
+            }
+        }
+
+        return data
+    } else {
+        var data = await getAllData(mongodatabase, false).catch(() => { })
+
+        if (!data || Object.keys(data).length <= 0 || !data.data || Object.keys(data.data).length <= 0) {
+            return getAllDataLoop()
+        }
+
+        return data
+    }
+}*/
+
 async function master() {
     console.log('master started')
 
-    let workQueue = require('./modules/workQueue')();
+    let workQueue = require('./modules/createQueue')('work');
 
     var jobs = await workQueue.getJobs('active').catch(() => { })
 
@@ -145,19 +182,28 @@ async function master() {
 }
 
 async function start(id) {
-    let workQueue = require('./modules/workQueue')();
+    let workQueue = require('./modules/createQueue')('work');
 
-    let downloadJob = async (job) => {
+    /*let getDataJob = async (job) => {
         var data = job.data
 
-        var buffer = data.buffer
-        var filename = data.filename
-        var filepath = data.filepath
+        var mongodatabase = data.mongodatabase
 
-        mkdirs(filepath)
+        if (datastores[mongodatabase]) return datastores[mongodatabase]
 
-        fs.writeFileSync(`${filepath}/${filename}`, Buffer.from(buffer, 'base64'))
-    }
+        var poopyjob = await workQueue.add({
+            type: 'poopyData',
+            mongodatabase: mongodatabase
+        }).catch(() => { })
+
+        if (!poopyjob) return await getAllDataLoop(mongodatabase)
+
+        var datastore = await poopyjob.finished().catch(() => { })
+
+        if (datastore) return datastore
+
+        return await getAllDataLoop(mongodatabase)
+    }*/
 
     let execJob = async (job) => {
         let data = job.data
@@ -168,12 +214,10 @@ async function start(id) {
         let args = code.split(' ')
         let command = args[0]
 
-        console.log(command)
-
         let delfolder
 
         for (let inpdir in (data.files ?? {})) {
-            let [idir, iname] = dir_name(inpdir)
+            let [idir] = dir_name(inpdir)
 
             mkdirs(idir)
 
@@ -225,28 +269,17 @@ async function start(id) {
         return output
     }
 
-    let deleteJob = async (job) => {
-        var data = job.data
-
-        var filepath = data.filepath
-
-        mkdirs(filepath)
-
-        fs.rmSync(filepath, { force: true, recursive: true })
-    }
-
     workQueue.process(maxJobsPerWorker, async (job) => {
         switch (job.data.type) {
-            case 'download':
-                await downloadJob(job)
-                break;
+            /*case 'getData':
+                return await getDataJob(job);
+
+            case 'updateData':
+                await updateDataJob(job)
+                break;*/
 
             case 'exec':
                 return await execJob(job);
-
-            case 'delete':
-                await deleteJob(job)
-                break;
 
             case 'eval':
                 try {

@@ -123,8 +123,6 @@ class Poopy {
         poopy.vars = {}
         poopy.data = {}
         poopy.tempdata = {}
-        poopy.procs = []
-        poopy.jobs = []
         poopy.tempfiles = {}
 
         // module trash
@@ -195,7 +193,7 @@ class Poopy {
             access_token_key: process.env.TWITTERACCESSTOKENKEY,
             access_token_secret: process.env.TWITTERACCESSTOKENSECRET
         })*/
-        poopy.vars.workQueue = require('./modules/workQueue')()
+        poopy.vars.workQueue = require('./modules/createQueue')('work')
         poopy.vars.rest = new poopy.modules.REST({ version: '9' })
         poopy.vars.gifFormats = ['gif', 'apng']
         poopy.vars.jimpFormats = ['png', 'jpeg', 'jpg', 'gif', 'bmp', 'tiff']
@@ -647,18 +645,38 @@ class Poopy {
                         files: poopy.vars.processingTools.inputs[command](code.split(' ').slice(1))
                     }
 
-                    var job = await poopy.vars.workQueue.add(execData)
-                    poopy.jobs.push(job)
-                    var result = await job.finished().catch(() => { })
+                    var job = await poopy.vars.workQueue.add(execData).catch(() => { })
+
+                    if (!job) {
+                        resolve()
+                        return
+                    }
+
+                    var result = await (new Promise((resolve) => {
+                        var result = { std: 'The process has crashed.' } 
+                        var validStates = ['completed', 'failed', 'stuck']
+
+                        var stuckInterval = setInterval(async () => {
+                            var state = await job.getState().catch(() => { })
+
+                            if (validStates.includes(state)) {
+                                clearInterval(stuckInterval)
+                                resolve(result)
+                            }
+                        }, 1000)
+
+                        job.finished().then((r) => {
+                            result = r
+                        }).catch(() => { })
+                    })).catch(() => { })
+
                     job.remove().catch(() => { })
-                    var fjob = poopy.jobs.findIndex(j => j === job)
-                    if (fjob > -1) poopy.jobs.splice(fjob, 1)
 
                     if (!result) {
                         resolve()
                         return
                     }
-                    
+
                     if (result.files) {
                         var name = poopy.vars.processingTools.outputs[command](args)
                         var dirsplit = name.split('/')
@@ -697,8 +715,6 @@ class Poopy {
 
                 function handleExit() {
                     if (!stdoutclosed || !stderrclosed || !procExited) return
-                    var fproc = poopy.procs.findIndex(p => p === proc)
-                    if (fproc > -1) poopy.procs.splice(fproc, 1)
                     var out = stdout.join('\n') || stderr.join('\n')
                     clearInterval(memoryInterval)
                     proc.removeAllListeners()
@@ -735,8 +751,6 @@ class Poopy {
                     procExited = true
                     handleExit()
                 })
-
-                poopy.procs.push(proc)
             })
         }
 
@@ -4562,9 +4576,9 @@ class Poopy {
 
                 return data
             } else {
-                var data = await poopy.functions.getAllData(poopy.config.mongodatabase).catch(() => { })
+                var data = await poopy.functions.getAllData(poopy.config.mongodatabase, Object.keys(poopy.functions.globalData()).length <= 0).catch(() => { })
 
-                if (!data || Object.keys(data).length <= 0 || !data.data || Object.keys(data.data).length <= 0 || !data.globaldata || Object.keys(data.globaldata).length <= 0) {
+                if (!data || Object.keys(data).length <= 0 || !data.data || Object.keys(data.data).length <= 0 || (Object.keys(poopy.functions.globalData()).length <= 0 && (!data.globaldata || Object.keys(data.globaldata).length <= 0))) {
                     console.log('no data, retrying')
                     await poopy.functions.infoPost(`Error fetching data, retrying`)
                     return getAllDataLoop()
