@@ -647,6 +647,7 @@ class Poopy {
                         files: poopy.vars.processingTools.inputs[command](code.split(' ').slice(1))
                     }
 
+                    console.log(Object.keys(files))
                     var job = await poopy.vars.workQueue.add(execData)
                     poopy.jobs.push(job)
                     var result = await job.finished().catch(() => { })
@@ -660,15 +661,16 @@ class Poopy {
                     }
                     
                     if (result.files) {
+                        console.log(result.files)
                         var name = poopy.vars.processingTools.outputs[command](args)
                         var dirsplit = name.split('/')
                         var dir = dirsplit.slice(0, dirsplit.length - 1).join('/')
-                        
+
                         for (var filename in result.files) {
                             poopy.modules.fs.writeFileSync(`${dir}/${filename}`, Buffer.from(result.files[filename], 'base64'))
                         }
                     }
-                    
+
                     resolve(result.std)
                     return
                 }

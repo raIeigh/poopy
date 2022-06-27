@@ -163,7 +163,6 @@ async function start(id) {
         let command = args[0]
 
         if (processingTools.inputs[command]) {
-            console.log(Object.keys(data.files))
             for (var filedir in data.files) {
                 var [dir, name] = dir_name(filedir)
 
@@ -184,8 +183,6 @@ async function start(id) {
             var nameregex = digitRegex(name)
             var files = {}
 
-            console.log(dir, name, nameregex)
-
             mkdirs(dir)
 
             command = args[0] = processingTools.names[args[0]] ?? args[0]
@@ -194,7 +191,10 @@ async function start(id) {
             const execProc = await execPromise(code)
 
             fs.readdirSync(dir).forEach(file => {
-                if (file.match(nameregex)) files[file] = fs.readFileSync(`${dir}/${file}`).toString('base64')
+                if (file.match(nameregex)) {
+                    console.log(`good ${file}`)
+                    files[file] = fs.readFileSync(`${dir}/${file}`).toString('base64')
+                } else console.log(`bad ${file}`)
             })
 
             var dirsplit = dir.split('/')
