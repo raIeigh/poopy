@@ -63,22 +63,19 @@ module.exports = {
         },
 
         magick: (args) => {
-            var inputs = []
+            var inputs = {}
 
             for (var i in args) {
                 var file = args[i]
 
                 if (file.startsWith('temp/')) {
-                    console.log('start temp/')
                     var [dir, name] = dir_name(file)
                     var nameregex = digitRegex(name)
 
-                    console.log(dir, name, nameregex)
                     fs.readdirSync(dir).forEach(file => {
                         if (file.match(nameregex)) {
-                            console.log(`epic win ${file}`)
                             inputs[`${dir}/${file}`] = fs.readFileSync(`${dir}/${file}`).toString('base64')
-                        } else console.log(`epic fail ${file}`)
+                        }
                     })
                 }
                 else break
@@ -91,7 +88,7 @@ module.exports = {
         },
 
         gmic: (args) => {
-            var inputs = []
+            var inputs = {}
 
             for (var i in args) {
                 var file = args[i]
