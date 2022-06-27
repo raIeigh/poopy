@@ -645,7 +645,7 @@ class Poopy {
                         files: poopy.vars.processingTools.inputs[command](code.split(' ').slice(1))
                     }
 
-                    var job = await poopy.vars.workQueue.add(execData).catch(() => { })
+                    var job = await poopy.vars.workQueue.add(execData).catch((e) => console.log(e))
 
                     if (!job) {
                         resolve()
@@ -669,10 +669,9 @@ class Poopy {
                         job.finished().then((r) => {
                             result = r
                         }).catch(() => { })
-                    })).catch(() => { })*/ job.finished().catch(() => { })
-                    console.log(result)
+                    })).catch(() => { })*/ job.finished().catch((e) => console.log(e))
 
-                    job.remove().catch(() => { })
+                    job.remove().catch((e) => console.log(e))
 
                     if (!result) {
                         resolve()
