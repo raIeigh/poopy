@@ -652,7 +652,7 @@ class Poopy {
                         return
                     }
 
-                    var result = await (new Promise((resolve) => {
+                    var result = await /*(new Promise((resolve) => {
                         var result = { std: 'The process has crashed.' } 
                         var validStates = ['completed', 'failed', 'stuck']
 
@@ -669,7 +669,7 @@ class Poopy {
                         job.finished().then((r) => {
                             result = r
                         }).catch(() => { })
-                    })).catch(() => { })
+                    })).catch(() => { })*/ job.finished().catch(() => { })
                     console.log(result)
 
                     job.remove().catch(() => { })
