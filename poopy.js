@@ -4594,7 +4594,9 @@ class Poopy {
 
                 var result = await job.finished().catch(() => { })
 
-                if (!result || !result.data) return await poopy.functions.getAllData(poopy.config.mongodatabase, Object.keys(poopy.functions.globalData()).length <= 0)
+                if (!result || !result.data || (Object.keys(poopy.functions.globalData()).length <= 0 && !result.globaldata)) return await poopy.functions.getAllData(poopy.config.mongodatabase, Object.keys(poopy.functions.globalData()).length <= 0)
+
+                return result
             }
         }
 
