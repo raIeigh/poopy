@@ -647,10 +647,9 @@ class Poopy {
                         files: poopy.vars.processingTools.inputs[command](code.split(' ').slice(1))
                     }
 
-                    console.log(Object.keys(execData.files))
                     var job = await poopy.vars.workQueue.add(execData)
                     poopy.jobs.push(job)
-                    var result = await job.finished().catch(() => { })
+                    var result = await job.finished().catch((e) => console.log(e))
                     job.remove().catch(() => { })
                     var fjob = poopy.jobs.findIndex(j => j === job)
                     if (fjob > -1) poopy.jobs.splice(fjob, 1)
@@ -661,7 +660,6 @@ class Poopy {
                     }
                     
                     if (result.files) {
-                        console.log(result.files)
                         var name = poopy.vars.processingTools.outputs[command](args)
                         var dirsplit = name.split('/')
                         var dir = dirsplit.slice(0, dirsplit.length - 1).join('/')
