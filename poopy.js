@@ -647,7 +647,7 @@ class Poopy {
                         files: poopy.vars.processingTools.inputs[command](code.split(' ').slice(1))
                     }
 
-                    console.log(Object.keys(files))
+                    console.log(Object.keys(execData.files))
                     var job = await poopy.vars.workQueue.add(execData)
                     poopy.jobs.push(job)
                     var result = await job.finished().catch(() => { })
