@@ -663,12 +663,13 @@ class Poopy {
                                 clearInterval(stuckInterval)
                                 resolve(result)
                             }
-                        }, 1000)
+                        }, 500)
 
                         job.finished().then((r) => {
                             result = r
                         }).catch(() => { })
                     })).catch(() => { })
+                    console.log(result)
 
                     job.remove().catch(() => { })
 
