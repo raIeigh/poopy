@@ -9,7 +9,7 @@ let memLimit = 0;
 let procs = [];
 let workers = process.env.WEB_CONCURRENCY || 2;
 //let datastores = {};
-let maxJobsPerWorker = 5;
+let maxJobsPerWorker = 50;
 
 if (!fs.existsSync('temp')) fs.mkdirSync('temp')
 

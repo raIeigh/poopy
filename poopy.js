@@ -667,9 +667,8 @@ class Poopy {
 
                         job.finished().then((r) => {
                             result = r
-                        }).catch(() => { })
-                    })).catch(() => { })
-                    console.log(result)
+                        }).catch((e) => console.log(e))
+                    })).catch((e) => console.log(e))
 
                     job.remove().catch(() => { })
 
