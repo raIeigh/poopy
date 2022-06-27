@@ -123,6 +123,8 @@ function execPromise(code) {
 }
 
 async function master() {
+    console.log('master started')
+
     let workQueue = require('./modules/workQueue')();
 
     var waiting = await workQueue.getWaiting().catch(() => { })
@@ -204,6 +206,8 @@ async function start(id) {
     }
 
     workQueue.process(maxJobsPerWorker, async (job) => {
+        console.log(job)
+
         switch (job.data.type) {
             case 'download':
                 await downloadJob(job)
@@ -215,7 +219,7 @@ async function start(id) {
             case 'delete':
                 await deleteJob(job)
                 break;
-            
+
             case 'eval':
                 try {
                     return { value: eval(job.data.code) }
