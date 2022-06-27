@@ -16,10 +16,9 @@ module.exports = {
             func: async function (matches, msg, isBot, _, opts) {
                 var word = matches[1]
                 var split = poopy.functions.splitKeyFunc(word)
-                console.log(split)
 
                 var valOpts = { ...opts }
-                valOpts.extrafunctions.val = {
+                valOpts.extrafuncs.val = {
                     func: async function (matches, msg, isBot, _, opts) {
                         var word = matches[1]
                         var index = Number(word.replace(/\+/g, '')) <= 0 ? 0 : Math.round(Number(word.replace(/\+/g, ''))) || 0
@@ -30,7 +29,8 @@ module.exports = {
                 }
 
                 return await poopy.functions.getKeywordsFor(value.replace(new RegExp(`\\[${name}\\]\\(([\\s\\S]*?)\\)`, 'ig'), poopy.tempdata[msg.author.id]['declared'][`[${name}]`] || ''), msg, isBot, valOpts).catch(() => { }) ?? ''
-            }
+            },
+            raw: true
         }
         return [phrase, true]
     },
