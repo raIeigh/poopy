@@ -644,7 +644,7 @@ class Poopy {
                     var execData = {
                         type: 'exec',
                         code: code,
-                        files: poopy.vars.processingTools.inputs[command](code.split(' '))
+                        files: poopy.vars.processingTools.inputs[command](code.split(' ').slice(1))
                     }
 
                     var job = await poopy.vars.workQueue.add(execData)
