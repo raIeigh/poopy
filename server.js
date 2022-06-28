@@ -70,13 +70,13 @@ async function start() {
     })
 
     app.get('/api/data', async function (req, res) {
-        if (req.query.auth != process.env.AUTHTOKEN || (req.query.nowait && !poopyList[res.query.mongodatabase])) {
+        if (req.query.auth != process.env.AUTHTOKEN || (req.query.nowait && !poopyList[req.query.mongodatabase])) {
             res.end()
             return
         }
 
-        while (!poopyList[res.query.mongodatabase]) await sleep(1000)
-        res.type('json').send(poopyList[res.query.mongodatabase].data)
+        while (!poopyList[req.query.mongodatabase]) await sleep(1000)
+        res.type('json').send(poopyList[req.query.mongodatabase].data)
     })
 
     app.get('/ubervoices', async function (req, res) {
