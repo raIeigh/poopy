@@ -3605,8 +3605,6 @@ class Poopy {
                 await poopy.vars.workQueue.add({
                     type: 'datasave',
                     mongodatabase: poopy.config.mongodatabase
-                }, {
-                    removeOnComplete: true
                 }).catch(() => { })
             }
 
@@ -4590,8 +4588,6 @@ class Poopy {
                     type: 'dataget',
                     mongodatabase: poopy.config.mongodatabase,
                     global: poopy.config.quitOnDestroy
-                }, {
-                    removeOnComplete: true
                 }).catch(() => { })
 
                 if (!job) {
@@ -4600,6 +4596,7 @@ class Poopy {
                 }
 
                 var result = await job.finished().catch(() => { })
+                job.remove().catch(() => { })
 
                 if (!result || !result.data || (poopy.config.quitOnDestroy && !result.globaldata)) {
                     console.log(`${poopy.bot.user.username}: nvm gathering from mongodb`)
