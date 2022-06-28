@@ -60,8 +60,23 @@ async function start() {
     })
 
     app.get('/api/globalData', async function (req, res) {
-        while (!poopyStarted) await sleep(1000)
+        if (req.query.nowait && Object.keys(globalData()).length <= 0) {
+            res.end()
+            return
+        }
+
+        while (Object.keys(globalData()).length <= 0) await sleep(1000)
         res.type('json').send(globalData())
+    })
+
+    app.get('/api/data', async function (req, res) {
+        if (req.query.auth != process.env.AUTHTOKEN || (req.query.nowait && !poopyList[res.query.mongodatabase])) {
+            res.end()
+            return
+        }
+
+        while (!poopyList[res.query.mongodatabase]) await sleep(1000)
+        res.type('json').send(poopyList[res.query.mongodatabase].data)
     })
 
     app.get('/ubervoices', async function (req, res) {

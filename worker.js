@@ -1,6 +1,7 @@
 let throng = require('throng')
 let os = require('os')
 let fs = require('fs-extra')
+let axios = require('axios').default
 let { exec, spawn } = require('child_process')
 
 let memLimit = 0;
@@ -152,12 +153,14 @@ async function processJob(job) {
         var data = job.data
 
         var mongodatabase = data.mongodatabase
-        var data = data.data
 
         console.log(`${mongodatabase} save`)
 
-        if (data.data) datastores[mongodatabase] = data.data
-        if (data.globaldata) globaldata = data.globaldata
+        var dataRequest = await axios.get(`https://poopies-for-you.herokuapp.com/api/data?mongodatabase=${mongodatabase}&nowait=1&auth=${process.env.AUTHTOKEN}`)
+        if (dataRequest.data) datastores[mongodatabase] = dataRequest.data
+
+        var globaldataRequest = await axios.get(`https://poopies-for-you.herokuapp.com/api/globalData?nowait=1`)
+        if (globaldataRequest.data) globaldata = globaldataRequest.data
     }
 
     let execJob = async (job) => {

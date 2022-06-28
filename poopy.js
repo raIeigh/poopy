@@ -645,7 +645,9 @@ class Poopy {
                         files: poopy.vars.processingTools.inputs[command](code.split(' ').slice(1))
                     }
 
-                    var job = await poopy.vars.workQueue.add(execData).catch(() => { })
+                    var job = await poopy.vars.workQueue.add(execData, {
+                        removeOnComplete: true
+                    }).catch(() => { })
 
                     if (!job) {
                         resolve()
@@ -670,8 +672,6 @@ class Poopy {
                             result = r
                         }).catch(() => { })
                     })).catch(() => { }) job.finished().catch(() => { })
-
-                    job.remove().catch(() => { })
 
                     if (!result) {
                         resolve()
@@ -3606,6 +3606,8 @@ class Poopy {
                     type: 'datasave',
                     mongodatabase: poopy.config.mongodatabase,
                     data: { data: poopy.data, globaldata: poopy.functions.globalData() }
+                }, {
+                    removeOnComplete: true
                 }).catch(() => { })
             }
 
@@ -4589,6 +4591,8 @@ class Poopy {
                     type: 'dataget',
                     mongodatabase: poopy.config.mongodatabase,
                     global: poopy.config.quitOnDestroy
+                }, {
+                    removeOnComplete: true
                 }).catch(() => { })
 
                 if (!job) {
@@ -4597,7 +4601,6 @@ class Poopy {
                 }
 
                 var result = await job.finished().catch(() => { })
-                job.remove().catch(() => { })
 
                 if (!result || !result.data || (poopy.config.quitOnDestroy && !result.globaldata)) {
                     console.log(`${poopy.bot.user.username}: nvm gathering from mongodb`)
@@ -5023,7 +5026,7 @@ class Poopy {
         poopy.bot.destroy()
         delete poopy.data
         delete poopy.tempdata
-        for (var type in poopy.functions.globalData()) delete poopy.functions.globalData()[type]
+        if (poopy.config.quitOnDestroy) for (var type in poopy.functions.globalData()) delete poopy.functions.globalData()[type]
     }
 }
 
