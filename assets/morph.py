@@ -1,4 +1,0 @@
-from gmic import run
-import sys
-
-run(sys.argv[1] + '/static.png ' + sys.argv[1] + '/static2.png morph 20 output ' + sys.argv[1] + '/frames/frame.png')
