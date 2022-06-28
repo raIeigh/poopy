@@ -1,4 +1,4 @@
-import gmic
+from gmic import run
 import sys
 
-gmic.run(sys.argv[1] + '/static.png ' + sys.argv[1] + '/static2.png morph 20 output ' + sys.argv[1] + '/frames/frame.png')
+run(sys.argv[1] + '/static.png ' + sys.argv[1] + '/static2.png morph 20 output ' + sys.argv[1] + '/frames/frame.png')
