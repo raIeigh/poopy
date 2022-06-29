@@ -3599,8 +3599,7 @@ class Poopy {
                 await poopy.functions.updateAllData(poopy.config.mongodatabase, { data: poopy.data, globaldata: poopy.functions.globalData() }).catch(() => { })
                 await poopy.functions.processTask({
                     type: 'datasave',
-                    mongodatabase: poopy.config.mongodatabase,
-                    data: { data: poopy.data, globaldata: poopy.functions.globalData() }
+                    mongodatabase: poopy.config.mongodatabase
                 }).catch(() => { })
             }
 
