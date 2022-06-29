@@ -64,10 +64,10 @@ module.exports = {
         },
 
         ffprobe: (args) => {
-            if (args[args.length - 1].includes('"')) return {}
-            return {
+            if (args[args.length - 1].startsWith('temp/')) return {
                 [args[args.length - 1]]: fs.readFileSync(args[args.length - 1]).toString('base64')
             }
+            return {}
         },
 
         magick: (args) => {
@@ -93,9 +93,10 @@ module.exports = {
         },
 
         gifsicle: (args) => {
-            return {
+            if (args[args.length - 1].startsWith('temp/')) return {
                 [args[args.length - 1]]: fs.readFileSync(args[args.length - 1]).toString('base64')
             }
+            return {}
         },
 
         gmic: (args) => {

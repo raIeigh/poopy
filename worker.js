@@ -4,12 +4,12 @@ let fs = require('fs-extra')
 let axios = require('axios').default
 let { exec, spawn } = require('child_process')
 
+var url = process.env.CLOUDAMQP_URL || "amqp://localhost";
 let memLimit = 0;
 let procs = [];
 let workers = process.env.WEB_CONCURRENCY || 2;
 let datastores = {};
 let globaldata;
-let maxJobsPerWorker = 50;
 
 if (!fs.existsSync('temp')) fs.mkdirSync('temp')
 
@@ -53,6 +53,16 @@ function dir_name(filedir) {
     var dir = dirsplit.join('/')
 
     return [dir, name]
+}
+
+function tryJSONstringify(obj) {
+    if (typeof obj == 'undefined') return ''
+
+    try {
+        return JSON.stringify(obj)
+    } catch (_) {
+        return obj.toString()
+    }
 }
 
 let processingTools = require('./modules/processingTools')
@@ -129,10 +139,8 @@ function execPromise(code) {
     })
 }
 
-async function processJob(job) {
-    let getDataJob = async (job) => {
-        var data = job.data
-
+async function processJob(data) {
+    let getDataJob = async () => {
         var mongodatabase = data.mongodatabase
         var global = data.global
 
@@ -149,9 +157,7 @@ async function processJob(job) {
         }
     }
 
-    let saveDataJob = async (job) => {
-        var data = job.data
-
+    let saveDataJob = async () => {
         var mongodatabase = data.mongodatabase
 
         console.log(`${mongodatabase} save`)
@@ -161,13 +167,13 @@ async function processJob(job) {
 
         var globaldataRequest = await axios.get(`https://poopies-for-you.herokuapp.com/api/globalData?nowait=1`)
         if (globaldataRequest.data) globaldata = globaldataRequest.data
+
+        return {}
     }
 
-    let execJob = async (job) => {
-        let data = job.data
-
+    let execJob = async () => {
         let code = data.code
-        if (!code) throw new Error('No code was provided!')
+        if (!code) throw { err: 'No code was provided!' }
 
         let args = code.split(' ')
         let command = args[0]
@@ -226,20 +232,19 @@ async function processJob(job) {
         return output
     }
 
-    switch (job.data.type) {
+    switch (data.type) {
         case 'dataget':
-            return await getDataJob(job);
+            return await getDataJob();
 
         case 'datasave':
-            await saveDataJob(job);
-            break;
+            return await saveDataJob();
 
         case 'exec':
-            return await execJob(job);
+            return await execJob();
 
         case 'eval':
             try {
-                return { value: eval(job.data.code) }
+                return { value: eval(data.code) }
             } catch (err) {
                 throw { err: err.stack }
             };
@@ -249,45 +254,33 @@ async function processJob(job) {
 async function master() {
     console.log('master started')
 
-    let workQueue = require('./modules/createQueue')('work');
+    var conn = await require('amqplib').connect(url);
+    var ch = await conn.createChannel()
 
-    var jobs = await workQueue.getJobs('active').catch(() => { }) ?? []
+    ch.ackAll()
 
-    workQueue.process(maxJobsPerWorker, async (job) => {
-        return await processJob(job)
-    })
-
-    var promises = []
-
-    console.log(`${jobs.length} jobs are pending`)
-
-    for (var job of jobs) {
-        promises.push(async () => {
-            if (job.data.type == 'exec') {
-                await job.moveToFailed('Stalled jobs clean').catch(() => { })
-            } else {
-                await job.retry().catch(() => { })
-            }
-        })
-    }
-
-    await Promise.all(promises).catch(() => { })
-
-    await sleep(5000)
-
-    await workQueue.obliterate({ force: true }).catch(() => { })
-
-    workQueue.close()
+    await ch.close()
+    await conn.close()
 }
 
 async function start(id) {
-    let workQueue = require('./modules/createQueue')('work');
-
-    workQueue.process(maxJobsPerWorker, async (job) => {
-        return await processJob(job)
-    })
-
     console.log(`worker ${id} started`)
+
+    var conn = await require('amqplib').connect(url);
+    var ch = await conn.createChannel()
+
+    await ch.assertQueue('tasks', { durable: true });
+    await ch.prefetch(1);
+
+    await ch.consume('tasks', async function (msg) {
+        var data = JSON.parse(msg.content.toString())
+        console.log(data)
+        var res = await processJob(data).catch(() => { })
+
+        ch.sendToQueue(msg.properties.replyTo, Buffer.from(JSON.stringify(res)), {
+            correlationId: msg.properties.correlationId
+        })
+    }, { noAck: true })
 }
 
 throng({ workers, master, start });

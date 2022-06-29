@@ -193,7 +193,6 @@ class Poopy {
             access_token_key: process.env.TWITTERACCESSTOKENKEY,
             access_token_secret: process.env.TWITTERACCESSTOKENSECRET
         })*/
-        poopy.vars.workQueue = require('./modules/createQueue')('work')
         poopy.vars.rest = new poopy.modules.REST({ version: '9' })
         poopy.vars.gifFormats = ['gif', 'apng']
         poopy.vars.jimpFormats = ['png', 'jpeg', 'jpg', 'gif', 'bmp', 'tiff']
@@ -638,40 +637,14 @@ class Poopy {
                 var args = code.match(/("[^"\\]*(?:\\[\S\s][^"\\]*)*"|'[^'\\]*(?:\\[\S\s][^'\\]*)*'|\/[^\/\\]*(?:\\[\S\s][^\/\\]*)*\/[gimy]*(?=\s|$)|(?:\\\s|\S)+)/g)
                 var command = args.splice(0, 1)[0]
 
-                /*if (poopy.vars.processingTools.inputs[command] && !poopy.config.testing) {
+                if (poopy.vars.processingTools.inputs[command]/* && !poopy.config.testing*/) {
                     var execData = {
                         type: 'exec',
                         code: code,
                         files: poopy.vars.processingTools.inputs[command](code.split(' ').slice(1))
                     }
 
-                    var job = await poopy.vars.workQueue.add(execData, {
-                        removeOnComplete: true
-                    }).catch(() => { })
-
-                    if (!job) {
-                        resolve()
-                        return
-                    }
-
-                    var result = await (new Promise((resolve) => {
-                        var result = { std: 'The process has crashed.' } 
-                        var validStates = ['completed', 'failed', 'stuck']
-
-                        var stuckInterval = setInterval(async () => {
-                            var state = await job.getState().catch(() => { })
-
-                            if (validStates.includes(state)) {
-                                console.log(state)
-                                clearInterval(stuckInterval)
-                                resolve(result)
-                            }
-                        }, 500)
-
-                        job.finished().then((r) => {
-                            result = r
-                        }).catch(() => { })
-                    })).catch(() => { }) job.finished().catch(() => { })
+                    var result = await poopy.functions.processTask(execData).catch(() => { })
 
                     if (!result) {
                         resolve()
@@ -690,7 +663,7 @@ class Poopy {
 
                     resolve(result.std)
                     return
-                }*/
+                }
 
                 var stdout = []
                 var stderr = []
@@ -719,7 +692,6 @@ class Poopy {
                     var out = stdout.join('\n') || stderr.join('\n')
                     clearInterval(memoryInterval)
                     proc.removeAllListeners()
-                    console.log(out)
                     resolve(out)
                 }
 
@@ -1086,6 +1058,28 @@ class Poopy {
             var res = await poopy.modules.axios.request(options).catch(() => { }) ?? { data: { AIResponse: '' } }
 
             return res.data.AIResponse*/
+        }
+
+        poopy.functions.processTask = async function (data) {
+            return new Promise(async (resolve, reject) => {
+                var ch = await poopy.amqpconn.createChannel().catch(reject)
+                var q = await ch.assertQueue('', { exclusive: true }).catch(reject)
+                var correlationId = poopy.functions.generateId()
+
+                var consumer = await ch.consume(q.queue, function (msg) {
+                    if (msg.properties.correlationId == correlationId) {
+                        ch.cancel(consumer.consumerTag)
+                        resolve(JSON.parse(msg.content.toString()))
+                    }
+                }, {
+                    noAck: true
+                }).catch(reject)
+
+                ch.sendToQueue('tasks', Buffer.from(JSON.stringify(data)), {
+                    correlationId: correlationId,
+                    replyTo: q.queue
+                })
+            })
         }
 
         poopy.functions.infoPost = async function (message) {
@@ -3603,7 +3597,7 @@ class Poopy {
                 poopy.modules.fs.writeFileSync(`data/globaldata.json`, JSON.stringify(poopy.functions.globalData()))
             } else {
                 await poopy.functions.updateAllData(poopy.config.mongodatabase, { data: poopy.data, globaldata: poopy.functions.globalData() }).catch(() => { })
-                await poopy.vars.workQueue.add({
+                await poopy.functions.processTask({
                     type: 'datasave',
                     mongodatabase: poopy.config.mongodatabase
                 }).catch(() => { })
@@ -4585,19 +4579,11 @@ class Poopy {
                 return data
             } else {
                 console.log(`${poopy.bot.user.username}: gathering from worker`)
-                var job = await poopy.vars.workQueue.add({
+                var result = await poopy.functions.processTask({
                     type: 'dataget',
                     mongodatabase: poopy.config.mongodatabase,
                     global: poopy.config.quitOnDestroy
                 }).catch(() => { })
-
-                if (!job) {
-                    console.log(`${poopy.bot.user.username}: nvm gathering from mongodb`)
-                    return await poopy.functions.getAllData(poopy.config.mongodatabase, poopy.config.quitOnDestroy)
-                }
-
-                var result = await job.finished().catch(() => { })
-                job.remove().catch(() => { })
 
                 if (!result || !result.data || (poopy.config.quitOnDestroy && !result.globaldata)) {
                     console.log(`${poopy.bot.user.username}: nvm gathering from mongodb`)
@@ -4623,6 +4609,7 @@ class Poopy {
                 }
             ]
         })
+        poopy.amqpconn = await require('amqplib').connect(process.env.CLOUDAMQP_URL || "amqp://localhost")
 
         await poopy.functions.infoPost(`Gathering data in \`${poopy.config.mongodatabase}\``)
         var gdata = await requestData()
