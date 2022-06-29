@@ -1062,17 +1062,29 @@ class Poopy {
 
         poopy.functions.processTask = async function (data) {
             return new Promise(async (resolve, reject) => {
+
                 var ch = await poopy.amqpconn.createChannel().catch(reject)
                 var q = await ch.assertQueue('', { exclusive: true }).catch(reject)
                 var correlationId = poopy.functions.generateId()
 
+                async function closeAll() {
+                    await ch.cancel(consumer.consumerTag).catch(() => { })
+                    await ch.cancel(timeoutconsumer.consumerTag).catch(() => { })
+                    await ch.close().catch(() => { })
+                }
+
                 var consumer = await ch.consume(q.queue, function (msg) {
                     if (msg.properties.correlationId == correlationId) {
-                        ch.cancel(consumer.consumerTag)
+                        await closeAll()
                         resolve(JSON.parse(msg.content.toString()))
                     }
-                }, {
-                    noAck: true
+                }, { noAck: true }).catch(reject)
+
+                var timeoutconsumer = await ch.consume('tasks', function (msg) {
+                    if (msg.content.toString() == 'worker_crash') {
+                        await closeAll()
+                        reject(JSON.parse(msg.content.toString()))
+                    }
                 }).catch(reject)
 
                 ch.sendToQueue('tasks', Buffer.from(JSON.stringify(data)), {

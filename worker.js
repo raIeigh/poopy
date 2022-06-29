@@ -254,7 +254,9 @@ async function master() {
 
     var conn = await require('amqplib').connect(url);
     var ch = await conn.createChannel()
+    await ch.assertQueue('tasks', { durable: true })
 
+    ch.sendToQueue('tasks', Buffer.from('worker_crash'))
     ch.ackAll()
 
     await ch.close()
@@ -264,11 +266,11 @@ async function master() {
 async function start(id) {
     console.log(`worker ${id} started`)
 
-    var conn = await require('amqplib').connect(url);
+    var conn = await require('amqplib').connect(url)
     var ch = await conn.createChannel()
 
-    await ch.assertQueue('tasks', { durable: true });
-    await ch.prefetch(1);
+    await ch.assertQueue('tasks', { durable: true })
+    await ch.prefetch(1)
 
     await ch.consume('tasks', async function (msg) {
         var data = JSON.parse(msg.content.toString())
@@ -280,4 +282,4 @@ async function start(id) {
     }, { noAck: true })
 }
 
-throng({ workers, master, start });
+throng({ workers, master, start })
