@@ -1075,14 +1075,14 @@ class Poopy {
 
                 var consumer = await ch.consume(q.queue, function (msg) {
                     if (msg.properties.correlationId == correlationId) {
-                        await closeAll()
+                        closeAll()
                         resolve(JSON.parse(msg.content.toString()))
                     }
                 }, { noAck: true }).catch(reject)
 
                 var timeoutconsumer = await ch.consume('tasks', function (msg) {
                     if (msg.content.toString() == 'worker_crash') {
-                        await closeAll()
+                        closeAll()
                         reject(JSON.parse(msg.content.toString()))
                     }
                 }).catch(reject)
