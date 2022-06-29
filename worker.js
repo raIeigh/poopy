@@ -254,9 +254,12 @@ async function master() {
 
     var conn = await require('amqplib').connect(url);
     var ch = await conn.createChannel()
-    await ch.assertQueue('tasks', { durable: true })
 
-    ch.sendToQueue('tasks', Buffer.from('worker_crash'))
+    await ch.assertExchange('crash', 'fanout', {
+        durable: false
+    })
+    ch.publish('crash', '', Buffer.from('The worker has crashed'))
+
     ch.ackAll()
 
     await ch.close()
