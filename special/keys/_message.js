@@ -1,5 +1,5 @@
 module.exports = {
-  desc: 'Returns a random message from the server. Requires permission for the bot to read messages within the channel.',
+  desc: 'Returns a random message from the server. Requires permission for the bot to read messages within a channel.',
   func: function (msg) {
     let poopy = this
 

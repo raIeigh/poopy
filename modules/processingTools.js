@@ -129,6 +129,6 @@ module.exports = {
     },
 
     names: {
-        gmic: 'python assets/gmic.py'
+        gmic: 'python assets/gmicRunner.py'
     }
 }
