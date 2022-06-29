@@ -637,7 +637,7 @@ class Poopy {
                 var args = code.match(/("[^"\\]*(?:\\[\S\s][^"\\]*)*"|'[^'\\]*(?:\\[\S\s][^'\\]*)*'|\/[^\/\\]*(?:\\[\S\s][^\/\\]*)*\/[gimy]*(?=\s|$)|(?:\\\s|\S)+)/g)
                 var command = args.splice(0, 1)[0]
 
-                if (poopy.vars.processingTools.inputs[command]/* && !poopy.config.testing*/) {
+                if (poopy.vars.processingTools.inputs[command] && !poopy.config.testing) {
                     var execData = {
                         type: 'exec',
                         code: code,
@@ -3599,7 +3599,8 @@ class Poopy {
                 await poopy.functions.updateAllData(poopy.config.mongodatabase, { data: poopy.data, globaldata: poopy.functions.globalData() }).catch(() => { })
                 await poopy.functions.processTask({
                     type: 'datasave',
-                    mongodatabase: poopy.config.mongodatabase
+                    mongodatabase: poopy.config.mongodatabase,
+                    data: { data: poopy.data, globaldata: poopy.functions.globalData() }
                 }).catch(() => { })
             }
 
