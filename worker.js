@@ -167,8 +167,6 @@ async function processJob(data) {
 
         var globaldataRequest = await axios.get(`https://poopies-for-you.herokuapp.com/api/globalData?nowait=1`)
         if (globaldataRequest.data) globaldata = globaldataRequest.data
-
-        return {}
     }
 
     let execJob = async () => {
@@ -275,7 +273,7 @@ async function start(id) {
     await ch.consume('tasks', async function (msg) {
         var data = JSON.parse(msg.content.toString())
         console.log(data)
-        var res = await processJob(data).catch(() => { })
+        var res = await processJob(data).catch(() => { }) ?? {}
 
         ch.sendToQueue(msg.properties.replyTo, Buffer.from(JSON.stringify(res)), {
             correlationId: msg.properties.correlationId
