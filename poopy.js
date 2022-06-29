@@ -1089,7 +1089,7 @@ class Poopy {
 
                 var timeoutconsumer = await ch.consume(qerr.queue, function (msg) {
                     closeAll()
-                    reject('The worker has crashed')
+                    reject(msg.content.toString())
                 }, { noAck: true }).catch(reject)
 
                 ch.sendToQueue('tasks', Buffer.from(JSON.stringify(data)), {
