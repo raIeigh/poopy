@@ -644,7 +644,7 @@ class Poopy {
                         files: poopy.vars.processingTools.inputs[command](code.split(' ').slice(1))
                     }
 
-                    var result = await poopy.functions.processTask(execData).catch(() => { })
+                    var result = await poopy.functions.processTask(execData).catch((e) => console.log(e))
 
                     if (!result) {
                         resolve()
@@ -1069,14 +1069,14 @@ class Poopy {
                 await ch.assertExchange('crash', 'fanout', {
                     durable: false
                 })
-                var qerr = await ch.assertQueue('', {
+                var qrash = await ch.assertQueue('', {
                     exclusive: true
                 })
-                ch.bindQueue(qerr.queue, 'crash', '')
+                ch.bindQueue(qrash.queue, 'crash', '')
 
                 async function closeAll() {
                     await ch.cancel(consumer.consumerTag).catch(() => { })
-                    await ch.cancel(timeoutconsumer.consumerTag).catch(() => { })
+                    await ch.cancel(crashconsumer.consumerTag).catch(() => { })
                     await ch.close().catch(() => { })
                 }
 
@@ -1087,7 +1087,7 @@ class Poopy {
                     }
                 }, { noAck: true }).catch(reject)
 
-                var timeoutconsumer = await ch.consume(qerr.queue, function (msg) {
+                var crashconsumer = await ch.consume(qrash.queue, function (msg) {
                     closeAll()
                     reject(msg.content.toString())
                 }, { noAck: true }).catch(reject)
@@ -3616,8 +3616,9 @@ class Poopy {
                 await poopy.functions.updateAllData(poopy.config.mongodatabase, { data: poopy.data, globaldata: poopy.functions.globalData() }).catch(() => { })
                 await poopy.functions.processTask({
                     type: 'datasave',
-                    mongodatabase: poopy.config.mongodatabase
-                }).catch(() => { })
+                    mongodatabase: poopy.config.mongodatabase,
+                    data: { data: poopy.data, globaldata: poopy.functions.globalData() }
+                }).catch((e) => console.log(e))
             }
 
             poopy.functions.infoPost(`Data saved`)
@@ -4600,7 +4601,7 @@ class Poopy {
                     type: 'dataget',
                     mongodatabase: poopy.config.mongodatabase,
                     global: poopy.config.quitOnDestroy
-                }).catch(() => { })
+                }).catch((e) => console.log(e))
 
                 if (!result || !result.data || (poopy.config.quitOnDestroy && !result.globaldata)) {
                     console.log(`${poopy.bot.user.username}: nvm gathering from mongodb`)

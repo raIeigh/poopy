@@ -159,14 +159,12 @@ async function processJob(data) {
 
     let saveDataJob = async () => {
         var mongodatabase = data.mongodatabase
+        var datastore = data.data
 
         console.log(`${mongodatabase} save`)
 
-        var dataRequest = await axios.get(`https://poopies-for-you.herokuapp.com/api/data?mongodatabase=${mongodatabase}&nowait=1&auth=${process.env.AUTHTOKEN}`)
-        if (dataRequest.data) datastores[mongodatabase] = dataRequest.data
-
-        var globaldataRequest = await axios.get(`https://poopies-for-you.herokuapp.com/api/globalData?nowait=1`)
-        if (globaldataRequest.data) globaldata = globaldataRequest.data
+        if (datastore.data) datastores[mongodatabase] = datastore.data
+        if (datastore.globaldata) globaldata = datastore.globaldata
     }
 
     let execJob = async () => {

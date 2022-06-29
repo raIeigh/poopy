@@ -39,7 +39,7 @@ module.exports = {
                         var [dir, name] = dir_name(file)
                         var nameregex = digitRegex(name)
 
-                        fs.readdirSync(dir).forEach(file => {
+                        if (fs.existsSync(dir)) fs.readdirSync(dir).forEach(file => {
                             if (file.match(nameregex)) {
                                 inputs[`${dir}/${file}`] = fs.readFileSync(`${dir}/${file}`).toString('base64')
 
@@ -50,7 +50,7 @@ module.exports = {
                                         if (txtfile.startsWith('file')) {
                                             var file = txtfile.substring(6, txtfile.length - 1)
 
-                                            inputs[`${dir}/${file}`] = fs.readFileSync(`${dir}/${file}`).toString('base64')
+                                            if (fs.existsSync(`${dir}/${file}`)) inputs[`${dir}/${file}`] = fs.readFileSync(`${dir}/${file}`).toString('base64')
                                         }
                                     })
                                 }
@@ -64,7 +64,7 @@ module.exports = {
         },
 
         ffprobe: (args) => {
-            if (args[args.length - 1].startsWith('temp/')) return {
+            if (args[args.length - 1].startsWith('temp/') && fs.existsSync(args[args.length - 1])) return {
                 [args[args.length - 1]]: fs.readFileSync(args[args.length - 1]).toString('base64')
             }
             return {}
@@ -80,20 +80,19 @@ module.exports = {
                     var [dir, name] = dir_name(file)
                     var nameregex = digitRegex(name)
 
-                    fs.readdirSync(dir).forEach(file => {
+                    if (fs.existsSync(dir)) fs.readdirSync(dir).forEach(file => {
                         if (file.match(nameregex)) {
                             inputs[`${dir}/${file}`] = fs.readFileSync(`${dir}/${file}`).toString('base64')
                         }
                     })
-                }
-                else break
+                } else if (file.match(/^https?:|"/)) break
             }
 
             return inputs
         },
 
         gifsicle: (args) => {
-            if (args[args.length - 1].startsWith('temp/')) return {
+            if (args[args.length - 1].startsWith('temp/') && fs.existsSync(args[args.length - 1])) return {
                 [args[args.length - 1]]: fs.readFileSync(args[args.length - 1]).toString('base64')
             }
             return {}
@@ -109,13 +108,12 @@ module.exports = {
                     var [dir, name] = dir_name(file)
                     var nameregex = digitRegex(name)
 
-                    fs.readdirSync(dir).forEach(file => {
+                    if (fs.existsSync(dir)) fs.readdirSync(dir).forEach(file => {
                         if (file.match(nameregex)) {
                             inputs[`${dir}/${file}`] = fs.readFileSync(`${dir}/${file}`).toString('base64')
                         }
                     })
-                }
-                else break
+                } else if (file.match(/^https?:|"/)) break
             }
 
             return inputs
