@@ -79,7 +79,7 @@ module.exports = {
         var output
 
         if (stdOut && stdErr) output = `StdOut: ${stdOut.data}\n\nStdErr: ${stdErr.data}`
-        else output = (stdOut ?? stdErr).data || 'No output.'
+        else output = (stdOut ?? stdErr) ? (stdOut ?? stdErr).data : 'No output.'
 
         await msg.channel.send({
             content: output,
