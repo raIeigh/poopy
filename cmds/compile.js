@@ -24,7 +24,7 @@ module.exports = {
             return
         }
 
-        saidMessage = args.slice(cl ? 1 : 2).join(' ')
+        saidMessage = args.slice(cl > -1 ? 1 : 2).join(' ')
         if (codeBlock) saidMessage = saidMessage.substring(cl > -1 ? cl : 0, saidMessage.length - 3).trim()
 
         var langresponse = await poopy.modules.axios.get('https://wandbox.org/api/list.json').catch(() => { })
@@ -90,7 +90,7 @@ module.exports = {
     },
     help: {
         name: 'compile <language> <code>',
-        value: '<:newpoopy:839191885310066729> Compiles the code in the specified language using Wandbox.\n' +
+        value: 'Compiles the code in the specified language using Wandbox.\n' +
             'Pro Tip: You can also just write a code block with the language at the start.'
     },
     type: 'Text'
