@@ -13,11 +13,8 @@ module.exports = function (msg, fixedchoice) {
     const adjectives = ['is trans', 'the femboy', 'the futa', 'the idiot', 'the stalker', 'the impostor', 'now sus', 'the nutter', 'the shitter', 'the burger', 'is very annoying', 'big', 'fat', 'is thin', 'is small', 'what', 'is funny', 'noob', 'wtf', 'with pp', 'peed his pants', 'is amongla', 'looks at porn lolololol', 'angry'];
     const shipAdjectives = ['likes', 'you like', 'loves', 'you love', 'you are in love with', 'you should marry', 'with', 'hug', 'your game is now poopoo for'];
     const characters = ['daddy dearest', 'gf', 'pico', 'skid and pump', 'monster', 'mommy mearest', 'senpai', 'tankman', 'whitty', 'carol', 'hex', 'ruv', 'sarvente', 'miku', 'tricky', 'zardy', 'matt', 'garcello', 'shaggy', 'annie', 'tbh creature', 'yippee', 'cheeky', 'bob', 'tabi', 'agoti', 'kapi', 'neon', 'nene', 'monika', 'selever', 'tord', 'impostor', 'trollge', 'tree', 'nonsense', 'hypno', 'sonic.exe', 'sonic.exe', 'sonic.exe', 'sonic.exe', 'morbius', 'deinx', 'ralsei', 'kris', 'susie', 'berdly', 'nikocado', 'ness', 'giygas', 'tails doll', 'lord x', 'tbh', 'sans', 'cuphead', 'bendy', 'niko', 'joe biden', 'sprigatito']
-    const locations = ['home', 'bedroom', 'car', 'bus', 'garden', 'museum', 'hotel', 'festival', 'fair', 'park', 'kitchen', 'toilet', 'farm', 'cinema', 'restaurant', 'school', 'plane', 'train', 'store', 'shopping', 'elevator', 'forest', 'swamp', 'mountain', 'desert', 'island', 'heaven', 'hell']
-    const consoles = ['pc', 'mobile', 'tablet', 'xbox', 'nintendo switch', 'nintendo 3ds', 'nintendo 2ds', 'psp', 'ps1', 'ps2', 'gamecube', 'ps3', 'ps4', 'ps5', 'wii', 'xbox 360', 'xbox one', 'gameboy', 'nintendo 64', 'sega genesis', 'wii u']
-    const what = ['boobs', 'breasts', 'cleavage', 'bosoms', 'pussy', 'vagina', 'ass', 'ass', 'ass', 'ass', 'ass', 'asshole', 'butt', 'buttocks', 'bum', 'bussy', 'boy pussy', 'penis', 'cock', 'dick', 'balls', 'testicles', 'scrotum', 'perineum', 'thighs', 'legs', 'mouth', 'feet', 'cum', 'paws', 'toes', 'anus', 'pawpads', 'foreskin', 'pubes', 'tits', 'titties', 'areolas', 'milkers', 'goat bussy']
     const options = [
-        { text: `im in a ${locations[Math.floor(Math.random() * locations.length)]}` },
+        { text: `im in the ${keys._location.func.call(poopy).toLowerCase()}` },
         { text: 'lol https://tenor.com/view/sus-suspect-among-us-gif-18663592' },
         { text: 'https://tenor.com/view/madness-hank-new-grounds-jump-gif-17044581' },
         { text: 'https://tenor.com/view/friday-night-funkin-hey-boyfriend-gif-21180248' },
@@ -51,7 +48,7 @@ module.exports = function (msg, fixedchoice) {
         { text: `the ${keys._arab.func.call(poopy).toLowerCase()}` },
         { text: `not ${keys._arab.func.call(poopy).toLowerCase()} fetish` },
         { text: `im eating ${keys._restaurantfood.func.call(poopy).toLowerCase()}` },
-        { text: `finally a ${keys._arab.func.call(poopy).toLowerCase()} game to ${consoles[Math.floor(Math.random() * consoles.length)]}` },
+        { text: `finally a ${keys._arab.func.call(poopy).toLowerCase()} game to ${keys._platform.func.call(poopy).toLowerCase()}` },
         { text: `someone draw ${keys._activemember.func.call(poopy, msg).toLowerCase()} as ${characters[Math.floor(Math.random() * characters.length)]}` },
         { text: `ayo its ${keys._activemember.func.call(poopy, msg).toLowerCase()}` },
         { text: `ayo its ${characters[Math.floor(Math.random() * characters.length)]}` },
@@ -74,8 +71,8 @@ module.exports = function (msg, fixedchoice) {
         { pings: true, text: `they hit the ${keys._animal.func.call(poopy)}` },
         { text: 'WHU', edit: 'WHY' },
         { text: 'nopw', edit: 'nope' },
-        { text: `${keys._persontype.func.call(poopy)}  I ate your ${what[Math.floor(Math.random() * what.length)]}` },
-        { text: `u like ${characters[Math.floor(Math.random() * characters.length)]}s ${what[Math.floor(Math.random() * what.length)]}` },
+        { text: `${keys._persontype.func.call(poopy)}  I ate your ${keys._segsy.func.call(poopy)}` },
+        { text: `u like ${characters[Math.floor(Math.random() * characters.length)]}s ${keys._segsy.func.call(poopy)}` },
         { pings: true, text: 'WHY' },
         { pings: true, text: `you are ${keys._insult.func.call(poopy)}` },
         { pings: true, text: `you are ${keys._compliment.func.call(poopy)}` },
@@ -125,7 +122,7 @@ module.exports = function (msg, fixedchoice) {
         { text: `${msg.author.username.toLowerCase()}: ${keys._arab.func.call(poopy).toLowerCase()}` },
         { text: `no not ${msg.author.username.toLowerCase()} with ${keys._arab.func.call(poopy).toLowerCase()}` },
         { text: 'ahhhhhhhhhh' },
-        { text: `${locations[Math.floor(Math.random() * locations.length)]} suuucks` },
+        { text: `${keys._location.func.call(poopy).toLowerCase()} suuucks` },
         { text: 'why am i a bot' },
         { text: `${msg.author.username.toLowerCase()} ${shipAdjectives[Math.floor(Math.random() * shipAdjectives.length)]} ${keys._activemember.func.call(poopy, msg).toLowerCase()}` },
         { text: `is ${keys._activemember.func.call(poopy, msg).toLowerCase()} hot` },

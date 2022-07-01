@@ -2,13 +2,14 @@
     if you got access to this module, wow congrats on hacking me!!!!!
     some cmd code is outdated, don't blame me if it uses 213789 lines
     relating to that, im also planning to move some code into modules
-    just be warned though, poopy needs a lot of environment variables
+    just be warned though, poopy needs a TON of environment variables
     for all the commands to work, you need to get all of these below:
 
     - TOKEN (it's just the discord bot token, you can just put a random name like POOPYTOKEN, accessed at https://discord.com/developers/applications/<app-id>/bot)
+    - CLOUDAMQP_URL (url used to send file processing and data queues, accessed at https://api.cloudamqp.com/console/<app-id>/details)
     - DEEPAIKEY (key generated when you sign up in deepai, accessed at https://deepai.org/dashboard/profile)
-    - GAMERKEY (key that was used for a cleverbot alternative, generated at https://api-info.pgamerx.com/manage-key)
-    - GOOGLEKEY (key from google cloud you can generate at https://console.cloud.google.com/apis/credentials?project=<project-name>)
+    - GOOGLEKEY (key from google cloud fot accessing the youtube api, generated at https://console.cloud.google.com/apis/credentials?project=<project-name>)
+    - MAKESWEETKEY (key from makesweet for generating heartlocket gifs, dm @mkswt on twitter asking for one)
     - MONGOOSEURL (url used to access the database, generated at https://cloud.mongodb.com/v2/<project-id>#clusters/connect)
     - RAPIDAPIKEY (key from rapid api when you sign up, accessed at https://rapidapi.com/developer/security/<app-name>)
     - REMOVEBGKEY (key from remove.bg, generated at https://www.remove.bg/dashboard#api-key)
