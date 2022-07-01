@@ -165,7 +165,7 @@ module.exports = {
                 args[heightindex + 1] = args[heightindex + 1].substring(0, args[heightindex + 1].length - 1)
             }
             size[1] = (percentage ? height : 1) * ((isNaN(Number(args[heightindex + 1])) ? 0 : Number(args[heightindex + 1]) <= 0 ? 0 : Number(args[heightindex + 1]) || 0) / (percentage ? 100 : 1))
-        } z
+        }
 
         if ((filetype.mime.startsWith('image') && !(poopy.vars.gifFormats.find(f => f === filetype.ext))) && (filetype2.mime.startsWith('image') && !(poopy.vars.gifFormats.find(f => f === filetype2.ext)))) {
             await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -i ${filepath}/${filename2} -filter_complex "[1:v]colorkey=${rgbhex}:${similarity / 100}:${blend / 100},scale=${size[0]}:${size[1]}${keepaspectratio ? `:force_original_aspect_ratio=${keepaspectratio}` : ''}[chroma];[0:v][chroma]overlay=shortest=1:x=${originx}+${Math.round(ox)}:y=${originy}+${Math.round(oy)}:format=auto[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} ${filepath}/output.png`)
