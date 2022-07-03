@@ -6,9 +6,11 @@ module.exports = {
 
     var word = matches[1]
 
-    if (poopy.tempdata[msg.guild.id][msg.channel.id][msg.author.id].messageCollector) {
+    if (poopy.tempdata[msg.guild.id][msg.channel.id][msg.author.id].messageCollector && poopy.tempdata[msg.guild.id][msg.channel.id][msg.author.id].messageCollector.stop) {
       poopy.tempdata[msg.guild.id][msg.channel.id][msg.author.id].messageCollector.stop(word ? 'time' : 'user')
       delete poopy.tempdata[msg.guild.id][msg.channel.id][msg.author.id].messageCollector
     }
+  
+    return ''
   }
 }

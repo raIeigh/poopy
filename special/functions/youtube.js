@@ -24,10 +24,7 @@ module.exports = {
 
         var page = poopy.functions.parseNumber(page, { dft: Math.floor(Math.random() * urls.length), min: 0, max: urls.length - 1, round: true })
 
-        return await poopy.modules.youtubedl(urls[page], {
-            format: '18',
-            'get-url': ''
-        }).catch(() => { }) ?? urls[page]
+        return urls[page]
     },
     attemptvalue: 10,
     limit: 5

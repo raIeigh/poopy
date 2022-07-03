@@ -3,12 +3,12 @@ module.exports = {
     execute: async function (msg, args) {
         let poopy = this
 
+        await msg.channel.sendTyping().catch(() => { })
         if (msg.member.permissions.has('MANAGE_GUILD')  || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || poopy.config.ownerids.find(id => id == msg.author.id)) {
             if (args[1] === undefined && args[2] === undefined) {
                 await msg.channel.send('How much do I spam?!').catch(() => { })
                 return;
             }
-            await msg.channel.sendTyping().catch(() => { })
             var del = true
             var deleteIndex = args.indexOf('-nodelete')
             if (deleteIndex > -1) {
@@ -34,17 +34,14 @@ module.exports = {
                         parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                     }
                 }).catch(() => { })
-                await msg.channel.sendTyping().catch(() => { })
                 return;
             }
             else if (numToRepeat > 25) {
                 await msg.channel.send('Number must be smaller or equal to **25**.').catch(() => { })
-                await msg.channel.sendTyping().catch(() => { })
                 return;
             }
             if (args[2] === undefined && attachments.length <= 0) {
                 await msg.channel.send('What is the message to spam?!').catch(() => { })
-                await msg.channel.sendTyping().catch(() => { })
                 return;
             };
             var sendObject = {
@@ -65,7 +62,6 @@ module.exports = {
                 await poopy.functions.waitMessageCooldown()
                 await msg.channel.send(sendObject).catch(() => { })
             };
-            await msg.channel.sendTyping().catch(() => { })
         } else {
             await msg.channel.send('You need to have the manage messages permission to execute that!').catch(() => { })
             return;

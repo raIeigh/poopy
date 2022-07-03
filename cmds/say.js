@@ -23,7 +23,6 @@ module.exports = {
         });
         if (args[1] === undefined && attachments.length <= 0) {
             await msg.channel.send('What is the message to say?!').catch(() => { })
-            await msg.channel.sendTyping().catch(() => { })
             return;
         };
         var sendObject = {
@@ -45,7 +44,6 @@ module.exports = {
         if (del) {
             msg.delete().catch(() => { })
         }
-        await msg.channel.sendTyping().catch(() => { })
     },
     help: {
         name: 'say/talk/speak <message> [-nodelete] [-tts]',

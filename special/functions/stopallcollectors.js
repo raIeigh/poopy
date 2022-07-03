@@ -17,5 +17,7 @@ module.exports = {
         } else {
             return 'You need the manage messages permission to use this function.'
         }
+
+        return ''
     }
 }

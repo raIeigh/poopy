@@ -7,7 +7,6 @@ module.exports = {
             await msg.channel.send('Where are the arguments?!').catch(() => { })
             return;
         }
-        await msg.channel.sendTyping().catch(() => { })
         var saidEmojis = args[1];
         var saidMessage = args[2];
 
@@ -27,15 +26,11 @@ module.exports = {
                                     parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                                 }
                             }).catch(() => { })
-                            await msg.channel.sendTyping().catch(() => { })
                             return
                         })
 
                     if (messageToReact) {
                         messageToReact.react(saidEmoji)
-                            .then(async () => {
-                                await msg.channel.sendTyping().catch(() => { })
-                            })
                             .catch(async () => {
                                 await msg.channel.send({
                                     content: 'Invalid emoji: **' + saidEmoji + '**',
@@ -43,7 +38,6 @@ module.exports = {
                                         parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                                     }
                                 }).catch(() => { })
-                                await msg.channel.sendTyping().catch(() => { })
                                 return;
                             })
                     }
