@@ -9,13 +9,16 @@ module.exports = async function (src, negative) {
 	if (src === undefined) return;
 
 	const canvas = await createImageCanvas(src);
+	if (!canvas) return ''
 	const text = await canvasToText(canvas, negative);
 	return text
 }
 
 async function createImageCanvas(src) {
 	const canvas = Canvas.createCanvas(1, 1);
-	const image = await Canvas.loadImage(src);
+	const image = await Canvas.loadImage(src).catch(() => { });
+
+	if (!image) return
 
 	let width = Math.floor(image.width / 6);;
 	let height = width * image.height / image.width;

@@ -2,6 +2,7 @@ const Canvas = require('canvas');
 
 module.exports = async function (src) {
 	var img = await Canvas.loadImage(src);
+	if (!img) return { r: 0, g: 0, b: 0 }
 	var canvas = Canvas.createCanvas(1, 1);
 	var ctx = canvas.getContext('2d');
 	var width = canvas.width = img.naturalWidth;

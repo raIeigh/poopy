@@ -98,7 +98,8 @@ function generate(message) {
 }
 
 module.exports = async function (src, { o_length = 6, o_freq = 20000, o_factor = 1 } = {}) {
-    var srcimg = await Canvas.loadImage(src);
+    var srcimg = await Canvas.loadImage(src).catch(() => { });
+    if (!srcimg) return ''
     var canvas = Canvas.createCanvas(srcimg.width, srcimg.height)
     var context = canvas.getContext("2d");
     context.drawImage(srcimg, 0, 0, srcimg.width, srcimg.height, 0, 0, srcimg.width, srcimg.height);
@@ -111,7 +112,12 @@ module.exports = async function (src, { o_length = 6, o_freq = 20000, o_factor =
     var Factor = o_factor;
 
     var data = generate({
-        'srcImgData1': srcImgData1, 'width': width, 'height': height, 'durationSeconds': durationSeconds, 'maxSpecFreq': maxSpecFreq, 'Factor': Factor
+        'srcImgData1': srcImgData1,
+        'width': width,
+        'height': height,
+        'durationSeconds': durationSeconds,
+        'maxSpecFreq': maxSpecFreq,
+        'Factor': Factor
     });
 
     return data
