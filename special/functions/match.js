@@ -7,9 +7,9 @@ module.exports = {
     var word = matches[1]
     var split = poopy.functions.splitKeyFunc(word, { args: 2 })
     var phrase = split[0] ?? ''
-    var reg = split.slice(1).length ? split.slice(1).join('|') : ''
+    var reg = split[1] ?? ''
     var regexp = new RegExp(reg, 'i')
     var match = phrase.match(regexp) ?? []
-    return match[1] ?? match[0] ?? ''
+    return match[0] ?? ''
   }
 }
