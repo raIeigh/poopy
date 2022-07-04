@@ -1241,6 +1241,8 @@ class Poopy {
             for (var i in string) {
                 var char = string[i]
 
+                console.log(char)
+
                 switch (char) {
                     case '(':
                         var funcmatch = poopy.functions.matchLongestFunc(string.substring(0, i), funcs) // get real function
