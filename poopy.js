@@ -1238,10 +1238,12 @@ class Poopy {
             var funcs = Object.keys(funclist).sort((a, b) => b.length - a.length)
             var pfuncs = Object.keys(pfunclist).sort((a, b) => b.length - a.length)
 
+            var keyfirstletters = keys.map(key => key[0]).filter(function(item, pos, self) {
+                return self.indexOf(item) == pos
+            })
+
             for (var i in string) {
                 var char = string[i]
-
-                console.log(char)
 
                 switch (char) {
                     case '(':
@@ -1306,12 +1308,14 @@ class Poopy {
                         break
                 }
 
-                var keymatch = poopy.functions.matchLongestKey(string.substring(i), keys)
-                if (keymatch) {
-                    keyindex = i
-                    if (rawrequired <= 0) return {
-                        match: keymatch[0],
-                        type: 'key'
+                if (keyfirstletters.includes(char)) {
+                    var keymatch = poopy.functions.matchLongestKey(string.substring(i), keys)
+                    if (keymatch) {
+                        keyindex = i
+                        if (rawrequired <= 0) return {
+                            match: keymatch[0],
+                            type: 'key'
+                        }
                     }
                 }
             }
