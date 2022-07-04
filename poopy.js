@@ -3015,8 +3015,6 @@ class Poopy {
                         else change = func.func.call(poopy, [funcName, match], msg, isBot, string, { extrakeys: extradkeys, extrafuncs: extradfuncs, ownermode: ownermode })
 
                         string = typeof (change) === 'object' && change[1] === true ? change[0] : string.replace(`${funcName}(${match})`, change)
-                        poopy.modules.fs.writeFileSync('chinga.txt', string)
-                        process.exit()
                         poopy.tempdata[msg.author.id][msg.id]['keyattempts'] += func.attemptvalue ?? 1
                         break
                 }
