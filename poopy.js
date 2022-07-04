@@ -1238,6 +1238,9 @@ class Poopy {
             var funcs = Object.keys(funclist).sort((a, b) => b.length - a.length)
             var pfuncs = Object.keys(pfunclist).sort((a, b) => b.length - a.length)
 
+            var keyfiltered = keys.filter((key) => string.includes(key))
+            var funcfiltered = funcs.filter((func) => string.includes(`${func}(`))
+            var pfuncfiltered = pfuncs.filter((pfunc) => string.includes(`${pfunc}(`))
             var keyfirstletters = keys.map(key => key[0]).filter(function(item, pos, self) {
                 return self.indexOf(item) == pos
             })
@@ -1245,10 +1248,11 @@ class Poopy {
             for (var i in string) {
                 var char = string[i]
 
+                if (funcfiltered.length > 0 || pfuncfiltered.length > 0)
                 switch (char) {
                     case '(':
-                        var funcmatch = poopy.functions.matchLongestFunc(string.substring(0, i), funcs) // get real function
-                        var pfuncmatch = poopy.functions.matchLongestFunc(string.substring(0, i), parenthesesGoal.length <= 0 ? pfuncs : ['']) // get probable functions (like resettimer())
+                        var funcmatch = poopy.functions.matchLongestFunc(string.substring(0, i), funcfiltered) // get real function
+                        var pfuncmatch = poopy.functions.matchLongestFunc(string.substring(0, i), parenthesesGoal.length <= 0 ? pfuncfiltered : ['']) // get probable functions (like resettimer())
 
                         if (funcmatch) {
                             parindex++ // open parentheses found
@@ -1276,7 +1280,7 @@ class Poopy {
                         break
 
                     case ')':
-                        var funcmatch = poopy.functions.matchLongestFunc(string.substring(0, lastParenthesesIndex), funcs)
+                        var funcmatch = poopy.functions.matchLongestFunc(string.substring(0, lastParenthesesIndex), funcfiltered)
 
                         if (funcmatch && string[i - 1] !== '\\') {
                             if (parenthesesGoal.find(pgoal => parindex == pgoal)) {
@@ -1308,6 +1312,7 @@ class Poopy {
                         break
                 }
 
+                if (keyfiltered.length > 0)
                 if (keyfirstletters.includes(char)) {
                     var keymatch = poopy.functions.matchLongestKey(string.substring(i), keys)
                     if (keymatch) {
@@ -1321,7 +1326,7 @@ class Poopy {
             }
 
             if (llastParenthesesIndex > -1) {
-                var funcmatch = poopy.functions.matchLongestFunc(string.substring(0, lastParenthesesIndex), funcs)
+                var funcmatch = poopy.functions.matchLongestFunc(string.substring(0, lastParenthesesIndex), funcfiltered)
 
                 lastParenthesesIndex++
                 return {
