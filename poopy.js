@@ -1245,6 +1245,8 @@ class Poopy {
                 return self.indexOf(item) == pos
             })
 
+            if ((keyfiltered.length <= 0 && funcfiltered.length <= 0) || string.length > 1024 * 1024) return false
+
             for (var i in string) {
                 var char = string[i]
 
@@ -1374,13 +1376,16 @@ class Poopy {
             var pfuncs = Object.keys(pfunclist).sort((a, b) => b.length - a.length)
             var afuncs = funcs.concat(pfuncs).sort((a, b) => b.length - a.length)
 
+            var afuncfiltered = afuncs.filter((afunc) => string.includes(`${afunc}(`))
+
             for (var i in string) {
                 var char = string[i]
                 i = Number(i)
 
+                if (afuncfiltered.length > 0)
                 switch (char) {
                     case '(':
-                        var funcmatch = poopy.functions.matchLongestFunc(string.substring(0, i), parenthesesGoal.length <= 0 ? afuncs : [''])
+                        var funcmatch = poopy.functions.matchLongestFunc(string.substring(0, i), parenthesesGoal.length <= 0 ? afuncfiltered : [''])
                         if (funcmatch) {
                             lastParenthesesIndex = i
                             parenthesesrequired++
@@ -1402,7 +1407,7 @@ class Poopy {
                         break
 
                     case ')':
-                        var funcmatch = poopy.functions.matchLongestFunc(string.substring(0, lastParenthesesIndex), parenthesesGoal.length <= 0 ? afuncs : [''])
+                        var funcmatch = poopy.functions.matchLongestFunc(string.substring(0, lastParenthesesIndex), parenthesesGoal.length <= 0 ? afuncfiltered : [''])
                         if (funcmatch && string[i - 1] !== '\\') {
                             if (parenthesesGoal.find(pgoal => parenthesesrequired == pgoal)) {
                                 parenthesesGoal.splice(parenthesesGoal.findIndex(pgoal => parenthesesrequired == pgoal), 1)
@@ -2974,7 +2979,7 @@ class Poopy {
                         var key = poopy.special.keys[keydata.match] || extradkeys[keydata.match]
 
                         if (key.limit != undefined && poopy.functions.equalValues(poopy.tempdata[msg.author.id][msg.id]['keywordsExecuted'], keyName) >= key.limit) {
-                            string = string.replace(new RegExp(poopy.functions.regexClean(keydata.match), 'i'), '')
+                            string = string.replace(keydata.match, '')
                             break
                         }
 
@@ -2984,7 +2989,7 @@ class Poopy {
                         if (key.func.constructor.name == 'AsyncFunction') change = await key.func.call(poopy, msg, isBot, string, { extrakeys: extradkeys, extrafuncs: extradfuncs, ownermode: ownermode }).catch(() => { }) ?? ''
                         else change = key.func.call(poopy, msg, isBot, string, { extrakeys: extradkeys, extrafuncs: extradfuncs, ownermode: ownermode })
 
-                        string = typeof (change) === 'object' && change[1] === true ? change[0] : string.replace(new RegExp(poopy.functions.regexClean(keydata.match), 'i'), change)
+                        string = typeof (change) === 'object' && change[1] === true ? change[0] : string.replace(keydata.match, change)
                         poopy.tempdata[msg.author.id][msg.id]['keyattempts'] += key.attemptvalue ?? 1
                         break
 
@@ -2994,7 +2999,7 @@ class Poopy {
                         var m = match
 
                         if (func.limit != undefined && poopy.functions.equalValues(poopy.tempdata[msg.author.id][msg.id]['keywordsExecuted'], keyName) >= func.limit) {
-                            string = string.replace(new RegExp(poopy.functions.regexClean(`${funcName}(${match})`), 'i'), '')
+                            string = string.replace(`${funcName}(${match})`, '')
                             break
                         }
 
@@ -3009,7 +3014,9 @@ class Poopy {
                         if (func.func.constructor.name == 'AsyncFunction') change = await func.func.call(poopy, [funcName, match], msg, isBot, string, { extrakeys: extradkeys, extrafuncs: extradfuncs, ownermode: ownermode }).catch(() => { }) ?? ''
                         else change = func.func.call(poopy, [funcName, match], msg, isBot, string, { extrakeys: extradkeys, extrafuncs: extradfuncs, ownermode: ownermode })
 
-                        string = typeof (change) === 'object' && change[1] === true ? change[0] : string.replace(new RegExp(poopy.functions.regexClean(`${funcName}(${match})`), 'i'), change)
+                        string = typeof (change) === 'object' && change[1] === true ? change[0] : string.replace(`${funcName}(${match})`, change)
+                        poopy.modules.fs.writeFileSync('chinga.txt', string)
+                        process.exit()
                         poopy.tempdata[msg.author.id][msg.id]['keyattempts'] += func.attemptvalue ?? 1
                         break
                 }
@@ -3630,7 +3637,7 @@ class Poopy {
                     type: 'datasave',
                     mongodatabase: poopy.config.mongodatabase,
                     data: { data: poopy.data, globaldata: poopy.functions.globalData() }
-                }).catch((e) => console.log(e))
+                }).catch(() => { })
             }
 
             poopy.functions.infoPost(`Data saved`)
