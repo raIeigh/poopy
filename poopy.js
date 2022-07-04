@@ -1241,7 +1241,7 @@ class Poopy {
             var keyfiltered = keys.filter((key) => string.includes(key))
             var funcfiltered = funcs.filter((func) => string.includes(`${func}(`))
             var pfuncfiltered = pfuncs.filter((pfunc) => string.includes(`${pfunc}(`))
-            var keyfirstletters = keys.map(key => key[0]).filter(function(item, pos, self) {
+            var keyfirstletters = keys.map(key => key[0]).filter(function (item, pos, self) {
                 return self.indexOf(item) == pos
             })
 
@@ -1251,80 +1251,80 @@ class Poopy {
                 var char = string[i]
 
                 if (funcfiltered.length > 0 || pfuncfiltered.length > 0)
-                switch (char) {
-                    case '(':
-                        var funcmatch = poopy.functions.matchLongestFunc(string.substring(0, i), funcfiltered) // get real function
-                        var pfuncmatch = poopy.functions.matchLongestFunc(string.substring(0, i), parenthesesGoal.length <= 0 ? pfuncfiltered : ['']) // get probable functions (like resettimer())
+                    switch (char) {
+                        case '(':
+                            var funcmatch = poopy.functions.matchLongestFunc(string.substring(0, i), funcfiltered) // get real function
+                            var pfuncmatch = poopy.functions.matchLongestFunc(string.substring(0, i), parenthesesGoal.length <= 0 ? pfuncfiltered : ['']) // get probable functions (like resettimer())
 
-                        if (funcmatch) {
-                            parindex++ // open parentheses found
-                            lastParenthesesIndex = i // set the index of the last parentheses
-                            if (!rawMatch) {
-                                var func = funclist[funcmatch[0]]
-                                if (func) {
-                                    if (func.raw) {
-                                        rawParenthesesIndex = i
-                                        rawrequired++
-                                        rawMatch = funcmatch[0]
-                                    } // if the function is raw, activate raw setting
-
-                                    if (func.parentheses) {
-                                        parenthesesGoal.push(parindex - 1)
-                                    } // if the function uses parentheses inside, activate whole parentheses setting
-                                }
-                            } else {
-                                rawrequired++
-                            } // if the function isnt inside a raw one, execute it like normal, else add a requirement for raw parentheses
-                        } else if (pfuncmatch || pfuncmatch == '') {
-                            parindex++ // open parentheses found
-                            potentialindexes.push(parindex)
-                        }
-                        break
-
-                    case ')':
-                        var funcmatch = poopy.functions.matchLongestFunc(string.substring(0, lastParenthesesIndex), funcfiltered)
-
-                        if (funcmatch && string[i - 1] !== '\\') {
-                            if (parenthesesGoal.find(pgoal => parindex == pgoal)) {
-                                parenthesesGoal.splice(parenthesesGoal.findIndex(pgoal => parindex == pgoal), 1)
-                            }
-                            if (potentialindexes.find(ind => ind === parindex)) {
-                                potentialindexes.splice(potentialindexes.findIndex(ind => ind === parindex), 1)
-                            } else {
+                            if (funcmatch) {
+                                parindex++ // open parentheses found
+                                lastParenthesesIndex = i // set the index of the last parentheses
                                 if (!rawMatch) {
-                                    lastParenthesesIndex++
-                                    return {
-                                        match: [funcmatch[0], string.substring(lastParenthesesIndex, i)],
-                                        type: 'func'
+                                    var func = funclist[funcmatch[0]]
+                                    if (func) {
+                                        if (func.raw) {
+                                            rawParenthesesIndex = i
+                                            rawrequired++
+                                            rawMatch = funcmatch[0]
+                                        } // if the function is raw, activate raw setting
+
+                                        if (func.parentheses) {
+                                            parenthesesGoal.push(parindex - 1)
+                                        } // if the function uses parentheses inside, activate whole parentheses setting
                                     }
                                 } else {
-                                    rawrequired--
-                                    llastParenthesesIndex = i
-                                    if (rawrequired <= 0) {
-                                        rawParenthesesIndex++
+                                    rawrequired++
+                                } // if the function isnt inside a raw one, execute it like normal, else add a requirement for raw parentheses
+                            } else if (pfuncmatch || pfuncmatch == '') {
+                                parindex++ // open parentheses found
+                                potentialindexes.push(parindex)
+                            }
+                            break
+
+                        case ')':
+                            var funcmatch = poopy.functions.matchLongestFunc(string.substring(0, lastParenthesesIndex), funcfiltered)
+
+                            if (funcmatch && string[i - 1] !== '\\') {
+                                if (parenthesesGoal.find(pgoal => parindex == pgoal)) {
+                                    parenthesesGoal.splice(parenthesesGoal.findIndex(pgoal => parindex == pgoal), 1)
+                                }
+                                if (potentialindexes.find(ind => ind === parindex)) {
+                                    potentialindexes.splice(potentialindexes.findIndex(ind => ind === parindex), 1)
+                                } else {
+                                    if (!rawMatch) {
+                                        lastParenthesesIndex++
                                         return {
-                                            match: [rawMatch, string.substring(rawParenthesesIndex, i)],
+                                            match: [funcmatch[0], string.substring(lastParenthesesIndex, i)],
                                             type: 'func'
+                                        }
+                                    } else {
+                                        rawrequired--
+                                        llastParenthesesIndex = i
+                                        if (rawrequired <= 0) {
+                                            rawParenthesesIndex++
+                                            return {
+                                                match: [rawMatch, string.substring(rawParenthesesIndex, i)],
+                                                type: 'func'
+                                            }
                                         }
                                     }
                                 }
+                                parindex-- // closed parentheses found
                             }
-                            parindex-- // closed parentheses found
-                        }
-                        break
-                }
+                            break
+                    }
 
                 if (keyfiltered.length > 0)
-                if (keyfirstletters.includes(char)) {
-                    var keymatch = poopy.functions.matchLongestKey(string.substring(i), keys)
-                    if (keymatch) {
-                        keyindex = i
-                        if (rawrequired <= 0) return {
-                            match: keymatch[0],
-                            type: 'key'
+                    if (keyfirstletters.includes(char)) {
+                        var keymatch = poopy.functions.matchLongestKey(string.substring(i), keys)
+                        if (keymatch) {
+                            keyindex = i
+                            if (rawrequired <= 0) return {
+                                match: keymatch[0],
+                                type: 'key'
+                            }
                         }
                     }
-                }
             }
 
             if (llastParenthesesIndex > -1) {
@@ -1382,17 +1382,18 @@ class Poopy {
                 var char = string[i]
                 i = Number(i)
 
-                if (afuncfiltered.length > 0)
                 switch (char) {
                     case '(':
-                        var funcmatch = poopy.functions.matchLongestFunc(string.substring(0, i), parenthesesGoal.length <= 0 ? afuncfiltered : [''])
-                        if (funcmatch) {
-                            lastParenthesesIndex = i
-                            parenthesesrequired++
-                            var func = funclist[funcmatch[0]]
-                            if (func) {
-                                if (func.parentheses) {
-                                    parenthesesGoal.push(parenthesesrequired - 1)
+                        if (afuncfiltered.length > 0) {
+                            var funcmatch = poopy.functions.matchLongestFunc(string.substring(0, i), parenthesesGoal.length <= 0 ? afuncfiltered : [''])
+                            if (funcmatch) {
+                                lastParenthesesIndex = i
+                                parenthesesrequired++
+                                var func = funclist[funcmatch[0]]
+                                if (func) {
+                                    if (func.parentheses) {
+                                        parenthesesGoal.push(parenthesesrequired - 1)
+                                    }
                                 }
                             }
                         }
@@ -1407,12 +1408,14 @@ class Poopy {
                         break
 
                     case ')':
-                        var funcmatch = poopy.functions.matchLongestFunc(string.substring(0, lastParenthesesIndex), parenthesesGoal.length <= 0 ? afuncfiltered : [''])
-                        if (funcmatch && string[i - 1] !== '\\') {
-                            if (parenthesesGoal.find(pgoal => parenthesesrequired == pgoal)) {
-                                parenthesesGoal.splice(parenthesesGoal.findIndex(pgoal => parenthesesrequired == pgoal), 1)
+                        if (afuncfiltered.length > 0) {
+                            var funcmatch = poopy.functions.matchLongestFunc(string.substring(0, lastParenthesesIndex), parenthesesGoal.length <= 0 ? afuncfiltered : [''])
+                            if (funcmatch && string[i - 1] !== '\\') {
+                                if (parenthesesGoal.find(pgoal => parenthesesrequired == pgoal)) {
+                                    parenthesesGoal.splice(parenthesesGoal.findIndex(pgoal => parenthesesrequired == pgoal), 1)
+                                }
+                                parenthesesrequired--
                             }
-                            parenthesesrequired--
                         }
                         break
                 }
@@ -2989,7 +2992,7 @@ class Poopy {
                         if (key.func.constructor.name == 'AsyncFunction') change = await key.func.call(poopy, msg, isBot, string, { extrakeys: extradkeys, extrafuncs: extradfuncs, ownermode: ownermode }).catch(() => { }) ?? ''
                         else change = key.func.call(poopy, msg, isBot, string, { extrakeys: extradkeys, extrafuncs: extradfuncs, ownermode: ownermode })
 
-                        string = typeof (change) === 'object' && change[1] === true ? change[0] : string.replace(keydata.match, change)
+                        string = typeof (change) === 'object' && change[1] === true ? change[0] : string.replace(keydata.match, change.replace(/\$&/g, '$\\&'))
                         poopy.tempdata[msg.author.id][msg.id]['keyattempts'] += key.attemptvalue ?? 1
                         break
 
@@ -3014,7 +3017,7 @@ class Poopy {
                         if (func.func.constructor.name == 'AsyncFunction') change = await func.func.call(poopy, [funcName, match], msg, isBot, string, { extrakeys: extradkeys, extrafuncs: extradfuncs, ownermode: ownermode }).catch(() => { }) ?? ''
                         else change = func.func.call(poopy, [funcName, match], msg, isBot, string, { extrakeys: extradkeys, extrafuncs: extradfuncs, ownermode: ownermode })
 
-                        string = typeof (change) === 'object' && change[1] === true ? change[0] : string.replace(`${funcName}(${match})`, change)
+                        string = typeof (change) === 'object' && change[1] === true ? change[0] : string.replace(`${funcName}(${match})`, change.replace(/\$&/g, '$\\&'))
                         poopy.tempdata[msg.author.id][msg.id]['keyattempts'] += func.attemptvalue ?? 1
                         break
                 }
