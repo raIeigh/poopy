@@ -141,7 +141,6 @@ class Poopy {
         poopy.modules.request = require('request')
         poopy.modules.FormData = require('form-data')
         poopy.modules.cheerio = require('cheerio')
-        poopy.modules.randomUseragent = require('random-useragent')
         poopy.modules.util = require('util')
         poopy.modules.md5 = require('md5')
         poopy.modules.Jimp = require('jimp')
@@ -994,21 +993,16 @@ class Poopy {
                 return escape(f)
             }
 
-            var context = poopy.vars.clevercontexts[id] || (poopy.vars.clevercontexts[id] = {
-                messages: [],
-                agent: poopy.modules.randomUseragent.getRandom()
-            })
+            var UA = 'Mozilla/5.0 (X11; U; Linux i686; it; rv:1.9.2.3) Gecko/20100406 Firefox/3.6.3 (Swiftfox)'
 
-            var UA = context.agent
-
-            if (!context.jar) context.jar = await poopy.modules.axios.get("https://www.cleverbot.com/extras/conversation-social-min.js", {
+            if (!poopy.vars.cleverbotJar) poopy.vars.cleverbotJar = await poopy.modules.axios.get("https://www.cleverbot.com/extras/conversation-social-min.js", {
                 headers: {
                     "User-Agent": UA
                 }
             }).then(res => res.headers['set-cookie'][0].split(";")[0]).catch(() => { })
-            var jar = context.jar
+            var jar = poopy.vars.cleverbotJar
 
-            context = context.messages
+            var context = poopy.vars.clevercontexts[id] || (poopy.vars.clevercontexts[id] = [])
 
             var payload = `stimulus=${encodeForSending(stim)}`
             if (context.length > 10) context.splice(0, context.length - 10)
