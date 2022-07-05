@@ -2974,11 +2974,16 @@ class Poopy {
                     return 'Keyword attempts value exceeded.'
                 }
 
-                var keydata = poopy.functions.getKeyFunc(string, { extrakeys: extradkeys, extrafuncs: extradfuncs })
-                var keyName = typeof (keydata.match) == 'object' ? keydata.match[0] : keydata.match
+                var keydata = poopy.functions.getKeyFunc(string, {
+                    extrakeys: extradkeys,
+                    extrafuncs: extradfuncs
+                })
+
+                var opts = { extrakeys: extradkeys, extrafuncs: extradfuncs, ownermode: ownermode }
 
                 switch (keydata.type) {
                     case 'key':
+                        var keyName = keydata.match
                         var key = poopy.special.keys[keydata.match] || extradkeys[keydata.match]
 
                         if (key.limit != undefined && poopy.functions.equalValues(poopy.tempdata[msg.author.id][msg.id]['keywordsExecuted'], keyName) >= key.limit) {
@@ -2989,10 +2994,14 @@ class Poopy {
                         poopy.tempdata[msg.author.id][msg.id]['keywordsExecuted'].push(keyName)
 
                         var change
-                        if (key.func.constructor.name == 'AsyncFunction') change = await key.func.call(poopy, msg, isBot, string, { extrakeys: extradkeys, extrafuncs: extradfuncs, ownermode: ownermode }).catch(() => { }) ?? ''
-                        else change = key.func.call(poopy, msg, isBot, string, { extrakeys: extradkeys, extrafuncs: extradfuncs, ownermode: ownermode })
 
-                        string = typeof (change) === 'object' && change[1] === true ? change[0] : string.replace(keydata.match, change.replace(/\$&/g, '$\\&'))
+                        if (key.func.constructor.name == 'AsyncFunction') {
+                            change = await key.func.call(poopy, msg, isBot, string, opts).catch(() => { }) ?? ''
+                        } else {
+                            change = key.func.call(poopy, msg, isBot, string, opts)
+                        }
+
+                        string = typeof (change) === 'object' && change[1] === true ? String(change[0]) : string.replace(keydata.match, String(change).replace(/\$&/g, '$\\&'))
                         poopy.tempdata[msg.author.id][msg.id]['keyattempts'] += key.attemptvalue ?? 1
                         break
 
@@ -3001,12 +3010,12 @@ class Poopy {
                         var func = poopy.special.functions[funcName] || extradfuncs[funcName]
                         var m = match
 
-                        if (func.limit != undefined && poopy.functions.equalValues(poopy.tempdata[msg.author.id][msg.id]['keywordsExecuted'], keyName) >= func.limit) {
+                        if (func.limit != undefined && poopy.functions.equalValues(poopy.tempdata[msg.author.id][msg.id]['keywordsExecuted'], funcName) >= func.limit) {
                             string = string.replace(`${funcName}(${match})`, '')
                             break
                         }
 
-                        poopy.tempdata[msg.author.id][msg.id]['keywordsExecuted'].push(keyName)
+                        poopy.tempdata[msg.author.id][msg.id]['keywordsExecuted'].push(funcName)
 
                         match = match.replace(/\\\)/g, ')')
                         if (!func.raw) {
@@ -3014,10 +3023,14 @@ class Poopy {
                         }
 
                         var change
-                        if (func.func.constructor.name == 'AsyncFunction') change = await func.func.call(poopy, [funcName, match], msg, isBot, string, { extrakeys: extradkeys, extrafuncs: extradfuncs, ownermode: ownermode }).catch(() => { }) ?? ''
-                        else change = func.func.call(poopy, [funcName, match], msg, isBot, string, { extrakeys: extradkeys, extrafuncs: extradfuncs, ownermode: ownermode })
 
-                        string = typeof (change) === 'object' && change[1] === true ? change[0] : string.replace(`${funcName}(${match})`, change.replace(/\$&/g, '$\\&'))
+                        if (func.func.constructor.name == 'AsyncFunction') {
+                            change = await func.func.call(poopy, [funcName, match], msg, isBot, string, opts).catch(() => { }) ?? ''
+                        } else {
+                            change = func.func.call(poopy, [funcName, match], msg, isBot, string, opts)
+                        }
+
+                        string = typeof (change) === 'object' && change[1] === true ? String(change[0]) : string.replace(`${funcName}(${match})`, String(change).replace(/\$&/g, '$\\&'))
                         poopy.tempdata[msg.author.id][msg.id]['keyattempts'] += func.attemptvalue ?? 1
                         break
                 }
