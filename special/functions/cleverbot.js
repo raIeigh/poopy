@@ -6,7 +6,7 @@ module.exports = {
 
     var word = matches[1]
 
-    var resp = await poopy.functions.cleverbot(word, msg.channel.id).catch(() => { })
+    var resp = await poopy.functions.cleverbot(word, msg.author.id).catch(() => { })
 
     if (resp) {
       return resp

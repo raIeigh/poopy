@@ -9,13 +9,15 @@ module.exports = {
             args.splice(once, 1)
             continuous = false
         }
+
         var channel = msg.channel
         var guildid = msg.guild.id
         var channelid = channel.id
         var authorid = msg.author.id
+
         var saidMessage = args.slice(1).join(' ')
         if (saidMessage) {
-            var resp = await poopy.functions.cleverbot(saidMessage, channelid).catch(err => {
+            var resp = await poopy.functions.cleverbot(saidMessage, authorid).catch(err => {
                 channel.send({
                     content: err.stack,
                     allowedMentions: {
@@ -39,7 +41,9 @@ module.exports = {
             }
             channel.send('Hello, I will respond to your messages now.').catch(() => { })
         }
+
         channel.sendTyping().catch(() => { })
+
         if (continuous) {
             if (poopy.tempdata[guildid][channelid][authorid].messageCollector) {
                 poopy.tempdata[guildid][channelid][authorid].messageCollector.stop()

@@ -141,6 +141,7 @@ class Poopy {
         poopy.modules.request = require('request')
         poopy.modules.FormData = require('form-data')
         poopy.modules.cheerio = require('cheerio')
+        poopy.modules.randomUseragent = require('random-useragent')
         poopy.modules.util = require('util')
         poopy.modules.md5 = require('md5')
         poopy.modules.Jimp = require('jimp')
@@ -993,13 +994,21 @@ class Poopy {
                 return escape(f)
             }
 
-            var UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.127 Safari/537.36'
-            if (!poopy.vars.cleverJar) poopy.vars.cleverJar = await poopy.modules.axios.get("https://www.cleverbot.com/extras/conversation-social-min.js", { headers: { "User-Agent": UA } }).then(res => res.headers['set-cookie'][0].split(";")[0]).catch(() => { })
+            var context = poopy.vars.clevercontexts[id] || (poopy.vars.clevercontexts[id] = {
+                messages: [],
+                agent: poopy.modules.randomUseragent.getRandom()
+            })
 
-            var context = id
-            if (!Array.isArray(id)) {
-                context = poopy.vars.clevercontexts[id] || (poopy.vars.clevercontexts[id] = [])
-            }
+            var UA = context.agent
+
+            if (!context.jar) context.jar = await poopy.modules.axios.get("https://www.cleverbot.com/extras/conversation-social-min.js", {
+                headers: {
+                    "User-Agent": UA
+                }
+            }).then(res => res.headers['set-cookie'][0].split(";")[0]).catch(() => { })
+            var jar = context.jar
+
+            context = context.messages
 
             var payload = `stimulus=${encodeForSending(stim)}`
             if (context.length > 10) context.splice(0, context.length - 10)
@@ -1015,7 +1024,7 @@ class Poopy {
                 data: payload,
                 headers: {
                     "Content-Type": "text/plain",
-                    Cookie: poopy.vars.cleverJar,
+                    Cookie: jar,
                     "User-Agent": UA
                 }
             })
@@ -4443,7 +4452,7 @@ class Poopy {
                 ]
 
                 if (await msg.fetchReference().catch(() => { })) {
-                    var resp = await poopy.functions.cleverbot(msg.content, msg.channel.id).catch(() => { })
+                    var resp = await poopy.functions.cleverbot(msg.content, msg.author.id).catch(() => { })
 
                     if (resp) {
                         await poopy.functions.waitMessageCooldown()
