@@ -13,5 +13,6 @@ module.exports = {
     if (!res) return word
 
     return res.data
-  }
+  },
+  limit: 1
 }

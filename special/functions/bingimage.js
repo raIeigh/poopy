@@ -16,5 +16,6 @@ module.exports = {
 
         return urls[page]
     },
-    attemptvalue: 10
+    attemptvalue: 10,
+    limit: 5
 }
