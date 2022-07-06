@@ -97,7 +97,7 @@ module.exports = {
                     },
                     page: false
                 }
-            ], number)
+            ], number, undefined, undefined, undefined, msg)
         })
     },
     help: {

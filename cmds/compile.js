@@ -20,12 +20,11 @@ module.exports = {
 
         if (language === undefined) {
             await msg.channel.send('What is the programming language?!').catch(() => { })
-            await msg.channel.sendTyping().catch(() => { })
             return
         }
 
         saidMessage = args.slice(cl > -1 ? 1 : 2).join(' ')
-        if (codeBlock) saidMessage = saidMessage.substring(cl > -1 ? cl : 0, saidMessage.length - 3).trim()
+        if (codeBlock) saidMessage = saidMessage.substring(cl > -1 ? cl : 3, saidMessage.length - 3).trim()
 
         var langresponse = await poopy.modules.axios.get('https://wandbox.org/api/list.json').catch(() => { })
         var langVersion

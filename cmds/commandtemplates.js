@@ -236,7 +236,7 @@ module.exports = {
                         },
                         page: false
                     }
-                ])
+                ], undefined, undefined, undefined, undefined, msg)
             },
 
             search: async (msg, args) => {
@@ -397,7 +397,7 @@ module.exports = {
                         },
                         page: false
                     }
-                ])
+                ], undefined, undefined, undefined, undefined, msg)
             },
 
             register: async (msg, args) => {

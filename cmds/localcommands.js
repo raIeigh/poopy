@@ -37,7 +37,7 @@ module.exports = {
                             "text": `Page ${page}/${localCmds.length}`
                         },
                     }
-                }, localCmds.length, msg.member)
+                }, localCmds.length, msg.member, undefined, undefined, undefined, undefined, undefined, msg)
             },
 
             phrase: async (msg, args) => {

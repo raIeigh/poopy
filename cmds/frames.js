@@ -70,7 +70,7 @@ module.exports = {
                     }
                 ], undefined, undefined, undefined, (reason) => {
                     if (reason == 'time') poopy.modules.fs.rmSync(filepath, { force: true, recursive: true })
-                })
+                }, msg)
             });
 
             archive.pipe(output)
