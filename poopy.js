@@ -647,17 +647,21 @@ class Poopy {
                 var args = code.match(/("[^"\\]*(?:\\[\S\s][^"\\]*)*"|'[^'\\]*(?:\\[\S\s][^'\\]*)*'|\/[^\/\\]*(?:\\[\S\s][^\/\\]*)*\/[gimy]*(?=\s|$)|(?:\\\s|\S)+)/g)
                 var command = args.splice(0, 1)[0]
 
-                /*if (poopy.vars.processingTools.inputs[command] && !poopy.config.testing && process.env.CLOUDAMQP_URL) {
+                async function execTask() {
                     var execData = {
                         type: 'exec',
                         code: code,
                         files: poopy.vars.processingTools.inputs[command](code.split(' ').slice(1))
                     }
 
+                    var taskLength = JSON.stringify(execData)
+                    if (taskLength > 15 * 1024 * 1024) {
+                        return
+                    }
+
                     var result = await poopy.functions.processTask(execData).catch(() => { })
 
                     if (!result) {
-                        resolve()
                         return
                     }
 
@@ -671,9 +675,16 @@ class Poopy {
                         }
                     }
 
-                    resolve(result.std)
-                    return
-                }*/
+                    return result.std
+                }
+
+                if (poopy.vars.processingTools.inputs[command] && !poopy.config.testing && process.env.CLOUDAMQP_URL) {
+                    var taskValue = await execTask().catch(() => { })
+                    if (taskValue) {
+                        resolve(taskValue)
+                        return
+                    }
+                }
 
                 var stdout = []
                 var stderr = []
