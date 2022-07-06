@@ -59,14 +59,24 @@ async function start() {
         res.end()
     })
 
-    app.get('/api/globalData', async function (req, res) {
+    app.get('/api/psfiles', async function (req, res) {
         if (req.query.nowait && Object.keys(globalData()).length <= 0) {
             res.end()
             return
         }
 
         while (Object.keys(globalData()).length <= 0) await sleep(1000)
-        res.type('json').send(globalData())
+        res.type('json').send(globalData()['bot-data']['psfiles'])
+    })
+
+    app.get('/api/pspasta', async function (req, res) {
+        if (req.query.nowait && Object.keys(globalData()).length <= 0) {
+            res.end()
+            return
+        }
+
+        while (Object.keys(globalData()).length <= 0) await sleep(1000)
+        res.type('json').send(globalData()['bot-data']['pspasta'])
     })
 
     app.get('/ubervoices', async function (_, res) {

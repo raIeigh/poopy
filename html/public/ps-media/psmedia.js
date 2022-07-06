@@ -18,12 +18,8 @@ async function main() {
     fileButton.className = 'top'
     document.body.appendChild(fileButton)
 
-    var psFiles
-    var randomPs
-
-    var ps = await $.getJSON('/api/globalData')
-    psFiles = ps['bot-data']['psfiles']
-    randomPs = sortArrayRandomly(psFiles)
+    var psFiles = await $.getJSON('/api/psfiles')
+    var randomPs = sortArrayRandomly(psFiles)
 
     var count = 0
     var repeat = false
