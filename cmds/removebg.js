@@ -80,5 +80,6 @@ module.exports = {
         value: "Removes an image's background with remove.bg. It has limits though."
     },
     cooldown: 2500,
-    type: 'Effects'
+    type: 'Effects',
+    envRequired: ['REMOVEBGKEY']
 }

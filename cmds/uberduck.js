@@ -72,5 +72,6 @@ module.exports = {
         name: 'uberduck/tts <voice> <text>',
         value: 'Generates a TTS synthesized speech with Uberduck AI. A list of voices can be found at https://poopies-for-you.herokuapp.com/ubervoices. Try it yourself at https://app.uberduck.ai/speak#mode=tts-basic'
     },
-    type: 'Generation'
+    type: 'Generation',
+    envRequired: ['UBERDUCKKEY', 'UBERDUCKSECRET']
 }

@@ -54,7 +54,7 @@ async function start() {
             .replace(/&apos;/g, '\'')
     }
 
-    app.get('/api/waitPoopyStart', async function (req, res) {
+    app.get('/api/waitPoopyStart', async function (_, res) {
         while (!poopyStarted) await sleep(1000)
         res.end()
     })
@@ -69,17 +69,7 @@ async function start() {
         res.type('json').send(globalData())
     })
 
-    app.get('/api/data', async function (req, res) {
-        if (req.query.auth != process.env.AUTHTOKEN || (req.query.nowait && !poopyList[req.query.mongodatabase])) {
-            res.end()
-            return
-        }
-
-        while (!poopyList[req.query.mongodatabase]) await sleep(1000)
-        res.type('json').send(poopyList[req.query.mongodatabase].data)
-    })
-
-    app.get('/ubervoices', async function (req, res) {
+    app.get('/ubervoices', async function (_, res) {
         while (!poopyStarted) await sleep(1000)
         var listings = [[], [], []]
         var li = 0
@@ -106,6 +96,7 @@ async function start() {
 
         let messages = []
 
+        // mockup message
         let msg = {
             content: `${mainPoopy.config.globalPrefix}${req.body.args}`,
 
@@ -423,6 +414,7 @@ async function start() {
         msg.member = member
         msg.channel = channel
         msg.guild = guild
+        // done
 
         if (globalData()['bot-data']['shit'].find(id => id === msg.author.id)) {
             return res.type('text').status(400).send('shit')
@@ -597,11 +589,6 @@ async function start() {
                 }
             }
         ]
-    }
-
-    if (fs.existsSync('node_modules/@jimp/plugin-print')) {
-        fs.rmSync('node_modules/@jimp/plugin-print', { force: true, recursive: true })
-        fs.copySync('modules/plugin-print', 'node_modules/@jimp/plugin-print', { recursive: true })
     }
 
     /*let getDataJob = async (job) => {

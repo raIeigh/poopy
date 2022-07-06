@@ -84,5 +84,6 @@ module.exports = {
             'Example usage: p:gif house exploding -page 3'
     },
     cooldown: 2500,
-    type: 'Fetching'
+    type: 'Fetching',
+    envRequired: ['TENORKEY']
 }

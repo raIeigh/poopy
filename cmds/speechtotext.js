@@ -174,5 +174,6 @@ module.exports = {
         value: 'Tries to recognize the speech inside the audio of a file and convert it to text. Maximum duration is 1 minute.'
     },
     cooldown: 2500,
-    type: 'Text'
+    type: 'Text',
+    envRequired: ['RAPIDAPIKEY']
 }

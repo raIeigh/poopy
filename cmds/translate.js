@@ -64,5 +64,6 @@ module.exports = {
         name: 'translate/tr <message> [-source <language>] [-target <language>]',
         value: 'Translates the specified message. The default source language is auto and the default target language is English.'
     },
-    type: 'Text'
+    type: 'Text',
+    envRequired: ['RAPIDAPIKEY']
 }

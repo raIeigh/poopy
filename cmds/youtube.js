@@ -105,5 +105,6 @@ module.exports = {
         value: 'Search for a random video in YouTube.'
     },
     cooldown: 2500,
-    type: 'Fetching'
+    type: 'Fetching',
+    envRequired: ['GOOGLEKEY']
 }

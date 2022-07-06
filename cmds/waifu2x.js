@@ -66,5 +66,6 @@ module.exports = {
         value: 'Upscales the image and reduces its noise with Waifu2x. Try it yourself at http://waifu2x.udp.jp/'
     },
     cooldown: 2500,
-    type: 'Resizing'
+    type: 'Resizing',
+    envRequired: ['DEEPAIKEY']
 }

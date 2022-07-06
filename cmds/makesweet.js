@@ -117,5 +117,6 @@ module.exports = {
         value: "Creates a MakeSweet GIF depending on the template, if specified. Available templates are billboard-cityscape, circuit-board, flag, flying-bear, heart-locket and nesting-doll. Try it yourself at https://makesweet.com/"
     },
     cooldown: 2500,
-    type: 'Generation'
+    type: 'Generation',
+    envRequired: ['MAKESWEETKEY']
 }

@@ -17,5 +17,6 @@ module.exports = {
             return ''
         }
     },
-    attemptvalue: 2
+    attemptvalue: 2,
+    envRequired: ['TENORKEY']
 }

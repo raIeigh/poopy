@@ -12,5 +12,6 @@ module.exports = {
   },
   help: { name: 'randomgif', value: 'Sends a completely random Tenor GIF.' },
   cooldown: 2500,
-  type: 'Random'
+  type: 'Random',
+  envRequired: ['TENORKEY']
 }

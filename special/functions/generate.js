@@ -17,5 +17,6 @@ module.exports = {
     return word
   },
   attemptvalue: 10,
-  limit: 1
+  limit: 1,
+  envRequired: ['DEEPAIKEY']
 }

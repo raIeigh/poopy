@@ -83,5 +83,6 @@ module.exports = {
         value: "Recognizes text within an image with Microsoft's Computer Vision."
     },
     cooldown: 2500,
-    type: 'Text'
+    type: 'Text',
+    envRequired: ['RAPIDAPIKEY']
 }

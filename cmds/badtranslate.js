@@ -114,5 +114,6 @@ module.exports = {
         name: 'badtranslate/badtr <message> [-source <language>] [-target <language>] [-languages <number (max 25)>]',
         value: 'Badly translates the specified message. The default source language is auto and the default target language is English.'
     },
-    type: 'Text'
+    type: 'Text',
+    envRequired: ['RAPIDAPIKEY']
 }

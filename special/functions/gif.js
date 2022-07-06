@@ -21,5 +21,6 @@ module.exports = {
         return urls[page].itemurl
     },
     attemptvalue: 10,
-    limit: 5
+    limit: 5,
+    envRequired: ['TENORKEY']
 }

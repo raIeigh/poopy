@@ -37,5 +37,6 @@ module.exports = {
         value: 'Generates a picture depending on what the text is with DeepAI.'
     },
     cooldown: 2500,
-    type: 'Generation'
+    type: 'Generation',
+    envRequired: ['DEEPAIKEY']
 }

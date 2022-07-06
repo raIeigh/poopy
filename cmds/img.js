@@ -19,7 +19,7 @@ module.exports = {
 
         var bing = false
         var bingindex = args.indexOf('-bing')
-        if (bingindex > -1) {
+        if (bingindex > -1 && process.env.RAPIDAPIKEY) {
             bing = true
             args.splice(bingindex, 1)
         }

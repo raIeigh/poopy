@@ -66,5 +66,6 @@ module.exports = {
         value: 'Upscales the image and reduces its noise with DeepAI\'s super resolution API.'
     },
     cooldown: 2500,
-    type: 'Resizing'
+    type: 'Resizing',
+    envRequired: ['DEEPAIKEY']
 }

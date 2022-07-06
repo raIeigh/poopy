@@ -17,5 +17,6 @@ module.exports = {
         return urls[page]
     },
     attemptvalue: 10,
-    limit: 5
+    limit: 5,
+    envRequired: ['RAPIDAPIKEY']
 }
