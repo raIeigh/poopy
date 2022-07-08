@@ -662,7 +662,7 @@ class Poopy {
                     var result = await poopy.functions.processTask(execData).catch(() => { })
 
                     if (!result) {
-                        return
+                        return 'No output.'
                     }
 
                     if (result.files) {
