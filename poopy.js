@@ -1264,7 +1264,7 @@ class Poopy {
             var keyfiltered = keys.filter((key) => string.includes(key))
             var funcfiltered = funcs.filter((func) => string.includes(`${func}(`))
             var pfuncfiltered = pfuncs.filter((pfunc) => string.includes(`${pfunc}(`))
-            var keyfirstletters = keys.map(key => key[0]).filter(function (item, pos, self) {
+            var keyfirstletters = keyfiltered.map(key => key[0]).filter(function (item, pos, self) {
                 return self.indexOf(item) == pos
             })
 
@@ -1337,17 +1337,16 @@ class Poopy {
                             break
                     }
 
-                if (keyfiltered.length > 0)
-                    if (keyfirstletters.includes(char)) {
-                        var keymatch = poopy.functions.matchLongestKey(string.substring(i), keys)
-                        if (keymatch) {
-                            keyindex = i
-                            if (rawrequired <= 0) return {
-                                match: keymatch[0],
-                                type: 'key'
-                            }
+                if (keyfiltered.length > 0 && keyfirstletters.includes(char)) {
+                    var keymatch = poopy.functions.matchLongestKey(string.substring(i), keys)
+                    if (keymatch) {
+                        keyindex = i
+                        if (rawrequired <= 0) return {
+                            match: keymatch[0],
+                            type: 'key'
                         }
                     }
+                }
             }
 
             if (llastParenthesesIndex > -1) {
