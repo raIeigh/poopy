@@ -654,10 +654,10 @@ class Poopy {
                         files: poopy.vars.processingTools.inputs[command](code.split(' ').slice(1))
                     }
 
-                    var taskLength = JSON.stringify(execData)
+                    /*var taskLength = JSON.stringify(execData)
                     if (taskLength > 15 * 1024 * 1024) {
                         return
-                    }
+                    }*/
 
                     var result = await poopy.functions.processTask(execData).catch(() => { })
 
