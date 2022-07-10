@@ -4680,13 +4680,13 @@ class Poopy {
                     result = await poopy.functions.processTask({
                         type: 'dataget',
                         mongodatabase: poopy.config.mongodatabase,
-                        global: poopy.config.quitOnDestroy
+                        global: Object.keys(poopy.functions.globalData()).length <= 0
                     }).catch(() => { })
                 }
 
-                if (!result || !result.data || (poopy.config.quitOnDestroy && !result.globaldata)) {
+                if (!result || !result.data || (Object.keys(poopy.functions.globalData()).length <= 0 && !result.globaldata)) {
                     console.log(`${poopy.bot.user.username}: ${process.env.CLOUDAMQP_URL ? 'nvm ' : ''}gathering from mongodb`)
-                    return await poopy.functions.getAllData(poopy.config.mongodatabase, poopy.config.quitOnDestroy)
+                    result = await poopy.functions.getAllData(poopy.config.mongodatabase, Object.keys(poopy.functions.globalData()).length <= 0)
                 }
 
                 return result
@@ -4713,8 +4713,10 @@ class Poopy {
         await poopy.functions.infoPost(`Gathering data in \`${poopy.config.mongodatabase}\``)
         var gdata = await requestData()
 
-        poopy.data = gdata.data
-        if (Object.keys(poopy.functions.globalData()).length <= 0) for (var type in gdata.globaldata) poopy.functions.globalData()[type] = gdata.globaldata[type]
+        if (gdata) {
+            poopy.data = gdata.data
+            if (Object.keys(poopy.functions.globalData()).length <= 0) for (var type in gdata.globaldata) poopy.functions.globalData()[type] = gdata.globaldata[type]
+        }
 
         console.log(`${poopy.bot.user.username}: all data gathered!!!`)
         await poopy.functions.infoPost(`All data gathered`)
@@ -5098,7 +5100,7 @@ class Poopy {
         }
     }
 
-    async destroy() {
+    async destroy(deldata) {
         let poopy = this
 
         clearInterval(poopy.vars.statusInterval)
@@ -5106,9 +5108,15 @@ class Poopy {
         clearInterval(poopy.vars.saveInterval)
         delete poopy.vars.saveInterval
         poopy.bot.destroy()
-        delete poopy.data
-        delete poopy.tempdata
-        if (poopy.config.quitOnDestroy) for (var type in poopy.functions.globalData()) delete poopy.functions.globalData()[type]
+
+        if (deldata) {
+            delete poopy.data
+            delete poopy.tempdata
+
+            if (poopy.config.quitOnDestroy)
+            for (var type in poopy.functions.globalData())
+            delete poopy.functions.globalData()[type]
+        }
     }
 }
 
