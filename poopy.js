@@ -3690,12 +3690,12 @@ class Poopy {
                 poopy.modules.fs.writeFileSync(`data/${poopy.config.mongodatabase}.json`, JSON.stringify(poopy.data))
                 poopy.modules.fs.writeFileSync(`data/globaldata.json`, JSON.stringify(poopy.functions.globalData()))
             } else {
-                await poopy.functions.updateAllData(poopy.config.mongodatabase, { data: poopy.data, globaldata: poopy.functions.globalData() }).catch(() => { })
                 if (process.env.CLOUDAMQP_URL) await poopy.functions.processTask({
                     type: 'datasave',
                     mongodatabase: poopy.config.mongodatabase,
                     data: { data: poopy.data, globaldata: poopy.functions.globalData() }
                 }).catch(() => { })
+                await poopy.functions.updateAllData(poopy.config.mongodatabase, { data: poopy.data, globaldata: poopy.functions.globalData() }).catch(() => { })
             }
 
             poopy.functions.infoPost(`Data saved`)
@@ -4715,7 +4715,7 @@ class Poopy {
 
         if (gdata) {
             poopy.data = gdata.data
-            if (Object.keys(poopy.functions.globalData()).length <= 0) for (var type in gdata.globaldata) poopy.functions.globalData()[type] = gdata.globaldata[type]
+            if (Object.keys(poopy.functions.globalData()).length <= 0 && gdata.globaldata) for (var type in gdata.globaldata) poopy.functions.globalData()[type] = gdata.globaldata[type]
         }
 
         console.log(`${poopy.bot.user.username}: all data gathered!!!`)
