@@ -233,7 +233,8 @@ async function processJob(data) {
             return await getDataJob();
 
         case 'datasave':
-            return await saveDataJob();
+            await saveDataJob();
+            break;
 
         case 'exec':
             return await execJob();
