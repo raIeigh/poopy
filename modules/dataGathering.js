@@ -70,7 +70,7 @@ module.exports = {
 
         var globaldata = d.globaldata
 
-        await schemas.globaldata.findOneAndUpdate({}, globaldata, {
+        if (globaldata) await schemas.globaldata.findOneAndUpdate({}, globaldata, {
             upsert: true,
             useFindAndModify: false
         }).catch(() => { })

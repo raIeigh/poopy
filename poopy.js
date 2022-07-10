@@ -639,7 +639,7 @@ class Poopy {
         }
 
         poopy.functions.sleep = function (ms) {
-            return new Promise(resolve => setTimeout(resolve, ms))
+            return new Promise(resolve => setTimeout(resolve, ms ?? 0))
         }
 
         poopy.functions.execPromise = function (code) {
@@ -2992,7 +2992,13 @@ class Poopy {
                     declaredonly: declaredonly
                 })
 
-                var opts = { extrakeys: extradkeys, extrafuncs: extradfuncs, ownermode: ownermode }
+                console.log(keydata.match)
+
+                var opts = {
+                    extrakeys: extradkeys,
+                    extrafuncs: extradfuncs,
+                    ownermode: ownermode
+                }
 
                 switch (keydata.type) {
                     case 'key':
@@ -3050,6 +3056,8 @@ class Poopy {
 
                 extradkeys = declaredonly ? { ...poopy.tempdata[msg.author.id]['keydeclared'] } : { ...extrakeys, ...poopy.tempdata[msg.author.id]['keydeclared'] }
                 extradfuncs = declaredonly ? { ...poopy.tempdata[msg.author.id]['funcdeclared'] } : { ...extrafuncs, ...poopy.tempdata[msg.author.id]['funcdeclared'] }
+
+                await poopy.functions.sleep()
             }
 
             if (resetattempts) {
