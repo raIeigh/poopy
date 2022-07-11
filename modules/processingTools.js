@@ -35,7 +35,7 @@ module.exports = {
                 if (arg == '-i') {
                     var file = args[Number(i) + 1]
 
-                    if (file.startsWith('temp/')) {
+                    if (file.startsWith('temp')) {
                         var [dir, name] = dir_name(file)
                         var nameregex = digitRegex(name)
 
@@ -64,7 +64,7 @@ module.exports = {
         },
 
         ffprobe: (args) => {
-            if (args[args.length - 1].startsWith('temp/') && fs.existsSync(args[args.length - 1])) return {
+            if (args[args.length - 1].startsWith('temp') && fs.existsSync(args[args.length - 1])) return {
                 [args[args.length - 1]]: fs.readFileSync(args[args.length - 1]).toString('base64')
             }
             return {}
@@ -76,7 +76,7 @@ module.exports = {
             for (var i in args) {
                 var file = args[i]
 
-                if (file.startsWith('temp/')) {
+                if (file.startsWith('temp')) {
                     var [dir, name] = dir_name(file)
                     var nameregex = digitRegex(name)
 
@@ -92,7 +92,7 @@ module.exports = {
         },
 
         gifsicle: (args) => {
-            if (args[args.length - 1].startsWith('temp/') && fs.existsSync(args[args.length - 1])) return {
+            if (args[args.length - 1].startsWith('temp') && fs.existsSync(args[args.length - 1])) return {
                 [args[args.length - 1]]: fs.readFileSync(args[args.length - 1]).toString('base64')
             }
             return {}
@@ -104,7 +104,7 @@ module.exports = {
             for (var i in args) {
                 var file = args[i]
 
-                if (file.startsWith('temp/')) {
+                if (file.startsWith('temp')) {
                     var [dir, name] = dir_name(file)
                     var nameregex = digitRegex(name)
 
