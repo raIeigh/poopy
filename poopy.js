@@ -172,6 +172,7 @@ class Poopy {
         poopy.functions.braille = require('./modules/braille')
         poopy.functions.lingo = require('./modules/lingo')
         poopy.functions.gibberish = require('./modules/gibberish')
+        poopy.functions.markov = require('./modules/markov')
         poopy.functions.averageColor = require('./modules/averageColor')
         poopy.functions.spectrogram = require('./modules/spectrogram')
         poopy.functions.getAllData = require('./modules/dataGathering').getAllData
@@ -5013,28 +5014,30 @@ class Poopy {
                 Authorization: `Basic ${btoa(`${process.env.UBERDUCKKEY}:${process.env.UBERDUCKSECRET}`)}`
             }
         }).catch(() => { })
-        poopy.vars.ubervoices = voiceResponse.data
-        poopy.vars.ubervoices.sort((va, vb) => {
-            var x = va.display_name.toLowerCase()
-            var y = vb.display_name.toLowerCase()
-            if (x < y) return -1
-            if (x > y) return 1
-            return 0
-        })
-        poopy.vars.ubercategories = []
-        for (var i in poopy.vars.ubervoices) {
-            var voice = poopy.vars.ubervoices[i]
-
-            if (!poopy.vars.ubercategories.find(category => category.name == voice.category)) poopy.vars.ubercategories.push({ name: voice.category, voices: [] })
-            poopy.vars.ubercategories.find(category => category.name == voice.category).voices.push(voice)
+        if (voiceResponse) {
+            poopy.vars.ubervoices = voiceResponse.data
+            poopy.vars.ubervoices.sort((va, vb) => {
+                var x = va.display_name.toLowerCase()
+                var y = vb.display_name.toLowerCase()
+                if (x < y) return -1
+                if (x > y) return 1
+                return 0
+            })
+            poopy.vars.ubercategories = []
+            for (var i in poopy.vars.ubervoices) {
+                var voice = poopy.vars.ubervoices[i]
+    
+                if (!poopy.vars.ubercategories.find(category => category.name == voice.category)) poopy.vars.ubercategories.push({ name: voice.category, voices: [] })
+                poopy.vars.ubercategories.find(category => category.name == voice.category).voices.push(voice)
+            }
+            poopy.vars.ubercategories.sort((ca, cb) => {
+                var x = ca.name.toLowerCase()
+                var y = cb.name.toLowerCase()
+                if (x < y) return -1
+                if (x > y) return 1
+                return 0
+            })
         }
-        poopy.vars.ubercategories.sort((ca, cb) => {
-            var x = ca.name.toLowerCase()
-            var y = cb.name.toLowerCase()
-            if (x < y) return -1
-            if (x > y) return 1
-            return 0
-        })
         var lresponse = await poopy.modules.axios.request({
             method: 'GET',
             url: 'https://microsoft-translator-text.p.rapidapi.com/languages',
