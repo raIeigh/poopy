@@ -22,10 +22,7 @@ module.exports = {
                 tts = true
             }
             var saidMessage = args.slice(2).join(' ')
-            var attachments = []
-            msg.attachments.forEach(attachment => {
-                attachments.push(new poopy.modules.Discord.MessageAttachment(attachment.url))
-            });
+            var attachments = msg.attachments.map(attachment => new poopy.modules.Discord.MessageAttachment(attachment.url, attachment.name))
             var numToRepeat = Number(args[1]);
             if (isNaN(numToRepeat)) {
                 await msg.channel.send({
@@ -49,6 +46,7 @@ module.exports = {
                     parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 },
                 files: attachments,
+                stickers: msg.stickers,
                 tts: (msg.member.permissions.has('ADMINISTRATOR') || msg.member.permissions.has('SEND_TTS_MESSAGES') || msg.author.id === msg.guild.ownerID) && tts
             }
             if (saidMessage) {

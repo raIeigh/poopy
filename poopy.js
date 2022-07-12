@@ -4004,14 +4004,8 @@ class Poopy {
                 if (parent) {
                     if (poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['custom'] && (msg.content || msg.attachments.size || msg.embeds.length) && !(parent.isText())) {
                         if (typeof (poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['custom']) === 'object') {
-                            var attachments = []
-                            var embeds = []
-                            msg.attachments.forEach(attachment => {
-                                attachments.push(new poopy.modules.Discord.MessageAttachment(attachment.url))
-                            })
-                            msg.embeds.forEach(embed => {
-                                if (embed.type === 'rich') embeds.push(embed)
-                            })
+                            var attachments = msg.attachments.map(attachment => new poopy.modules.Discord.MessageAttachment(attachment.url, attachment.name))
+                            var embeds = msg.embeds.filter(embed => embed.type === 'rich')
                             var name = poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['custom']['name']
                             var randomindex = Math.floor(Math.random() * name.length)
                             name = `${name.substring(0, randomindex)}​${name.substring(randomindex, name.length)}`
@@ -4020,6 +4014,7 @@ class Poopy {
                                 avatarURL: poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['custom']['avatar'],
                                 files: attachments,
                                 embeds: embeds,
+                                stickers: msg.stickers,
                                 allowedMentions: {
                                     parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                                 }
@@ -4062,19 +4057,14 @@ class Poopy {
                         }
                     } else if (poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['impostor']) {
                         if (poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['impostor'] === true) {
-                            var attachments = []
-                            var embeds = []
-                            msg.attachments.forEach(attachment => {
-                                attachments.push(new poopy.modules.Discord.MessageAttachment(attachment.url))
-                            })
-                            msg.embeds.forEach(embed => {
-                                if (embed.type === 'rich') embeds.push(embed)
-                            })
+                            var attachments = msg.attachments.map(attachment => new poopy.modules.Discord.MessageAttachment(attachment.url, attachment.name))
+                            var embeds = msg.embeds.filter(embed => embed.type === 'rich')
                             var sendObject = {
                                 username: msg.member.nickname || msg.author.username,
                                 avatarURL: 'https://cdn.discordapp.com/attachments/760223418968047629/835923486668750888/imposter.jpg',
                                 files: attachments,
                                 embeds: embeds,
+                                stickers: msg.stickers,
                                 allowedMentions: {
                                     parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                                 }
