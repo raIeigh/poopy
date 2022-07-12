@@ -27,6 +27,7 @@ module.exports = {
             }
 
             await poopy.functions.getKeywordsFor(func, msg, isBot, valOpts).catch(() => { })
+            await poopy.functions.sleep()
         }
 
         return ''
