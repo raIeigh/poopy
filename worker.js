@@ -225,7 +225,6 @@ async function processJob(data) {
 
         if (delfolder) fs.rmSync(delfolder, { force: true, recursive: true })
 
-        console.log(output)
         return output
     }
 

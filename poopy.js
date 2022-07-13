@@ -721,7 +721,6 @@ class Poopy {
                     var out = stdout.join('\n') || stderr.join('\n')
                     clearInterval(memoryInterval)
                     proc.removeAllListeners()
-                    console.log(out)
                     resolve(out)
                 }
 
@@ -3032,8 +3031,6 @@ class Poopy {
                     declaredonly: declaredonly
                 })
 
-                console.log(keydata.match)
-
                 var opts = {
                     extrakeys: extradkeys,
                     extrafuncs: extradfuncs,
@@ -3263,7 +3260,34 @@ class Poopy {
                 filename = extraOptions.name
             }
 
-            if (extraOptions.nosend) {
+            if (extraOptions.catbox) {
+                poopy.functions.infoPost(`Uploading file to catbox.moe`)
+                var fileLink = await poopy.vars[extraOptions.nosend ? 'Litterbox' : 'Catbox'].upload(`${filepath}/${filename}`).catch(() => { })
+                if (fileLink) {
+                    var isUrl = poopy.vars.validUrl.test(fileLink)
+
+                    if (extraOptions.nosend) {
+                        if (isUrl) {
+                            poopy.functions.addLastUrl(msg.guild.id, msg.channel.id, fileLink)
+                        } else {
+                            await poopy.functions.waitMessageCooldown()
+                            await msg.reply(fileLink.includes('retard') ? 'ok so what happened right here is i tried to upload a gif with a size bigger than 20 mb to catbox.moe but apparently you cant do it so uhhhhhh haha no link for you' : fileLink).catch(() => { })
+                            poopy.functions.infoPost(`Couldn\'t upload catbox.moe file, reason:\n\`${fileLink.includes('retard') ? 'ok so what happened right here is i tried to upload a gif with a size bigger than 20 mb to catbox.moe but apparently you cant do it so uhhhhhh haha no link for you' : fileLink}\``)
+                        }
+                    } else {
+                        await poopy.functions.waitMessageCooldown()
+                        await msg.reply(fileLink.includes('retard') ? 'ok so what happened right here is i tried to upload a gif with a size bigger than 20 mb to catbox.moe but apparently you cant do it so uhhhhhh haha no link for you' : fileLink).catch(() => { })
+                        if (!isUrl) {
+                            poopy.functions.infoPost(`Couldn\'t upload catbox.moe file, reason:\n\`${fileLink.includes('retard') ? 'ok so what happened right here is i tried to upload a gif with a size bigger than 20 mb to catbox.moe but apparently you cant do it so uhhhhhh haha no link for you' : fileLink}\``)
+                        }
+                    }
+
+                    if (isUrl) returnUrl = fileLink
+                } else {
+                    await msg.reply('Couldn\'t send file.').catch(() => { })
+                    poopy.functions.infoPost(`Couldn\'t upload catbox.moe file`)
+                }
+            } else if (extraOptions.nosend) {
                 poopy.functions.infoPost(`Saving file temporarily`)
 
                 var id = poopy.functions.generateId(poopy.modules.fs.readdirSync('tempfiles').map(file => {
@@ -3292,34 +3316,7 @@ class Poopy {
                 setTimeout(() => {
                     poopy.modules.fs.rmSync(`tempfiles/${id}${ext}`, { force: true, recursive: true })
                     delete poopy.tempfiles[id]
-                }, 60000)
-            } else if (extraOptions.catbox) {
-                poopy.functions.infoPost(`Uploading file to catbox.moe`)
-                var fileLink = await poopy.vars[extraOptions.nosend ? 'Litterbox' : 'Catbox'].upload(`${filepath}/${filename}`).catch(() => { })
-                if (fileLink) {
-                    var isUrl = poopy.vars.validUrl.test(fileLink)
-
-                    if (extraOptions.nosend) {
-                        if (isUrl) {
-                            poopy.functions.addLastUrl(msg.guild.id, msg.channel.id, fileLink)
-                        } else {
-                            await poopy.functions.waitMessageCooldown()
-                            await msg.reply(fileLink.includes('retard') ? 'ok so what happened right here is i tried to upload a gif with a size bigger than 20 mb to catbox.moe but apparently you cant do it so uhhhhhh haha no link for you' : fileLink).catch(() => { })
-                            poopy.functions.infoPost(`Couldn\'t upload catbox.moe file, reason:\n\`${fileLink.includes('retard') ? 'ok so what happened right here is i tried to upload a gif with a size bigger than 20 mb to catbox.moe but apparently you cant do it so uhhhhhh haha no link for you' : fileLink}\``)
-                        }
-                    } else {
-                        await poopy.functions.waitMessageCooldown()
-                        await msg.reply(fileLink.includes('retard') ? 'ok so what happened right here is i tried to upload a gif with a size bigger than 20 mb to catbox.moe but apparently you cant do it so uhhhhhh haha no link for you' : fileLink).catch(() => { })
-                        if (!isUrl) {
-                            poopy.functions.infoPost(`Couldn\'t upload catbox.moe file, reason:\n\`${fileLink.includes('retard') ? 'ok so what happened right here is i tried to upload a gif with a size bigger than 20 mb to catbox.moe but apparently you cant do it so uhhhhhh haha no link for you' : fileLink}\``)
-                        }
-                    }
-
-                    if (isUrl) returnUrl = fileLink
-                } else {
-                    await msg.reply('Couldn\'t send file.').catch(() => { })
-                    poopy.functions.infoPost(`Couldn\'t upload catbox.moe file`)
-                }
+                }, 600000)
             } else {
                 poopy.functions.infoPost(`Sending file to channel`)
                 var sendObject = {
