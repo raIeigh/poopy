@@ -4134,7 +4134,7 @@ class Poopy {
 
                     msg.oldcontent = cmd
 
-                    if (!(ignored.find(name => cmd.toLowerCase().includes(`${prefix}${name}`.toLowerCase()))) && ((!msg.author.bot && msg.author.id != poopy.bot.user.id) || poopy.config.allowbotusage)) {
+                    if (!(ignored.find(name => cmd.toLowerCase().includes(name.toLowerCase()))) && ((!msg.author.bot && msg.author.id != poopy.bot.user.id) || poopy.config.allowbotusage)) {
                         var change = await poopy.functions.getKeywordsFor(cmd, msg, false, { resetattempts: true }).catch(async err => {
                             await poopy.functions.waitMessageCooldown()
                             await msg.reply({
