@@ -2889,8 +2889,23 @@ class Poopy {
                 }
             }
 
+            if (msg.stickers.size) {
+                var stickersR = []
+                msg.stickers.forEach(sticker => {
+                    if (options.update && sticker.fetched) return
+                    stickersR.push(`https://cdn.discordapp.com/stickers/${sticker.id}.png`)
+                    if (options.update && !sticker.fetched) sticker.fetched = true
+                })
+                stickersR.reverse()
+                for (var i in stickersR) {
+                    var sticker = stickersR[i]
+                    urls = [sticker].concat(urls)
+                    if (urls.length >= max) break
+                }
+            }
+
             var reply = await msg.fetchReference().catch(() => { })
-            if (reply && !options.replied) {
+            if (reply && !options.replied && msg.author.id != poopy.bot.user.id && prefixFound) {
                 if (reply.guild) {
                     urls = urls.concat(await poopy.functions.getUrls(reply, {
                         replied: true,
