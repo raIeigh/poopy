@@ -12,8 +12,10 @@ module.exports = {
         }
         await msg.channel.sendTyping().catch(() => { })
 
+        var markov = poopy.functions.markov(messages, minlength)
+
         await msg.channel.send({
-            content: poopy.functions.markov(messages, minlength),
+            content: markov,
             allowedMentions: {
                 parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
             }

@@ -4,6 +4,7 @@ module.exports = function (phrases, length = 5) {
     var markovTerminals = {};
     var markovStartWords = [];
     var markovWordStats = {};
+    var word
     var iteractions = 0
 
     var markovTrain = function (words) {
