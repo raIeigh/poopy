@@ -149,6 +149,8 @@ module.exports = {
             await image.writeAsync(`${filepath}/frames/${i.padStart(3, '0')}.png`)
         }
 
+        console.log(poopy.modules.fs.readdirSync(`${filepath}/frames`))
+
         await poopy.functions.execPromise(`ffmpeg -r ${fps} -i ${filepath}/frames/%03d.png -filter_complex "[0:v]scale='min(400,iw)':min'(400,ih)':force_original_aspect_ratio=decrease,split[gif][pgif];[pgif]palettegen=reserve_transparent=1[palette];[gif][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} -vsync 0 -gifflags -offsetting ${filepath}/output.gif`)
         return await poopy.functions.sendFile(msg, filepath, `output.gif`)
     },

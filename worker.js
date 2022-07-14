@@ -174,7 +174,7 @@ async function processJob(data) {
         let args = code.split(' ')
         let command = args[0]
 
-        let delfolder
+        let delfolders = []
 
         for (let inpdir in (data.files ?? {})) {
             let [idir] = dir_name(inpdir)
@@ -183,7 +183,7 @@ async function processJob(data) {
 
             fs.writeFileSync(inpdir, Buffer.from(data.files[inpdir], 'base64'))
 
-            if (!delfolder) delfolder = idir.split('/').slice(0, 3).join('/')
+            if (!delfolders.includes(idir.split('/').slice(0, 3).join('/'))) delfolders.push(idir.split('/').slice(0, 3).join('/'))
         }
 
         let filedir = processingTools.outputs[command] &&
@@ -202,7 +202,7 @@ async function processJob(data) {
 
             mkdirs(dir)
 
-            if (!delfolder) delfolder = dir.split('/').slice(0, 3).join('/')
+            if (!delfolders.includes(dir.split('/').slice(0, 3).join('/'))) delfolders.push(dir.split('/').slice(0, 3).join('/'))
         }
 
         let exargs = args.slice()
@@ -223,7 +223,7 @@ async function processJob(data) {
             })
         }
 
-        if (delfolder) fs.rmSync(delfolder, { force: true, recursive: true })
+        if (delfolders.length) delfolders.forEach(delfolder => fs.rmSync(delfolder, { force: true, recursive: true }))
 
         return output
     }
