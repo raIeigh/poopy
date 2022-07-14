@@ -165,6 +165,7 @@ class Poopy {
         poopy.modules.catbox = require('catbox.moe')
         poopy.modules.mathjs = require('mathjs')
         poopy.modules.prettyBytes = require('pretty-bytes')
+        poopy.modules.itob = require('istextorbinary')
         poopy.modules.os = require('os')
 
         // these are functions
