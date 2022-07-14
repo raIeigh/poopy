@@ -33,6 +33,7 @@ module.exports = {
         var nofiles = false
         if (fetched.length <= 0) nofiles = true
 
+        console.log(fetched.length)
         if (nofiles) {
             var validfilecount = 0
             var framemessage = await msg.channel.send(`Found 0 images.`).catch(() => { })
