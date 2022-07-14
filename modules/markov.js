@@ -1,9 +1,10 @@
 // Markov Model from https://www.soliantconsulting.com/blog/2013/02/title-generator-using-markov-chains
 
-module.exports = function (phrases) {
+module.exports = function (phrases, length = 5) {
     var markovTerminals = {};
     var markovStartWords = [];
     var markovWordStats = {};
+    var iteractions = 0
 
     var markovTrain = function (words) {
         markovTerminals[words[words.length - 1]] = true;
@@ -23,6 +24,7 @@ module.exports = function (phrases) {
     };
 
     var markovMakeSentence = function (min_length) {
+        iteractions++
         word = markovWordChoice(markovStartWords);
         var sentence = [word];
         while (markovWordStats.hasOwnProperty(word)) {
@@ -33,12 +35,12 @@ module.exports = function (phrases) {
                 break;
             };
         }
-        if (sentence.length < min_length && Math.random() > 0.2) {
+        if (sentence.length < min_length && iteractions < 250) {
             return markovMakeSentence(min_length)
         };
         return sentence.join(' ');
     };
 
     if (phrases) phrases.forEach(phrase => markovTrain(phrase.split(' ')));
-    return markovMakeSentence(5);
+    return markovMakeSentence(length);
 }

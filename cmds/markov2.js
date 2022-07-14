@@ -3,10 +3,7 @@ module.exports = {
     execute: async function (msg, args) {
         let poopy = this
 
-        var wordNumber = poopy.functions.getOption(args, 'words', { dft: Math.floor(Math.random() * 20) + 1, splice: true, n: 1, join: true, func: (opt) => poopy.functions.parseNumber(opt, { dft: Math.floor(Math.random() * 20) + 1, min: 1, max: 10000, round: true }) })
-        var nopunctuation = poopy.functions.getOption(args, 'nopunctuation', { dft: false, splice: true, n: 0, join: true })
-        var keepcase = poopy.functions.getOption(args, 'keepcase', { dft: false, splice: true, n: 0, join: true })
-        var randlerp = poopy.functions.getOption(args, 'randlerp', { dft: 0.4, splice: true, n: 1, join: true })
+        var minlength = poopy.functions.getOption(args, 'minlength', { dft: 5, splice: true, n: 1, join: true, func: (opt) => poopy.functions.parseNumber(opt, { dft: 5, min: 1, max: 10000, round: true }) })
         var randomsentences = poopy.functions.getOption(args, 'randomsentences', { dft: false, splice: true, n: 0, join: true })
 
         var messages = poopy.data['guild-data'][msg.guild.id]['messages'].slice().map(m => m.content)
@@ -16,7 +13,7 @@ module.exports = {
         await msg.channel.sendTyping().catch(() => { })
 
         await msg.channel.send({
-            content: poopy.functions.markov(messages),
+            content: poopy.functions.markov(messages, minlength),
             allowedMentions: {
                 parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
             }
