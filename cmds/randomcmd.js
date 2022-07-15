@@ -3,36 +3,39 @@ module.exports = {
     execute: async function (msg, args) {
         let poopy = this
 
-        var type = 'Rand'
+        var type
+        var allCmds = poopy.commands.concat(poopy.data['guild-data'][msg.guild.id]['localcmds'].map(lcmd => {
+            return {
+                name: [lcmd.name],
+                type: 'Local',
+                execute: async () => await poopy.functions.getKeywordsFor(lcmd.phrase, msg, true, { resetattempts: true, ownermode: lcmd.ownermode }).catch(() => { }) ?? 'error'
+            }
+        }))
+
         function chooseCmd() {
-            var cmd
-            if (type === 'Rand') {
-                cmd = poopy.commands[Math.floor(Math.random() * poopy.commands.length)]
+            if (type) {
+                var foundCmds = []
+                for (var i in allCmds) {
+                    var cmd = allCmds[i]
+                    if (cmd.type === type && !(cmd.type === 'Owner' || cmd.type === 'JSON Club' || cmd.perms || poopy.data['guild-data'][msg.guild.id]['disabled'].find(c => c.find(n => n === cmd.name.find(nn => nn === n))))) {
+                        foundCmds.push(cmd)
+                    }
+                }
+
+                if (foundCmds.length) {
+                    return foundCmds[Math.floor(Math.random() * foundCmds.length)]
+                }
+
+                return allCmds[Math.floor(Math.random() * allCmds.length)]
+            } else {
+                var cmd = allCmds[Math.floor(Math.random() * allCmds.length)]
                 if (cmd.type === 'Owner' || cmd.type === 'JSON Club' || cmd.perms || poopy.data['guild-data'][msg.guild.id]['disabled'].find(c => c.find(n => n === cmd.name.find(nn => nn === n)))) {
                     return chooseCmd()
                 }
                 return cmd
-            } else {
-                var cmds = []
-                for (var i in poopy.vars.shelpCmds) {
-                    var shelpCmd = poopy.vars.shelpCmds[i]
-                    if (shelpCmd.type === type) {
-                        for (var j in shelpCmd.commands) {
-                            var command = shelpCmd.commands[j]
-                            var cmd = poopy.commands.find(c => c.help.name === command.name)
-                            if (!(cmd.type === 'Owner' || cmd.type === 'JSON Club' || cmd.perms || poopy.data['guild-data'][msg.guild.id]['disabled'].find(c => c.find(n => n === cmd.name.find(nn => nn === n))))) {
-                                cmds.push(cmd)
-                            }
-                        }
-                    }
-                }
-                if (cmds.length > 0) {
-                    cmd = cmds[Math.floor(Math.random() * cmds.length)]
-                    return cmd
-                }
-                return
             }
         }
+
         var typeindex = args.indexOf('-cmdtype')
         if (typeindex > -1) {
             if (poopy.vars.types.find(type => type.toLowerCase() === args.slice(typeindex + 1).join(' ').toLowerCase())) {
@@ -40,10 +43,11 @@ module.exports = {
                 args.splice(typeindex)
             }
         }
+
         var cmd = chooseCmd()
 
         if (!cmd) {
-            await msg.channel.send('no').catch(() => { })
+            await msg.channel.send('there is no dog').catch(() => { })
             return
         }
 
@@ -51,17 +55,29 @@ module.exports = {
         if (cmd.cooldown) {
             poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] = (poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] || Date.now()) + cmd.cooldown / ((msg.member.permissions.has('MANAGE_GUILD') || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID) && (cmd.type === 'Text' || cmd.type === 'Main') ? 5 : 1)
         }
+
         var deletetimeout = setTimeout(() => {
             if (!cmdmessage) return
             cmdmessage.delete().catch(() => { })
             clearTimeout(deletetimeout)
         }, 3000)
-        await cmd.execute.call(this, msg, args)
+
+        var phrase = await cmd.execute.call(poopy, msg, args).catch(() => { }) ?? 'error'
+        if (poopy.tempdata[msg.guild.id][msg.channel.id]['shut']) return
+        await poopy.functions.waitMessageCooldown()
+        if (cmd.type == 'Local') {
+            await msg.channel.send({
+                content: phrase,
+                allowedMentions: {
+                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                }
+            }).catch(() => { })
+        }
     },
     help: {
         name: 'randomcmd [args] [-cmdtype <commandType>]',
         value: 'Executes a completely random Poopy command.\n' +
-            'Example usage: p:randomcmd -cmdtype File Manipulation'
+            'Example usage: p:randomcmd -cmdtype Local'
     },
     cooldown: 2500,
     type: 'Random'

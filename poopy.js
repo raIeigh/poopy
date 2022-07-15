@@ -3846,7 +3846,7 @@ class Poopy {
         poopy.vars.jsonCmds = []
         poopy.vars.devCmds = []
         poopy.vars.sections = []
-        poopy.vars.types = []
+        poopy.vars.types = ['Local']
 
         for (var i in poopy.commands) {
             var command = poopy.commands[i]
