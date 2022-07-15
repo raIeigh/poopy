@@ -3986,7 +3986,9 @@ class Poopy {
             }
 
             await poopy.functions.gatherData(msg).catch(() => { })
-            setTimeout(() => { delete poopy.tempdata[msg.author.id][msg.id] }, 600000)
+            setTimeout(() => {
+                if (poopy.tempdata[msg.author.id]) delete poopy.tempdata[msg.author.id][msg.id]
+            }, 600000)
 
             var guildfilter = poopy.config.guildfilter
             var channelfilter = poopy.config.channelfilter
