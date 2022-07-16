@@ -1,6 +1,6 @@
 module.exports = {
     helpf: '(id | index)',
-    desc: 'Returns a random YouTube video from the playlist, if no index is specified.',
+    desc: 'Returns a random YouTube video from the channel, if no index is specified.',
     func: async function (matches) {
         let poopy = this
 
@@ -8,9 +8,11 @@ module.exports = {
         var split = poopy.functions.splitKeyFunc(word, { args: 2 })
         var id = poopy.functions.getIndexOption(split, 0)[0]
         var page = poopy.functions.getIndexOption(split, 1, { n: Infinity }).join(' | ')
-        var countres = await poopy.vars.youtube.playlistItems.list({
-            playlistId: id,
+        var countres = await poopy.vars.youtube.search.list({
+            channelId: id,
+            type: 'video',
             part: 'snippet',
+            order: 'date',
             maxResults: 50
         }).catch(() => { })
 
@@ -31,9 +33,11 @@ module.exports = {
 
         while (pagecount > 1) {
             pagecount--
-            var nres = await poopy.vars.youtube.playlistItems.list({
-                playlistId: id,
+            var nres = await poopy.vars.youtube.search.list({
+                channelId: id,
+                type: 'video',
                 part: 'snippet',
+                order: 'date',
                 maxResults: 50,
                 pageToken: nextToken
             }).catch(() => { })
@@ -44,7 +48,7 @@ module.exports = {
 
         page = Math.min(page, res.data.items.length)
 
-        var urls = res.data.items.map(result => `https://www.youtube.com/watch?v=${result.snippet.resourceId.videoId}`)
+        var urls = res.data.items.map(result => `https://www.youtube.com/watch?v=${result.id.videoId}`)
 
         if (!urls || !urls.length) return word
 

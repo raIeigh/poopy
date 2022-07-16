@@ -20,63 +20,67 @@ module.exports = {
 
         var res = await poopy.modules.axios.request(`https://g.tenor.com/v1/search?q=${encodeURIComponent(search)}&key=${process.env.TENORKEY}&limit=100&contentfilter=${msg.channel.nsfw ? 'off' : 'medium'}`).catch(() => { })
 
-        if (res) {
-            var results = res.data.results
-
-            var urls = [];
-
-            for (var i in results) {
-                var result = results[i]
-                urls.push(result.media[0].gif.url)
-            }
-
-            if (!urls.length) {
-                await msg.channel.send('Not found.').catch(() => { })
-                await msg.channel.sendTyping().catch(() => { })
-                return;
-            }
-
-            var number = page
-            if (number > urls.length) number = urls.length;
-            if (number < 1) number = 1
-
-            await poopy.functions.navigateEmbed(msg.channel, async (page) => {
-                undefined = poopy.functions.lastUrl(msg.guild.id, msg.channel.id, 0)
-                undefined = urls[page - 1]
-                var lastUrls = [urls[page - 1]].concat(poopy.functions.lastUrls(msg.guild.id, msg.channel.id))
-                lastUrls.splice(100)
-                undefined = lastUrls
-
-                if (poopy.config.textEmbeds) return `${urls[page - 1]}\n\nGIF ${page}/${urls.length}`
-                else return {
-                    "title": "Tenor GIF Search Results For " + search,
-                    "description": "Use the arrows to navigate.",
-                    "color": 0x472604,
-                    "footer": {
-                        "text": "GIF " + page + "/" + urls.length
-                    },
-                    "image": {
-                        "url": urls[page - 1]
-                    },
-                    "author": {
-                        "name": msg.author.tag,
-                        "icon_url": msg.author.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' })
-                    }
-                }
-            }, urls.length, msg.member, [
-                {
-                    emoji: '874406183933444156',
-                    reactemoji: '❌',
-                    customid: 'delete',
-                    style: 'DANGER',
-                    function: async (_, __, resultsMsg, collector) => {
-                        collector.stop()
-                        resultsMsg.delete().catch(() => { })
-                    },
-                    page: false
-                }
-            ], number, undefined, undefined, undefined, msg)
+        if (!res) {
+            await msg.channel.send('Error.').catch(() => { })
+            await msg.channel.sendTyping().catch(() => { })
+            return;
         }
+
+        var results = res.data.results
+
+        var urls = [];
+
+        for (var i in results) {
+            var result = results[i]
+            urls.push(result.media[0].gif.url)
+        }
+
+        if (!urls.length) {
+            await msg.channel.send('Not found.').catch(() => { })
+            await msg.channel.sendTyping().catch(() => { })
+            return;
+        }
+
+        var number = page
+        if (number > urls.length) number = urls.length;
+        if (number < 1) number = 1
+
+        await poopy.functions.navigateEmbed(msg.channel, async (page) => {
+            undefined = poopy.functions.lastUrl(msg.guild.id, msg.channel.id, 0)
+            undefined = urls[page - 1]
+            var lastUrls = [urls[page - 1]].concat(poopy.functions.lastUrls(msg.guild.id, msg.channel.id))
+            lastUrls.splice(100)
+            undefined = lastUrls
+
+            if (poopy.config.textEmbeds) return `${urls[page - 1]}\n\nGIF ${page}/${urls.length}`
+            else return {
+                "title": "Tenor GIF Search Results For " + search,
+                "description": "Use the arrows to navigate.",
+                "color": 0x472604,
+                "footer": {
+                    "text": "GIF " + page + "/" + urls.length
+                },
+                "image": {
+                    "url": urls[page - 1]
+                },
+                "author": {
+                    "name": msg.author.tag,
+                    "icon_url": msg.author.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' })
+                }
+            }
+        }, urls.length, msg.member, [
+            {
+                emoji: '874406183933444156',
+                reactemoji: '❌',
+                customid: 'delete',
+                style: 'DANGER',
+                function: async (_, __, resultsMsg, collector) => {
+                    collector.stop()
+                    resultsMsg.delete().catch(() => { })
+                },
+                page: false
+            }
+        ], number, undefined, undefined, undefined, msg)
     },
     help: {
         name: 'gif/tenor <query> [-page <number>]',
