@@ -13,13 +13,13 @@ module.exports = {
         var phrase = string.replace(new RegExp(`${poopy.functions.regexClean(fullword)}\\s*`, 'i'), '')
         poopy.tempdata[msg.author.id]['declared'][`[${name}]`] = value
         poopy.tempdata[msg.author.id]['funcdeclared'][`[${name}]`] = {
-            func: async function (matches, msg, isBot, _, opts) {
+            func: async function (matches, msg, _, __, opts) {
                 var word = matches[1]
                 var split = poopy.functions.splitKeyFunc(word)
 
                 var valOpts = { ...opts }
                 valOpts.extrafuncs.val = {
-                    func: async function (matches, msg, isBot, _, opts) {
+                    func: async function (matches, msg, _, __, opts) {
                         var word = matches[1]
                         var index = Number(word.replace(/\+/g, '')) <= 0 ? 0 : Math.round(Number(word.replace(/\+/g, ''))) || 0
 
