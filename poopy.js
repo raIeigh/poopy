@@ -31,8 +31,6 @@ class Poopy {
 
         let poopy = this
 
-        var { Intents } = require('discord.js')
-
         poopy.config = {
             testing: false,
             poosonia: false,
@@ -51,7 +49,7 @@ class Poopy {
             mongodatabase: 'poopydata',
             globalPrefix: 'p:',
             stfu: false,
-            intents: new Intents(65209),
+            intents: 65209,
             ownerids: ['464438783866175489', '454732245425455105', '613501149282172970'],
             jsoning: ['411624455194804224', '395947826690916362', '486845950200119307'],
             illKillYouIfYouUseEval: ['535467581881188354'],
@@ -187,7 +185,7 @@ class Poopy {
 
         // bot and variables now
         poopy.bot = new poopy.modules.Discord.Client({
-            intents: poopy.config.intents,
+            intents: new poopy.modules.Discord.Intents(poopy.config.intents),
             partials: ['CHANNEL'],
             failIfNotExists: false
         })
