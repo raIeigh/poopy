@@ -3774,12 +3774,14 @@ class Poopy {
 
         poopy.commands = []
 
-        poopy.modules.fs.readdirSync('cmds').forEach(name => {
-            var cmd = name.replace(/\.js$/, '')
-            var cmdData = require(`./cmds/${name}`)
-            if (!(poopy.config.poosonia && poopy.config.poosoniablacklist.find(cmdname => cmdname == cmd)) && poopy.functions.envsExist(cmdData.envRequired ?? [])) {
-                poopy.commands.push(cmdData)
-            }
+        poopy.modules.fs.readdirSync('cmds').forEach(category => {
+            poopy.modules.fs.readdirSync(`cmds/${category}`).forEach(name => {
+                var cmd = name.replace(/\.js$/, '')
+                var cmdData = require(`./cmds/${category}/${name}`)
+                if (!(poopy.config.poosonia && poopy.config.poosoniablacklist.find(cmdname => cmdname == cmd)) && poopy.functions.envsExist(cmdData.envRequired ?? [])) {
+                    poopy.commands.push(cmdData)
+                }
+            })
         })
 
         if (poopy.config.testing) poopy.modules.fs.readdirSync('soon').forEach(name => {
