@@ -31,6 +31,8 @@ class Poopy {
 
         let poopy = this
 
+        var { Intents } = require('discord.js')
+
         poopy.config = {
             testing: false,
             poosonia: false,
@@ -49,7 +51,7 @@ class Poopy {
             mongodatabase: 'poopydata',
             globalPrefix: 'p:',
             stfu: false,
-            intents: Object.values(require('discord.js').Intents.FLAGS),
+            intents: new Intents(65209),
             ownerids: ['464438783866175489', '454732245425455105', '613501149282172970'],
             jsoning: ['411624455194804224', '395947826690916362', '486845950200119307'],
             illKillYouIfYouUseEval: ['535467581881188354'],
@@ -1902,7 +1904,7 @@ class Poopy {
             else sendObject.embeds = [resultEmbed]
 
             await poopy.functions.waitMessageCooldown()
-            var resultsMsg = await (reply ?? channel)[reply ? 'reply' : 'send'](sendObject).catch(() => { })
+            var resultsMsg = await (!poopy.config.allowbotusage ? reply : channel)[(reply && !poopy.config.allowbotusage) ? 'reply' : 'send'](sendObject).catch(() => { })
 
             if (!resultsMsg) {
                 if (errOnFail) throw new Error(`Couldn't send navigable embed to channel`)
