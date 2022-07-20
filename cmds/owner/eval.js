@@ -15,7 +15,7 @@ module.exports = {
             return
         }
         try {
-            var evalMessage = eval(saidMessage)
+            var evalMessage = await eval(saidMessage)
 
             if (typeof (evalMessage) !== 'string') evalMessage = poopy.modules.util.inspect(evalMessage)
 
