@@ -1902,7 +1902,7 @@ class Poopy {
             else sendObject.embeds = [resultEmbed]
 
             await poopy.functions.waitMessageCooldown()
-            var resultsMsg = await (!poopy.config.allowbotusage ? reply : channel)[(reply && !poopy.config.allowbotusage) ? 'reply' : 'send'](sendObject).catch(() => { })
+            var resultsMsg = await ((reply && !poopy.config.allowbotusage) ? reply : channel)[(reply && !poopy.config.allowbotusage) ? 'reply' : 'send'](sendObject).catch(() => { })
 
             if (!resultsMsg) {
                 if (errOnFail) throw new Error(`Couldn't send navigable embed to channel`)
