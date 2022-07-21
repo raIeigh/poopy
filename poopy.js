@@ -4186,6 +4186,10 @@ class Poopy {
                     if (poopy.tempdata[msg.guild.id][msg.channel.id]['shut']) break
 
                     if (msg.content.toLowerCase().startsWith(prefix.toLowerCase()) && ((!msg.author.bot && msg.author.id != poopy.bot.user.id) || poopy.config.allowbotusage)) {
+                        if (!msg.channel.permissionsFor(msg.guild.me).has('SEND_MESSAGES', false)) {
+                            await msg.react(poopy.functions.randomChoice(poopy.bot.emojis.cache.keys())).catch(() => { })
+                        }
+
                         if (poopy.functions.globalData()['bot-data']['shit'].find(id => id === msg.author.id)) {
                             await poopy.functions.waitMessageCooldown()
                             await sending[poopy.config.allowbotusage ? 'send' : 'reply']('shit').catch(() => { })
