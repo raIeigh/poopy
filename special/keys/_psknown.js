@@ -21,7 +21,7 @@ module.exports = {
       "spellbunny",
       "fnepp",
       "concern",
-      "bartekoklol",
+      "barte",
       "betteruser",
       "lead",
       "phexonia",
@@ -33,22 +33,23 @@ module.exports = {
       "agnook",
       "ennakon",
       "gordano",
-      "lad",
-      "charleh",
-      "maks",
       "zekkriel",
       "pl0x7",
       "wovxzers",
-      "zeezy",
       "henryguy",
       "kleio",
       "diep",
-      "kirbo",
+      "bork",
       "fizzy",
       "kurbee",
       "viper",
       "carlito",
-      "goober"
+      "goober",
+      "lordphan",
+      "grulannius",
+      "cocoa",
+      "julia",
+      "frank"
     ]
     return members[Math.floor(Math.random() * members.length)]
   }

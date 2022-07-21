@@ -3,6 +3,9 @@ module.exports = {
     execute: async function (msg, args) {
         let poopy = this
 
+        await msg.channel.send('this is temporarily disabled').catch(() => { })
+        return
+
         await msg.channel.sendTyping().catch(() => { })
         if (msg.member.permissions.has('MANAGE_GUILD')  || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || poopy.config.ownerids.find(id => id == msg.author.id)) {
             if (args[1] === undefined && args[2] === undefined) {

@@ -115,8 +115,8 @@ class Poopy {
                     message: `the height of that file exceeds the exception limit of {param} hahahaha there's nothing you can do`
                 }
             },
-            commandLimit: 5,
-            keyLimit: 500,
+            commandLimit: 5 / 2,
+            keyLimit: 500 / 2,
             memLimit: 0,
             quitOnDestroy: false
         }
@@ -1902,7 +1902,7 @@ class Poopy {
             else sendObject.embeds = [resultEmbed]
 
             await poopy.functions.waitMessageCooldown()
-            var resultsMsg = await (!poopy.config.allowbotusage ? reply : channel)[(reply && !poopy.config.allowbotusage) ? 'reply' : 'send'](sendObject).catch(() => { })
+            var resultsMsg = await ((reply && !poopy.config.allowbotusage) ? reply : channel)[(reply && !poopy.config.allowbotusage) ? 'reply' : 'send'](sendObject).catch(() => { })
 
             if (!resultsMsg) {
                 if (errOnFail) throw new Error(`Couldn't send navigable embed to channel`)

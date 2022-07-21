@@ -179,7 +179,8 @@ module.exports = {
                 }).catch(() => { })
             }
             await msg.channel.send('✅ Check your DMs.').catch(() => { })
-        }).catch(async () => {
+        }).catch(async (e) => {
+            console.log(e)
             await msg.channel.send('Couldn\'t send help to you. Do you have me blocked?').catch(() => { })
             return
         })

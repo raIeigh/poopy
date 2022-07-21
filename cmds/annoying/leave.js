@@ -3,6 +3,9 @@ module.exports = {
     execute: async function (msg) {
         let poopy = this
 
+        await msg.channel.send('this is temporarily disabled').catch(() => { })
+        return
+
         if (msg.member.permissions.has('MANAGE_GUILD') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || poopy.config.ownerids.find(id => id == msg.author.id)) {
             var phrases = [
                 'idiot',
