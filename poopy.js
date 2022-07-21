@@ -115,8 +115,8 @@ class Poopy {
                     message: `the height of that file exceeds the exception limit of {param} hahahaha there's nothing you can do`
                 }
             },
-            commandLimit: 5,
-            keyLimit: 500,
+            commandLimit: 5 / 2,
+            keyLimit: 500 / 2,
             memLimit: 0,
             quitOnDestroy: false
         }
