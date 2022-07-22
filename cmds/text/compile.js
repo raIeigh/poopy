@@ -19,7 +19,7 @@ module.exports = {
         }
 
         if (language === undefined) {
-            await msg.channel.send('What is the programming language?!').catch(() => { })
+            await msg.channel.send(`What is the programming language?! Available ones are:\n${languages.map(lang => `\`${lang.templates[0]}\``).join(', ')}`).catch(() => { })
             return
         }
 
@@ -41,7 +41,7 @@ module.exports = {
             if (findLang) {
                 langVersion = findLang.name
             } else {
-                await msg.channel.send(`Not a valid programming language. Available ones are: ${languages.map(lang => `\`${lang.templates[0]}\``).join(', ')}`).catch(() => { })
+                await msg.channel.send(`Not a valid programming language.\nAvailable ones are: ${languages.map(lang => `\`${lang.templates[0]}\``).join(', ')}`).catch(() => { })
                 return
             }
         } else return

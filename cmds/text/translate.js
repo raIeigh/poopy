@@ -5,7 +5,7 @@ module.exports = {
 
         await msg.channel.sendTyping().catch(() => { })
         if (args[1] === undefined) {
-            await msg.channel.send('What is the text to translate?!').catch(() => { })
+            await msg.channel.send(`What is the text to translate?! A list of supported languages are:\n${poopy.vars.languages.map(language => `\`${language.language}\``).join(', ')}`).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
         }
@@ -16,7 +16,7 @@ module.exports = {
             if (poopy.vars.languages.find(language => (language.language.toLowerCase() === args[sourceindex + 1].toLowerCase()) || (language.name.toLowerCase() === args[sourceindex + 1].toLowerCase()))) {
                 source = poopy.vars.languages.find(language => (language.language.toLowerCase() === args[sourceindex + 1].toLowerCase()) || (language.name.toLowerCase() === args[sourceindex + 1].toLowerCase())).language
             } else {
-                await msg.channel.send(`Not a supported source language. A list of supported languages are:\n${poopy.vars.languages.map(language => `${language.name} (${language.language})`).join(', ')}`).catch(() => { })
+                await msg.channel.send(`Not a supported source language. A list of supported languages are:\n${poopy.vars.languages.map(language => `\`${language.language}\``).join(', ')}`).catch(() => { })
                 return
             }
             args.splice(sourceindex, 2)
@@ -28,7 +28,7 @@ module.exports = {
             if (poopy.vars.languages.find(language => (language.language.toLowerCase() === args[targetindex + 1].toLowerCase()) || (language.name.toLowerCase() === args[targetindex + 1].toLowerCase()))) {
                 target = poopy.vars.languages.find(language => (language.language.toLowerCase() === args[targetindex + 1].toLowerCase()) || (language.name.toLowerCase() === args[targetindex + 1].toLowerCase())).language
             } else {
-                await msg.channel.send(`Not a supported target language. A list of supported languages are:\n${poopy.vars.languages.map(language => `${language.name} (\`${language.language}\`)`).join(', ')}`).catch(() => { })
+                await msg.channel.send(`Not a supported target language. A list of supported languages are:\n${poopy.vars.languages.map(language => `\`${language.language}\``).join(', ')}`).catch(() => { })
                 return
             }
             args.splice(targetindex, 2)
