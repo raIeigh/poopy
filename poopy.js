@@ -9,6 +9,7 @@
     - CLOUDAMQP_URL (url used to send file processing and data queues, accessed at https://api.cloudamqp.com/console/<app-id>/details)
     - MONGOOSEURL (url used to access the database, generated at https://cloud.mongodb.com/v2/<project-id>#clusters/connect)
 
+    - AI21KEY (key generated when you sign up in ai21 for generating text, accessed at https://studio.ai21.com/account/account)
     - DEEPAIKEY (key generated when you sign up in deepai, accessed at https://deepai.org/dashboard/profile)
     - GOOGLEKEY (key from google cloud for accessing the youtube api, generated at https://console.cloud.google.com/apis/credentials?project=<project-name>)
     - MAKESWEETKEY (key from makesweet for generating heartlocket gifs, dm @mkswt on twitter asking for one)
