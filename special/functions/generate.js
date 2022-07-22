@@ -48,7 +48,7 @@ module.exports = {
   }).catch(() => { })
 
     if (resp) {
-      return `${saidMessage}${resp.data.completions[0].data.text}`
+      return `${word}${resp.data.completions[0].data.text}`
     }
 
     return word
