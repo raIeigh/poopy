@@ -50,10 +50,18 @@ module.exports = {
     if (resp) {
       return `${word}${resp.data.completions[0].data.text}`
     }
+    
+    resp = await poopy.modules.deepai.callStandardApi("text-generator", {
+      text: word,
+    }).catch(() => { })
+
+    if (resp) {
+      return resp.output
+    }
 
     return word
   },
   attemptvalue: 10,
   limit: 1,
-  envRequired: ['AI21KEY']
+  envRequired: ['AI21KEY', 'DEEPAIKEY']
 }

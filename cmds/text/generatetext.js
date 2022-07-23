@@ -56,14 +56,7 @@ module.exports = {
             headers: {
                 Authorization: `Bearer ${process.env.AI21KEY}`
             }
-        }).catch(async err => {
-            await msg.channel.send({
-                content: err.stack,
-                allowedMentions: {
-                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
-                }
-            }).catch(() => { })
-        })
+        }).catch(() => { })
 
         if (resp) {
             await msg.channel.send({
@@ -82,13 +75,39 @@ module.exports = {
                 }).catch(() => { })
                 poopy.modules.fs.rmSync(`${filepath}`, { force: true, recursive: true })
             })
+            return
         }
-        await msg.channel.sendTyping().catch(() => { })
+        
+        if (poopy.vars.validUrl.test(saidMessage)) {
+            await msg.channel.send('URLs in this command will break it.').catch(() => { })
+            await msg.channel.sendTyping().catch(() => { })
+            return
+        }
+        
+        resp = await poopy.modules.deepai.callStandardApi("text-generator", {
+            text: saidMessage,
+        }).catch(async err => {
+            await msg.channel.send({
+                content: err.stack,
+                allowedMentions: {
+                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                }
+            }).catch(() => { })
+        })
+        
+        if (resp) {
+            await msg.channel.send({
+                content: resp.output,
+                allowedMentions: {
+                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                }
+            }).catch(() => { })
+        }
     },
     help: {
         name: 'generatetext/predicttext <message> [-temperature <number (from 0 to 1)] [-maxtokens <number (max 2048)>] [-(pres/count/freq)penalty <number (from 0 to 5/1/500)>]',
-        value: 'Tries to predict subsequent text from the specified message with AI21. Default max tokens are 65 and temperature is 0.6.'
+        value: 'Tries to predict subsequent text from the specified message with AI21, DeepAI otherwise. Default max tokens are 65 and temperature is 0.6.'
     },
     type: 'Text',
-    envRequired: ['AI21KEY']
+    envRequired: ['AI21KEY', 'DEEPAIKEY']
 }
