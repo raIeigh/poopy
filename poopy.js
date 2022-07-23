@@ -870,6 +870,10 @@ class Poopy {
                 poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['read'] = false
             }
 
+            if (poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['nsfw'] === undefined) {
+                poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['nsfw'] = msg.channel.nsfw
+            }
+
             if (!webhook) {
                 if (!poopy.data['guild-data'][msg.guild.id]['members']) {
                     poopy.data['guild-data'][msg.guild.id]['members'] = {}
@@ -3993,8 +3997,12 @@ class Poopy {
             }
 
             await poopy.functions.gatherData(msg).catch(() => { })
+            msg.channel.onsfw = msg.channel.nsfw
+            msg.channel.nsfw = poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['nsfw']
             setTimeout(() => {
-                if (poopy.tempdata[msg.author.id]) delete poopy.tempdata[msg.author.id][msg.id]
+                try {
+                    delete poopy.tempdata[msg.author.id][msg.id]
+                } catch (_) { }
             }, 600000)
 
             var guildfilter = poopy.config.guildfilter
