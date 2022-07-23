@@ -44,11 +44,7 @@ module.exports = {
         if (number < 1) number = 1
 
         await poopy.functions.navigateEmbed(msg.channel, async (page) => {
-            undefined = poopy.functions.lastUrl(msg.guild.id, msg.channel.id, 0)
-            undefined = urls[page - 1]
-            var lastUrls = [urls[page - 1]].concat(poopy.functions.lastUrls(msg.guild.id, msg.channel.id))
-            lastUrls.splice(100)
-            undefined = lastUrls
+            poopy.functions.addLastUrl(msg.guild.id, msg.channel.id, urls[page - 1])
 
             if (poopy.config.textEmbeds) return `${urls[page - 1]}\n\nImage ${page}/${urls.length}`
             else return {

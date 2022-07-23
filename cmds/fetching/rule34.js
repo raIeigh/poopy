@@ -1,7 +1,12 @@
 module.exports = {
-    name: ['gif', 'tenor'],
+    name: ['rule34', 'r34'],
     execute: async function (msg, args) {
         let poopy = this
+
+        if (!msg.channel.nsfw) {
+            await poopy.functions.findCommand('img').execute.call(poopy, msg, ['img', 'snail']).catch(() => { })
+            return;
+        }
 
         await msg.channel.sendTyping().catch(() => { })
         if (args[1] === undefined) {
@@ -18,22 +23,26 @@ module.exports = {
         }
         var search = args.slice(1).join(" ");
 
-        var res = await poopy.modules.axios.request(`https://g.tenor.com/v1/search?q=${encodeURIComponent(search)}&key=${process.env.TENORKEY}&limit=100&contentfilter=${msg.channel.nsfw ? 'off' : 'medium'}`).catch(() => { })
+        var body = await poopy.modules.axios.request(`https://api.rule34.xxx/index.php?page=dapi&s=post&q=index&json=1&limit=100&tags=${encodeURIComponent(search)}`).catch(() => { })
 
-        if (!res) {
+        if (!body) {
             await msg.channel.send('Error.').catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
         }
 
-        var results = res.data.results
+        var results = body.data
 
-        var urls = [];
+        var urls = results.map(result => {
+            var isMP4 = result.tags.split(' ').includes('animated') && !result.image.endsWith('gif')
 
-        for (var i in results) {
-            var result = results[i]
-            urls.push(result.media[0].gif.url)
-        }
+            return {
+                url: result.file_url,
+                thumb: isMP4 ? result.sample_url : result.file_url,
+                score: result.score,
+                rating: poopy.vars.caseModifiers[2](result.rating)
+            }
+        });
 
         if (!urls.length) {
             await msg.channel.send('Not found.').catch(() => { })
@@ -46,22 +55,24 @@ module.exports = {
         if (number < 1) number = 1
 
         await poopy.functions.navigateEmbed(msg.channel, async (page) => {
-            poopy.functions.addLastUrl(msg.guild.id, msg.channel.id, urls[page - 1])
+            poopy.functions.addLastUrl(msg.guild.id, msg.channel.id, urls[page - 1].url)
 
-            if (poopy.config.textEmbeds) return `${urls[page - 1]}\n\nGIF ${page}/${urls.length}`
+            if (poopy.config.textEmbeds) return `${urls[page - 1].url}\n**Rating**: ${urls[page - 1].rating}\n**Score**: ${urls[page - 1].score}\n\nPost ${page}/${urls.length}`
             else return {
-                "title": "Tenor GIF Search Results For " + search,
-                "description": "Use the arrows to navigate.",
+                "title": "Rule 34 Post Search Results For " + search,
+                "description": `**Source**: ${urls[page - 1].url}\n**Rating**: ${urls[page - 1].rating}\n**Score**: ${urls[page - 1].score}`,
                 "color": 0x472604,
                 "footer": {
-                    "text": "GIF " + page + "/" + urls.length
+                    "text": "Post " + page + "/" + urls.length
                 },
                 "image": {
-                    "url": urls[page - 1]
+                    "url": urls[page - 1].thumb
                 },
                 "author": {
                     "name": msg.author.tag,
-                    "icon_url": msg.author.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' })
+                    "icon_url": msg.author.displayAvatarURL({
+                        dynamic: true, size: 1024, format: 'png'
+                    })
                 }
             }
         }, urls.length, msg.member, [
@@ -79,11 +90,9 @@ module.exports = {
         ], number, undefined, undefined, undefined, msg)
     },
     help: {
-        name: 'gif/tenor <query> [-page <number>]',
-        value: 'Search for a random GIF in Tenor.\n' +
-            'Example usage: p:gif house exploding -page 3'
+        name: 'rule34/r34 <query> [-page <number>]',
+        value: 'rule 34'
     },
     cooldown: 2500,
-    type: 'Fetching',
-    envRequired: ['TENORKEY']
+    type: 'Fetching'
 }
