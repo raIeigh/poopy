@@ -5,53 +5,56 @@ module.exports = {
     let poopy = this
 
     var word = matches[1]
+    var models = ['j1-jumbo', 'j1-grande', 'j1-large']
 
-    var resp = await poopy.modules.axios.request({
-      url: 'https://api.ai21.com/studio/v1/j1-jumbo/complete',
-      method: 'POST',
-      data: {
-          prompt: word,
-          numResults: 1,
-          maxTokens: 65,
-          temperature: 0.6,
-          topKReturn: 0,
-          topP: 1,
-          presencePenalty: {
-              scale: 0,
-              applyToNumbers: false,
-              applyToPunctuations: false,
-              applyToStopwords: false,
-              applyToWhitespaces: false,
-              applyToEmojis: false
+    for (var model of models) {
+        var resp = await poopy.modules.axios.request({
+          url: 'https://api.ai21.com/studio/v1/j1-jumbo/complete',
+          method: 'POST',
+          data: {
+              prompt: word,
+              numResults: 1,
+              maxTokens: 65,
+              temperature: 0.6,
+              topKReturn: 0,
+              topP: 1,
+              presencePenalty: {
+                  scale: 0,
+                  applyToNumbers: false,
+                  applyToPunctuations: false,
+                  applyToStopwords: false,
+                  applyToWhitespaces: false,
+                  applyToEmojis: false
+              },
+              countPenalty: {
+                  scale: 0,
+                  applyToNumbers: false,
+                  applyToPunctuations: false,
+                  applyToStopwords: false,
+                  applyToWhitespaces: false,
+                  applyToEmojis: false
+              },
+              frequencyPenalty: {
+                  scale: 0,
+                  applyToNumbers: false,
+                  applyToPunctuations: false,
+                  applyToStopwords: false,
+                  applyToWhitespaces: false,
+                  applyToEmojis: false
+              },
+              stopSequences: []
           },
-          countPenalty: {
-              scale: 0,
-              applyToNumbers: false,
-              applyToPunctuations: false,
-              applyToStopwords: false,
-              applyToWhitespaces: false,
-              applyToEmojis: false
-          },
-          frequencyPenalty: {
-              scale: 0,
-              applyToNumbers: false,
-              applyToPunctuations: false,
-              applyToStopwords: false,
-              applyToWhitespaces: false,
-              applyToEmojis: false
-          },
-          stopSequences: []
-      },
-      headers: {
-          Authorization: `Bearer ${process.env.AI21KEY}`
+          headers: {
+              Authorization: `Bearer ${process.env.AI21KEY}`
+          }
+      }).catch(() => { })
+
+      if (resp) {
+        return `${word}${resp.data.completions[0].data.text}`
       }
-  }).catch(() => { })
-
-    if (resp) {
-      return `${word}${resp.data.completions[0].data.text}`
     }
     
-    resp = await poopy.modules.deepai.callStandardApi("text-generator", {
+    var resp = await poopy.modules.deepai.callStandardApi("text-generator", {
       text: word,
     }).catch(() => { })
 

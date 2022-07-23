@@ -6,7 +6,7 @@ module.exports = {
         await msg.channel.sendTyping().catch(() => { })
 
         var temperature = poopy.functions.getOption(args, 'temperature', { dft: 0.6, splice: true, n: 1, join: true, func: (opt) => poopy.functions.parseNumber(opt, { dft: 0.6, min: 0, max: 1, round: false }) })
-        var maxtokens = poopy.functions.getOption(args, 'maxtokens', { dft: 65, splice: true, n: 1, join: true, func: (opt) => poopy.functions.parseNumber(opt, { dft: 65, min: 1, max: 2048, round: true }) })
+        var maxtokens = poopy.functions.getOption(args, 'maxtokens', { dft: 65, splice: true, n: 1, join: true, func: (opt) => poopy.functions.parseNumber(opt, { dft: 65, min: 1, max: 512, round: true }) })
         var pres = poopy.functions.getOption(args, 'prespenalty', { dft: 1, splice: true, n: 1, join: true, func: (opt) => poopy.functions.parseNumber(opt, { dft: 1, min: 0, max: 5, round: false }) })
         var count = poopy.functions.getOption(args, 'countpenalty', { dft: 0, splice: true, n: 1, join: true, func: (opt) => poopy.functions.parseNumber(opt, { dft: 0, min: 0, max: 1, round: false }) })
         var freq = poopy.functions.getOption(args, 'freqpenalty', { dft: 0, splice: true, n: 1, join: true, func: (opt) => poopy.functions.parseNumber(opt, { dft: 0, min: 0, max: 500, round: true }) })
@@ -17,65 +17,69 @@ module.exports = {
             return
         }
 
-        var resp = await poopy.modules.axios.request({
-            url: 'https://api.ai21.com/studio/v1/j1-jumbo/complete',
-            method: 'POST',
-            data: {
-                prompt: saidMessage,
-                numResults: 1,
-                maxTokens: maxtokens,
-                temperature: temperature,
-                topKReturn: 0,
-                topP: 1,
-                presencePenalty: {
-                    scale: pres,
-                    applyToNumbers: false,
-                    applyToPunctuations: false,
-                    applyToStopwords: false,
-                    applyToWhitespaces: false,
-                    applyToEmojis: false
-                },
-                countPenalty: {
-                    scale: count,
-                    applyToNumbers: false,
-                    applyToPunctuations: false,
-                    applyToStopwords: false,
-                    applyToWhitespaces: false,
-                    applyToEmojis: false
-                },
-                frequencyPenalty: {
-                    scale: freq,
-                    applyToNumbers: false,
-                    applyToPunctuations: false,
-                    applyToStopwords: false,
-                    applyToWhitespaces: false,
-                    applyToEmojis: false
-                },
-                stopSequences: []
-            },
-            headers: {
-                Authorization: `Bearer ${process.env.AI21KEY}`
-            }
-        }).catch(() => { })
+        var models = ['j1-jumbo', 'j1-grande', 'j1-large']
 
-        if (resp) {
-            await msg.channel.send({
-                content: `${saidMessage}${resp.data.completions[0].data.text}`,
-                allowedMentions: {
-                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+        for (var model of models) {
+            var resp = await poopy.modules.axios.request({
+                url: `https://api.ai21.com/studio/v1/${model}/complete`,
+                method: 'POST',
+                data: {
+                    prompt: saidMessage,
+                    numResults: 1,
+                    maxTokens: maxtokens,
+                    temperature: temperature,
+                    topKReturn: 0,
+                    topP: 1,
+                    presencePenalty: {
+                        scale: pres,
+                        applyToNumbers: false,
+                        applyToPunctuations: false,
+                        applyToStopwords: false,
+                        applyToWhitespaces: false,
+                        applyToEmojis: false
+                    },
+                    countPenalty: {
+                        scale: count,
+                        applyToNumbers: false,
+                        applyToPunctuations: false,
+                        applyToStopwords: false,
+                        applyToWhitespaces: false,
+                        applyToEmojis: false
+                    },
+                    frequencyPenalty: {
+                        scale: freq,
+                        applyToNumbers: false,
+                        applyToPunctuations: false,
+                        applyToStopwords: false,
+                        applyToWhitespaces: false,
+                        applyToEmojis: false
+                    },
+                    stopSequences: []
+                },
+                headers: {
+                    Authorization: `Bearer ${process.env.AI21KEY}`
                 }
-            }).catch(async () => {
-                var currentcount = poopy.vars.filecount
-                poopy.vars.filecount++
-                var filepath = `temp/${poopy.config.mongodatabase}/file${currentcount}`
-                poopy.modules.fs.mkdirSync(`${filepath}`)
-                poopy.modules.fs.writeFileSync(`${filepath}/generated.txt`, `${saidMessage}${resp.data.completions[0].data.text}`)
+            }).catch(() => { })
+
+            if (resp) {
                 await msg.channel.send({
-                    files: [new poopy.modules.Discord.MessageAttachment(`${filepath}/generated.txt`)]
-                }).catch(() => { })
-                poopy.modules.fs.rmSync(`${filepath}`, { force: true, recursive: true })
-            })
-            return
+                    content: `${saidMessage}${resp.data.completions[0].data.text}`,
+                    allowedMentions: {
+                        parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    }
+                }).catch(async () => {
+                    var currentcount = poopy.vars.filecount
+                    poopy.vars.filecount++
+                    var filepath = `temp/${poopy.config.mongodatabase}/file${currentcount}`
+                    poopy.modules.fs.mkdirSync(`${filepath}`)
+                    poopy.modules.fs.writeFileSync(`${filepath}/generated.txt`, `${saidMessage}${resp.data.completions[0].data.text}`)
+                    await msg.channel.send({
+                        files: [new poopy.modules.Discord.MessageAttachment(`${filepath}/generated.txt`)]
+                    }).catch(() => { })
+                    poopy.modules.fs.rmSync(`${filepath}`, { force: true, recursive: true })
+                })
+                return
+            }
         }
         
         if (poopy.vars.validUrl.test(saidMessage)) {
@@ -84,7 +88,7 @@ module.exports = {
             return
         }
         
-        resp = await poopy.modules.deepai.callStandardApi("text-generator", {
+        var resp = await poopy.modules.deepai.callStandardApi("text-generator", {
             text: saidMessage,
         }).catch(async err => {
             await msg.channel.send({
@@ -105,7 +109,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'generatetext/predicttext <message> [-temperature <number (from 0 to 1)] [-maxtokens <number (max 2048)>] [-(pres/count/freq)penalty <number (from 0 to 5/1/500)>]',
+        name: 'generatetext/predicttext <message> [-temperature <number (from 0 to 1)] [-maxtokens <number (max 512)>] [-(pres/count/freq)penalty <number (from 0 to 5/1/500)>]',
         value: 'Tries to predict subsequent text from the specified message with AI21, DeepAI otherwise. Default max tokens are 65 and temperature is 0.6.'
     },
     type: 'Text',
