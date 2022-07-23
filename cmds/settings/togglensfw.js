@@ -9,9 +9,9 @@ module.exports = {
         return;
       }
 
-      poopy.data['guild-data'][msg.guild.id]['nsfw'] = !poopy.data['guild-data'][msg.guild.id]['nsfw']
-      msg.channel.nsfw = poopy.data['guild-data'][msg.guild.id]['nsfw']
-      await msg.channel.send('Set to **' + poopy.data['guild-data'][msg.guild.id]['nsfw'] + '**.').catch(() => { })
+      poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['nsfw'] = !poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['nsfw']
+      msg.channel.nsfw = poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['nsfw']
+      await msg.channel.send('Set to **' + poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['nsfw'] + '**.').catch(() => { })
     } else {
       await msg.channel.send('You need the manage server permission to execute that!').catch(() => { })
       return;
