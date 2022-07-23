@@ -85,7 +85,7 @@ module.exports = {
         return await poopy.functions.sendFile(msg, filepath, `output.${fileinfo.type.ext}`)
     },
     help: {
-        name: '<:newpoopy:839191885310066729> burningtext/flamingtext/cooltext <prompt> [-fontsize <pixels>] [-origin <x (left/center/right)> <y (top/middle/bottom)>] [-id <number (default 4)>]',
+        name: 'burningtext/flamingtext/cooltext <prompt> [-fontsize <pixels>] [-origin <x (left/center/right)> <y (top/middle/bottom)>] [-id <number (default 4)>]',
         value: 'i love metallica!!!!!! If you put any different ID, it might use a different font. Try it yourself at https://cooltext.com'
     },
     cooldown: 2500,

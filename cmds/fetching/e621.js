@@ -44,7 +44,7 @@ module.exports = {
         var results = body.data.posts
 
         var urls = results.map(result => {
-            var isMP4 = result.tags.includes('animated') && result.file.ext != 'gif'
+            var isMP4 = result.tags.meta.includes('animated') && result.file.ext != 'gif'
             var ratingNames = {
                 s: 'Safe',
                 q: 'Questionable',

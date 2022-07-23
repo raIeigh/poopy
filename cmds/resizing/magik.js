@@ -87,7 +87,7 @@ module.exports = {
         }
     },
     help: {
-        name: '<:newpoopy:839191885310066729> magik/awareshrink/liquidshrink <file> [-scale <multiplier (from 1 to 6)>]',
+        name: 'magik/awareshrink/liquidshrink <file> [-scale <multiplier (from 1 to 6)>]',
         value: "Shrinks the file by liquid-rescaling it."
     },
     cooldown: 2500,

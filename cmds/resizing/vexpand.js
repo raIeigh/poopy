@@ -73,7 +73,7 @@ module.exports = {
         }
     },
     help: {
-        name: '<:newpoopy:839191885310066729> vexpand [multiplier (from 1 to 6)] <file> [-origin <x (left/center/right)> <y (top/middle/bottom)>]',
+        name: 'vexpand [multiplier (from 1 to 6)] <file> [-origin <x (left/center/right)> <y (top/middle/bottom)>]',
         value: 'Expands the height of the file.'
     },
     cooldown: 2500,

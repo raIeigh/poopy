@@ -113,7 +113,7 @@ module.exports = {
         return await poopy.functions.sendFile(msg, filepath, `output.gif`)
     },
     help: {
-        name: '<:newpoopy:839191885310066729> makesweet/heartlocket "{text1}"... {file1}... [-textfirst] [-template <name>]',
+        name: 'makesweet/heartlocket "{text1}"... {file1}... [-textfirst] [-template <name>]',
         value: "Creates a MakeSweet GIF depending on the template, if specified. Available templates are billboard-cityscape, circuit-board, flag, flying-bear, heart-locket and nesting-doll. Try it yourself at https://makesweet.com/"
     },
     cooldown: 2500,

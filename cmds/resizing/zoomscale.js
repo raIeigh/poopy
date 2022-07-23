@@ -122,7 +122,7 @@ module.exports = {
         }
     },
     help: {
-        name: '<:newpoopy:839191885310066729> zoomscale <width> <height> <file> [-flags <algorithm>] [-origin <x (left/center/right)> <y (top/middle/bottom)>] [-keepaspectratio <mode (increase or decrease)>]',
+        name: 'zoomscale <width> <height> <file> [-flags <algorithm>] [-origin <x (left/center/right)> <y (top/middle/bottom)>] [-keepaspectratio <mode (increase or decrease)>]',
         value: 'Zooms the file to correspond to the specified width and height. A list of flags can be found at https://ffmpeg.org/ffmpeg-scaler.html#Scaler-Options'
     },
     cooldown: 2500,

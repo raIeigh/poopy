@@ -51,7 +51,7 @@ module.exports = {
         }
     },
     help: {
-        name: '<:newpoopy:839191885310066729> describeimage <image>',
+        name: 'describeimage <image>',
         value: "Describes the contents of an image. Try it yourself at https://huggingface.co/spaces/OFA-Sys/OFA-Image_Caption"
     },
     cooldown: 2500,

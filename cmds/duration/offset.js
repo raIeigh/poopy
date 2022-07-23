@@ -103,7 +103,7 @@ module.exports = {
         }
     },
     help: {
-        name: '<:newpoopy:839191885310066729> offset <timestamp (you can use hh:mm:ss)> <file>',
+        name: 'offset <timestamp (you can use hh:mm:ss)> <file>',
         value: 'Offsets the file by the timestamp.'
     },
     cooldown: 2500,

@@ -73,7 +73,7 @@ module.exports = {
         }
     },
     help: {
-        name: '<:newpoopy:839191885310066729> vcontract [multiplier (from 1 to 6)] <file> [-origin <x (left/center/right)> <y (top/middle/bottom)>]',
+        name: 'vcontract [multiplier (from 1 to 6)] <file> [-origin <x (left/center/right)> <y (top/middle/bottom)>]',
         value: 'Contracts the height of the file.'
     },
     cooldown: 2500,

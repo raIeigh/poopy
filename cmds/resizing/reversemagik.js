@@ -87,7 +87,7 @@ module.exports = {
         }
     },
     help: {
-        name: '<:newpoopy:839191885310066729> reversemagik/awareenlarge/liquidenlarge <file> [-scale <multiplier (from 1 to 2)>]',
+        name: 'reversemagik/awareenlarge/liquidenlarge <file> [-scale <multiplier (from 1 to 2)>]',
         value: "Enlarges the file by liquid-rescaling it."
     },
     cooldown: 2500,

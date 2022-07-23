@@ -85,7 +85,7 @@ module.exports = {
         }
     },
     help: {
-        name: '<:newpoopy:839191885310066729> vremove/vreversecrop <y> <h> <file>',
+        name: 'vremove/vreversecrop <y> <h> <file>',
         value: 'Removes a portion of the file vertically depending on the Y axis and height.'
     },
     cooldown: 2500,

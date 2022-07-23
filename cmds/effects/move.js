@@ -67,9 +67,9 @@ module.exports = {
         }
     },
     help: {
-        name: '<:newpoopy:839191885310066729> move <x> <y> <file>',
+        name: 'move <x> <y> <file>',
         value: 'Moves the file around in a transparent background.'
     },
     cooldown: 2500,
-    type: 'Effects'
+    type: 'Overlaying'
 }
