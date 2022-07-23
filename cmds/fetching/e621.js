@@ -55,7 +55,7 @@ module.exports = {
                 url: result.file.url,
                 thumb: isMP4 ? result.sample.url : result.file.url,
                 score: result.score.total,
-                favcount = result.fav_count,
+                favcount: result.fav_count,
                 rating: ratingNames[result.rating]
             }
         });
