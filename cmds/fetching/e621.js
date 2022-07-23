@@ -106,8 +106,8 @@ module.exports = {
         ], number, undefined, undefined, undefined, msg)
     },
     help: {
-        name: 'e621 <query> [-page <number>]',
-        value: 'e621'
+        name: 'e621 <query> [-page <number>] (nsfw channel only)',
+        value: 'its funny because its furry porn'
     },
     cooldown: 2500,
     type: 'Fetching'

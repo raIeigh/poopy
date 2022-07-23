@@ -1,5 +1,5 @@
 module.exports = {
-    helpf: '(query | index)',
+    helpf: '(query | index) (nsfw channel only)',
     desc: 'e621',
     func: async function (matches, msg) {
         let poopy = this

@@ -90,8 +90,8 @@ module.exports = {
         ], number, undefined, undefined, undefined, msg)
     },
     help: {
-        name: 'rule34/r34 <query> [-page <number>]',
-        value: 'rule 34'
+        name: 'rule34/r34 <query> [-page <number>] (nsfw channel only)',
+        value: 'its funny because its porn'
     },
     cooldown: 2500,
     type: 'Fetching'
