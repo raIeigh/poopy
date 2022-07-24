@@ -16,7 +16,7 @@ module.exports = {
 
         if (!countres) return word
 
-        var count = Math.min(countres.data.pageInfo.totalResults, 500)
+        var count = Math.min(countres.data.pageInfo.totalResults, 250)
         var page = poopy.functions.parseNumber(page, { dft: Math.floor(Math.random() * count), min: 0, max: count - 1, round: true })
 
         var pagecount = 1
@@ -26,6 +26,7 @@ module.exports = {
             page -= 50
         }
 
+        console.log(pagecount)
         var res = countres
         var nextToken = countres.data.nextPageToken
 

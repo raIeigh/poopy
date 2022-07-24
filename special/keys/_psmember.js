@@ -83,7 +83,7 @@ module.exports = {
       "kurbee",
       "cain",
       "lumin",
-      "archerlolman",
+      "whisky",
       "icre8",
       "charleh",
       "nitra_dev",
@@ -92,13 +92,16 @@ module.exports = {
       "bork",
       "viper",
       "carlito",
-      "goober",
+      "burger",
       "grulannius",
       "lordphan",
       "cocoa",
       "julia",
       "frank",
-      "shabunka"
+      "shabunka",
+      "unax",
+      "vord",
+      "jane"
     ]
     return members[Math.floor(Math.random() * members.length)]
   }

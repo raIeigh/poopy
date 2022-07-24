@@ -9,14 +9,15 @@ module.exports = {
             "timprox",
             "maks",
             "lumin",
-            "archerlolman",
+            "whisky",
             "icre8",
             "charleh",
             "nitra_dev",
             "rukifox",
             "euth",
             "kirbo",
-            "viper"
+            "viper",
+            "jane"
         ]
         return members[Math.floor(Math.random() * members.length)]
     }
