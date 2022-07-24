@@ -6,6 +6,7 @@
     you really just need the discord bot token aaaaaaaaaand that's it
     but if you're brave enough, you can hunt for every one of these:
 
+    - BOTWEBSITE (url if you want a website for your bot)
     - CLOUDAMQP_URL (url used to send file processing and data queues, accessed at https://api.cloudamqp.com/console/<app-id>/details)
     - MONGOOSEURL (url used to access the database, generated at https://cloud.mongodb.com/v2/<project-id>#clusters/connect)
 
