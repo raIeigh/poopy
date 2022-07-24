@@ -21,7 +21,20 @@ body {
     margin: 2.5px;
 }
 
-a.btn, button {
+input {
+    color: #d1a198;
+    background-color: #543933;
+    border-color: #875c54;
+    box-shadow: 3px 3px 3px #0000005e;
+    transition: 0.25s;
+}
+
+a {
+    color: #fa0;
+    text-decoration: none;
+}
+
+a.btn, button, input[type=submit] {
     color: #d1a198;
     background-color: #543933;
     border-style: solid;
@@ -35,11 +48,11 @@ a.btn, button {
     transition: 0.25s;
 }
 
-a.btn:hover, button:hover {
+a.btn:hover, button:hover, input[type=submit]:hover {
     background-color: #875c54;
 }
 
-a.btn:focus, button:focus {
+a.btn:focus, button:focus, input[type=submit]:focus {
     color: #4e342f;
     background-color: #b5958e;
     transform: translateY(1px);
