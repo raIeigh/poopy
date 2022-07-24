@@ -5023,7 +5023,7 @@ class Poopy {
 
         poopy.vars.filecount = poopy.data['bot-data']['filecount'] || 0
 
-        if (poopy.config.testing) {
+        if (poopy.config.testing || !process.env.MONGOOSEURL) {
             if (!poopy.modules.fs.existsSync('data')) {
                 poopy.modules.fs.mkdirSync('data')
             }
