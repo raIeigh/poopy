@@ -5073,10 +5073,12 @@ class Poopy {
                 'x-rapidapi-key': poopy.functions.randomKey('RAPIDAPIKEY')
             }
         }).catch(() => { })
-        poopy.vars.languages = Object.values(lresponse.data.translation)
-        for (var i in lresponse.data.translation) {
-            lresponse.data.translation[i].language = i
-            poopy.vars.languages.push(lresponse.data.translation[i])
+        if (lresponse) {
+            poopy.vars.languages = Object.values(lresponse.data.translation)
+            for (var i in lresponse.data.translation) {
+                lresponse.data.translation[i].language = i
+                poopy.vars.languages.push(lresponse.data.translation[i])
+            }
         }
         poopy.json.emojiJSON = await poopy.functions.getEmojis().catch(() => { })
         console.log(`${poopy.bot.user.username}: emojis`)
