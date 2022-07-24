@@ -3240,8 +3240,8 @@ class Poopy {
             var prefix = poopy.data['guild-data'][msg.guild.id]['prefix']
             var args = msg.content.substring(prefix.toLowerCase().length).split(' ')
 
-            extraOptions.catbox = !!args.find(arg => arg === '-catbox')
-            extraOptions.nosend = !!args.find(arg => arg === '-nosend')
+            extraOptions.catbox = args.find(arg => arg === '-catbox') || extraOptions.catbox || false
+            extraOptions.nosend = args.find(arg => arg === '-nosend') || extraOptions.nosend || false
 
             var nameindex = args.indexOf('-filename')
             if (nameindex > -1 && args[nameindex + 1]) {
