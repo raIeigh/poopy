@@ -1,6 +1,6 @@
 module.exports = {
     helpf: '(query | index)',
-    desc: 'Returns a random YouTube video out of the search query, if no index is specified.',
+    desc: 'Returns a random image out of the search query from DeviantArt, if no index is specified.',
     func: async function (matches, msg) {
         let poopy = this
 
@@ -8,17 +8,15 @@ module.exports = {
         var split = poopy.functions.splitKeyFunc(word, { args: 2 })
         var query = poopy.functions.getIndexOption(split, 0)[0]
         var page = poopy.functions.getIndexOption(split, 1, { n: Infinity }).join(' | ')
-        var res = await poopy.vars.youtube.search.list({
-            type: 'video',
-            q: query,
-            part: 'snippet',
-            maxResults: 50,
-            safeSearch: msg.channel.nsfw ? 'none' : 'strict'
-        }).catch(() => { })
-        
+        var res = await poopy.modules.axios.request(`https://backend.deviantart.com/rss.xml?type=deviation&q=${encodeURIComponent(query)}`).catch(() => { })
+
         if (!res) return word
 
-        var urls = res.data.items.map(result => `https://www.youtube.com/watch?v=${result.id.videoId}`)
+        var results = await poopy.modules.xml2json(res.data).catch(() => { }) ?? { rss: { channel: [{}] } }
+
+        if (!results.rss.channel[0].item) return word
+
+        var urls = results.rss.channel[0].item.filter(result => msg.channel.nsfw ? true : result['media:rating'][0] == 'nonadult').map(result => result['media:content'][0]['$'].url)
         
         if (!urls || !urls.length) return word
 
@@ -28,6 +26,5 @@ module.exports = {
     },
     attemptvalue: 10,
     limit: 5,
-    envRequired: ['GOOGLEKEY'],
-    cmdconnected: 'youtube'
+    cmdconnected: 'deviantart'
 }

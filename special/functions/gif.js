@@ -22,5 +22,6 @@ module.exports = {
     },
     attemptvalue: 10,
     limit: 5,
-    envRequired: ['TENORKEY']
+    envRequired: ['TENORKEY'],
+    cmdconnected: 'gif'
 }

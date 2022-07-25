@@ -3051,7 +3051,8 @@ class Poopy {
                         var keyName = keydata.match
                         var key = poopy.special.keys[keydata.match] || extradkeys[keydata.match]
 
-                        if (key.limit != undefined && poopy.functions.equalValues(poopy.tempdata[msg.author.id][msg.id]['keywordsExecuted'], keyName) >= key.limit) {
+                        if ((key.limit != undefined && poopy.functions.equalValues(poopy.tempdata[msg.author.id][msg.id]['keywordsExecuted'], keyName) >= key.limit) ||
+                            (key.cmdconnected && poopy.data['guild-data'][msg.guild.id]['disabled'].find(cmd => cmd.find(n => n === key.cmdconnected)))) {
                             string = string.replace(keydata.match, '')
                             break
                         }
@@ -3075,7 +3076,8 @@ class Poopy {
                         var func = poopy.special.functions[funcName] || extradfuncs[funcName]
                         var m = match
 
-                        if (func.limit != undefined && poopy.functions.equalValues(poopy.tempdata[msg.author.id][msg.id]['keywordsExecuted'], funcName) >= func.limit) {
+                        if ((func.limit != undefined && poopy.functions.equalValues(poopy.tempdata[msg.author.id][msg.id]['keywordsExecuted'], funcName) >= func.limit) ||
+                            (func.cmdconnected && poopy.data['guild-data'][msg.guild.id]['disabled'].find(cmd => cmd.find(n => n === func.cmdconnected)))) {
                             string = string.replace(`${funcName}(${match})`, '')
                             break
                         }

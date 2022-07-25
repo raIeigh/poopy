@@ -39,7 +39,7 @@ module.exports = {
             var isMP4 = result.tags.split(' ').includes('animated') && !result.image.endsWith('gif')
 
             return {
-                posturl: `https://rule34.xxx/index.php?page=post&s=view&id=${result.id}`
+                posturl: `https://rule34.xxx/index.php?page=post&s=view&id=${result.id}`,
                 url: result.file_url,
                 title: tags,
                 thumb: isMP4 ? result.sample_url : result.file_url,

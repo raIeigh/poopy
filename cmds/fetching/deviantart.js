@@ -26,16 +26,20 @@ module.exports = {
             return;
         }
 
-        var results = await poopy.modules.xml2json(body.data).catch(() => { }) ?? { rss: { channel: [ { item: [] } ] } }
+        var results = await poopy.modules.xml2json(body.data).catch(() => { }) ?? { rss: { channel: [{}] } }
 
-        var urls = results.rss.channel[0].item.map(result => {
-            
+        if (!results.rss.channel[0].item) {
+            await msg.channel.send('Not found.').catch(() => { })
+            await msg.channel.sendTyping().catch(() => { })
+            return;
+        }
 
+        var urls = results.rss.channel[0].item.filter(result => msg.channel.nsfw ? true : result['media:rating'][0] == 'nonadult').map(result => {
             return {
                 posturl: result.link[0],
                 url: result['media:content'][0]['$'].url,
                 title: result.title[0],
-                creator: result['media:creator'][0]['_'],
+                creator: result['media:credit'][0]['_'],
                 rating: poopy.vars.caseModifiers[2](result['media:rating'][0])
             }
         });
@@ -56,7 +60,7 @@ module.exports = {
             if (poopy.config.textEmbeds) return `${urls[page - 1].url}\n**Rating**: ${urls[page - 1].rating}\n**Score**: ${urls[page - 1].score}\n\nPost ${page}/${urls.length}`
             else return {
                 "title": "DeviantArt Post Search Results For " + search,
-                "description": `[${urls[page - 1].title}](${urls[page - 1].posturl})\n**Creator**: ${urls[page - 1].creator}\n**Rating**: ${urls[page - 1].rating}`,
+                "description": `**[${urls[page - 1].title}](${urls[page - 1].posturl})**\n**Creator**: ${urls[page - 1].creator}\n**Rating**: ${urls[page - 1].rating}`,
                 "color": 0x472604,
                 "footer": {
                     "text": "Post " + page + "/" + urls.length

@@ -57,5 +57,6 @@ module.exports = {
     },
     attemptvalue: 10,
     limit: 5,
-    envRequired: ['GOOGLEKEY']
+    envRequired: ['GOOGLEKEY'],
+    cmdconnected: 'youtube'
 }

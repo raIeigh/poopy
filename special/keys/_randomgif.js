@@ -18,5 +18,6 @@ module.exports = {
         }
     },
     attemptvalue: 2,
-    envRequired: ['TENORKEY']
+    envRequired: ['TENORKEY'],
+    cmdconnected: 'randomgif'
 }

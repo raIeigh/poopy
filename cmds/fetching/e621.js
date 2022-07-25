@@ -44,7 +44,7 @@ module.exports = {
         var results = body.data.posts
 
         var urls = results.map(result => {
-            var tags = Object.values(result.tags).map(tags => tags.join(' ')).join(' ')
+            var tags = Object.values(result.tags).map(tags => tags.join(' ')).sort().join(' ')
             if (tags.length > 50) tags = `${tags.substring(0, 50)}...`
             var isMP4 = result.tags.meta.includes('animated') && result.file.ext != 'gif'
             var ratingNames = {
@@ -54,7 +54,7 @@ module.exports = {
             }
 
             return {
-                posturl: `https://e621.net/post/show/${result.id}`
+                posturl: `https://e621.net/post/show/${result.id}`,
                 url: result.file.url,
                 title: tags,
                 thumb: isMP4 ? result.sample.url : result.file.url,
