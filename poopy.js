@@ -150,6 +150,7 @@ class Poopy {
         poopy.modules.request = require('request')
         poopy.modules.FormData = require('form-data')
         poopy.modules.cheerio = require('cheerio')
+        poopy.modules.xml2json = require('xml2js').parseStringPromise
         poopy.modules.util = require('util')
         poopy.modules.md5 = require('md5')
         if (poopy.modules.fs.existsSync('node_modules/@jimp/plugin-print')) {

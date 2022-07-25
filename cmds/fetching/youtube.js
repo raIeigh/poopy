@@ -38,11 +38,16 @@ module.exports = {
             var title = result.snippet.title.replace(/&quot;/g, '"').replace(/&amp;/g, '&').replace(/&#\d+;/g, (match) => {
                 return String.fromCharCode(match.substring(2, match.length - 1))
             })
+            var description = result.snippet.description.replace(/&quot;/g, '"').replace(/&amp;/g, '&').replace(/&#\d+;/g, (match) => {
+                return String.fromCharCode(match.substring(2, match.length - 1))
+            })
+            if (description.length > 200) description = `${description.substring(0, 200)}...`
 
             return {
                 url: `https://www.youtube.com/watch?v=${result.id.videoId}`,
                 thumb: result.snippet.thumbnails.high.url,
-                title: title
+                title: title,
+                description: description
             }
         });
 
@@ -67,7 +72,7 @@ module.exports = {
             if (poopy.config.textEmbeds) return `${urls[page - 1].url}\n\nVideo ${page}/${urls.length}`
             else return {
                 "title": "YouTube Video Search Results For " + search,
-                "description": `[${urls[page - 1].title}](${urls[page - 1].url})`,
+                "description": `**[${urls[page - 1].title}](${urls[page - 1].url})**\n${urls[page - 1].description}`,
                 "color": 0x472604,
                 "footer": {
                     "text": "Video " + page + "/" + urls.length

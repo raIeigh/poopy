@@ -34,10 +34,14 @@ module.exports = {
         var results = body.data
 
         var urls = results.map(result => {
+            var tags = result.tags
+            if (tags.length > 50) tags = `${tags.substring(0, 50)}...`
             var isMP4 = result.tags.split(' ').includes('animated') && !result.image.endsWith('gif')
 
             return {
+                posturl: `https://rule34.xxx/index.php?page=post&s=view&id=${result.id}`
                 url: result.file_url,
+                title: tags,
                 thumb: isMP4 ? result.sample_url : result.file_url,
                 score: result.score,
                 rating: poopy.vars.caseModifiers[2](result.rating)
@@ -60,7 +64,7 @@ module.exports = {
             if (poopy.config.textEmbeds) return `${urls[page - 1].url}\n**Rating**: ${urls[page - 1].rating}\n**Score**: ${urls[page - 1].score}\n\nPost ${page}/${urls.length}`
             else return {
                 "title": "Rule 34 Post Search Results For " + search,
-                "description": `**Source**: ${urls[page - 1].url}\n**Rating**: ${urls[page - 1].rating}\n**Score**: ${urls[page - 1].score}`,
+                "description": `**[${urls[page - 1].title}](${urls[page - 1].posturl})**\n[Media Url](${urls[page - 1].url})\n**Rating**: ${urls[page - 1].rating}\n**Score**: ${urls[page - 1].score}`,
                 "color": 0x472604,
                 "footer": {
                     "text": "Post " + page + "/" + urls.length
