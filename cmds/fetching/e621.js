@@ -44,7 +44,7 @@ module.exports = {
         var results = body.data.posts
 
         var urls = results.map(result => {
-            var tags = Object.values(result.tags).filter(tags => tags.length > 0).map(tags => tags.sort().join(' ')).sort().join(' ')
+            var tags = Object.values(result.tags).flat().sort().join(' ')
             if (tags.length > 50) tags = `${tags.substring(0, 50)}...`
             var isMP4 = result.tags.meta.includes('animated') && result.file.ext != 'gif'
             var ratingNames = {
