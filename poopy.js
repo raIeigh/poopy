@@ -2987,6 +2987,7 @@ class Poopy {
                     urls.splice(i, 1)
                     poopy.data['guild-data'][g]['channels'][c]['lastUrls'].splice(i, 1)
                     i--
+                    continue
                 }
 
                 if (url.startsWith('temp:')) {
@@ -2996,6 +2997,7 @@ class Poopy {
                         urls.splice(i, 1)
                         poopy.data['guild-data'][g]['channels'][c]['lastUrls'].splice(i, 1)
                         i--
+                        continue
                     } else if (tempdir) {
                         urls[i] = `tempfiles/${tempfile.name}`
                     }
