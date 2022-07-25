@@ -35,12 +35,8 @@ module.exports = {
         var results = body.data.items
 
         var urls = results.map(result => {
-            var title = result.snippet.title.replace(/&quot;/g, '"').replace(/&amp;/g, '&').replace(/&#\d+;/g, (match) => {
-                return String.fromCharCode(match.substring(2, match.length - 1))
-            })
-            var description = result.snippet.description.replace(/&quot;/g, '"').replace(/&amp;/g, '&').replace(/&#\d+;/g, (match) => {
-                return String.fromCharCode(match.substring(2, match.length - 1))
-            })
+            var title = poopy.functions.unescapeHTML(result.snippet.title)
+            var description = poopy.functions.unescapeHTML(result.snippet.description)
             if (description.length > 200) description = `${description.substring(0, 200)}...`
 
             return {

@@ -34,7 +34,7 @@ module.exports = {
         var results = body.data
 
         var urls = results.map(result => {
-            var tags = result.tags
+            var tags = poopy.functions.unescapeHTML(result.tags)
             if (tags.length > 50) tags = `${tags.substring(0, 50)}...`
             var isMP4 = result.tags.split(' ').includes('animated') && !result.image.endsWith('gif')
 

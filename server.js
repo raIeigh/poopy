@@ -51,6 +51,9 @@ async function start() {
                 .replace(/&gt;/g, '>')
                 .replace(/&quot;/g, '"')
                 .replace(/&apos;/g, '\'')
+                .replace(/&#\d+;/g, (match) => {
+                    return String.fromCharCode(match.substring(2, match.length - 1))
+                })
         }
     
         app.get('/api/waitPoopyStart', async function (_, res) {

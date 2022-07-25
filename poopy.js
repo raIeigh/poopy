@@ -1191,6 +1191,18 @@ class Poopy {
             return str.replace(/[\\^$.|?*+()[{]/g, (match) => `\\${match}`)
         }
 
+        poopy.functions.unescapeHTML = function (value) {
+            return value
+                .replace(/&amp;/g, '&')
+                .replace(/&lt;/g, '<')
+                .replace(/&gt;/g, '>')
+                .replace(/&quot;/g, '"')
+                .replace(/&apos;/g, '\'')
+                .replace(/&#\d+;/g, (match) => {
+                    return String.fromCharCode(match.substring(2, match.length - 1))
+                })
+        }
+
         poopy.functions.parMatch = function (string) {
             var lastParenthesesIndex = -1
             var llastParenthesesIndex = -1
@@ -2944,6 +2956,12 @@ class Poopy {
             var urls = poopy.data['guild-data'][g]['channels'][c]['lastUrls'].slice()
             var url = urls[i]
 
+            if (url == null) {
+                urls.splice(i, 1)
+                poopy.data['guild-data'][g]['channels'][c]['lastUrls'].splice(i, 1)
+                return poopy.functions.lastUrl(g, c, i, tempdir)
+            }
+
             if (url.startsWith('temp:')) {
                 var id = url.substring(5)
                 var tempfile = poopy.tempfiles[id]
@@ -2965,6 +2983,12 @@ class Poopy {
             for (var i = 0; i < urls.length; i++) {
                 var url = urls[i]
 
+                if (url == null) {
+                    urls.splice(i, 1)
+                    poopy.data['guild-data'][g]['channels'][c]['lastUrls'].splice(i, 1)
+                    i--
+                }
+
                 if (url.startsWith('temp:')) {
                     var id = url.substring(5)
                     var tempfile = poopy.tempfiles[id]
@@ -2982,6 +3006,7 @@ class Poopy {
         }
 
         poopy.functions.addLastUrl = function (g, c, url) {
+            if (!url) return
             var lastUrls = [url].concat(poopy.functions.lastUrls(g, c))
             lastUrls.splice(100)
             poopy.data['guild-data'][g]['channels'][c]['lastUrls'] = lastUrls
