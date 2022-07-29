@@ -25,6 +25,7 @@ module.exports = {
       "betteruser",
       "lead",
       "phexonia",
+      "ghod",
       "deinbag",
       "hiro",
       "superbrohouse",

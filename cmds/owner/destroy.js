@@ -8,6 +8,9 @@ module.exports = {
             await msg.channel.send('Owner only!').catch(() => { })
             return
         } else {
+            var confirm = await poopy.functions.yesno(msg.channel, 'are you sure about killing me', msg.member).catch(() => { })
+            if (!confirm) return
+
             await msg.channel.send('The salami lid').catch(() => { })
             await poopy.destroy(true)
             if (poopy.config.quitOnDestroy) process.exit()

@@ -8,6 +8,9 @@ module.exports = {
             await msg.channel.send('Owner only!').catch(() => { })
             return
         } else {
+            var confirm = await poopy.functions.yesno(msg.channel, 'are you sure about retarding me', msg.member).catch(() => { })
+            if (!confirm) return
+
             var config = poopy.config
             var TOKEN = poopy.__TOKEN
 
