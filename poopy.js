@@ -239,6 +239,7 @@ class Poopy {
         poopy.vars.statusChanges = 'true'
         poopy.vars.filecount = 0
         poopy.vars.cps = 0
+        delete poopy.modules.Discord.Guild.prototype.leave
 
         poopy.statuses = [
             {
