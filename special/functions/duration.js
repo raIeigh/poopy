@@ -8,7 +8,7 @@ module.exports = {
 
     var error
     var fileinfo = await poopy.functions.validateFile(word, 'very true').catch(err => {
-      error = err.stack
+      error = err
     })
     if (error) return error
 

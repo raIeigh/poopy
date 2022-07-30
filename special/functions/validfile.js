@@ -1,6 +1,6 @@
 module.exports = {
   helpf: '(url | exception)',
-  desc: 'Returns true if the specified file is valid for use.',
+  desc: 'Returns true if the specified file is valid for use, else returns why it isn\'t.',
   func: async function (matches) {
     let poopy = this
 
@@ -9,8 +9,12 @@ module.exports = {
     var url = split[0] ?? ''
     var exception = split[1] ?? false
 
-    var fileinfo = await poopy.functions.validateFile(url, exception).catch(() => { })
+    var error
+    await poopy.functions.validateFile(url, exception).catch(err => {
+      error = err
+    })
+    if (error) return error
 
-    return fileinfo ?? ''
+    return true
   }
 }

@@ -2962,7 +2962,7 @@ class Poopy {
             var urls = urlsGlobal.slice()
             var url = urls[i]
 
-            if (url == null) {
+            if (url === null) {
                 urls.splice(i, 1)
                 urlsGlobal.splice(i, 1)
                 return poopy.functions.lastUrl(msg, i, tempdir)
@@ -2990,7 +2990,7 @@ class Poopy {
             for (var i = 0; i < urls.length; i++) {
                 var url = urls[i]
 
-                if (url == null) {
+                if (url === null) {
                     urls.splice(i, 1)
                     urlsGlobal.splice(i, 1)
                     i--
