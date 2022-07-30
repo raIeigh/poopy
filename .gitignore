@@ -1,7 +1,6 @@
 .git
-hell.js
-spoopy.js
 temp
+tempfiles
 data
 node_modules
 package-lock.json
