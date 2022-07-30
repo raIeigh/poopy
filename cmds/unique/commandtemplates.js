@@ -162,7 +162,7 @@ module.exports = {
                         }
                     }
 
-                    var textEmbed = `\`${name}${syntax ? ` ${syntax}` : ''}\`\n\n**Description:** ${description || 'No description available.'}\n**ID:** \`${id}\`\n**Phrase:** \`${phrase}\`\n**Date Updated:** <t:${date}>\n\nMade by ${creator} - Command ${Number(i) + 1}/${dcmdTemplates.length}`.substring(0, 2000)
+                    var textEmbed = `\`${name}${syntax ? ` ${syntax}` : ''}\`\n\n**Description:** ${description || 'No description available.'}\n**ID:** \`${id}\`\n**Date Updated:** <t:${date}>\n\nMade by ${creator} - Command ${Number(i) + 1}/${dcmdTemplates.length}`.substring(0, 2000)
 
                     cmdTemplates.push({
                         embed: embed,
@@ -312,7 +312,7 @@ module.exports = {
                         }
                     }
 
-                    var textEmbed = `\`${name}${syntax ? ` ${syntax}` : ''}\`\n\n**Description:** ${description || 'No description available.'}\n**ID:** \`${id}\`\n**Phrase:** \`${phrase}\`\n**Date Updated:** <t:${date}>\n\nMade by ${creator} - Command ${Number(i) + 1}/${dcmdTemplates.length}`.substring(0, 2000)
+                    var textEmbed = `\`${name}${syntax ? ` ${syntax}` : ''}\`\n\n**Description:** ${description || 'No description available.'}\n**ID:** \`${id}\`\n**Date Updated:** <t:${date}>\n\nMade by ${creator} - Command ${Number(i) + 1}/${dcmdTemplates.length}`.substring(0, 2000)
 
                     cmdTemplates.push({
                         embed: embed,
