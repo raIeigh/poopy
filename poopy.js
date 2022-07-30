@@ -928,60 +928,64 @@ class Poopy {
                 poopy.tempdata[msg.guild.id][msg.channel.id] = {}
             }
 
-            if (!poopy.tempdata[msg.guild.id][msg.channel.id][msg.author.id]) {
-                poopy.tempdata[msg.guild.id][msg.channel.id][msg.author.id] = {}
-            }
+            if (!webhook) {
+                if (!poopy.tempdata[msg.guild.id][msg.channel.id][msg.author.id]) {
+                    poopy.tempdata[msg.guild.id][msg.channel.id][msg.author.id] = {}
+                }
 
-            if (!poopy.tempdata[msg.guild.id][msg.author.id]) {
-                poopy.tempdata[msg.guild.id][msg.author.id] = {}
-            }
+                if (!poopy.tempdata[msg.guild.id][msg.author.id]) {
+                    poopy.tempdata[msg.guild.id][msg.author.id] = {}
+                }
 
-            if (!poopy.tempdata[msg.guild.id][msg.author.id]['promises']) {
-                poopy.tempdata[msg.guild.id][msg.author.id]['promises'] = []
-            }
+                if (!poopy.tempdata[msg.guild.id][msg.author.id]['promises']) {
+                    poopy.tempdata[msg.guild.id][msg.author.id]['promises'] = []
+                }
 
-            if (!poopy.tempdata[msg.author.id]) {
-                poopy.tempdata[msg.author.id] = {}
-            }
+                if (!poopy.tempdata[msg.author.id]) {
+                    poopy.tempdata[msg.author.id] = {}
+                }
 
-            if (!poopy.tempdata[msg.author.id][msg.id]) {
-                poopy.tempdata[msg.author.id][msg.id] = {}
-            }
+                if (!poopy.tempdata[msg.author.id][msg.id]) {
+                    poopy.tempdata[msg.author.id][msg.id] = {}
+                }
 
-            if (!poopy.tempdata[msg.author.id][msg.id]['execCount']) {
-                poopy.tempdata[msg.author.id][msg.id]['execCount'] = 0
-            }
+                if (!poopy.tempdata[msg.author.id][msg.id]['execCount']) {
+                    poopy.tempdata[msg.author.id][msg.id]['execCount'] = 0
+                }
 
-            if (!poopy.tempdata[msg.author.id][msg.id]['keyattempts']) {
-                poopy.tempdata[msg.author.id][msg.id]['keyattempts'] = 0
-            }
+                poopy.tempdata[msg.author.id][msg.id]['lastUrls'] = poopy.functions.lastUrls(msg, false, true)
 
-            if (!poopy.tempdata[msg.author.id]['cooler']) {
-                poopy.tempdata[msg.author.id]['cooler'] = msg.id
-            }
+                if (!poopy.tempdata[msg.author.id][msg.id]['keyattempts']) {
+                    poopy.tempdata[msg.author.id][msg.id]['keyattempts'] = 0
+                }
 
-            if (!poopy.tempdata[msg.author.id]['arrays']) {
-                poopy.tempdata[msg.author.id]['arrays'] = {}
-            }
+                if (!poopy.tempdata[msg.author.id]['cooler']) {
+                    poopy.tempdata[msg.author.id]['cooler'] = msg.id
+                }
 
-            if (!poopy.tempdata[msg.author.id]['declared']) {
-                poopy.tempdata[msg.author.id]['declared'] = {}
-            }
+                if (!poopy.tempdata[msg.author.id]['arrays']) {
+                    poopy.tempdata[msg.author.id]['arrays'] = {}
+                }
 
-            if (!poopy.tempdata[msg.author.id]['promises']) {
-                poopy.tempdata[msg.author.id]['promises'] = []
-            }
+                if (!poopy.tempdata[msg.author.id]['declared']) {
+                    poopy.tempdata[msg.author.id]['declared'] = {}
+                }
 
-            if (!poopy.tempdata[msg.author.id]['eggphrases']) {
-                poopy.tempdata[msg.author.id]['eggphrases'] = {}
-            }
+                if (!poopy.tempdata[msg.author.id]['promises']) {
+                    poopy.tempdata[msg.author.id]['promises'] = []
+                }
 
-            if (!poopy.tempdata[msg.author.id]['eggphrases']['lastmention']) {
-                poopy.tempdata[msg.author.id]['eggphrases']['lastmention'] = 0
-            }
+                if (!poopy.tempdata[msg.author.id]['eggphrases']) {
+                    poopy.tempdata[msg.author.id]['eggphrases'] = {}
+                }
 
-            if (!poopy.tempdata[msg.author.id]['eggphrases']['phrase']) {
-                poopy.tempdata[msg.author.id]['eggphrases']['phrase'] = 0
+                if (!poopy.tempdata[msg.author.id]['eggphrases']['lastmention']) {
+                    poopy.tempdata[msg.author.id]['eggphrases']['lastmention'] = 0
+                }
+
+                if (!poopy.tempdata[msg.author.id]['eggphrases']['phrase']) {
+                    poopy.tempdata[msg.author.id]['eggphrases']['phrase'] = 0
+                }
             }
 
             var lastDataGather = Date.now() - poopy.data['guild-data'][msg.guild.id]['gettingData']
@@ -1033,16 +1037,16 @@ class Poopy {
                     f = f.replace("|201C", "'").replace("|201D", "'").replace("|2018", "'").replace("|2019", "'").replace("`", "'").replace("%B4", "'").replace("|FF20", "").replace("|FE6B", "")
                     return escape(f)
                 }
-    
+
                 var UA = 'Mozilla/5.0 (X11; U; Linux i686; it; rv:1.9.2.3) Gecko/20100406 Firefox/3.6.3 (Swiftfox)'
-    
+
                 if (!poopy.vars.cleverbotJar) poopy.vars.cleverbotJar = await poopy.modules.axios.get("https://www.cleverbot.com/extras/conversation-social-min.js", {
                     headers: {
                         "User-Agent": UA
                     }
                 }).then(res => res.headers['set-cookie'][0].split(";")[0]).catch(() => { })
                 var jar = poopy.vars.cleverbotJar
-    
+
                 var payload = `stimulus=${encodeForSending(stim)}`
                 var l = context.length - 1
                 for (var i = 0; i <= l; i++) {
@@ -1099,9 +1103,9 @@ class Poopy {
                         'x-rapidapi-key': poopy.functions.randomKey('RAPIDAPIKEY')
                     }
                 }
-    
+
                 var res = await poopy.modules.axios.request(options).catch(() => { }) ?? { data: { AIResponse: '' } }
-    
+
                 return res.data.AIResponse
             }
 
@@ -2943,7 +2947,7 @@ class Poopy {
                     var url = urlsr[i]
 
                     if (url) {
-                        poopy.functions.addLastUrl(msg.guild.id, msg.channel.id, url)
+                        poopy.functions.addLastUrl(msg, url)
                     }
                 }
             }
@@ -2953,14 +2957,15 @@ class Poopy {
             return urls
         }
 
-        poopy.functions.lastUrl = function (g, c, i, tempdir) {
-            var urls = poopy.data['guild-data'][g]['channels'][c]['lastUrls'].slice()
+        poopy.functions.lastUrl = function (msg, i, tempdir, global) {
+            var urlsGlobal = global ? poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrls'] : poopy.tempdata[msg.author.id][msg.id]['lastUrls']
+            var urls = urlsGlobal.slice()
             var url = urls[i]
 
             if (url == null) {
                 urls.splice(i, 1)
-                poopy.data['guild-data'][g]['channels'][c]['lastUrls'].splice(i, 1)
-                return poopy.functions.lastUrl(g, c, i, tempdir)
+                urlsGlobal.splice(i, 1)
+                return poopy.functions.lastUrl(msg, i, tempdir)
             }
 
             if (url.startsWith('temp:')) {
@@ -2968,8 +2973,8 @@ class Poopy {
                 var tempfile = poopy.tempfiles[id]
                 if (!tempfile) {
                     urls.splice(i, 1)
-                    poopy.data['guild-data'][g]['channels'][c]['lastUrls'].splice(i, 1)
-                    return poopy.functions.lastUrl(g, c, i, tempdir)
+                    urlsGlobal.splice(i, 1)
+                    return poopy.functions.lastUrl(msg, i, tempdir)
                 } else if (tempdir) {
                     url = `tempfiles/${tempfile.name}`
                 }
@@ -2978,15 +2983,16 @@ class Poopy {
             return url
         }
 
-        poopy.functions.lastUrls = function (g, c, tempdir) {
-            var urls = poopy.data['guild-data'][g]['channels'][c]['lastUrls'].slice()
+        poopy.functions.lastUrls = function (msg, tempdir, global) {
+            var urlsGlobal = global ? poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrls'] : poopy.tempdata[msg.author.id][msg.id]['lastUrls']
+            var urls = urlsGlobal.slice()
 
             for (var i = 0; i < urls.length; i++) {
                 var url = urls[i]
 
                 if (url == null) {
                     urls.splice(i, 1)
-                    poopy.data['guild-data'][g]['channels'][c]['lastUrls'].splice(i, 1)
+                    urlsGlobal.splice(i, 1)
                     i--
                     continue
                 }
@@ -2996,7 +3002,7 @@ class Poopy {
                     var tempfile = poopy.tempfiles[id]
                     if (!tempfile) {
                         urls.splice(i, 1)
-                        poopy.data['guild-data'][g]['channels'][c]['lastUrls'].splice(i, 1)
+                        urlsGlobal.splice(i, 1)
                         i--
                         continue
                     } else if (tempdir) {
@@ -3008,11 +3014,16 @@ class Poopy {
             return urls
         }
 
-        poopy.functions.addLastUrl = function (g, c, url) {
+        poopy.functions.addLastUrl = function (msg, url) {
             if (!url) return
-            var lastUrls = [url].concat(poopy.functions.lastUrls(g, c))
+
+            var lastUrls = [url].concat(poopy.functions.lastUrls(msg))
             lastUrls.splice(100)
-            poopy.data['guild-data'][g]['channels'][c]['lastUrls'] = lastUrls
+            poopy.tempdata[msg.author.id][msg.id]['lastUrls'] = lastUrls
+
+            var lastUrls = [url].concat(poopy.functions.lastUrls(msg, false, true))
+            lastUrls.splice(100)
+            poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrls'] = lastUrls
         }
 
         poopy.functions.getKeywordsFor = async function (string, msg, isBot, { extrakeys = {}, extrafuncs = {}, resetattempts = false, ownermode = false, declaredonly = false } = {}) {
@@ -3309,7 +3320,7 @@ class Poopy {
 
                     if (extraOptions.nosend) {
                         if (isUrl) {
-                            poopy.functions.addLastUrl(msg.guild.id, msg.channel.id, fileLink)
+                            poopy.functions.addLastUrl(msg, fileLink)
                         } else {
                             await poopy.functions.waitMessageCooldown()
                             await sending[poopy.config.allowbotusage ? 'send' : 'reply'](fileLink.includes('retard') ? 'ok so what happened right here is i tried to upload a gif with a size bigger than 20 mb to catbox.moe but apparently you cant do it so uhhhhhh haha no link for you' : fileLink).catch(() => { })
@@ -3350,7 +3361,7 @@ class Poopy {
                     opath: filepath
                 }
 
-                poopy.functions.addLastUrl(msg.guild.id, msg.channel.id, `temp:${id}`)
+                poopy.functions.addLastUrl(msg, `temp:${id}`)
 
                 returnUrl = `temp:${id}`
 
@@ -5084,7 +5095,7 @@ class Poopy {
             poopy.vars.ubercategories = []
             for (var i in poopy.vars.ubervoices) {
                 var voice = poopy.vars.ubervoices[i]
-    
+
                 if (!poopy.vars.ubercategories.find(category => category.name == voice.category)) poopy.vars.ubercategories.push({ name: voice.category, voices: [] })
                 poopy.vars.ubercategories.find(category => category.name == voice.category).voices.push(voice)
             }
@@ -5177,8 +5188,8 @@ class Poopy {
             delete poopy.tempdata
 
             if (poopy.config.quitOnDestroy)
-            for (var type in poopy.functions.globalData())
-            delete poopy.functions.globalData()[type]
+                for (var type in poopy.functions.globalData())
+                    delete poopy.functions.globalData()[type]
         }
     }
 }

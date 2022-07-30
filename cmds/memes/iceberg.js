@@ -4,7 +4,7 @@ module.exports = {
         let poopy = this
 
         await msg.channel.sendTyping().catch(() => { })
-        if (poopy.functions.lastUrl(msg.guild.id, msg.channel.id, 0) === undefined && args[1] === undefined) {
+        if (poopy.functions.lastUrl(msg, 0) === undefined && args[1] === undefined) {
             await msg.channel.send('What are the files?!').catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
@@ -99,7 +99,7 @@ module.exports = {
                 return true
             }
 
-            var lastUrls = poopy.functions.lastUrls(msg.guild.id, msg.channel.id)
+            var lastUrls = poopy.functions.lastUrls(msg)
 
             for (var i in lastUrls) {
                 var url = lastUrls[i]

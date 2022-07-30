@@ -75,7 +75,7 @@ module.exports = {
         if (number < 1) number = 1
 
         await poopy.functions.navigateEmbed(msg.channel, async (page) => {
-            poopy.functions.addLastUrl(msg.guild.id, msg.channel.id, urls[page - 1].url)
+            poopy.functions.addLastUrl(msg, urls[page - 1].url)
 
             if (poopy.config.textEmbeds) return `${urls[page - 1].url}\n**Rating**: ${urls[page - 1].rating}\n**Score**: ${urls[page - 1].score}\n**Favcount**: ${urls[page - 1].favcount}\n\nPost ${page}/${urls.length}`
             else return {

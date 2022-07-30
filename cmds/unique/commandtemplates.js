@@ -128,17 +128,10 @@ module.exports = {
                     var name = cmd.name
                     var description = cmd.description
                     var syntax = cmd.syntax
-                    var phrase = cmd.phrase
                     var image = cmd.image
                     var id = cmd.id
                     var creator = cmd.creator
                     var date = cmd.date
-
-                    var long = phrase.length > 1016
-
-                    if (long) {
-                        phrase = phrase.substring(0, 1013) + '...'
-                    }
 
                     var embed = {
                         "title": `${name}${syntax ? ` ${syntax}` : ''}`,
@@ -151,10 +144,6 @@ module.exports = {
                             {
                                 name: "ID",
                                 value: `\`${id}\``
-                            },
-                            {
-                                name: "Phrase",
-                                value: `\`\`\`\n${phrase}\n\`\`\``
                             },
                             {
                                 name: "Date Updated",
@@ -214,7 +203,7 @@ module.exports = {
                                     })
 
                                     await msg.channel.send({
-                                        content: `✅ Imported \`${name}\` command with phrase \`${findCommandTemplate.phrase}\``,
+                                        content: `✅ Imported \`${name}\` command from the database.`,
                                         allowedMentions: {
                                             parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                                         }
@@ -289,17 +278,10 @@ module.exports = {
                     var name = cmd.name
                     var description = cmd.description
                     var syntax = cmd.syntax
-                    var phrase = cmd.phrase
                     var image = cmd.image
                     var id = cmd.id
                     var creator = cmd.creator
                     var date = cmd.date
-
-                    var long = phrase.length > 1016
-
-                    if (long) {
-                        phrase = phrase.substring(0, 1013) + '...'
-                    }
 
                     var embed = {
                         "title": `${name}${syntax ? ` ${syntax}` : ''}`,
@@ -312,10 +294,6 @@ module.exports = {
                             {
                                 name: "ID",
                                 value: `\`${id}\``
-                            },
-                            {
-                                name: "Phrase",
-                                value: `\`\`\`\n${phrase}\n\`\`\``
                             },
                             {
                                 name: "Date Updated",
@@ -375,7 +353,7 @@ module.exports = {
                                     })
 
                                     await msg.channel.send({
-                                        content: `✅ Imported \`${name}\` command with phrase \`${findCommandTemplate.phrase}\``,
+                                        content: `✅ Imported \`${name}\` command from the database.`,
                                         allowedMentions: {
                                             parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                                         }

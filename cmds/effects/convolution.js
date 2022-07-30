@@ -4,7 +4,7 @@ module.exports = {
         let poopy = this
 
         await msg.channel.sendTyping().catch(() => { })
-        if (poopy.functions.lastUrl(msg.guild.id, msg.channel.id, 0) === undefined && args[4] === undefined) {
+        if (poopy.functions.lastUrl(msg, 0) === undefined && args[4] === undefined) {
             await msg.channel.send('What is the file?!').catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
@@ -20,7 +20,7 @@ module.exports = {
             matchedTextes = ['""']
         }
         var convolution = matchedTextes[0].substring(1, matchedTextes[0].length - 1).replace(/[^\d- :/]/g, '')
-        var currenturl = poopy.functions.lastUrl(msg.guild.id, msg.channel.id, 0)
+        var currenturl = poopy.functions.lastUrl(msg, 0)
         var fileinfo = await poopy.functions.validateFile(currenturl).catch(async error => {
             await msg.channel.send(error).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })

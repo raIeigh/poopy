@@ -119,7 +119,7 @@ module.exports = {
                         })
 
                         await msg.channel.send({
-                            content: `✅ Imported \`${name}\` command with phrase \`${findCommandTemplate.phrase}\``,
+                            content: `✅ Imported \`${name}\` command from the database.`,
                             allowedMentions: {
                                 parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                             }

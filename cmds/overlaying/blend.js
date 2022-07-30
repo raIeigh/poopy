@@ -4,7 +4,7 @@ module.exports = {
         let poopy = this
 
         await msg.channel.sendTyping().catch(() => { })
-        if (poopy.functions.lastUrl(msg.guild.id, msg.channel.id, 1) === undefined && args[2] === undefined) {
+        if (poopy.functions.lastUrl(msg, 1) === undefined && args[2] === undefined) {
             await msg.channel.send('What are the files?!').catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
@@ -94,8 +94,8 @@ module.exports = {
                 return
             }
         }
-        var currenturl = args.find(arg => arg === '-localcmd') ? args[1] : (poopy.functions.lastUrl(msg.guild.id, msg.channel.id, 0) || args[1])
-        var currenturl2 = args.find(arg => arg === '-localcmd') ? args[2] : (poopy.functions.lastUrl(msg.guild.id, msg.channel.id, 1) || args[2])
+        var currenturl = args.find(arg => arg === '-localcmd') ? args[1] : (poopy.functions.lastUrl(msg, 0) || args[1])
+        var currenturl2 = args.find(arg => arg === '-localcmd') ? args[2] : (poopy.functions.lastUrl(msg, 1) || args[2])
         var urls = await poopy.functions.getUrls(msg).catch(() => { }) ?? []
         if (urls.length < 2) {
             var c = currenturl

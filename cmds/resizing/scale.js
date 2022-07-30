@@ -1,15 +1,15 @@
 module.exports = {
-    name: ['scale', 'rescale'],
+    name: ['scale', 'resize'],
     execute: async function (msg, args) {
         let poopy = this
 
         await msg.channel.sendTyping().catch(() => { })
-        if (poopy.functions.lastUrl(msg.guild.id, msg.channel.id, 0) === undefined && args[2] === undefined) {
+        if (poopy.functions.lastUrl(msg, 0) === undefined && args[2] === undefined) {
             await msg.channel.send('What is the file?!').catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
         };
-        var currenturl = poopy.functions.lastUrl(msg.guild.id, msg.channel.id, 0)
+        var currenturl = poopy.functions.lastUrl(msg, 0)
         var keepaspectratio
         var width = isNaN(Number(args[1])) ? undefined : Number(args[1]) <= 1 ? 1 : Number(args[1]) >= 3000 ? 3000 : Number(args[1]) || undefined
         if (width === undefined) {
@@ -114,8 +114,8 @@ module.exports = {
         }
     },
     help: {
-        name: 'scale/rescale <width> <height> <file> [-flags <algorithm>] [-keepaspectratio <mode (increase or decrease)>]',
-        value: 'Rescales the file to correspond to the specified width and height. A list of flags can be found at https://ffmpeg.org/ffmpeg-scaler.html#Scaler-Options'
+        name: 'scale/resize <width> <height> <file> [-flags <algorithm>] [-keepaspectratio <mode (increase or decrease)>]',
+        value: 'Resizes the file to correspond to the specified width and height. A list of flags can be found at https://ffmpeg.org/ffmpeg-scaler.html#Scaler-Options'
     },
     cooldown: 2500,
     type: 'Resizing'

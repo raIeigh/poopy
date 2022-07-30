@@ -61,7 +61,7 @@ module.exports = {
             poopy.modules.youtubedl(urls[page - 1].url, {
                 format: '18',
                 'get-url': ''
-            }).then(youtubeurl => poopy.functions.addLastUrl(msg.guild.id, msg.channel.id, youtubeurl)).catch(() => { })
+            }).then(youtubeurl => poopy.functions.addLastUrl(msg, youtubeurl)).catch(() => { })
 
             var thumbresponse = await poopy.modules.axios.request(urls[page - 1].thumb.replace('hqdefault', 'hq720')).catch(() => { })
 

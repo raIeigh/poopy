@@ -46,7 +46,7 @@ module.exports = {
         if (number < 1) number = 1
 
         await poopy.functions.navigateEmbed(msg.channel, async (page) => {
-            poopy.functions.addLastUrl(msg.guild.id, msg.channel.id, urls[page - 1])
+            poopy.functions.addLastUrl(msg, urls[page - 1])
 
             if (poopy.config.textEmbeds) return `${urls[page - 1]}\n\nGIF ${page}/${urls.length}`
             else return {
