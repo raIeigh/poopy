@@ -61,7 +61,7 @@ module.exports = {
     },
     help: {
         name: 'wackyscale <video> [-mode <value (bounce, shutter, sporadic, bounce+shutter)>] [-delta <number (default 2)>] [-bps <number (default 1.9)>]',
-        value: "Manipulates the video to make it a WEBm that scales itself during playtime."
+        value: "Manipulates the video to make it a WebM that scales itself during playtime."
     },
     cooldown: 2500,
     type: 'Resizing'

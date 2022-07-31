@@ -158,7 +158,7 @@ module.exports = {
     },
     help: {
         name: 'makewebm <frames> [-frames <framenumber (max 50)> {fps (max 60)}',
-        value: 'Makes a WEBm out of the frames and FPS specified.'
+        value: 'Makes a WebM out of the frames and FPS specified.'
     },
     cooldown: 2500,
     type: 'Conversion'

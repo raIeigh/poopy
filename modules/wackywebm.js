@@ -6,8 +6,6 @@ By OIRNOIR#0032
 */
 const path = require('path')
 const fs = require('fs')
-// Synchronous execution via promisify. 
-const util = require('util')
 const getFileName = p => path.basename(p, path.extname(p))
 
 module.exports = async function (inputType, videoPath, { delta = 2, bouncesPerSecond = 1.9 } = {}) {
@@ -56,7 +54,7 @@ module.exports = async function (inputType, videoPath, { delta = 2, bouncesPerSe
 		buildLocations()
 
 		// Use one call to ffprobe to obtain framerate, width, and height, returned as JSON.
-		const videoInfo = await execSync(`ffprobe -v error -select_streams v -of json -show_entries stream=r_frame_rate,width,height "${videoPath}"`)
+		const videoInfo = await execSync(`ffprobe -v error -select_streams v -of json -show_entries stream=r_frame_rate,width,height ${videoPath}`)
 		// Deconstructor extracts these values and renames them.
 		let { streams: [{ width: maxWidth, height: maxHeight, r_frame_rate: framerate }] } = JSON.parse(videoInfo.trim())
 		maxWidth = Number(maxWidth)
