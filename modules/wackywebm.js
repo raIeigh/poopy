@@ -70,14 +70,14 @@ module.exports = async function (inputType, videoPath, { delta = 2, bouncesPerSe
 		// If the file has no audio, flag it to it is not attempted.
 		let audioFlag = true
 		try {
-			await execSync(`ffmpeg -y -i "${videoPath}" -vn -c:a libvorbis "${workLocations.tempAudio}"`)
+			await execSync(`ffmpeg -y -i ${videoPath} -vn -c:a libvorbis "${workLocations.tempAudio}"`)
 		}
 		catch {
 			audioFlag = false
 		}
 
 		// Extracts the frames to be modified for the wackiness.
-		await execSync(`ffmpeg -y -i "${videoPath}" "${workLocations.tempFrameFiles}"`)
+		await execSync(`ffmpeg -y -i ${videoPath} ${workLocations.tempFrameFiles}`)
 
 		// Sorts with a map so extraction of information only happens once per entry.
 		const tempFramesFiles = fs.readdirSync(workLocations.tempFrames)
@@ -107,7 +107,7 @@ module.exports = async function (inputType, videoPath, { delta = 2, bouncesPerSe
 					break
 			}
 			// Creates the respective resized frame based on the above.
-			await execSync(`ffmpeg -y -i "${path.join(workLocations.tempFrames, file)}" -c:v vp8 -b:v 1M -crf 10 -auto-alt-ref 0 -vf scale=${width}x${height} -aspect ${width}:${height} -r ${framerate} -f webm "${path.join(workLocations.tempResizedFrames, file + '.webm')}"`)
+			await execSync(`ffmpeg -y -i ${path.join(workLocations.tempFrames, file)} -c:v vp8 -b:v 1M -crf 10 -auto-alt-ref 0 -vf scale=${width}x${height} -aspect ${width}:${height} -r ${framerate} -f webm ${path.join(workLocations.tempResizedFrames, file + '.webm')}`)
 			// Tracks the new file for concatenation later.
 			lines.push(`file '${path.join('tempResizedFrames', file + '.webm')}'`)
 			index++
@@ -125,7 +125,7 @@ module.exports = async function (inputType, videoPath, { delta = 2, bouncesPerSe
 		// Congatenates segments and applies te original audio to the new file.
 		//if(audioFlag) await execSync(`ffmpeg -y -f concat -safe 0 -i "${workLocations.tempConcatList}" -i "${workLocations.tempAudio}" -c copy "${workLocations.outputFile}"`)
 		//else await execSync(`ffmpeg -y -f concat -safe 0 -i "${workLocations.tempConcatList}" -c copy "${workLocations.outputFile}"`)
-		await execSync(`ffmpeg -y -f concat -safe 0 -i "${workLocations.tempConcatList}"${audioFlag ? ` -i "${workLocations.tempAudio}" ` : ' '}-c copy "${workLocations.outputFile}"`)
+		await execSync(`ffmpeg -y -f concat -safe 0 -i ${workLocations.tempConcatList}${audioFlag ? ` -i ${workLocations.tempAudio} ` : ' '}-c copy ${workLocations.outputFile}`)
 
 		// Recursive removal of temporary files via the main temporary folder.
 		await fs.promises.rm(workLocations.tempFolder, { recursive: true })
