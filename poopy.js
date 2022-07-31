@@ -179,6 +179,7 @@ class Poopy {
         poopy.functions.markov = require('./modules/markov')
         poopy.functions.averageColor = require('./modules/averageColor')
         poopy.functions.spectrogram = require('./modules/spectrogram')
+        poopy.functions.wackywebm = require('./modules/wackywebm')
         poopy.functions.getAllData = require('./modules/dataGathering').getAllData
         poopy.functions.updateAllData = require('./modules/dataGathering').updateAllData
         poopy.functions.globalData = require('./modules/globalData')
@@ -726,6 +727,7 @@ class Poopy {
                     var out = stdout.join('\n') || stderr.join('\n')
                     clearInterval(memoryInterval)
                     proc.removeAllListeners()
+                    console.log(out)
                     resolve(out)
                 }
 
@@ -1506,7 +1508,7 @@ class Poopy {
             return args.slice(i, i + n) || dft
         }
 
-        poopy.functions.getOption = function (args, name, { dft = undefined, n = 1, splice = false, join = false, func = (opt) => opt } = {}) {
+        poopy.functions.getOption = function (args, name, { dft = undefined, n = 1, splice = false, join = true, func = (opt) => opt } = {}) {
             var optionindex = args.indexOf(`-${name}`)
             if (optionindex > -1) {
                 var option = []

@@ -1,5 +1,5 @@
 module.exports = {
-    name: ['makegif'],
+    name: ['makewebm'],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -14,12 +14,12 @@ module.exports = {
         if (!isNaN(Number(args[args.length - 1])) && args[args.length - 2] !== '-frames') {
             fpsIsLastArg = true
         }
-        var fps = !fpsIsLastArg ? 50 : Number(args[args.length - 1]) >= 50 ? 50 : Number(args[args.length - 1]) <= 0 ? 0 : Number(args[args.length - 1]) ?? 50
+        var fps = !fpsIsLastArg ? 60 : Number(args[args.length - 1]) >= 60 ? 60 : Number(args[args.length - 1]) <= 0 ? 0 : Number(args[args.length - 1]) ?? 60
 
-        var framenumber = 50
+        var framenumber = 25
         var framesindex = args.indexOf('-frames')
         if (framesindex > -1) {
-            framenumber = isNaN(Number(args[framesindex + 1])) ? 50 : Number(args[framesindex + 1]) <= 1 ? 1 : Number(args[framesindex + 1]) >= 100 ? 100 : Math.round(Number(args[framesindex + 1])) || 50
+            framenumber = isNaN(Number(args[framesindex + 1])) ? 25 : Number(args[framesindex + 1]) <= 1 ? 1 : Number(args[framesindex + 1]) >= 50 ? 50 : Math.round(Number(args[framesindex + 1])) || 25
             args.splice(framesindex, 2)
         }
 
@@ -136,25 +136,29 @@ module.exports = {
         var filepath = `temp/${poopy.config.mongodatabase}/file${currentcount}`
 
         poopy.modules.fs.mkdirSync(`${filepath}`)
+
         poopy.modules.fs.mkdirSync(`${filepath}/frames`)
-        var framesizes
+        poopy.modules.fs.mkdirSync(`${filepath}/webmframes`)
+
+        var concatList = []
+
         for (var i in frameurls) {
             var frameurl = frameurls[i]
-            if (!framesizes) {
-                framesizes = { x: infos[i].info.width, y: infos[i].info.height }
-            }
 
             var image = await poopy.modules.Jimp.read(frameurl)
-            image.resize(framesizes.x, framesizes.y)
             await image.writeAsync(`${filepath}/frames/${i.padStart(3, '0')}.png`)
+            await poopy.functions.execPromise(`ffmpeg -y -i ${filepath}/frames/${i.padStart(3, '0')}.png -c:v vp8 -b:v 1M -crf 10 -auto-alt-ref 0 -vf scale=${infos[i].info.width}x${infos[i].info.height} -aspect ${infos[i].info.width}:${infos[i].info.height} -r ${fps} -f webm ${filepath}/webmframes/${i.padStart(3, '0')}.webm`)
+            concatList.push(`file 'webmframes/${i.padStart(3, '0')}.webm'`)
         }
 
-        await poopy.functions.execPromise(`ffmpeg -r ${fps} -i ${filepath}/frames/%03d.png -filter_complex "[0:v]scale='min(400,iw)':min'(400,ih)':force_original_aspect_ratio=decrease,split[gif][pgif];[pgif]palettegen=reserve_transparent=1[palette];[gif][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} -vsync 0 -gifflags -offsetting ${filepath}/output.gif`)
-        return await poopy.functions.sendFile(msg, filepath, `output.gif`)
+        poopy.modules.fs.writeFileSync(`${filepath}/concat.txt`, concatList.join('\n'))
+
+        await poopy.functions.execPromise(`ffmpeg -y -f concat -safe 0 -i ${filepath}/concat.txt -c copy ${filepath}/output.webm`)
+        return await poopy.functions.sendFile(msg, filepath, `output.webm`)
     },
     help: {
-        name: 'makegif <frames> [-frames <framenumber (max 100)> {fps (max 50)}',
-        value: 'Makes a GIF out of the frames and FPS specified.'
+        name: 'makewebm <frames> [-frames <framenumber (max 50)> {fps (max 60)}',
+        value: 'Makes a WEBm out of the frames and FPS specified.'
     },
     cooldown: 2500,
     type: 'Conversion'

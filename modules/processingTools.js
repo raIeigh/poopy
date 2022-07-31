@@ -44,7 +44,7 @@ module.exports = {
                                 inputs[`${dir}/${file}`] = fs.readFileSync(`${dir}/${file}`).toString('base64')
 
                                 if (file.endsWith('.txt')) {
-                                    var txtfiles = fs.readFileSync(`${dir}/${file}`).toString().split('\n')
+                                    var txtfiles = fs.readFileSync(`${dir}/${file}`).toString().trim().split('\n')
 
                                     txtfiles.forEach(txtfile => {
                                         if (txtfile.startsWith('file')) {
