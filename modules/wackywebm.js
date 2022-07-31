@@ -68,13 +68,9 @@ module.exports = async function (inputType, videoPath, { delta = 2, bouncesPerSe
 
 		// Separates the audio to be re-applied at the end of the process.
 		// If the file has no audio, flag it to it is not attempted.
-		let audioFlag = true
-		try {
-			await execSync(`ffmpeg -y -i ${videoPath} -vn -c:a libvorbis "${workLocations.tempAudio}"`)
-		}
-		catch {
-			audioFlag = false
-		}
+		let audioFlag = false
+		await execSync(`ffmpeg -y -i ${videoPath} -vn -c:a libvorbis ${workLocations.tempAudio}`)
+		if (fs.existsSync(workLocations.tempAudio)) audioFlag = true
 
 		// Extracts the frames to be modified for the wackiness.
 		await execSync(`ffmpeg -y -i ${videoPath} ${workLocations.tempFrameFiles}`)
