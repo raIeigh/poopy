@@ -1129,16 +1129,15 @@ class Poopy {
 
                 await ch.assertExchange('crash', 'fanout', {
                     durable: false
-                })
-                var qrash = await ch.assertQueue('', {
-                    exclusive: true
-                })
+                }).catch(reject)
+                var qrash = await ch.assertQueue('', { exclusive: true }).catch(reject)
                 ch.bindQueue(qrash.queue, 'crash', '')
 
                 async function closeAll() {
                     await ch.cancel(consumer.consumerTag).catch(() => { })
                     await ch.cancel(crashconsumer.consumerTag).catch(() => { })
                     await ch.deleteQueue(q.queue).catch(() => { })
+                    await ch.deleteQueue(qrash.queue).catch(() => { })
                     await ch.close().catch(() => { })
                 }
 
