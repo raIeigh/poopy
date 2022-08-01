@@ -22,6 +22,23 @@ module.exports = {
             framenumber = isNaN(Number(args[framesindex + 1])) ? 25 : Number(args[framesindex + 1]) <= 1 ? 1 : Number(args[framesindex + 1]) >= 50 ? 50 : Math.round(Number(args[framesindex + 1])) || 25
             args.splice(framesindex, 2)
         }
+        
+        var audiourl = poopy.functions.getOption(args, 'audio', { splice: true })
+        var audioinfo
+        if (audiourl) {
+            audioinfo = await poopy.functions.validateFile(audiourl, true, {
+                size: `the audio exceeds the exception size limit of {param} mb hahahaha there's nothing you can do`,
+                frames: `the frames of the audio exceed the exception limit of {param} hahahaha there's nothing you can do`,
+                width: `the width of the audio exceeds the exception limit of {param} hahahaha there's nothing you can do`,
+                height: `the height of the audio exceeds the exception limit of {param} hahahaha there's nothing you can do`
+            }).catch(async error => {
+                await msg.channel.send(error).catch(() => { })
+                await msg.channel.sendTyping().catch(() => { })
+                return
+            })
+
+            if (!audioinfo) return
+        }
 
         var lasturlserror = ''
 
@@ -29,7 +46,7 @@ module.exports = {
         var filetypes = {}
         var infos = {}
 
-        var fetched = await poopy.functions.getUrls(msg, { tempdir: true }).catch(() => { }) ?? []
+        var fetched = await poopy.functions.getUrls(msg, { tempdir: true, string: args.join(' ') }).catch(() => { }) ?? []
         var nofiles = false
         if (fetched.length <= 0) nofiles = true
 
@@ -136,7 +153,6 @@ module.exports = {
         var filepath = `temp/${poopy.config.mongodatabase}/file${currentcount}`
 
         poopy.modules.fs.mkdirSync(`${filepath}`)
-
         poopy.modules.fs.mkdirSync(`${filepath}/frames`)
         poopy.modules.fs.mkdirSync(`${filepath}/webmframes`)
 
@@ -151,13 +167,20 @@ module.exports = {
             concatList.push(`file 'webmframes/${i.padStart(3, '0')}.webm'`)
         }
 
+        if (audioinfo) {
+            await poopy.functions.downloadFile(audiourl, `audio.mp3`, {
+                fileinfo: audioinfo,
+                filepath: filepath
+            })
+        }
+
         poopy.modules.fs.writeFileSync(`${filepath}/concat.txt`, concatList.join('\n'))
 
-        await poopy.functions.execPromise(`ffmpeg -y -f concat -safe 0 -i ${filepath}/concat.txt -c copy ${filepath}/output.webm`)
+        await poopy.functions.execPromise(`ffmpeg -y -f concat -safe 0 -i ${filepath}/concat.txt${audioinfo ? `-i ${filepath}/audio.mp3 -map 0:v -map 1:a` : ''} -c copy ${filepath}/output.webm`)
         return await poopy.functions.sendFile(msg, filepath, `output.webm`)
     },
     help: {
-        name: 'makewebm <frames> [-frames <framenumber (max 50)> {fps (max 60)}',
+        name: 'makewebm <frames> [-frames <framenumber (max 50)>] [-audio <audioFile>] {fps (max 60)}',
         value: 'Makes a WebM out of the frames and FPS specified.'
     },
     cooldown: 2500,

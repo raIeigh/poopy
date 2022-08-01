@@ -1,5 +1,5 @@
 module.exports = {
-    name: ['wackyscale', 'wackyresize'],
+    name: ['wackywebm', 'wackyscale', 'wackyresize'],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -36,11 +36,11 @@ module.exports = {
         if (!fileinfo) return
         var type = fileinfo.type
 
-        if (type.mime.startsWith('video')) {
-            var filepath = await poopy.functions.downloadFile(currenturl, `input.mp4`, {
+        if (type.mime.startsWith('image') && poopy.vars.gifFormats.find(f => f === type.ext) || type.mime.startsWith('video')) {
+            var filepath = await poopy.functions.downloadFile(currenturl, `input.${fileinfo.shortext}`, {
                 fileinfo: fileinfo
             })
-            var filename = `input.mp4`
+            var filename = `input.${fileinfo.shortext}`
 
             await poopy.functions.wackywebm.call(poopy, mode, `${filepath}/${filename}`, {
                 delta: delta,
@@ -60,8 +60,8 @@ module.exports = {
         }
     },
     help: {
-        name: 'wackyscale <video> [-mode <value (bounce, shutter, sporadic, bounce+shutter)>] [-delta <number (default 2)>] [-bps <number (default 1.9)>]',
-        value: "Manipulates the video to make it a WebM that scales itself during playtime."
+        name: 'wackywebm/wackyscale/wackyresize <video> [-mode <value (bounce, shutter, sporadic, bounce+shutter)>] [-delta <number (default 2)>] [-bps <number (default 1.9)>]',
+        value: "Manipulates the video to make it a WebM that scales wackily during playtime."
     },
     cooldown: 2500,
     type: 'Resizing'

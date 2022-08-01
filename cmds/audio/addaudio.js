@@ -104,7 +104,11 @@ module.exports = {
                 }
             }
 
-            await poopy.functions.execPromise(filetype.mime.startsWith('video') ? `ffmpeg -i ${filepath}/${filename} ${audio ? `-t ${duration - offset}` : `-itsoffset ${offset}`} -i ${filepath}/${filename2} ${offset ? `-t ${offset} -i ${filepath}/${filename} ` : ''}-filter_complex "[0:v]scale=ceil(iw/2)*2:ceil(ih/2)*2[v]${(offset && audio) ? `;[2:a][1:a]concat=v=0:a=1[a]` : ''}" -map "[v]" ${(offset && audio) ? '-map "[a]"' : '-map 1:a'} -c:v libx264 -pix_fmt yuv420p -t ${(duration2 + offset <= duration) && !(args.find(arg => arg === '-waituntilend')) ? duration2 + offset : duration} ${filepath}/output.mp4` : `ffmpeg -stream_loop -1 -i ${filepath}/${filename} -itsoffset ${offset} -i ${filepath}/${filename2} -filter_complex "[0:v]scale=ceil(iw/2)*2:ceil(ih/2)*2[v]" -map "[v]" -map 1:a -c:v libx264 -tune stillimage -c:a aac -pix_fmt yuv420p -shortest -t ${duration2 + offset} ${filepath}/output.mp4`)
+            await poopy.functions.execPromise(
+                filetype.mime.startsWith('video') ?
+                `ffmpeg -i ${filepath}/${filename} ${audio ? `-t ${duration - offset}` : `-itsoffset ${offset}`} -i ${filepath}/${filename2} ${offset ? `-t ${offset} -i ${filepath}/${filename} ` : ''}-filter_complex "[0:v]scale=ceil(iw/2)*2:ceil(ih/2)*2[v]${(offset && audio) ? `;[2:a][1:a]concat=v=0:a=1[a]` : ''}" -map "[v]" ${(offset && audio) ? '-map "[a]"' : '-map 1:a'} -c:v libx264 -pix_fmt yuv420p -t ${(duration2 + offset <= duration) && !(args.find(arg => arg === '-waituntilend')) ? duration2 + offset : duration} ${filepath}/output.mp4` :
+                `ffmpeg -stream_loop -1 -i ${filepath}/${filename} -itsoffset ${offset} -i ${filepath}/${filename2} -filter_complex "[0:v]scale=ceil(iw/2)*2:ceil(ih/2)*2[v]" -map "[v]" -map 1:a -c:v libx264 -tune stillimage -c:a aac -pix_fmt yuv420p -shortest -t ${duration2 + offset} ${filepath}/output.mp4`
+            )
             return await poopy.functions.sendFile(msg, filepath, `output.mp4`)
         } else {
             await msg.channel.send('No audio stream detected.').catch(() => { })
