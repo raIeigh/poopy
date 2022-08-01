@@ -172,11 +172,12 @@ module.exports = {
                 fileinfo: audioinfo,
                 filepath: filepath
             })
+            await poopy.functions.execPromise(`ffmpeg -i ${filepath}/audio.mp3 -c:a libvorbis ${filepath}/audio.webm`)
         }
 
         poopy.modules.fs.writeFileSync(`${filepath}/concat.txt`, concatList.join('\n'))
 
-        await poopy.functions.execPromise(`ffmpeg -y -f concat -safe 0 -i ${filepath}/concat.txt ${audioinfo ? `-i ${filepath}/audio.mp3 -map 0:v -map 1:a ` : ''}-c copy ${filepath}/output.webm`)
+        await poopy.functions.execPromise(`ffmpeg -y -f concat -safe 0 -i ${filepath}/concat.txt${audioinfo ? ` -i ${filepath}/audio.webm ` : ' '}-c copy ${filepath}/output.webm`)
         return await poopy.functions.sendFile(msg, filepath, `output.webm`)
     },
     help: {

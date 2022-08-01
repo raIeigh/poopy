@@ -64,5 +64,5 @@ module.exports = {
         value: "Manipulates the video to make it a WebM that scales wackily during playtime."
     },
     cooldown: 2500,
-    type: 'Resizing'
+    type: 'Animation'
 }
