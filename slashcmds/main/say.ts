@@ -9,19 +9,22 @@ const commandObject = {
         .addStringOption(option =>
             option.setName('content')
                 .setDescription('The message\'s content.')
-                .setRequired(true))
+                .setRequired(true)
+        )
 
         .addUserOption(option =>
             option.setName('user')
                 .setDescription('An user to DM the content.')
-                .setRequired(false))
+                .setRequired(false)
+        )
 
         .addIntegerOption(option =>
             option.setName('repeat')
                 .setDescription('How much times to repeat. (max 25)')
                 .setMinValue(1)
                 .setMaxValue(25)
-                .setRequired(false))
+                .setRequired(false)
+        )
 
         .toJSON(),
 
