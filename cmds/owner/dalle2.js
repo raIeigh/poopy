@@ -58,7 +58,7 @@ module.exports = {
                         
 
                         if (taskCompleteRes) {
-                            var status taskCompleteRes.data.status
+                            var status = taskCompleteRes.data.status
 
                             if (status == 'succeeded') {
                                 imageRes = taskCompleteRes
@@ -66,7 +66,7 @@ module.exports = {
                             } else if (status == 'rejected') {
                                 clearInterval(processInterval)
                                 waitMsg.edit('I failed.').catch(() => { })
-                                    return
+                                return
                             }
                         }
 
@@ -178,7 +178,7 @@ module.exports = {
                             })
 
                             if (taskCompleteRes) {
-                                var status taskCompleteRes.data.status
+                                var status = taskCompleteRes.data.status
                                 
                                 if (status == 'succeeded') {
                                     imageRes = taskCompleteRes
