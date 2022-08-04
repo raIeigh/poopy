@@ -3849,28 +3849,7 @@ class Poopy {
         })
 
         poopy.slashCommands = [
-            {
-                info: new poopy.modules.DiscordBuilders.SlashCommandBuilder()
-                    .setName('say')
-                    .setDescription('A test command, for now.')
-                    .addStringOption(option =>
-                        option.setName('content')
-                            .setDescription('The message\'s content.')
-                            .setRequired(true))
-                    .toJSON(),
-
-                execute: async function (interaction) {
-                    await interaction.reply({
-                        content: interaction.options.getString('content'),
-                        allowedMentions: {
-                            parse: (!interaction.member.permissions.has('ADMINISTRATOR') &&
-                                !interaction.member.permissions.has('MENTION_EVERYONE') &&
-                                interaction.author.id !== interaction.guild.ownerID) ?
-                                ['users'] : ['users', 'everyone', 'roles']
-                        }
-                    }).catch(() => { })
-                }
-            }
+            require('./slashcmds/main/say')
         ]
 
         poopy.functions.updateSlashCommands = async function () {
@@ -4697,7 +4676,7 @@ class Poopy {
                 var findCmd = poopy.slashCommands.find(cmd => cmd.info.name === interaction.commandName)
 
                 if (findCmd) {
-                    await findCmd.execute.call(this, interaction).catch(() => { })
+                    await findCmd.execute.call(this, interaction).catch((e) => console.log(e))
                 }
             }
         }

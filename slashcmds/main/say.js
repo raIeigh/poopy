@@ -1,5 +1,4 @@
-import { CommandInteraction, GuildMember } from 'discord.js';
-import { SlashCommandBuilder } from '@discordjs/builders';
+const { SlashCommandBuilder } = require('@discordjs/builders');
 
 const commandObject = {
     info: new SlashCommandBuilder()
@@ -28,28 +27,40 @@ const commandObject = {
 
         .toJSON(),
 
-    async execute(interaction: CommandInteraction): Promise<any> {
+    async execute(interaction) {
         const options = interaction.options;
 
-        const member = interaction.member as GuildMember;
+        const member = interaction.member;
         const user = interaction.user;
+        const channel = interaction.channel;
         const guild = interaction.guild;
-        if (!member || !user || !guild) return;
+        if (!member || !user || !channel || !guild) return;
         const permissions = member.permissions;
 
         const content = options.getString('content');
         const dmUser = options.getUser('user');
         const repeat = options.getInteger('repeat');
 
-        await interaction.reply({
-            content: content,
-            allowedMentions: {
-                parse: (permissions.has('ADMINISTRATOR') ||
-                    permissions.has('MENTION_EVERYONE') ||
-                    user.id == guild.ownerId) ?
-                    ['users', 'everyone', 'roles'] : ['users']
-            }
-        }).catch(() => { });
+        const channelToSend = dmUser ?? channel;
+
+        if (repeat && !(permissions.has('ADMINISTRATOR') || ermissions.has('MANAGE_MESSAGES') || user.id == guild.ownerId)) {
+            await interaction.reply('Fat').catch(() => { });
+            return
+        }
+
+        await interaction.deferReply().catch(() => { });
+        await interaction.deleteReply().catch(() => { });
+
+        for (let i = 1; i <= (repeat ?? 1); i++)
+            await channelToSend.send({
+                content: content,
+                allowedMentions: {
+                    parse: (permissions.has('ADMINISTRATOR') ||
+                        permissions.has('MENTION_EVERYONE') ||
+                        user.id == guild.ownerId) ?
+                        ['users', 'everyone', 'roles'] : ['users']
+                }
+            }).catch(() => { });
     },
 
     cooldown: 2500,
@@ -57,4 +68,4 @@ const commandObject = {
     type: 'Main'
 };
 
-export default commandObject;
+module.exports = commandObject;
