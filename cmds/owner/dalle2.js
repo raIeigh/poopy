@@ -154,8 +154,6 @@ module.exports = {
                             }
                         }).catch(() => { })
 
-                        console.log(taskRes)
-
                         if (!taskRes) return
 
                         var taskId = taskRes.data.id
@@ -169,8 +167,6 @@ module.exports = {
                                     Authorization: `Bearer ${process.env.DALLE2KEY}`
                                 }
                             })
-
-                            console.log(taskCompleteRes)
 
                             if (taskCompleteRes && taskCompleteRes.data.status == 'succeeded') {
                                 imageRes = taskCompleteRes
@@ -190,8 +186,6 @@ module.exports = {
                     if (!imageRes) return
 
                     var images = imageRes.data.generations.data.map(gdata => gdata.generation.image_path)
-
-                    console.log(images)
 
                     await poopy.functions.navigateEmbed(msg.channel, async (page) => {
                         if (poopy.config.textEmbeds) return `${images[page - 1]}\n\nImage ${page}/${images.length}`
