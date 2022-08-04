@@ -47,8 +47,6 @@ module.exports = {
                         }
                     }).catch(() => { })
 
-                    console.log(taskRes)
-
                     if (!taskRes) {
                         fail()
                         return
@@ -58,6 +56,8 @@ module.exports = {
                     var imageRes
 
                     while (!imageRes) {
+                        await poopy.functions.sleep(20000)
+
                         var taskCompleteRes = await poopy.modules.axios.request({
                             url: `https://labs.openai.com/api/labs/tasks/${taskId}`,
                             method: 'GET',
@@ -65,8 +65,6 @@ module.exports = {
                                 Authorization: `Bearer ${process.env.DALLE2KEY}`
                             }
                         })
-
-                        console.log(taskCompleteRes)
 
                         if (taskCompleteRes) {
                             var status = taskCompleteRes.data.status
@@ -78,12 +76,7 @@ module.exports = {
                                 fail()
                                 return
                             }
-                        } else {
-                            fail()
-                            return
                         }
-
-                        await poopy.functions.sleep(5000)
                     }
 
                     clearInterval(processInterval)
@@ -181,8 +174,6 @@ module.exports = {
                             }
                         }).catch(() => { })
 
-                        console.log(taskRes)
-
                         if (!taskRes) {
                             fail()
                             return
@@ -192,6 +183,8 @@ module.exports = {
                         var imageRes
 
                         while (!imageRes) {
+                            await poopy.functions.sleep(20000)
+
                             var taskCompleteRes = await poopy.modules.axios.request({
                                 url: `https://labs.openai.com/api/labs/tasks/${taskId}`,
                                 method: 'GET',
@@ -199,8 +192,6 @@ module.exports = {
                                     Authorization: `Bearer ${process.env.DALLE2KEY}`
                                 }
                             })
-
-                            console.log(taskCompleteRes)
 
                             if (taskCompleteRes) {
                                 var status = taskCompleteRes.data.status
@@ -212,12 +203,7 @@ module.exports = {
                                     fail()
                                     return
                                 }
-                            } else {
-                                fail()
-                                return
                             }
-
-                            await poopy.functions.sleep(5000)
                         }
 
                         clearInterval(processInterval)
