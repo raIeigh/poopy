@@ -26,6 +26,11 @@ module.exports = {
                 }, 5000)
                 await msg.channel.sendTyping().catch(() => { })
 
+                function fail() {
+                    clearInterval(processInterval)
+                    waitMsg.edit('I failed.').catch(() => { })
+                }
+
                 async function dalle2Request() {
                     var taskRes = await poopy.modules.axios.request({
                         url: 'https://labs.openai.com/api/labs/tasks',
@@ -42,7 +47,12 @@ module.exports = {
                         }
                     }).catch(() => { })
 
-                    if (!taskRes) return
+                    console.log(taskRes)
+
+                    if (!taskRes) {
+                        fail()
+                        return
+                    }
 
                     var taskId = taskRes.data.id
                     var imageRes
@@ -55,7 +65,8 @@ module.exports = {
                                 Authorization: `Bearer ${process.env.DALLE2KEY}`
                             }
                         })
-                        
+
+                        console.log(taskCompleteRes)
 
                         if (taskCompleteRes) {
                             var status = taskCompleteRes.data.status
@@ -64,10 +75,12 @@ module.exports = {
                                 imageRes = taskCompleteRes
                                 break
                             } else if (status == 'rejected') {
-                                clearInterval(processInterval)
-                                waitMsg.edit('I failed.').catch(() => { })
+                                fail()
                                 return
                             }
+                        } else {
+                            fail()
+                            return
                         }
 
                         await poopy.functions.sleep(5000)
@@ -147,6 +160,11 @@ module.exports = {
                     }, 5000)
                     await msg.channel.sendTyping().catch(() => { })
 
+                    function fail() {
+                        clearInterval(processInterval)
+                        waitMsg.edit('I failed.').catch(() => { })
+                    }
+
                     async function dalle2Request() {
                         var taskRes = await poopy.modules.axios.request({
                             url: 'https://labs.openai.com/api/labs/tasks',
@@ -163,7 +181,12 @@ module.exports = {
                             }
                         }).catch(() => { })
 
-                        if (!taskRes) return
+                        console.log(taskRes)
+
+                        if (!taskRes) {
+                            fail()
+                            return
+                        }
 
                         var taskId = taskRes.data.id
                         var imageRes
@@ -177,6 +200,8 @@ module.exports = {
                                 }
                             })
 
+                            console.log(taskCompleteRes)
+
                             if (taskCompleteRes) {
                                 var status = taskCompleteRes.data.status
                                 
@@ -184,10 +209,12 @@ module.exports = {
                                     imageRes = taskCompleteRes
                                     break
                                 } else if (status == 'rejected') {
-                                    clearInterval(processInterval)
-                                    waitMsg.edit('I failed.').catch(() => { })
+                                    fail()
                                     return
                                 }
+                            } else {
+                                fail()
+                                return
                             }
 
                             await poopy.functions.sleep(5000)
