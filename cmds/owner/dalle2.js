@@ -56,11 +56,18 @@ module.exports = {
                             }
                         })
                         
-                        console.log(taskCompleteRes)
 
-                        if (taskCompleteRes && taskCompleteRes.data.status == 'succeeded') {
-                            imageRes = taskCompleteRes
-                            break
+                        if (taskCompleteRes) {
+                            var status taskCompleteRes.data.status
+
+                            if (status == 'succeeded') {
+                                imageRes = taskCompleteRes
+                                break
+                            } else if (status == 'rejected') {
+                                clearInterval(processInterval)
+                                waitMsg.edit('I failed.').catch(() => { })
+                                    return
+                            }
                         }
 
                         await poopy.functions.sleep(5000)
@@ -169,12 +176,18 @@ module.exports = {
                                     Authorization: `Bearer ${process.env.DALLE2KEY}`
                                 }
                             })
-                        
-                            console.log(taskCompleteRes)
 
-                            if (taskCompleteRes && taskCompleteRes.data.status == 'succeeded') {
-                                imageRes = taskCompleteRes
-                                break
+                            if (taskCompleteRes) {
+                                var status taskCompleteRes.data.status
+                                
+                                if (status == 'succeeded') {
+                                    imageRes = taskCompleteRes
+                                    break
+                                } else if (status == 'rejected') {
+                                    clearInterval(processInterval)
+                                    waitMsg.edit('I failed.').catch(() => { })
+                                    return
+                                }
                             }
 
                             await poopy.functions.sleep(5000)
