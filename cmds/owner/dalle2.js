@@ -55,6 +55,8 @@ module.exports = {
                                 Authorization: `Bearer ${process.env.DALLE2KEY}`
                             }
                         })
+                        
+                        console.log(taskCompleteRes)
 
                         if (taskCompleteRes && taskCompleteRes.data.status == 'succeeded') {
                             imageRes = taskCompleteRes
@@ -167,6 +169,8 @@ module.exports = {
                                     Authorization: `Bearer ${process.env.DALLE2KEY}`
                                 }
                             })
+                        
+                            console.log(taskCompleteRes)
 
                             if (taskCompleteRes && taskCompleteRes.data.status == 'succeeded') {
                                 imageRes = taskCompleteRes
