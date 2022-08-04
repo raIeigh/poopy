@@ -1,6 +1,6 @@
 module.exports = {
     name: ['dalle2'],
-    execute: async function (msg, args) {
+    execute: async function (msg, args, opts) {
         let poopy = this
 
         var ownerid = poopy.config.ownerids.find(id => id == msg.author.id);
