@@ -11,11 +11,11 @@ const commandObject = {
                 .setRequired(true)
         )
 
-        .addUserOption(option =>
+        /*.addUserOption(option =>
             option.setName('user')
                 .setDescription('An user to DM the content.')
                 .setRequired(false)
-        )
+        )*/
 
         .addIntegerOption(option =>
             option.setName('repeat')
@@ -44,11 +44,11 @@ const commandObject = {
         const permissions = member.permissions;
 
         const content = options.getString('content');
-        const dmUser = options.getUser('user');
+        //const dmUser = options.getUser('user');
         const repeat = options.getInteger('repeat');
         const tts = options.getBoolean('tts') ?? false;
 
-        const channelToSend = dmUser ?? channel;
+        const channelToSend = channel//dmUser ?? channel;
 
         if (repeat && repeat > 1 && !(permissions.has('ADMINISTRATOR') || permissions.has('MANAGE_MESSAGES') || user.id == guild.ownerId)) {
             await interaction.reply({

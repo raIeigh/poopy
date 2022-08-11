@@ -29,7 +29,7 @@ module.exports = {
                 if (poopy.data['guild-data'][msg.guild.id]['disabled'].find(cmd => cmd.find(n => n === commandname))) {
                     return 'This command is disabled in this server.'
                 } else {
-                    var msgclone = msg
+                    var msgclone = { ...msg }
 
                     msgclone.content = `${poopy.data['guild-data'][msg.guild.id]['prefix']}${commandname} ${args}`
 

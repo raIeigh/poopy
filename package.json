@@ -1,6 +1,6 @@
 {
   "name": "poopy",
-  "version": "0.42.4",
+  "version": "0.42.6",
   "description": "Ballfish",
   "main": "server.js",
   "scripts": {
