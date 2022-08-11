@@ -29,12 +29,12 @@ module.exports = {
                 if (poopy.data['guild-data'][msg.guild.id]['disabled'].find(cmd => cmd.find(n => n === commandname))) {
                     return 'This command is disabled in this server.'
                 } else {
-                    var msgclone = { ...msg }
+                    var content = msg.content
 
-                    msgclone.content = `${poopy.data['guild-data'][msg.guild.id]['prefix']}${commandname} ${args}`
+                    msg.content = `${poopy.data['guild-data'][msg.guild.id]['prefix']}${commandname} ${args}`
 
-                    await poopy.functions.getUrls(msgclone, {
-                        string: msgclone.content,
+                    await poopy.functions.getUrls(msg, {
+                        string: msg.content,
                         update: true
                     }).catch(() => { })
 
@@ -42,8 +42,14 @@ module.exports = {
                         var increaseCount = !(command.execute.toString().includes('sendFile') && args.includes('-nosend'))
 
                         if (increaseCount) {
-                            if (poopy.tempdata[msg.author.id][msg.id]['execCount'] >= 1 && poopy.data['guild-data'][msg.guild.id]['chaincommands'] == false && !(msg.member.permissions.has('MANAGE_GUILD') || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || isBot)) return 'You can\'t chain commands in this server.'
-                            if (poopy.tempdata[msg.author.id][msg.id]['execCount'] >= poopy.config.commandLimit * ((msg.member.permissions.has('MANAGE_GUILD') || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || isBot) ? 5 : 1)) return `Number of commands to run at the same time must be smaller or equal to **${poopy.config.commandLimit * ((msg.member.permissions.has('MANAGE_GUILD') || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || isBot) ? 5 : 1)}**!`
+                            if (poopy.tempdata[msg.author.id][msg.id]['execCount'] >= 1 && poopy.data['guild-data'][msg.guild.id]['chaincommands'] == false && !(msg.member.permissions.has('MANAGE_GUILD') || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || isBot)) {
+                                msg.content = content
+                                return 'You can\'t chain commands in this server.'
+                            }
+                            if (poopy.tempdata[msg.author.id][msg.id]['execCount'] >= poopy.config.commandLimit * ((msg.member.permissions.has('MANAGE_GUILD') || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || isBot) ? 5 : 1)) {
+                                msg.content = content
+                                return `Number of commands to run at the same time must be smaller or equal to **${poopy.config.commandLimit * ((msg.member.permissions.has('MANAGE_GUILD') || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || isBot) ? 5 : 1)}**!`
+                            }
                             poopy.tempdata[msg.author.id][msg.id]['execCount']++
                         }
 
@@ -60,10 +66,11 @@ module.exports = {
 
                         poopy.functions.infoPost(`Command \`${commandname}\` used`)
                         await poopy.functions.waitMessageCooldown()
-                        var url = await command.execute.call(poopy, msgclone, [commandname].concat(args.split(' ')), { ownermode: opts.ownermode }).catch(err => {
+                        var url = await command.execute.call(poopy, msg, [commandname].concat(args.split(' ')), { ownermode: opts.ownermode }).catch(err => {
                             error = err.stack
                         })
                         poopy.data['bot-data']['filecount'] = poopy.vars.filecount
+                        msg.content = content
                         return url ?? error
                     } else if (localCommand) {
                         poopy.vars.cps++
@@ -75,8 +82,9 @@ module.exports = {
                         poopy.functions.infoPost(`Command \`${commandname}\` used`)
                         var oopts = { ...opts }
                         oopts.ownermode = localCommand.ownermode || oopts.ownermode
-                        var phrase = await poopy.functions.getKeywordsFor(localCommand.phrase, msgclone, true, oopts).catch(() => { }) ?? 'error'
+                        var phrase = await poopy.functions.getKeywordsFor(localCommand.phrase, msg, true, oopts).catch(() => { }) ?? 'error'
                         poopy.data['bot-data']['filecount'] = poopy.vars.filecount
+                        msg.content = content
                         return phrase
                     }
                 }
