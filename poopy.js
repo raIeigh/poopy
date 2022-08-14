@@ -2863,7 +2863,7 @@ class Poopy {
 
             var matches = string.match(urlregex)
             if (matches) {
-                var matchesr = matches.reverse().slice(0, 10)
+                var matchesr = matches.reverse()
                 for (var i in matchesr) {
                     var match = matchesr[i]
                     var matched = []

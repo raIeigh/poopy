@@ -29,7 +29,9 @@ module.exports = {
         var filetypes = {}
         var infos = {}
 
+        console.log(msg.content)
         var fetched = await poopy.functions.getUrls(msg, { tempdir: true }).catch(() => { }) ?? []
+        console.log(fetched)
         var nofiles = false
         if (fetched.length <= 0) nofiles = true
 
