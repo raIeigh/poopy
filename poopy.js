@@ -1125,40 +1125,44 @@ class Poopy {
 
         poopy.functions.processTask = async function (data) {
             return new Promise(async (resolve, reject) => {
-                var ch = await poopy.amqpconn.createChannel().catch(reject)
-                var q = await ch.assertQueue('', { exclusive: true }).catch(reject)
-                var correlationId = poopy.functions.generateId()
-
-                await ch.assertExchange('crash', 'fanout', {
-                    durable: false
-                }).catch(reject)
-                var qrash = await ch.assertQueue('', { exclusive: true }).catch(reject)
-                ch.bindQueue(qrash.queue, 'crash', '')
-
-                async function closeAll() {
-                    await ch.cancel(consumer.consumerTag).catch(() => { })
-                    await ch.cancel(crashconsumer.consumerTag).catch(() => { })
-                    await ch.deleteQueue(q.queue).catch(() => { })
-                    await ch.deleteQueue(qrash.queue).catch(() => { })
-                    await ch.close().catch(() => { })
-                }
-
-                var consumer = await ch.consume(q.queue, function (msg) {
-                    if (msg.properties.correlationId == correlationId) {
-                        closeAll()
-                        resolve(JSON.parse(msg.content.toString()))
+                try {
+                    var ch = await poopy.amqpconn.createChannel().catch(reject)
+                    var q = await ch.assertQueue('', { exclusive: true }).catch(reject)
+                    var correlationId = poopy.functions.generateId()
+    
+                    await ch.assertExchange('crash', 'fanout', {
+                        durable: false
+                    }).catch(reject)
+                    var qrash = await ch.assertQueue('', { exclusive: true }).catch(reject)
+                    ch.bindQueue(qrash.queue, 'crash', '')
+    
+                    async function closeAll() {
+                        await ch.cancel(consumer.consumerTag).catch(() => { })
+                        await ch.cancel(crashconsumer.consumerTag).catch(() => { })
+                        await ch.deleteQueue(q.queue).catch(() => { })
+                        await ch.deleteQueue(qrash.queue).catch(() => { })
+                        await ch.close().catch(() => { })
                     }
-                }, { noAck: true }).catch(reject)
-
-                var crashconsumer = await ch.consume(qrash.queue, function (msg) {
-                    closeAll()
-                    reject(msg.content.toString())
-                }, { noAck: true }).catch(reject)
-
-                ch.sendToQueue('tasks', Buffer.from(JSON.stringify(data)), {
-                    correlationId: correlationId,
-                    replyTo: q.queue
-                })
+    
+                    var consumer = await ch.consume(q.queue, function (msg) {
+                        if (msg.properties.correlationId == correlationId) {
+                            closeAll()
+                            resolve(JSON.parse(msg.content.toString()))
+                        }
+                    }, { noAck: true }).catch(reject)
+    
+                    var crashconsumer = await ch.consume(qrash.queue, function (msg) {
+                        closeAll()
+                        reject(msg.content.toString())
+                    }, { noAck: true }).catch(reject)
+    
+                    ch.sendToQueue('tasks', Buffer.from(JSON.stringify(data)), {
+                        correlationId: correlationId,
+                        replyTo: q.queue
+                    })
+                } catch (err) {
+                    reject(err)
+                }
             })
         }
 
