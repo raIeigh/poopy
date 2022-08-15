@@ -55,13 +55,11 @@ function dir_name(filedir) {
     return [dir, name]
 }
 
-function tryJSONstringify(obj) {
-    if (typeof obj == 'undefined') return ''
-
+function tryJSONparse(obj) {
     try {
-        return JSON.stringify(obj)
+        return JSON.parse(obj)
     } catch (_) {
-        return obj.toString()
+        return null
     }
 }
 
@@ -275,8 +273,8 @@ async function start(id) {
     await ch.prefetch(1)
 
     await ch.consume('tasks', async function (msg) {
-        var data = JSON.parse(msg.content.toString())
-        var res = await processJob(data).catch(() => { }) ?? {}
+        var data = tryJSONparse(msg.content.toString())
+        var res = data ? (await processJob(data).catch(() => { }) ?? {}) : {}
 
         ch.sendToQueue(msg.properties.replyTo, Buffer.from(JSON.stringify(res)), {
             correlationId: msg.properties.correlationId
