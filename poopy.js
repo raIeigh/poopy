@@ -1156,7 +1156,7 @@ class Poopy {
                         reject(msg.content.toString())
                     }, { noAck: true }).catch(reject)
     
-                    ch.sendToQueue('tasks', Buffer.from(JSON.stringify(data)), {
+                    ch.sendToQueue('tasks', Buffer.from(JSON.stringify(data).substring(8388608)), {
                         correlationId: correlationId,
                         replyTo: q.queue
                     })
