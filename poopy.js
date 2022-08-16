@@ -727,7 +727,6 @@ class Poopy {
                     var out = stdout.join('\n') || stderr.join('\n')
                     clearInterval(memoryInterval)
                     proc.removeAllListeners()
-                    console.log(out)
                     resolve(out)
                 }
 
@@ -1156,7 +1155,6 @@ class Poopy {
                     }
 
                     var consumer = await ch.consume(q.queue, function (msg) {
-                        console.log(chunkdata)
                         if (msg.properties.correlationId == correlationId) {
                             console.log('scrolte')
                             var content = msg.content.toString()
@@ -1174,6 +1172,7 @@ class Poopy {
                                 resolve(data)
                             }
                         }
+                        console.log(chunkdata)
                     }, { noAck: true }).catch(reject)
     
                     var crashconsumer = await ch.consume(qrash.queue, function (msg) {
