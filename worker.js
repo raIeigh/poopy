@@ -263,8 +263,11 @@ async function start(id) {
 
     await ch.consume('tasks', async function (msg) {
         var location = msg.content.toString()
+        console.log(location)
         var data = await axios.get(location).then(res => res.data).catch(() => { })
+        console.log(data)
         var res = data ? (await processJob(data).catch(() => { }) ?? {}) : {}
+        console.log(res)
 
         var i = 0
         var resdata = JSON.stringify(res)
