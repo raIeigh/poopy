@@ -270,8 +270,8 @@ async function start(id) {
         var resdata = Buffer.from(JSON.stringify(res))
         var reschunks = []
 
-        for (var i = 0; i < Math.ceil(resdata.length / limit); i++) {
-            var chunk = resdata.subarray(limit * i, limit * (i + 1))
+        for (var i = 0; i < Math.ceil(resdata.length / msgSizeLimit); i++) {
+            var chunk = resdata.subarray(msgSizeLimit * i, msgSizeLimit * (i + 1))
             var ordchunk = Buffer.from(String(i).padStart(3, '0')).concat([chunk])
             reschunks.push(ordchunk)
         }
