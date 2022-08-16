@@ -1138,7 +1138,6 @@ class Poopy {
                     async function closeAll() {
                         await ch.cancel(consumer.consumerTag).catch(() => { })
                         await ch.cancel(crashconsumer.consumerTag).catch(() => { })
-                        await ch.deleteQueue(q.queue).catch(() => { })
                         await ch.deleteQueue(qrash.queue).catch(() => { })
                         await ch.close().catch(() => { })
                         poopy.modules.fs.rm(`tasks/${correlationId}.json`, { force: true, recursive: true })
