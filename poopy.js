@@ -1142,6 +1142,7 @@ class Poopy {
                         await ch.deleteQueue(q.queue).catch(() => { })
                         await ch.deleteQueue(qrash.queue).catch(() => { })
                         await ch.close().catch(() => { })
+                        poopy.modules.fs.rm(`tasks/${correlationId}.json`, { force: true, recursive: true })
                     }
 
                     var chunkdata = ''
@@ -1169,7 +1170,7 @@ class Poopy {
                         closeAll()
                         reject(msg.content.toString())
                     }, { noAck: true }).catch(reject)
-    
+
                     poopy.modules.fs.writeFileSync(`tasks/${correlationId}.json`, JSON.stringify(data))
     
                     ch.sendToQueue('tasks', Buffer.from(`${process.env.BOTWEBSITE}/tasks/${correlationId}?auth=${process.env.AUTHTOKEN}`), {

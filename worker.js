@@ -208,7 +208,6 @@ async function processJob(data) {
         code = exargs.join(' ')
 
         const execProc = await execPromise(code)
-        console.log(execProc)
 
         let output = {
             std: execProc
