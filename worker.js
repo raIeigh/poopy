@@ -273,7 +273,8 @@ async function start(id) {
     await ch.prefetch(1)
 
     await ch.consume('tasks', async function (msg) {
-        var data = tryJSONparse(msg.content.toString())
+        var location = msg.content.toString()
+        var data = await axios.get(location).then(res => res.data).catch(() => { })
         var res = data ? (await processJob(data).catch(() => { }) ?? {}) : {}
 
         ch.sendToQueue(msg.properties.replyTo, Buffer.from(JSON.stringify(res)), {

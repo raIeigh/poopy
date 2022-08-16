@@ -81,6 +81,19 @@ async function start() {
             res.type('json').send(globalData()['bot-data']['pspasta'])
         })
     
+        app.get('/tasks/:id', async function (req, res) {
+            const auth = req.query.auth
+            const taskid = req.params.id
+
+            if (process.env.AUTHTOKEN != auth || !fs.existsSync(`tasks/${id}.json`)) {
+                res.end()
+                return
+            }
+    
+            const taskdata = fs.readFileSync(`tasks/${id}.json`).toString()
+            res.type('json').send(taskdata)
+        })
+    
         app.get('/ubervoices', async function (_, res) {
             while (!poopyStarted) await sleep(1000)
             var listings = [[], [], []]

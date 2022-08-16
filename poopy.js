@@ -692,7 +692,7 @@ class Poopy {
                     return result.std
                 }
 
-                if (poopy.vars.processingTools.inputs[command] && !poopy.config.testing && process.env.CLOUDAMQP_URL) {
+                if (poopy.vars.processingTools.inputs[command] && !poopy.config.testing && process.env.CLOUDAMQP_URL && process.env.BOTWEBSITE) {
                     var taskValue = await execTask().catch(() => { })
                     if (taskValue) {
                         resolve(taskValue)
@@ -1156,7 +1156,9 @@ class Poopy {
                         reject(msg.content.toString())
                     }, { noAck: true }).catch(reject)
     
-                    ch.sendToQueue('tasks', Buffer.from(JSON.stringify(data).substring(8388608)), {
+                    poopy.modules.fs.writeFileSync(`tasks/${correlationId}.json`, JSON.stringify(data))
+    
+                    ch.sendToQueue('tasks', Buffer.from(`${process.env.BOTWEBSITE}/tasks/${correlationId}?auth=${process.env.AUTHTOKEN}`), {
                         correlationId: correlationId,
                         replyTo: q.queue
                     })
@@ -3760,7 +3762,7 @@ class Poopy {
                 poopy.modules.fs.writeFileSync(`data/${poopy.config.mongodatabase}.json`, JSON.stringify(poopy.data))
                 poopy.modules.fs.writeFileSync(`data/globaldata.json`, JSON.stringify(poopy.functions.globalData()))
             } else {
-                if (process.env.CLOUDAMQP_URL) await poopy.functions.processTask({
+                if (process.env.CLOUDAMQP_URL && process.env.BOTWEBSITE) await poopy.functions.processTask({
                     type: 'datasave',
                     mongodatabase: poopy.config.mongodatabase,
                     data: { data: poopy.data, globaldata: poopy.functions.globalData() }
@@ -4728,7 +4730,7 @@ class Poopy {
             } else {
                 var result
 
-                if (process.env.CLOUDAMQP_URL) {
+                if (process.env.CLOUDAMQP_URL && process.env.BOTWEBSITE) {
                     console.log(`${poopy.bot.user.username}: gathering from worker`)
                     result = await poopy.functions.processTask({
                         type: 'dataget',
@@ -5116,6 +5118,9 @@ class Poopy {
         }
         if (!poopy.modules.fs.existsSync('tempfiles')) {
             poopy.modules.fs.mkdirSync('tempfiles')
+        }
+        if (!poopy.modules.fs.existsSync('tasks') && process.env.CLOUDAMQP_URL && process.env.BOTWEBSITE) {
+            poopy.modules.fs.mkdirSync('tasks')
         }
         await poopy.functions.updateSlashCommands()
         poopy.functions.saveData()
