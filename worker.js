@@ -259,6 +259,7 @@ async function start(id) {
     ch.ackAll()
 
     await ch.assertQueue('tasks', { durable: true })
+    await ch.assertQueue('data', { durable: true })
     await ch.prefetch(1)
 
     await ch.consume('tasks', async function (msg) {
@@ -271,7 +272,7 @@ async function start(id) {
         var reschunks = resdata.match(/.{1,8388605}/g).map(chunk => `${String(i++).padStart(3, '0')}${chunk}`)
 
         for (var chunk of reschunks) {
-            ch.sendToQueue(msg.properties.replyTo, Buffer.from(chunk), {
+            ch.sendToQueue('data', Buffer.from(chunk), {
                 correlationId: msg.properties.correlationId
             })
             await sleep(1000)

@@ -1127,7 +1127,6 @@ class Poopy {
             return new Promise(async (resolve, reject) => {
                 try {
                     var ch = await poopy.amqpconn.createChannel().catch(reject)
-                    var q = await ch.assertQueue('', { exclusive: true }).catch(reject)
                     var correlationId = poopy.functions.generateId()
     
                     await ch.assertExchange('crash', 'fanout', {
@@ -1155,7 +1154,7 @@ class Poopy {
                         }
                     }
 
-                    var consumer = await ch.consume(q.queue, function (msg) {
+                    var consumer = await ch.consume('data', function (msg) {
                         console.log(chunkdata.length + 1)
                         if (msg.properties.correlationId == correlationId) {
                             console.log('scrolte')
@@ -1184,8 +1183,7 @@ class Poopy {
                     poopy.modules.fs.writeFileSync(`tasks/${correlationId}.json`, JSON.stringify(data))
     
                     ch.sendToQueue('tasks', Buffer.from(`${process.env.BOTWEBSITE}/tasks/${correlationId}?auth=${process.env.AUTHTOKEN}`), {
-                        correlationId: correlationId,
-                        replyTo: q.queue
+                        correlationId: correlationId
                     })
                 } catch (err) {
                     reject(err)
