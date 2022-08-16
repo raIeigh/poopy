@@ -266,8 +266,9 @@ async function start(id) {
         var data = await axios.get(location).then(res => res.data).catch(() => { })
         var res = data ? (await processJob(data).catch(() => { }) ?? {}) : {}
         
-        var res = JSON.stringify(res)
-        var reschunks = res.match(/.{1,8388608}/g)
+        var i = 0
+        var resdata = JSON.stringify(res)
+        var reschunks = resdata.match(/.{1,8388605}/g).map(chunk => `${String(i++).padStart(3, '0')}${chunk}`)
 
         reschunks.forEach(chunk => {
             ch.sendToQueue(msg.properties.replyTo, Buffer.from(chunk), {

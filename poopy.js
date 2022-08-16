@@ -1145,7 +1145,7 @@ class Poopy {
                         poopy.modules.fs.rm(`tasks/${correlationId}.json`, { force: true, recursive: true })
                     }
 
-                    var chunkdata = ''
+                    var chunkdata = []
 
                     function tryJSONparse(obj) {
                         try {
@@ -1156,8 +1156,16 @@ class Poopy {
                     }
 
                     var consumer = await ch.consume(q.queue, function (msg) {
+                        console.log(chunkdata.length)
                         if (msg.properties.correlationId == correlationId) {
-                            chunkdata += msg.content.toString()
+                            var content = msg.content.toString()
+
+                            var order = Number(content.substring(0, 3))
+                            var chunk = content.substring(3)
+                            chunkdata.push({ order, chunk })
+                            chunkdata.sort((a, b) => a.order - b.order)
+
+                            var chunkjoin = chunkdata.map(c => c.chunk).join('')
                             var data = tryJSONparse(chunkdata)
                             if (data) {
                                 closeAll()
