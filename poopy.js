@@ -1156,7 +1156,7 @@ class Poopy {
                     }
 
                     var consumer = await ch.consume(q.queue, function (msg) {
-                        console.log(chunkdata.length + 1)
+                        console.log(chunkdata)
                         if (msg.properties.correlationId == correlationId) {
                             console.log('scrolte')
                             var content = msg.content.toString()
