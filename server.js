@@ -1,3 +1,5 @@
+const throng = require('throng')
+
 async function start() {
     let poopyStarted = false
     let mainPoopy
@@ -636,4 +638,4 @@ async function start() {
     })
 }
 
-start()
+throng({ workers: 1, start })

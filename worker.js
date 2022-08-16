@@ -247,10 +247,10 @@ async function processJob(data) {
     }
 }
 
-async function master() {
-    console.log('master started')
+async function start(id) {
+    console.log(`worker ${id} started`)
 
-    var conn = await require('amqplib').connect(url);
+    var conn = await require('amqplib').connect(url)
     var ch = await conn.createChannel()
     await ch.assertExchange('crash', 'fanout', {
         durable: false
@@ -258,16 +258,6 @@ async function master() {
 
     ch.publish('crash', '', Buffer.from('The worker has crashed'))
     ch.ackAll()
-
-    await ch.close()
-    await conn.close()
-}
-
-async function start(id) {
-    console.log(`worker ${id} started`)
-
-    var conn = await require('amqplib').connect(url)
-    var ch = await conn.createChannel()
 
     await ch.assertQueue('tasks', { durable: true })
     await ch.prefetch(1)
@@ -283,4 +273,4 @@ async function start(id) {
     }, { noAck: true })
 }
 
-throng({ workers, master, start })
+throng({ workers, start })
