@@ -265,16 +265,17 @@ async function start(id) {
         var location = msg.content.toString()
         var data = await axios.get(location).then(res => res.data).catch(() => { })
         var res = data ? (await processJob(data).catch(() => { }) ?? {}) : {}
-        
+
         var i = 0
         var resdata = JSON.stringify(res)
         var reschunks = resdata.match(/.{1,8388605}/g).map(chunk => `${String(i++).padStart(3, '0')}${chunk}`)
 
-        reschunks.forEach(chunk => {
+        for (var chunk of reschunks) {
             ch.sendToQueue(msg.properties.replyTo, Buffer.from(chunk), {
                 correlationId: msg.properties.correlationId
             })
-        })
+            await sleep(1000)
+        }
     }, { noAck: true })
 }
 

@@ -673,7 +673,7 @@ class Poopy {
                         return
                     }*/
 
-                    var result = await poopy.functions.processTask(execData).catch(() => { })
+                    var result = await poopy.functions.processTask(execData).catch((e) => console.log(e))
 
                     if (!result) {
                         return 'No output.'
@@ -1156,8 +1156,9 @@ class Poopy {
                     }
 
                     var consumer = await ch.consume(q.queue, function (msg) {
-                        console.log(chunkdata.length)
+                        console.log(chunkdata.length + 1)
                         if (msg.properties.correlationId == correlationId) {
+                            console.log('scrolte')
                             var content = msg.content.toString()
 
                             var order = Number(content.substring(0, 3))
@@ -1168,6 +1169,7 @@ class Poopy {
                             var chunkjoin = chunkdata.map(c => c.chunk).join('')
                             var data = tryJSONparse(chunkdata)
                             if (data) {
+                                console.log('rid')
                                 closeAll()
                                 resolve(data)
                             }
@@ -3789,7 +3791,7 @@ class Poopy {
                     type: 'datasave',
                     mongodatabase: poopy.config.mongodatabase,
                     data: { data: poopy.data, globaldata: poopy.functions.globalData() }
-                }).catch(() => { })
+                }).catch((e) => console.log(e))
                 await poopy.functions.updateAllData(poopy.config.mongodatabase, { data: poopy.data, globaldata: poopy.functions.globalData() }).catch(() => { })
             }
 
@@ -4759,7 +4761,7 @@ class Poopy {
                         type: 'dataget',
                         mongodatabase: poopy.config.mongodatabase,
                         global: Object.keys(poopy.functions.globalData()).length <= 0
-                    }).catch(() => { })
+                    }).catch((e) => console.log(e))
                 }
 
                 if (!result || !result.data || (Object.keys(poopy.functions.globalData()).length <= 0 && !result.globaldata)) {
