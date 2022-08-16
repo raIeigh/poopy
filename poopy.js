@@ -1143,11 +1143,25 @@ class Poopy {
                         await ch.deleteQueue(qrash.queue).catch(() => { })
                         await ch.close().catch(() => { })
                     }
-    
+
+                    var chunkdata = ''
+
+                    function tryJSONparse(obj) {
+                        try {
+                            return JSON.parse(obj)
+                        } catch (_) {
+                            return null
+                        }
+                    }
+
                     var consumer = await ch.consume(q.queue, function (msg) {
                         if (msg.properties.correlationId == correlationId) {
-                            closeAll()
-                            resolve(JSON.parse(msg.content.toString()))
+                            chunkdata += msg.content.toString()
+                            var data = tryJSONparse(chunkdata)
+                            if (data) {
+                                closeAll()
+                                resolve(data)
+                            }
                         }
                     }, { noAck: true }).catch(reject)
     

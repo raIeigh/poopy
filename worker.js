@@ -266,9 +266,14 @@ async function start(id) {
         var location = msg.content.toString()
         var data = await axios.get(location).then(res => res.data).catch(() => { })
         var res = data ? (await processJob(data).catch(() => { }) ?? {}) : {}
+        
+        var res = JSON.stringify(res)
+        var reschunks = res.match(/.{1,8388608}/g)
 
-        ch.sendToQueue(msg.properties.replyTo, Buffer.from(JSON.stringify(res)), {
-            correlationId: msg.properties.correlationId
+        reschunks.forEach(chunk => {
+            ch.sendToQueue(msg.properties.replyTo, Buffer.from(chunk), {
+                correlationId: msg.properties.correlationId
+            })
         })
     }, { noAck: true })
 }
