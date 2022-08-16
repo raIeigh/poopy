@@ -6,6 +6,7 @@ let { exec, spawn } = require('child_process')
 
 var url = process.env.CLOUDAMQP_URL || "amqp://localhost";
 let memLimit = 0;
+let msgSizeLimit = 8388608;
 let procs = [];
 let workers = process.env.WEB_CONCURRENCY || 2;
 let datastores = {};
@@ -263,15 +264,18 @@ async function start(id) {
 
     await ch.consume('tasks', async function (msg) {
         var location = msg.content.toString()
-        console.log(location)
         var data = await axios.get(location).then(res => res.data).catch(() => { })
-        console.log(data)
         var res = data ? (await processJob(data).catch(() => { }) ?? {}) : {}
-        console.log(res)
 
-        var i = 0
         var resdata = JSON.stringify(res)
-        var reschunks = resdata.match(/.{1,8388605}/g).map(chunk => `${String(i++).padStart(3, '0')}${chunk}`)
+        var reschunks = []
+
+        var limit = msgSizeLimit - 3
+
+        for (var i = 0; i < Math.ceil(resdata.length / limit); i++) {
+            var chunk = resdata.substring(limit * i, limit * (i + 1))
+            reschunks.push(`${String(i).padStart(3, '0')}${chunk}`)
+        }
 
         for (var chunk of reschunks) {
             ch.sendToQueue(msg.properties.replyTo, Buffer.from(chunk), {
