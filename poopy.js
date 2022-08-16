@@ -1165,7 +1165,7 @@ class Poopy {
                             chunkdata.sort((a, b) => a.order - b.order)
 
                             var chunkjoin = chunkdata.map(c => c.chunk).join('')
-                            var data = tryJSONparse(chunkdata)
+                            var data = tryJSONparse(chunkdata.chunk)
                             if (data) {
                                 console.log('rid')
                                 closeAll()
