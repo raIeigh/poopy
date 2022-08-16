@@ -85,12 +85,12 @@ async function start() {
             const auth = req.query.auth
             const taskid = req.params.id
 
-            if (process.env.AUTHTOKEN != auth || !fs.existsSync(`tasks/${id}.json`)) {
+            if (process.env.AUTHTOKEN != auth || !fs.existsSync(`tasks/${taskid}.json`)) {
                 res.end()
                 return
             }
     
-            const taskdata = fs.readFileSync(`tasks/${id}.json`).toString()
+            const taskdata = fs.readFileSync(`tasks/${taskid}.json`).toString()
             res.type('json').send(taskdata)
         })
     
