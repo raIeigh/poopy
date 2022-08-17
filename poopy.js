@@ -1141,7 +1141,8 @@ class Poopy {
                         await ch.deleteQueue(q.queue).catch(() => { })
                         await ch.deleteQueue(qrash.queue).catch(() => { })
                         await ch.close().catch(() => { })
-                        poopy.modules.fs.rm(`tasks/${correlationId}.json`, { force: true, recursive: true })
+                        if (poopy.modules.fs.existsSync(`tasks/${correlationId}.json`))
+                            poopy.modules.fs.rm(`tasks/${correlationId}.json`, { force: true, recursive: true })
                     }
 
                     var chunkdata = []
