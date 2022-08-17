@@ -4759,7 +4759,11 @@ class Poopy {
         }
 
         poopy.callbacks.interactionCallback = async interaction => {
-            if (interaction.isChatInputCommand && interaction.isChatInputCommand()) {
+            if (!interaction.isChatInputCommand()) {
+                console.log('jeji')
+                return
+            }
+
                 var findCmd = poopy.commandGroups.find(group => group.cmds.find(c => c == interaction.commandName)) ||
                     poopy.functions.findCommand(interaction.commandName)
 
@@ -4854,12 +4858,12 @@ class Poopy {
                             stop: () => { }
                         }
                     }
+                    console.log('yrorup')
 
                     await poopy.callbacks.messageCallback(interaction).catch(() => { })
 
                     if (!interaction.replied) interaction.deleteReply().catch(() => { })
                 }
-            }
         }
     }
 
