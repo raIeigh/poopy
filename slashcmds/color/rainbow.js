@@ -57,7 +57,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'rainbow/disco <file> [-duration <seconds (max 10)>]',
+        name: 'rainbow/disco {file} [-duration <seconds (max 10)>]',
         value: 'Adds a rainbow effect to the file.'
     },
     cooldown: 2500,

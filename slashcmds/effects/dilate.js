@@ -61,7 +61,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'dilate <file> [-strength <number (max 100)>]',
+        name: 'dilate {file} [-strength <number (max 100)>]',
         value: "Dilates the file's colors. Default strength is 1."
     },
     cooldown: 2500,

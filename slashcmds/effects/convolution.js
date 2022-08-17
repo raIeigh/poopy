@@ -63,7 +63,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'convolution "{matrix}" <file>',
+        name: 'convolution "{matrix}" {file}',
         value: 'Apply convolution of 3x3, 5x5, 7x7 or horizontal/vertical up to 49 elements to the file. More info found at https://ffmpeg.org/ffmpeg-filters.html#convolution and https://docs.gimp.org/2.6/en/plug-in-convmatrix.html including some examples.\n' +
             'Example usage: p:convolution "-2 -1 0 -1 1 1 0 1 2" https://cdn.discordapp.com/attachments/835974556610592788/962072284112244826/a_294be0ac79572cee7c49b119c356444e.gif (apply emboss)'
     },

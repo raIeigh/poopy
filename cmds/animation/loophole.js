@@ -1,5 +1,6 @@
 module.exports = {
     name: ['loophole'],
+    args: [{"name":"file","required":false,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -41,7 +42,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'loophole <file>',
+        name: 'loophole {file}',
         value: 'Creates an infinite zooming in loophole with the file.'
     },
     cooldown: 2500,

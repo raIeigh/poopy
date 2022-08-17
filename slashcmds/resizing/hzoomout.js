@@ -101,7 +101,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'hzoomout [multiplier (from 1 to 6)] <file> [-origin <x (left/center/right)> <y (top/middle/bottom)>]',
+        name: 'hzoomout [multiplier (from 1 to 6)] {file} [-origin <x (left/center/right)> <y (top/middle/bottom)>]',
         value: 'Zooms the file out horizontally. A list of flags can be found at https://ffmpeg.org/ffmpeg-scaler.html#Scaler-Options'
     },
     cooldown: 2500,

@@ -1,5 +1,6 @@
 module.exports = {
     name: ['chromakeybg', 'chromabg'],
+    args: [{"name":"file","required":false,"specifarg":false},{"name":"color","required":false,"specifarg":true},{"name":"similarity","required":false,"specifarg":true},{"name":"blend","required":false,"specifarg":true}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -77,7 +78,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'chromakeybg/chromabg <file> [-color <r> <g> <b>] [-similarity (from 0 to 100)] [-blend (from 0 to 100)]',
+        name: 'chromakeybg/chromabg {file} [-color <r> <g> <b>] [-similarity (from 0 to 100)] [-blend (from 0 to 100)]',
         value: "Tries to remove the file's background with chroma key."
     },
     cooldown: 2500,

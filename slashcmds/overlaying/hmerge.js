@@ -101,7 +101,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'hmerge <file> <file2> [-swapheight]',
+        name: 'hmerge {file} <file2> [-swapheight]',
         value: 'Merges the first file with the second one horizontally.'
     },
     cooldown: 2500,

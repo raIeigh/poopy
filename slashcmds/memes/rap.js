@@ -126,7 +126,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'rap/fnf/friday <file>',
+        name: 'rap/fnf/friday {file}',
         value: "when i'm funny Rapping !!!"
     },
     cooldown: 2500,

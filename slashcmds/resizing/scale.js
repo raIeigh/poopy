@@ -114,7 +114,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'scale/resize <width> <height> <file> [-flags <algorithm>] [-keepaspectratio <mode (increase or decrease)>]',
+        name: 'scale/resize <width> <height> {file} [-flags <algorithm>] [-keepaspectratio <mode (increase or decrease)>]',
         value: 'Resizes the file to correspond to the specified width and height. A list of flags can be found at https://ffmpeg.org/ffmpeg-scaler.html#Scaler-Options'
     },
     cooldown: 2500,

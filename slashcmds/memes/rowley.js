@@ -66,7 +66,7 @@ module.exports = {
             return
         }
     },
-    help: { name: 'rowley/wimpy <file>', value: 'society:' },
+    help: { name: 'rowley/wimpy {file}', value: 'society:' },
     cooldown: 2500,
     type: 'Memes'
 }

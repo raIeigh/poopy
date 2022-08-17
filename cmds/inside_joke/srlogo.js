@@ -1,5 +1,6 @@
 module.exports = {
     name: ['srlogo', 'sr', 'soupremastered'],
+    args: [{"name":"file","required":false,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -58,7 +59,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'srlogo/sr/soupremastered <file>',
+        name: 'srlogo/sr/soupremastered {file}',
         value: 'Applies the Soup Remastered Logo to the file.'
     },
     cooldown: 2500,

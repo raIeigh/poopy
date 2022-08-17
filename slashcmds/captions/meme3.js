@@ -115,7 +115,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'meme3/caption "{text}" <file> [-size <multiplier (from 0.5 to 5)>]',
+        name: 'meme3/caption "{text}" {file} [-size <multiplier (from 0.5 to 5)>]',
         value: 'Adds a white box caption to the file.'
     },
     cooldown: 2500,

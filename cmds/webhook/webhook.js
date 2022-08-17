@@ -1,5 +1,6 @@
 module.exports = {
     name: ['webhook', 'customhook', 'customwebhook'],
+    args: [{"name":"user","required":false,"specifarg":false},{"name":"text","required":true,"specifarg":false},{"name":"image","required":true,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 

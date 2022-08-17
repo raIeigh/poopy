@@ -1,5 +1,6 @@
 module.exports = {
     name: ['crasher', 'crashvideo'],
+    args: [{"name":"file","required":false,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -47,7 +48,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'crasher/crashvideo <file> (moderator only)',
+        name: 'crasher/crashvideo {file} (moderator only)',
         value: "Manipulates the file to make it a WebM crasher."
     },
     cooldown: 2500,

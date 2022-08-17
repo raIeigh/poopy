@@ -1,5 +1,6 @@
 module.exports = {
     name: ['tord', 'tordenask', 'tordenaskwatermark'],
+    args: [{"name":"file","required":false,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -61,7 +62,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'tord/tordenask/tordenaskwatermark <file>',
+        name: 'tord/tordenask/tordenaskwatermark {file}',
         value: 'Applies the Tordenask Watermark to the file. https://gizmo.moe/profile?user=2'
     },
     cooldown: 2500,

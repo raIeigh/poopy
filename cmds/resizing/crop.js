@@ -1,5 +1,6 @@
 module.exports = {
     name: ['crop'],
+    args: [{"name":"x","required":false,"specifarg":true},{"name":"y","required":false,"specifarg":true},{"name":"w","required":false,"specifarg":true},{"name":"h","required":false,"specifarg":true},{"name":"file","required":false,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -139,7 +140,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'crop [-x <pixel>] [-y <pixel>] [-w <pixels>] [-h <pixels>] <file>',
+        name: 'crop [-x <pixel>] [-y <pixel>] [-w <pixels>] [-h <pixels>] {file}',
         value: 'Crops the file depending on the XY axes and the width and height.'
     },
     cooldown: 2500,

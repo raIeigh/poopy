@@ -113,7 +113,7 @@ module.exports = {
             return
         }
     },
-    help: { name: 'stuff "{text}" <file>', value: "I'm stuff" },
+    help: { name: 'stuff "{text}" {file}', value: "I'm stuff" },
     cooldown: 2500,
     type: 'Captions'
 }

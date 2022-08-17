@@ -1,5 +1,6 @@
 module.exports = {
     name: ['spin'],
+    args: [{"name":"file","required":false,"specifarg":false},{"name":"duration","required":false,"specifarg":true}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -41,7 +42,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'spin <file> [-duration <seconds (max 10)>]',
+        name: 'spin {file} [-duration <seconds (max 10)>]',
         value: 'Continuously spins the file.'
     },
     cooldown: 2500,

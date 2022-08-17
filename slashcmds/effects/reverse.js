@@ -58,7 +58,7 @@ module.exports = {
             return
         }
     },
-    help: { name: 'reverse <file>', value: 'Reverses the file.' },
+    help: { name: 'reverse {file}', value: 'Reverses the file.' },
     cooldown: 2500,
     type: 'Effects'
 }

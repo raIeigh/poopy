@@ -57,7 +57,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'dizzy <file> [-distance <distance>]',
+        name: 'dizzy {file} [-distance <distance>]',
         value: 'Adds a dizzy effect to the file.'
     },
     cooldown: 2500,

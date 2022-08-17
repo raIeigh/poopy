@@ -1,5 +1,6 @@
 module.exports = {
     name: ['mask', 'alphamerge'],
+    args: [{"name":"file","required":false,"specifarg":false},{"name":"mask","required":true,"specifarg":false},{"name":"keep","required":false,"specifarg":true},{"name":"overlay","required":false,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -155,7 +156,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'mask/alphamerge <file> <mask> [-keep] [overlay options]',
+        name: 'mask/alphamerge {file} <mask> [-keep] [overlay options]',
         value: 'Uses the specified mask on the file. Might not work well on GIFs though!'
     },
     cooldown: 2500,

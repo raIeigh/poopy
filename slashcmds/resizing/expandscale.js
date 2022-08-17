@@ -106,7 +106,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'expandscale <width> <height> <file> [-origin <x (left/center/right)> <y (top/middle/bottom)>] [-keepaspectratio <mode (increase or decrease)>]',
+        name: 'expandscale <width> <height> {file} [-origin <x (left/center/right)> <y (top/middle/bottom)>] [-keepaspectratio <mode (increase or decrease)>]',
         value: 'Expands or contracts the file to correspond to the specified width and height.'
     },
     cooldown: 2500,

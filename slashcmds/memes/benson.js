@@ -93,7 +93,7 @@ module.exports = {
             return
         }
     },
-    help: { name: 'benson "{name}" <file>', value: 'A.I. Level 20' },
+    help: { name: 'benson "{name}" {file}', value: 'A.I. Level 20' },
     cooldown: 2500,
     type: 'Memes'
 }

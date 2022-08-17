@@ -155,7 +155,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'mask/alphamerge <file> <mask> [-keep] [overlay options]',
+        name: 'mask/alphamerge {file} <mask> [-keep] [overlay options]',
         value: 'Uses the specified mask on the file. Might not work well on GIFs though!'
     },
     cooldown: 2500,

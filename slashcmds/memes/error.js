@@ -119,7 +119,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'error/warning "{title}" "{message}" "[leftbutton]" [-lgray] "[centerbutton]" [-cgray] "[rightbutton]" [-rgray] [-style <style (98 or XP)>] <file>',
+        name: 'error/warning "{title}" "{message}" "[leftbutton]" [-lgray] "[centerbutton]" [-cgray] "[rightbutton]" [-rgray] [-style <style (98 or XP)>] {file}',
         value: 'Sonic is hacking your computer'
     },
     cooldown: 2500,

@@ -1,5 +1,6 @@
 module.exports = {
     name: ['donotplaytwice', 'playtwice'],
+    args: [{"name":"file","required":false,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -59,7 +60,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'donotplaytwice/playtwice <audio/video>',
+        name: 'donotplaytwice/playtwice {file}',
         value: `Creates a "DO NOT PLAY THIS AUDIO TWICE" ogg with the audio. Probably doesn't work now...`
     },
     cooldown: 2500,

@@ -1,5 +1,6 @@
 module.exports = {
     name: ['reverb'],
+    args: [{"name":"file","required":false,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -53,7 +54,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'reverb <video/audio>',
+        name: 'reverb {file}',
         value: 'Adds a reverb effect to the video.'
     },
     cooldown: 2500,

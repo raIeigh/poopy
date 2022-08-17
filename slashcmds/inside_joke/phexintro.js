@@ -46,7 +46,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'phexintro/phexoniaintro <file>',
+        name: 'phexintro/phexoniaintro {file}',
         value: "Starts the file with Phexonia's intro."
     },
     cooldown: 2500,

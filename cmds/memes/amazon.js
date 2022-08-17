@@ -1,5 +1,6 @@
 module.exports = {
     name: ['amazon'],
+    args: [{"name":"name","required":false,"specifarg":false},{"name":"price","required":false,"specifarg":false},{"name":"rating","required":false,"specifarg":false},{"name":"file","required":false,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -135,7 +136,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'amazon "{name}" "[price]" "[rating (in stars)]" <file>',
+        name: 'amazon "{name}" "[price]" "[rating (in stars)]" {file}',
         value: 'Now ON SALE!!!'
     },
     cooldown: 2500,

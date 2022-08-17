@@ -1,5 +1,6 @@
 module.exports = {
     name: ['phexoutro', 'phexoniaoutro'],
+    args: [{"name":"file","required":false,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -46,7 +47,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'phexoutro/phexoniaoutro <file>',
+        name: 'phexoutro/phexoniaoutro {file}',
         value: "Ends the file with Phexonia's outro."
     },
     cooldown: 2500,

@@ -1,5 +1,6 @@
 module.exports = {
     name: ['tint'],
+    args: [{"name":"r","required":false,"specifarg":false},{"name":"g","required":false,"specifarg":false},{"name":"b","required":false,"specifarg":false},{"name":"a","required":false,"specifarg":false},{"name":"file","required":false,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -65,7 +66,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'tint [r] [g] [b] [a] <file>',
+        name: 'tint [r] [g] [b] [a] {file}',
         value: 'Tints the file with the new color depending on the RGBA values.'
     },
     cooldown: 2500,

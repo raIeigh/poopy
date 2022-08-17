@@ -1,5 +1,6 @@
 module.exports = {
     name: ['loop', 'repeat'],
+    args: [{"name":"file","required":false,"specifarg":false},{"name":"times","required":false,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -68,7 +69,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'loop/repeat <video/audio/gif> [times]',
+        name: 'loop/repeat {file} [times]',
         value: "Loops the file, if [times] is supplied, it'll loop [times] times.\n" +
             'Example usage: p:loop https://cdn.discordapp.com/attachments/621060031357517827/823936228323623023/video.mp4 3'
     },

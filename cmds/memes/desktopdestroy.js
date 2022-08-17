@@ -1,5 +1,6 @@
 module.exports = {
     name: ['desktopdestroy', 'desktopdestroyer'],
+    args: [{"name":"file","required":false,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -57,7 +58,7 @@ module.exports = {
             return
         }
     },
-    help: { name: 'desktopdestroy/desktopdestroyer <file>', value: 'death' },
+    help: { name: 'desktopdestroy/desktopdestroyer {file}', value: 'death' },
     cooldown: 2500,
     type: 'Memes'
 }

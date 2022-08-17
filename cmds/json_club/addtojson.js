@@ -1,5 +1,6 @@
 module.exports = {
     name: ['addtojson'],
+    args: [{"name":"json","required":true,"specifarg":false},{"name":"value","required":true,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 

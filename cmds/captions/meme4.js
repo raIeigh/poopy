@@ -1,5 +1,6 @@
 module.exports = {
     name: ['meme4', 'tenorcaption'],
+    args: [{"name":"topText","required":false,"specifarg":false},{"name":"bottomText","required":false,"specifarg":false},{"name":"file","required":false,"specifarg":false},{"name":"color","required":false,"specifarg":true},{"name":"size","required":false,"specifarg":true}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -127,7 +128,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'meme4/tenorcaption "{topText}" "[bottomText]" <file> [-color <r> <g> <b>] [-size <multiplier (from 0.5 to 5)>]',
+        name: 'meme4/tenorcaption "{topText}" "[bottomText]" {file} [-color <r> <g> <b>] [-size <multiplier (from 0.5 to 5)>]',
         value: 'Adds a Tenor GIF caption to the file.\n' +
             'Example usage: p:tenorcaption "You putrid fool" https://cdn.discordapp.com/attachments/691444857108955196/855507735750901831/output.png -color 255 0 0'
     },

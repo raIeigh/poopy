@@ -59,7 +59,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'spazz/shake <file> [-radius <number>] [-seed <number>] [-rescale]',
+        name: 'spazz/shake {file} [-radius <number>] [-seed <number>] [-rescale]',
         value: 'Makes the file spazz out.'
     },
     cooldown: 2500,

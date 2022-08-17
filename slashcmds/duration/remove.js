@@ -161,7 +161,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'remove/reversetrim [-start <timestamp (you can use hh:mm:ss)>] [-end <timestamp (you can use hh:mm:ss)>] <file>',
+        name: 'remove/reversetrim [-start <timestamp (you can use hh:mm:ss)>] [-end <timestamp (you can use hh:mm:ss)>] {file}',
         value: 'Removes a portion from the file from the start timestamp and the end timestamp.'
     },
     cooldown: 2500,

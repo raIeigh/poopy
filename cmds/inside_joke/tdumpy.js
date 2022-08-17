@@ -1,5 +1,6 @@
 module.exports = {
     name: ['tdumpy', 'trollfaced', 'trollfacedmosaic'],
+    args: [{"name":"image","required":true,"specifarg":false},{"name":"resolution","required":false,"specifarg":true}],
     execute: async function (msg, args) {
         let poopy = this
 

@@ -85,7 +85,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'battlecats/bc <file>',
+        name: 'battlecats/bc {file}',
         value: 'Command your Cats with simple controls in a battle through space and time! No need to register to develop your own Cat Army! BATTLE WITH ALL THE CATS!!'
     },
     cooldown: 2500,

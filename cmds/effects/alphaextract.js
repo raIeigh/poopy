@@ -1,5 +1,6 @@
 module.exports = {
     name: ['alphaextract', 'createmask'],
+    args: [{"name":"file","required":false,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -49,7 +50,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'alphaextract/createmask <image/gif>',
+        name: 'alphaextract/createmask {file}',
         value: 'Extracts the alpha from the file.'
     },
     cooldown: 2500,

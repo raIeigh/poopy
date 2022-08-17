@@ -53,7 +53,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'trebling/treble/highpass <file>',
+        name: 'trebling/treble/highpass {file}',
         value: 'Makes the audio in the file treble.'
     },
     cooldown: 2500,

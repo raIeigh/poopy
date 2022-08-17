@@ -73,7 +73,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'reencode <file> [-encodingpreset <preset>] [-codec <codec>]',
+        name: 'reencode {file} [-encodingpreset <preset>] [-codec <codec>]',
         value: 'Reencodes the file to other preset, codec or audio codec. A list of presets can be found at https://trac.ffmpeg.org/wiki/Encode/H.264#a2.Chooseapresetandtune\n' +
             'Pro Tip: These options can be used in ANY file manipulation command!'
     },

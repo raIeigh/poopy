@@ -51,7 +51,7 @@ module.exports = {
             return
         }
     },
-    help: { name: 'vflip <file>', value: 'Flips the file vertically.' },
+    help: { name: 'vflip {file}', value: 'Flips the file vertically.' },
     cooldown: 2500,
     type: 'Mirroring'
 }

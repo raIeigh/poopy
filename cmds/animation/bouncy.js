@@ -1,5 +1,6 @@
 module.exports = {
     name: ['bouncy', 'bounce', 'jumping', 'jump'],
+    args: [{"name":"file","required":false,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -38,7 +39,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'bouncy/bounce/jumping/jump <file>',
+        name: 'bouncy/bounce/jumping/jump {file}',
         value: 'Makes the file bounce around in a transparent background.'
     },
     cooldown: 2500,

@@ -1,5 +1,6 @@
 module.exports = {
     name: ['piranha', 'appear'],
+    args: [{"name":"file","required":false,"specifarg":false},{"name":"duration","required":false,"specifarg":true}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -45,7 +46,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'piranha/appear <file> [-duration <seconds (max 20)>]',
+        name: 'piranha/appear {file} [-duration <seconds (max 20)>]',
         value: 'Makes the file appear like the piranhas in Super Mario.'
     },
     cooldown: 2500,

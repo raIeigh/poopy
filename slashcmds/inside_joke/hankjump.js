@@ -37,7 +37,7 @@ module.exports = {
             return
         }
     },
-    help: { name: 'hankjump/hank <file>', value: 'hank jumping gif' },
+    help: { name: 'hankjump/hank {file}', value: 'hank jumping gif' },
     cooldown: 2500,
     type: 'Inside Joke'
 }

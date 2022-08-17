@@ -63,7 +63,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'tremolo <file> [-frequency <hz (from 0.1 to 20000)>] [-depth <percentage>]',
+        name: 'tremolo {file} [-frequency <hz (from 0.1 to 20000)>] [-depth <percentage>]',
         value: "Adds a tremolo effect to the file's audio. Default frequency is 5 and depth is 50."
     },
     cooldown: 2500,

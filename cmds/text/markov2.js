@@ -1,5 +1,6 @@
 module.exports = {
     name: ['markov2'],
+    args: [{"name":"minlength","required":false,"specifarg":true},{"name":"randomsentences","required":false,"specifarg":true}],
     execute: async function (msg, args) {
         let poopy = this
 

@@ -1,5 +1,6 @@
 module.exports = {
     name: ['rainbow', 'disco'],
+    args: [{"name":"file","required":false,"specifarg":false},{"name":"duration","required":false,"specifarg":true}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -57,7 +58,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'rainbow/disco <file> [-duration <seconds (max 10)>]',
+        name: 'rainbow/disco {file} [-duration <seconds (max 10)>]',
         value: 'Adds a rainbow effect to the file.'
     },
     cooldown: 2500,

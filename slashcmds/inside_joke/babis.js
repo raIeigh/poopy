@@ -67,7 +67,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'babis/infant/kirby <file>',
+        name: 'babis/infant/kirby {file}',
         value: 'A silly baby. He loves HAMBURGAS!'
     },
     cooldown: 2500,

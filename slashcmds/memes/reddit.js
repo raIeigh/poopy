@@ -97,7 +97,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'reddit {name} <file>',
+        name: 'reddit {name} {file}',
         value: 'The kind stranger has arrived.'
     },
     cooldown: 2500,

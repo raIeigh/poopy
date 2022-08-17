@@ -1,5 +1,6 @@
 module.exports = {
     name: ['pvz', 'plant'],
+    args: [{"name":"name","required":false,"specifarg":false},{"name":"description","required":false,"specifarg":false},{"name":"file","required":false,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -103,7 +104,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'pvz/plant "{name}" "{description}" <file>',
+        name: 'pvz/plant "{name}" "{description}" {file}',
         value: 'You got a new plant!'
     },
     cooldown: 2500,

@@ -1,5 +1,6 @@
 module.exports = {
     name: ['canyoufind', 'find'],
+    args: [{"name":"background","required":true,"specifarg":false},{"name":"tofind","required":true,"specifarg":false},{"name":"size","required":false,"specifarg":true}],
     execute: async function (msg, args) {
         let poopy = this
 

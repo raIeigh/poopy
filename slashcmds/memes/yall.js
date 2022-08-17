@@ -94,7 +94,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'yall/twitterartist "[text]" <file>',
+        name: 'yall/twitterartist "[text]" {file}',
         value: 'twitter artist'
     },
     cooldown: 2500,

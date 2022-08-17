@@ -1,5 +1,6 @@
 module.exports = {
   name: ['shutup'],
+  args: [{"name":"duration","required":false,"specifarg":false}],
   execute: async function (msg, args) {
     let poopy = this
 

@@ -1,5 +1,6 @@
 module.exports = {
     name: ['circle'],
+    args: [{"name":"file","required":false,"specifarg":false},{"name":"width","required":false,"specifarg":true},{"name":"height","required":false,"specifarg":true},{"name":"owidth","required":false,"specifarg":true},{"name":"oheight","required":false,"specifarg":true},{"name":"duration","required":false,"specifarg":true}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -63,7 +64,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'circle <file> [-width <pixels>] [-height <pixels>] [-owidth <pixels>] [-oheight <pixels>] [-duration <seconds (max 10)>]',
+        name: 'circle {file} [-width <pixels>] [-height <pixels>] [-owidth <pixels>] [-oheight <pixels>] [-duration <seconds (max 10)>]',
         value: 'Makes the file move around in a circle.'
     },
     cooldown: 2500,

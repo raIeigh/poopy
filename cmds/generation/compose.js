@@ -1,5 +1,6 @@
 module.exports = {
     name: ['compose', 'generatemusic'],
+    args: [{"name":"style","required":false,"specifarg":true},{"name":"density","required":false,"specifarg":true},{"name":"temperature","required":false,"specifarg":true}],
     execute: async function (msg, args) {
         let poopy = this
 

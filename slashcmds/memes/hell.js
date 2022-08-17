@@ -72,7 +72,7 @@ module.exports = {
             return
         }
     },
-    help: { name: 'hell <file>', value: 'they get sent to hell' },
+    help: { name: 'hell {file}', value: 'they get sent to hell' },
     cooldown: 2500,
     type: 'Memes'
 }

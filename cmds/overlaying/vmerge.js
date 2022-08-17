@@ -1,5 +1,6 @@
 module.exports = {
     name: ['vmerge'],
+    args: [{"name":"file","required":false,"specifarg":false},{"name":"file2","required":false,"specifarg":false},{"name":"swap","required":false,"specifarg":true}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -101,7 +102,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'vmerge <file> <file2> [-swapwidth]',
+        name: 'vmerge {file} {file2} [-swap]',
         value: 'Merges the first file with the second one vertically.'
     },
     cooldown: 2500,

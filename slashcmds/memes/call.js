@@ -106,7 +106,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'call/phonecall "[name]" <file>',
+        name: 'call/phonecall "[name]" {file}',
         value: 'Poopy is calling.'
     },
     cooldown: 2500,

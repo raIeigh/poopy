@@ -1,5 +1,6 @@
 module.exports = {
     name: ['speechtotext', 'speechrecognize'],
+    args: [{"name":"file","required":false,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -170,7 +171,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'speechtotext/speechrecognize <video/audio>',
+        name: 'speechtotext/speechrecognize {file}',
         value: 'Tries to recognize the speech inside the audio of a file and convert it to text. Maximum duration is 1 minute.'
     },
     cooldown: 2500,

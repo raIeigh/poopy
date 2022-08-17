@@ -1,5 +1,6 @@
 module.exports = {
     name: ['localcommands', 'localcmds', 'servercommands', 'servercmds'],
+    args: [{"name":"option","required":true,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 

@@ -1,5 +1,6 @@
 module.exports = {
     name: ['topmirror', 'mirrortop', 'tmirror', 'mirrort'],
+    args: [{"name":"file","required":false,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -52,7 +53,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'topmirror/mirrortop/tmirror/mirrort <file>',
+        name: 'topmirror/mirrortop/tmirror/mirrort {file}',
         value: 'Mirrors the top side of the file.'
     },
     cooldown: 2500,

@@ -63,7 +63,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'circle <file> [-width <pixels>] [-height <pixels>] [-owidth <pixels>] [-oheight <pixels>] [-duration <seconds (max 10)>]',
+        name: 'circle {file} [-width <pixels>] [-height <pixels>] [-owidth <pixels>] [-oheight <pixels>] [-duration <seconds (max 10)>]',
         value: 'Makes the file move around in a circle.'
     },
     cooldown: 2500,

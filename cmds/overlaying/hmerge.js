@@ -1,5 +1,6 @@
 module.exports = {
     name: ['hmerge'],
+    args: [{"name":"file","required":false,"specifarg":false},{"name":"file2","required":false,"specifarg":false},{"name":"swap","required":false,"specifarg":true}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -101,7 +102,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'hmerge <file> <file2> [-swapheight]',
+        name: 'hmerge {file} {file2} [-swap]',
         value: 'Merges the first file with the second one horizontally.'
     },
     cooldown: 2500,

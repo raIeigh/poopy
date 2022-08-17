@@ -1,5 +1,6 @@
 module.exports = {
     name: ['reversemagik', 'awareenlarge', 'liquidenlarge'],
+    args: [{"name":"file","required":false,"specifarg":false},{"name":"scale","required":false,"specifarg":true}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -87,7 +88,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'reversemagik/awareenlarge/liquidenlarge <file> [-scale <multiplier (from 1 to 2)>]',
+        name: 'reversemagik/awareenlarge/liquidenlarge {file} [-scale <multiplier (from 1 to 2)>]',
         value: "Enlarges the file by liquid-rescaling it."
     },
     cooldown: 2500,

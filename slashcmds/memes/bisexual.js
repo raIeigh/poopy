@@ -52,7 +52,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'bisexual/bi <file>',
+        name: 'bisexual/bi {file}',
         value: 'Adds bisexual lighting to the image.'
     },
     cooldown: 2500,

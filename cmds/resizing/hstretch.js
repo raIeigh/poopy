@@ -1,5 +1,6 @@
 module.exports = {
     name: ['hstretch'],
+    args: [{"name":"multiplier","required":false,"specifarg":false},{"name":"file","required":false,"specifarg":false},{"name":"flags","required":false,"specifarg":true}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -87,7 +88,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'hstretch [multiplier (from 1 to 6)] <file> [-flags <algorithm>]',
+        name: 'hstretch [multiplier (from 1 to 6)] {file} [-flags <algorithm>]',
         value: 'Stretches the file horizontally. A list of flags can be found at https://ffmpeg.org/ffmpeg-scaler.html#Scaler-Options'
     },
     cooldown: 2500,

@@ -1,5 +1,6 @@
 module.exports = {
     name: ['dontrepost', '3am', 'donotrepost'],
+    args: [{"name":"file","required":false,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -67,7 +68,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'dontrepost/3am/donotrepost <file>',
+        name: 'dontrepost/3am/donotrepost {file}',
         value: 'DO NOT REPOST IT'
     },
     cooldown: 2500,

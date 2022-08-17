@@ -67,7 +67,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'pixenlarge [multiplier (2, 3, 4)] <file> [-filter <type (xbr or hqx)>]',
+        name: 'pixenlarge [multiplier (2, 3, 4)] {file} [-filter <type (xbr or hqx)>]',
         value: 'Enlarges the file, this is mostly designed for pixel art.'
     },
     cooldown: 2500,

@@ -1,5 +1,6 @@
 module.exports = {
     name: ['spectrogram'],
+    args: [{"name":"file","required":false,"specifarg":false},{"name":"color","required":false,"specifarg":true},{"name":"scale","required":false,"specifarg":true},{"name":"saturation","required":false,"specifarg":true}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -104,7 +105,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'spectrogram <file> [-color <mode>] [-scale <scale>] [-saturation <number (from -10 to 10)>]',
+        name: 'spectrogram {file} [-color <mode>] [-scale <scale>] [-saturation <number (from -10 to 10)>]',
         value: 'Displays the spectrogram of the audio file. A list of options for color and scale can be found at https://ffmpeg.org/ffmpeg-filters.html#showspectrumpic'
     },
     cooldown: 2500,

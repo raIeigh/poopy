@@ -1,5 +1,6 @@
 module.exports = {
     name: ['dizzy'],
+    args: [{"name":"file","required":false,"specifarg":false},{"name":"distance","required":false,"specifarg":true}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -57,7 +58,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'dizzy <file> [-distance <distance>]',
+        name: 'dizzy {file} [-distance <distance>]',
         value: 'Adds a dizzy effect to the file.'
     },
     cooldown: 2500,

@@ -1,5 +1,6 @@
 module.exports = {
     name: ['cleverbot', 'respond'],
+    args: [{"name":"message","required":false,"specifarg":false},{"name":"once","required":false,"specifarg":true}],
     execute: async function (msg, args) {
         let poopy = this
 

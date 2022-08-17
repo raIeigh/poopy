@@ -1,5 +1,6 @@
 module.exports = {
     name: ['makewebm'],
+    args: [{"name":"frames","required":true,"specifarg":false},{"name":"frames","required":false,"specifarg":true},{"name":"audio","required":false,"specifarg":true},{"name":"fps","required":false,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 

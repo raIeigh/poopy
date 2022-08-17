@@ -448,7 +448,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'choicegif "{name}" <file>',
+        name: 'choicegif "{name}" {file}',
         value: 'Creates one of those "Choose your fighter" gifs depending on the selected image.'
     },
     cooldown: 2500,

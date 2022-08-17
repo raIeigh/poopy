@@ -1,5 +1,6 @@
 module.exports = {
     name: ['generatetext', 'predicttext'],
+    args: [{"name":"message","required":true,"specifarg":false},{"name":"temperature","required":false,"specifarg":true},{"name":"maxtokens","required":false,"specifarg":true},{"name":"prespenalty","required":false,"specifarg":true},{"name":"countpenalty","required":false,"specifarg":true},{"name":"freqpenalty","required":false,"specifarg":true}],
     execute: async function (msg, args) {
         let poopy = this
 

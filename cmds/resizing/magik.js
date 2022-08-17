@@ -1,5 +1,6 @@
 module.exports = {
     name: ['magik', 'awareshrink', 'liquidshrink'],
+    args: [{"name":"file","required":false,"specifarg":false},{"name":"scale","required":false,"specifarg":true}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -87,7 +88,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'magik/awareshrink/liquidshrink <file> [-scale <multiplier (from 1 to 6)>]',
+        name: 'magik/awareshrink/liquidshrink {file} [-scale <multiplier (from 1 to 6)>]',
         value: "Shrinks the file by liquid-rescaling it."
     },
     cooldown: 2500,

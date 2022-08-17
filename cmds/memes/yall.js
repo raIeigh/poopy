@@ -1,5 +1,6 @@
 module.exports = {
     name: ['yall', 'twitterartist'],
+    args: [{"name":"text","required":false,"specifarg":false},{"name":"file","required":false,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -94,7 +95,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'yall/twitterartist "[text]" <file>',
+        name: 'yall/twitterartist "[text]" {file}',
         value: 'twitter artist'
     },
     cooldown: 2500,

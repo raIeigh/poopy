@@ -1,5 +1,6 @@
 module.exports = {
     name: ['morph', 'transform'],
+    args: [{"name":"file","required":false,"specifarg":false},{"name":"file2","required":true,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -88,7 +89,7 @@ module.exports = {
         return await poopy.functions.sendFile(msg, filepath, `output.gif`)
     },
     help: {
-        name: 'morph/transform <file> <file2>',
+        name: 'morph/transform {file} <file2>',
         value: 'Morphs the first file into the second.'
     },
     cooldown: 2500,

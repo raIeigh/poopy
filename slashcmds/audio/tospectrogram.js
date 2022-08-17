@@ -61,7 +61,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'tospectrogram/spectrogramimage <file> [-duration <seconds (from 1 to 20)>] [-frequency <hz (from 20 to 40000)>] [-density <number (from 1 to 10)>]',
+        name: 'tospectrogram/spectrogramimage {file} [-duration <seconds (from 1 to 20)>] [-frequency <hz (from 20 to 40000)>] [-density <number (from 1 to 10)>]',
         value: 'Generates a new WAV from the image. When you view its spectrogram, the image will be there! (`spectrogram` command)'
     },
     cooldown: 2500,

@@ -1,5 +1,6 @@
 module.exports = {
     name: ['squishy'],
+    args: [{"name":"file","required":false,"specifarg":false},{"name":"duration","required":false,"specifarg":true}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -55,7 +56,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'squishy <file> [-duration <seconds (max 10)>]',
+        name: 'squishy {file} [-duration <seconds (max 10)>]',
         value: 'Makes the file squishy.'
     },
     cooldown: 2500,

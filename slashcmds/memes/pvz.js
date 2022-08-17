@@ -103,7 +103,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'pvz/plant "{name}" "{description}" <file>',
+        name: 'pvz/plant "{name}" "{description}" {file}',
         value: 'You got a new plant!'
     },
     cooldown: 2500,

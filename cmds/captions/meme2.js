@@ -1,5 +1,6 @@
 module.exports = {
     name: ['meme2', 'demotivator', 'motivator'],
+    args: [{"name":"topText","required":false,"specifarg":false},{"name":"bottomText","required":false,"specifarg":false},{"name":"file","required":false,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -168,7 +169,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'meme2/demotivator/motivator "{topText}" "[bottomText]" <file>',
+        name: 'meme2/demotivator/motivator "{topText}" "[bottomText]" {file}',
         value: 'Adds a demotivator caption to the file.'
     },
     cooldown: 2500,

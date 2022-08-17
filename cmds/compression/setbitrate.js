@@ -1,5 +1,6 @@
 module.exports = {
     name: ['setbitrate'],
+    args: [{"name":"bitrate","required":true,"specifarg":false},{"name":"file","required":false,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -60,7 +61,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'setbitrate <bitrate> <file>',
+        name: 'setbitrate <bitrate> {file}',
         value: "Sets the file's bitrate to <bitrate>."
     },
     cooldown: 2500,

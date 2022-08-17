@@ -73,7 +73,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'expand [multiplier (from 1 to 6)] <file> [-origin <x (left/center/right)> <y (top/middle/bottom)>]',
+        name: 'expand [multiplier (from 1 to 6)] {file} [-origin <x (left/center/right)> <y (top/middle/bottom)>]',
         value: 'Expands the width and height of the file.'
     },
     cooldown: 2500,

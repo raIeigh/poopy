@@ -50,7 +50,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'nervous/randomorder/randomframes <file> [-frames <number (from 2 to 512)>]',
+        name: 'nervous/randomorder/randomframes {file} [-frames <number (from 2 to 512)>]',
         value: 'Adds a nervous effect to the file, with the frames going into random orders all the time. Default frames are 30.'
     },
     cooldown: 2500,

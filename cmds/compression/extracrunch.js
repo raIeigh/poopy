@@ -1,5 +1,6 @@
 module.exports = {
     name: ['extracrunch'],
+    args: [{"name":"file","required":false,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -61,7 +62,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'extracrunch <file>',
+        name: 'extracrunch {file}',
         value: "Lowers the file's quality to the lowest."
     },
     cooldown: 2500,

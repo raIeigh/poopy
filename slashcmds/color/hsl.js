@@ -55,7 +55,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'hsl/hsv [hue (from -360 to 360)] [saturation (from -10 to 10)] [lightness (from -10 to 10)] <file>',
+        name: 'hsl/hsv [hue (from -360 to 360)] [saturation (from -10 to 10)] [lightness (from -10 to 10)] {file}',
         value: "Changes the file's hue, saturation and lightness values."
     },
     cooldown: 2500,

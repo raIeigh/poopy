@@ -1,5 +1,6 @@
 module.exports = {
     name: ['curves'],
+    args: [{"name":"rcurves","required":false,"specifarg":false},{"name":"gcurves","required":false,"specifarg":false},{"name":"bcurves","required":false,"specifarg":false},{"name":"file","required":false,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -83,7 +84,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'curves "[rcurves]" "[gcurves]" "[bcurves]" <file>',
+        name: 'curves "[rcurves]" "[gcurves]" "[bcurves]" {file}',
         value: 'Gives the file a new color depending on the curve points specified.\n' +
             'Example usage: p:curves "0/0 215/47 255/255" "0/0 215/47 255/255" "0/0 215/47 255/255" https://cdn.discordapp.com/attachments/682052452740104223/944611349848264795/output.png'
     },

@@ -101,7 +101,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'vmerge <file> <file2> [-swapwidth]',
+        name: 'vmerge {file} <file2> [-swapwidth]',
         value: 'Merges the first file with the second one vertically.'
     },
     cooldown: 2500,

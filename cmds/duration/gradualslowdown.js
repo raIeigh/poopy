@@ -1,5 +1,6 @@
 module.exports = {
     name: ['gradualslowdown', 'gradualslow'],
+    args: [{"name":"multiplier","required":false,"specifarg":false},{"name":"file","required":false,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -120,7 +121,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'gradualslowdown/gradualslow [multiplier <number (from 1 to 2)>] <video/audio>',
+        name: 'gradualslowdown/gradualslow [multiplier <number (from 1 to 2)>] {file}',
         value: 'Gradually slows down the file until the end.'
     },
     cooldown: 2500,

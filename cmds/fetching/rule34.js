@@ -1,5 +1,6 @@
 module.exports = {
     name: ['rule34', 'r34'],
+    args: [{"name":"query","required":true,"specifarg":false},{"name":"page","required":false,"specifarg":true}],
     execute: async function (msg, args) {
         let poopy = this
 

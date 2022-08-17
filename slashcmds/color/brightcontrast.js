@@ -69,7 +69,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'brightcontrast/brightness/contrast [brightness (from -10 to 10)] [contrast (from -10 to 10)] <file>',
+        name: 'brightcontrast/brightness/contrast [brightness (from -10 to 10)] [contrast (from -10 to 10)] {file}',
         value: "Changes the file's brightness and contrast values."
     },
     cooldown: 2500,

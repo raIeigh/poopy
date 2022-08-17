@@ -1,5 +1,6 @@
 module.exports = {
     name: ['higherpitch', 'increasepitch'],
+    args: [{"name":"multiplier","required":false,"specifarg":false},{"name":"file","required":false,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -64,7 +65,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'higherpitch/increasepitch [multiplier <number (from 1 to 6)>] <video/audio>',
+        name: 'higherpitch/increasepitch [multiplier <number (from 1 to 6)>] {file}',
         value: "Increases the video's pitch. Default is 2."
     },
     cooldown: 2500,

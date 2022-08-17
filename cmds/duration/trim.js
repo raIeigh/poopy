@@ -1,5 +1,6 @@
 module.exports = {
     name: ['trim', 'cut'],
+    args: [{"name":"start","required":false,"specifarg":true},{"name":"end","required":false,"specifarg":true},{"name":"file","required":false,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -160,7 +161,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'trim/cut [-start <timestamp (you can use hh:mm:ss)>] [-end <timestamp (you can use hh:mm:ss)>] <file>',
+        name: 'trim/cut [-start <timestamp (you can use hh:mm:ss)>] [-end <timestamp (you can use hh:mm:ss)>] {file}',
         value: 'Trims the file from the start timestamp and the end timestamp.'
     },
     cooldown: 2500,

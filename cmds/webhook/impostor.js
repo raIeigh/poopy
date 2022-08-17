@@ -1,5 +1,6 @@
 module.exports = {
     name: ['impostor', 'imposter', 'sus'],
+    args: [{"name":"user","required":false,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 

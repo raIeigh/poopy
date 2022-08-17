@@ -1,5 +1,6 @@
 module.exports = {
     name: ['pillow', 'bodypillow'],
+    args: [{"name":"file","required":false,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -52,7 +53,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'pillow/bodypillow <file>',
+        name: 'pillow/bodypillow {file}',
         value: 'Creates a pillow with the file.'
     },
     cooldown: 2500,

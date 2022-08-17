@@ -1,5 +1,6 @@
 module.exports = {
     name: ['say', 'talk', 'speak'],
+    args: [{"name":"message","required":true,"specifarg":false},{"name":"nodelete","required":false,"specifarg":true},{"name":"tts","required":false,"specifarg":true}],
     execute: async function (msg, args) {
         let poopy = this
 

@@ -160,7 +160,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'trim/cut [-start <timestamp (you can use hh:mm:ss)>] [-end <timestamp (you can use hh:mm:ss)>] <file>',
+        name: 'trim/cut [-start <timestamp (you can use hh:mm:ss)>] [-end <timestamp (you can use hh:mm:ss)>] {file}',
         value: 'Trims the file from the start timestamp and the end timestamp.'
     },
     cooldown: 2500,

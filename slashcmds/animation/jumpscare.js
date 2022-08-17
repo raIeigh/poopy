@@ -51,7 +51,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'jumpscare/fnaf <file> [-zoomtime <seconds>] [-zoomsize <multiplier>]',
+        name: 'jumpscare/fnaf {file} [-zoomtime <seconds>] [-zoomsize <multiplier>]',
         value: 'five nights. Default time is 0.25 and size is 1.'
     },
     cooldown: 2500,

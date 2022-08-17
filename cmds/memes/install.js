@@ -1,5 +1,6 @@
 module.exports = {
     name: ['install', 'installnow'],
+    args: [{"name":"file","required":false,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -70,7 +71,7 @@ module.exports = {
             return
         }
     },
-    help: { name: 'install/installnow <file>', value: 'Install Now' },
+    help: { name: 'install/installnow {file}', value: 'Install Now' },
     cooldown: 2500,
     type: 'Memes'
 }

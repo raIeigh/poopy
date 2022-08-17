@@ -1,5 +1,6 @@
 module.exports = {
     name: ['expandscale'],
+    args: [{"name":"width","required":true,"specifarg":false},{"name":"height","required":true,"specifarg":false},{"name":"file","required":false,"specifarg":false},{"name":"origin","required":false,"specifarg":true},{"name":"keepaspectratio","required":false,"specifarg":true}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -106,7 +107,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'expandscale <width> <height> <file> [-origin <x (left/center/right)> <y (top/middle/bottom)>] [-keepaspectratio <mode (increase or decrease)>]',
+        name: 'expandscale <width> <height> {file} [-origin <x (left/center/right)> <y (top/middle/bottom)>] [-keepaspectratio <mode (increase or decrease)>]',
         value: 'Expands or contracts the file to correspond to the specified width and height.'
     },
     cooldown: 2500,

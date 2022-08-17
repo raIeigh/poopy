@@ -1,5 +1,6 @@
 module.exports = {
     name: ['tween'],
+    args: [{"name":"file","required":false,"specifarg":false},{"name":"circle","required":false,"specifarg":false},{"name":"startsize","required":false,"specifarg":true},{"name":"endsize","required":false,"specifarg":true},{"name":"origin","required":false,"specifarg":true},{"name":"startoffset","required":false,"specifarg":true},{"name":"endoffset","required":false,"specifarg":true},{"name":"startangle","required":false,"specifarg":true},{"name":"endangle","required":false,"specifarg":true},{"name":"fitangle","required":false,"specifarg":true},{"name":"easing","required":false,"specifarg":true}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -153,7 +154,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'tween <file> [circle options] [-(start/end)size <x> <y>] [-origin <x (left/center/right)> <y (top/middle/bottom)>] [-(start/end)offset <x> <y>] [-(start/end)angle <degrees>] [-fitangle] [-easing <style>]',
+        name: 'tween {file} [circle options] [-(start/end)size <x> <y>] [-origin <x (left/center/right)> <y (top/middle/bottom)>] [-(start/end)offset <x> <y>] [-(start/end)angle <degrees>] [-fitangle] [-easing <style>]',
         value: 'Allows you to tween the file in a transparent background in any way possible! A least of easings can be found at https://easings.net/ (also including linear)'
     },
     cooldown: 2500,

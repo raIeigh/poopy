@@ -88,7 +88,7 @@ module.exports = {
         return await poopy.functions.sendFile(msg, filepath, `output.gif`)
     },
     help: {
-        name: 'morph/transform <file> <file2>',
+        name: 'morph/transform {file} <file2>',
         value: 'Morphs the first file into the second.'
     },
     cooldown: 2500,

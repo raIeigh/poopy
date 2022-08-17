@@ -1,5 +1,6 @@
 module.exports = {
     name: ['zekk', 'zekkriel'],
+    args: [{"name":"file","required":false,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -66,7 +67,7 @@ module.exports = {
             return
         }
     },
-    help: { name: 'zekk/zekkriel <file>', value: 'Yup!' },
+    help: { name: 'zekk/zekkriel {file}', value: 'Yup!' },
     cooldown: 2500,
     type: 'Inside Joke'
 }

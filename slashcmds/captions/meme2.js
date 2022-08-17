@@ -168,7 +168,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'meme2/demotivator/motivator "{topText}" "[bottomText]" <file>',
+        name: 'meme2/demotivator/motivator "{topText}" "[bottomText]" {file}',
         value: 'Adds a demotivator caption to the file.'
     },
     cooldown: 2500,

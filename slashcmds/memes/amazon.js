@@ -135,7 +135,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'amazon "{name}" "[price]" "[rating (in stars)]" <file>',
+        name: 'amazon "{name}" "[price]" "[rating (in stars)]" {file}',
         value: 'Now ON SALE!!!'
     },
     cooldown: 2500,

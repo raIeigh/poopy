@@ -1,5 +1,6 @@
 module.exports = {
   name: ['newimage', 'makeimage'],
+  args: [{"name":"width","required":true,"specifarg":false},{"name":"height","required":true,"specifarg":false},{"name":"r","required":true,"specifarg":false},{"name":"g","required":true,"specifarg":false},{"name":"b","required":true,"specifarg":false},{"name":"a","required":false,"specifarg":false}],
   execute: async function (msg, args) {
     let poopy = this
 

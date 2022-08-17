@@ -52,7 +52,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'larry <file>',
+        name: 'larry {file}',
         value: 'Step 1: Eat hot chip\nStep 2: Eat hot chip\nStep 3: Eat hot chip'
     },
     cooldown: 2500,

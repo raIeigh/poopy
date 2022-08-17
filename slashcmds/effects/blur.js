@@ -65,7 +65,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'blur <file> [-radius <pixels>] [-power <number>]',
+        name: 'blur {file} [-radius <pixels>] [-power <number>]',
         value: 'Blurs the file.'
     },
     cooldown: 2500,

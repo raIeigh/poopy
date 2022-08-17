@@ -1,5 +1,6 @@
 module.exports = {
     name: ['perspective'],
+    args: [{"name":"file","required":false,"specifarg":false},{"name":"tl","required":false,"specifarg":true},{"name":"tr","required":false,"specifarg":true},{"name":"bl","required":false,"specifarg":true},{"name":"br","required":false,"specifarg":true}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -133,7 +134,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'perspective <file> [-tl <x> <y> (pixels or percentage)] [-tr <x> <y> (pixels or percentage)] [-bl <x> <y> (pixels or percentage)] [-br <x> <y> (pixels or percentage)]',
+        name: 'perspective {file} [-tl <x> <y> (pixels or percentage)] [-tr <x> <y> (pixels or percentage)] [-bl <x> <y> (pixels or percentage)] [-br <x> <y> (pixels or percentage)]',
         value: 'Changes the perspective of the file depending on the coordinates specified for each point.'
     },
     cooldown: 2500,

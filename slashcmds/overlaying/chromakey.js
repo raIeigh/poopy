@@ -185,7 +185,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'chromakey/chroma <file> <chromakey> [-color <r> <g> <b>] [-similarity (from 0 to 100)] [-blend (from 0 to 100)] [-origin <x (left/center/right)> <y (top/middle/bottom)>] [-offsetpos <x> <y>] [-size <pixels>]',
+        name: 'chromakey/chroma {file} <chromakey> [-color <r> <g> <b>] [-similarity (from 0 to 100)] [-blend (from 0 to 100)] [-origin <x (left/center/right)> <y (top/middle/bottom)>] [-offsetpos <x> <y>] [-size <pixels>]',
         value: 'Adds the specified chroma key to the file. Default similarity and blend are 30.'
     },
     cooldown: 2500,

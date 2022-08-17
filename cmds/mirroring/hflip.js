@@ -1,5 +1,6 @@
 module.exports = {
     name: ['hflip'],
+    args: [{"name":"file","required":false,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -51,7 +52,7 @@ module.exports = {
             return
         }
     },
-    help: { name: 'hflip <file>', value: 'Flips the file horizontally.' },
+    help: { name: 'hflip {file}', value: 'Flips the file horizontally.' },
     cooldown: 2500,
     type: 'Mirroring'
 }

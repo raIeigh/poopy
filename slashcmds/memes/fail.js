@@ -51,7 +51,7 @@ module.exports = {
             return
         }
     },
-    help: { name: 'fail/norris <file>', value: 'FAIL' },
+    help: { name: 'fail/norris {file}', value: 'FAIL' },
     cooldown: 2500,
     type: 'Memes'
 }

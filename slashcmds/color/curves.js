@@ -83,7 +83,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'curves "[rcurves]" "[gcurves]" "[bcurves]" <file>',
+        name: 'curves "[rcurves]" "[gcurves]" "[bcurves]" {file}',
         value: 'Gives the file a new color depending on the curve points specified.\n' +
             'Example usage: p:curves "0/0 215/47 255/255" "0/0 215/47 255/255" "0/0 215/47 255/255" https://cdn.discordapp.com/attachments/682052452740104223/944611349848264795/output.png'
     },

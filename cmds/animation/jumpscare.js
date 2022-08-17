@@ -1,5 +1,6 @@
 module.exports = {
     name: ['jumpscare', 'fnaf'],
+    args: [{"name":"file","required":false,"specifarg":false},{"name":"zoomtime","required":false,"specifarg":true},{"name":"zoomsize","required":false,"specifarg":true}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -51,7 +52,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'jumpscare/fnaf <file> [-zoomtime <seconds>] [-zoomsize <multiplier>]',
+        name: 'jumpscare/fnaf {file} [-zoomtime <seconds>] [-zoomsize <multiplier>]',
         value: 'five nights. Default time is 0.25 and size is 1.'
     },
     cooldown: 2500,

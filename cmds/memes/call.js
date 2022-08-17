@@ -1,5 +1,6 @@
 module.exports = {
     name: ['call', 'phonecall'],
+    args: [{"name":"name","required":false,"specifarg":false},{"name":"file","required":false,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -106,7 +107,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'call/phonecall "[name]" <file>',
+        name: 'call/phonecall "[name]" {file}',
         value: 'Poopy is calling.'
     },
     cooldown: 2500,

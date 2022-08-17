@@ -1,5 +1,6 @@
 module.exports = {
     name: ['hzoomout'],
+    args: [{"name":"multiplier","required":false,"specifarg":false},{"name":"file","required":false,"specifarg":false},{"name":"origin","required":false,"specifarg":true},{"name":"flags","required":false,"specifarg":true}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -101,7 +102,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'hzoomout [multiplier (from 1 to 6)] <file> [-origin <x (left/center/right)> <y (top/middle/bottom)>]',
+        name: 'hzoomout [multiplier (from 1 to 6)] {file} [-origin <x (left/center/right)> <y (top/middle/bottom)>] [-flags <algorithm>]',
         value: 'Zooms the file out horizontally. A list of flags can be found at https://ffmpeg.org/ffmpeg-scaler.html#Scaler-Options'
     },
     cooldown: 2500,

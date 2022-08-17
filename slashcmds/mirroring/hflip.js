@@ -51,7 +51,7 @@ module.exports = {
             return
         }
     },
-    help: { name: 'hflip <file>', value: 'Flips the file horizontally.' },
+    help: { name: 'hflip {file}', value: 'Flips the file horizontally.' },
     cooldown: 2500,
     type: 'Mirroring'
 }

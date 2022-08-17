@@ -1,5 +1,6 @@
 module.exports = {
   name: ['clickhole'],
+  args: [],
   execute: async function (msg) {
     let poopy = this
 

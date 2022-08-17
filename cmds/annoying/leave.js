@@ -1,5 +1,6 @@
 module.exports = {
     name: ['leave'],
+    args: [],
     execute: async function (msg) {
         let poopy = this
 

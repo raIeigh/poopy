@@ -1,5 +1,6 @@
 module.exports = {
     name: ['bassy', 'bass', 'lowpass'],
+    args: [{"name":"file","required":false,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -53,7 +54,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'bassy/bass/lowpass <file>',
+        name: 'bassy/bass/lowpass {file}',
         value: 'Makes the audio in the file bassy.'
     },
     cooldown: 2500,

@@ -72,7 +72,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'jpeg/needsmorejpeg <file> [-quality <percentage>]',
+        name: 'jpeg/needsmorejpeg {file} [-quality <percentage>]',
         value: "Adds JPEG artifacts to the file."
     },
     cooldown: 2500,

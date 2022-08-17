@@ -60,7 +60,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'setbitrate <bitrate> <file>',
+        name: 'setbitrate <bitrate> {file}',
         value: "Sets the file's bitrate to <bitrate>."
     },
     cooldown: 2500,

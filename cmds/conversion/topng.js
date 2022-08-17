@@ -1,5 +1,6 @@
 module.exports = {
     name: ['topng', 'getframe', 'extractframe'],
+    args: [{"name":"file","required":false,"specifarg":false},{"name":"framepos","required":false,"specifarg":true}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -46,7 +47,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'topng/getframe/extractframe <video/gif> [-framepos <number>]',
+        name: 'topng/getframe/extractframe {file} [-framepos <number>]',
         value: 'Converts the video/GIF to a static PNG. Specifying the framepos param extracts the frame in the file with that position.'
     },
     cooldown: 2500,

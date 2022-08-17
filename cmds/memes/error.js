@@ -1,5 +1,6 @@
 module.exports = {
     name: ['error', 'warning'],
+    args: [{"name":"title","required":false,"specifarg":false},{"name":"message","required":false,"specifarg":false},{"name":"leftbutton","required":false,"specifarg":false},{"name":"lgray","required":false,"specifarg":true},{"name":"centerbutton","required":false,"specifarg":false},{"name":"cgray","required":false,"specifarg":true},{"name":"rightbutton","required":false,"specifarg":false},{"name":"rgray","required":false,"specifarg":true},{"name":"style","required":false,"specifarg":true},{"name":"file","required":false,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -119,7 +120,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'error/warning "{title}" "{message}" "[leftbutton]" [-lgray] "[centerbutton]" [-cgray] "[rightbutton]" [-rgray] [-style <style (98 or XP)>] <file>',
+        name: 'error/warning "{title}" "{message}" "[leftbutton]" [-lgray] "[centerbutton]" [-cgray] "[rightbutton]" [-rgray] [-style <style (98 or XP)>] {file}',
         value: 'Sonic is hacking your computer'
     },
     cooldown: 2500,

@@ -133,7 +133,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'perspective <file> [-tl <x> <y> (pixels or percentage)] [-tr <x> <y> (pixels or percentage)] [-bl <x> <y> (pixels or percentage)] [-br <x> <y> (pixels or percentage)]',
+        name: 'perspective {file} [-tl <x> <y> (pixels or percentage)] [-tr <x> <y> (pixels or percentage)] [-bl <x> <y> (pixels or percentage)] [-br <x> <y> (pixels or percentage)]',
         value: 'Changes the perspective of the file depending on the coordinates specified for each point.'
     },
     cooldown: 2500,

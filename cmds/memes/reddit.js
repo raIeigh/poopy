@@ -1,5 +1,6 @@
 module.exports = {
     name: ['reddit'],
+    args: [{"name":"name","required":false,"specifarg":false},{"name":"file","required":false,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -97,7 +98,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'reddit {name} <file>',
+        name: 'reddit {name} {file}',
         value: 'The kind stranger has arrived.'
     },
     cooldown: 2500,

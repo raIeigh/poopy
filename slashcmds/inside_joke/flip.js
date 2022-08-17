@@ -66,7 +66,7 @@ module.exports = {
             return
         }
     },
-    help: { name: 'flip/fnepp <file>', value: 'Yeah!' },
+    help: { name: 'flip/fnepp {file}', value: 'Yeah!' },
     cooldown: 2500,
     type: 'Inside Joke'
 }

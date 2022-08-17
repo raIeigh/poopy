@@ -1,5 +1,6 @@
 module.exports = {
     name: ['crewmate', 'amongus', 'amogus'],
+    args: [{"name":"file","required":false,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -71,7 +72,7 @@ module.exports = {
             return
         }
     },
-    help: { name: 'crewmate/amongus/amogus <file>', value: 'HOP ON AMONG US!' },
+    help: { name: 'crewmate/amongus/amogus {file}', value: 'HOP ON AMONG US!' },
     cooldown: 2500,
     type: 'Memes'
 }

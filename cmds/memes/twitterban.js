@@ -1,5 +1,6 @@
 module.exports = {
     name: ['twitterban'],
+    args: [{"name":"message","required":false,"specifarg":false},{"name":"nickname","required":false,"specifarg":false},{"name":"username","required":false,"specifarg":false},{"name":"file","required":false,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -123,7 +124,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'twitterban "{message}" "{nickname}" "{username}" <file>',
+        name: 'twitterban "{message}" "{nickname}" "{username}" {file}',
         value: 'banned for hating Pan | They/Them | #BLM | #ACAB | #GAYRIGHTS | #ProudPansexual | #ProudNon-Binary | #LGBTQRIGHTS | Hates Straights'
     },
     cooldown: 2500,

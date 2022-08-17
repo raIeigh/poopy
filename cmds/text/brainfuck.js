@@ -1,5 +1,6 @@
 module.exports = {
   name: ['brainfuck', 'bf'],
+  args: [{"name":"code","required":true,"specifarg":false}],
   execute: async function (msg, args) {
     let poopy = this
 

@@ -63,7 +63,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'speedup/speed [multiplier (from 1 to 6)] <file>',
+        name: 'speedup/speed [multiplier (from 1 to 6)] {file}',
         value: 'Speeds up the file by the multiplier. Default is 2.'
     },
     cooldown: 2500,

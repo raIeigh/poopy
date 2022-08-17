@@ -59,7 +59,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'reverseboomerang/rboomerang <file>',
+        name: 'reverseboomerang/rboomerang {file}',
         value: 'Reverses the file back to the start and plays it until the end.'
     },
     cooldown: 2500,

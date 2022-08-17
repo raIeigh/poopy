@@ -53,7 +53,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'rotate/rot {degrees (from -360 to 360)} <file> [-cut]',
+        name: 'rotate/rot {degrees (from -360 to 360)} {file} [-cut]',
         value: 'Rotates the file by the degrees specified.'
     },
     cooldown: 2500,

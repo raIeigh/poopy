@@ -1,5 +1,6 @@
 module.exports = {
     name: ['vflip'],
+    args: [{"name":"file","required":false,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -51,7 +52,7 @@ module.exports = {
             return
         }
     },
-    help: { name: 'vflip <file>', value: 'Flips the file vertically.' },
+    help: { name: 'vflip {file}', value: 'Flips the file vertically.' },
     cooldown: 2500,
     type: 'Mirroring'
 }

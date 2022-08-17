@@ -66,7 +66,7 @@ module.exports = {
             return
         }
     },
-    help: { name: 'tshirt/shirt <file>', value: 'Creates a T-Shirt the file.' },
+    help: { name: 'tshirt/shirt {file}', value: 'Creates a T-Shirt the file.' },
     cooldown: 2500,
     type: 'Memes'
 }

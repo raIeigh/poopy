@@ -83,7 +83,7 @@ module.exports = {
             return
         }
     },
-    help: { name: 'countdown/annoyingorange "{name}" <file>', value: 'oh no' },
+    help: { name: 'countdown/annoyingorange "{name}" {file}', value: 'oh no' },
     cooldown: 2500,
     type: 'Memes'
 }

@@ -73,7 +73,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'slowdown/slow [multiplier (from 1 to 6)] <file>',
+        name: 'slowdown/slow [multiplier (from 1 to 6)] {file}',
         value: 'Slows down the file by the multiplier. Default is 2.'
     },
     cooldown: 2500,

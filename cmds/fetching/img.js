@@ -1,5 +1,6 @@
 module.exports = {
     name: ['img', 'image'],
+    args: [{ "name": "query", "required": true, "specifarg": false }, { "name": "page", "required": false, "specifarg": true }],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -17,15 +18,9 @@ module.exports = {
             args.splice(pageindex, 2)
         }
 
-        var bing = false
-        var bingindex = args.indexOf('-bing')
-        if (bingindex > -1 && process.env.RAPIDAPIKEY) {
-            bing = true
-            args.splice(bingindex, 1)
-        }
         var search = args.slice(1).join(" ");
 
-        var urls = await poopy.functions.fetchImages(search, bing, !msg.channel.nsfw).catch(() => { })
+        var urls = await poopy.functions.fetchImages(search, false, !msg.channel.nsfw).catch(() => { })
 
         if (!urls) {
             await msg.channel.send('Error.').catch(() => { })
@@ -48,7 +43,7 @@ module.exports = {
 
             if (poopy.config.textEmbeds) return `${urls[page - 1]}\n\nImage ${page}/${urls.length}`
             else return {
-                "title": "Image Search Results For " + search,
+                "title": "Google Image Search Results For " + search,
                 "description": "Use the arrows to navigate.",
                 "color": 0x472604,
                 "footer": {
@@ -77,8 +72,8 @@ module.exports = {
         ], number, undefined, undefined, undefined, msg)
     },
     help: {
-        name: 'img/image <query> [-page <number>] [-bing]',
-        value: 'Search for a random image in Google or Bing.\nExample usage: p:img Burger -page 5 -bing'
+        name: 'img/image <query> [-page <number>]',
+        value: 'Search for a random image in Google.\nExample usage: p:img Burger -page 5'
     },
     cooldown: 2500,
     type: 'Fetching'

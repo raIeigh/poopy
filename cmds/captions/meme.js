@@ -1,5 +1,6 @@
 module.exports = {
     name: ['meme'],
+    args: [{"name":"topText","required":false,"specifarg":false},{"name":"bottomText","required":false,"specifarg":false},{"name":"file","required":false,"specifarg":false},{"name":"size","required":false,"specifarg":true}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -113,7 +114,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'meme "{topText}" "[bottomText]" <file> [-size <multiplier (from 0.5 to 5)>]',
+        name: 'meme "{topText}" "[bottomText]" {file} [-size <multiplier (from 0.5 to 5)>]',
         value: 'Adds a meme caption to the file.'
     },
     cooldown: 2500,

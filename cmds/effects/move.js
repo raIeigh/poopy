@@ -1,5 +1,6 @@
 module.exports = {
     name: ['move'],
+    args: [{"name":"x","required":true,"specifarg":false},{"name":"y","required":true,"specifarg":false},{"name":"file","required":false,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -67,7 +68,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'move <x> <y> <file>',
+        name: 'move <x> <y> {file}',
         value: 'Moves the file around in a transparent background.'
     },
     cooldown: 2500,

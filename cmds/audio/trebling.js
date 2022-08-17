@@ -1,5 +1,6 @@
 module.exports = {
     name: ['trebling', 'treble', 'highpass'],
+    args: [{"name":"file","required":false,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -53,7 +54,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'trebling/treble/highpass <file>',
+        name: 'trebling/treble/highpass {file}',
         value: 'Makes the audio in the file treble.'
     },
     cooldown: 2500,

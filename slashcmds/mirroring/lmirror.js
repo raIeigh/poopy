@@ -52,7 +52,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'leftmirror/mirrorleft/lmirror/mirrorl <file>',
+        name: 'leftmirror/mirrorleft/lmirror/mirrorl {file}',
         value: 'Mirrors the left side of the file.'
     },
     cooldown: 2500,

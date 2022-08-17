@@ -67,7 +67,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'dontrepost/3am/donotrepost <file>',
+        name: 'dontrepost/3am/donotrepost {file}',
         value: 'DO NOT REPOST IT'
     },
     cooldown: 2500,

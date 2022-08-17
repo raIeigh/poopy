@@ -1,5 +1,6 @@
 module.exports = {
     name: ['pixenlarge'],
+    args: [{"name":"multiplier","required":false,"specifarg":false},{"name":"file","required":false,"specifarg":false},{"name":"filter","required":false,"specifarg":true}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -67,7 +68,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'pixenlarge [multiplier (2, 3, 4)] <file> [-filter <type (xbr or hqx)>]',
+        name: 'pixenlarge [multiplier (2, 3, 4)] {file} [-filter <type (xbr or hqx)>]',
         value: 'Enlarges the file, this is mostly designed for pixel art.'
     },
     cooldown: 2500,

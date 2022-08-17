@@ -1,5 +1,6 @@
 module.exports = {
     name: ['weirdcore', 'text2img', 'text2image', 't2i'],
+    args: [{"name":"message","required":true,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 

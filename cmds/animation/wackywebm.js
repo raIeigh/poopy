@@ -1,5 +1,6 @@
 module.exports = {
     name: ['wackywebm', 'wackyscale', 'wackyresize'],
+    args: [{"name":"video","required":true,"specifarg":false},{"name":"mode","required":false,"specifarg":true},{"name":"delta","required":false,"specifarg":true},{"name":"bps","required":false,"specifarg":true}],
     execute: async function (msg, args) {
         let poopy = this
 

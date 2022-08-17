@@ -1,5 +1,6 @@
 module.exports = {
     name: ['scale', 'resize'],
+    args: [{"name":"width","required":true,"specifarg":false},{"name":"height","required":true,"specifarg":false},{"name":"file","required":false,"specifarg":false},{"name":"flags","required":false,"specifarg":true},{"name":"keepaspectratio","required":false,"specifarg":true}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -114,7 +115,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'scale/resize <width> <height> <file> [-flags <algorithm>] [-keepaspectratio <mode (increase or decrease)>]',
+        name: 'scale/resize <width> <height> {file} [-flags <algorithm>] [-keepaspectratio <mode (increase or decrease)>]',
         value: 'Resizes the file to correspond to the specified width and height. A list of flags can be found at https://ffmpeg.org/ffmpeg-scaler.html#Scaler-Options'
     },
     cooldown: 2500,

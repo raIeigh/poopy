@@ -1,5 +1,6 @@
 module.exports = {
     name: ['waifu2x'],
+    args: [{"name":"image","required":true,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 

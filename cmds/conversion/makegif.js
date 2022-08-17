@@ -1,5 +1,6 @@
 module.exports = {
     name: ['makegif'],
+    args: [{"name":"frames","required":true,"specifarg":false},{"name":"frame","required":false,"specifarg":true},{"name":"framenumber","required":true,"specifarg":false},{"name":"fps","required":false,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 

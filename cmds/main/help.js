@@ -1,5 +1,6 @@
 module.exports = {
     name: ['help', 'commands', 'cmds'],
+    args: [{"name":"command","required":false,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 

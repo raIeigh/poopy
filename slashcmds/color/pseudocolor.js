@@ -78,7 +78,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'pseudocolor <file> [-preset <preset>]',
+        name: 'pseudocolor {file} [-preset <preset>]',
         value: 'Gives the file a new color, depending on the specified preset. A list of presets can be found at https://ffmpeg.org/ffmpeg-filters.html#pseudocolor'
     },
     cooldown: 2500,

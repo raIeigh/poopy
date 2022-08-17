@@ -1,5 +1,6 @@
 module.exports = {
     name: ['lmirror', 'mirrorl', 'leftmirror', 'mirrorleft'],
+    args: [{"name":"file","required":false,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -52,7 +53,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'leftmirror/mirrorleft/lmirror/mirrorl <file>',
+        name: 'leftmirror/mirrorleft/lmirror/mirrorl {file}',
         value: 'Mirrors the left side of the file.'
     },
     cooldown: 2500,

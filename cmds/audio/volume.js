@@ -1,5 +1,6 @@
 module.exports = {
     name: ['volume'],
+    args: [{"name":"volume","required":false,"specifarg":false},{"name":"file","required":false,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -54,7 +55,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'volume {volume (by percentage)} <video/audio>',
+        name: 'volume {volume (by percentage)} {file}',
         value: "Increases the file's volume by {volume}%."
     },
     cooldown: 2500,

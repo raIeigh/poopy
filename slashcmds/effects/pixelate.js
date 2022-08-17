@@ -60,7 +60,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'pixelate <file> [-size <pixels>]',
+        name: 'pixelate {file} [-size <pixels>]',
         value: 'Pixelates the file.'
     },
     cooldown: 2500,

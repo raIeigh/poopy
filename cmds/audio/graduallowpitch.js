@@ -1,5 +1,6 @@
 module.exports = {
     name: ['graduallowpitch', 'gradualdecreasepitch'],
+    args: [{"name":"multiplier","required":false,"specifarg":false},{"name":"file","required":false,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -102,7 +103,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'graduallowpitch/gradualdecreasepitch [multiplier <number (from 1 to 6)>] <video/audio>',
+        name: 'graduallowpitch/gradualdecreasepitch [multiplier <number (from 1 to 6)>] {file}',
         value: 'Gradually decreases the pitch of the file until the end.'
     },
     cooldown: 2500,

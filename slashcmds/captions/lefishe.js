@@ -92,7 +92,7 @@ module.exports = {
             return
         }
     },
-    help: { name: 'lefishe/fishe "{name}" <file>', value: 'au chocolat.' },
+    help: { name: 'lefishe/fishe "{name}" {file}', value: 'au chocolat.' },
     cooldown: 2500,
     type: 'Captions'
 }

@@ -1,5 +1,6 @@
 module.exports = {
     name: ['glow', 'holy'],
+    args: [{"name":"file","required":false,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -52,7 +53,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'glow/holy <file>',
+        name: 'glow/holy {file}',
         value: 'Adds a glow effect to the file.'
     },
     cooldown: 2500,

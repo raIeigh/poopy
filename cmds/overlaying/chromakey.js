@@ -1,5 +1,6 @@
 module.exports = {
     name: ['chromakey', 'chroma'],
+    args: [{"name":"file","required":false,"specifarg":false},{"name":"chromakey","required":true,"specifarg":false},{"name":"color","required":false,"specifarg":true},{"name":"similarity","required":false,"specifarg":true},{"name":"blend","required":false,"specifarg":true},{"name":"origin","required":false,"specifarg":true},{"name":"offsetpos","required":false,"specifarg":true},{"name":"size","required":false,"specifarg":true}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -185,7 +186,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'chromakey/chroma <file> <chromakey> [-color <r> <g> <b>] [-similarity (from 0 to 100)] [-blend (from 0 to 100)] [-origin <x (left/center/right)> <y (top/middle/bottom)>] [-offsetpos <x> <y>] [-size <pixels>]',
+        name: 'chromakey/chroma {file} <chromakey> [-color <r> <g> <b>] [-similarity (from 0 to 100)] [-blend (from 0 to 100)] [-origin <x (left/center/right)> <y (top/middle/bottom)>] [-offsetpos <x> <y>] [-size <pixels>]',
         value: 'Adds the specified chroma key to the file. Default similarity and blend are 30.'
     },
     cooldown: 2500,

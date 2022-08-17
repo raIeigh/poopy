@@ -1,5 +1,6 @@
 module.exports = {
     name: ['fileinfo'],
+    args: [{"name":"file","required":false,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -312,7 +313,7 @@ module.exports = {
             embeds: [embed]
         }).catch(() => { })
     },
-    help: { name: 'fileinfo <file>', value: 'Get info on a file.' },
+    help: { name: 'fileinfo {file}', value: 'Get info on a file.' },
     cooldown: 2500,
     type: 'Main'
 }

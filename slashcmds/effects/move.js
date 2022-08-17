@@ -67,7 +67,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'move <x> <y> <file>',
+        name: 'move <x> <y> {file}',
         value: 'Moves the file around in a transparent background.'
     },
     cooldown: 2500,

@@ -66,7 +66,7 @@ module.exports = {
             return
         }
     },
-    help: { name: 'dababy <file>', value: 'dababy' },
+    help: { name: 'dababy {file}', value: 'dababy' },
     cooldown: 2500,
     type: 'Memes'
 }

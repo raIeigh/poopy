@@ -1,5 +1,6 @@
 module.exports = {
     name: ['outline', 'border'],
+    args: [{"name":"file","required":false,"specifarg":false},{"name":"radius","required":false,"specifarg":true},{"name":"power","required":false,"specifarg":true},{"name":"color","required":false,"specifarg":true},{"name":"repeat","required":false,"specifarg":true}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -90,7 +91,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'outline/border <file> [-radius <pixels>] [-power <number>] [-color <r> <g> <b>] [-repeat <number (max 100)>]',
+        name: 'outline/border {file} [-radius <pixels>] [-power <number>] [-color <r> <g> <b>] [-repeat <number (max 100)>]',
         value: 'Adds an outline to the file, only works with transparent ones.'
     },
     cooldown: 2500,

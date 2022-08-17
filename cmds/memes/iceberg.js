@@ -1,5 +1,7 @@
 module.exports = {
     name: ['iceberg'],
+    args: [{"name":"stage1words","required":false,"specifarg":true},{"name":"stage1image","required":false,"specifarg":true},{"name":"stage2words","required":false,"specifarg":true},{"name":"stage2image","required":false,"specifarg":true},{"name":"stage3words","required":false,"specifarg":true},{"name":"stage3image","required":false,"specifarg":true},{"name":"stage4words","required":false,"specifarg":true},{"name":"stage4image","required":false,"specifarg":true},{"name":"stage5words","required":false,"specifarg":true},{"name":"stage5image","required":false,"specifarg":true},{"name":"stage6words","required":false,"specifarg":true},{"name":"stage6image","required":false,"specifarg":true},{"name":"stage7words","required":false,"specifarg":true},{"name":"stage7image","required":false,"specifarg":true},{"name":"stage8words","required":false,"specifarg":true},{"name":"stage8image","required":false,"specifarg":true},{"name":"stage9words","required":false,"specifarg":true},{"name":"stage9image","required":false,"specifarg":true},{"name":"stage10words","required":false,"specifarg":true},{"name":"stage10image","required":false,"specifarg":true},{"name":"stages","required":false,"specifarg":true}],
+    noargchange: true,
     execute: async function (msg, args) {
         let poopy = this
 

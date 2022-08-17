@@ -66,7 +66,7 @@ module.exports = {
             return
         }
     },
-    help: { name: 'zekk/zekkriel <file>', value: 'Yup!' },
+    help: { name: 'zekk/zekkriel {file}', value: 'Yup!' },
     cooldown: 2500,
     type: 'Inside Joke'
 }

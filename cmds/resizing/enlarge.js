@@ -1,5 +1,6 @@
 module.exports = {
     name: ['enlarge'],
+    args: [{"name":"multiplier","required":false,"specifarg":false},{"name":"file","required":false,"specifarg":false},{"name":"flags","required":false,"specifarg":true}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -81,7 +82,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'enlarge [multiplier (from 1 to 6)] <file> [-flags <algorithm>]',
+        name: 'enlarge [multiplier (from 1 to 6)] {file} [-flags <algorithm>]',
         value: 'Enlarges the file. A list of flags can be found at https://ffmpeg.org/ffmpeg-scaler.html#Scaler-Options'
     },
     cooldown: 2500,

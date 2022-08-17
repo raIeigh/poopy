@@ -1,5 +1,6 @@
 module.exports = {
     name: ['allaboutme', 'mynameis'],
+    args: [{"name":"file","required":false,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -75,7 +76,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'allaboutme/mynameis <file>',
+        name: 'allaboutme/mynameis {file}',
         value: 'there is no jojo reference'
     },
     cooldown: 2500,

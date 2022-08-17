@@ -63,7 +63,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'infinity/boss/fly <file> [-width <pixels>] [-height <pixels>] [-owidth <pixels>] [-oheight <pixels>] [-duration <seconds (max 10)>]',
+        name: 'infinity/boss/fly {file} [-width <pixels>] [-height <pixels>] [-owidth <pixels>] [-oheight <pixels>] [-duration <seconds (max 10)>]',
         value: 'Makes the file move around in an infinity symbol, similar to a boss battle.'
     },
     cooldown: 2500,

@@ -1,5 +1,6 @@
 module.exports = {
     name: ['boomerang'],
+    args: [{"name":"file","required":false,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -59,7 +60,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'boomerang <file>',
+        name: 'boomerang {file}',
         value: 'Plays the file until the end and reverses it back to the start.'
     },
     cooldown: 2500,

@@ -1,5 +1,6 @@
 module.exports = {
     name: ['playvideo'],
+    args: [{"name":"file","required":false,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -61,7 +62,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'playvideo <file>',
+        name: 'playvideo {file}',
         value: 'Your video was played over 1000 times!'
     },
     cooldown: 2500,

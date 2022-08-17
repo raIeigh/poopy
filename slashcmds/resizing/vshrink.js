@@ -87,7 +87,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'vshrink [multiplier (from 1 to 6)] <file> [-flags <algorithm>]',
+        name: 'vshrink [multiplier (from 1 to 6)] {file} [-flags <algorithm>]',
         value: 'Shrinks the file vertically. A list of flags can be found at https://ffmpeg.org/ffmpeg-scaler.html#Scaler-Options'
     },
     cooldown: 2500,

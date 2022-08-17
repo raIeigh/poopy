@@ -1,5 +1,6 @@
 module.exports = {
     name: ['ps', 'phexoniastudios'],
+    args: [{"name":"type","required":false,"specifarg":true}],
     execute: async function (msg, args) {
         let poopy = this
 

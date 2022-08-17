@@ -1,5 +1,6 @@
 module.exports = {
     name: ['slowpitch'],
+    args: [{"name":"multiplier","required":false,"specifarg":false},{"name":"file","required":false,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -69,7 +70,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'slowpitch [multiplier <number (from 1 to 6)>] <video/audio>',
+        name: 'slowpitch [multiplier <number (from 1 to 6)>] {file}',
         value: 'Slows down the file while also decreasing its pitch.'
     },
     cooldown: 2500,

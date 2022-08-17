@@ -87,7 +87,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'vstretch [multiplier (from 1 to 6)] <file> [-flags <algorithm>]',
+        name: 'vstretch [multiplier (from 1 to 6)] {file} [-flags <algorithm>]',
         value: 'Stretches the file vertically. A list of flags can be found at https://ffmpeg.org/ffmpeg-scaler.html#Scaler-Options'
     },
     cooldown: 2500,

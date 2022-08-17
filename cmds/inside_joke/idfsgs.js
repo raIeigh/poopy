@@ -1,5 +1,6 @@
 module.exports = {
     name: ['idfsgs'],
+    args: [{"name":"file","required":false,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -61,7 +62,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'idfsgs <file>',
+        name: 'idfsgs {file}',
         value: 'Applies the IDFSGS Logo to the file.'
     },
     cooldown: 2500,

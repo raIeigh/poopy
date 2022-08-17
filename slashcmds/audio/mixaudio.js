@@ -117,7 +117,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'mixaudio/mixsound/mixmusic <file> <audio> [-offset <seconds (you can use hh:mm:ss)>]',
+        name: 'mixaudio/mixsound/mixmusic {file} <audio> [-offset <seconds (you can use hh:mm:ss)>]',
         value: "Mixes the first file's audio with the second file's audio."
     },
     cooldown: 2500,

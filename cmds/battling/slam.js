@@ -1,5 +1,6 @@
 module.exports = {
     name: ['slam'],
+    args: [{"name":"subject","required":true,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 

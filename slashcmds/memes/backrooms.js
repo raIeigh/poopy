@@ -74,7 +74,7 @@ module.exports = {
             return
         }
     },
-    help: { name: 'backrooms/backroom <file>', value: 'the arrival' },
+    help: { name: 'backrooms/backroom {file}', value: 'the arrival' },
     cooldown: 2500,
     type: 'Memes'
 }

@@ -1,5 +1,6 @@
 module.exports = {
   name: ['stroke', 'gibberish'],
+  args: [{"name":"message","required":true,"specifarg":false}],
   execute: async function (msg, args) {
     let poopy = this
 

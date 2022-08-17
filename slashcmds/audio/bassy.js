@@ -53,7 +53,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'bassy/bass/lowpass <file>',
+        name: 'bassy/bass/lowpass {file}',
         value: 'Makes the audio in the file bassy.'
     },
     cooldown: 2500,

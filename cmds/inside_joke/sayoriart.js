@@ -1,5 +1,6 @@
 module.exports = {
   name: ['sayoriart'],
+  args: [],
   execute: async function (msg) {
     let poopy = this
 

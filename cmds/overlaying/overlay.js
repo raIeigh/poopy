@@ -1,5 +1,6 @@
 module.exports = {
     name: ['overlay'],
+    args: [{"name":"file","required":false,"specifarg":false},{"name":"overlay","required":true,"specifarg":false},{"name":"origin","required":false,"specifarg":true},{"name":"offsetpos","required":false,"specifarg":true},{"name":"width","required":false,"specifarg":true},{"name":"height","required":false,"specifarg":true},{"name":"keepaspectratio","required":false,"specifarg":true}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -155,7 +156,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'overlay <file> <overlay> [-origin <x (left/center/right)> <y (top/middle/bottom)>] [-offsetpos <x> <y>] [-width <pixels or percentage>] [-height <pixels or percentage>] [-keepaspectratio <mode (increase or decrease)>]',
+        name: 'overlay {file} <overlay> [-origin <x (left/center/right)> <y (top/middle/bottom)>] [-offsetpos <x> <y>] [-width <pixels or percentage>] [-height <pixels or percentage>] [-keepaspectratio <mode (increase or decrease)>]',
         value: 'Adds the specified overlay to the file.'
     },
     cooldown: 2500,

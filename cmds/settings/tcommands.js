@@ -1,5 +1,6 @@
 module.exports = {
     name: ['tcommands', 'toggledcommands', 'togglecommands'],
+    args: [{"name":"option","required":true,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 

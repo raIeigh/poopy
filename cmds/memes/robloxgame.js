@@ -1,5 +1,6 @@
 module.exports = {
     name: ['robloxgame', 'rgame'],
+    args: [{"name":"name","required":false,"specifarg":false},{"name":"likeRatio","required":false,"specifarg":false},{"name":"playerCount","required":false,"specifarg":false},{"name":"file","required":false,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -114,7 +115,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'robloxgame/rgame "{name}" "[likeRatio]" "[playerCount]" <file>',
+        name: 'robloxgame/rgame "{name}" "[likeRatio]" "[playerCount]" {file}',
         value: 'Power your imagination.'
     },
     cooldown: 2500,

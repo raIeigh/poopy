@@ -1,5 +1,6 @@
 module.exports = {
     name: ['dm'],
+    args: [{"name":"user","required":true,"specifarg":false},{"name":"message","required":true,"specifarg":false},{"name":"anonymous","required":false,"specifarg":true}],
     execute: async function (msg, args) {
         let poopy = this
 

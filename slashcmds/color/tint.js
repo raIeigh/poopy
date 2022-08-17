@@ -65,7 +65,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'tint [r] [g] [b] [a] <file>',
+        name: 'tint [r] [g] [b] [a] {file}',
         value: 'Tints the file with the new color depending on the RGBA values.'
     },
     cooldown: 2500,

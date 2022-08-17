@@ -1,5 +1,6 @@
 module.exports = {
     name: ['vstack'],
+    args: [{"name":"file","required":false,"specifarg":false},{"name":"stack","required":false,"specifarg":true}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -60,7 +61,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'vstack <file> [-stack <number (from 1 to 10)>]',
+        name: 'vstack {file} [-stack <number (from 1 to 10)>]',
         value: 'Stacks the file vertically.'
     },
     cooldown: 2500,

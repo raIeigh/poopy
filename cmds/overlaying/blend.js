@@ -1,5 +1,6 @@
 module.exports = {
     name: ['blend'],
+    args: [{"name":"file","required":false,"specifarg":false},{"name":"blend","required":true,"specifarg":false},{"name":"mode","required":false,"specifarg":true},{"name":"overlay","required":false,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -206,7 +207,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'blend <file> <blend> [-mode <mode>] [overlay options]',
+        name: 'blend {file} <blend> [-mode <mode>] [overlay options]',
         value: 'Blends the first file to the second. A list of modes can be found at https://trac.ffmpeg.org/wiki/Blend'
     },
     cooldown: 2500,

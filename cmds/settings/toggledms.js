@@ -1,5 +1,6 @@
 module.exports = {
     name: ['toggledms', 'tdms'],
+    args: [],
     execute: async function (msg) {
         let poopy = this
 

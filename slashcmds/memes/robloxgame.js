@@ -114,7 +114,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'robloxgame/rgame "{name}" "[likeRatio]" "[playerCount]" <file>',
+        name: 'robloxgame/rgame "{name}" "[likeRatio]" "[playerCount]" {file}',
         value: 'Power your imagination.'
     },
     cooldown: 2500,

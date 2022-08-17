@@ -1,5 +1,6 @@
 module.exports = {
   name: ['randomimage'],
+  args: [],
   execute: async function (msg) {
     let poopy = this
 

@@ -1,5 +1,6 @@
 module.exports = {
   name: ['araboword', 'raleighword'],
+  args: [],
   execute: async function (msg) {
     let poopy = this
 

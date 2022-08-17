@@ -1,5 +1,6 @@
 module.exports = {
     name: ['flip', 'fnepp'],
+    args: [{"name":"file","required":false,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -66,7 +67,7 @@ module.exports = {
             return
         }
     },
-    help: { name: 'flip/fnepp <file>', value: 'Yeah!' },
+    help: { name: 'flip/fnepp {file}', value: 'Yeah!' },
     cooldown: 2500,
     type: 'Inside Joke'
 }

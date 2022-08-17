@@ -52,7 +52,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'bottommirror/mirrorbottom/bmirror/mirrorb <file>',
+        name: 'bottommirror/mirrorbottom/bmirror/mirrorb {file}',
         value: 'Mirrors the bottom side of the file.'
     },
     cooldown: 2500,

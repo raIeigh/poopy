@@ -55,7 +55,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'blob/slime/squishy2 <file> [-duration <seconds (max 10)>]',
+        name: 'blob/slime/squishy2 {file} [-duration <seconds (max 10)>]',
         value: 'Makes the file squishy like a blob.'
     },
     cooldown: 2500,

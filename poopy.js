@@ -173,12 +173,12 @@ class Poopy {
 
         // these are functions
         poopy.functions.getEmojis = require('@jimp/plugin-print/emojis')
-        poopy.functions.braille = require('./modules/braille')
+        //poopy.functions.braille = require('./modules/braille')
         poopy.functions.lingo = require('./modules/lingo')
         poopy.functions.gibberish = require('./modules/gibberish')
         poopy.functions.markov = require('./modules/markov')
-        poopy.functions.averageColor = require('./modules/averageColor')
-        poopy.functions.spectrogram = require('./modules/spectrogram')
+        //poopy.functions.averageColor = require('./modules/averageColor')
+        //poopy.functions.spectrogram = require('./modules/spectrogram')
         poopy.functions.wackywebm = require('./modules/wackywebm')
         poopy.functions.getAllData = require('./modules/dataGathering').getAllData
         poopy.functions.updateAllData = require('./modules/dataGathering').updateAllData
@@ -211,7 +211,7 @@ class Poopy {
             access_token_key: process.env.TWITTERACCESSTOKENKEY,
             access_token_secret: process.env.TWITTERACCESSTOKENSECRET
         })*/
-        poopy.vars.rest = new poopy.modules.REST({ version: '9' })
+        poopy.vars.rest = new poopy.modules.REST({ version: '10' })
         poopy.vars.gifFormats = ['gif', 'apng']
         poopy.vars.jimpFormats = ['png', 'jpeg', 'jpg', 'gif', 'bmp', 'tiff']
         poopy.vars.processingTools = require('./modules/processingTools')
@@ -1128,13 +1128,13 @@ class Poopy {
                     var ch = await poopy.amqpconn.createChannel().catch(reject)
                     var q = await ch.assertQueue('', { exclusive: true }).catch(reject)
                     var correlationId = poopy.functions.generateId()
-    
+
                     await ch.assertExchange('crash', 'fanout', {
                         durable: false
                     }).catch(reject)
                     var qrash = await ch.assertQueue('', { exclusive: true }).catch(reject)
                     ch.bindQueue(qrash.queue, 'crash', '')
-    
+
                     async function closeAll() {
                         await ch.cancel(consumer.consumerTag).catch(() => { })
                         await ch.cancel(crashconsumer.consumerTag).catch(() => { })
@@ -1172,14 +1172,14 @@ class Poopy {
                             }
                         }
                     }, { noAck: true }).catch(reject)
-    
+
                     var crashconsumer = await ch.consume(qrash.queue, function (msg) {
                         closeAll()
                         reject(msg.content.toString())
                     }, { noAck: true }).catch(reject)
 
                     poopy.modules.fs.writeFileSync(`tasks/${correlationId}.json`, JSON.stringify(data))
-    
+
                     ch.sendToQueue('tasks', Buffer.from(`${process.env.BOTWEBSITE}/tasks/${correlationId}?auth=${process.env.AUTHTOKEN}`), {
                         correlationId: correlationId,
                         replyTo: q.queue
@@ -1194,7 +1194,7 @@ class Poopy {
             if (poopy.config.stfu || poopy.config.noInfoPost) return
 
             var avatar = poopy.bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' })
-            var color = await poopy.functions.averageColor(avatar)
+            var color = { r: 255, b: 255, g: 255 }//await poopy.functions.averageColor(avatar)
             await poopy.functions.waitMessageCooldown(true)
 
             var infoMsg
@@ -3848,12 +3848,115 @@ class Poopy {
 
         poopy.commands = []
 
+        poopy.slashBuilders = {}
+
+        var commandGroups = {
+            audio: [
+                'addaudio',
+                'mixaudio'
+            ],
+            pitchspeed: [
+                'gradualhighpitch',
+                'graduallowpitch',
+                'gradualslowpitch',
+                'gradualspeedpitch',
+                'higherpitch',
+                'lowerpitch',
+                'slowpitch',
+                'speedpitch',
+                'gradualslowdown',
+                'gradualspeedup',
+                'slowdown',
+                'speedup'
+            ],
+            color: [
+                'color',
+                'color2'
+            ],
+            bitrate: [
+                'setaudiobitrate',
+                'setbitrate'
+            ],
+            togif: [
+                'toapng',
+                'togif'
+            ],
+            morphology: [
+                'dilate',
+                'erode'
+            ],
+            search: [
+                'bing',
+                'e621',
+                'gif',
+                'image',
+                'rule34',
+                'youtube'
+            ],
+            fakelength: [
+                'dividelength',
+                'multlength'
+            ],
+            enhance: [
+                'superresolution',
+                'waifu2x'
+            ],
+            merge: [
+                'hmerge',
+                'vmerge'
+            ],
+            stack: [
+                'hstack',
+                'vstack'
+            ],
+            expand: [
+                'contract',
+                'expand',
+                'hcontract',
+                'hexpand',
+                'vcontract',
+                'vexpand'
+              ]
+        }
+
         poopy.modules.fs.readdirSync('cmds').forEach(category => {
             poopy.modules.fs.readdirSync(`cmds/${category}`).forEach(name => {
                 var cmd = name.replace(/\.js$/, '')
                 var cmdData = require(`./cmds/${category}/${name}`)
                 if (!(poopy.config.poosonia && poopy.config.poosoniablacklist.find(cmdname => cmdname == cmd)) && poopy.functions.envsExist(cmdData.envRequired ?? [])) {
                     poopy.commands.push(cmdData)
+
+                    if (Object.keys(poopy.slashBuilders).length < 5 && cmdData.type != 'Owner' && cmdData.type != 'JSON Club') {
+                        var args = cmdData.args.sort((x, y) => (x.required === y.required) ? 0 : x.required ? -1 : 1)
+                        var description = cmdData.help.value.match(/[^.!?]+[.!?]*/)[0].substring(0, 100)
+
+                        var slashBuilder = new poopy.modules.DiscordBuilders.SlashCommandBuilder()
+
+                        slashBuilder.setName(cmdData.name[0])
+                            .setDescription(description)
+
+                        args.forEach(arg =>
+                            slashBuilder.addStringOption(option =>
+                                option.setName(arg.name.toLowerCase())
+                                    .setDescription(arg.name)
+                                    .setRequired(arg.required)
+                            )
+                        )
+
+                        slashBuilder.addStringOption(option =>
+                            option.setName('extra')
+                                .setDescription('Extra payload you can specify for the command.')
+                                .setRequired(false)
+                        )
+
+                        slashBuilder.addAttachmentOption(option =>
+                            option.setName('attachment')
+                                .setDescription('An attachment you can specify for the command.')
+                                .setRequired(false)
+                        )
+
+                        poopy.slashBuilders[cmd] = slashBuilder
+                    }
                 }
             })
         })
@@ -3876,12 +3979,9 @@ class Poopy {
             return 0
         })
 
-        poopy.slashCommands = [
-            require('./slashcmds/main/say')
-        ]
-
         poopy.functions.updateSlashCommands = async function () {
-            await poopy.vars.rest.put(poopy.modules.Routes.applicationCommands(poopy.bot.user.id), { body: poopy.slashCommands.map(scmd => scmd.info) }).catch(() => { })
+            var slashBuilders = Object.values(poopy.slashBuilders)
+            await poopy.vars.rest.put(poopy.modules.Routes.applicationCommands(poopy.bot.user.id), { body: slashBuilders }).catch((e) => console.log(e))
         }
 
         poopy.functions.findCommand = function (name) {
@@ -4046,7 +4146,7 @@ class Poopy {
                 return
             }
 
-            await poopy.functions.gatherData(msg).catch(() => { })
+            await poopy.functions.gatherData(msg).catch((e) => console.log(e))
             msg.channel.onsfw = msg.channel.nsfw
             msg.channel.nsfw = poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['nsfw']
             setTimeout(() => {
@@ -4568,6 +4668,7 @@ class Poopy {
                     ''
                 ]
 
+                // else if else if selselaesl seif sia esla fiwsa eaisf afis asifasfd
                 if (await msg.fetchReference().catch(() => { })) {
                     var resp = await poopy.functions.cleverbot(msg.content, msg.author.id).catch(() => { })
 
@@ -4701,10 +4802,108 @@ class Poopy {
 
         poopy.callbacks.interactionCallback = async interaction => {
             if (interaction.isCommand && interaction.isCommand()) {
-                var findCmd = poopy.slashCommands.find(cmd => cmd.info.name === interaction.commandName)
+                var findCmd = poopy.functions.findCommand(interaction.commandName)
 
                 if (findCmd) {
-                    await findCmd.execute.call(this, interaction).catch((e) => console.log(e))
+                    var cmdargs = findCmd.args
+
+                    var prefix = poopy.data['guild-data'][interaction.guild.id]['prefix']
+                    var indexcontent = []
+                    var specicontent = []
+
+                    var extracontent = interaction.options.getString('extra') ?? ''
+
+                    for (var { name, value } of interaction.options.data) {
+                        var cmdarg = cmdargs.find(arg => arg.name == name)
+                        if (cmdarg) {
+                            if (cmdarg.specifarg) {
+                                specicontent.push(`-${name} ${value}`)
+                            } else {
+                                indexcontent.push(value)
+                            }
+                        }
+                    }
+
+                    indexcontent = indexcontent.join(' ')
+                    specicontent = specicontent.join(' ')
+
+                    var content = [interaction.commandName]
+
+                    if (indexcontent) content.push(indexcontent)
+                    if (specicontent) content.push(specicontent)
+                    if (extracontent) content.push(extracontent)
+
+                    content = content.join(' ')
+
+                    interaction.deferReply()
+
+                    var reply = interaction.reply
+                    var editReply = interaction.editReply
+
+                    interaction.replied = false
+                    interaction.reply = async function (payload) {
+                        var interaction = this
+
+                        var message = await (interaction.replied ? reply : editReply).call(interaction, payload)
+                        interaction.replied = true
+
+                        return message
+                    }
+
+                    interaction.content = `${prefix}${content}`
+                    interaction.author = interaction.user
+                    interaction.bot = false
+                    interaction.attachments = new Map()
+                    interaction.embeds = []
+                    interaction.stickers = new Map()
+                    interaction.mentions = {
+                        users: {
+                            get: () => { },
+                            find: () => { },
+                            forEach: () => { },
+                            map: () => { },
+                            size: 0
+                        },
+                        members: {
+                            get: () => { },
+                            find: () => { },
+                            forEach: () => { },
+                            map: () => { },
+                            size: 0
+                        },
+                        roles: {
+                            get: () => { },
+                            find: () => { },
+                            forEach: () => { },
+                            map: () => { },
+                            size: 0
+                        }
+                    }
+
+                    interaction.react = async () => { }
+                    interaction.delete = async () => { }
+                    interaction.fetchWebhook = async () => { }
+                    interaction.fetchReference = async () => { }
+                    interaction.createReactionCollector = () => {
+                        return {
+                            on: () => { },
+                            once: () => { },
+                            resetTimer: () => { },
+                            stop: () => { }
+                        }
+                    }
+                    interaction.createMessageComponentCollector = () => {
+                        return {
+                            on: () => { },
+                            once: () => { },
+                            resetTimer: () => { },
+                            stop: () => { }
+                        }
+                    }
+
+                    await poopy.callbacks.messageCallback(interaction).catch(() => { })
+
+                    if (!interaction.replied) interaction.deleteReply().catch(() => { })
                 }
             }
         }

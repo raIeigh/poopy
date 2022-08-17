@@ -1,5 +1,6 @@
 module.exports = {
     name: ['transition'],
+    args: [{"name":"transition","required":false,"specifarg":false},{"name":"file","required":false,"specifarg":false},{"name":"file2","required":true,"specifarg":false},{"name":"duration","required":false,"specifarg":true},{"name":"waituntilend","required":false,"specifarg":true}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -225,7 +226,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'transition {transition (default is fade)} <file> <file2> [-duration <seconds (max 10)>] [-waituntilend]',
+        name: 'transition {transition (default is fade)} {file} <file2> [-duration <seconds (max 10)>] [-waituntilend]',
         value: 'Does a transition between the first file and the second one, 0 duration means no transition. A list of transitions can be found here, including random: https://trac.ffmpeg.org/wiki/Xfade'
     },
     cooldown: 2500,

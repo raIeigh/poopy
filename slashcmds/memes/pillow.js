@@ -52,7 +52,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'pillow/bodypillow <file>',
+        name: 'pillow/bodypillow {file}',
         value: 'Creates a pillow with the file.'
     },
     cooldown: 2500,

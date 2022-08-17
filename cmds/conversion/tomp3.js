@@ -1,5 +1,6 @@
 module.exports = {
     name: ['tomp3', 'toaudio', 'tosound'],
+    args: [{"name":"video","required":true,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 

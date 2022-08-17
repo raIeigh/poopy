@@ -1,5 +1,6 @@
 module.exports = {
     name: ['hsl', 'hsv'],
+    args: [{"name":"hue","required":false,"specifarg":false},{"name":"saturation","required":false,"specifarg":false},{"name":"lightness","required":false,"specifarg":false},{"name":"file","required":false,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -55,7 +56,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'hsl/hsv [hue (from -360 to 360)] [saturation (from -10 to 10)] [lightness (from -10 to 10)] <file>',
+        name: 'hsl/hsv [hue (from -360 to 360)] [saturation (from -10 to 10)] [lightness (from -10 to 10)] {file}',
         value: "Changes the file's hue, saturation and lightness values."
     },
     cooldown: 2500,

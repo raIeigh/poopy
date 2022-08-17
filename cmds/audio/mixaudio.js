@@ -1,5 +1,6 @@
 module.exports = {
     name: ['mixaudio', 'mixsound', 'mixmusic'],
+    args: [{"name":"file","required":false,"specifarg":false},{"name":"audio","required":false,"specifarg":false},{"name":"offset","required":false,"specifarg":true},{"name":"waituntilend","required":false,"specifarg":true}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -107,7 +108,7 @@ module.exports = {
             await poopy.functions.execPromise(
                 filetype.mime.startsWith('image') ?
                 `ffmpeg -stream_loop -1 -i ${filepath}/${filename} -itsoffset ${offset} -i ${filepath}/${filename2} -filter_complex "[0:v]scale=ceil(iw/2)*2:ceil(ih/2)*2[v]" -map "[v]" -map 1:a -preset ${poopy.functions.findpreset(args)} -c:v libx264 -tune stillimage -c:a aac -pix_fmt yuv420p -shortest -t ${duration2 + offset} ${filepath}/output.mp4` : !audio ? `ffmpeg -i ${filepath}/${filename} -itsoffset ${offset} -i ${filepath}/${filename2} -filter_complex "[0:v]scale=ceil(iw/2)*2:ceil(ih/2)*2[v]" -map "[v]" -map 1:a -c:v libx264 -tune stillimage -c:a aac -pix_fmt yuv420p -shortest -t ${duration} ${filepath}/output.mp4` :
-                `ffmpeg -i ${filepath}/${filename} -i ${filepath}/${filename2} ${offset > 0 ? `-f lavfi -t ${offset} -i anullsrc=r=48000 ` : ''}-filter_complex "${offset > 0 ? `[1:a]aresample=44100[silaud];[2:a][silaud]concat=a=1:v=0[aud];` : ''}[0:a][${offset > 0 ? 'aud' : '1:a'}]amix=inputs=2:duration=longest[a]" ${!(filetype.mime.startsWith('audio')) ? '-map 0:v ' : ''}-map "[a]" -preset ${poopy.functions.findpreset(args)} ${!(filetype.mime.startsWith('audio')) ? '-c:v libx264 -pix_fmt yuv420p ' : ''} -shortest -t ${duration} ${filepath}/output.${!(filetype.mime.startsWith('audio')) ? 'mp4' : 'mp3'}`
+                `ffmpeg -i ${filepath}/${filename} -i ${filepath}/${filename2} ${offset > 0 ? `-f lavfi -t ${offset} -i anullsrc=r=48000 ` : ''}-filter_complex "${offset > 0 ? `[1:a]aresample=44100[silaud];[2:a][silaud]concat=a=1:v=0[aud];` : ''}[0:a][${offset > 0 ? 'aud' : '1:a'}]amix=inputs=2:duration=longest[a]" ${!(filetype.mime.startsWith('audio')) ? '-map 0:v ' : ''}-map "[a]" -preset ${poopy.functions.findpreset(args)} ${!(filetype.mime.startsWith('audio')) ? '-c:v libx264 -pix_fmt yuv420p ' : ''} -shortest -t ${(duration2 + offset <= duration) && !(args.find(arg => arg === '-waituntilend')) ? duration2 + offset : duration} ${filepath}/output.${!(filetype.mime.startsWith('audio')) ? 'mp4' : 'mp3'}`
             )
             return await poopy.functions.sendFile(msg, filepath, `output.${!(filetype.mime.startsWith('audio')) ? 'mp4' : 'mp3'}`)
         } else {
@@ -117,7 +118,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'mixaudio/mixsound/mixmusic <file> <audio> [-offset <seconds (you can use hh:mm:ss)>]',
+        name: 'mixaudio/mixsound/mixmusic {file} {audio} [-offset <seconds (you can use hh:mm:ss)>] [-waituntilend]',
         value: "Mixes the first file's audio with the second file's audio."
     },
     cooldown: 2500,

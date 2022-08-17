@@ -1,5 +1,6 @@
 module.exports = {
     name: ['bloxys', 'bloxy'],
+    args: [{"name":"name","required":false,"specifarg":false},{"name":"file","required":false,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -54,7 +55,7 @@ module.exports = {
             return
         }
     },
-    help: { name: 'bloxys/bloxy "{name}" <file>', value: 'YOU WON A BLOXY!' },
+    help: { name: 'bloxys/bloxy "{name}" {file}', value: 'YOU WON A BLOXY!' },
     cooldown: 2500,
     type: 'Memes'
 }

@@ -1,5 +1,6 @@
 module.exports = {
     name: ['dalle2'],
+    args: [{"name":"option","required":true,"specifarg":false}],
     execute: async function (msg, args, opts) {
         let poopy = this
 

@@ -1,5 +1,6 @@
 module.exports = {
     name: ['addaudio', 'addsound', 'addmusic'],
+    args: [{"name":"file","required":false,"specifarg":false},{"name":"audio","required":false,"specifarg":false},{"name":"offset","required":false,"specifarg":true},{"name":"waituntilend","required":false,"specifarg":true}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -117,7 +118,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'addaudio/addsound/addmusic <file> <audio> [-offset <seconds (you can use hh:mm:ss)>] [-waituntilend]',
+        name: 'addaudio/addsound/addmusic {file} {audio} [-offset <seconds (you can use hh:mm:ss)>] [-waituntilend]',
         value: "Adds the second file's audio to the first file."
     },
     cooldown: 2500,

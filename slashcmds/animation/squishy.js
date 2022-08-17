@@ -55,7 +55,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'squishy <file> [-duration <seconds (max 10)>]',
+        name: 'squishy {file} [-duration <seconds (max 10)>]',
         value: 'Makes the file squishy.'
     },
     cooldown: 2500,

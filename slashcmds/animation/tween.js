@@ -153,7 +153,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'tween <file> [circle options] [-(start/end)size <x> <y>] [-origin <x (left/center/right)> <y (top/middle/bottom)>] [-(start/end)offset <x> <y>] [-(start/end)angle <degrees>] [-fitangle] [-easing <style>]',
+        name: 'tween {file} [circle options] [-(start/end)size <x> <y>] [-origin <x (left/center/right)> <y (top/middle/bottom)>] [-(start/end)offset <x> <y>] [-(start/end)angle <degrees>] [-fitangle] [-easing <style>]',
         value: 'Allows you to tween the file in a transparent background in any way possible! A least of easings can be found at https://easings.net/ (also including linear)'
     },
     cooldown: 2500,

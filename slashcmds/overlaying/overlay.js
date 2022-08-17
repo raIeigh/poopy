@@ -155,7 +155,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'overlay <file> <overlay> [-origin <x (left/center/right)> <y (top/middle/bottom)>] [-offsetpos <x> <y>] [-width <pixels or percentage>] [-height <pixels or percentage>] [-keepaspectratio <mode (increase or decrease)>]',
+        name: 'overlay {file} <overlay> [-origin <x (left/center/right)> <y (top/middle/bottom)>] [-offsetpos <x> <y>] [-width <pixels or percentage>] [-height <pixels or percentage>] [-keepaspectratio <mode (increase or decrease)>]',
         value: 'Adds the specified overlay to the file.'
     },
     cooldown: 2500,

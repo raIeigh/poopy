@@ -1,5 +1,6 @@
 module.exports = {
     name: ['burningtext', 'flamingtext', 'cooltext'],
+    args: [{"name":"prompt","required":true,"specifarg":false},{"name":"fontsize","required":false,"specifarg":true},{"name":"origin","required":false,"specifarg":true},{"name":"id","required":false,"specifarg":true}],
     execute: async function (msg, args) {
         let poopy = this
 

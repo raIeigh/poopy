@@ -70,7 +70,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'notclickbait/redcircle [-random] <file>',
+        name: 'notclickbait/redcircle [-random] {file}',
         value: 'Real.\n' +
             'Example usage: p:notclickbait -random https://imagesvc.meredithcorp.io/v3/mm/image?q=85&c=sc&poi=face&w=2000&h=1000&url=https%3A%2F%2Fstatic.onecms.io%2Fwp-content%2Fuploads%2Fsites%2F9%2F2013%2F12%2F06%2F201307-xl-spice-roasted-pork-tenderloin-2000.jpg'
     },

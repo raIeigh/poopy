@@ -1,5 +1,6 @@
 module.exports = {
     name: ['sayori'],
+    args: [{"name":"phraseChoice","required":false,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 

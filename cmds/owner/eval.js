@@ -1,5 +1,6 @@
 module.exports = {
     name: ['eval', 'execute'],
+    args: [{"name":"code","required":false,"specifarg":false}],
     execute: async function (msg, args, opts) {
         let poopy = this
 

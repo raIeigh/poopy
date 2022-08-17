@@ -1,5 +1,6 @@
 module.exports = {
     name: ['stuff'],
+    args: [{"name":"text","required":false,"specifarg":false},{"name":"file","required":false,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -113,7 +114,7 @@ module.exports = {
             return
         }
     },
-    help: { name: 'stuff "{text}" <file>', value: "I'm stuff" },
+    help: { name: 'stuff "{text}" {file}', value: "I'm stuff" },
     cooldown: 2500,
     type: 'Captions'
 }

@@ -1,5 +1,6 @@
 module.exports = {
     name: ['setstatus', 'ss'],
+    args: [{"name":"changes","required":true,"specifarg":false},{"name":"type","required":true,"specifarg":false},{"name":"statusMessage","required":true,"specifarg":false}],
     execute: async function (msg, args, opts) {
         let poopy = this
 
@@ -62,7 +63,7 @@ module.exports = {
         };
     },
     help: {
-        name: 'setstatus/ss <changes? (false or true)> <type (STREAMING, WATCHING, PLAYING, LISTENING or COMPETING)> <statusMessage>',
+        name: 'setstatus/ss <changes (false or true)> <type (STREAMING, WATCHING, PLAYING, LISTENING or COMPETING)> <statusMessage>',
         value: 'Allows Poopy to have a custom status.\n' +
             'Example usage: p:setstatus false STREAMING you, idiot.'
     },

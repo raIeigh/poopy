@@ -57,7 +57,7 @@ module.exports = {
             return
         }
     },
-    help: { name: 'desktopdestroy/desktopdestroyer <file>', value: 'death' },
+    help: { name: 'desktopdestroy/desktopdestroyer {file}', value: 'death' },
     cooldown: 2500,
     type: 'Memes'
 }

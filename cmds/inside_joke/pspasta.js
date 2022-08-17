@@ -1,5 +1,6 @@
 module.exports = {
   name: ['pspasta', 'phexoniastudiospasta'],
+  args: [],
   execute: async function (msg) {
     let poopy = this
 

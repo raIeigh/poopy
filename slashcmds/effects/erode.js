@@ -61,7 +61,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'erode/corrode <file> [-strength <number (max 100)>]',
+        name: 'erode/corrode {file} [-strength <number (max 100)>]',
         value: "Erodes the file's colors. Default strength is 1."
     },
     cooldown: 2500,

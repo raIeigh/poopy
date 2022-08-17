@@ -96,7 +96,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'duration/stretch <seconds (max 60)> <file>',
+        name: 'duration/stretch <seconds (max 60)> {file}',
         value: 'Stretches the file to match the supplied duration in seconds.'
     },
     cooldown: 2500,

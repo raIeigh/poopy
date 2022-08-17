@@ -1,5 +1,6 @@
 module.exports = {
     name: ['country', 'flag'],
+    args: [{"name":"file","required":false,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -51,7 +52,7 @@ module.exports = {
             return
         }
     },
-    help: { name: 'country/flag <file>', value: "It's my Mainland!" },
+    help: { name: 'country/flag {file}', value: "It's my Mainland!" },
     cooldown: 2500,
     type: 'Memes'
 }

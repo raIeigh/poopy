@@ -58,7 +58,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'srlogo/sr/soupremastered <file>',
+        name: 'srlogo/sr/soupremastered {file}',
         value: 'Applies the Soup Remastered Logo to the file.'
     },
     cooldown: 2500,

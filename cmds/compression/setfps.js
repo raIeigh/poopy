@@ -1,5 +1,6 @@
 module.exports = {
     name: ['setfps'],
+    args: [{"name":"fps","required":true,"specifarg":false},{"name":"file","required":false,"specifarg":false},{"name":"changespeed","required":false,"specifarg":true}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -56,7 +57,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'setfps <fps> <video/gif> [-changespeed]',
+        name: 'setfps <fps> {file} [-changespeed]',
         value: "Sets the file's FPS to <fps>."
     },
     cooldown: 2500,

@@ -1,6 +1,6 @@
 module.exports = {
-    name: ['gif', 'tenor'],
-    args: [{"name":"query","required":true,"specifarg":false},{"name":"page","required":false,"specifarg":true}],
+    name: ['bing', 'bingimage'],
+    args: [{ "name": "query", "required": true, "specifarg": false }, { "name": "page", "required": false, "specifarg": true }],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -17,23 +17,15 @@ module.exports = {
             page = isNaN(Number(args[pageindex + 1])) ? 1 : Number(args[pageindex + 1]) <= 1 ? 1 : Math.round(Number(args[pageindex + 1])) || 1
             args.splice(pageindex, 2)
         }
+
         var search = args.slice(1).join(" ");
 
-        var res = await poopy.modules.axios.request(`https://g.tenor.com/v1/search?q=${encodeURIComponent(search)}&key=${process.env.TENORKEY}&limit=100&contentfilter=${msg.channel.nsfw ? 'off' : 'medium'}`).catch(() => { })
+        var urls = await poopy.functions.fetchImages(search, true, !msg.channel.nsfw).catch(() => { })
 
-        if (!res) {
+        if (!urls) {
             await msg.channel.send('Error.').catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
-        }
-
-        var results = res.data.results
-
-        var urls = [];
-
-        for (var i in results) {
-            var result = results[i]
-            urls.push(result.media[0].gif.url)
         }
 
         if (!urls.length) {
@@ -49,13 +41,13 @@ module.exports = {
         await poopy.functions.navigateEmbed(msg.channel, async (page) => {
             poopy.functions.addLastUrl(msg, urls[page - 1])
 
-            if (poopy.config.textEmbeds) return `${urls[page - 1]}\n\nGIF ${page}/${urls.length}`
+            if (poopy.config.textEmbeds) return `${urls[page - 1]}\n\nImage ${page}/${urls.length}`
             else return {
-                "title": "Tenor GIF Search Results For " + search,
+                "title": "Bing Image Search Results For " + search,
                 "description": "Use the arrows to navigate.",
                 "color": 0x472604,
                 "footer": {
-                    "text": "GIF " + page + "/" + urls.length
+                    "text": "Image " + page + "/" + urls.length
                 },
                 "image": {
                     "url": urls[page - 1]
@@ -80,11 +72,10 @@ module.exports = {
         ], number, undefined, undefined, undefined, msg)
     },
     help: {
-        name: 'gif/tenor <query> [-page <number>]',
-        value: 'Search for a random GIF in Tenor.\n' +
-            'Example usage: p:gif house exploding -page 3'
+        name: 'bing/bingimage <query> [-page <number>]',
+        value: 'Search for a random image in Bing.'
     },
     cooldown: 2500,
     type: 'Fetching',
-    envRequired: ['TENORKEY']
+    envRequired: ['RAPIDAPIKEY']
 }

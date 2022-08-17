@@ -104,7 +104,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'snapchat "{text}" <file> [-size <multiplier (from 0.5 to 5)>]',
+        name: 'snapchat "{text}" {file} [-size <multiplier (from 0.5 to 5)>]',
         value: 'Adds a Snapchat caption to the file.'
     },
     cooldown: 2500,

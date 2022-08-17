@@ -1,5 +1,6 @@
 module.exports = {
     name: ['pixelate'],
+    args: [{"name":"file","required":false,"specifarg":false},{"name":"size","required":false,"specifarg":true}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -60,7 +61,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'pixelate <file> [-size <pixels>]',
+        name: 'pixelate {file} [-size <pixels>]',
         value: 'Pixelates the file.'
     },
     cooldown: 2500,

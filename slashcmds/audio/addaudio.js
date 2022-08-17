@@ -117,7 +117,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'addaudio/addsound/addmusic <file> <audio> [-offset <seconds (you can use hh:mm:ss)>] [-waituntilend]',
+        name: 'addaudio/addsound/addmusic {file} <audio> [-offset <seconds (you can use hh:mm:ss)>] [-waituntilend]',
         value: "Adds the second file's audio to the first file."
     },
     cooldown: 2500,

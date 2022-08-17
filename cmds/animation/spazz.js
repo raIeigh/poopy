@@ -1,5 +1,6 @@
 module.exports = {
     name: ['spazz', 'shake'],
+    args: [{"name":"file","required":false,"specifarg":false},{"name":"radius","required":false,"specifarg":true},{"name":"seed","required":false,"specifarg":true},{"name":"rescale","required":false,"specifarg":true}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -59,7 +60,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'spazz/shake <file> [-radius <number>] [-seed <number>] [-rescale]',
+        name: 'spazz/shake {file} [-radius <number>] [-seed <number>] [-rescale]',
         value: 'Makes the file spazz out.'
     },
     cooldown: 2500,

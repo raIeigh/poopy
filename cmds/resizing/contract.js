@@ -1,5 +1,6 @@
 module.exports = {
     name: ['contract'],
+    args: [{"name":"multiplier","required":false,"specifarg":false},{"name":"file","required":false,"specifarg":false},{"name":"origin","required":false,"specifarg":true}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -73,7 +74,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'contract [multiplier (from 1 to 6)] <file> [-origin <x (left/center/right)> <y (top/middle/bottom)>]',
+        name: 'contract [multiplier (from 1 to 6)] {file} [-origin <x (left/center/right)> <y (top/middle/bottom)>]',
         value: 'Contracts the width and height of the file.'
     },
     cooldown: 2500,

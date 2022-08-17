@@ -94,7 +94,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'hd <file> [-flags <algorithm>]',
+        name: 'hd {file} [-flags <algorithm>]',
         value: 'Makes the file Ultra HD 4k 2160p Blu-ray. A list of flags can be found at https://ffmpeg.org/ffmpeg-scaler.html#Scaler-Options'
     },
     cooldown: 2500,

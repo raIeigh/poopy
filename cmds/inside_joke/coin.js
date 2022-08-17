@@ -1,5 +1,6 @@
 module.exports = {
     name: ['coin'],
+    args: [{"name":"file","required":false,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -66,7 +67,7 @@ module.exports = {
             return
         }
     },
-    help: { name: 'coin <file>', value: 'Make your own currency!' },
+    help: { name: 'coin {file}', value: 'Make your own currency!' },
     cooldown: 2500,
     type: 'Inside Joke'
 }

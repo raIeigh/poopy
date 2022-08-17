@@ -1,5 +1,6 @@
 module.exports = {
     name: ['frames', 'extractframes', 'getframes'],
+    args: [{"name":"file","required":false,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -88,7 +89,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'frames/extractframes/getframes <video/gif>',
+        name: 'frames/extractframes/getframes {file}',
         value: 'Extracts all of the frames in the video/GIF and archives them in a ZIP file.'
     },
     cooldown: 2500,

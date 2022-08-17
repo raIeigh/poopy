@@ -58,7 +58,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'emotegame/emote <file>',
+        name: 'emotegame/emote {file}',
         value: 'Applies the Emote Game Logo to the file.'
     },
     cooldown: 2500,

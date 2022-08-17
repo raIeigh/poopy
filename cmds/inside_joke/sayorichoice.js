@@ -1,5 +1,6 @@
 module.exports = {
   name: ['sayorichoice', 'schoice'],
+  args: [{"name":"blueChoice","required":false,"specifarg":false},{"name":"redChoice","required":false,"specifarg":false}],
   execute: async function (msg, args) {
     let poopy = this
 

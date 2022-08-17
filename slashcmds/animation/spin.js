@@ -41,7 +41,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'spin <file> [-duration <seconds (max 10)>]',
+        name: 'spin {file} [-duration <seconds (max 10)>]',
         value: 'Continuously spins the file.'
     },
     cooldown: 2500,

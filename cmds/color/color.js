@@ -1,5 +1,6 @@
 module.exports = {
     name: ['color', 'colorlight'],
+    args: [{"name":"r","required":false,"specifarg":false},{"name":"g","required":false,"specifarg":false},{"name":"b","required":false,"specifarg":false},{"name":"file","required":false,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -55,7 +56,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'color/colorlight [r] [g] [b] <file>',
+        name: 'color/colorlight [r] [g] [b] {file}',
         value: 'Gives the file a new color depending on the RGB values, focusing more on lighter tones.'
     },
     cooldown: 2500,

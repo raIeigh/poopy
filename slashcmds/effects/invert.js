@@ -52,7 +52,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'invert/negate/negative <file>',
+        name: 'invert/negate/negative {file}',
         value: "Inverts the file's colors."
     },
     cooldown: 2500,

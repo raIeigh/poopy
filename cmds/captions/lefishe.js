@@ -1,5 +1,6 @@
 module.exports = {
     name: ['lefishe', 'fishe'],
+    args: [{"name":"name","required":false,"specifarg":false},{"name":"file","required":false,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -92,7 +93,7 @@ module.exports = {
             return
         }
     },
-    help: { name: 'lefishe/fishe "{name}" <file>', value: 'au chocolat.' },
+    help: { name: 'lefishe/fishe "{name}" {file}', value: 'au chocolat.' },
     cooldown: 2500,
     type: 'Captions'
 }

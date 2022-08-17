@@ -54,7 +54,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'melt/trippy <file> [-decay <percentage>] [-loop]',
+        name: 'melt/trippy {file} [-decay <percentage>] [-loop]',
         value: 'Adds a trippy melting effect to the file. Default decay is 95.'
     },
     cooldown: 2500,

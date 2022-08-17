@@ -1,5 +1,6 @@
 module.exports = {
     name: ['newtext', 'newcaption'],
+    args: [{"name":"font","required":true,"specifarg":false},{"name":"text","required":false,"specifarg":false},{"name":"maxwidth","required":false,"specifarg":true},{"name":"color","required":false,"specifarg":true},{"name":"bgcolor","required":false,"specifarg":true},{"name":"resetcolor","required":false,"specifarg":true},{"name":"padding","required":false,"specifarg":true},{"name":"origin","required":false,"specifarg":true}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -161,7 +162,7 @@ module.exports = {
         })
     },
     help: {
-        name: 'newtext/newcaption <font> "{text}" [-maxwidth <pixels>] [(-color | -bgcolor) <r> <g> <b> <a>] [-resetcolor] [-padding <top> <bottom> <left> <right>] [-origin <x (left/center/right)> <y (top/middle/bottom)>]',
+        name: 'newtext/newcaption <font> "{text}" [-maxwidth <pixels>] [-(color/bgcolor) <r> <g> <b> <a>] [-resetcolor] [-padding <top> <bottom> <left> <right>] [-origin <x (left/center/right)> <y (top/middle/bottom)>]',
         value: 'Creates a new caption from the specified options and colors.\n' +
             'Pro Tip: Using "<Img={url}>" allows you to use custom emojis in your captions!'
     },

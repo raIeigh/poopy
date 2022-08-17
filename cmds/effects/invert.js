@@ -1,5 +1,6 @@
 module.exports = {
     name: ['invert', 'negate', 'negative'],
+    args: [{"name":"file","required":false,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -52,7 +53,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'invert/negate/negative <file>',
+        name: 'invert/negate/negative {file}',
         value: "Inverts the file's colors."
     },
     cooldown: 2500,

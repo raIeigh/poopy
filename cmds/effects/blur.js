@@ -1,5 +1,6 @@
 module.exports = {
     name: ['blur'],
+    args: [{"name":"file","required":false,"specifarg":false},{"name":"radius","required":false,"specifarg":true},{"name":"power","required":false,"specifarg":true}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -65,7 +66,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'blur <file> [-radius <pixels>] [-power <number>]',
+        name: 'blur {file} [-radius <pixels>] [-power <number>]',
         value: 'Blurs the file.'
     },
     cooldown: 2500,

@@ -104,7 +104,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'spectrogram <file> [-color <mode>] [-scale <scale>] [-saturation <number (from -10 to 10)>]',
+        name: 'spectrogram {file} [-color <mode>] [-scale <scale>] [-saturation <number (from -10 to 10)>]',
         value: 'Displays the spectrogram of the audio file. A list of options for color and scale can be found at https://ffmpeg.org/ffmpeg-filters.html#showspectrumpic'
     },
     cooldown: 2500,

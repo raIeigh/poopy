@@ -58,7 +58,7 @@ module.exports = {
             return
         }
     },
-    help: { name: 'crunch <file>', value: "Lowers the file's quality." },
+    help: { name: 'crunch {file}', value: "Lowers the file's quality." },
     cooldown: 2500,
     type: 'Compression'
 }

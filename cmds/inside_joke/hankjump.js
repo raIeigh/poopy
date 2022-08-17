@@ -1,5 +1,6 @@
 module.exports = {
     name: ['hankjump', 'hank'],
+    args: [{"name":"file","required":false,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -37,7 +38,7 @@ module.exports = {
             return
         }
     },
-    help: { name: 'hankjump/hank <file>', value: 'hank jumping gif' },
+    help: { name: 'hankjump/hank {file}', value: 'hank jumping gif' },
     cooldown: 2500,
     type: 'Inside Joke'
 }

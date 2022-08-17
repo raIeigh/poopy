@@ -1,5 +1,6 @@
 module.exports = {
     name: ['distort', 'earrape', 'bassboost'],
+    args: [{"name":"distort","required":false,"specifarg":false},{"name":"file","required":false,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -54,7 +55,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'distort/earrape/bassboost {distort (from 0 to 100)} <video/audio>',
+        name: 'distort/earrape/bassboost {distort (from 0 to 100)} {file}',
         value: 'Distorts the audio by {distort}.'
     },
     cooldown: 2500,

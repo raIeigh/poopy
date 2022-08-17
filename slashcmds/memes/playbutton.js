@@ -61,7 +61,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'playbutton/play/pb <file>',
+        name: 'playbutton/play/pb {file}',
         value: 'Adds a play button to the file for epic pranks!!!'
     },
     cooldown: 2500,

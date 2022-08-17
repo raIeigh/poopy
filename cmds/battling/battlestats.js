@@ -1,5 +1,6 @@
 module.exports = {
     name: ['battlestats', 'userstats'],
+    args: [{"name":"user","required":false,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 

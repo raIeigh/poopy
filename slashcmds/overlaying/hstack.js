@@ -60,7 +60,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'hstack <file> [-stack <number (from 1 to 10)>]',
+        name: 'hstack {file} [-stack <number (from 1 to 10)>]',
         value: 'Stacks the file horizontally.'
     },
     cooldown: 2500,

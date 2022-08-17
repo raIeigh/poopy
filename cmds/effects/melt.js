@@ -1,5 +1,6 @@
 module.exports = {
     name: ['melt', 'trippy'],
+    args: [{"name":"file","required":false,"specifarg":false},{"name":"decay","required":false,"specifarg":true},{"name":"loop","required":false,"specifarg":true}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -54,7 +55,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'melt/trippy <file> [-decay <percentage>] [-loop]',
+        name: 'melt/trippy {file} [-decay <percentage>] [-loop]',
         value: 'Adds a trippy melting effect to the file. Default decay is 95.'
     },
     cooldown: 2500,

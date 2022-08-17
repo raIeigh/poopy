@@ -77,7 +77,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'chromakeybg/chromabg <file> [-color <r> <g> <b>] [-similarity (from 0 to 100)] [-blend (from 0 to 100)]',
+        name: 'chromakeybg/chromabg {file} [-color <r> <g> <b>] [-similarity (from 0 to 100)] [-blend (from 0 to 100)]',
         value: "Tries to remove the file's background with chroma key."
     },
     cooldown: 2500,

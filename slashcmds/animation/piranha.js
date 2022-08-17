@@ -45,7 +45,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'piranha/appear <file> [-duration <seconds (max 20)>]',
+        name: 'piranha/appear {file} [-duration <seconds (max 20)>]',
         value: 'Makes the file appear like the piranhas in Super Mario.'
     },
     cooldown: 2500,

@@ -90,7 +90,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'outline/border <file> [-radius <pixels>] [-power <number>] [-color <r> <g> <b>] [-repeat <number (max 100)>]',
+        name: 'outline/border {file} [-radius <pixels>] [-power <number>] [-color <r> <g> <b>] [-repeat <number (max 100)>]',
         value: 'Adds an outline to the file, only works with transparent ones.'
     },
     cooldown: 2500,

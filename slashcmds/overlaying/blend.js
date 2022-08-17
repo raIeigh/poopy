@@ -206,7 +206,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'blend <file> <blend> [-mode <mode>] [overlay options]',
+        name: 'blend {file} <blend> [-mode <mode>] [overlay options]',
         value: 'Blends the first file to the second. A list of modes can be found at https://trac.ffmpeg.org/wiki/Blend'
     },
     cooldown: 2500,

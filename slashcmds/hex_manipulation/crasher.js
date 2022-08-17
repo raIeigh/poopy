@@ -47,7 +47,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'crasher/crashvideo <file> (moderator only)',
+        name: 'crasher/crashvideo {file} (moderator only)',
         value: "Manipulates the file to make it a WebM crasher."
     },
     cooldown: 2500,

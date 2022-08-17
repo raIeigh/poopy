@@ -60,7 +60,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'vstack <file> [-stack <number (from 1 to 10)>]',
+        name: 'vstack {file} [-stack <number (from 1 to 10)>]',
         value: 'Stacks the file vertically.'
     },
     cooldown: 2500,

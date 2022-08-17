@@ -1,5 +1,6 @@
 module.exports = {
     name: ['bisexual', 'bi'],
+    args: [{"name":"file","required":false,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -52,7 +53,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'bisexual/bi <file>',
+        name: 'bisexual/bi {file}',
         value: 'Adds bisexual lighting to the image.'
     },
     cooldown: 2500,

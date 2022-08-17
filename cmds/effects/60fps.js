@@ -1,5 +1,6 @@
 module.exports = {
     name: ['60fps'],
+    args: [{"name":"file","required":false,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -46,7 +47,7 @@ module.exports = {
         }
     },
     help: {
-        name: '60fps <file>',
+        name: '60fps {file}',
         value: 'Makes the file 60 FPS by using interpolation.'
     },
     cooldown: 2500,

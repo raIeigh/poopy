@@ -1,5 +1,6 @@
 module.exports = {
     name: ['setcrf'],
+    args: [{"name":"crf","required":true,"specifarg":false},{"name":"file","required":false,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -60,7 +61,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'setcrf <crf (from 0 to 51)> <file>',
+        name: 'setcrf <crf (from 0 to 51)> {file}',
         value: "Sets the file's CRF to <crf>. A higher CRF means worse quality."
     },
     cooldown: 2500,

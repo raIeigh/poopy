@@ -101,7 +101,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'hzoomin [multiplier (from 1 to 6)] <file> [-origin <x (left/center/right)> <y (top/middle/bottom)>] [-flags <algorithm>]',
+        name: 'hzoomin [multiplier (from 1 to 6)] {file} [-origin <x (left/center/right)> <y (top/middle/bottom)>] [-flags <algorithm>]',
         value: 'Zooms the file in horizontally. A list of flags can be found at https://ffmpeg.org/ffmpeg-scaler.html#Scaler-Options'
     },
     cooldown: 2500,

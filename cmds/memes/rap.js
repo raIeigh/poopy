@@ -1,5 +1,6 @@
 module.exports = {
     name: ['rap', 'fnf', 'friday'],
+    args: [{"name":"file","required":false,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -126,7 +127,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'rap/fnf/friday <file>',
+        name: 'rap/fnf/friday {file}',
         value: "when i'm funny Rapping !!!"
     },
     cooldown: 2500,

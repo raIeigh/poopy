@@ -1,5 +1,6 @@
 module.exports = {
     name: ['favorite'],
+    args: [{"name":"file","required":false,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -58,7 +59,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'favorite <file>',
+        name: 'favorite {file}',
         value: 'Your GIF was favorited over 1000 times!'
     },
     cooldown: 2500,

@@ -371,7 +371,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'ytp <file> [-clips <number (max 200)>] [-repetitions <number (max 10)>] [-norandomize]',
+        name: 'ytp {file} [-clips <number (max 200)>] [-repetitions <number (max 10)>] [-norandomize]',
         value: 'Turns the file into a YTP. Default clips is 10 and repetitions is 1.'
     },
     cooldown: 2500,

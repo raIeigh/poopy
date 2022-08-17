@@ -46,7 +46,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'phexoutro/phexoniaoutro <file>',
+        name: 'phexoutro/phexoniaoutro {file}',
         value: "Ends the file with Phexonia's outro."
     },
     cooldown: 2500,

@@ -129,13 +129,13 @@ async function start() {
     
                 id: 'apimessage',
     
-                delete: async () => undefined,
+                delete: async () => { },
     
-                react: async () => undefined,
+                react: async () => { },
     
-                fetchReference: async () => undefined,
+                fetchReference: async () => { },
     
-                fetchWebhook: async () => undefined,
+                fetchWebhook: async () => { },
     
                 createReactionCollector: () => {
                     return {
@@ -158,6 +158,10 @@ async function start() {
                 bot: false,
     
                 attachments: new Map(),
+
+                embeds: [],
+
+                stickers: new Map(),
     
                 mentions: {
                     users: new Map(),
@@ -183,7 +187,7 @@ async function start() {
             let channel = {
                 isText: () => true,
     
-                sendTyping: async () => undefined,
+                sendTyping: async () => { },
     
                 fetchWebhooks: async () => new Map([['apichannel', channel]]),
     
@@ -609,7 +613,7 @@ async function start() {
     } else {
         tokens = [
             {
-                TOKEN: process.env.POOPYTOKEN2,
+                TOKEN: process.env.SHUGGATOKEN,
                 config: {
                     testing: true,
                     globalPrefix: '2p:',

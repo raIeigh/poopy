@@ -1,11 +1,6 @@
 module.exports = {
-    name: [
-        'dumpy',
-        'twerkmosaic',
-        'amongmosaic',
-        'amongusmosaic',
-        'crewmateamosaic'
-    ],
+    name: ['dumpy', 'twerkmosaic', 'amongmosaic', 'amongusmosaic', 'crewmateamosaic'],
+    args: [{"name":"image","required":true,"specifarg":false},{"name":"resolution","required":false,"specifarg":true}],
     execute: async function (msg, args) {
         let poopy = this
 

@@ -57,7 +57,7 @@ module.exports = {
         }
     },
     help: {
-        name: '8bit/reducecolors <file> [-colors <number (from 1 to 255)>]',
+        name: '8bit/reducecolors {file} [-colors <number (from 1 to 255)>]',
         value: 'Reduces the color range within the file, being able to produce some 8-bit-ish effect when low.'
     },
     cooldown: 2500,

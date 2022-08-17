@@ -1,5 +1,6 @@
 module.exports = {
     name: ['vremove', 'vreversecrop'],
+    args: [{"name":"y","required":true,"specifarg":false},{"name":"h","required":true,"specifarg":false},{"name":"file","required":false,"specifarg":false}],
     execute: async function (msg, args, opts) {
         let poopy = this
 
@@ -85,7 +86,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'vremove/vreversecrop <y> <h> <file>',
+        name: 'vremove/vreversecrop <y> <h> {file}',
         value: 'Removes a portion of the file vertically depending on the Y axis and height.'
     },
     cooldown: 2500,

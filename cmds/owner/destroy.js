@@ -1,5 +1,6 @@
 module.exports = {
     name: ['destroy', 'kill', 'shutdown'],
+    args: [],
     execute: async function (msg, _, opts) {
         let poopy = this
 

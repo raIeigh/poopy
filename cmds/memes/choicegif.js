@@ -1,5 +1,6 @@
 module.exports = {
     name: ['choicegif'],
+    args: [{"name":"name","required":false,"specifarg":false},{"name":"file","required":false,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -448,7 +449,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'choicegif "{name}" <file>',
+        name: 'choicegif "{name}" {file}',
         value: 'Creates one of those "Choose your fighter" gifs depending on the selected image.'
     },
     cooldown: 2500,

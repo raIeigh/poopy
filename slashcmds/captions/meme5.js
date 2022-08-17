@@ -98,7 +98,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'meme5/inspiration "{text}" <file> [-size <multiplier (from 0.5 to 5)>]',
+        name: 'meme5/inspiration "{text}" {file} [-size <multiplier (from 0.5 to 5)>]',
         value: 'Adds a centered inspirational text to the file.'
     },
     cooldown: 2500,

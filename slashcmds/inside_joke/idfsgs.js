@@ -61,7 +61,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'idfsgs <file>',
+        name: 'idfsgs {file}',
         value: 'Applies the IDFSGS Logo to the file.'
     },
     cooldown: 2500,

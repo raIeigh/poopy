@@ -85,7 +85,7 @@ module.exports = {
         }
     },
     help: {
-        name: '<:newpoopy:839191885310066729> hremove/hreversecrop <x> <w> <file>',
+        name: '<:newpoopy:839191885310066729> hremove/hreversecrop <x> <w> {file}',
         value: 'Removes a portion of the file horizontally depending on the X axis and width.'
     },
     cooldown: 2500,

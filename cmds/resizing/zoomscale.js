@@ -1,5 +1,6 @@
 module.exports = {
     name: ['zoomscale'],
+    args: [{"name":"width","required":true,"specifarg":false},{"name":"height","required":true,"specifarg":false},{"name":"file","required":false,"specifarg":false},{"name":"flags","required":false,"specifarg":true},{"name":"origin","required":false,"specifarg":true},{"name":"keepaspectratio","required":false,"specifarg":true}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -122,7 +123,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'zoomscale <width> <height> <file> [-flags <algorithm>] [-origin <x (left/center/right)> <y (top/middle/bottom)>] [-keepaspectratio <mode (increase or decrease)>]',
+        name: 'zoomscale <width> <height> {file} [-flags <algorithm>] [-origin <x (left/center/right)> <y (top/middle/bottom)>] [-keepaspectratio <mode (increase or decrease)>]',
         value: 'Zooms the file to correspond to the specified width and height. A list of flags can be found at https://ffmpeg.org/ffmpeg-scaler.html#Scaler-Options'
     },
     cooldown: 2500,

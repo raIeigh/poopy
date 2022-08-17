@@ -1,5 +1,6 @@
 module.exports = {
     name: ['fixratio', 'fixaspectratio'],
+    args: [{"name":"file","required":false,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -45,7 +46,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'fixratio/fixaspectratio <video/gif>',
+        name: 'fixratio/fixaspectratio {file}',
         value: 'Fixes the aspect ratio in videos or GIFs, like https://cdn.discordapp.com/attachments/760223418968047629/917190253536768000/output.mp4'
     },
     cooldown: 2500,

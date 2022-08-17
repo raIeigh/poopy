@@ -1,5 +1,6 @@
 module.exports = {
     name: ['togif'],
+    args: [{"name":"file","required":false,"specifarg":false},{"name":"duration","required":false,"specifarg":true},{"name":"fps","required":false,"specifarg":true}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -58,7 +59,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'togif <file> [-duration <seconds (max 60)>] [-fps <fps (max 50)>]',
+        name: 'togif {file} [-duration <seconds (max 60)>] [-fps <fps (max 50)>]',
         value: 'Converts the file to GIF. Default duration is 10 and default FPS is 20.'
     },
     cooldown: 2500,

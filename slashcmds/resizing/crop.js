@@ -139,7 +139,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'crop [-x <pixel>] [-y <pixel>] [-w <pixels>] [-h <pixels>] <file>',
+        name: 'crop [-x <pixel>] [-y <pixel>] [-w <pixels>] [-h <pixels>] {file}',
         value: 'Crops the file depending on the XY axes and the width and height.'
     },
     cooldown: 2500,

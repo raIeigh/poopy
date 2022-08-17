@@ -1,5 +1,6 @@
 module.exports = {
     name: ['arabottify'],
+    args: [{"name":"message","required":false,"specifarg":false},{"name":"words","required":false,"specifarg":true},{"name":"noextrawords","required":false,"specifarg":true},{"name":"nopunctuation","required":false,"specifarg":true}],
     execute: async function (msg, args) {
         let poopy = this
 

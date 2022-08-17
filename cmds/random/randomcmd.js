@@ -1,5 +1,6 @@
 module.exports = {
     name: ['randomcmd'],
+    args: [{"name":"args","required":false,"specifarg":false},{"name":"cmdtype","required":false,"specifarg":true}],
     execute: async function (msg, args) {
         let poopy = this
 

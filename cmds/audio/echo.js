@@ -1,5 +1,6 @@
 module.exports = {
     name: ['echo'],
+    args: [{"name":"file","required":false,"specifarg":false},{"name":"delay","required":false,"specifarg":true},{"name":"decay","required":false,"specifarg":true},{"name":"echoes","required":false,"specifarg":true}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -74,7 +75,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'echo <video/audio> [-delay <seconds (max 90)>] [-decay <loudness (from 0 to 100)>] [-echoes <number (from 1 to 99)>]',
+        name: 'echo {file} [-delay <seconds (max 90)>] [-decay <loudness (from 0 to 100)>] [-echoes <number (from 1 to 99)>]',
         value: 'Adds an echo effect to the video.'
     },
     cooldown: 2500,

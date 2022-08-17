@@ -37,7 +37,7 @@ module.exports = {
             return
         }
     },
-    help: { name: 'tomp4/tovideo <file>', value: 'Converts the file to MP4.' },
+    help: { name: 'tomp4/tovideo {file}', value: 'Converts the file to MP4.' },
     cooldown: 2500,
     type: 'Conversion'
 }

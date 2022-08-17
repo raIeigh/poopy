@@ -1,5 +1,6 @@
 module.exports = {
     name: ['blob', 'slime', 'squishy2'],
+    args: [{"name":"file","required":false,"specifarg":false},{"name":"duration","required":false,"specifarg":true}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -55,7 +56,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'blob/slime/squishy2 <file> [-duration <seconds (max 10)>]',
+        name: 'blob/slime/squishy2 {file} [-duration <seconds (max 10)>]',
         value: 'Makes the file squishy like a blob.'
     },
     cooldown: 2500,

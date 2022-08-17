@@ -1,5 +1,6 @@
 module.exports = {
     name: ['erode', 'corrode'],
+    args: [{"name":"file","required":false,"specifarg":false},{"name":"strength","required":false,"specifarg":true}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -61,7 +62,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'erode/corrode <file> [-strength <number (max 100)>]',
+        name: 'erode/corrode {file} [-strength <number (max 100)>]',
         value: "Erodes the file's colors. Default strength is 1."
     },
     cooldown: 2500,

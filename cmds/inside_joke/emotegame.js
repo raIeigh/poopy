@@ -1,5 +1,6 @@
 module.exports = {
     name: ['emotegame', 'emote'],
+    args: [{"name":"file","required":false,"specifarg":false}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -58,7 +59,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'emotegame/emote <file>',
+        name: 'emotegame/emote {file}',
         value: 'Applies the Emote Game Logo to the file.'
     },
     cooldown: 2500,
