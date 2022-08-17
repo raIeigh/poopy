@@ -27,7 +27,7 @@
     "name":"compress","cmds":["crunch","extracrunch"],"description":"Commands that lower the file's quality.","args":[{
         "name":"file","required":false,"specifarg":false,"orig":"{file}"
     }]}, {
-    "name":"animate","cmds":["blob","piranha","spin","squishy","rainbow"],"description":"Commands that jiggle jiggle the file.","args":[{
+    "name":"animate","cmds":["blob","piranha","spin","squishy","rainbow"],"description":"Commands that move and jiggle the file.","args":[{
         "name":"file","required":false,"specifarg":false,"orig":"{file}"
     }, {
         "name":"duration","required":false,"specifarg":true,"orig":"[-duration <seconds (max 10)>]"

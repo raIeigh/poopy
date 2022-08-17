@@ -5333,7 +5333,7 @@ class Poopy {
                 poopy.callbacks.guildDeleteCallback(guild).catch(() => { })
             })
             poopy.bot.on('interactionCreate', (interaction) => {
-                poopy.callbacks.interactionCallback(interaction).catch(() => { })
+                poopy.callbacks.interactionCallback(interaction).catch((e) => console.log(e))
             })
         }
     }
