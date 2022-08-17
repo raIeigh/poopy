@@ -1,6 +1,6 @@
 module.exports = {
     name: ['chew'],
-    args: [{"name":"image","required":true,"specifarg":false}],
+    args: [{"name":"image","required":true,"specifarg":false,"orig":"<image>"}],
     execute: async function (msg, args) {
         let poopy = this
 

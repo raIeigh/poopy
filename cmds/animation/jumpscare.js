@@ -1,6 +1,6 @@
 module.exports = {
     name: ['jumpscare', 'fnaf'],
-    args: [{"name":"file","required":false,"specifarg":false},{"name":"zoomtime","required":false,"specifarg":true},{"name":"zoomsize","required":false,"specifarg":true}],
+    args: [{"name":"file","required":false,"specifarg":false,"orig":"{file}"},{"name":"zoomtime","required":false,"specifarg":true,"orig":"[-zoomtime <seconds>]"},{"name":"zoomsize","required":false,"specifarg":true,"orig":"[-zoomsize <multiplier>]"}],
     execute: async function (msg, args) {
         let poopy = this
 

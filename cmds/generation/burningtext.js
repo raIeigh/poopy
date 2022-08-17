@@ -1,6 +1,6 @@
 module.exports = {
     name: ['burningtext', 'flamingtext', 'cooltext'],
-    args: [{"name":"prompt","required":true,"specifarg":false},{"name":"fontsize","required":false,"specifarg":true},{"name":"origin","required":false,"specifarg":true},{"name":"id","required":false,"specifarg":true}],
+    args: [{"name":"prompt","required":true,"specifarg":false,"orig":"<prompt>"},{"name":"fontsize","required":false,"specifarg":true,"orig":"[-fontsize <pixels>]"},{"name":"origin","required":false,"specifarg":true,"orig":"[-origin <x (left/center/right)> <y (top/middle/bottom)>]"},{"name":"id","required":false,"specifarg":true,"orig":"[-id <number (default 4)>]"}],
     execute: async function (msg, args) {
         let poopy = this
 

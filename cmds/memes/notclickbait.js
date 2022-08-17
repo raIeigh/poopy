@@ -1,6 +1,6 @@
 module.exports = {
     name: ['notclickbait', 'redcircle'],
-    args: [{"name":"random","required":false,"specifarg":true},{"name":"file","required":false,"specifarg":false}],
+    args: [{"name":"random","required":false,"specifarg":true,"orig":"[-random]"},{"name":"file","required":false,"specifarg":false,"orig":"{file}"}],
     execute: async function (msg, args) {
         let poopy = this
 

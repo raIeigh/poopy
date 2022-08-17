@@ -1,6 +1,6 @@
 module.exports = {
     name: ['spin'],
-    args: [{"name":"file","required":false,"specifarg":false},{"name":"duration","required":false,"specifarg":true}],
+    args: [{"name":"file","required":false,"specifarg":false,"orig":"{file}"},{"name":"duration","required":false,"specifarg":true,"orig":"[-duration <seconds (max 10)>]"}],
     execute: async function (msg, args) {
         let poopy = this
 

@@ -1,6 +1,6 @@
 module.exports = {
     name: ['ascii', 'braille'],
-    args: [{"name":"negative","required":false,"specifarg":true},{"name":"image","required":true,"specifarg":false}],
+    args: [{"name":"negative","required":false,"specifarg":true,"orig":"[-negative]"},{"name":"image","required":true,"specifarg":false,"orig":"<image>"}],
     execute: async function (msg, args) {
         let poopy = this
 

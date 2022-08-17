@@ -1,6 +1,6 @@
 module.exports = {
     name: ['newtext', 'newcaption'],
-    args: [{"name":"font","required":true,"specifarg":false},{"name":"text","required":false,"specifarg":false},{"name":"maxwidth","required":false,"specifarg":true},{"name":"color","required":false,"specifarg":true},{"name":"bgcolor","required":false,"specifarg":true},{"name":"resetcolor","required":false,"specifarg":true},{"name":"padding","required":false,"specifarg":true},{"name":"origin","required":false,"specifarg":true}],
+    args: [{"name":"font","required":true,"specifarg":false,"orig":"<font>"},{"name":"text","required":false,"specifarg":false,"orig":"\"{text}\""},{"name":"maxwidth","required":false,"specifarg":true,"orig":"[-maxwidth <pixels>]"},{"name":"color","required":false,"specifarg":true,"orig":"[-(color/bgcolor) <r> <g> <b> <a>]"},{"name":"bgcolor","required":false,"specifarg":true,"orig":"[-(color/bgcolor) <r> <g> <b> <a>]"},{"name":"resetcolor","required":false,"specifarg":true,"orig":"[-resetcolor]"},{"name":"padding","required":false,"specifarg":true,"orig":"[-padding <top> <bottom> <left> <right>]"},{"name":"origin","required":false,"specifarg":true,"orig":"[-origin <x (left/center/right)> <y (top/middle/bottom)>]"}],
     execute: async function (msg, args) {
         let poopy = this
 

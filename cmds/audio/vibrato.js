@@ -1,6 +1,6 @@
 module.exports = {
     name: ['vibrato'],
-    args: [{"name":"file","required":false,"specifarg":false},{"name":"frequency","required":false,"specifarg":true},{"name":"depth","required":false,"specifarg":true}],
+    args: [{"name":"file","required":false,"specifarg":false,"orig":"{file}"},{"name":"frequency","required":false,"specifarg":true,"orig":"[-frequency <hz (from 0.1 to 20000)>]"},{"name":"depth","required":false,"specifarg":true,"orig":"[-depth <percentage>]"}],
     execute: async function (msg, args) {
         let poopy = this
 

@@ -1,6 +1,6 @@
 module.exports = {
     name: ['topng', 'getframe', 'extractframe'],
-    args: [{"name":"file","required":false,"specifarg":false},{"name":"framepos","required":false,"specifarg":true}],
+    args: [{"name":"file","required":false,"specifarg":false,"orig":"{file}"},{"name":"framepos","required":false,"specifarg":true,"orig":"[-framepos <number>]"}],
     execute: async function (msg, args) {
         let poopy = this
 

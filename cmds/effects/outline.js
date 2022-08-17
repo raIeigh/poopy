@@ -1,6 +1,6 @@
 module.exports = {
     name: ['outline', 'border'],
-    args: [{"name":"file","required":false,"specifarg":false},{"name":"radius","required":false,"specifarg":true},{"name":"power","required":false,"specifarg":true},{"name":"color","required":false,"specifarg":true},{"name":"repeat","required":false,"specifarg":true}],
+    args: [{"name":"file","required":false,"specifarg":false,"orig":"{file}"},{"name":"radius","required":false,"specifarg":true,"orig":"[-radius <pixels>]"},{"name":"power","required":false,"specifarg":true,"orig":"[-power <number>]"},{"name":"color","required":false,"specifarg":true,"orig":"[-color <r> <g> <b>]"},{"name":"repeat","required":false,"specifarg":true,"orig":"[-repeat <number (max 100)>]"}],
     execute: async function (msg, args) {
         let poopy = this
 

@@ -1,6 +1,6 @@
 module.exports = {
     name: ['vremove', 'vreversecrop'],
-    args: [{"name":"y","required":true,"specifarg":false},{"name":"h","required":true,"specifarg":false},{"name":"file","required":false,"specifarg":false}],
+    args: [{"name":"y","required":true,"specifarg":false,"orig":"<y>"},{"name":"h","required":true,"specifarg":false,"orig":"<h>"},{"name":"file","required":false,"specifarg":false,"orig":"{file}"}],
     execute: async function (msg, args, opts) {
         let poopy = this
 

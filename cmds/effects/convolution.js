@@ -1,6 +1,6 @@
 module.exports = {
     name: ['convolution'],
-    args: [{"name":"matrix","required":false,"specifarg":false},{"name":"file","required":false,"specifarg":false}],
+    args: [{"name":"matrix","required":false,"specifarg":false,"orig":"\"{matrix}\""},{"name":"file","required":false,"specifarg":false,"orig":"{file}"}],
     execute: async function (msg, args) {
         let poopy = this
 

@@ -1,6 +1,6 @@
 module.exports = {
     name: ['compose', 'generatemusic'],
-    args: [{"name":"style","required":false,"specifarg":true},{"name":"density","required":false,"specifarg":true},{"name":"temperature","required":false,"specifarg":true}],
+    args: [{"name":"style","required":false,"specifarg":true,"orig":"[-style <musicStyle>]"},{"name":"density","required":false,"specifarg":true,"orig":"[-density <value (from 0 to 2)>]"},{"name":"temperature","required":false,"specifarg":true,"orig":"[-temperature <value (from 0 to 3))>]"}],
     execute: async function (msg, args) {
         let poopy = this
 

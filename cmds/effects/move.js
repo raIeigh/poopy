@@ -1,6 +1,6 @@
 module.exports = {
     name: ['move'],
-    args: [{"name":"x","required":true,"specifarg":false},{"name":"y","required":true,"specifarg":false},{"name":"file","required":false,"specifarg":false}],
+    args: [{"name":"x","required":true,"specifarg":false,"orig":"<x>"},{"name":"y","required":true,"specifarg":false,"orig":"<y>"},{"name":"file","required":false,"specifarg":false,"orig":"{file}"}],
     execute: async function (msg, args) {
         let poopy = this
 

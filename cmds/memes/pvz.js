@@ -1,6 +1,6 @@
 module.exports = {
     name: ['pvz', 'plant'],
-    args: [{"name":"name","required":false,"specifarg":false},{"name":"description","required":false,"specifarg":false},{"name":"file","required":false,"specifarg":false}],
+    args: [{"name":"name","required":false,"specifarg":false,"orig":"\"{name}\""},{"name":"description","required":false,"specifarg":false,"orig":"\"{description}\""},{"name":"file","required":false,"specifarg":false,"orig":"{file}"}],
     execute: async function (msg, args) {
         let poopy = this
 

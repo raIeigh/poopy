@@ -1,6 +1,6 @@
 module.exports = {
     name: ['volume'],
-    args: [{"name":"volume","required":false,"specifarg":false},{"name":"file","required":false,"specifarg":false}],
+    args: [{"name":"volume","required":false,"specifarg":false,"orig":"{volume (by percentage)}"},{"name":"file","required":false,"specifarg":false,"orig":"{file}"}],
     execute: async function (msg, args) {
         let poopy = this
 

@@ -1,6 +1,6 @@
 module.exports = {
     name: ['markov'],
-    args: [{"name":"message","required":false,"specifarg":false},{"name":"words","required":false,"specifarg":true},{"name":"nopunctuation","required":false,"specifarg":true},{"name":"keepcase","required":false,"specifarg":true},{"name":"randlerp","required":false,"specifarg":true},{"name":"randomsentences","required":false,"specifarg":true}],
+    args: [{"name":"message","required":false,"specifarg":false,"orig":"[message]"},{"name":"words","required":false,"specifarg":true,"orig":"[-words <wordNumber>]"},{"name":"nopunctuation","required":false,"specifarg":true,"orig":"[-nopunctuation]"},{"name":"keepcase","required":false,"specifarg":true,"orig":"[-keepcase]"},{"name":"randlerp","required":false,"specifarg":true,"orig":"[-randlerp <number (from 0 to 1)>]"},{"name":"randomsentences","required":false,"specifarg":true,"orig":"[-randomsentences]"}],
     execute: async function (msg, args) {
         let poopy = this
 

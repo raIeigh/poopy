@@ -1,6 +1,6 @@
 module.exports = {
     name: ['translate', 'tr'],
-    args: [{"name":"message","required":true,"specifarg":false},{"name":"source","required":false,"specifarg":true},{"name":"target","required":false,"specifarg":true}],
+    args: [{"name":"message","required":true,"specifarg":false,"orig":"<message>"},{"name":"source","required":false,"specifarg":true,"orig":"[-source <language>]"},{"name":"target","required":false,"specifarg":true,"orig":"[-target <language>]"}],
     execute: async function (msg, args) {
         let poopy = this
 

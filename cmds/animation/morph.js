@@ -1,6 +1,6 @@
 module.exports = {
     name: ['morph', 'transform'],
-    args: [{"name":"file","required":false,"specifarg":false},{"name":"file2","required":true,"specifarg":false}],
+    args: [{"name":"file","required":false,"specifarg":false,"orig":"{file}"},{"name":"file2","required":true,"specifarg":false,"orig":"<file2>"}],
     execute: async function (msg, args) {
         let poopy = this
 

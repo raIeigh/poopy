@@ -1,6 +1,6 @@
 module.exports = {
     name: ['opacity'],
-    args: [{"name":"alpha","required":false,"specifarg":false},{"name":"image","required":true,"specifarg":false}],
+    args: [{"name":"alpha","required":false,"specifarg":false,"orig":"{alpha (from 0 to 255)}"},{"name":"image","required":true,"specifarg":false,"orig":"<image>"}],
     execute: async function (msg, args) {
         let poopy = this
 

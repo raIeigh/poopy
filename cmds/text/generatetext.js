@@ -1,6 +1,6 @@
 module.exports = {
     name: ['generatetext', 'predicttext'],
-    args: [{"name":"message","required":true,"specifarg":false},{"name":"temperature","required":false,"specifarg":true},{"name":"maxtokens","required":false,"specifarg":true},{"name":"prespenalty","required":false,"specifarg":true},{"name":"countpenalty","required":false,"specifarg":true},{"name":"freqpenalty","required":false,"specifarg":true}],
+    args: [{"name":"message","required":true,"specifarg":false,"orig":"<message>"},{"name":"temperature","required":false,"specifarg":true,"orig":"[-temperature <number (from 0 to 1)]"},{"name":"maxtokens","required":false,"specifarg":true,"orig":"[-maxtokens <number (max 512)>]"},{"name":"prespenalty","required":false,"specifarg":true,"orig":"[-(pres/count/freq)penalty <number (from 0 to 5/1/500)>]"},{"name":"countpenalty","required":false,"specifarg":true,"orig":"[-(pres/count/freq)penalty <number (from 0 to 5/1/500)>]"},{"name":"freqpenalty","required":false,"specifarg":true,"orig":"[-(pres/count/freq)penalty <number (from 0 to 5/1/500)>]"}],
     execute: async function (msg, args) {
         let poopy = this
 

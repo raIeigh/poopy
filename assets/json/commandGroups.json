@@ -1,0 +1,150 @@
+[{
+    "name":"audio","cmds":["addaudio","mixaudio"],"description":"Adds and mix file audio.","args":[{
+        "name":"file","required":false,"specifarg":false,"orig":"{file}"
+    }, {
+        "name":"audio","required":false,"specifarg":false,"orig":"{audio}"
+    }, {
+        "name":"offset","required":false,"specifarg":true,"orig":"[-offset <seconds (you can use hh:mm:ss)>]"
+    }, {
+        "name":"waituntilend","required":false,"specifarg":true,"orig":"[-waituntilend]"
+    }]}, {
+    "name":"filter","cmds":["bassy","trebly"],"description":"Audio filters to make it bassy or trebly.","args":[{
+        "name":"file","required":false,"specifarg":false,"orig":"{file}"
+    }]}, {
+    "name":"bossfight","cmds":["circle","infinity"],"description":"Commands that make the file move around.","args":[{
+        "name":"file","required":false,"specifarg":false,"orig":"{file}"
+    }, {
+        "name":"width","required":false,"specifarg":true,"orig":"[-width <pixels>]"
+    }, {
+        "name":"height","required":false,"specifarg":true,"orig":"[-height <pixels>]"
+    }, {
+        "name":"owidth","required":false,"specifarg":true,"orig":"[-owidth <pixels>]"
+    }, {
+        "name":"oheight","required":false,"specifarg":true,"orig":"[-oheight <pixels>]"
+    }, {
+        "name":"duration","required":false,"specifarg":true,"orig":"[-duration <seconds (max 10)>]"
+    }]}, {
+    "name":"compress","cmds":["crunch","extracrunch"],"description":"Commands that lower the file's quality.","args":[{
+        "name":"file","required":false,"specifarg":false,"orig":"{file}"
+    }]}, {
+    "name":"animate","cmds":["blob","piranha","spin","squishy","rainbow"],"description":"Commands that jiggle jiggle the file.","args":[{
+        "name":"file","required":false,"specifarg":false,"orig":"{file}"
+    }, {
+        "name":"duration","required":false,"specifarg":true,"orig":"[-duration <seconds (max 10)>]"
+    }]}, {
+    "name":"playback","cmds":["boomerang","reverse","reverseboomerang"],"description":"Commands that change the file's playback.","args":[{
+        "name":"file","required":false,"specifarg":false,"orig":"{file}"
+    }]}, {
+    "name":"meme","cmds":["allaboutme","backrooms","battlecats","bisexual","country","crewmate","dababy","desktopdestroy","dontrepost","fail","favorite","heaven","hell","install","pillow","playbutton","playvideo","rap","rowley","skin","tshirt"],"description":"Meme based commands.","args":[{
+        "name":"file","required":false,"specifarg":false,"orig":"{file}"
+    }]}, {
+    "name":"mirror","cmds":["bottommirror","topmirror","rightmirror","leftmirror"],"description":"Commands that mirror the file on different axes.","args":[{
+        "name":"file","required":false,"specifarg":false,"orig":"{file}"
+    }]}, {
+    "name":"insidejoke","cmds":["babis","coin","emotegame","flip","hankjump","idfsgs","larry","phexintro","phexoutro","srlogo","tord","zekk"],"description":"Can Izzy dab?","args":[{
+        "name":"file","required":false,"specifarg":false,"orig":"{file}"
+    }]}, {
+    "name":"flip","cmds":["hflip","vflip"],"description":"Flips the file horizontally or vertically.","args":[{
+        "name":"file","required":false,"specifarg":false,"orig":"{file}"
+    }]}, {
+    "name":"pitchspeed","cmds":["gradualhighpitch","graduallowpitch","gradualslowpitch","gradualspeedpitch","higherpitch","lowerpitch","slowpitch","speedpitch","gradualslowdown","gradualspeedup","slowdown","speedup"],"description":"Change the file's speed and pitch.","args":[{
+        "name":"multiplier","required":false,"specifarg":false,"orig":"[multiplier <number (from 1 to 2)>]"
+    }, {
+        "name":"file","required":false,"specifarg":false,"orig":"{file}"
+    }]}, {
+    "name":"color","cmds":["colorlight","colordark"],"description":"Gives the file a new color depending on RGB values."
+}, {
+    "name":"bitrate","cmds":["setaudiobitrate","setbitrate"],"description":"Sets the file's video or audio bitrate.","args":[{
+        "name":"bitrate","required":true,"specifarg":false,"orig":"<bitrate>"
+    }, {
+        "name":"file","required":false,"specifarg":false,"orig":"{file}"
+    }]}, {
+    "name":"togif","cmds":["toapng","togif"],"description":"Converts the file to animated image formats.","args":[{
+        "name":"file","required":false,"specifarg":false,"orig":"{file}"
+    }, {
+        "name":"duration","required":false,"specifarg":true,"orig":"[-duration <seconds (max 60)>]"
+    }, {
+        "name":"fps","required":false,"specifarg":true,"orig":"[-fps <fps (max 50)>]"
+    }]}, {
+    "name":"morphology","cmds":["dilate","erode"],"description":"Dilate or erode the file's colors.","args":[{
+        "name":"file","required":false,"specifarg":false,"orig":"{file}"
+    }, {
+        "name":"strength","required":false,"specifarg":true,"orig":"[-strength <number (max 100)>]"
+    }]}, {
+    "name":"search","cmds":["bing","e621","gif","image","rule34","youtube"],"description":"Search for media in the web.","args":[{
+        "name":"query","required":true,"specifarg":false,"orig":"<query>"
+    }, {
+        "name":"page","required":false,"specifarg":true,"orig":"[-page <number>]"
+    }]}, {
+    "name":"fakelength","cmds":["dividelength","multlength","long"],"description":"Manipulates the video's Hex Code to change its duration.","args":[{
+        "name":"multiplier","required":false,"specifarg":false,"orig":"[multiplier (from 1 to 6)]"
+    }, {
+        "name":"video","required":true,"specifarg":false,"orig":"<video>"
+    }]}, {
+    "name":"enhance","cmds":["superresolution","waifu2x"],"description":"Upscale an image and reduce its noise.","args":[{
+        "name":"image","required":true,"specifarg":false,"orig":"<image>"
+    }]}, {
+    "name":"merge","cmds":["hmerge","vmerge"],"description":"Merge the first file with the second one.","args":[{
+        "name":"file","required":false,"specifarg":false,"orig":"{file}"
+    }, {
+        "name":"file2","required":false,"specifarg":false,"orig":"{file2}"
+    }, {
+        "name":"swap","required":false,"specifarg":true,"orig":"[-swap]"
+    }]}, {
+    "name":"stack","cmds":["hstack","vstack"],"description":"Stacks the file horizontally or vertically.","args":[{
+        "name":"file","required":false,"specifarg":false,"orig":"{file}"
+    }, {
+        "name":"stack","required":false,"specifarg":true,"orig":"[-stack <number (from 1 to 10)>]"
+    }]}, {
+    "name":"magik","cmds":["magik","unmagik"],"description":"Liquid-rescales the file.","args":[{
+        "name":"file","required":false,"specifarg":false,"orig":"{file}"
+    }, {
+        "name":"scale","required":false,"specifarg":true,"orig":"[-scale <multiplier (from 1 to 6)>]"
+    }]}, {
+    "name":"fix","cmds":["fixgif","fixratio"],"description":"Fixes some aspects of files."
+}, {
+    "name":"expand","cmds":["contract","expand","hcontract","hexpand","vcontract","vexpand"],"description":"Contract or expand the width and height of a file.","args":[{
+        "name":"multiplier","required":false,"specifarg":false,"orig":"[multiplier (from 1 to 6)]"
+    }, {
+        "name":"file","required":false,"specifarg":false,"orig":"{file}"
+    }, {
+        "name":"origin","required":false,"specifarg":true,"orig":"[-origin <x (left/center/right)> <y (top/middle/bottom)>]"
+    }]}, {
+    "name":"zoom","cmds":["hzoomin","hzoomout","vzoomin","vzoomout","zoomin","zoomout"],"description":"Zooms a file in or out.","args":[{
+        "name":"multiplier","required":false,"specifarg":false,"orig":"[multiplier (from 1 to 6)]"
+    }, {
+        "name":"file","required":false,"specifarg":false,"orig":"{file}"
+    }, {
+        "name":"origin","required":false,"specifarg":true,"orig":"[-origin <x (left/center/right)> <y (top/middle/bottom)>]"
+    }, {
+        "name":"flags","required":false,"specifarg":true,"orig":"[-flags <algorithm>]"
+    }]}, {
+    "name":"size","cmds":["enlarge","hshrink","hstretch","shrink","vshrink","vstretch"],"description":"Resize a file.","args":[{
+        "name":"multiplier","required":false,"specifarg":false,"orig":"[multiplier (from 1 to 6)]"
+    }, {
+        "name":"file","required":false,"specifarg":false,"orig":"{file}"
+    }, {
+        "name":"flags","required":false,"specifarg":true,"orig":"[-flags <algorithm>]"
+    }]}, {
+    "name":"json","cmds":["addtojson","removefromjson","displayjson"],"description":"Adds a new value to JSONs like Phexonia Studio's files.","args":[{
+        "name":"json","required":true,"specifarg":false,"orig":"<json (psfiles, pspasta, funnygif, poop, dmphrases)>"
+    }, {
+        "name":"value","required":true,"specifarg":false,"orig":"<value>"
+    }]}, {
+    "name":"death","cmds":["destroy","reset"],"description":"Shutdown or restart Poopy.","args":[]}, {
+    "name":"random","cmds":["randomword","clickhole","funnygif","randomgif","randomimage","randomname","randomsentence","ronald","araboword","garbage"],"description":"Random output generators.","args":[]}, {
+    "name":"config","cmds":["toggledms","togglensfw","chaincommands"],"description":"Disable/enable some Poopy config.","args":[]}, {
+    "name":"fight","cmds":["punch","chainpunch","slam","slap","poopallover"],"description":"Fight against someone or something!","args":[{
+        "name":"subject","required":true,"specifarg":false,"orig":"<subject>"
+    }]}, {
+    "name":"dumpy","cmds":["dumpy","tdumpy"],"description":"Fun Fact: poopy has 3 among us related commands","args":[{
+        "name":"image","required":true,"specifarg":false,"orig":"<image>"
+    }, {
+        "name":"resolution","required":false,"specifarg":true,"orig":"[-resolution <number>]"
+    }]}, {
+    "name":"og","cmds":["baldi","canigetadmin","heyapple","poop","ratemyfarts"],"description":"YO MAMA!","args":[]
+}, {
+    "name":"manage","cmds":["togglecommands","commandtemplates","localcommands","messages"],"description":"Manage different databases, like local commands, messages, toggled commands or command templates.","args":[{
+        "name":"option","required":true,"specifarg":false,"orig":"<option>"
+    }]
+}]

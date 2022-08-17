@@ -1,6 +1,6 @@
 module.exports = {
     name: ['magik', 'awareshrink', 'liquidshrink'],
-    args: [{"name":"file","required":false,"specifarg":false},{"name":"scale","required":false,"specifarg":true}],
+    args: [{"name":"file","required":false,"specifarg":false,"orig":"{file}"},{"name":"scale","required":false,"specifarg":true,"orig":"[-scale <multiplier (from 1 to 6)>]"}],
     execute: async function (msg, args) {
         let poopy = this
 

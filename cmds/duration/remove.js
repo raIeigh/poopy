@@ -1,6 +1,6 @@
 module.exports = {
     name: ['remove', 'reversetrim'],
-    args: [{"name":"start","required":false,"specifarg":true},{"name":"end","required":false,"specifarg":true},{"name":"file","required":false,"specifarg":false}],
+    args: [{"name":"start","required":false,"specifarg":true,"orig":"[-start <timestamp (you can use hh:mm:ss)>]"},{"name":"end","required":false,"specifarg":true,"orig":"[-end <timestamp (you can use hh:mm:ss)>]"},{"name":"file","required":false,"specifarg":false,"orig":"{file}"}],
     execute: async function (msg, args) {
         let poopy = this
 

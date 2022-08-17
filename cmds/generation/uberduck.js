@@ -1,6 +1,6 @@
 module.exports = {
     name: ['uberduck', 'tts'],
-    args: [{"name":"voice","required":true,"specifarg":false},{"name":"text","required":true,"specifarg":false}],
+    args: [{"name":"voice","required":true,"specifarg":false,"orig":"<voice>"},{"name":"text","required":true,"specifarg":false,"orig":"<text>"}],
     execute: async function (msg, args) {
         let poopy = this
 

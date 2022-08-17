@@ -1,6 +1,6 @@
 module.exports = {
     name: ['dividelength', 'divideduration'],
-    args: [{"name":"multiplier","required":false,"specifarg":false},{"name":"video","required":true,"specifarg":false}],
+    args: [{"name":"multiplier","required":false,"specifarg":false,"orig":"[multiplier (from 1 to 6)]"},{"name":"video","required":true,"specifarg":false,"orig":"<video>"}],
     execute: async function (msg, args) {
         let poopy = this
 

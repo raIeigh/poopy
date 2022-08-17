@@ -1,6 +1,6 @@
 module.exports = {
     name: ['badtranslate', 'badtr'],
-    args: [{"name":"message","required":true,"specifarg":false},{"name":"source","required":false,"specifarg":true},{"name":"target","required":false,"specifarg":true},{"name":"languages","required":false,"specifarg":true}],
+    args: [{"name":"message","required":true,"specifarg":false,"orig":"<message>"},{"name":"source","required":false,"specifarg":true,"orig":"[-source <language>]"},{"name":"target","required":false,"specifarg":true,"orig":"[-target <language>]"},{"name":"languages","required":false,"specifarg":true,"orig":"[-languages <number (max 25)>]"}],
     execute: async function (msg, args) {
         let poopy = this
 

@@ -1,6 +1,6 @@
 module.exports = {
     name: ['erode', 'corrode'],
-    args: [{"name":"file","required":false,"specifarg":false},{"name":"strength","required":false,"specifarg":true}],
+    args: [{"name":"file","required":false,"specifarg":false,"orig":"{file}"},{"name":"strength","required":false,"specifarg":true,"orig":"[-strength <number (max 100)>]"}],
     execute: async function (msg, args) {
         let poopy = this
 

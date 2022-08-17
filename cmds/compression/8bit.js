@@ -1,6 +1,6 @@
 module.exports = {
     name: ['8bit', 'reducecolors'],
-    args: [{"name":"file","required":false,"specifarg":false},{"name":"colors","required":false,"specifarg":true}],
+    args: [{"name":"file","required":false,"specifarg":false,"orig":"{file}"},{"name":"colors","required":false,"specifarg":true,"orig":"[-colors <number (from 1 to 255)>]"}],
     execute: async function (msg, args) {
         let poopy = this
 

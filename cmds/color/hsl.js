@@ -1,6 +1,6 @@
 module.exports = {
     name: ['hsl', 'hsv'],
-    args: [{"name":"hue","required":false,"specifarg":false},{"name":"saturation","required":false,"specifarg":false},{"name":"lightness","required":false,"specifarg":false},{"name":"file","required":false,"specifarg":false}],
+    args: [{"name":"hue","required":false,"specifarg":false,"orig":"[hue (from -360 to 360)]"},{"name":"saturation","required":false,"specifarg":false,"orig":"[saturation (from -10 to 10)]"},{"name":"lightness","required":false,"specifarg":false,"orig":"[lightness (from -10 to 10)]"},{"name":"file","required":false,"specifarg":false,"orig":"{file}"}],
     execute: async function (msg, args) {
         let poopy = this
 

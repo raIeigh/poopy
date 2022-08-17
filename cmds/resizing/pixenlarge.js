@@ -1,6 +1,6 @@
 module.exports = {
     name: ['pixenlarge'],
-    args: [{"name":"multiplier","required":false,"specifarg":false},{"name":"file","required":false,"specifarg":false},{"name":"filter","required":false,"specifarg":true}],
+    args: [{"name":"multiplier","required":false,"specifarg":false,"orig":"[multiplier (2, 3, 4)]"},{"name":"file","required":false,"specifarg":false,"orig":"{file}"},{"name":"filter","required":false,"specifarg":true,"orig":"[-filter <type (xbr or hqx)>]"}],
     execute: async function (msg, args) {
         let poopy = this
 

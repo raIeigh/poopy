@@ -1,6 +1,6 @@
 module.exports = {
     name: ['ytp'],
-    args: [{"name":"file","required":false,"specifarg":false},{"name":"clips","required":false,"specifarg":true},{"name":"repetitions","required":false,"specifarg":true},{"name":"norandomize","required":false,"specifarg":true}],
+    args: [{"name":"file","required":false,"specifarg":false,"orig":"{file}"},{"name":"clips","required":false,"specifarg":true,"orig":"[-clips <number (max 200)>]"},{"name":"repetitions","required":false,"specifarg":true,"orig":"[-repetitions <number (max 10)>]"},{"name":"norandomize","required":false,"specifarg":true,"orig":"[-norandomize]"}],
     execute: async function (msg, args) {
         let poopy = this
 

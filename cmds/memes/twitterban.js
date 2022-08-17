@@ -1,6 +1,6 @@
 module.exports = {
     name: ['twitterban'],
-    args: [{"name":"message","required":false,"specifarg":false},{"name":"nickname","required":false,"specifarg":false},{"name":"username","required":false,"specifarg":false},{"name":"file","required":false,"specifarg":false}],
+    args: [{"name":"message","required":false,"specifarg":false,"orig":"\"{message}\""},{"name":"nickname","required":false,"specifarg":false,"orig":"\"{nickname}\""},{"name":"username","required":false,"specifarg":false,"orig":"\"{username}\""},{"name":"file","required":false,"specifarg":false,"orig":"{file}"}],
     execute: async function (msg, args) {
         let poopy = this
 

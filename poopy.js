@@ -823,6 +823,10 @@ class Poopy {
             })
         }
 
+        poopy.functions.requireJSON = function (path) {
+            return JSON.parse(poopy.modules.fs.readFileSync(path).toString())
+        }
+
         poopy.functions.gatherData = async function (msg) {
             var webhook = await msg.fetchWebhook().catch(() => { })
 
@@ -3850,74 +3854,7 @@ class Poopy {
 
         poopy.slashBuilders = {}
 
-        var commandGroups = {
-            audio: [
-                'addaudio',
-                'mixaudio'
-            ],
-            pitchspeed: [
-                'gradualhighpitch',
-                'graduallowpitch',
-                'gradualslowpitch',
-                'gradualspeedpitch',
-                'higherpitch',
-                'lowerpitch',
-                'slowpitch',
-                'speedpitch',
-                'gradualslowdown',
-                'gradualspeedup',
-                'slowdown',
-                'speedup'
-            ],
-            color: [
-                'color',
-                'color2'
-            ],
-            bitrate: [
-                'setaudiobitrate',
-                'setbitrate'
-            ],
-            togif: [
-                'toapng',
-                'togif'
-            ],
-            morphology: [
-                'dilate',
-                'erode'
-            ],
-            search: [
-                'bing',
-                'e621',
-                'gif',
-                'image',
-                'rule34',
-                'youtube'
-            ],
-            fakelength: [
-                'dividelength',
-                'multlength'
-            ],
-            enhance: [
-                'superresolution',
-                'waifu2x'
-            ],
-            merge: [
-                'hmerge',
-                'vmerge'
-            ],
-            stack: [
-                'hstack',
-                'vstack'
-            ],
-            expand: [
-                'contract',
-                'expand',
-                'hcontract',
-                'hexpand',
-                'vcontract',
-                'vexpand'
-              ]
-        }
+        poopy.commandGroups = poopy.functions.requireJSON(`assets/json/commandGroups.json`)
 
         poopy.modules.fs.readdirSync('cmds').forEach(category => {
             poopy.modules.fs.readdirSync(`cmds/${category}`).forEach(name => {
@@ -3928,34 +3865,55 @@ class Poopy {
 
                     if (Object.keys(poopy.slashBuilders).length < 5 && cmdData.type != 'Owner' && cmdData.type != 'JSON Club') {
                         var args = cmdData.args.sort((x, y) => (x.required === y.required) ? 0 : x.required ? -1 : 1)
-                        var description = cmdData.help.value.match(/[^.!?]+[.!?]*/)[0].substring(0, 100)
+                        var description = cmdData.help.value.match(/[^\n.!?]+[.!?]*/)[0].substring(0, 100)
 
-                        var slashBuilder = new poopy.modules.DiscordBuilders.SlashCommandBuilder()
+                        var slashBuilder
+                        var slashCmd = cmd
+                        var commandGroup = poopy.commandGroups.find(group => group.cmds.find(c => c == cmd))
+                        var newBuilder = true
 
-                        slashBuilder.setName(cmdData.name[0])
-                            .setDescription(description)
+                        if (commandGroup) {
+                            slashCmd = commandGroup.name
+                            description = commandGroup.description
+                        }
 
-                        args.forEach(arg =>
-                            slashBuilder.addStringOption(option =>
-                                option.setName(arg.name.toLowerCase())
-                                    .setDescription(arg.name)
-                                    .setRequired(arg.required)
+                        if (poopy.slashBuilders[slashCmd]) {
+                            newBuilder = false
+                            slashBuilder = poopy.slashBuilders[slashCmd]
+                        } else {
+                            slashBuilder = new poopy.modules.DiscordBuilders.SlashCommandBuilder()
+                        }
+
+                        if (newBuilder) {
+                            slashBuilder.setName(slashCmd)
+                                .setDescription(description)
+
+                            if (commandGroup) slashBuilder.addStringOption(option =>
+                                option.setName('command')
+                                    .setDescription('The command to choose from the group.')
+                                    .setRequired(true)
+                                    .addChoices(...commandGroup.cmds.map(cmd => {
+                                        return { name: cmd, value: cmd }
+                                    })
+                                )
                             )
-                        )
+    
+                            args.forEach(arg =>
+                                slashBuilder.addStringOption(option =>
+                                    option.setName(arg.name.toLowerCase())
+                                        .setDescription(arg.orig)
+                                        .setRequired(arg.required)
+                                )
+                            )
+    
+                            slashBuilder.addStringOption(option =>
+                                option.setName('extra')
+                                    .setDescription('Extra payload you can specify for the command.')
+                                    .setRequired(false)
+                            )
+                        }
 
-                        slashBuilder.addStringOption(option =>
-                            option.setName('extra')
-                                .setDescription('Extra payload you can specify for the command.')
-                                .setRequired(false)
-                        )
-
-                        slashBuilder.addAttachmentOption(option =>
-                            option.setName('attachment')
-                                .setDescription('An attachment you can specify for the command.')
-                                .setRequired(false)
-                        )
-
-                        poopy.slashBuilders[cmd] = slashBuilder
+                        poopy.slashBuilders[slashCmd] = slashBuilder
                     }
                 }
             })
@@ -4801,50 +4759,46 @@ class Poopy {
         }
 
         poopy.callbacks.interactionCallback = async interaction => {
-            if (interaction.isCommand && interaction.isCommand()) {
-                var findCmd = poopy.functions.findCommand(interaction.commandName)
+            if (interaction.isChatInputCommand && interaction.isChatInputCommand()) {
+                var findCmd = poopy.commandGroups.find(group => group.cmds.find(c => c == interaction.commandName)) ||
+                    poopy.functions.findCommand(interaction.commandName)
 
                 if (findCmd) {
                     var cmdargs = findCmd.args
 
                     var prefix = poopy.data['guild-data'][interaction.guild.id]['prefix']
-                    var indexcontent = []
-                    var specicontent = []
+                    var argcontent = []
 
                     var extracontent = interaction.options.getString('extra') ?? ''
 
                     for (var { name, value } of interaction.options.data) {
-                        var cmdarg = cmdargs.find(arg => arg.name == name)
-                        if (cmdarg) {
-                            if (cmdarg.specifarg) {
-                                specicontent.push(`-${name} ${value}`)
-                            } else {
-                                indexcontent.push(value)
-                            }
+                        var cmdargi = cmdargs.findIndex(arg => arg.name.toLowerCase() == name)
+                        if (cmdargi > -1) {
+                            var cmdarg = cmdargs[cmdargi]
+                            argcontent[cmdargi] = `${cmdarg.specifarg ? `-${name} ` : ''}${value}`
                         }
                     }
 
-                    indexcontent = indexcontent.join(' ')
-                    specicontent = specicontent.join(' ')
+                    argcontent = argcontent.flat().join(' ')
 
-                    var content = [interaction.commandName]
+                    var cmd = interaction.options.getString('command') ?? interaction.commandName
+                    var content = [cmd]
 
-                    if (indexcontent) content.push(indexcontent)
-                    if (specicontent) content.push(specicontent)
+                    if (argcontent) content.push(argcontent)
                     if (extracontent) content.push(extracontent)
 
                     content = content.join(' ')
 
                     interaction.deferReply()
 
-                    var reply = interaction.reply
+                    var followUp = interaction.followUp
                     var editReply = interaction.editReply
 
                     interaction.replied = false
                     interaction.reply = async function (payload) {
                         var interaction = this
 
-                        var message = await (interaction.replied ? reply : editReply).call(interaction, payload)
+                        var message = await (interaction.replied ? followUp : editReply).call(interaction, payload)
                         interaction.replied = true
 
                         return message
@@ -4881,7 +4835,7 @@ class Poopy {
                     }
 
                     interaction.react = async () => { }
-                    interaction.delete = async () => { }
+                    interaction.delete = interaction.deleteReply
                     interaction.fetchWebhook = async () => { }
                     interaction.fetchReference = async () => { }
                     interaction.createReactionCollector = () => {
@@ -5344,7 +5298,7 @@ class Poopy {
         }
         poopy.json.emojiJSON = await poopy.functions.getEmojis().catch(() => { })
         console.log(`${poopy.bot.user.username}: emojis`)
-        await poopy.functions.updateSlashCommands()
+        //await poopy.functions.updateSlashCommands()
         poopy.functions.saveData()
         poopy.vars.saveInterval = setInterval(function () {
             poopy.functions.saveData()

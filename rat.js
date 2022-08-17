@@ -63,6 +63,7 @@ function getArgs(args) {
         var specifarg = false
 
         if (arg[0] == '(') continue
+        var origarg = arg
         if (arg[0].endsWith('...')) {
             multiarg = true
             arg = arg.substring(0, arg.length - 3)
@@ -82,8 +83,9 @@ function getArgs(args) {
             if (argm.includes('/')) console.log(cmd)
             arglist.push({
                 name: argm,
-                required: required,
-                specifarg: specifarg
+                required,
+                specifarg,
+                orig: origarg
             })
         }
     }
@@ -96,26 +98,28 @@ var commandGroups = []
 
 fs.readdirSync('cmds').forEach(category => {
     fs.readdirSync(`cmds/${category}`).forEach(name => {
+        //let cmdraw = fs.readFileSync(`cmds/${category}/${name}`).toString()
         const cmd = require(`./cmds/${category}/${name}`)
-        if (cmd.noargchange) return
+        //if (cmd.noargchange) return
+
+        //var group = commandGroups.find(group => group.cmds[0] == cmd.name[0])
+        //if (group) group.args = cmd.args
 
         commands.push(cmd)
 
-        /*const args = getArgs(cmd.help.name)
+        //const args = getArgs(cmd.help.name)
 
-        const cmdrawsplit = cmdraw.split('\n')
-        const space = (cmdrawsplit[1].match(/\s+/) ?? ['    '])[0]
-        cmdrawsplit[2] = `${space}args: ${JSON.stringify(args)},`
-        cmdraw = cmdrawsplit.join('\n')
-        fs.writeFileSync(`cmds/${category}/${name}`, cmdraw)*/
+        //const cmdrawsplit = cmdraw.split('\n')
+        //const space = (cmdrawsplit[1].match(/\s+/) ?? ['    '])[0]
+        //cmdrawsplit[2] = `${space}args: ${JSON.stringify(args)},`
+        //cmdraw = cmdrawsplit.join('\n')
+        //fs.writeFileSync(`cmds/${category}/${name}`, cmdraw)
     })
 })
 
-var chrom = false
+//fs.writeFileSync(`assets/json/commandGroups.json`, JSON.stringify(commandGroups))
 
 commands.forEach(cmd => {
-    if (cmd.name[0] == 'chromakey') chrom = true
-    if (!chrom) return
     var group = commandGroups.find(group => objectsEqual(group.args, cmd.args))
     if (!group) {
         group = {
@@ -128,4 +132,4 @@ commands.forEach(cmd => {
     group.names.push(cmd.name[0])
 })
 
-console.log(commandGroups)
+commandGroups.forEach(g => console.log(g))

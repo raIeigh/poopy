@@ -1,6 +1,6 @@
 module.exports = {
     name: ['jpeg'],
-    args: [{"name":"file","required":false,"specifarg":false},{"name":"quality","required":false,"specifarg":true}],
+    args: [{"name":"file","required":false,"specifarg":false,"orig":"{file}"},{"name":"quality","required":false,"specifarg":true,"orig":"[-quality <percentage>]"}],
     execute: async function (msg, args) {
         let poopy = this
 

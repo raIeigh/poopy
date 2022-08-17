@@ -1,6 +1,6 @@
 module.exports = {
     name: ['contract'],
-    args: [{"name":"multiplier","required":false,"specifarg":false},{"name":"file","required":false,"specifarg":false},{"name":"origin","required":false,"specifarg":true}],
+    args: [{"name":"multiplier","required":false,"specifarg":false,"orig":"[multiplier (from 1 to 6)]"},{"name":"file","required":false,"specifarg":false,"orig":"{file}"},{"name":"origin","required":false,"specifarg":true,"orig":"[-origin <x (left/center/right)> <y (top/middle/bottom)>]"}],
     execute: async function (msg, args) {
         let poopy = this
 

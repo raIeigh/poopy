@@ -1,6 +1,6 @@
 module.exports = {
     name: ['compile'],
-    args: [{"name":"language","required":true,"specifarg":false},{"name":"code","required":true,"specifarg":false}],
+    args: [{"name":"language","required":true,"specifarg":false,"orig":"<language>"},{"name":"code","required":true,"specifarg":false,"orig":"<code>"}],
     execute: async function (msg, args) {
         let poopy = this
 

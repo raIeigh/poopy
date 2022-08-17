@@ -1,6 +1,6 @@
 module.exports = {
     name: ['nervous', 'randomorder', 'randomframes'],
-    args: [{"name":"file","required":false,"specifarg":false},{"name":"frames","required":false,"specifarg":true}],
+    args: [{"name":"file","required":false,"specifarg":false,"orig":"{file}"},{"name":"frames","required":false,"specifarg":true,"orig":"[-frames <number (from 2 to 512)>]"}],
     execute: async function (msg, args) {
         let poopy = this
 

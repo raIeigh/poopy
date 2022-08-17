@@ -1,6 +1,6 @@
 module.exports = {
     name: ['meme3', 'caption'],
-    args: [{"name":"text","required":false,"specifarg":false},{"name":"file","required":false,"specifarg":false},{"name":"size","required":false,"specifarg":true}],
+    args: [{"name":"text","required":false,"specifarg":false,"orig":"\"{text}\""},{"name":"file","required":false,"specifarg":false,"orig":"{file}"},{"name":"size","required":false,"specifarg":true,"orig":"[-size <multiplier (from 0.5 to 5)>]"}],
     execute: async function (msg, args) {
         let poopy = this
 

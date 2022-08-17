@@ -1,6 +1,6 @@
 module.exports = {
     name: ['lossygif'],
-    args: [{"name":"gif","required":true,"specifarg":false},{"name":"lossy","required":false,"specifarg":true}],
+    args: [{"name":"gif","required":true,"specifarg":false,"orig":"<gif>"},{"name":"lossy","required":false,"specifarg":true,"orig":"[-lossy <number (from 30 to 200)>]"}],
     execute: async function (msg, args) {
         let poopy = this
 

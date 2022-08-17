@@ -1,6 +1,6 @@
 module.exports = {
     name: ['setfps'],
-    args: [{"name":"fps","required":true,"specifarg":false},{"name":"file","required":false,"specifarg":false},{"name":"changespeed","required":false,"specifarg":true}],
+    args: [{"name":"fps","required":true,"specifarg":false,"orig":"<fps>"},{"name":"file","required":false,"specifarg":false,"orig":"{file}"},{"name":"changespeed","required":false,"specifarg":true,"orig":"[-changespeed]"}],
     execute: async function (msg, args) {
         let poopy = this
 

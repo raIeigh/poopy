@@ -1,6 +1,6 @@
 module.exports = {
     name: ['countdown', 'annoyingorange'],
-    args: [{"name":"name","required":false,"specifarg":false},{"name":"file","required":false,"specifarg":false}],
+    args: [{"name":"name","required":false,"specifarg":false,"orig":"\"{name}\""},{"name":"file","required":false,"specifarg":false,"orig":"{file}"}],
     execute: async function (msg, args) {
         let poopy = this
 

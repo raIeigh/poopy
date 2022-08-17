@@ -1,6 +1,6 @@
 module.exports = {
     name: ['loop', 'repeat'],
-    args: [{"name":"file","required":false,"specifarg":false},{"name":"times","required":false,"specifarg":false}],
+    args: [{"name":"file","required":false,"specifarg":false,"orig":"{file}"},{"name":"times","required":false,"specifarg":false,"orig":"[times]"}],
     execute: async function (msg, args) {
         let poopy = this
 

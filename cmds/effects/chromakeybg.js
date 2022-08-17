@@ -1,6 +1,6 @@
 module.exports = {
     name: ['chromakeybg', 'chromabg'],
-    args: [{"name":"file","required":false,"specifarg":false},{"name":"color","required":false,"specifarg":true},{"name":"similarity","required":false,"specifarg":true},{"name":"blend","required":false,"specifarg":true}],
+    args: [{"name":"file","required":false,"specifarg":false,"orig":"{file}"},{"name":"color","required":false,"specifarg":true,"orig":"[-color <r> <g> <b>]"},{"name":"similarity","required":false,"specifarg":true,"orig":"[-similarity (from 0 to 100)]"},{"name":"blend","required":false,"specifarg":true,"orig":"[-blend (from 0 to 100)]"}],
     execute: async function (msg, args) {
         let poopy = this
 

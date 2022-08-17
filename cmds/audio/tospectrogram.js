@@ -1,6 +1,6 @@
 module.exports = {
     name: ['tospectrogram', 'spectrogramimage'],
-    args: [{"name":"file","required":false,"specifarg":false},{"name":"duration","required":false,"specifarg":true},{"name":"frequency","required":false,"specifarg":true},{"name":"density","required":false,"specifarg":true}],
+    args: [{"name":"file","required":false,"specifarg":false,"orig":"{file}"},{"name":"duration","required":false,"specifarg":true,"orig":"[-duration <seconds (from 1 to 20)>]"},{"name":"frequency","required":false,"specifarg":true,"orig":"[-frequency <hz (from 20 to 40000)>]"},{"name":"density","required":false,"specifarg":true,"orig":"[-density <number (from 1 to 10)>]"}],
     execute: async function (msg, args) {
         let poopy = this
 

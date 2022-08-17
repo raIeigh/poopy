@@ -1,6 +1,6 @@
 module.exports = {
     name: ['duration', 'stretch'],
-    args: [{"name":"seconds","required":true,"specifarg":false},{"name":"file","required":false,"specifarg":false}],
+    args: [{"name":"seconds","required":true,"specifarg":false,"orig":"<seconds (max 60)>"},{"name":"file","required":false,"specifarg":false,"orig":"{file}"}],
     execute: async function (msg, args) {
         let poopy = this
 

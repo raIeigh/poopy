@@ -1,6 +1,6 @@
 module.exports = {
     name: ['makesweet', 'heartlocket'],
-    args: [{"name":"text1}\".","required":false,"specifarg":false},{"name":"file1}..","required":false,"specifarg":false},{"name":"textfirst","required":false,"specifarg":true},{"name":"template","required":false,"specifarg":true}],
+    args: [{"name":"text1}\".","required":false,"specifarg":false,"orig":"\"{text1}\"..."},{"name":"file1}..","required":false,"specifarg":false,"orig":"{file1}..."},{"name":"textfirst","required":false,"specifarg":true,"orig":"[-textfirst]"},{"name":"template","required":false,"specifarg":true,"orig":"[-template <name>]"}],
     execute: async function (msg, args) {
         let poopy = this
 

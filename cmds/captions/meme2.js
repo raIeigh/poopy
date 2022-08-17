@@ -1,6 +1,6 @@
 module.exports = {
     name: ['meme2', 'demotivator', 'motivator'],
-    args: [{"name":"topText","required":false,"specifarg":false},{"name":"bottomText","required":false,"specifarg":false},{"name":"file","required":false,"specifarg":false}],
+    args: [{"name":"topText","required":false,"specifarg":false,"orig":"\"{topText}\""},{"name":"bottomText","required":false,"specifarg":false,"orig":"\"[bottomText]\""},{"name":"file","required":false,"specifarg":false,"orig":"{file}"}],
     execute: async function (msg, args) {
         let poopy = this
 

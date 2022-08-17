@@ -1,6 +1,6 @@
 module.exports = {
     name: ['amazon'],
-    args: [{"name":"name","required":false,"specifarg":false},{"name":"price","required":false,"specifarg":false},{"name":"rating","required":false,"specifarg":false},{"name":"file","required":false,"specifarg":false}],
+    args: [{"name":"name","required":false,"specifarg":false,"orig":"\"{name}\""},{"name":"price","required":false,"specifarg":false,"orig":"\"[price]\""},{"name":"rating","required":false,"specifarg":false,"orig":"\"[rating (in stars)]\""},{"name":"file","required":false,"specifarg":false,"orig":"{file}"}],
     execute: async function (msg, args) {
         let poopy = this
 

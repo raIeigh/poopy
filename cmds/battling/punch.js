@@ -1,6 +1,6 @@
 module.exports = {
     name: ['punch'],
-    args: [{"name":"subject","required":true,"specifarg":false}],
+    args: [{"name":"subject","required":true,"specifarg":false,"orig":"<subject>"}],
     execute: async function (msg, args) {
         let poopy = this
 

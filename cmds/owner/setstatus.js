@@ -1,6 +1,6 @@
 module.exports = {
     name: ['setstatus', 'ss'],
-    args: [{"name":"changes","required":true,"specifarg":false},{"name":"type","required":true,"specifarg":false},{"name":"statusMessage","required":true,"specifarg":false}],
+    args: [{"name":"changes","required":true,"specifarg":false,"orig":"<changes (false or true)>"},{"name":"type","required":true,"specifarg":false,"orig":"<type (STREAMING, WATCHING, PLAYING, LISTENING or COMPETING)>"},{"name":"statusMessage","required":true,"specifarg":false,"orig":"<statusMessage>"}],
     execute: async function (msg, args, opts) {
         let poopy = this
 

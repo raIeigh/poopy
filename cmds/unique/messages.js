@@ -1,6 +1,6 @@
 module.exports = {
     name: ['messages'],
-    args: [{"name":"option","required":true,"specifarg":false}],
+    args: [{"name":"option","required":true,"specifarg":false,"orig":"<option>"}],
     execute: async function (msg, args) {
         let poopy = this
 

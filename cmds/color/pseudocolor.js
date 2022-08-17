@@ -1,6 +1,6 @@
 module.exports = {
     name: ['pseudocolor'],
-    args: [{"name":"file","required":false,"specifarg":false},{"name":"preset","required":false,"specifarg":true}],
+    args: [{"name":"file","required":false,"specifarg":false,"orig":"{file}"},{"name":"preset","required":false,"specifarg":true,"orig":"[-preset <preset>]"}],
     execute: async function (msg, args) {
         let poopy = this
 

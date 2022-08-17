@@ -1,6 +1,6 @@
 module.exports = {
     name: ['setprefix'],
-    args: [{"name":"prefix","required":true,"specifarg":false}],
+    args: [{"name":"prefix","required":true,"specifarg":false,"orig":"<prefix>"}],
     execute: async function (msg, args) {
         let poopy = this
 

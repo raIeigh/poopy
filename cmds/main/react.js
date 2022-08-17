@@ -1,6 +1,6 @@
 module.exports = {
     name: ['react'],
-    args: [{"name":"emojis","required":true,"specifarg":false},{"name":"messageid","required":false,"specifarg":false}],
+    args: [{"name":"emojis","required":true,"specifarg":false,"orig":"<emojis>"},{"name":"messageid","required":false,"specifarg":false,"orig":"{messageid}"}],
     execute: async function (msg, args) {
         let poopy = this
 

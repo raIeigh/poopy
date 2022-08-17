@@ -1,6 +1,6 @@
 module.exports = {
     name: ['bing', 'bingimage'],
-    args: [{ "name": "query", "required": true, "specifarg": false }, { "name": "page", "required": false, "specifarg": true }],
+    args: [{"name":"query","required":true,"specifarg":false,"orig":"<query>"},{"name":"page","required":false,"specifarg":true,"orig":"[-page <number>]"}],
     execute: async function (msg, args) {
         let poopy = this
 

@@ -1,6 +1,6 @@
 module.exports = {
     name: ['reencode'],
-    args: [{"name":"file","required":false,"specifarg":false},{"name":"encodingpreset","required":false,"specifarg":true},{"name":"codec","required":false,"specifarg":true}],
+    args: [{"name":"file","required":false,"specifarg":false,"orig":"{file}"},{"name":"encodingpreset","required":false,"specifarg":true,"orig":"[-encodingpreset <preset>]"},{"name":"codec","required":false,"specifarg":true,"orig":"[-codec <codec>]"}],
     execute: async function (msg, args) {
         let poopy = this
 

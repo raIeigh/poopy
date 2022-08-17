@@ -1,6 +1,6 @@
 module.exports = {
     name: ['robloxgame', 'rgame'],
-    args: [{"name":"name","required":false,"specifarg":false},{"name":"likeRatio","required":false,"specifarg":false},{"name":"playerCount","required":false,"specifarg":false},{"name":"file","required":false,"specifarg":false}],
+    args: [{"name":"name","required":false,"specifarg":false,"orig":"\"{name}\""},{"name":"likeRatio","required":false,"specifarg":false,"orig":"\"[likeRatio]\""},{"name":"playerCount","required":false,"specifarg":false,"orig":"\"[playerCount]\""},{"name":"file","required":false,"specifarg":false,"orig":"{file}"}],
     execute: async function (msg, args) {
         let poopy = this
 

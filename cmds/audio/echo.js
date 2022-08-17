@@ -1,6 +1,6 @@
 module.exports = {
     name: ['echo'],
-    args: [{"name":"file","required":false,"specifarg":false},{"name":"delay","required":false,"specifarg":true},{"name":"decay","required":false,"specifarg":true},{"name":"echoes","required":false,"specifarg":true}],
+    args: [{"name":"file","required":false,"specifarg":false,"orig":"{file}"},{"name":"delay","required":false,"specifarg":true,"orig":"[-delay <seconds (max 90)>]"},{"name":"decay","required":false,"specifarg":true,"orig":"[-decay <loudness (from 0 to 100)>]"},{"name":"echoes","required":false,"specifarg":true,"orig":"[-echoes <number (from 1 to 99)>]"}],
     execute: async function (msg, args) {
         let poopy = this
 

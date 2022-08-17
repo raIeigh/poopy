@@ -1,6 +1,6 @@
 module.exports = {
     name: ['spazz', 'shake'],
-    args: [{"name":"file","required":false,"specifarg":false},{"name":"radius","required":false,"specifarg":true},{"name":"seed","required":false,"specifarg":true},{"name":"rescale","required":false,"specifarg":true}],
+    args: [{"name":"file","required":false,"specifarg":false,"orig":"{file}"},{"name":"radius","required":false,"specifarg":true,"orig":"[-radius <number>]"},{"name":"seed","required":false,"specifarg":true,"orig":"[-seed <number>]"},{"name":"rescale","required":false,"specifarg":true,"orig":"[-rescale]"}],
     execute: async function (msg, args) {
         let poopy = this
 

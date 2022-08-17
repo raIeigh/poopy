@@ -1,6 +1,6 @@
 module.exports = {
     name: ['rotate', 'rot'],
-    args: [{"name":"degrees","required":false,"specifarg":false},{"name":"file","required":false,"specifarg":false},{"name":"cut","required":false,"specifarg":true}],
+    args: [{"name":"degrees","required":false,"specifarg":false,"orig":"{degrees (from -360 to 360)}"},{"name":"file","required":false,"specifarg":false,"orig":"{file}"},{"name":"cut","required":false,"specifarg":true,"orig":"[-cut]"}],
     execute: async function (msg, args) {
         let poopy = this
 

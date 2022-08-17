@@ -1,6 +1,6 @@
 module.exports = {
     name: ['hmerge'],
-    args: [{"name":"file","required":false,"specifarg":false},{"name":"file2","required":false,"specifarg":false},{"name":"swap","required":false,"specifarg":true}],
+    args: [{"name":"file","required":false,"specifarg":false,"orig":"{file}"},{"name":"file2","required":false,"specifarg":false,"orig":"{file2}"},{"name":"swap","required":false,"specifarg":true,"orig":"[-swap]"}],
     execute: async function (msg, args) {
         let poopy = this
 

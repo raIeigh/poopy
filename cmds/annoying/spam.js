@@ -1,6 +1,6 @@
 module.exports = {
     name: ['spam', 'flood'],
-    args: [{"name":"times","required":true,"specifarg":false},{"name":"message","required":true,"specifarg":false},{"name":"nodelete","required":false,"specifarg":true},{"name":"tts","required":false,"specifarg":true}],
+    args: [{"name":"times","required":true,"specifarg":false,"orig":"<times>"},{"name":"message","required":true,"specifarg":false,"orig":"<message>"},{"name":"nodelete","required":false,"specifarg":true,"orig":"[-nodelete]"},{"name":"tts","required":false,"specifarg":true,"orig":"[-tts]"}],
     execute: async function (msg, args) {
         let poopy = this
 

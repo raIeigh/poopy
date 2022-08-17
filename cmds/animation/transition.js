@@ -1,6 +1,6 @@
 module.exports = {
     name: ['transition'],
-    args: [{"name":"transition","required":false,"specifarg":false},{"name":"file","required":false,"specifarg":false},{"name":"file2","required":true,"specifarg":false},{"name":"duration","required":false,"specifarg":true},{"name":"waituntilend","required":false,"specifarg":true}],
+    args: [{"name":"transition","required":false,"specifarg":false,"orig":"{transition (default is fade)}"},{"name":"file","required":false,"specifarg":false,"orig":"{file}"},{"name":"file2","required":true,"specifarg":false,"orig":"<file2>"},{"name":"duration","required":false,"specifarg":true,"orig":"[-duration <seconds (max 10)>]"},{"name":"waituntilend","required":false,"specifarg":true,"orig":"[-waituntilend]"}],
     execute: async function (msg, args) {
         let poopy = this
 

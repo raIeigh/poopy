@@ -1,6 +1,6 @@
 module.exports = {
     name: ['curves'],
-    args: [{"name":"rcurves","required":false,"specifarg":false},{"name":"gcurves","required":false,"specifarg":false},{"name":"bcurves","required":false,"specifarg":false},{"name":"file","required":false,"specifarg":false}],
+    args: [{"name":"rcurves","required":false,"specifarg":false,"orig":"\"[rcurves]\""},{"name":"gcurves","required":false,"specifarg":false,"orig":"\"[gcurves]\""},{"name":"bcurves","required":false,"specifarg":false,"orig":"\"[bcurves]\""},{"name":"file","required":false,"specifarg":false,"orig":"{file}"}],
     execute: async function (msg, args) {
         let poopy = this
 

@@ -1,6 +1,6 @@
 module.exports = {
     name: ['fix', 'fixgif'],
-    args: [{"name":"gif","required":true,"specifarg":false}],
+    args: [{"name":"file","required":false,"specifarg":false,"orig":"{file}"}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -39,7 +39,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'fix/fixgif <gif>',
+        name: 'fix/fixgif {file}',
         value: 'Fixes the quality for GIFs, mainly for grainy ones like https://cdn.discordapp.com/attachments/535469236802551811/726167982149074954/output.gif'
     },
     cooldown: 2500,

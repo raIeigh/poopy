@@ -1,6 +1,6 @@
 module.exports = {
     name: ['brightcontrast', 'brightness', 'contrast'],
-    args: [{"name":"brightness","required":false,"specifarg":false},{"name":"contrast","required":false,"specifarg":false},{"name":"file","required":false,"specifarg":false}],
+    args: [{"name":"brightness","required":false,"specifarg":false,"orig":"[brightness (from -10 to 10)]"},{"name":"contrast","required":false,"specifarg":false,"orig":"[contrast (from -10 to 10)]"},{"name":"file","required":false,"specifarg":false,"orig":"{file}"}],
     execute: async function (msg, args) {
         let poopy = this
 

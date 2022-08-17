@@ -1,6 +1,6 @@
 module.exports = {
     name: ['spectrogram'],
-    args: [{"name":"file","required":false,"specifarg":false},{"name":"color","required":false,"specifarg":true},{"name":"scale","required":false,"specifarg":true},{"name":"saturation","required":false,"specifarg":true}],
+    args: [{"name":"file","required":false,"specifarg":false,"orig":"{file}"},{"name":"color","required":false,"specifarg":true,"orig":"[-color <mode>]"},{"name":"scale","required":false,"specifarg":true,"orig":"[-scale <scale>]"},{"name":"saturation","required":false,"specifarg":true,"orig":"[-saturation <number (from -10 to 10)>]"}],
     execute: async function (msg, args) {
         let poopy = this
 

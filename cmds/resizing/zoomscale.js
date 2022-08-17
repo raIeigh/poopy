@@ -1,6 +1,6 @@
 module.exports = {
     name: ['zoomscale'],
-    args: [{"name":"width","required":true,"specifarg":false},{"name":"height","required":true,"specifarg":false},{"name":"file","required":false,"specifarg":false},{"name":"flags","required":false,"specifarg":true},{"name":"origin","required":false,"specifarg":true},{"name":"keepaspectratio","required":false,"specifarg":true}],
+    args: [{"name":"width","required":true,"specifarg":false,"orig":"<width>"},{"name":"height","required":true,"specifarg":false,"orig":"<height>"},{"name":"file","required":false,"specifarg":false,"orig":"{file}"},{"name":"flags","required":false,"specifarg":true,"orig":"[-flags <algorithm>]"},{"name":"origin","required":false,"specifarg":true,"orig":"[-origin <x (left/center/right)> <y (top/middle/bottom)>]"},{"name":"keepaspectratio","required":false,"specifarg":true,"orig":"[-keepaspectratio <mode (increase or decrease)>]"}],
     execute: async function (msg, args) {
         let poopy = this
 

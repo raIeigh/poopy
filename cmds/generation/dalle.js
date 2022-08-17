@@ -1,6 +1,6 @@
 module.exports = {
     name: ['dalle', 'craiyon', 'text2images'],
-    args: [{"name":"prompt","required":true,"specifarg":false}],
+    args: [{"name":"prompt","required":true,"specifarg":false,"orig":"<prompt>"}],
     execute: async function (msg, args) {
         let poopy = this
 

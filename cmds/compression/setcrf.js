@@ -1,6 +1,6 @@
 module.exports = {
     name: ['setcrf'],
-    args: [{"name":"crf","required":true,"specifarg":false},{"name":"file","required":false,"specifarg":false}],
+    args: [{"name":"crf","required":true,"specifarg":false,"orig":"<crf (from 0 to 51)>"},{"name":"file","required":false,"specifarg":false,"orig":"{file}"}],
     execute: async function (msg, args) {
         let poopy = this
 

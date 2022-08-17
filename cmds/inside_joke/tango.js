@@ -1,6 +1,6 @@
 module.exports = {
     name: ['tango', 'deleteembed', 'dembed'],
-    args: [{"name":"message","required":false,"specifarg":false}],
+    args: [{"name":"message","required":false,"specifarg":false,"orig":"{message}"}],
     execute: async function (msg, args) {
         let poopy = this
         

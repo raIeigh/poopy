@@ -1,6 +1,6 @@
 module.exports = {
     name: ['blend'],
-    args: [{"name":"file","required":false,"specifarg":false},{"name":"blend","required":true,"specifarg":false},{"name":"mode","required":false,"specifarg":true},{"name":"overlay","required":false,"specifarg":false}],
+    args: [{"name":"file","required":false,"specifarg":false,"orig":"{file}"},{"name":"file2","required":false,"specifarg":false,"orig":"{file2}"},{"name":"mode","required":false,"specifarg":true,"orig":"[-mode <mode>]"},{"name":"origin","required":false,"specifarg":true,"orig":"[-origin <x (left/center/right)> <y (top/middle/bottom)>]"},{"name":"offsetpos","required":false,"specifarg":true,"orig":"[-offsetpos <x> <y>]"},{"name":"width","required":false,"specifarg":true,"orig":"[-width <pixels or percentage>]"},{"name":"height","required":false,"specifarg":true,"orig":"[-height <pixels or percentage>]"},{"name":"keepaspectratio","required":false,"specifarg":true,"orig":"[-keepaspectratio <mode (increase or decrease)>]"}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -95,8 +95,8 @@ module.exports = {
                 return
             }
         }
-        var currenturl = args.find(arg => arg === '-localcmd') ? args[1] : (poopy.functions.lastUrl(msg, 0) || args[1])
-        var currenturl2 = args.find(arg => arg === '-localcmd') ? args[2] : (poopy.functions.lastUrl(msg, 1) || args[2])
+        var currenturl = poopy.functions.lastUrl(msg, 0) || args[1]
+        var currenturl2 = poopy.functions.lastUrl(msg, 1) || args[2]
         var urls = await poopy.functions.getUrls(msg).catch(() => { }) ?? []
         if (urls.length < 2) {
             var c = currenturl
@@ -207,7 +207,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'blend {file} <blend> [-mode <mode>] [overlay options]',
+        name: 'blend {file} {file2} [-mode <mode>] [overlay options]',
         value: 'Blends the first file to the second. A list of modes can be found at https://trac.ffmpeg.org/wiki/Blend'
     },
     cooldown: 2500,

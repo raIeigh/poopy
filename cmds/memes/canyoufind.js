@@ -1,6 +1,6 @@
 module.exports = {
     name: ['canyoufind', 'find'],
-    args: [{"name":"background","required":true,"specifarg":false},{"name":"tofind","required":true,"specifarg":false},{"name":"size","required":false,"specifarg":true}],
+    args: [{"name":"background","required":false,"specifarg":false,"orig":"{background}"},{"name":"toFind","required":false,"specifarg":false,"orig":"{toFind}"},{"name":"size","required":false,"specifarg":true,"orig":"[-size <pixels>]"}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -97,7 +97,7 @@ module.exports = {
         return await poopy.functions.sendFile(msg, filepath, `output.png`)
     },
     help: {
-        name: 'canyoufind/find <background> <tofind> [-size <pixels>]',
+        name: 'canyoufind/find {background} {toFind} [-size <pixels>]',
         value: 'Can you find mario (only works with static images though)\n' +
             'Example usage: p:find https://images.herzindagi.info/image/2020/Jun/chocolate-parle-g-ice-cream.jpg https://pbs.twimg.com/media/BOgwprmCEAAvjq3.jpg -size 50'
     },

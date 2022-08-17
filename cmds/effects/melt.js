@@ -1,6 +1,6 @@
 module.exports = {
     name: ['melt', 'trippy'],
-    args: [{"name":"file","required":false,"specifarg":false},{"name":"decay","required":false,"specifarg":true},{"name":"loop","required":false,"specifarg":true}],
+    args: [{"name":"file","required":false,"specifarg":false,"orig":"{file}"},{"name":"decay","required":false,"specifarg":true,"orig":"[-decay <percentage>]"},{"name":"loop","required":false,"specifarg":true,"orig":"[-loop]"}],
     execute: async function (msg, args) {
         let poopy = this
 

@@ -1,6 +1,6 @@
 module.exports = {
     name: ['overlay'],
-    args: [{"name":"file","required":false,"specifarg":false},{"name":"overlay","required":true,"specifarg":false},{"name":"origin","required":false,"specifarg":true},{"name":"offsetpos","required":false,"specifarg":true},{"name":"width","required":false,"specifarg":true},{"name":"height","required":false,"specifarg":true},{"name":"keepaspectratio","required":false,"specifarg":true}],
+    args: [{"name":"file","required":false,"specifarg":false,"orig":"{file}"},{"name":"file2","required":false,"specifarg":false,"orig":"{file2}"},{"name":"origin","required":false,"specifarg":true,"orig":"[-origin <x (left/center/right)> <y (top/middle/bottom)>]"},{"name":"offsetpos","required":false,"specifarg":true,"orig":"[-offsetpos <x> <y>]"},{"name":"width","required":false,"specifarg":true,"orig":"[-width <pixels or percentage>]"},{"name":"height","required":false,"specifarg":true,"orig":"[-height <pixels or percentage>]"},{"name":"keepaspectratio","required":false,"specifarg":true,"orig":"[-keepaspectratio <mode (increase or decrease)>]"}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -44,8 +44,8 @@ module.exports = {
                 keepaspectratio = args[ratioindex + 1]
             }
         }
-        var currenturl = args.find(arg => arg === '-localcmd') ? args[1] : (poopy.functions.lastUrl(msg, 0) || args[1])
-        var currenturl2 = args.find(arg => arg === '-localcmd') ? args[2] : (poopy.functions.lastUrl(msg, 1) || args[2])
+        var currenturl = poopy.functions.lastUrl(msg, 0) || args[1]
+        var currenturl2 = poopy.functions.lastUrl(msg, 1) || args[2]
         var urls = await poopy.functions.getUrls(msg).catch(() => { }) ?? []
         if (urls.length < 2) {
             var c = currenturl
@@ -156,8 +156,8 @@ module.exports = {
         }
     },
     help: {
-        name: 'overlay {file} <overlay> [-origin <x (left/center/right)> <y (top/middle/bottom)>] [-offsetpos <x> <y>] [-width <pixels or percentage>] [-height <pixels or percentage>] [-keepaspectratio <mode (increase or decrease)>]',
-        value: 'Adds the specified overlay to the file.'
+        name: 'overlay {file} {file2} [-origin <x (left/center/right)> <y (top/middle/bottom)>] [-offsetpos <x> <y>] [-width <pixels or percentage>] [-height <pixels or percentage>] [-keepaspectratio <mode (increase or decrease)>]',
+        value: 'Overlays the 2nd file to the 1st one.'
     },
     cooldown: 2500,
     type: 'Overlaying'

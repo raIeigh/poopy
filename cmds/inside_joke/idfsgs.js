@@ -1,6 +1,6 @@
 module.exports = {
     name: ['idfsgs'],
-    args: [{"name":"file","required":false,"specifarg":false}],
+    args: [{"name":"file","required":false,"specifarg":false,"orig":"{file}"}],
     execute: async function (msg, args) {
         let poopy = this
 

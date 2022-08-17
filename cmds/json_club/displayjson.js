@@ -1,6 +1,6 @@
 module.exports = {
     name: ['displayjson'],
-    args: [{"name":"json","required":true,"specifarg":false}],
+    args: [{"name":"json","required":true,"specifarg":false,"orig":"<json (psfiles, pspasta, funnygif, poop, dmphrases)>"}],
     execute: async function (msg, args) {
         let poopy = this
 

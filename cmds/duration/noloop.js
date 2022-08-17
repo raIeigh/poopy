@@ -1,6 +1,6 @@
 module.exports = {
     name: ['noloop'],
-    args: [{"name":"gif","required":true,"specifarg":false}],
+    args: [{"name":"gif","required":true,"specifarg":false,"orig":"<gif>"}],
     execute: async function (msg, args) {
         let poopy = this
 

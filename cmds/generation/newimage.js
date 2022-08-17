@@ -1,6 +1,6 @@
 module.exports = {
   name: ['newimage', 'makeimage'],
-  args: [{"name":"width","required":true,"specifarg":false},{"name":"height","required":true,"specifarg":false},{"name":"r","required":true,"specifarg":false},{"name":"g","required":true,"specifarg":false},{"name":"b","required":true,"specifarg":false},{"name":"a","required":false,"specifarg":false}],
+  args: [{"name":"width","required":true,"specifarg":false,"orig":"<width (max 2000)>"},{"name":"height","required":true,"specifarg":false,"orig":"<height (max 2000)>"},{"name":"r","required":true,"specifarg":false,"orig":"<r>"},{"name":"g","required":true,"specifarg":false,"orig":"<g>"},{"name":"b","required":true,"specifarg":false,"orig":"<b>"},{"name":"a","required":false,"specifarg":false,"orig":"[a]"}],
   execute: async function (msg, args) {
     let poopy = this
 

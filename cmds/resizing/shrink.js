@@ -1,6 +1,6 @@
 module.exports = {
-    name: ['shrink'],
-    args: [{"name":"multiplier","required":false,"specifarg":false},{"name":"file","required":false,"specifarg":false},{"name":"flags","required":false,"specifarg":true}],
+    name: ['shrink', 'reduce'],
+    args: [{"name":"multiplier","required":false,"specifarg":false,"orig":"[multiplier (from 1 to 6)]"},{"name":"file","required":false,"specifarg":false,"orig":"{file}"},{"name":"flags","required":false,"specifarg":true,"orig":"[-flags <algorithm>]"}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -82,7 +82,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'shrink [multiplier (from 1 to 6)] {file} [-flags <algorithm>]',
+        name: 'shrink/reduce [multiplier (from 1 to 6)] {file} [-flags <algorithm>]',
         value: 'Shrinks the file. A list of flags can be found at https://ffmpeg.org/ffmpeg-scaler.html#Scaler-Options'
     },
     cooldown: 2500,

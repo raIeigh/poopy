@@ -1,6 +1,6 @@
 module.exports = {
     name: ['dizzy'],
-    args: [{"name":"file","required":false,"specifarg":false},{"name":"distance","required":false,"specifarg":true}],
+    args: [{"name":"file","required":false,"specifarg":false,"orig":"{file}"},{"name":"distance","required":false,"specifarg":true,"orig":"[-distance <distance>]"}],
     execute: async function (msg, args) {
         let poopy = this
 

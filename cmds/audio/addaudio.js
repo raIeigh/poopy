@@ -1,6 +1,6 @@
 module.exports = {
     name: ['addaudio', 'addsound', 'addmusic'],
-    args: [{"name":"file","required":false,"specifarg":false},{"name":"audio","required":false,"specifarg":false},{"name":"offset","required":false,"specifarg":true},{"name":"waituntilend","required":false,"specifarg":true}],
+    args: [{"name":"file","required":false,"specifarg":false,"orig":"{file}"},{"name":"audio","required":false,"specifarg":false,"orig":"{audio}"},{"name":"offset","required":false,"specifarg":true,"orig":"[-offset <seconds (you can use hh:mm:ss)>]"},{"name":"waituntilend","required":false,"specifarg":true,"orig":"[-waituntilend]"}],
     execute: async function (msg, args) {
         let poopy = this
 

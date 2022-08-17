@@ -1,6 +1,6 @@
 module.exports = {
     name: ['mute', 'silence', 'removeaudio', 'removemusic'],
-    args: [{"name":"video","required":true,"specifarg":false}],
+    args: [{"name":"video","required":true,"specifarg":false,"orig":"<video>"}],
     execute: async function (msg, args) {
         let poopy = this
 

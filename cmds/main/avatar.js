@@ -1,6 +1,6 @@
 module.exports = {
     name: ['avatar', 'av', 'pfp'],
-    args: [{"name":"user","required":false,"specifarg":false}],
+    args: [{"name":"user","required":false,"specifarg":false,"orig":"[user]"}],
     execute: async function (msg, args) {
         let poopy = this
 

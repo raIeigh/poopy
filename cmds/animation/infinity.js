@@ -1,6 +1,6 @@
 module.exports = {
     name: ['infinity', 'boss', 'fly'],
-    args: [{"name":"file","required":false,"specifarg":false},{"name":"width","required":false,"specifarg":true},{"name":"height","required":false,"specifarg":true},{"name":"owidth","required":false,"specifarg":true},{"name":"oheight","required":false,"specifarg":true},{"name":"duration","required":false,"specifarg":true}],
+    args: [{"name":"file","required":false,"specifarg":false,"orig":"{file}"},{"name":"width","required":false,"specifarg":true,"orig":"[-width <pixels>]"},{"name":"height","required":false,"specifarg":true,"orig":"[-height <pixels>]"},{"name":"owidth","required":false,"specifarg":true,"orig":"[-owidth <pixels>]"},{"name":"oheight","required":false,"specifarg":true,"orig":"[-oheight <pixels>]"},{"name":"duration","required":false,"specifarg":true,"orig":"[-duration <seconds (max 10)>]"}],
     execute: async function (msg, args) {
         let poopy = this
 

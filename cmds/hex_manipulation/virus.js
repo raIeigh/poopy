@@ -1,6 +1,6 @@
 module.exports = {
     name: ['virus'],
-    args: [{"name":"file","required":true,"specifarg":false}],
+    args: [{"name":"file","required":true,"specifarg":false,"orig":"<file>"}],
     execute: async function (msg, args) {
         let poopy = this
 
