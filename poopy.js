@@ -1156,7 +1156,6 @@ class Poopy {
 
                     var consumer = await ch.consume(q.queue, function (msg) {
                         if (msg.properties.correlationId == correlationId) {
-                            console.log('scrolte')
                             var content = msg.content.toString()
 
                             var order = Number(content.substring(0, 3))
@@ -1167,12 +1166,10 @@ class Poopy {
                             var chunkjoin = chunkdata.map(c => c.chunk).join('')
                             var data = tryJSONparse(chunkjoin)
                             if (data) {
-                                console.log('rid')
                                 closeAll()
                                 resolve(data)
                             }
                         }
-                        console.log(chunkdata)
                     }, { noAck: true }).catch(reject)
     
                     var crashconsumer = await ch.consume(qrash.queue, function (msg) {

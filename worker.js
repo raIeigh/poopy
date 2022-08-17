@@ -280,7 +280,6 @@ async function start(id) {
             ch.sendToQueue(msg.properties.replyTo, chunk, {
                 correlationId: msg.properties.correlationId
             })
-            await sleep(1000)
         }
     }, { noAck: true })
 }
