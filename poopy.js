@@ -4760,110 +4760,110 @@ class Poopy {
 
         poopy.callbacks.interactionCallback = async interaction => {
             if (!interaction.isCommand || !interaction.isCommand()) {
-                console.log('jeji')
                 return
             }
 
-                var findCmd = poopy.commandGroups.find(group => group.cmds.find(c => c == interaction.commandName)) ||
-                    poopy.functions.findCommand(interaction.commandName)
+            var findCmd = poopy.commandGroups.find(group => group.name == interaction.commandName) ||
+                poopy.functions.findCommand(interaction.commandName)
 
-                if (findCmd) {
-                    var cmdargs = findCmd.args
+            if (!findCmd) {
+                return
+            }
 
-                    var prefix = poopy.data['guild-data'][interaction.guild.id]['prefix']
-                    var argcontent = []
+            var cmdargs = findCmd.args
 
-                    var extracontent = interaction.options.getString('extra') ?? ''
+            var prefix = poopy.data['guild-data'][interaction.guild.id]['prefix']
+            var argcontent = []
 
-                    for (var { name, value } of interaction.options.data) {
-                        var cmdargi = cmdargs.findIndex(arg => arg.name.toLowerCase() == name)
-                        if (cmdargi > -1) {
-                            var cmdarg = cmdargs[cmdargi]
-                            argcontent[cmdargi] = `${cmdarg.specifarg ? `-${name} ` : ''}${value}`
-                        }
-                    }
+            var extracontent = interaction.options.getString('extra') ?? ''
 
-                    argcontent = argcontent.flat().join(' ')
-
-                    var cmd = interaction.options.getString('command') ?? interaction.commandName
-                    var content = [cmd]
-
-                    if (argcontent) content.push(argcontent)
-                    if (extracontent) content.push(extracontent)
-
-                    content = content.join(' ')
-
-                    interaction.deferReply()
-
-                    var followUp = interaction.followUp
-                    var editReply = interaction.editReply
-
-                    interaction.replied = false
-                    interaction.reply = async function (payload) {
-                        var interaction = this
-
-                        var message = await (interaction.replied ? followUp : editReply).call(interaction, payload)
-                        interaction.replied = true
-
-                        return message
-                    }
-
-                    interaction.content = `${prefix}${content}`
-                    interaction.author = interaction.user
-                    interaction.bot = false
-                    interaction.attachments = new Map()
-                    interaction.embeds = []
-                    interaction.stickers = new Map()
-                    interaction.mentions = {
-                        users: {
-                            get: () => { },
-                            find: () => { },
-                            forEach: () => { },
-                            map: () => { },
-                            size: 0
-                        },
-                        members: {
-                            get: () => { },
-                            find: () => { },
-                            forEach: () => { },
-                            map: () => { },
-                            size: 0
-                        },
-                        roles: {
-                            get: () => { },
-                            find: () => { },
-                            forEach: () => { },
-                            map: () => { },
-                            size: 0
-                        }
-                    }
-
-                    interaction.react = async () => { }
-                    interaction.delete = interaction.deleteReply
-                    interaction.fetchWebhook = async () => { }
-                    interaction.fetchReference = async () => { }
-                    interaction.createReactionCollector = () => {
-                        return {
-                            on: () => { },
-                            once: () => { },
-                            resetTimer: () => { },
-                            stop: () => { }
-                        }
-                    }
-                    interaction.createMessageComponentCollector = () => {
-                        return {
-                            on: () => { },
-                            once: () => { },
-                            resetTimer: () => { },
-                            stop: () => { }
-                        }
-                    }
-                    console.log('yrorup')
-
-                    await poopy.callbacks.messageCallback(interaction).catch(() => { })
-
-                    if (!interaction.replied) interaction.deleteReply().catch(() => { })
+            for (var { name, value } of interaction.options.data) {
+                var cmdargi = cmdargs.findIndex(arg => arg.name.toLowerCase() == name)
+                if (cmdargi > -1) {
+                    var cmdarg = cmdargs[cmdargi]
+                    argcontent[cmdargi] = `${cmdarg.specifarg ? `-${name} ` : ''}${value}`
                 }
+            }
+
+            argcontent = argcontent.flat().join(' ')
+
+            var cmd = interaction.options.getString('command') ?? interaction.commandName
+            var content = [cmd]
+
+            if (argcontent) content.push(argcontent)
+            if (extracontent) content.push(extracontent)
+
+            content = content.join(' ')
+
+            interaction.deferReply()
+
+            var followUp = interaction.followUp
+            var editReply = interaction.editReply
+
+            interaction.replied = false
+            interaction.reply = async function (payload) {
+                var interaction = this
+
+                var message = await (interaction.replied ? followUp : editReply).call(interaction, payload)
+                interaction.replied = true
+
+                return message
+            }
+
+            interaction.content = `${prefix}${content}`
+            interaction.author = interaction.user
+            interaction.bot = false
+            interaction.attachments = new Map()
+            interaction.embeds = []
+            interaction.stickers = new Map()
+            interaction.mentions = {
+                users: {
+                    get: () => { },
+                    find: () => { },
+                    forEach: () => { },
+                    map: () => { },
+                    size: 0
+                },
+                members: {
+                    get: () => { },
+                    find: () => { },
+                    forEach: () => { },
+                    map: () => { },
+                    size: 0
+                },
+                roles: {
+                    get: () => { },
+                    find: () => { },
+                    forEach: () => { },
+                    map: () => { },
+                    size: 0
+                }
+            }
+
+            interaction.react = async () => { }
+            interaction.delete = interaction.deleteReply
+            interaction.fetchWebhook = async () => { }
+            interaction.fetchReference = async () => { }
+            interaction.createReactionCollector = () => {
+                return {
+                    on: () => { },
+                    once: () => { },
+                    resetTimer: () => { },
+                    stop: () => { }
+                }
+            }
+            interaction.createMessageComponentCollector = () => {
+                return {
+                    on: () => { },
+                    once: () => { },
+                    resetTimer: () => { },
+                    stop: () => { }
+                }
+            }
+
+            await poopy.callbacks.messageCallback(interaction).catch(() => { })
+
+            if (!interaction.replied) interaction.deleteReply().catch(() => { })
         }
     }
 
