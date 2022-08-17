@@ -4785,9 +4785,22 @@ class Poopy {
                 }
             ]
         })
-        if (process.env.CLOUDAMQP_URL) poopy.amqpconn = await require('amqplib').connect(process.env.CLOUDAMQP_URL)
+
+        if (!poopy.modules.fs.existsSync('temp')) {
+            poopy.modules.fs.mkdirSync('temp')
+        }
+        if (!poopy.modules.fs.existsSync(`temp/${poopy.config.mongodatabase}`)) {
+            poopy.modules.fs.mkdirSync(`temp/${poopy.config.mongodatabase}`)
+        }
+        if (!poopy.modules.fs.existsSync('tempfiles')) {
+            poopy.modules.fs.mkdirSync('tempfiles')
+        }
+        if (!poopy.modules.fs.existsSync('tasks') && process.env.CLOUDAMQP_URL && process.env.BOTWEBSITE) {
+            poopy.modules.fs.mkdirSync('tasks')
+        }
 
         await poopy.functions.infoPost(`Gathering data in \`${poopy.config.mongodatabase}\``)
+        if (process.env.CLOUDAMQP_URL) poopy.amqpconn = await require('amqplib').connect(process.env.CLOUDAMQP_URL)
         var gdata = await requestData()
 
         if (gdata) {
@@ -5132,18 +5145,6 @@ class Poopy {
         }
         poopy.json.emojiJSON = await poopy.functions.getEmojis().catch(() => { })
         console.log(`${poopy.bot.user.username}: emojis`)
-        if (!poopy.modules.fs.existsSync('temp')) {
-            poopy.modules.fs.mkdirSync('temp')
-        }
-        if (!poopy.modules.fs.existsSync(`temp/${poopy.config.mongodatabase}`)) {
-            poopy.modules.fs.mkdirSync(`temp/${poopy.config.mongodatabase}`)
-        }
-        if (!poopy.modules.fs.existsSync('tempfiles')) {
-            poopy.modules.fs.mkdirSync('tempfiles')
-        }
-        if (!poopy.modules.fs.existsSync('tasks') && process.env.CLOUDAMQP_URL && process.env.BOTWEBSITE) {
-            poopy.modules.fs.mkdirSync('tasks')
-        }
         await poopy.functions.updateSlashCommands()
         poopy.functions.saveData()
         poopy.vars.saveInterval = setInterval(function () {
