@@ -1,6 +1,6 @@
 module.exports = {
     name: ['makewebm'],
-    args: [{"name":"frames","required":true,"specifarg":false,"orig":"<frames>"},{"name":"frames","required":false,"specifarg":true,"orig":"[-frames <framenumber (max 50)>]"},{"name":"audio","required":false,"specifarg":true,"orig":"[-audio <audioFile>]"},{"name":"fps","required":false,"specifarg":false,"orig":"{fps (max 60)}"}],
+    args: [{"name":"frameurls","required":false,"specifarg":false,"orig":"<frames>"},{"name":"frames","required":false,"specifarg":true,"orig":"[-frames <framenumber (max 50)>]"},{"name":"audio","required":false,"specifarg":true,"orig":"[-audio <audioFile>]"},{"name":"fps","required":false,"specifarg":false,"orig":"{fps (max 60)}"}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -182,7 +182,7 @@ module.exports = {
         return await poopy.functions.sendFile(msg, filepath, `output.webm`)
     },
     help: {
-        name: 'makewebm <frames> [-frames <framenumber (max 50)>] [-audio <audioFile>] {fps (max 60)}',
+        name: 'makewebm {frameurls} [-frames <framenumber (max 50)>] [-audio <audioFile>] {fps (max 60)}',
         value: 'Makes a WebM out of the frames and FPS specified.'
     },
     cooldown: 2500,

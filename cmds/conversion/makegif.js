@@ -1,6 +1,6 @@
 module.exports = {
     name: ['makegif'],
-    args: [{"name":"frames","required":true,"specifarg":false,"orig":"<frames>"},{"name":"frame","required":false,"specifarg":true,"orig":"[-frames"},{"name":"framenumber","required":true,"specifarg":false,"orig":"<framenumber (max 100)>"},{"name":"fps","required":false,"specifarg":false,"orig":"{fps (max 50)}"}],
+    args: [{"name":"frameurls","required":false,"specifarg":false,"orig":"<frames>"},{"name":"frame","required":false,"specifarg":true,"orig":"[-frames"},{"name":"framenumber","required":true,"specifarg":false,"orig":"<framenumber (max 100)>"},{"name":"fps","required":false,"specifarg":false,"orig":"{fps (max 50)}"}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -156,7 +156,7 @@ module.exports = {
         return await poopy.functions.sendFile(msg, filepath, `output.gif`)
     },
     help: {
-        name: 'makegif <frames> [-frames <framenumber (max 100)> {fps (max 50)}',
+        name: 'makegif <frameurls> [-frames <framenumber (max 100)> {fps (max 50)}',
         value: 'Makes a GIF out of the frames and FPS specified.'
     },
     cooldown: 2500,
