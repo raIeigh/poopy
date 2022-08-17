@@ -4759,7 +4759,7 @@ class Poopy {
         }
 
         poopy.callbacks.interactionCallback = async interaction => {
-            if (!interaction.isChatInputCommand()) {
+            if (!interaction.isCommand || !interaction.isCommand()) {
                 console.log('jeji')
                 return
             }
