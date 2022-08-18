@@ -1,4 +1,4 @@
-/*
+﻿/*
     if you got access to this module, wow congrats on hacking me!!!!!
     some cmd code is outdated, don't blame me if it uses 213789 lines
     relating to that, im also planning to move some code into modules
@@ -3863,12 +3863,12 @@ class Poopy {
                 if (!(poopy.config.poosonia && poopy.config.poosoniablacklist.find(cmdname => cmdname == cmd)) && poopy.functions.envsExist(cmdData.envRequired ?? [])) {
                     poopy.commands.push(cmdData)
 
-                    if (Object.keys(poopy.slashBuilders).length < 100 && cmdData.type != 'Owner' && cmdData.type != 'JSON Club') {
+                    if (Object.keys(poopy.slashBuilders).length < 100) {
                         var args = cmdData.args.sort((x, y) => (x.required === y.required) ? 0 : x.required ? -1 : 1)
                         var description = cmdData.help.value.match(/[^\n.!?]+[.!?]*/)[0].substring(0, 100)
 
                         var slashCmd = cmd
-                        var commandGroup = poopy.commandGroups.find(group => group.cmds.find(c => c == cmd))
+                        var commandGroup = poopy.commandGroups.find(group => group.cmds.find(c => cmdData.name.includes(c)))
 
                         if (commandGroup) {
                             slashCmd = commandGroup.name
