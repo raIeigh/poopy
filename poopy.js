@@ -3852,10 +3852,6 @@ class Poopy {
 
         poopy.commands = []
 
-        poopy.slashBuilders = {}
-
-        poopy.commandGroups = poopy.functions.requireJSON(`assets/json/commandGroups.json`)
-
         poopy.modules.fs.readdirSync('cmds').forEach(category => {
             poopy.modules.fs.readdirSync(`cmds/${category}`).forEach(name => {
                 var cmd = name.replace(/\.js$/, '')
@@ -3865,51 +3861,6 @@ class Poopy {
                 !poopy.functions.envsExist(cmdData.envRequired ?? [])) return
 
                 poopy.commands.push(cmdData)
-
-                //if (Object.keys(poopy.slashBuilders).length >= 100) return
-                var args = cmdData.args.sort((x, y) => (x.required === y.required) ? 0 : x.required ? -1 : 1)
-                var description = cmdData.help.value.match(/[^\n.!?]+[.!?]*/)[0].substring(0, 100)
-
-                var slashCmd = cmd
-                var commandGroup = poopy.commandGroups.find(group => group.cmds.find(c => cmdData.name.includes(c)))
-
-                if (commandGroup) {
-                    slashCmd = commandGroup.name
-                    description = commandGroup.description
-                }
-
-                if (poopy.slashBuilders[slashCmd]) return
-
-                var slashBuilder = new poopy.modules.DiscordBuilders.SlashCommandBuilder()
-
-                slashBuilder.setName(slashCmd)
-                    .setDescription(description)
-
-                if (commandGroup) slashBuilder.addStringOption(option =>
-                    option.setName('command')
-                        .setDescription('The command to choose from the group.')
-                        .setRequired(true)
-                        .addChoices(...commandGroup.cmds.map(cmd => {
-                            return { name: cmd, value: cmd }
-                        })
-                    )
-                )
-
-                args.forEach(arg =>
-                    slashBuilder.addStringOption(option =>
-                        option.setName(arg.name.toLowerCase())
-                            .setDescription(arg.orig)
-                            .setRequired(arg.required)
-                    )
-                )
-
-                slashBuilder.addStringOption(option =>
-                    option.setName('extra')
-                        .setDescription('Extra payload you can specify for the command.')
-                        .setRequired(false)
-                )
-
-                poopy.slashBuilders[slashCmd] = slashBuilder
             })
         })
 
@@ -3929,6 +3880,80 @@ class Poopy {
                 return -1
             }
             return 0
+        })
+
+        poopy.slashBuilders = {}
+        poopy.commandGroups = poopy.functions.requireJSON(`assets/json/commandGroups.json`)
+
+        function findGroup(cmdData) {
+            var cmdFind = cmd => cmdData.name.find(name => name == cmd)
+            var groupFind = group => group.cmds.find(cmdFind)
+
+            return poopy.commandGroups.find(groupFind)
+        }
+
+        function findCmdInGroup(cmdData) {
+            var cmdFind = cmd => cmdData.name.find(name => name == cmd)
+            var commandGroup = findGroup(cmdData)
+
+            return commandGroup.cmds.find(cmdFind)
+        }
+
+        function addArgs(builder, args) {
+            args.forEach(arg =>
+                builder.addStringOption(option =>
+                    option.setName(arg.name.toLowerCase())
+                        .setDescription(arg.orig)
+                        .setRequired(arg.required)
+                )
+            )
+
+            builder.addStringOption(option =>
+                option.setName('extra')
+                    .setDescription('Extra payload you can specify for the command.')
+                    .setRequired(false)
+            )
+        }
+
+        poopy.commands.forEach(cmdData => {
+            var slashCmd = cmdData.name[0]
+            var args = cmdData.args.sort((x, y) => (x.required === y.required) ? 0 : x.required ? -1 : 1)
+            var description = cmdData.help.value.match(/[^\n.!?]+[.!?]*/)[0].substring(0, 100)
+
+            var commandGroup = findGroup(cmdData)
+
+            if (commandGroup) {
+                slashCmd = commandGroup.name
+                description = commandGroup.description
+            }
+
+            if (poopy.slashBuilders[slashCmd]) return
+
+            var slashBuilder = new poopy.modules.DiscordBuilders.SlashCommandBuilder()
+
+            slashBuilder.setName(slashCmd)
+                .setDescription(description)
+
+            if (commandGroup) {
+                commandGroup.cmds.forEach(cmd => {
+                    var fcmdData = poopy.functions.findCommand(cmd)
+
+                    var args = fcmdData.args.sort((x, y) => (x.required === y.required) ? 0 : x.required ? -1 : 1)
+                    var description = fcmdData.help.value.match(/[^\n.!?]+[.!?]*/)[0].substring(0, 100)
+
+                    slashBuilder.addSubcommand(subcommand => {
+                        subcommand
+                            .setName(cmd)
+                            .setDescription(description)
+
+                        addArgs(subcommand, args)
+                    })
+                })
+            } else {
+                addArgs(slashBuilder, args)
+            }
+
+            poopy.slashBuilders[slashCmd] = slashBuilder
         })
 
         poopy.functions.updateSlashCommands = async function () {
@@ -4757,10 +4782,10 @@ class Poopy {
                 return
             }
 
-            var findCmd = poopy.commandGroups.find(group => group.name == interaction.commandName) ||
-                poopy.functions.findCommand(interaction.commandName)
+            var findCmd = poopy.functions.findCommand(interaction.options.getSubcommand() ?? interaction.commandName)
 
             if (!findCmd) {
+                await interaction.reply('Fake.').catch(() => { })
                 return
             }
 
@@ -4789,7 +4814,7 @@ class Poopy {
 
             content = content.join(' ')
 
-            interaction.deferReply()
+            await interaction.deferReply().catch(() => { })
 
             var followUp = interaction.followUp
             var editReply = interaction.editReply

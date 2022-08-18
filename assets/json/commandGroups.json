@@ -387,6 +387,56 @@
         ]
     },
     {
+        "name": "complexeffects",
+        "cmds": [
+            "curves",
+            "convolution"
+        ],
+        "description": "Complex effects you can apply on files, like curves and convolution matrix.",
+        "args": [
+            {
+                "name": "file",
+                "required": false,
+                "specifarg": false,
+                "orig": "{file}"
+            },
+            {
+                "name": "data",
+                "required": false,
+                "specifarg": true,
+                "orig": "\"{data}\""
+            }
+        ]
+    },
+    {
+        "name": "flange",
+        "cmds": [
+            "vibrato",
+            "tremolo"
+        ],
+        "description": "Flanges the file's audio.",
+        "args": [
+            {
+                "name": "file",
+                "required": false,
+                "specifarg": false,
+                "orig": "{file}"
+            },
+            {
+                "name": "frequency",
+                "required": false,
+                "specifarg": true,
+                "orig": "[-frequency <hz (from 0.1 to 20000)>]"
+            },
+            {
+                "name": "depth",
+                "required": false,
+                "specifarg": true,
+                "orig": "[-depth <percentage>]"
+            }
+        ]
+    },
+    {
         "name": "overlay",
         "cmds": [
             "overlay",
