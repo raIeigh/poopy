@@ -1,5 +1,5 @@
 [{
-    "name":"audio","cmds":["addaudio","mixaudio"],"description":"Adds and mix file audio.","args":[{
+    "name":"audio","cmds":["addaudio","mixaudio"],"description":"Add and mix file audio.","args":[{
         "name":"file","required":false,"specifarg":false,"orig":"{file}"
     }, {
         "name":"audio","required":false,"specifarg":false,"orig":"{audio}"
@@ -48,23 +48,25 @@
         "name":"file","required":false,"specifarg":false,"orig":"{file}"
     }]}, {
     "name":"pitchspeed","cmds":["gradualhighpitch","graduallowpitch","gradualslowpitch","gradualspeedpitch","higherpitch","lowerpitch","slowpitch","speedpitch","gradualslowdown","gradualspeedup","slowdown","speedup"],"description":"Change the file's speed and pitch.","args":[{
-        "name":"multiplier","required":false,"specifarg":false,"orig":"[multiplier <number (from 1 to 2)>]"
+        "name":"multiplier","required":false,"specifarg":false,"orig":"[multiplier <number>]"
     }, {
         "name":"file","required":false,"specifarg":false,"orig":"{file}"
     }]}, {
-    "name":"color","cmds":["colorlight","colordark"],"description":"Gives the file a new color depending on RGB values."
+    "name":"color","cmds":["colorlight","colordark"],"description":"Give a file a new color depending on RGB values."
 }, {
     "name":"bitrate","cmds":["setaudiobitrate","setbitrate"],"description":"Sets the file's video or audio bitrate.","args":[{
         "name":"bitrate","required":true,"specifarg":false,"orig":"<bitrate>"
     }, {
         "name":"file","required":false,"specifarg":false,"orig":"{file}"
     }]}, {
-    "name":"togif","cmds":["toapng","togif"],"description":"Converts the file to animated image formats.","args":[{
+    "name":"convert","cmds":["toapng","togif","topng","tomp3","tomp4"],"description":"Converts a file to many formats.","args":[{
         "name":"file","required":false,"specifarg":false,"orig":"{file}"
     }, {
         "name":"duration","required":false,"specifarg":true,"orig":"[-duration <seconds (max 60)>]"
     }, {
         "name":"fps","required":false,"specifarg":true,"orig":"[-fps <fps (max 50)>]"
+    },{
+        "name":"framepos","required":false,"specifarg":true,"orig":"[-framepos <number>]"
     }]}, {
     "name":"morphology","cmds":["dilate","erode"],"description":"Dilate or erode the file's colors.","args":[{
         "name":"file","required":false,"specifarg":false,"orig":"{file}"
@@ -81,9 +83,6 @@
     }, {
         "name":"video","required":true,"specifarg":false,"orig":"<video>"
     }]}, {
-    "name":"enhance","cmds":["superresolution","waifu2x"],"description":"Upscale an image and reduce its noise.","args":[{
-        "name":"image","required":true,"specifarg":false,"orig":"<image>"
-    }]}, {
     "name":"merge","cmds":["hmerge","vmerge"],"description":"Merge the first file with the second one.","args":[{
         "name":"file","required":false,"specifarg":false,"orig":"{file}"
     }, {
@@ -99,7 +98,7 @@
     "name":"magik","cmds":["magik","unmagik"],"description":"Liquid-rescales the file.","args":[{
         "name":"file","required":false,"specifarg":false,"orig":"{file}"
     }, {
-        "name":"scale","required":false,"specifarg":true,"orig":"[-scale <multiplier (from 1 to 6)>]"
+        "name":"scale","required":false,"specifarg":true,"orig":"[-scale <multiplier>]"
     }]}, {
     "name":"fix","cmds":["fixgif","fixratio"],"description":"Fixes some aspects of files."
 }, {
@@ -119,8 +118,8 @@
     }, {
         "name":"flags","required":false,"specifarg":true,"orig":"[-flags <algorithm>]"
     }]}, {
-    "name":"size","cmds":["enlarge","hshrink","hstretch","shrink","vshrink","vstretch"],"description":"Resize a file.","args":[{
-        "name":"multiplier","required":false,"specifarg":false,"orig":"[multiplier (from 1 to 6)]"
+    "name":"size","cmds":["enlarge","hshrink","hstretch","shrink","vshrink","vstretch","superresolution","waifu2x","pixenlarge"],"description":"Resize a file.","args":[{
+        "name":"multiplier","required":false,"specifarg":false,"orig":"[multiplier]"
     }, {
         "name":"file","required":false,"specifarg":false,"orig":"{file}"
     }, {

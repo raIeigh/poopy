@@ -1,6 +1,6 @@
 module.exports = {
     name: ['tomp3', 'toaudio', 'tosound'],
-    args: [{"name":"video","required":true,"specifarg":false,"orig":"<video>"}],
+    args: [{"name":"file","required":false,"specifarg":false,"orig":"{file}"}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -47,8 +47,8 @@ module.exports = {
         }
     },
     help: {
-        name: 'tomp3/toaudio/tosound <video>',
-        value: 'Converts the video to mp3.'
+        name: 'tomp3/toaudio/tosound {file}',
+        value: 'Converts the video to MP3.'
     },
     cooldown: 2500,
     type: 'Conversion'
