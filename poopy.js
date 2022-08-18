@@ -3860,55 +3860,54 @@ class Poopy {
             poopy.modules.fs.readdirSync(`cmds/${category}`).forEach(name => {
                 var cmd = name.replace(/\.js$/, '')
                 var cmdData = require(`./cmds/${category}/${name}`)
-                if (!(poopy.config.poosonia && poopy.config.poosoniablacklist.find(cmdname => cmdname == cmd)) && poopy.functions.envsExist(cmdData.envRequired ?? [])) {
+                if ((poopy.config.poosonia && poopy.config.poosoniablacklist.find(cmdname => cmdname == cmd)) ||
+                !poopy.functions.envsExist(cmdData.envRequired ?? []) return
                     poopy.commands.push(cmdData)
 
-                    if (Object.keys(poopy.slashBuilders).length < 100) {
-                        var args = cmdData.args.sort((x, y) => (x.required === y.required) ? 0 : x.required ? -1 : 1)
-                        var description = cmdData.help.value.match(/[^\n.!?]+[.!?]*/)[0].substring(0, 100)
+                    //if (Object.keys(poopy.slashBuilders).length >= 100) return
+                    var args = cmdData.args.sort((x, y) => (x.required === y.required) ? 0 : x.required ? -1 : 1)
+                    var description = cmdData.help.value.match(/[^\n.!?]+[.!?]*/)[0].substring(0, 100)
 
-                        var slashCmd = cmd
-                        var commandGroup = poopy.commandGroups.find(group => group.cmds.find(c => cmdData.name.includes(c)))
+                    var slashCmd = cmd
+                    var commandGroup = poopy.commandGroups.find(group => group.cmds.find(c => cmdData.name.includes(c)))
 
-                        if (commandGroup) {
-                            slashCmd = commandGroup.name
-                            description = commandGroup.description
-                        }
-
-                        if (poopy.slashBuilders[slashCmd]) return
-
-                        var slashBuilder = new poopy.modules.DiscordBuilders.SlashCommandBuilder()
-
-                        slashBuilder.setName(slashCmd)
-                            .setDescription(description)
-
-                        if (commandGroup) slashBuilder.addStringOption(option =>
-                            option.setName('command')
-                                .setDescription('The command to choose from the group.')
-                                .setRequired(true)
-                                .addChoices(...commandGroup.cmds.map(cmd => {
-                                    return { name: cmd, value: cmd }
-                                })
-                            )
-                        )
-    
-                        args.forEach(arg =>
-                            slashBuilder.addStringOption(option =>
-                                    option.setName(arg.name.toLowerCase())
-                                    .setDescription(arg.orig)
-                                    .setRequired(arg.required)
-                            )
-                        )
-    
-                        slashBuilder.addStringOption(option =>
-                            option.setName('extra')
-                                .setDescription('Extra payload you can specify for the command.')
-                                .setRequired(false)
-                        )
-
-                        poopy.slashBuilders[slashCmd] = slashBuilder
+                    if (commandGroup) {
+                        slashCmd = commandGroup.name
+                        description = commandGroup.description
                     }
-                }
+
+                    if (poopy.slashBuilders[slashCmd]) return
+
+                    var slashBuilder = new poopy.modules.DiscordBuilders.SlashCommandBuilder()
+
+                    slashBuilder.setName(slashCmd)
+                        .setDescription(description)
+
+                    if (commandGroup) slashBuilder.addStringOption(option =>
+                        option.setName('command')
+                            .setDescription('The command to choose from the group.')
+                            .setRequired(true)
+                            .addChoices(...commandGroup.cmds.map(cmd => {
+                                return { name: cmd, value: cmd }
+                            })
+                        )
+                    )
+    
+                    args.forEach(arg =>
+                        slashBuilder.addStringOption(option =>
+                                option.setName(arg.name.toLowerCase())
+                                .setDescription(arg.orig)
+                                .setRequired(arg.required)
+                        )
+                    )
+    
+                    slashBuilder.addStringOption(option =>
+                        option.setName('extra')
+                            .setDescription('Extra payload you can specify for the command.')
+                            .setRequired(false)
+                    )
+
+                    poopy.slashBuilders[slashCmd] = slashBuilder
             })
         })
 
@@ -4856,6 +4855,7 @@ class Poopy {
 
             await poopy.callbacks.messageCallback(interaction).catch(() => { })
 
+            await poopy.functions.sleep(1000)
             if (!interaction.replied) interaction.deleteReply().catch(() => { })
         }
     }

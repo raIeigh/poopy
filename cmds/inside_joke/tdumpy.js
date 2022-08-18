@@ -1,6 +1,6 @@
 module.exports = {
     name: ['tdumpy', 'trollfaced', 'trollfacedmosaic'],
-    args: [{"name":"image","required":true,"specifarg":false,"orig":"<image>"},{"name":"resolution","required":false,"specifarg":true,"orig":"[-resolution <number>]"}],
+    args: [{"name":"file","required":false,"specifarg":false,"orig":"{file}"},{"name":"resolution","required":false,"specifarg":true,"orig":"[-resolution <number>]"}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -53,7 +53,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'tdumpy/trollfaced/trollfacedmosaic <image> [-resolution <number>]',
+        name: 'tdumpy/trollfaced/trollfacedmosaic {file} [-resolution <number>]',
         value: 'IT? created the trollfaced mosaic'
     },
     cooldown: 2500,

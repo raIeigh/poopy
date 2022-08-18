@@ -1,6 +1,6 @@
 module.exports = {
     name: ['dividelength', 'divideduration'],
-    args: [{"name":"multiplier","required":false,"specifarg":false,"orig":"[multiplier (from 1 to 6)]"},{"name":"video","required":true,"specifarg":false,"orig":"<video>"}],
+    args: [{"name":"multiplier","required":false,"specifarg":false,"orig":"[multiplier (from 1 to 6)]"},{"name":"file","required":false,"specifarg":false,"orig":"{file}"}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -47,7 +47,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'dividelength/divideduration [multiplier (from 1 to 6)] <video>',
+        name: 'dividelength/divideduration [multiplier (from 1 to 6)] {file}',
         value: "Manipulates the video's Hex Code to divide its duration."
     },
     cooldown: 2500,

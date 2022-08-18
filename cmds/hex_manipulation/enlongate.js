@@ -1,6 +1,6 @@
 module.exports = {
     name: ['enlongate', 'long'],
-    args: [{"name":"video","required":true,"specifarg":false,"orig":"<video>"}],
+    args: [{"name":"file","required":false,"specifarg":false,"orig":"{file}"}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -45,7 +45,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'enlongate/long <video>',
+        name: 'enlongate/long {file}',
         value: "Manipulates the video's Hex Code to make it as long as possible."
     },
     cooldown: 2500,
