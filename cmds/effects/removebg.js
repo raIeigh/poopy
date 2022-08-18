@@ -1,6 +1,6 @@
 module.exports = {
     name: ['removebg', 'removebackground'],
-    args: [{"name":"image","required":true,"specifarg":false,"orig":"<image>"}],
+    args: [{"name":"file","required":false,"specifarg":false,"orig":"{file}"}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -77,7 +77,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'removebg/removebackground <image>',
+        name: 'removebg/removebackground {file}',
         value: "Removes an image's background with remove.bg. It has limits though."
     },
     cooldown: 2500,

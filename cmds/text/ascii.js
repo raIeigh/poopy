@@ -1,6 +1,6 @@
 module.exports = {
     name: ['ascii', 'braille'],
-    args: [{"name":"negative","required":false,"specifarg":true,"orig":"[-negative]"},{"name":"image","required":true,"specifarg":false,"orig":"<image>"}],
+    args: [{"name":"negative","required":false,"specifarg":true,"orig":"[-negative]"},{"name":"file","required":false,"specifarg":false,"orig":"{file}"}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -54,7 +54,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'ascii/braille [-negative] <image>',
+        name: 'ascii/braille [-negative] {file}',
         value: 'Converts the image to ASCII.\n' +
             'Example usage: p:ascii -negative https://cdn.discordapp.com/emojis/827634704722165783.png'
     },

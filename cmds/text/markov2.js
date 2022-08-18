@@ -1,6 +1,6 @@
 module.exports = {
     name: ['markov2'],
-    args: [{"name":"minlength","required":false,"specifarg":true,"orig":"[-minlength <wordNumber>]"},{"name":"randomsentences","required":false,"specifarg":true,"orig":"[-randomsentences]"}],
+    args: [{"name":"minlength","required":false,"specifarg":true,"orig":"[-minlength <charNumber>]"},{"name":"randomsentences","required":false,"specifarg":true,"orig":"[-randomsentences]"}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -33,7 +33,7 @@ module.exports = {
         })
     },
     help: {
-        name: 'markov2 [-minlength <wordNumber>] [-randomsentences]',
+        name: 'markov2 [-minlength <charNumber>] [-randomsentences]',
         value: 'the Poopy Markov includes last messages. this use different algorith.'
     },
     cooldown: 2500,

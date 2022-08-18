@@ -1,6 +1,6 @@
 module.exports = {
     name: ['describeimage'],
-    args: [{"name":"image","required":true,"specifarg":false,"orig":"<image>"}],
+    args: [{"name":"file","required":false,"specifarg":false,"orig":"{file}"}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -52,7 +52,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'describeimage <image>',
+        name: 'describeimage {file}',
         value: "Describes the contents of an image. Try it yourself at https://huggingface.co/spaces/OFA-Sys/OFA-Image_Caption"
     },
     cooldown: 2500,

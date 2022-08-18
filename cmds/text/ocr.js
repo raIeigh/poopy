@@ -1,6 +1,6 @@
 module.exports = {
     name: ['ocr', 'recognizetext'],
-    args: [{"name":"image","required":true,"specifarg":false,"orig":"<image>"}],
+    args: [{"name":"file","required":false,"specifarg":false,"orig":"{file}"}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -80,7 +80,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'ocr/recognizetext <image>',
+        name: 'ocr/recognizetext {file}',
         value: "Recognizes text within an image with Microsoft's Computer Vision."
     },
     cooldown: 2500,

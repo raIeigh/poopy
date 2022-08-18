@@ -1,7 +1,7 @@
 module.exports = {
     name: ['localcommands', 'localcmds', 'servercommands', 'servercmds'],
     args: [{"name":"option","required":true,"specifarg":false,"orig":"<option>"}],
-    execute: async function (msg, args) {
+    execute: async function (msg, args, opts) {
         let poopy = this
 
         var options = {
@@ -11,7 +11,7 @@ module.exports = {
                     var cmd = poopy.data['guild-data'][msg.guild.id]['localcmds'][i]
                     localCmdsArray.push(`- ${cmd.name}`)
                 }
-                
+
                 if (localCmdsArray.length <= 0) {
                     if (poopy.config.textEmbeds) msg.channel.send('None.').catch(() => { })
                     else msg.channel.send({
@@ -51,6 +51,37 @@ module.exports = {
 
                 if (findCommand > -1) {
                     await msg.channel.send(`\`${poopy.data['guild-data'][msg.guild.id]['localcmds'][findCommand].phrase}\``).catch(() => { })
+                } else {
+                    await msg.channel.send(`Not a valid command.`).catch(() => { })
+                    return
+                }
+            },
+
+            execute: async (msg, args) => {
+                if (!args[1]) {
+                    await msg.channel.send('You gotta specify a command name!').catch(() => { })
+                    return
+                }
+
+                var findCommand = poopy.data['guild-data'][msg.guild.id]['localcmds'].findIndex(cmd => cmd.name === args[1].toLowerCase())
+
+                if (findCommand > -1) {
+                    var content = msg.content
+
+                    msg.content = `${poopy.data['guild-data'][msg.guild.id]['prefix']}${args.slice(1).join(' ')}`
+
+                    var localCommand = poopy.data['guild-data'][msg.guild.id]['localcmds'][findCommand]
+                    var oopts = { ...opts }
+                    oopts.ownermode = localCommand.ownermode || oopts.ownermode
+                    var phrase = await poopy.functions.getKeywordsFor(localCommand.phrase, msg, true, opts).catch(() => { }) ?? 'error'
+                    await msg.channel.send({
+                        content: phrase,
+                        allowedMentions: {
+                            parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                        }
+                    }).catch(() => { })
+
+                    msg.content = content
                 } else {
                     await msg.channel.send(`Not a valid command.`).catch(() => { })
                     return
@@ -200,12 +231,12 @@ module.exports = {
         }
 
         if (!args[1]) {
-            if (poopy.config.textEmbeds) msg.channel.send("**list** - Gets a list of local commands.\n**phrase** <commandname> - Displays the phrase of a specific command.\n**add** <commandname> <phrase> (moderator only) - Adds a new local command, if the name is available for use.\n**import** <id> [name] (moderator only) - Imports a new local command from Poopy's command template database (`commandtemplates` command) by ID.\n**edit** <commandname> <phrase> (moderator only) - Edits the local command, if it exists.\n**delete** <commandname> (moderator only) - Deletes the local command, if it exists.").catch(() => { })
+            if (poopy.config.textEmbeds) msg.channel.send("**list** - Gets a list of local commands.\n**phrase** <commandname> - Displays the phrase of a specific command.\n**execute** <commandname> [args] - Execute a specific command.\n**add** <commandname> <phrase> (moderator only) - Adds a new local command, if the name is available for use.\n**import** <id> [name] (moderator only) - Imports a new local command from Poopy's command template database (`commandtemplates` command) by ID.\n**edit** <commandname> <phrase> (moderator only) - Edits the local command, if it exists.\n**delete** <commandname> (moderator only) - Deletes the local command, if it exists.").catch(() => { })
             else msg.channel.send({
                 embeds: [
                     {
                         "title": "Available Options",
-                        "description": "**list** - Gets a list of local commands.\n**phrase** <commandname> - Displays the phrase of a specific command.\n**add** <commandname> <phrase> (moderator only) - Adds a new local command, if the name is available for use.\n**import** <id> [name] (moderator only) - Imports a new local command from Poopy's command template database (`commandtemplates` command) by ID.\n**edit** <commandname> <phrase> (moderator only) - Edits the local command, if it exists.\n**delete** <commandname> (moderator only) - Deletes the local command, if it exists.",
+                        "description": "**list** - Gets a list of local commands.\n**phrase** <commandname> - Displays the phrase of a specific command.\n**execute** <commandname> [args] - Execute a specific command.\n**add** <commandname> <phrase> (moderator only) - Adds a new local command, if the name is available for use.\n**import** <id> [name] (moderator only) - Imports a new local command from Poopy's command template database (`commandtemplates` command) by ID.\n**edit** <commandname> <phrase> (moderator only) - Edits the local command, if it exists.\n**delete** <commandname> (moderator only) - Deletes the local command, if it exists.",
                         "color": 0x472604,
                         "footer": {
                             "icon_url": poopy.bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),

@@ -1,4 +1,4 @@
-﻿/*
+/*
     if you got access to this module, wow congrats on hacking me!!!!!
     some cmd code is outdated, don't blame me if it uses 213789 lines
     relating to that, im also planning to move some code into modules
@@ -4794,12 +4794,11 @@ class Poopy {
             var followUp = interaction.followUp
             var editReply = interaction.editReply
 
-            interaction.replied = false
             interaction.reply = async function (payload) {
                 var interaction = this
 
                 var message = await (interaction.replied ? followUp : editReply).call(interaction, payload)
-                interaction.replied = true
+                interaction.replied = message
 
                 return message
             }
@@ -4859,6 +4858,7 @@ class Poopy {
 
             await poopy.functions.sleep(1000)
             if (!interaction.replied) interaction.deleteReply().catch(() => { })
+            else await poopy.callbacks.messageCallback(interaction.replied).catch(() => { })
         }
     }
 
