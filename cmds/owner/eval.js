@@ -25,18 +25,18 @@ module.exports = {
             for (var i in evalMessage) {
                 if (poopy.tempdata[msg.guild.id][msg.channel.id]['shut']) break
                 var ev = evalMessage[i]
-                await msg.reply({
+                await msg.channel.send({
                     content: ev,
                     allowedMentions: {
                         parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                     }
                 }).catch(async () => {
-                    await msg.reply('​').catch(() => { })
+                    await msg.channel.send('​').catch(() => { })
                     return
                 })
             }
         } catch (error) {
-            await msg.reply({
+            await msg.channel.send({
                 content: error.message,
                 allowedMentions: {
                     parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']

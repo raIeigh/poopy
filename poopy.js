@@ -4139,7 +4139,7 @@ class Poopy {
             if (msg.channel.type === 'DM' || msg.channel.type === 'GROUP_DM') {
                 if (msg.author.bot || msg.author.id == poopy.bot.user.id) return
                 await poopy.functions.sleep(Math.floor(Math.random() * 500) + 500)
-                await msg.reply(poopy.arrays.dmPhrases[Math.floor(Math.random() * poopy.arrays.dmPhrases.length)]
+                await msg.channel.send(poopy.arrays.dmPhrases[Math.floor(Math.random() * poopy.arrays.dmPhrases.length)]
                     .replace(/{mention}/, `<@${msg.author.id}>`)).catch(() => { })
                 return
             }
@@ -4834,7 +4834,7 @@ class Poopy {
                         interaction.reply = async function (payload) {
                             var interaction = this
 
-                            if (interaction.replied) return await interaction.reply(payload)
+                            if (interaction.replied) return await interaction.channel.send(payload)
                             else return interaction.replied = await interaction.editReply(payload)
                         }
 
@@ -5381,7 +5381,7 @@ class Poopy {
                 msg.reply = async function (payload) {
                     var message = this
 
-                    if (message.replied) return message.reply(payload)
+                    if (message.replied) return message.channel.send(payload)
                     else return message.replied = reply.call(message, payload)
                 }
 
