@@ -108,5 +108,5 @@ module.exports = {
         value: 'You got a new plant!'
     },
     cooldown: 2500,
-    type: 'Meme Captions'
+    type: 'Memes'
 }

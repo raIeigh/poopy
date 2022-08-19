@@ -4143,7 +4143,6 @@ class Poopy {
             'JSON Club': 'Exclusive to some people for editing the JSONs used by Poopy.',
             Main: 'Poopy\'s main commands.',
             Memes: 'Integrate an input in many different meme formats.',
-            'Meme Captions': 'Create memes with files and captions.',
             Mirroring: 'Flip or mirror a file in different axes.',
             OG: 'They were there since the very beginning...',
             Owner: 'salami commands',
@@ -4815,7 +4814,7 @@ class Poopy {
                         var choices = autocompleteValues.sort((a, b) =>
                             Math.abs(1 - poopy.functions.similarity(a, focused.value)) -
                             Math.abs(1 - poopy.functions.similarity(b, focused.value))
-                        ).slice(0, 10)
+                        ).slice(0, 25)
 
                         await interaction.respond(
                             choices.map(choice => ({ name: choice.replace(/\n|\r/g, ' ').substring(0, 100) || '(blank)', value: choice }))

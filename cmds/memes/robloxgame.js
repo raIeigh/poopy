@@ -119,5 +119,5 @@ module.exports = {
         value: 'Power your imagination.'
     },
     cooldown: 2500,
-    type: 'Meme Captions'
+    type: 'Memes'
 }

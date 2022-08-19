@@ -99,5 +99,5 @@ module.exports = {
         value: 'twitter artist'
     },
     cooldown: 2500,
-    type: 'Meme Captions'
+    type: 'Memes'
 }

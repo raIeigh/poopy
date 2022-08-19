@@ -140,5 +140,5 @@ module.exports = {
         value: 'Now ON SALE!!!'
     },
     cooldown: 2500,
-    type: 'Meme Captions'
+    type: 'Memes'
 }

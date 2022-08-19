@@ -453,5 +453,5 @@ module.exports = {
         value: 'Creates one of those "Choose your fighter" gifs depending on the selected image.'
     },
     cooldown: 2500,
-    type: 'Meme Captions'
+    type: 'Memes'
 }

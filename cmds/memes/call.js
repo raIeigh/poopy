@@ -111,5 +111,5 @@ module.exports = {
         value: 'Poopy is calling.'
     },
     cooldown: 2500,
-    type: 'Meme Captions'
+    type: 'Memes'
 }

@@ -128,5 +128,5 @@ module.exports = {
         value: 'banned for hating Pan | They/Them | #BLM | #ACAB | #GAYRIGHTS | #ProudPansexual | #ProudNon-Binary | #LGBTQRIGHTS | Hates Straights'
     },
     cooldown: 2500,
-    type: 'Meme Captions'
+    type: 'Memes'
 }
