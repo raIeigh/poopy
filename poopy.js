@@ -3953,6 +3953,7 @@ class Poopy {
                     option.setName(arg.name.toLowerCase())
                         .setDescription(arg.orig)
                         .setRequired(arg.required)
+                        .setAutocomplete(!!arg.autocomplete)
                 )
             )
 
@@ -4787,11 +4788,35 @@ class Poopy {
                 {
                     type: interaction.isAutocomplete && interaction.isAutocomplete(),
                     execute: async () => {
-                        var focusedValue = interaction.options.getFocused()
-                        var choices = ['-filename <name>', '-catbox', '-nosend']
-                        var filtered = choices.filter(choice => choice.startsWith(focusedValue))
+                        var cmd = interaction.commandName
+                        var subcommand = interaction.options.getSubcommand(false)
+                        var commandGroup = findGroup(subcommand ?? cmd)
+
+                        if (subcommand && commandGroup) cmd = subcommand
+
+                        var findCmd = poopy.functions.findCommand(cmd)
+
+                        if (!findCmd) {
+                            await interaction.respond([])
+                            return
+                        }
+
+                        if (subcommand && !commandGroup) {
+                            cmd += ` ${subcommand}`
+                            findCmd = findCmd.subcommands.find(subcmd => subcmd.name == subcommand)
+                        }
+
+                        var focused = interaction.options.getFocused(true)
+                        var findArg = findCmd.args.find(arg => arg.name.toLowerCase() == focused.name)
+                        var autocompleteValues = await findArg.autocomplete.call(poopy, interaction)
+
+                        var choices = autocompleteValues.sort((a, b) =>
+                            Math.abs(1 - poopy.functions.similarity(a, focused.value)) -
+                            Math.abs(1 - poopy.functions.similarity(b, focused.value))
+                        ).slice(0, 10)
+
                         await interaction.respond(
-                            filtered.map(choice => ({ name: choice, value: choice }))
+                            choices.map(choice => ({ name: choice, value: choice }))
                         )
                     }
                 },
