@@ -6,6 +6,8 @@ module.exports = {
 
         await msg.channel.sendTyping().catch(() => { })
 
+        args[1] = args[1] ?? ''
+
         var member = (msg.mentions.members.first() && msg.mentions.members.first().user) ??
             await poopy.bot.users.fetch((args[1].match(/\d+/) ?? [args[1]])[0]).catch(() => { }) ??
             msg.author

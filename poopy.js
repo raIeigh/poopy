@@ -4858,8 +4858,6 @@ class Poopy {
                             else return interaction.replied = await interaction.editReply(payload)
                         }
 
-                        console.log(`${prefix}${content}`)
-
                         interaction.content = `${prefix}${content}`
                         interaction.author = interaction.user
                         interaction.bot = false
