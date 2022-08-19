@@ -252,7 +252,7 @@ class Poopy {
                 this.size = 0
             }
         }
-        
+
         class FakeCollector {
             constructor() {
                 this.on = () => { }
@@ -263,26 +263,27 @@ class Poopy {
         }
 
         var channelSend = poopy.modules.Discord.BaseGuildTextChannel.prototype.send
-        poopy.modules.Discord.BaseGuildTextChannel.prototype.send = async function (payload) {
+        poopy.modules.Discord.BaseGuildTextChannel.prototype.send = async function send(payload) {
             var channel = this
 
             await poopy.functions.waitMessageCooldown()
-            if ((channel.type == 'DM' || channel.type == 'GROUP_DM') && 
+            if ((channel.type == 'DM' || channel.type == 'GROUP_DM') &&
                 poopy.tempdata[channel.guild.id][channel.id]['shut']) return
 
-            return await channelSend.call(channel, payload)
+            return await channelSend.call(channel, payload).then(poopy.functions.setMessageCooldown)
         }
 
         var messageReply = poopy.modules.Discord.Message.prototype.reply
-        poopy.modules.Discord.Message.prototype.reply = async function (payload) {
+        poopy.modules.Discord.Message.prototype.reply = async function reply(payload) {
             var message = this
 
             await poopy.functions.waitMessageCooldown()
-            if ((message.channel.type == 'DM' || message.channel.type == 'GROUP_DM') && 
+            if ((message.channel.type == 'DM' || message.channel.type == 'GROUP_DM') &&
                 poopy.tempdata[message.guild.id][message.channel.id]['shut']) return
 
-            if (poopy.config.allowbotusage) return await message.channel.send(payload)
-            else return await messageReply.call(message, payload)
+            if (poopy.config.allowbotusage) return await message.channel.send(payload).then(poopy.functions.setMessageCooldown)
+            else return await messageReply.call(message, payload).then(poopy.functions.setMessageCooldown).catch(() => { }) ??
+                await message.channel.send(payload).then(poopy.functions.setMessageCooldown)
         }
 
         delete poopy.modules.Discord.Guild.prototype.leave
@@ -1244,7 +1245,6 @@ class Poopy {
 
             var avatar = poopy.bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' })
             var color = { r: 255, b: 255, g: 255 }//await poopy.functions.averageColor(avatar)
-            await poopy.functions.waitMessageCooldown(true)
 
             var infoMsg
             if (poopy.config.textEmbeds) infoMsg = await poopy.bot.guilds.cache.get('834431435704107018')?.channels.cache.get('967083645619830834')?.send({
@@ -1699,7 +1699,7 @@ class Poopy {
                     sendObject.components = components
                 }
 
-                var yesnoMsg = await ((reply && !poopy.config.allowbotusage) ? reply : channel)[(reply && !poopy.config.allowbotusage) ? 'reply' : 'send'](sendObject).catch(() => { })
+                var yesnoMsg = await (reply ?? channel)[reply ? 'reply' : 'send'](sendObject).catch(() => { })
 
                 if (!yesnoMsg) {
                     resolve(false)
@@ -2001,7 +2001,7 @@ class Poopy {
             if (poopy.config.textEmbeds) sendObject.content = resultEmbed
             else sendObject.embeds = [resultEmbed]
 
-            var resultsMsg = await ((reply && !poopy.config.allowbotusage) ? reply : channel)[(reply && !poopy.config.allowbotusage) ? 'reply' : 'send'](sendObject).catch(() => { })
+            var resultsMsg = await (reply ?? channel)[reply ? 'reply' : 'send'](sendObject).catch(() => { })
 
             if (!resultsMsg) {
                 if (errOnFail) throw new Error(`Couldn't send navigable embed to channel`)
@@ -3924,17 +3924,18 @@ class Poopy {
             return poopy.commands.find(c => c.name.find(n => n === name))
         }
 
-        poopy.functions.waitMessageCooldown = async function (noreset) {
+        poopy.functions.waitMessageCooldown = async function () {
             if (poopy.config.msgcooldown <= 0) return
 
-            while (poopy.vars.msgcooldown) {
-                await poopy.functions.sleep(1000)
+            var elapsed = Date.now() - poopy.vars.lastMsgCooldown
+            while (elapsed < poopy.config.msgcooldown) {
+                await poopy.functions.sleep(poopy.config.msgcooldown - elapsed)
             }
+        }
 
-            if (!noreset) {
-                poopy.vars.msgcooldown = true
-                setTimeout(() => poopy.vars.msgcooldown = false, poopy.config.msgcooldown)
-            }
+        poopy.functions.setMessageCooldown = async function (msg) {
+            poopy.vars.msgcooldown = Date.now()
+            return msg
         }
 
         poopy.slashBuilders = {}
@@ -4876,11 +4877,11 @@ class Poopy {
 
                         await interaction.deferReply().catch(() => { })
 
-                        interaction.reply = async function (payload) {
+                        interaction.reply = async function reply(payload) {
                             var interaction = this
 
                             if (interaction.replied) return await interaction.channel.send(payload)
-                            else return interaction.replied = await interaction.editReply(payload)
+                            else return interaction.replied = await interaction.editReply(payload).catch(() => { }) ?? await interaction.channel.send(payload)
                         }
 
                         interaction.content = `${prefix}${content}`
@@ -5377,11 +5378,11 @@ class Poopy {
         if (!poopy.config.apiMode) {
             poopy.bot.on('messageCreate', (msg) => {
                 var reply = msg.reply
-                msg.reply = async function (payload) {
+                msg.reply = async function reply(payload) {
                     var message = this
 
-                    if (message.replied) return message.channel.send(payload)
-                    else return message.replied = reply.call(message, payload)
+                    if (message.replied) return await message.channel.send(payload)
+                    else return message.replied = await reply.call(message, payload).catch(() => { }) ?? await message.channel.send(payload)
                 }
 
                 poopy.callbacks.messageCallback(msg).catch(() => { })
