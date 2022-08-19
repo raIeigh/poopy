@@ -6,13 +6,13 @@ module.exports = {
 
         await msg.channel.sendTyping().catch(() => { })
         if (poopy.functions.lastUrl(msg, 0) === undefined && args[1] === undefined) {
-            await msg.channel.send('What is the file?!').catch(() => { })
+            await msg.reply('What is the file?!').catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
         };
         var currenturl = poopy.functions.lastUrl(msg, 0) || args[1]
         var fileinfo = await poopy.functions.validateFile(currenturl).catch(async error => {
-            await msg.channel.send(error).catch(() => { })
+            await msg.reply(error).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
         })
@@ -57,7 +57,7 @@ module.exports = {
             await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -i assets/coinmaskg.png -i assets/shadow.png -filter_complex "${squareS.constraint !== 'both' ? `[0:v]crop=x=${squareS.constraint === 'height' ? 0 : 'iw/2-ih/2'}:y=${squareS.constraint === 'width' ? 0 : 'ih/2-iw/2'}:w=${squareS.constraint === 'width' ? 'ih' : 'iw'}:h=${squareS.constraint === 'height' ? 'iw' : 'ih'}[cframe];` : ''}[${squareS.constraint !== 'both' ? 'cframe' : '0:v'}]scale=256:256[frame];[2:v][frame]scale2ref[shadow][sframe];[1:v][shadow]scale2ref[mask][sshadow];[sframe][mask]overlay=x=0:y=0:format=auto[mframe];[sshadow][mframe]overlay=x=0:y=0:format=auto,colorkey=0x00AC91:0.01:0,convolution='-2 -1 0 -1 1 1 0 1 2:-2 -1 0 -1 1 1 0 1 2:-2 -1 0 -1 1 1 0 1 2:-2 -1 0 -1 1 1 0 1 2'[oout];[oout]split[pout][ppout];[ppout]palettegen=reserve_transparent=1[palette];[pout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} -gifflags -offsetting ${filepath}/output.gif`)
             return await poopy.functions.sendFile(msg, filepath, `output.gif`)
         } else {
-            await msg.channel.send({
+            await msg.reply({
                 content: `Unsupported file: \`${currenturl}\``,
                 allowedMentions: {
                     parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']

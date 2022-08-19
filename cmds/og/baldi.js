@@ -6,7 +6,7 @@ module.exports = {
 
     await msg.channel.sendTyping().catch(() => { })
     var attachment = new poopy.modules.Discord.MessageAttachment('assets/baldi.mp4')
-    await msg.channel.send({
+    await msg.reply({
       files: [attachment]
     }).catch(() => { })
     await msg.channel.sendTyping().catch(() => { })

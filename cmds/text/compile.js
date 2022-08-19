@@ -30,7 +30,7 @@ module.exports = {
         })
 
         if (language === undefined) {
-            await msg.channel.send(`What is the programming language?! Available ones are:\n${languages.map(lang => `\`${lang.templates[0]}\``).join(', ')}`).catch(() => { })
+            await msg.reply(`What is the programming language?! Available ones are:\n${languages.map(lang => `\`${lang.templates[0]}\``).join(', ')}`).catch(() => { })
             return
         }
 
@@ -43,7 +43,7 @@ module.exports = {
         if (findLang) {
             langVersion = findLang.name
         } else {
-            await msg.channel.send(`Not a valid programming language.\nAvailable ones are: ${languages.map(lang => `\`${lang.templates[0]}\``).join(', ')}`).catch(() => { })
+            await msg.reply(`Not a valid programming language.\nAvailable ones are: ${languages.map(lang => `\`${lang.templates[0]}\``).join(', ')}`).catch(() => { })
             return
         }
 
@@ -62,7 +62,7 @@ module.exports = {
                 title: ""
             }
         }).catch(async err => {
-            await msg.channel.send({
+            await msg.reply({
                 content: err.stack,
                 allowedMentions: {
                     parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
@@ -81,7 +81,7 @@ module.exports = {
         if (stdOut && stdErr) output = `StdOut: ${stdOut.data}\n\nStdErr: ${stdErr.data}`
         else output = (stdOut ?? stdErr) ? (stdOut ?? stdErr).data : 'No output.'
 
-        await msg.channel.send({
+        await msg.reply({
             content: output,
             allowedMentions: {
                 parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']

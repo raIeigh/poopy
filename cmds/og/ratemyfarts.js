@@ -5,7 +5,7 @@ module.exports = {
         let poopy = this
 
         await msg.channel.sendTyping().catch(() => { })
-        await msg.channel.send('Let\'s see...').catch(() => { })
+        await msg.reply('Let\'s see...').catch(() => { })
         var fartRating = Math.floor(Math.random() * 100) + 1
         if (!poopy.data['user-data'][msg.author.id]) {
             poopy.data['user-data'][msg.author.id] = {}
@@ -22,10 +22,10 @@ module.exports = {
             poopy.data['user-data'][msg.author.id]['lastFartRate'] = Date.now();
         }
         if (poopy.data['user-data'][msg.author.id]['fartRate'] >= 70) {
-            await msg.channel.send('**' + poopy.data['user-data'][msg.author.id]['fartRate'] + '**/100, great farts!').catch(() => { })
+            await msg.reply('**' + poopy.data['user-data'][msg.author.id]['fartRate'] + '**/100, great farts!').catch(() => { })
         }
         else {
-            await msg.channel.send('**' + poopy.data['user-data'][msg.author.id]['fartRate'] + '**/100').catch(() => { })
+            await msg.reply('**' + poopy.data['user-data'][msg.author.id]['fartRate'] + '**/100').catch(() => { })
         }
         await msg.channel.sendTyping().catch(() => { })
     },

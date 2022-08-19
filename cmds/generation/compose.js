@@ -22,7 +22,7 @@ module.exports = {
             if (styles.find(style => style === args[styleindex + 1].toLowerCase())) {
                 style = args[styleindex + 1].toLowerCase()
             } else {
-                await msg.channel.send('Not a supported style.').catch(() => { })
+                await msg.reply('Not a supported style.').catch(() => { })
                 return
             }
         }
@@ -62,7 +62,7 @@ module.exports = {
                 temperature: temperature
             }
         }).catch(async () => {
-            await msg.channel.send('Error generating song.').catch(() => { })
+            await msg.reply('Error generating song.').catch(() => { })
         })
 
         if (!createResponse) return

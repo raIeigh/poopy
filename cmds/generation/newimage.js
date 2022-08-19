@@ -6,7 +6,7 @@ module.exports = {
 
     await msg.channel.sendTyping().catch(() => { })
     if (args.length < 6) {
-      await msg.channel.send('Where are all the required arguments?!').catch(() => { })
+      await msg.reply('Where are all the required arguments?!').catch(() => { })
       await msg.channel.sendTyping().catch(() => { })
       return;
     }

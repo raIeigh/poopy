@@ -48,11 +48,11 @@ module.exports = {
         var cmd = chooseCmd()
 
         if (!cmd) {
-            await msg.channel.send('there is no dog').catch(() => { })
+            await msg.reply('there is no dog').catch(() => { })
             return
         }
 
-        var cmdmessage = await msg.channel.send(`Executing \`${cmd.name[0]}\`.`).catch(() => { })
+        var cmdmessage = await msg.reply(`Executing \`${cmd.name[0]}\`.`).catch(() => { })
         if (cmd.cooldown) {
             poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] = (poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] || Date.now()) + cmd.cooldown / ((msg.member.permissions.has('MANAGE_GUILD') || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID) && (cmd.type === 'Text' || cmd.type === 'Main') ? 5 : 1)
         }
@@ -66,7 +66,7 @@ module.exports = {
         var phrase = await cmd.execute.call(poopy, msg, args).catch(() => { }) ?? 'error'
         if (poopy.tempdata[msg.guild.id][msg.channel.id]['shut']) return
         if (cmd.type == 'Local') {
-            await msg.channel.send({
+            await msg.reply({
                 content: phrase,
                 allowedMentions: {
                     parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']

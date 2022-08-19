@@ -125,13 +125,13 @@ module.exports = {
             ]
         }
 
-        if (poopy.config.textEmbeds) msg.channel.send({
+        if (poopy.config.textEmbeds) msg.reply({
             content: `${statsEmbed.fields.map(p => `**${p.name}**: ${p.value}`).join('\n')}\n\nv${poopy.package.version}`,
             allowedMentions: {
                 parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
             }
         }).catch(() => { })
-        else msg.channel.send({
+        else msg.reply({
             embeds: [statsEmbed]
         }).catch(() => { })
     },

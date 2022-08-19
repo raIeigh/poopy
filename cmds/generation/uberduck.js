@@ -7,19 +7,19 @@ module.exports = {
         await msg.channel.sendTyping().catch(() => { })
 
         if (args[1] === undefined) {
-            await msg.channel.send(`What is the voice?! A list can be found at ${process.env.BOTWEBSITE ? `${process.env.BOTWEBSITE}/ubervoices` : `https://app.uberduck.ai/quack-help`}`).catch(() => { })
+            await msg.reply(`What is the voice?! A list can be found at ${process.env.BOTWEBSITE ? `${process.env.BOTWEBSITE}/ubervoices` : `https://app.uberduck.ai/quack-help`}`).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
         }
 
         if (!poopy.vars.ubervoices.find(vc => vc.name == args[1].toLowerCase())) {
-            await msg.channel.send(`Invalid voice. A list can be found at ${process.env.BOTWEBSITE ? `${process.env.BOTWEBSITE}/ubervoices` : `https://app.uberduck.ai/quack-help`}`).catch(() => { })
+            await msg.reply(`Invalid voice. A list can be found at ${process.env.BOTWEBSITE ? `${process.env.BOTWEBSITE}/ubervoices` : `https://app.uberduck.ai/quack-help`}`).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return
         }
 
         if (args[2] === undefined) {
-            await msg.channel.send('What is the text?!').catch(() => { })
+            await msg.reply('What is the text?!').catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
         }
@@ -52,7 +52,7 @@ module.exports = {
         })
 
         if (rejected && response.data) {
-            await msg.channel.send({
+            await msg.reply({
                 content: response.data,
                 allowedMentions: {
                     parse: (!msg.member.permissions.has('ADMINISTRATOR') &&

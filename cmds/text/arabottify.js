@@ -51,7 +51,7 @@ module.exports = {
                     chooseWord()
                 }
             }
-            await msg.channel.send({
+            await msg.reply({
                 content: arabArray.join(' '),
                 allowedMentions: {
                     parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
@@ -62,7 +62,7 @@ module.exports = {
                 var filepath = `temp/${poopy.config.mongodatabase}/file${currentcount}`
                 poopy.modules.fs.mkdirSync(`${filepath}`)
                 poopy.modules.fs.writeFileSync(`${filepath}/arabottify.txt`, arabArray.join(' '))
-                await msg.channel.send({
+                await msg.reply({
                     files: [new poopy.modules.Discord.MessageAttachment(`${filepath}/arabottify.txt`)]
                 }).catch(() => { })
                 poopy.modules.fs.rmSync(`${filepath}`, { force: true, recursive: true })
@@ -97,7 +97,7 @@ module.exports = {
         if (wordsSpecified) {
             arabArray.splice(wordNumber)
         }
-        await msg.channel.send({
+        await msg.reply({
             content: arabArray.join(' '),
             allowedMentions: {
                 parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
@@ -108,7 +108,7 @@ module.exports = {
             var filepath = `temp/${poopy.config.mongodatabase}/file${currentcount}`
             poopy.modules.fs.mkdirSync(`${filepath}`)
             poopy.modules.fs.writeFileSync(`${filepath}/arabottify.txt`, arabArray.join(' '))
-            await msg.channel.send({
+            await msg.reply({
                 files: [new poopy.modules.Discord.MessageAttachment(`${filepath}/arabottify.txt`)]
             }).catch(() => { })
             poopy.modules.fs.rmSync(`${filepath}`, { force: true, recursive: true })

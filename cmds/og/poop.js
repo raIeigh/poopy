@@ -5,7 +5,7 @@ module.exports = {
         let poopy = this
 
         await msg.channel.sendTyping().catch(() => { })
-        await msg.channel.send({
+        await msg.reply({
             content: poopy.arrays.poopPhrases[Math.floor(Math.random() * poopy.arrays.poopPhrases.length)]
                 .replace(/{fart}/, Math.floor(Math.random() * 291) + 10)
                 .replace(/{seconds}/, Math.floor((Math.random() * 59) + 2))

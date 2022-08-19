@@ -6,7 +6,7 @@ module.exports = {
 
         await msg.channel.sendTyping().catch(() => { })
         if (poopy.functions.lastUrl(msg, 0) === undefined && args[1] === undefined) {
-            await msg.channel.send('What is the file?!').catch(() => { })
+            await msg.reply('What is the file?!').catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
         };
@@ -37,7 +37,7 @@ module.exports = {
         }
         var currenturl = poopy.functions.lastUrl(msg, 0) || args[1]
         var fileinfo = await poopy.functions.validateFile(currenturl).catch(async error => {
-            await msg.channel.send(error).catch(() => { })
+            await msg.reply(error).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
         })
@@ -53,7 +53,7 @@ module.exports = {
             await poopy.functions.execPromise(`ffmpeg -stream_loop -1 -t ${duration} -i ${filepath}/${filename} -r 50 -stream_loop -1 -t ${duration} -i assets/transparent.png -filter_complex "[0:v]fps=50,scale=${owidth}:${oheight}:force_original_aspect_ratio=decrease[overlay];[1:v]scale=${width}:${height}[transparent];[transparent][overlay]overlay=x=((W-w)/2)-cos(PI/2*(t*4/${duration}))*${(width / 2) - (owidth / 2)}:y=((H-h)/2)-sin(PI/2*(t*4/${duration}))*${(height / 2) - (oheight / 2)}:format=auto,split[pout][ppout];[ppout]palettegen=reserve_transparent=1[palette];[pout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} -gifflags -offsetting -r 50 -t ${duration} ${filepath}/output.gif`)
             return await poopy.functions.sendFile(msg, filepath, `output.gif`)
         } else {
-            await msg.channel.send({
+            await msg.reply({
                 content: `Unsupported file: \`${currenturl}\``,
                 allowedMentions: {
                     parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']

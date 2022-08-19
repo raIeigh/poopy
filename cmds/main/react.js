@@ -5,7 +5,7 @@ module.exports = {
         let poopy = this
 
         if (args[1] === undefined) {
-            await msg.channel.send('Where are the arguments?!').catch(() => { })
+            await msg.reply('Where are the arguments?!').catch(() => { })
             return;
         }
         var saidEmojis = args[1];
@@ -21,7 +21,7 @@ module.exports = {
                 async function getMessage(id) {
                     var messageToReact = await msg.channel.messages.fetch(id)
                         .catch(async () => {
-                            await msg.channel.send({
+                            await msg.reply({
                                 content: 'Invalid message id: **' + id + '**',
                                 allowedMentions: {
                                     parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
@@ -33,7 +33,7 @@ module.exports = {
                     if (messageToReact) {
                         messageToReact.react(saidEmoji)
                             .catch(async () => {
-                                await msg.channel.send({
+                                await msg.reply({
                                     content: 'Invalid emoji: **' + saidEmoji + '**',
                                     allowedMentions: {
                                         parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']

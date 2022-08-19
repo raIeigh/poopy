@@ -42,7 +42,7 @@ module.exports = {
             hu.resolve = true
             console.log(ho)
 
-            var haa = await poopy.functions.yesno(msg.channel, `It's time to choose the wise one`, msg.member, ho).catch(() => { })
+            var haa = await poopy.functions.yesno(msg.channel, `It's time to choose the wise one`, msg.member, ho, undefined, msg).catch(() => { })
 
             if (haa) {
                 poopy.data['user-data'][msg.author.id]['health'] = Number.MAX_SAFE_INTEGER

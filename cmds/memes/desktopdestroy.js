@@ -6,13 +6,13 @@ module.exports = {
 
         await msg.channel.sendTyping().catch(() => { })
         if (poopy.functions.lastUrl(msg, 0) === undefined && args[1] === undefined) {
-            await msg.channel.send('What is the file?!').catch(() => { })
+            await msg.reply('What is the file?!').catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
         };
         var currenturl = poopy.functions.lastUrl(msg, 0) || args[1]
         var fileinfo = await poopy.functions.validateFile(currenturl).catch(async error => {
-            await msg.channel.send(error).catch(() => { })
+            await msg.reply(error).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
         })
@@ -48,7 +48,7 @@ module.exports = {
             await poopy.functions.execPromise(`ffmpeg -stream_loop -1 -i ${filepath}/${filename} -i assets/destroy.gif -filter_complex "${height >= 238 ? `[1:v]scale=-1:${height}[ckout];` : ''}[${height >= 238 ? `ckout` : `1:v`}]colorkey=0x00FF01:0.3:0.3[jout];[0:v][jout]overlay=shortest=1:x=W/2-w/2:y=H/2-h/2:format=auto[rout];[rout]split[gnout][gpout];[gpout]palettegen=reserve_transparent=1[palette];[gnout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} -gifflags -offsetting ${filepath}/output.gif`)
             return await poopy.functions.sendFile(msg, filepath, `output.gif`)
         } else {
-            await msg.channel.send({
+            await msg.reply({
                 content: `Unsupported file: \`${currenturl}\``,
                 allowedMentions: {
                     parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']

@@ -6,13 +6,13 @@ module.exports = {
 
         await msg.channel.sendTyping().catch(() => { })
         if (poopy.functions.lastUrl(msg, 0) === undefined && args[1] === undefined) {
-            await msg.channel.send('What is the file to recognize?!').catch(() => { })
+            await msg.reply('What is the file to recognize?!').catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
         };
         var currenturl = poopy.functions.lastUrl(msg, 0) || args[1]
         var fileinfo = await poopy.functions.validateFile(currenturl).catch(async error => {
-            await msg.channel.send(error).catch(() => { })
+            await msg.reply(error).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
         })
@@ -36,7 +36,7 @@ module.exports = {
             }
 
             var response = await poopy.modules.axios.request(options).catch(async () => {
-                await msg.channel.send('Error.').catch(() => { })
+                await msg.reply('Error.').catch(() => { })
             })
 
             if (!response) return
@@ -45,13 +45,13 @@ module.exports = {
             var regions = body.regions
 
             if (regions.length <= 0) {
-                await msg.channel.send(`No text detected.`).catch(() => { })
+                await msg.reply(`No text detected.`).catch(() => { })
                 return
             }
 
             var result = regions.map(region => region.lines.map(line => line.words.map(word => word.text).join(' ')).join('\n')).join('\n\n')
 
-            await msg.channel.send({
+            await msg.reply({
                 content: `Language: \`${body.language}\`\n\`\`\`\n${result}\n\`\`\``,
                 allowedMentions: {
                     parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
@@ -62,14 +62,14 @@ module.exports = {
                 var filepath = `temp/${poopy.config.mongodatabase}/file${currentcount}`
                 poopy.modules.fs.mkdirSync(`${filepath}`)
                 poopy.modules.fs.writeFileSync(`${filepath}/ocr.txt`, result)
-                await msg.channel.send({
+                await msg.reply({
                     content: `Language: \`${body.language}\``,
                     files: [new poopy.modules.Discord.MessageAttachment(`${filepath}/ocr.txt`)]
                 }).catch(() => { })
                 poopy.modules.fs.rmSync(`${filepath}`, { force: true, recursive: true })
             })
         } else {
-            await msg.channel.send({
+            await msg.reply({
                 content: `Unsupported file: \`${currenturl}\``,
                 allowedMentions: {
                     parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']

@@ -6,20 +6,20 @@ module.exports = {
 
         var ownerid = poopy.config.ownerids.find(id => id == msg.author.id);
         if (ownerid === undefined && !opts.ownermode) {
-            await msg.channel.send('Owner only!').catch(() => { })
+            await msg.reply('Owner only!').catch(() => { })
             return
         }
         else {
             if (args[1] === undefined && args[2] === undefined && args[3] === undefined) {
-                await msg.channel.send('Where are the arguments?!').catch(() => { })
+                await msg.reply('Where are the arguments?!').catch(() => { })
                 return;
             }
             else if (args[2] === undefined && args[3] === undefined) {
-                await msg.channel.send('What is the status type?! (Available: **PLAYING**, **LISTENING**, **WATCHING**, **STREAMING**, **COMPETING**)').catch(() => { })
+                await msg.reply('What is the status type?! (Available: **PLAYING**, **LISTENING**, **WATCHING**, **STREAMING**, **COMPETING**)').catch(() => { })
                 return;
             }
             else if (args[3] === undefined) {
-                await msg.channel.send('What is the status message?!').catch(() => { })
+                await msg.reply('What is the status message?!').catch(() => { })
                 return;
             }
             if (args[1] === 'false' || args[1] === 'true') {
@@ -38,7 +38,7 @@ module.exports = {
                         ],
                     });
                     poopy.vars.statusChanges = args[1];
-                    await msg.channel.send({
+                    await msg.reply({
                         content: 'Poopy\'s status set to: **' + saidMessage + ' (' + args[2] + ')**',
                         allowedMentions: {
                             parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
@@ -47,7 +47,7 @@ module.exports = {
                     await msg.channel.sendTyping().catch(() => { })
                 }
                 else {
-                    await msg.channel.send({
+                    await msg.reply({
                         content: 'Invalid status type: **' + args[2] + '** (Available: **PLAYING**, **LISTENING**, **WATCHING**, **STREAMING**, **COMPETING**)',
                         allowedMentions: {
                             parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
@@ -57,7 +57,7 @@ module.exports = {
                 }
             }
             else {
-                await msg.channel.send('Specify a valid value! (**false** or **true**)').catch(() => { })
+                await msg.reply('Specify a valid value! (**false** or **true**)').catch(() => { })
                 return;
             }
         };

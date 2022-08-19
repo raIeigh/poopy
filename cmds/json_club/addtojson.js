@@ -6,16 +6,16 @@ module.exports = {
 
         var jsonid = poopy.config.ownerids.find(id => id == msg.author.id) || poopy.config.jsoning.find(id => id == msg.author.id);
         if (jsonid === undefined) {
-            await msg.channel.send('json club only').catch(() => { })
+            await msg.reply('json club only').catch(() => { })
             return
         } else {
             var types = ['psfiles', 'pspasta', 'funnygif', 'poop', 'dmphrases']
 
             if (args[1] === undefined) {
-                await msg.channel.send(`What is the JSON to update?! (Available: ${types.map(t => `**${t}**`).join(', ')})`).catch(() => { })
+                await msg.reply(`What is the JSON to update?! (Available: ${types.map(t => `**${t}**`).join(', ')})`).catch(() => { })
                 return;
             } else if (args[2] === undefined) {
-                await msg.channel.send('What is the value?!').catch(() => { })
+                await msg.reply('What is the value?!').catch(() => { })
                 return;
             }
 
@@ -24,19 +24,19 @@ module.exports = {
             if (types.find(t => t === args[1].toLowerCase())) {
                 type = args[1].toLowerCase()
             } else {
-                await msg.channel.send('Not a JSON type.').catch(() => { })
+                await msg.reply('Not a JSON type.').catch(() => { })
                 return
             }
             var saidMessage = args.slice(2).join(' ')
 
             if (poopy.functions.globalData()['bot-data'][type].find(v => v === saidMessage)) {
-                await msg.channel.send('Already exists.').catch(() => { })
+                await msg.reply('Already exists.').catch(() => { })
                 return
             }
 
             poopy.functions.globalData()['bot-data'][type].push(saidMessage)
 
-            await msg.channel.send({
+            await msg.reply({
                 content: '✅ Added ' + saidMessage,
                 allowedMentions: {
                     parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']

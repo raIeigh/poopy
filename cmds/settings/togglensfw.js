@@ -6,15 +6,15 @@ module.exports = {
 
     if (msg.member.permissions.has('MANAGE_GUILD') || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || poopy.config.ownerids.find(id => id == msg.author.id)) {
       if (!msg.channel.onsfw && !msg.channel.nsfw) {
-        await msg.channel.send('go touch grass').catch(() => { })
+        await msg.reply('go touch grass').catch(() => { })
         return;
       }
 
       poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['nsfw'] = !poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['nsfw']
       msg.channel.nsfw = poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['nsfw']
-      await msg.channel.send('Set to **' + poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['nsfw'] + '**.').catch(() => { })
+      await msg.reply('Set to **' + poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['nsfw'] + '**.').catch(() => { })
     } else {
-      await msg.channel.send('You need the manage server permission to execute that!').catch(() => { })
+      await msg.reply('You need the manage server permission to execute that!').catch(() => { })
       return;
     };
   },

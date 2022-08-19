@@ -6,21 +6,21 @@ module.exports = {
 
         var ownerid = poopy.config.ownerids.find(id => id == msg.author.id);
         if (ownerid === undefined && !opts.ownermode) {
-            await msg.channel.send('Owner only!').catch(() => { })
+            await msg.reply('Owner only!').catch(() => { })
             return
         }
 
         var options = {
             text2im: async (msg, args) => {
                 if (!args[1]) {
-                    await msg.channel.send('What is the text?!').catch(() => { })
+                    await msg.reply('What is the text?!').catch(() => { })
                     await msg.channel.sendTyping().catch(() => { })
                     return;
                 }
 
                 var text = args.slice(1).join(' ')
 
-                var waitMsg = await msg.channel.send(`Haha... This might take a century`).catch(() => { })
+                var waitMsg = await msg.reply(`Haha... This might take a century`).catch(() => { })
 
                 var processInterval = setInterval(async () => {
                     await msg.channel.sendTyping().catch(() => { })
@@ -121,13 +121,13 @@ module.exports = {
 
             variations: async (msg, args) => {
                 if (poopy.functions.lastUrl(msg, 0) === undefined && args[1] === undefined) {
-                    await msg.channel.send('What is the file?!').catch(() => { })
+                    await msg.reply('What is the file?!').catch(() => { })
                     await msg.channel.sendTyping().catch(() => { })
                     return;
                 };
                 var currenturl = poopy.functions.lastUrl(msg, 0)
                 var fileinfo = await poopy.functions.validateFile(currenturl, true).catch(async error => {
-                    await msg.channel.send(error).catch(() => { })
+                    await msg.reply(error).catch(() => { })
                     await msg.channel.sendTyping().catch(() => { })
                     return;
                 })
@@ -147,7 +147,7 @@ module.exports = {
 
                     var imageData = poopy.modules.fs.readFileSync(`${filepath}/output.png`)
 
-                    var waitMsg = await msg.channel.send(`Haha... This might take a century`).catch(() => { })
+                    var waitMsg = await msg.reply(`Haha... This might take a century`).catch(() => { })
 
                     var processInterval = setInterval(async () => {
                         await msg.channel.sendTyping().catch(() => { })
@@ -245,7 +245,7 @@ module.exports = {
                         }
                     ], undefined, undefined, undefined, undefined, msg)
                 } else {
-                    await msg.channel.send({
+                    await msg.reply({
                         content: `Unsupported file: \`${currenturl}\``,
                         allowedMentions: {
                             parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
@@ -258,8 +258,8 @@ module.exports = {
         }
 
         if (!args[1]) {
-            if (poopy.config.textEmbeds) msg.channel.send("**text2im** <prompt> - Generates 4 images from the text prompt.\n**variations** <image> - Generates 3 variations from the specified image.").catch(() => { })
-            else msg.channel.send({
+            if (poopy.config.textEmbeds) msg.reply("**text2im** <prompt> - Generates 4 images from the text prompt.\n**variations** <image> - Generates 3 variations from the specified image.").catch(() => { })
+            else msg.reply({
                 embeds: [
                     {
                         "title": "Available Options",
@@ -276,7 +276,7 @@ module.exports = {
         }
 
         if (!options[args[1].toLowerCase()]) {
-            await msg.channel.send('Not a valid option.').catch(() => { })
+            await msg.reply('Not a valid option.').catch(() => { })
             return
         }
 

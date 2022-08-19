@@ -14,7 +14,7 @@ module.exports = {
             if (!userMention) {
                 async function getUser(id) {
                     var member = await msg.guild.members.fetch(id).catch(async () => {
-                        await msg.channel.send({
+                        await msg.reply({
                             content: 'Invalid user ID: **' + id + '**',
                             allowedMentions: {
                                 parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
@@ -42,11 +42,11 @@ module.exports = {
                             })
                             var matchedTextes = symbolReplacedMessage.match(/"([\s\S]*?)"/)
                             if (!matchedTextes) {
-                                await msg.channel.send('Where\'s the name?!').catch(() => { })
+                                await msg.reply('Where\'s the name?!').catch(() => { })
                                 return
                             }
                             if (!poopy.vars.validUrl.test(args[args.length - 1])) {
-                                await msg.channel.send('Where\'s the avatar?!').catch(() => { })
+                                await msg.reply('Where\'s the avatar?!').catch(() => { })
                                 return
                             }
                             var name = matchedTextes[1]
@@ -60,7 +60,7 @@ module.exports = {
                             }
 
                             if (allBlank) {
-                                await msg.channel.send('Invalid name.').catch(() => { })
+                                await msg.reply('Invalid name.').catch(() => { })
                                 return
                             }
                             var fetchAvatar = await poopy.modules.axios.request({
@@ -68,16 +68,16 @@ module.exports = {
                                 responseType: 'stream'
                             }).catch(() => { })
                             if (!fetchAvatar) {
-                                await msg.channel.send('Invalid avatar.').catch(() => { })
+                                await msg.reply('Invalid avatar.').catch(() => { })
                                 return
                             }
                             var avatarFiletype = await poopy.modules.fileType.fromStream(fetchAvatar.data).catch(() => { })
                             if (!avatarFiletype) {
-                                await msg.channel.send('Invalid avatar.').catch(() => { })
+                                await msg.reply('Invalid avatar.').catch(() => { })
                                 return
                             }
                             if (!(avatarFiletype.mime.startsWith('image'))) {
-                                await msg.channel.send('Invalid avatar.').catch(() => { })
+                                await msg.reply('Invalid avatar.').catch(() => { })
                                 return
                             }
                             var avatar = args[args.length - 1]
@@ -86,14 +86,14 @@ module.exports = {
                                 name: allBlank ? '⠀' : name,
                                 avatar: avatar
                             }
-                            await msg.channel.send({
+                            await msg.reply({
                                 content: member.user.username + ` is now ${name}.`,
                                 allowedMentions: {
                                     parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                                 }
                             }).catch(() => { })
                         } else {
-                            await msg.channel.send({
+                            await msg.reply({
                                 content: member.user.username + ` is not ${poopy.data['guild-data'][msg.guild.id]['members'][member.id]['custom']['name']}.`,
                                 allowedMentions: {
                                     parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
@@ -125,11 +125,11 @@ module.exports = {
                     })
                     var matchedTextes = symbolReplacedMessage.match(/"([\s\S]*?)"/)
                     if (!matchedTextes) {
-                        await msg.channel.send('Where\'s the name?!').catch(() => { })
+                        await msg.reply('Where\'s the name?!').catch(() => { })
                         return
                     }
                     if (!poopy.vars.validUrl.test(args[args.length - 1])) {
-                        await msg.channel.send('Where\'s the avatar?!').catch(() => { })
+                        await msg.reply('Where\'s the avatar?!').catch(() => { })
                         return
                     }
                     var name = matchedTextes[1]
@@ -138,16 +138,16 @@ module.exports = {
                         responseType: 'stream'
                     }).catch(() => { })
                     if (!fetchAvatar) {
-                        await msg.channel.send('Invalid avatar.').catch(() => { })
+                        await msg.reply('Invalid avatar.').catch(() => { })
                         return
                     }
                     var avatarFiletype = await poopy.modules.fileType.fromStream(fetchAvatar.data).catch(() => { })
                     if (!avatarFiletype) {
-                        await msg.channel.send('Invalid avatar.').catch(() => { })
+                        await msg.reply('Invalid avatar.').catch(() => { })
                         return
                     }
                     if (!(avatarFiletype.mime.startsWith('image'))) {
-                        await msg.channel.send('Invalid avatar.').catch(() => { })
+                        await msg.reply('Invalid avatar.').catch(() => { })
                         return
                     }
                     var avatar = args[args.length - 1]
@@ -156,14 +156,14 @@ module.exports = {
                         name: name,
                         avatar: avatar
                     }
-                    await msg.channel.send({
+                    await msg.reply({
                         content: userMention.user.username + ` is now ${name}.`,
                         allowedMentions: {
                             parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                         }
                     }).catch(() => { })
                 } else {
-                    await msg.channel.send({
+                    await msg.reply({
                         content: userMention.user.username + ` is not ${poopy.data['guild-data'][msg.guild.id]['members'][userMention.id]['custom']['name']}.`,
                         allowedMentions: {
                             parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
@@ -173,7 +173,7 @@ module.exports = {
                 }
             }
         } else {
-            await msg.channel.send('You need to have the manage webhooks/messages permission to execute that!').catch(() => { })
+            await msg.reply('You need to have the manage webhooks/messages permission to execute that!').catch(() => { })
             return;
         };
     },

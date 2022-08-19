@@ -6,14 +6,14 @@ module.exports = {
 
         var ownerid = poopy.config.ownerids.find(id => id == msg.author.id);
         if (ownerid === undefined && !opts.ownermode) {
-            await msg.channel.send('Owner only!').catch(() => { })
+            await msg.reply('Owner only!').catch(() => { })
             return
         }
 
-        var confirm = await poopy.functions.yesno(msg.channel, 'are you sure about killing me', msg.member).catch(() => { })
+        var confirm = await poopy.functions.yesno(msg.channel, 'are you sure about killing me', msg.member, undefined, msg).catch(() => { })
         if (!confirm) return
 
-        await msg.channel.send('The salami lid').catch(() => { })
+        await msg.reply('The salami lid').catch(() => { })
         await poopy.destroy(true)
         if (poopy.config.quitOnDestroy) process.exit()
     },

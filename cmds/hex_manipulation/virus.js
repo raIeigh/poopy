@@ -7,13 +7,13 @@ module.exports = {
         if (msg.member.permissions.has('MANAGE_GUILD') || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || poopy.config.ownerids.find(id => id == msg.author.id)) {
             await msg.channel.sendTyping().catch(() => { })
             if (poopy.functions.lastUrl(msg, 0) === undefined && args[1] === undefined) {
-                await msg.channel.send('What is the file?!').catch(() => { })
+                await msg.reply('What is the file?!').catch(() => { })
                 await msg.channel.sendTyping().catch(() => { })
                 return;
             };
             var currenturl = poopy.functions.lastUrl(msg, 0) || args[1]
             var fileinfo = await poopy.functions.validateFile(currenturl, true).catch(async error => {
-                await msg.channel.send(error).catch(() => { })
+                await msg.reply(error).catch(() => { })
                 await msg.channel.sendTyping().catch(() => { })
                 return;
             })
@@ -29,7 +29,7 @@ module.exports = {
             poopy.modules.fs.writeFileSync(`${filepath}/output.${type.ext}`, newfilehex)
             return await poopy.functions.sendFile(msg, filepath, `output.${type.ext}`)
         } else {
-            await msg.channel.send('You need to be a moderator to execute that! (you can do it in another server though I won\'t stop you)').catch(() => { })
+            await msg.reply('You need to be a moderator to execute that! (you can do it in another server though I won\'t stop you)').catch(() => { })
             return;
         }
     },

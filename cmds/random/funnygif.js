@@ -4,7 +4,7 @@ module.exports = {
   execute: async function (msg) {
     let poopy = this
 
-    await msg.channel.send(poopy.special.keys._funnygif.func.call(poopy)).catch(() => { })
+    await msg.reply(poopy.special.keys._funnygif.func.call(poopy)).catch(() => { })
   },
   help: {
     name: 'funnygif/memegif',

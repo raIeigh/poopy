@@ -6,14 +6,14 @@ module.exports = {
 
         await msg.channel.sendTyping().catch(() => { })
         if (poopy.functions.lastUrl(msg, 0) === undefined && args[1] === undefined) {
-            await msg.channel.send('What is the file?!').catch(() => { })
+            await msg.reply('What is the file?!').catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
         };
         var currenturl = poopy.functions.lastUrl(msg, 0) || args[1]
         var speed = isNaN(Number(args[1])) ? 2 : Number(args[1]) <= 1 ? 1 : Number(args[1]) >= 6 ? 6 : Number(args[1]) || 2
         var fileinfo = await poopy.functions.validateFile(currenturl).catch(async error => {
-            await msg.channel.send(error).catch(() => { })
+            await msg.reply(error).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
         })
@@ -36,7 +36,7 @@ module.exports = {
             poopy.modules.fs.writeFileSync(`${filepath}/output.mp4`, newvideohex)
             return await poopy.functions.sendFile(msg, filepath, `output.mp4`)
         } else {
-            await msg.channel.send({
+            await msg.reply({
                 content: `Unsupported file: \`${currenturl}\``,
                 allowedMentions: {
                     parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']

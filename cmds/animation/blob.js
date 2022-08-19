@@ -6,7 +6,7 @@ module.exports = {
 
         await msg.channel.sendTyping().catch(() => { })
         if (poopy.functions.lastUrl(msg, 0) === undefined && args[1] === undefined) {
-            await msg.channel.send('What is the file?!').catch(() => { })
+            await msg.reply('What is the file?!').catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
         };
@@ -17,7 +17,7 @@ module.exports = {
         }
         var currenturl = poopy.functions.lastUrl(msg, 0) || args[1]
         var fileinfo = await poopy.functions.validateFile(currenturl).catch(async error => {
-            await msg.channel.send(error).catch(() => { })
+            await msg.reply(error).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
         })
@@ -45,7 +45,7 @@ module.exports = {
             await poopy.functions.execPromise(`ffmpeg -r ${fps.includes('0/0') ? '50' : fps} -i ${filepath}/${filename} -r ${fps.includes('0/0') ? '50' : fps} -i assets/transparent.png -filter_complex "[1:v][0:v]scale2ref=w=iw+iw/10:h=ih[transparent][overlay];[overlay]scale=iw+sin(PI/2*(t*4/${duration}))*(iw/10):ih+cos(PI/2*(t*4/${duration}))*(ih/3)-ih/3:eval=frame[ooverlay];[transparent][ooverlay]overlay=x=(W-w)/2:y=(H-h):format=auto[out]" -map "[out]" -map 0:a? -c:v libx264 -pix_fmt yuv420p -aspect ${Math.floor(width + width / 10)}:${height} -preset ${poopy.functions.findpreset(args)} ${filepath}/output.mp4`)
             return await poopy.functions.sendFile(msg, filepath, `output.mp4`)
         } else {
-            await msg.channel.send({
+            await msg.reply({
                 content: `Unsupported file: \`${currenturl}\``,
                 allowedMentions: {
                     parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']

@@ -5,7 +5,7 @@ module.exports = {
         let poopy = this
         
         if (poopy.config.textEmbeds) {
-            await msg.channel.send('but how').catch(() => { })
+            await msg.reply('but how').catch(() => { })
             return
         }
 
@@ -23,7 +23,7 @@ module.exports = {
                 "text": `Author: ${msg.author.id} | Message ID: ${msg.id}`
             },
         };
-        await msg.channel.send({
+        await msg.reply({
             allowedMentions: {
                 parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
             },

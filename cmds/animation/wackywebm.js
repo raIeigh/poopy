@@ -6,7 +6,7 @@ module.exports = {
 
         await msg.channel.sendTyping().catch(() => { })
         if (poopy.functions.lastUrl(msg, 0) === undefined && args[1] === undefined) {
-            await msg.channel.send('What is the file?!').catch(() => { })
+            await msg.reply('What is the file?!').catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
         };
@@ -21,7 +21,7 @@ module.exports = {
 
         var mode = poopy.functions.getOption(args, 'mode', { dft: 'bounce', func: (mode) => poopy.functions.parseString(mode, modes, { lower: true }) })
         if (!mode) {
-            await msg.channel.send('Not a supported mode.').catch(() => { })
+            await msg.reply('Not a supported mode.').catch(() => { })
             return
         }
 
@@ -29,7 +29,7 @@ module.exports = {
         var bps = poopy.functions.getOption(args, 'bps', { dft: 1.9, func: (bps) => poopy.functions.parseNumber(bps, { dft: 1.9, min: 0.01, max: 100 }) })
 
         var fileinfo = await poopy.functions.validateFile(currenturl).catch(async error => {
-            await msg.channel.send(error).catch(() => { })
+            await msg.reply(error).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
         })
@@ -50,7 +50,7 @@ module.exports = {
 
             return await poopy.functions.sendFile(msg, filepath, `output.webm`)
         } else {
-            await msg.channel.send({
+            await msg.reply({
                 content: `Unsupported file: \`${currenturl}\``,
                 allowedMentions: {
                     parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']

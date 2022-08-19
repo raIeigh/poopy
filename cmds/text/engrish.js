@@ -7,7 +7,7 @@ module.exports = {
     await msg.channel.sendTyping().catch(() => { })
     var saidMessage = args.slice(1).join(' ')
     if (args[1] === undefined) {
-      await msg.channel.send('What is the message?!').catch(() => { })
+      await msg.reply('What is the message?!').catch(() => { })
       await msg.channel.sendTyping().catch(() => { })
       return;
     };
@@ -21,7 +21,7 @@ module.exports = {
       regex2: ["$1 $2 a $4", "$2 $1", "the $1 $2"]
     }
 
-    await msg.channel.send({
+    await msg.reply({
       content: poopy.functions.lingo(saidMessage, translateSettings),
       allowedMentions: {
         parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']

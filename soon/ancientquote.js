@@ -7,11 +7,11 @@ module.exports = {
         await msg.channel.sendTyping().catch(() => { })
         var saidMessage = args.join(' ').substring(args[0].length + 1)
         if (args[1] === undefined) {
-            await msg.channel.send('What is the text?!').catch(() => { })
+            await msg.reply('What is the text?!').catch(() => { })
             return
         }
 
-        var waitMsg = await msg.channel.send(`Haha... This might take a century`).catch(() => { })
+        var waitMsg = await msg.reply(`Haha... This might take a century`).catch(() => { })
 
         var processInterval = setInterval(async () => {
             await msg.channel.sendTyping().catch(() => { })
@@ -23,7 +23,7 @@ module.exports = {
                 'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36'
             }
         }).catch(async () => {
-            await msg.channel.send('Error generating video.').catch(() => { })
+            await msg.reply('Error generating video.').catch(() => { })
         })
 
         if (!intromakerresponse) return
@@ -34,7 +34,7 @@ module.exports = {
                 'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36'
             }
         }).catch(async () => {
-            await msg.channel.send('Error generating video.').catch(() => { })
+            await msg.reply('Error generating video.').catch(() => { })
         })
 
         if (!introeditorresponse) return
@@ -67,7 +67,7 @@ module.exports = {
             },
             followAllRedirects: true
         }).catch(async () => {
-            await msg.channel.send('Error generating video.').catch(() => { })
+            await msg.reply('Error generating video.').catch(() => { })
         })
 
         if (!response) return

@@ -119,7 +119,7 @@ module.exports = {
 
     var sayori = await poopy.bot.users.fetch('758638862590803968')
 
-    await msg.channel.send({
+    await msg.reply({
       content: `This treasure was made by ${sayori.tag}.`,
       files: [new poopy.modules.Discord.MessageAttachment(sayoriart[Math.floor(Math.random() * sayoriart.length)])]
     }).catch(() => { })

@@ -6,7 +6,7 @@ module.exports = {
 
         await msg.channel.sendTyping().catch(() => { })
         if (poopy.functions.lastUrl(msg, 1) === undefined && args[2] === undefined) {
-            await msg.channel.send('What are the files?!').catch(() => { })
+            await msg.reply('What are the files?!').catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
         };
@@ -89,7 +89,7 @@ module.exports = {
             width: `the width of the first file exceeds the limit of {param} hahahaha (try to use the shrink command)`,
             height: `the height of the first file exceeds the limit of {param} hahahaha (try to use the shrink command)`
         }).catch(async error => {
-            await msg.channel.send(error).catch(() => { })
+            await msg.reply(error).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
         })
@@ -101,7 +101,7 @@ module.exports = {
             width: `the width of the second file exceeds the limit of {param} hahahaha (try to use the shrink command)`,
             height: `the height of the second file exceeds the limit of {param} hahahaha (try to use the shrink command)`
         }).catch(async error => {
-            await msg.channel.send(error).catch(() => { })
+            await msg.reply(error).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
         })
@@ -111,7 +111,7 @@ module.exports = {
         for (var i in errors) {
             var error = errors[i]
             if (error) {
-                await msg.channel.send({
+                await msg.reply({
                     content: error,
                     allowedMentions: {
                         parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
@@ -124,7 +124,7 @@ module.exports = {
         for (var i in filetypes) {
             var type = filetypes[i]
             if (!(type.mime.startsWith('image') || type.mime.startsWith('video'))) {
-                await msg.channel.send({
+                await msg.reply({
                     content: 'Unsupported file types.',
                     allowedMentions: {
                         parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']

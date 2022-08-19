@@ -6,7 +6,7 @@ module.exports = {
 
         if (msg.member.permissions.has('MANAGE_GUILD') || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || poopy.config.ownerids.find(id => id == msg.author.id)) {
             if (args[1] === undefined) {
-                await msg.channel.send('You must specify a prefix!').catch(() => { })
+                await msg.reply('You must specify a prefix!').catch(() => { })
                 return
             }
             for (var i in args) {
@@ -17,13 +17,13 @@ module.exports = {
             }
             var saidMessage = args.slice(1).join(' ').split(/[\s]+/).join(' ')
             if (saidMessage.length > 20) {
-                await msg.channel.send('The prefix can\'t be bigger than 20 characters.').catch(() => { })
+                await msg.reply('The prefix can\'t be bigger than 20 characters.').catch(() => { })
                 return
             }
             poopy.data['guild-data'][msg.guild.id]['prefix'] = saidMessage
-            await msg.channel.send(`The prefix was set to \`${saidMessage}\` (if this is wrong, mention me with "reset prefix")`).catch(() => { })
+            await msg.reply(`The prefix was set to \`${saidMessage}\` (if this is wrong, mention me with "reset prefix")`).catch(() => { })
         } else {
-            await msg.channel.send('You need to be a moderator to execute that!').catch(() => { })
+            await msg.reply('You need to be a moderator to execute that!').catch(() => { })
             return;
         };
     },

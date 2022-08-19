@@ -65,7 +65,7 @@ module.exports = {
                     if (msg.isCommand && msg.isCommand() && !msg.replied && !del) {
                         await msg.reply(sendObject).catch(() => { })
                     } else {
-                        await msg.channel.send(sendObject).catch(() => { })
+                        await msg.reply(sendObject).catch(() => { })
                     }
                 }
             };

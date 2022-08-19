@@ -6,13 +6,13 @@ module.exports = {
 
         var ownerid = (poopy.config.ownerids.find(id => id == msg.author.id));
         if (ownerid === undefined && !opts.ownermode) {
-            await msg.channel.send('Owner only!').catch(() => { })
+            await msg.reply('Owner only!').catch(() => { })
             return
         }
         var saidMessage = args.slice(1).join(' ')
         var no = poopy.config.illKillYouIfYouUseEval.find(id => id === msg.guild.id || saidMessage.includes(id))
         if (no) {
-            await msg.channel.send('<:YouIdiot:735259116737658890>').catch(() => { })
+            await msg.reply('<:YouIdiot:735259116737658890>').catch(() => { })
             return
         }
         try {
@@ -25,18 +25,18 @@ module.exports = {
             for (var i in evalMessage) {
                 if (poopy.tempdata[msg.guild.id][msg.channel.id]['shut']) break
                 var ev = evalMessage[i]
-                await msg.channel.send({
+                await msg.reply({
                     content: ev,
                     allowedMentions: {
                         parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                     }
                 }).catch(async () => {
-                    await msg.channel.send('​').catch(() => { })
+                    await msg.reply('​').catch(() => { })
                     return
                 })
             }
         } catch (error) {
-            await msg.channel.send({
+            await msg.reply({
                 content: error.message,
                 allowedMentions: {
                     parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']

@@ -47,7 +47,7 @@ module.exports = {
 
         var saidMessage = args.slice(1).join(' ')
         if (args[1] === undefined) {
-            await msg.channel.send('What is the text?!').catch(() => { })
+            await msg.reply('What is the text?!').catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return
         }
@@ -70,12 +70,12 @@ module.exports = {
         }).catch(() => { })
 
         if (!response || !response.data) {
-            await msg.channel.send(`Error creating text from ID ${id}.`).catch(() => { })
+            await msg.reply(`Error creating text from ID ${id}.`).catch(() => { })
             return
         }
 
         var fileinfo = await poopy.functions.validateFile(response.data.renderLocation.replace('https', 'http'), 'very true').catch(async error => {
-            await msg.channel.send(error).catch(() => { })
+            await msg.reply(error).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return
         })

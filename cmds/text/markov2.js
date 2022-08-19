@@ -15,7 +15,7 @@ module.exports = {
 
         var markov = poopy.functions.markov(messages, minlength)
 
-        await msg.channel.send({
+        await msg.reply({
             content: markov,
             allowedMentions: {
                 parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
@@ -26,7 +26,7 @@ module.exports = {
             var filepath = `temp/${poopy.config.mongodatabase}/file${currentcount}`
             poopy.modules.fs.mkdirSync(`${filepath}`)
             poopy.modules.fs.writeFileSync(`${filepath}/markov.txt`, markov)
-            await msg.channel.send({
+            await msg.reply({
                 files: [new poopy.modules.Discord.MessageAttachment(`${filepath}/markov.txt`)]
             }).catch(() => { })
             poopy.modules.fs.rmSync(`${filepath}`, { force: true, recursive: true })

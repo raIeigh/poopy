@@ -5,14 +5,14 @@ module.exports = {
         let poopy = this
 
         if (!args[1]) {
-            await msg.channel.send('What is the text?!').catch(() => { })
+            await msg.reply('What is the text?!').catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
         }
 
         var text = args.slice(1).join(' ')
 
-        var waitMsg = await msg.channel.send(`Haha... This might take a century`).catch(() => { })
+        var waitMsg = await msg.reply(`Haha... This might take a century`).catch(() => { })
 
         var processInterval = setInterval(async () => {
             await msg.channel.sendTyping().catch(() => { })

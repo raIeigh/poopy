@@ -6,13 +6,13 @@ module.exports = {
 
         await msg.channel.sendTyping().catch(() => { })
         if (poopy.functions.lastUrl(msg, 0) === undefined && args[2] === undefined) {
-            await msg.channel.send('What is the file?!').catch(() => { })
+            await msg.reply('What is the file?!').catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
         };
         var currenturl = poopy.functions.lastUrl(msg, 0)
         var fileinfo = await poopy.functions.validateFile(currenturl).catch(async error => {
-            await msg.channel.send(error).catch(() => { })
+            await msg.reply(error).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
         })
@@ -34,7 +34,7 @@ module.exports = {
 
                 return await poopy.functions.sendFile(msg, filepath, `output.ogg`)
             } else {
-                await msg.channel.send('No audio stream detected.').catch(() => { })
+                await msg.reply('No audio stream detected.').catch(() => { })
                 await msg.channel.sendTyping().catch(() => { })
                 poopy.modules.fs.rmSync(`${filepath}`, { force: true, recursive: true })
             }
@@ -49,7 +49,7 @@ module.exports = {
 
             return await poopy.functions.sendFile(msg, filepath, `output.ogg`)
         } else {
-            await msg.channel.send({
+            await msg.reply({
                 content: `Unsupported file: \`${currenturl}\``,
                 allowedMentions: {
                     parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']

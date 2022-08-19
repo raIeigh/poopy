@@ -6,7 +6,7 @@ module.exports = {
 
         await msg.channel.sendTyping().catch(() => { })
         if (args[1] === undefined) {
-            await msg.channel.send('What is the text to translate?!').catch(() => { })
+            await msg.reply('What is the text to translate?!').catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
         }
@@ -31,7 +31,7 @@ module.exports = {
             if (languages.find(language => (language.language === args[sourceindex + 1].toLowerCase()) || (language.name === args[sourceindex + 1].toLowerCase()))) {
                 source = languages.find(language => (language.language === args[sourceindex + 1].toLowerCase()) || (language.name === args[sourceindex + 1].toLowerCase())).language
             } else {
-                await msg.channel.send(`Not a supported source language. A list of supported languages are:\n${languages.map(language => `${language.name} (${language.language})`).join(', ')}`).catch(() => { })
+                await msg.reply(`Not a supported source language. A list of supported languages are:\n${languages.map(language => `${language.name} (${language.language})`).join(', ')}`).catch(() => { })
                 return
             }
             args.splice(sourceindex, 2)
@@ -43,7 +43,7 @@ module.exports = {
             if (languages.find(language => (language.language === args[targetindex + 1].toLowerCase()) || (language.name === args[targetindex + 1].toLowerCase()))) {
                 target = languages.find(language => (language.language === args[targetindex + 1].toLowerCase()) || (language.name === args[targetindex + 1].toLowerCase())).language
             } else {
-                await msg.channel.send(`Not a supported target language. A list of supported languages are:\n${languages.map(language => `${language.name} (\`${language.language}\`)`).join(', ')}`).catch(() => { })
+                await msg.reply(`Not a supported target language. A list of supported languages are:\n${languages.map(language => `${language.name} (\`${language.language}\`)`).join(', ')}`).catch(() => { })
                 return
             }
             args.splice(targetindex, 2)
@@ -60,7 +60,7 @@ module.exports = {
         var saidMessage = args.slice(1).join(' ')
 
         if (saidMessage.length > maxlength) {
-            await msg.channel.send(`The input length must be smaller or equal to 2000 divided by the number of repetitions. (in this case ${maxlength} characters)`)
+            await msg.reply(`The input length must be smaller or equal to 2000 divided by the number of repetitions. (in this case ${maxlength} characters)`)
             return
         }
 
@@ -68,7 +68,7 @@ module.exports = {
         var lastlanguage = source
         var currentlanguage = languages[Math.floor(Math.random() * languages.length)].language
 
-        var lmessage = await msg.channel.send(`Translating from ${languages.find(language => language.language === lastlanguage) ? languages.find(language => language.language === lastlanguage).name : 'Auto'} to ${languages.find(language => language.language === currentlanguage).name}. (${output})`).catch(() => { })
+        var lmessage = await msg.reply(`Translating from ${languages.find(language => language.language === lastlanguage) ? languages.find(language => language.language === lastlanguage).name : 'Auto'} to ${languages.find(language => language.language === currentlanguage).name}. (${output})`).catch(() => { })
 
         for (var i = 0; i < repeat; i++) {
             var options = {
@@ -84,7 +84,7 @@ module.exports = {
             };
 
             var response = await poopy.modules.axios.request(options).catch(async () => {
-                await msg.channel.send('Error.').catch(() => { })
+                await msg.reply('Error.').catch(() => { })
             })
 
             if (!response) {
@@ -103,7 +103,7 @@ module.exports = {
             await lmessage.delete().catch(() => { })
         }
 
-        await msg.channel.send({
+        await msg.reply({
             content: output,
             allowedMentions: {
                 parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']

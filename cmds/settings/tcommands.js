@@ -26,13 +26,13 @@ module.exports = {
                     }
                 }
 
-                if (poopy.config.textEmbeds) msg.channel.send({
+                if (poopy.config.textEmbeds) msg.reply({
                     content: list.join('\n'),
                     allowedMentions: {
                         parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                     }
                 }).catch(() => { })
-                else msg.channel.send({
+                else msg.reply({
                     embeds: [listEmbed]
                 }).catch(() => { })
             },
@@ -40,7 +40,7 @@ module.exports = {
             toggle: async (msg, args) => {
                 if (msg.member.permissions.has('MANAGE_GUILD') || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || (poopy.config.ownerids.find(id => id == msg.author.id))) {
                     if (!args[2]) {
-                        await msg.channel.send('You gotta specify a command!')
+                        await msg.reply('You gotta specify a command!')
                         return
                     }
 
@@ -58,36 +58,36 @@ module.exports = {
 
                             poopy.data['guild-data'][msg.guild.id]['disabled'].splice(index, 1)
 
-                            await msg.channel.send(`Enabled \`${findCommand.name.join('/')}\`.`)
+                            await msg.reply(`Enabled \`${findCommand.name.join('/')}\`.`)
                         } else {
                             if (findCommand.name.find(n => n === args[0].toLowerCase())) {
-                                await msg.channel.send(`You can't disable the disabling command!`)
+                                await msg.reply(`You can't disable the disabling command!`)
                                 return
                             }
 
                             poopy.data['guild-data'][msg.guild.id]['disabled'].push(findCommand.name)
 
-                            await msg.channel.send(`Disabled \`${findCommand.name.join('/')}\`.`)
+                            await msg.reply(`Disabled \`${findCommand.name.join('/')}\`.`)
                         }
                     } else {
-                        await msg.channel.send('Not a valid command.')
+                        await msg.reply('Not a valid command.')
                         return
                     }
                 } else {
-                    await msg.channel.send('You need to be a moderator to execute that!').catch(() => { })
+                    await msg.reply('You need to be a moderator to execute that!').catch(() => { })
                     return;
                 };
             },
         }
 
         if (!args[1]) {
-            if (poopy.config.textEmbeds) msg.channel.send({
+            if (poopy.config.textEmbeds) msg.reply({
                 content: "**list** - Gets a list of disabled commands.\n**toggle** <command> (moderator only) - Disables/enables a command, if it exists.",
                 allowedMentions: {
                     parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
-            else msg.channel.send({
+            else msg.reply({
                 embeds: [
                     {
                         "title": "Available Options",
@@ -104,7 +104,7 @@ module.exports = {
         }
 
         if (!options[args[1].toLowerCase()]) {
-            await msg.channel.send('Not a valid option.')
+            await msg.reply('Not a valid option.')
             return
         }
 

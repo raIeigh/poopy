@@ -3429,13 +3429,13 @@ class Poopy {
                     var fileLink = await poopy.vars.Catbox.upload(`${filepath}/${filename}`).catch(() => { })
                     if (fileLink) {
                         var isUrl = poopy.vars.validUrl.test(fileLink)
-                        await msg.channel.send(fileLink.includes('retard') ? 'ok so what happened right here is i tried to upload a gif with a size bigger than 20 mb to catbox.moe but apparently you cant do it so uhhhhhh haha no link for you' : fileLink).catch(() => { })
+                        await msg.reply(fileLink.includes('retard') ? 'ok so what happened right here is i tried to upload a gif with a size bigger than 20 mb to catbox.moe but apparently you cant do it so uhhhhhh haha no link for you' : fileLink).catch(() => { })
 
                         if (!isUrl) {
                             poopy.functions.infoPost(`Couldn\'t upload catbox.moe file, reason:\n\`${fileLink.includes('retard') ? 'ok so what happened right here is i tried to upload a gif with a size bigger than 20 mb to catbox.moe but apparently you cant do it so uhhhhhh haha no link for you' : fileLink}\``)
                         } else returnUrl = fileLink
                     } else {
-                        await msg.channel.send('Couldn\'t send file.').catch(() => { })
+                        await msg.reply('Couldn\'t send file.').catch(() => { })
                         poopy.functions.infoPost(`Couldn\'t upload catbox.moe file`)
                     }
                 } else returnUrl = fileMsg.attachments.first().url
@@ -4141,7 +4141,7 @@ class Poopy {
             if (msg.channel.type === 'DM' || msg.channel.type === 'GROUP_DM') {
                 if (msg.author.bot || msg.author.id == poopy.bot.user.id) return
                 await poopy.functions.sleep(Math.floor(Math.random() * 500) + 500)
-                await msg.channel.send(poopy.arrays.dmPhrases[Math.floor(Math.random() * poopy.arrays.dmPhrases.length)]
+                await msg.reply(poopy.arrays.dmPhrases[Math.floor(Math.random() * poopy.arrays.dmPhrases.length)]
                     .replace(/{mention}/, `<@${msg.author.id}>`)).catch(() => { })
                 return
             }
@@ -4466,7 +4466,7 @@ class Poopy {
                             poopy.data['bot-data']['filecount'] = poopy.vars.filecount
                         } else if (similarCmds ? similarCmds.find(fcmd => fcmd.similarity >= 0.5) : undefined) {
                             notExecuted = false
-                            var useCmd = await poopy.functions.yesno(msg.channel, `Did you mean to use \`${similarCmds[0].name}\`?`, msg.author.id).catch(() => { })
+                            var useCmd = await poopy.functions.yesno(msg.channel, `Did you mean to use \`${similarCmds[0].name}\`?`, msg.author.id, undefined, msg).catch(() => { })
                             if (useCmd) {
                                 if (similarCmds[0].type === 'cmd') {
                                     if (poopy.data['guild-data'][msg.guild.id]['disabled'].find(cmd => cmd.find(n => n === similarCmds[0].name))) {
@@ -4663,11 +4663,11 @@ class Poopy {
                         await msg.channel.sendTyping().catch(() => { })
                     })
                 } else if (msg.content.toLowerCase().includes('lore')) {
-                    await msg.channel.send(`Well... If you played a little bit with \`${poopy.config.globalPrefix}poop\`, I could give you some...`).catch(() => { })
+                    await msg.reply(`Well... If you played a little bit with \`${poopy.config.globalPrefix}poop\`, I could give you some...`).catch(() => { })
                 } else if ((msg.content.toLowerCase().includes('how') && msg.content.toLowerCase().includes('are') && msg.content.toLowerCase().includes('you')) || (msg.content.toLowerCase().includes('what') && msg.content.toLowerCase().includes('up')) || (msg.content.toLowerCase().includes('what') && msg.content.toLowerCase().includes('doing')) || msg.content.toLowerCase().includes('wassup') || (msg.content.toLowerCase().includes('how') && msg.content.toLowerCase().includes('it') && msg.content.toLowerCase().includes('going'))) {
                     var activity = poopy.bot.user.presence.activities[0]
                     if (activity) {
-                        await msg.channel.send({
+                        await msg.reply({
                             content: `Ya know, just ${activity.type.toLowerCase()} ${((activity.type === "COMPETING" && 'in ') || (activity.type === "LISTENING" && 'to ') || '')}${activity.name.replace(new RegExp(`${poopy.functions.regexClean(` | ${poopy.config.globalPrefix}help`)}$`), '')}.`,
                             allowedMentions: {
                                 parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
@@ -4675,21 +4675,21 @@ class Poopy {
                         }).catch(() => { })
                     }
                 } else if (msg.content.toLowerCase().includes('\?') || msg.content.toLowerCase().includes('do you') || msg.content.toLowerCase().includes('are you') || msg.content.toLowerCase().includes('did you') || msg.content.toLowerCase().includes('will you') || msg.content.toLowerCase().includes('were you') || msg.content.toLowerCase().includes('do you') || msg.content.toLowerCase().includes('when') || msg.content.toLowerCase().includes('where') || msg.content.toLowerCase().includes('how') || msg.content.toLowerCase().includes('why') || msg.content.toLowerCase().includes('what') || msg.content.toLowerCase().includes('who')) {
-                    await msg.channel.send(poopy.functions.randomChoice(poopy.arrays.eightball)).catch(() => { })
+                    await msg.reply(poopy.functions.randomChoice(poopy.arrays.eightball)).catch(() => { })
                 } else if (msg.content.toLowerCase().includes('thank') || msg.content.toLowerCase().includes('thx')) {
-                    await msg.channel.send('You\'re welcome!').catch(() => { })
+                    await msg.reply('You\'re welcome!').catch(() => { })
                 } else if (msg.content.toLowerCase().includes('mom') || msg.content.toLowerCase().includes('bitch') || msg.content.toLowerCase().includes('goatfucker') || msg.content.toLowerCase().includes('loser') || msg.content.toLowerCase().includes('asshole') || msg.content.toLowerCase().includes('dipshit') || msg.content.toLowerCase().includes('fucker') || msg.content.toLowerCase().includes('retard') || msg.content.toLowerCase().includes('shitass') || msg.content.toLowerCase().includes('moron') || msg.content.toLowerCase().includes('buffoon') || msg.content.toLowerCase().includes('idiot') || msg.content.toLowerCase().includes('stupid') || msg.content.toLowerCase().includes('gay') || msg.content.toLowerCase().includes('dumbass')) {
-                    await msg.channel.send('Shut up.').catch(() => { })
+                    await msg.reply('Shut up.').catch(() => { })
                 } else if (msg.content.toLowerCase().includes('hi') || msg.content.toLowerCase().includes('yo') || msg.content.toLowerCase().includes('hello') || msg.content.toLowerCase().includes('howdy')) {
-                    await msg.channel.send('Yo! What\'s up?').catch(() => { })
+                    await msg.reply('Yo! What\'s up?').catch(() => { })
                 } else if (msg.content.toLowerCase().includes('no') || msg.content.toLowerCase().includes('nah')) {
-                    await msg.channel.send(':(').catch(() => { })
+                    await msg.reply(':(').catch(() => { })
                 } else if (msg.content.toLowerCase().includes('ye') || msg.content.toLowerCase().includes('yup')) {
-                    await msg.channel.send(':)').catch(() => { })
+                    await msg.reply(':)').catch(() => { })
                 } else {
                     var lastMention = Date.now() - poopy.tempdata[msg.author.id]['eggphrases']['lastmention']
                     if (lastMention > 60000) poopy.tempdata[msg.author.id]['eggphrases']['phrase'] = 0
-                    await msg.channel.send(eggPhrases[poopy.tempdata[msg.author.id]['eggphrases']['phrase']]).catch(() => { })
+                    await msg.reply(eggPhrases[poopy.tempdata[msg.author.id]['eggphrases']['phrase']]).catch(() => { })
                     if (poopy.tempdata[msg.author.id]['eggphrases']['phrase'] < eggPhrases.length) poopy.tempdata[msg.author.id]['eggphrases']['phrase']++
                     poopy.tempdata[msg.author.id]['eggphrases']['lastmention'] = Date.now()
                 }
@@ -4831,7 +4831,7 @@ class Poopy {
                         interaction.reply = async function (payload) {
                             var interaction = this
 
-                            if (interaction.replied) return await interaction.channel.send(payload)
+                            if (interaction.replied) return await interaction.reply(payload)
                             else return interaction.replied = await interaction.editReply(payload)
                         }
 
@@ -5378,7 +5378,7 @@ class Poopy {
                 msg.reply = async function (payload) {
                     var message = this
 
-                    if (message.replied) return message.channel.send(payload)
+                    if (message.replied) return message.reply(payload)
                     else return message.replied = reply.call(message, payload)
                 }
 

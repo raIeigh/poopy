@@ -20,7 +20,7 @@ module.exports = {
             if (templates[args[templateindex + 1].toLowerCase()]) {
                 template = args[templateindex + 1].toLowerCase()
             } else {
-                await msg.channel.send('Not a supported template.').catch(() => { })
+                await msg.reply('Not a supported template.').catch(() => { })
                 return
             }
         }
@@ -40,7 +40,7 @@ module.exports = {
         var fetched = await poopy.functions.getUrls(msg, { max: templates[template] - textes.length }).catch(() => { }) ?? []
 
         if (textes.length <= 0 && fetched.length <= 0) {
-            await msg.channel.send('What are the arguments?!').catch(() => { })
+            await msg.reply('What are the arguments?!').catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
         };
@@ -51,7 +51,7 @@ module.exports = {
             var url = fetched[i]
 
             var fileinfo = await poopy.functions.validateFile(url).catch(async error => {
-                await msg.channel.send(error).catch(() => { })
+                await msg.reply(error).catch(() => { })
                 await msg.channel.sendTyping().catch(() => { })
                 return
             })
@@ -60,7 +60,7 @@ module.exports = {
 
             var filetype = fileinfo.type
             if (!filetype || !(filetype.mime.startsWith('image') && !(poopy.vars.gifFormats.find(f => f === filetype.ext)))) {
-                await msg.channel.send({
+                await msg.reply({
                     content: `Unsupported file: \`${url}\``,
                     allowedMentions: {
                         parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
@@ -101,7 +101,7 @@ module.exports = {
             },
             responseType: 'arraybuffer'
         }).catch(async (e) => {
-            await msg.channel.send(e.response.statusText).catch(() => { })
+            await msg.reply(e.response.statusText).catch(() => { })
             poopy.modules.fs.rmSync(`${filepath}`, { force: true, recursive: true })
         })
 

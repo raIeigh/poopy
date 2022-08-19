@@ -7,7 +7,7 @@ module.exports = {
         await msg.channel.sendTyping().catch(() => { })
         var fonts = poopy.modules.fs.readdirSync('assets/fonts')
         if (!args[1]) {
-            await msg.channel.send(`No font specified. A valid list of fonts is ${fonts.join(', ')}`).catch(() => { })
+            await msg.reply(`No font specified. A valid list of fonts is ${fonts.join(', ')}`).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
         }
@@ -16,7 +16,7 @@ module.exports = {
         if (fonts.find(font => font.toLowerCase() === args[1].toLowerCase())) {
             font = fonts.find(font => font.toLowerCase() === args[1].toLowerCase())
         } else {
-            await msg.channel.send(`Not a supported font. A valid list of fonts are:\n${fonts.map(font => `\`${font}\``).join(', ')}`).catch(() => { })
+            await msg.reply(`Not a supported font. A valid list of fonts are:\n${fonts.map(font => `\`${font}\``).join(', ')}`).catch(() => { })
             return
         }
 

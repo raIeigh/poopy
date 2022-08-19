@@ -6,7 +6,7 @@ module.exports = {
 
         if (msg.channel.parent) {
             if (msg.channel.parent.isText()) {
-                await msg.channel.send('Webhooks can\'t be used here.').catch(() => { })
+                await msg.reply('Webhooks can\'t be used here.').catch(() => { })
                 return
             }
         }
@@ -92,7 +92,7 @@ module.exports = {
                 }, 3000)
             }
         } else {
-            botmsg = await msg.channel.send({
+            botmsg = await msg.reply({
                 content: optiontext,
                 allowedMentions: {
                     parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']

@@ -13,7 +13,7 @@ module.exports = {
         var freq = poopy.functions.getOption(args, 'freqpenalty', { dft: 0, splice: true, n: 1, join: true, func: (opt) => poopy.functions.parseNumber(opt, { dft: 0, min: 0, max: 500, round: true }) })
         var saidMessage = args.slice(1).join(' ')
         if (args[1] === undefined) {
-            await msg.channel.send('What is the text to generate?!').catch(() => { })
+            await msg.reply('What is the text to generate?!').catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return
         }
@@ -63,7 +63,7 @@ module.exports = {
             }).catch(() => { })
 
             if (resp) {
-                await msg.channel.send({
+                await msg.reply({
                     content: `${saidMessage}${resp.data.completions[0].data.text}`,
                     allowedMentions: {
                         parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
@@ -74,7 +74,7 @@ module.exports = {
                     var filepath = `temp/${poopy.config.mongodatabase}/file${currentcount}`
                     poopy.modules.fs.mkdirSync(`${filepath}`)
                     poopy.modules.fs.writeFileSync(`${filepath}/generated.txt`, `${saidMessage}${resp.data.completions[0].data.text}`)
-                    await msg.channel.send({
+                    await msg.reply({
                         files: [new poopy.modules.Discord.MessageAttachment(`${filepath}/generated.txt`)]
                     }).catch(() => { })
                     poopy.modules.fs.rmSync(`${filepath}`, { force: true, recursive: true })
@@ -84,7 +84,7 @@ module.exports = {
         }
         
         if (poopy.vars.validUrl.test(saidMessage)) {
-            await msg.channel.send('URLs in this command will break it.').catch(() => { })
+            await msg.reply('URLs in this command will break it.').catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return
         }
@@ -92,7 +92,7 @@ module.exports = {
         var resp = await poopy.modules.deepai.callStandardApi("text-generator", {
             text: saidMessage,
         }).catch(async err => {
-            await msg.channel.send({
+            await msg.reply({
                 content: err.stack,
                 allowedMentions: {
                     parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
@@ -101,7 +101,7 @@ module.exports = {
         })
         
         if (resp) {
-            await msg.channel.send({
+            await msg.reply({
                 content: resp.output,
                 allowedMentions: {
                     parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']

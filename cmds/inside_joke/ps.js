@@ -18,7 +18,7 @@ module.exports = {
                 if (!(file.match(/\.(gif|mov|mp4|apng)/))) psImages.push(file)
             }
 
-            await msg.channel.send(psImages[Math.floor(Math.random() * psImages.length)]).catch(() => { })
+            await msg.reply(psImages[Math.floor(Math.random() * psImages.length)]).catch(() => { })
         } else if (type === 'video') {
             var psVideos = []
 
@@ -27,7 +27,7 @@ module.exports = {
                 if (file.match(/\.(mov|mp4)/)) psVideos.push(file)
             }
 
-            await msg.channel.send(psVideos[Math.floor(Math.random() * psVideos.length)]).catch(() => { })
+            await msg.reply(psVideos[Math.floor(Math.random() * psVideos.length)]).catch(() => { })
         } else if (type === 'gif') {
             var psGifs = []
 
@@ -36,9 +36,9 @@ module.exports = {
                 if (file.match(/\.(gif|apng)/)) psGifs.push(file)
             }
 
-            await msg.channel.send(psGifs[Math.floor(Math.random() * psGifs.length)]).catch(() => { })
+            await msg.reply(psGifs[Math.floor(Math.random() * psGifs.length)]).catch(() => { })
         } else {
-            await msg.channel.send(poopy.arrays.psFiles[Math.floor(Math.random() * poopy.arrays.psFiles.length)]).catch(() => { })
+            await msg.reply(poopy.arrays.psFiles[Math.floor(Math.random() * poopy.arrays.psFiles.length)]).catch(() => { })
         }
     },
     help: {

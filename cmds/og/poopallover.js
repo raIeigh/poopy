@@ -11,11 +11,11 @@ module.exports = {
             attachments.push(new poopy.modules.Discord.MessageAttachment(attachment.url))
         });
         if (args[1] === undefined && attachments.length <= 0) {
-            await msg.channel.send('What/who is the subject?!').catch(() => { })
+            await msg.reply('What/who is the subject?!').catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
         };
-        await msg.channel.send({
+        await msg.reply({
             content: '**' + (saidMessage || 'this') + '** has been successfully pooped on.',
             allowedMentions: {
                 parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']

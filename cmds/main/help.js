@@ -51,8 +51,8 @@ module.exports = {
                     }
                 }, findCmds.length, msg.member, undefined, undefined, undefined, undefined, undefined, msg)
             } else {
-                if (poopy.config.textEmbeds) msg.channel.send("No commands match your search.").catch(() => { })
-                else msg.channel.send({
+                if (poopy.config.textEmbeds) msg.reply("No commands match your search.").catch(() => { })
+                else msg.reply({
                     embeds: [
                         {
                             "description": "No commands match your search.",
@@ -179,13 +179,13 @@ module.exports = {
                     embeds: [devcmdEmbed]
                 }).catch(() => { })
             }
-            await msg.channel.send('✅ Check your DMs.').catch(() => { })
+            await msg.reply('✅ Check your DMs.').catch(() => { })
         }).catch(async (e) => {
             console.log(e)
-            await msg.channel.send('Couldn\'t send help to you. Do you have me blocked?').catch(() => { })
+            await msg.reply('Couldn\'t send help to you. Do you have me blocked?').catch(() => { })
             return
         })
-        else msg.channel.send('Couldn\'t send help to you. Do you have me blocked?').catch(() => { })
+        else msg.reply('Couldn\'t send help to you. Do you have me blocked?').catch(() => { })
     },
     help: {
         name: 'help/commands/cmds [command]',

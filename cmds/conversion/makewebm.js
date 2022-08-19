@@ -6,7 +6,7 @@ module.exports = {
 
         await msg.channel.sendTyping().catch(() => { })
         if (args[1] === undefined && msg.attachments.size <= 0 && !(poopy.functions.lastUrls(msg).length)) {
-            await msg.channel.send('What are the frames?!').catch(() => { })
+            await msg.reply('What are the frames?!').catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
         };
@@ -33,7 +33,7 @@ module.exports = {
                 width: `the width of the audio exceeds the exception limit of {param} hahahaha there's nothing you can do`,
                 height: `the height of the audio exceeds the exception limit of {param} hahahaha there's nothing you can do`
             }).catch(async error => {
-                await msg.channel.send(error).catch(() => { })
+                await msg.reply(error).catch(() => { })
                 await msg.channel.sendTyping().catch(() => { })
                 return
             })
@@ -53,7 +53,7 @@ module.exports = {
 
         if (nofiles) {
             var validfilecount = 0
-            var framemessage = await msg.channel.send(`Found 0 images.`).catch(() => { })
+            var framemessage = await msg.reply(`Found 0 images.`).catch(() => { })
 
             var frameeditinterval = setInterval(() => {
                 if (framemessage) framemessage.edit(`Found ${validfilecount} images.`).catch(() => { })
@@ -100,7 +100,7 @@ module.exports = {
         }
 
         if (nofiles && lasturlserror) {
-            await msg.channel.send({
+            await msg.reply({
                 content: lasturlserror,
                 allowedMentions: {
                     parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
@@ -123,7 +123,7 @@ module.exports = {
                     error = err
                 })
                 if (error) {
-                    await msg.channel.send({
+                    await msg.reply({
                         content: error,
                         allowedMentions: {
                             parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
@@ -135,7 +135,7 @@ module.exports = {
                 var filetype = fileinfo.type
                 if (!(filetype.mime.startsWith('image') && !(poopy.vars.gifFormats.find(f => f === filetype.ext)) && poopy.vars.jimpFormats.find(f => f === filetype.ext))) error = `Unsupported file: \`${imageurl}\``
                 if (error) {
-                    await msg.channel.send({
+                    await msg.reply({
                         content: error,
                         allowedMentions: {
                             parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']

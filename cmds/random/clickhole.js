@@ -17,7 +17,7 @@ module.exports = {
     var $2 = poopy.modules.cheerio.load(res2.data)
     var posts = $2('.post')
     var post = posts[Math.floor(Math.random() * posts.length)]
-    await msg.channel.send(post.children[1].children[1].children[0].attribs.href).catch(() => { })
+    await msg.reply(post.children[1].children[1].children[0].attribs.href).catch(() => { })
   },
   help: {
     name: 'clickhole',

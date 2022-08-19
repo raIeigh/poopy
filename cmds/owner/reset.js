@@ -6,16 +6,16 @@ module.exports = {
 
         var ownerid = poopy.config.ownerids.find(id => id == msg.author.id);
         if (ownerid === undefined && !opts.ownermode) {
-            await msg.channel.send('Owner only!').catch(() => { })
+            await msg.reply('Owner only!').catch(() => { })
             return
         } else {
-            var confirm = await poopy.functions.yesno(msg.channel, 'are you sure about retarding me', msg.member).catch(() => { })
+            var confirm = await poopy.functions.yesno(msg.channel, 'are you sure about retarding me', msg.member, undefined, msg).catch(() => { })
             if (!confirm) return
 
             var config = poopy.config
             var TOKEN = poopy.__TOKEN
 
-            await msg.channel.send('The chorizo slice').catch(() => { })
+            await msg.reply('The chorizo slice').catch(() => { })
             await poopy.destroy()
 
             var Poopy = require('../poopy')

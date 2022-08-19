@@ -6,7 +6,7 @@ module.exports = {
 
         await msg.channel.sendTyping().catch(() => { })
         if (poopy.functions.lastUrl(msg, 0) === undefined && args[1] === undefined) {
-            await msg.channel.send('What is the file?!').catch(() => { })
+            await msg.reply('What is the file?!').catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
         };
@@ -58,14 +58,14 @@ module.exports = {
         }
 
         if (clips * repetitions > 250) {
-            await msg.channel.send('The number of clips must be smaller or equal to 250.')
+            await msg.reply('The number of clips must be smaller or equal to 250.')
             await msg.channel.sendTyping().catch(() => { })
             return;
         }
 
         var currenturl = poopy.functions.lastUrl(msg, 0) || args[1]
         var fileinfo = await poopy.functions.validateFile(currenturl).catch(async error => {
-            await msg.channel.send(error).catch(() => { })
+            await msg.reply(error).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
         })
@@ -89,7 +89,7 @@ module.exports = {
                 var clipsmade = 0
                 var clipfiles = []
 
-                var clipsmessage = await msg.channel.send(`Processing clip 0 out of ${clips * repetitions}.`).catch(() => { })
+                var clipsmessage = await msg.reply(`Processing clip 0 out of ${clips * repetitions}.`).catch(() => { })
 
                 for (var i = 1; i <= (clips * repetitions); i++) {
                     clipfiles.push(`file '${i}.mp4'`)
@@ -205,7 +205,7 @@ module.exports = {
                 var clipsmade = 0
                 var clipfiles = []
 
-                var clipsmessage = await msg.channel.send(`Processing clip 0 out of ${clips * repetitions}.`).catch(() => { })
+                var clipsmessage = await msg.reply(`Processing clip 0 out of ${clips * repetitions}.`).catch(() => { })
 
                 for (var i = 1; i <= (clips * repetitions); i++) {
                     clipfiles.push(`file '${i}.mp4'`)
@@ -262,7 +262,7 @@ module.exports = {
             var clipsmade = 0
             var clipfiles = []
 
-            var clipsmessage = await msg.channel.send(`Processing clip 0 out of ${clips * repetitions}.`).catch(() => { })
+            var clipsmessage = await msg.reply(`Processing clip 0 out of ${clips * repetitions}.`).catch(() => { })
 
             for (var i = 1; i <= (clips * repetitions); i++) {
                 clipfiles.push(`file '${i}.gif'`)
@@ -318,7 +318,7 @@ module.exports = {
             var clipsmade = 0
             var clipfiles = []
 
-            var clipsmessage = await msg.channel.send(`Processing clip 0 out of ${clips * repetitions}.`).catch(() => { })
+            var clipsmessage = await msg.reply(`Processing clip 0 out of ${clips * repetitions}.`).catch(() => { })
 
             for (var i = 1; i <= (clips * repetitions); i++) {
                 clipfiles.push(`file '${i}.mp3'`)
@@ -361,7 +361,7 @@ module.exports = {
             clipsmessage.delete().catch(() => { })
             return await poopy.functions.sendFile(msg, filepath, `output.mp3`)
         } else {
-            await msg.channel.send({
+            await msg.reply({
                 content: `Unsupported file: \`${currenturl}\``,
                 allowedMentions: {
                     parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']

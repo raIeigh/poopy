@@ -7,7 +7,7 @@ module.exports = {
 
         await msg.channel.sendTyping().catch(() => { })
         if (poopy.functions.lastUrl(msg, 0) === undefined && args[1] === undefined) {
-            await msg.channel.send('What are the files?!').catch(() => { })
+            await msg.reply('What are the files?!').catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
         };
@@ -112,7 +112,7 @@ module.exports = {
         }
 
         if (nofiles && lasturlserror) {
-            await msg.channel.send({
+            await msg.reply({
                 content: lasturlserror,
                 allowedMentions: {
                     parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
@@ -135,7 +135,7 @@ module.exports = {
                     error = err
                 })
                 if (error) {
-                    await msg.channel.send({
+                    await msg.reply({
                         content: error,
                         allowedMentions: {
                             parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
@@ -147,7 +147,7 @@ module.exports = {
                 var filetype = fileinfo.type
                 if (!(filetype.mime.startsWith('image') && !(poopy.vars.gifFormats.find(f => f === filetype.ext)) && poopy.vars.jimpFormats.find(f => f === filetype.ext))) error = `Unsupported file: \`${imageurl}\``
                 if (error) {
-                    await msg.channel.send({
+                    await msg.reply({
                         content: error,
                         allowedMentions: {
                             parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']

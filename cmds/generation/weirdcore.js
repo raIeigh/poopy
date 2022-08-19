@@ -7,19 +7,19 @@ module.exports = {
         await msg.channel.sendTyping().catch(() => { })
         var saidMessage = args.slice(1).join(' ')
         if (args[1] === undefined) {
-            await msg.channel.send('What is the text?!').catch(() => { })
+            await msg.reply('What is the text?!').catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
         }
         if (poopy.vars.validUrl.test(saidMessage)) {
-            await msg.channel.send('URLs in this command will break it.').catch(() => { })
+            await msg.reply('URLs in this command will break it.').catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return
         }
         var resp = await poopy.modules.deepai.callStandardApi("text2img", {
             text: saidMessage,
         }).catch(async err => {
-            await msg.channel.send({
+            await msg.reply({
                 content: err.stack,
                 allowedMentions: {
                     parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
@@ -27,7 +27,7 @@ module.exports = {
             }).catch(() => { })
         })
         if (resp) {
-            await msg.channel.send({
+            await msg.reply({
                 files: [new poopy.modules.Discord.MessageAttachment(resp.output_url)]
             }).catch(() => { })
         }

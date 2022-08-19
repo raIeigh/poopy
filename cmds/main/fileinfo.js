@@ -6,13 +6,13 @@ module.exports = {
 
         await msg.channel.sendTyping().catch(() => { })
         if (poopy.functions.lastUrl(msg, 0) === undefined && args[4] === undefined) {
-            await msg.channel.send('What is the file?!').catch(() => { })
+            await msg.reply('What is the file?!').catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
         };
         var currenturl = poopy.functions.lastUrl(msg, 0)
         var fileinfo = await poopy.functions.validateFile(currenturl, 'very true').catch(async error => {
-            await msg.channel.send(error).catch(() => { })
+            await msg.reply(error).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
         })
@@ -300,7 +300,7 @@ module.exports = {
             }
         }
 
-        if (poopy.config.textEmbeds) msg.channel.send({
+        if (poopy.config.textEmbeds) msg.reply({
             content: `\`${fileinfo.name}\`\n\n${params.join('\n')}`,
             allowedMentions: {
                 parse: (!msg.member.permissions.has('ADMINISTRATOR') &&
@@ -309,7 +309,7 @@ module.exports = {
                     ['users'] : ['users', 'everyone', 'roles']
             }
         }).catch(() => { })
-        else msg.channel.send({
+        else msg.reply({
             embeds: [embed]
         }).catch(() => { })
     },

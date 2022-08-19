@@ -6,7 +6,7 @@ module.exports = {
 
         await msg.channel.sendTyping().catch(() => { })
         if (poopy.functions.lastUrl(msg, 0, true) === undefined && args[1] === undefined) {
-            await msg.channel.send('What is the image to asciify?!').catch(() => { })
+            await msg.reply('What is the image to asciify?!').catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
         };
@@ -15,7 +15,7 @@ module.exports = {
         var negative = false
         if (saidMessage.includes('-negative')) negative = true
         var fileinfo = await poopy.functions.validateFile(currenturl).catch(async error => {
-            await msg.channel.send(error).catch(() => { })
+            await msg.reply(error).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
         })
@@ -25,7 +25,7 @@ module.exports = {
 
         if (type.mime.startsWith('image') && !(poopy.vars.gifFormats.find(f => f === type.ext))) {
             var brailleText = await poopy.functions.braille(currenturl, negative)
-            await msg.channel.send({
+            await msg.reply({
                 content: brailleText,
                 allowedMentions: {
                     parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
@@ -36,14 +36,14 @@ module.exports = {
                 var filepath = `temp/${poopy.config.mongodatabase}/file${currentcount}`
                 poopy.modules.fs.mkdirSync(`${filepath}`)
                 poopy.modules.fs.writeFileSync(`${filepath}/ascii.txt`, brailleText)
-                await msg.channel.send({
+                await msg.reply({
                     files: [new poopy.modules.Discord.MessageAttachment(`${filepath}/ascii.txt`)]
                 }).catch(() => { })
                 poopy.modules.fs.rmSync(`${filepath}`, { force: true, recursive: true })
             })
             await msg.channel.sendTyping().catch(() => { })
         } else {
-            await msg.channel.send({
+            await msg.reply({
                 content: `Unsupported file: \`${currenturl}\``,
                 allowedMentions: {
                     parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']

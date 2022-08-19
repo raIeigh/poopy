@@ -11,7 +11,7 @@ module.exports = {
                 var filepath = `temp/${poopy.config.mongodatabase}/file${currentcount}`
                 poopy.modules.fs.mkdirSync(`${filepath}`)
                 poopy.modules.fs.writeFileSync(`${filepath}/messagelist.txt`, poopy.data['guild-data'][msg.guild.id]['messages'].map(m => `Author: ${m.author}\n${m.content}`).join('\n\n-----------------------------------------------\n\n') || 'lmao theres nothing')
-                await msg.channel.send({
+                await msg.reply({
                     files: [new poopy.modules.Discord.MessageAttachment(`${filepath}/messagelist.txt`)]
                 }).catch(() => { })
                 poopy.modules.fs.rmSync(`${filepath}`, { force: true, recursive: true })
@@ -19,7 +19,7 @@ module.exports = {
 
             search: async (msg, args) => {
                 if (!args[1]) {
-                    await msg.channel.send('You gotta specify the query!').catch(() => { })
+                    await msg.reply('You gotta specify the query!').catch(() => { })
                     return
                 }
 
@@ -42,19 +42,19 @@ module.exports = {
                 var filepath = `temp/${poopy.config.mongodatabase}/file${currentcount}`
                 poopy.modules.fs.mkdirSync(`${filepath}`)
                 poopy.modules.fs.writeFileSync(`${filepath}/messagelist.txt`, results.map(m => `Author: ${m.author}\n${m.content}`).join('\n\n-----------------------------------------------\n\n') || 'lmao theres nothing')
-                await msg.channel.send({
+                await msg.reply({
                     files: [new poopy.modules.Discord.MessageAttachment(`${filepath}/messagelist.txt`)]
                 }).catch(() => { })
                 poopy.modules.fs.rmSync(`${filepath}`, { force: true, recursive: true })
             },
 
             random: async (msg) => {
-                await msg.channel.send(poopy.data['guild-data'][msg.guild.id]['messages'][Math.floor(Math.random() * poopy.data['guild-data'][msg.guild.id]['messages'].length)].content).catch(() => { })
+                await msg.reply(poopy.data['guild-data'][msg.guild.id]['messages'][Math.floor(Math.random() * poopy.data['guild-data'][msg.guild.id]['messages'].length)].content).catch(() => { })
             },
 
             add: async (msg, args) => {
                 if (!args[1]) {
-                    await msg.channel.send('You gotta specify the message!').catch(() => { })
+                    await msg.reply('You gotta specify the message!').catch(() => { })
                     return
                 }
 
@@ -63,13 +63,13 @@ module.exports = {
                 var findMessage = poopy.data['guild-data'][msg.guild.id]['messages'].find(message => message.content.toLowerCase() === cleanMessage.toLowerCase())
 
                 if (findMessage) {
-                    await msg.channel.send(`That message already exists.`).catch(() => { })
+                    await msg.reply(`That message already exists.`).catch(() => { })
                     return
                 } else {
                     var send = true
 
                     if (cleanMessage.match(/nigg|https?\:\/\/.*(rule34|e621|pornhub|hentaihaven|xxx|iplogger|discord\.gg\/[\d\w]+\/?$|discord\.gift)/ig)) {
-                        send = await poopy.functions.yesno(msg.channel, 'That message looks nasty, are you sure about this?', msg.member.id).catch(() => { }) ?? false
+                        send = await poopy.functions.yesno(msg.channel, 'That message looks nasty, are you sure about this?', msg.member.id, undefined, msg).catch(() => { }) ?? false
                     }
 
                     var messages = [{
@@ -79,7 +79,7 @@ module.exports = {
                     messages.splice(10000)
                     poopy.data['guild-data'][msg.guild.id]['messages'] = messages
 
-                    await msg.channel.send({
+                    await msg.reply({
                         content: `✅ Added ${cleanMessage}`,
                         allowedMentions: {
                             parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
@@ -90,7 +90,7 @@ module.exports = {
 
             delete: async (msg, args) => {
                 if (!args[1]) {
-                    await msg.channel.send('You gotta specify the message!').catch(() => { })
+                    await msg.reply('You gotta specify the message!').catch(() => { })
                     return
                 }
 
@@ -101,23 +101,23 @@ module.exports = {
                 if (findMessage > -1) {
                     poopy.data['guild-data'][msg.guild.id]['messages'].splice(findMessage, 1)
 
-                    await msg.channel.send(`✅ Removed.`).catch(() => { })
+                    await msg.reply(`✅ Removed.`).catch(() => { })
                 } else {
-                    await msg.channel.send(`Not found.`).catch(() => { })
+                    await msg.reply(`Not found.`).catch(() => { })
                 }
             },
 
             clear: async (msg) => {
                 if (msg.member.permissions.has('MANAGE_GUILD') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || poopy.config.ownerids.find(id => id == msg.author.id)) {
-                    var confirm = await poopy.functions.yesno(msg.channel, 'are you sure about this', msg.member).catch(() => { })
+                    var confirm = await poopy.functions.yesno(msg.channel, 'are you sure about this', msg.member, undefined, msg).catch(() => { })
 
                     if (confirm) {
                         poopy.data['guild-data'][msg.guild.id]['messages'] = []
 
-                        await msg.channel.send(`✅ All the messages from the database have been cleared.`).catch(() => { })
+                        await msg.reply(`✅ All the messages from the database have been cleared.`).catch(() => { })
                     }
                 } else {
-                    await msg.channel.send('You need the manage server permission to execute that!').catch(() => { })
+                    await msg.reply('You need the manage server permission to execute that!').catch(() => { })
                 };
             },
 
@@ -126,9 +126,9 @@ module.exports = {
                     poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['read'] = !(poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['read'])
 
                     var read = poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['read']
-                    await msg.channel.send(`I **can${!read ? '\'t' : ''} read** messages from the channel now.`).catch(() => { })
+                    await msg.reply(`I **can${!read ? '\'t' : ''} read** messages from the channel now.`).catch(() => { })
                 } else {
-                    await msg.channel.send('You need to be a moderator to execute that!').catch(() => { })
+                    await msg.reply('You need to be a moderator to execute that!').catch(() => { })
                     return;
                 };
             },
@@ -149,17 +149,17 @@ module.exports = {
                     })
 
                     var read = poopy.data['guild-data'][msg.guild.id]['read']
-                    await msg.channel.send(`I **can${!read ? '\'t' : ''} read** messages from all channels now.`).catch(() => { })
+                    await msg.reply(`I **can${!read ? '\'t' : ''} read** messages from all channels now.`).catch(() => { })
                 } else {
-                    await msg.channel.send('You need the manage server permission to execute that!').catch(() => { })
+                    await msg.reply('You need the manage server permission to execute that!').catch(() => { })
                     return;
                 };
             },
         }
 
         if (!args[1]) {
-            if (poopy.config.textEmbeds) msg.channel.send("**list** - Sends a text file with a list of all messages that exist within the guild's message database.\n\n**search** <query> - Searches for every message in the server that matches the query.\n\n**random** - Sends a random message from the database to the channel.\n\n**add** <message> - Adds a new message to the guild's database, if it is available for use.\n\n**delete** <message> - Deletes the message, if it exists.\n\n**clear** (manage server only) - Clears ALL the messages from the database.\n\n**read** (moderator only) - Toggles whether the bot can read the messages from the channel or not.\n\n**readall** (manage server only) - Toggles whether the bot can read the messages from all channels or not.").catch(() => { })
-            else msg.channel.send({
+            if (poopy.config.textEmbeds) msg.reply("**list** - Sends a text file with a list of all messages that exist within the guild's message database.\n\n**search** <query> - Searches for every message in the server that matches the query.\n\n**random** - Sends a random message from the database to the channel.\n\n**add** <message> - Adds a new message to the guild's database, if it is available for use.\n\n**delete** <message> - Deletes the message, if it exists.\n\n**clear** (manage server only) - Clears ALL the messages from the database.\n\n**read** (moderator only) - Toggles whether the bot can read the messages from the channel or not.\n\n**readall** (manage server only) - Toggles whether the bot can read the messages from all channels or not.").catch(() => { })
+            else msg.reply({
                 embeds: [
                     {
                         "title": "Available Options",
@@ -176,7 +176,7 @@ module.exports = {
         }
 
         if (!options[args[1].toLowerCase()]) {
-            await msg.channel.send('Not a valid option.').catch(() => { })
+            await msg.reply('Not a valid option.').catch(() => { })
             return
         }
 

@@ -6,7 +6,7 @@ module.exports = {
 
         await msg.channel.sendTyping().catch(() => { })
         if (poopy.functions.lastUrl(msg, 0) === undefined && args[2] === undefined) {
-            await msg.channel.send('What is the file?!').catch(() => { })
+            await msg.reply('What is the file?!').catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
         };
@@ -14,13 +14,13 @@ module.exports = {
         var keepaspectratio
         var width = isNaN(Number(args[1])) ? undefined : Number(args[1]) <= 1 ? 1 : Number(args[1]) >= 3000 ? 3000 : Number(args[1]) || undefined
         if (width === undefined) {
-            await msg.channel.send('What is the width?!').catch(() => { })
+            await msg.reply('What is the width?!').catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
         }
         var height = isNaN(Number(args[2])) ? undefined : Number(args[2]) <= 1 ? 1 : Number(args[2]) >= 3000 ? 3000 : Number(args[2]) || undefined
         if (height === undefined) {
-            await msg.channel.send('What is the height?!').catch(() => { })
+            await msg.reply('What is the height?!').catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
         }
@@ -48,7 +48,7 @@ module.exports = {
             if (flags.find(flag => flag === args[flagsindex + 1].toLowerCase())) {
                 flag = args[flagsindex + 1]
             } else {
-                await msg.channel.send('Not a supported flag.').catch(() => { })
+                await msg.reply('Not a supported flag.').catch(() => { })
                 return
             }
         }
@@ -79,7 +79,7 @@ module.exports = {
             }
         }
         var fileinfo = await poopy.functions.validateFile(currenturl, true).catch(async error => {
-            await msg.channel.send(error).catch(() => { })
+            await msg.reply(error).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
         })
@@ -112,7 +112,7 @@ module.exports = {
             await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -i assets/transparent.png -filter_complex "[1:v][0:v]scale2ref[background][input];[input]scale=${width}:${height}${flag ? `:flags=${flag}` : ''}${keepaspectratio ? `:force_original_aspect_ratio=${keepaspectratio}` : ''}[overlay];[background][overlay]overlay=x=${originx}:y=${originy}:format=auto,split[pout][ppout];[ppout]palettegen=reserve_transparent=1[palette];[pout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} -gifflags -offsetting ${filepath}/output.gif`)
             return await poopy.functions.sendFile(msg, filepath, `output.gif`)
         } else {
-            await msg.channel.send({
+            await msg.reply({
                 content: `Unsupported file: \`${currenturl}\``,
                 allowedMentions: {
                     parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']

@@ -6,13 +6,13 @@ module.exports = {
 
         await msg.channel.sendTyping().catch(() => { })
         if (poopy.functions.lastUrl(msg, 0) === undefined && args[1] === undefined) {
-            await msg.channel.send('What is the file?!').catch(() => { })
+            await msg.reply('What is the file?!').catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
         };
         var currenturl = poopy.functions.lastUrl(msg, 0) || args[1]
         var fileinfo = await poopy.functions.validateFile(currenturl, true).catch(async error => {
-            await msg.channel.send(error).catch(() => { })
+            await msg.reply(error).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
         })
@@ -30,7 +30,7 @@ module.exports = {
             if (audio) {
                 var aduration = Number(fileinfo.info.aduration.includes('N/A') ? '0' : fileinfo.info.aduration)
                 if (aduration > 60) {
-                    await msg.channel.send('The length of that audio surpasses 1 minute, try trimming it!').catch(() => { })
+                    await msg.reply('The length of that audio surpasses 1 minute, try trimming it!').catch(() => { })
                     return
                 }
 
@@ -54,26 +54,26 @@ module.exports = {
                 }
 
                 var response = await poopy.functions.request(options).catch(async () => {
-                    await msg.channel.send('Error recognizing speech in audio.').catch(() => { })
+                    await msg.reply('Error recognizing speech in audio.').catch(() => { })
                 })
 
                 if (!response) return
 
                 if (!(response.status >= 200 && response.status < 300)) {
-                    await msg.channel.send(`${response.status} ${response.statusText}`).catch(() => { })
+                    await msg.reply(`${response.status} ${response.statusText}`).catch(() => { })
                     return
                 }
 
                 if (response.data.hasError) {
                     if (response.data.statusCode == 464) {
-                        await msg.channel.send(`I can't hear the voices.`).catch(() => { })
+                        await msg.reply(`I can't hear the voices.`).catch(() => { })
                     } else {
-                        await msg.channel.send(response.data.statusMessage).catch(() => { })
+                        await msg.reply(response.data.statusMessage).catch(() => { })
                     }
                     return
                 }
 
-                await msg.channel.send({
+                await msg.reply({
                     content: response.data.data.text.toLowerCase(),
                     allowedMentions: {
                         parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
@@ -84,13 +84,13 @@ module.exports = {
                     var filepath = `temp/${poopy.config.mongodatabase}/file${currentcount}`
                     poopy.modules.fs.mkdirSync(`${filepath}`)
                     poopy.modules.fs.writeFileSync(`${filepath}/speechtotext.txt`, response.data.data.text)
-                    await msg.channel.send({
+                    await msg.reply({
                         files: [new poopy.modules.Discord.MessageAttachment(`${filepath}/speechtotext.txt`)]
                     }).catch(() => { })
                     poopy.modules.fs.rmSync(`${filepath}`, { force: true, recursive: true })
                 })
             } else {
-                await msg.channel.send('No audio stream detected.').catch(() => { })
+                await msg.reply('No audio stream detected.').catch(() => { })
                 await msg.channel.sendTyping().catch(() => { })
                 poopy.modules.fs.rmSync(`${filepath}`, { force: true, recursive: true })
             }
@@ -102,7 +102,7 @@ module.exports = {
 
             var aduration = Number(fileinfo.info.aduration.includes('N/A') ? '0' : fileinfo.info.aduration)
             if (aduration > 60) {
-                await msg.channel.send('The length of that audio surpasses 1 minute, try trimming it!').catch(() => { })
+                await msg.reply('The length of that audio surpasses 1 minute, try trimming it!').catch(() => { })
                 return
             }
 
@@ -124,26 +124,26 @@ module.exports = {
             }
 
             var response = await poopy.functions.request(options).catch(async () => {
-                await msg.channel.send('Error recognizing speech in audio.').catch(() => { })
+                await msg.reply('Error recognizing speech in audio.').catch(() => { })
             })
 
             if (!response) return
 
             if (!(response.status >= 200 && response.status < 300)) {
-                await msg.channel.send(`${response.status} ${response.statusText}`).catch(() => { })
+                await msg.reply(`${response.status} ${response.statusText}`).catch(() => { })
                 return
             }
 
             if (response.data.hasError) {
                 if (response.data.statusCode == 464) {
-                    await msg.channel.send(`I can't hear the voices.`).catch(() => { })
+                    await msg.reply(`I can't hear the voices.`).catch(() => { })
                 } else {
-                    await msg.channel.send(response.data.statusMessage).catch(() => { })
+                    await msg.reply(response.data.statusMessage).catch(() => { })
                 }
                 return
             }
 
-            await msg.channel.send({
+            await msg.reply({
                 content: response.data.data.text.toLowerCase(),
                 allowedMentions: {
                     parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
@@ -154,13 +154,13 @@ module.exports = {
                 var filepath = `temp/${poopy.config.mongodatabase}/file${currentcount}`
                 poopy.modules.fs.mkdirSync(`${filepath}`)
                 poopy.modules.fs.writeFileSync(`${filepath}/speechtotext.txt`, response.data.data.text)
-                await msg.channel.send({
+                await msg.reply({
                     files: [new poopy.modules.Discord.MessageAttachment(`${filepath}/speechtotext.txt`)]
                 }).catch(() => { })
                 poopy.modules.fs.rmSync(`${filepath}`, { force: true, recursive: true })
             })
         } else {
-            await msg.channel.send({
+            await msg.reply({
                 content: `Unsupported file: \`${currenturl}\``,
                 allowedMentions: {
                     parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
