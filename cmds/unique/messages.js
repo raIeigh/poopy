@@ -1,6 +1,7 @@
 module.exports = {
     name: ['messages'],
     args: [{"name":"option","required":true,"specifarg":false,"orig":"<option>"}],
+    subcommands: [{"name":"list","args":[],"description":"Sends a text file with a list of all messages that exist within the guild's message database."},{"name":"search","args":[{"name":"query","required":true,"specifarg":false,"orig":"<query>"}],"description":"Searches for every message in the server that matches the query."},{"name":"random","args":[],"description":"Sends a random message from the database to the channel."},{"name":"add","args":[{"name":"message","required":true,"specifarg":false,"orig":"<message>"}],"description":"Adds a new message to the guild's database, if it is available for use."},{"name":"delete","args":[{"name":"message","required":true,"specifarg":false,"orig":"<message>"}],"description":"Deletes the message, if it exists."},{"name":"clear","args":[],"description":"Clears ALL the messages from the database."},{"name":"read","args":[],"description":"Toggles whether the bot can read the messages from the channel or not."},{"name":"readall","args":[],"description":"Toggles whether the bot can read the messages from all channels or not."}],
     execute: async function (msg, args) {
         let poopy = this
 

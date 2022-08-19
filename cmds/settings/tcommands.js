@@ -1,6 +1,7 @@
 module.exports = {
     name: ['tcommands', 'toggledcommands', 'togglecommands'],
     args: [{"name":"option","required":true,"specifarg":false,"orig":"<option>"}],
+    subcommands: [{"name":"list","args":[],"description":"Gets a list of disabled commands."},{"name":"toggle","args":[{"name":"command","required":true,"specifarg":false,"orig":"<command>"}],"description":"Disables/enables a command, if it exists."}],
     execute: async function (msg, args) {
         let poopy = this
 

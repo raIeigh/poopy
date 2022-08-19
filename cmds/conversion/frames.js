@@ -31,52 +31,55 @@ module.exports = {
             var output = poopy.modules.fs.createWriteStream(`${filepath}/output.zip`)
             var archive = poopy.modules.archiver('zip')
 
-            output.on('finish', async () => {
-                var frames = poopy.modules.fs.readdirSync(`${filepath}/frames`)
-                var catboxframes = {}
-
-                await poopy.functions.navigateEmbed(msg.channel, async (page, ended) => {
-                    var frameurl = ended ? await poopy.vars.Catbox.upload(`${filepath}/frames/${frames[page - 1]}`).catch(() => { }) : catboxframes[frames[page - 1]]
-
-                    if (!frameurl && !ended) {
-                        frameurl = await poopy.vars.Litterbox.upload(`${filepath}/frames/${frames[page - 1]}`).catch(() => { }) ?? ''
-                        catboxframes[frames[page - 1]] = frameurl
-                    }
-
-                    if (poopy.config.textEmbeds) return `${frameurl}\n\nFrame ${page}/${frames.length}`
-                    else return {
-                        "title": fileinfo.name,
-                        "url": currenturl,
-                        "color": 0x472604,
-                        "image": {
-                            "url": frameurl
-                        },
-                        "footer": {
-                            "icon_url": poopy.bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
-                            "text": `Frame ${page}/${frames.length}`
-                        },
-                    }
-                }, frames.length, msg.member, [
-                    {
-                        emoji: '939523064658526278',
-                        reactemoji: '⏬',
-                        customid: 'zip',
-                        style: 'PRIMARY',
-                        function: async (_, __, resultsMsg, collector) => {
-                            collector.stop()
-                            resultsMsg.delete().catch(() => { })
-                            poopy.functions.sendFile(msg, filepath, `output.zip`)
-                        },
-                        page: false
-                    }
-                ], undefined, undefined, undefined, (reason) => {
-                    if (reason == 'time') poopy.modules.fs.rmSync(filepath, { force: true, recursive: true })
-                }, msg)
-            });
-
-            archive.pipe(output)
-            archive.directory(`${filepath}/frames`, false)
-            archive.finalize()
+            await new Promise(async resolve => {
+                output.on('finish', async () => {
+                    var frames = poopy.modules.fs.readdirSync(`${filepath}/frames`)
+                    var catboxframes = {}
+    
+                    await poopy.functions.navigateEmbed(msg.channel, async (page, ended) => {
+                        var frameurl = ended ? await poopy.vars.Catbox.upload(`${filepath}/frames/${frames[page - 1]}`).catch(() => { }) : catboxframes[frames[page - 1]]
+    
+                        if (!frameurl && !ended) {
+                            frameurl = await poopy.vars.Litterbox.upload(`${filepath}/frames/${frames[page - 1]}`).catch(() => { }) ?? ''
+                            catboxframes[frames[page - 1]] = frameurl
+                        }
+    
+                        if (poopy.config.textEmbeds) return `${frameurl}\n\nFrame ${page}/${frames.length}`
+                        else return {
+                            "title": fileinfo.name,
+                            "url": currenturl,
+                            "color": 0x472604,
+                            "image": {
+                                "url": frameurl
+                            },
+                            "footer": {
+                                "icon_url": poopy.bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
+                                "text": `Frame ${page}/${frames.length}`
+                            },
+                        }
+                    }, frames.length, msg.member, [
+                        {
+                            emoji: '939523064658526278',
+                            reactemoji: '⏬',
+                            customid: 'zip',
+                            style: 'PRIMARY',
+                            function: async (_, __, resultsMsg, collector) => {
+                                collector.stop()
+                                resultsMsg.delete().catch(() => { })
+                                poopy.functions.sendFile(msg, filepath, `output.zip`)
+                            },
+                            page: false
+                        }
+                    ], undefined, undefined, undefined, (reason) => {
+                        if (reason == 'time') poopy.modules.fs.rmSync(filepath, { force: true, recursive: true })
+                    }, msg)
+                    resolve()
+                });
+    
+                archive.pipe(output)
+                archive.directory(`${filepath}/frames`, false)
+                archive.finalize()
+            })
         } else {
             await msg.reply({
                 content: `Unsupported file: \`${currenturl}\``,

@@ -73,7 +73,7 @@ function getArgs(text) {
     }
 }
 
-var text = "**list** - Gets a list of local commands.\n**phrase** <commandname> - Displays the phrase of a specific command.\n**execute** <commandname> [args] - Execute a specific command.\n**add** <commandname> <phrase> (moderator only) - Adds a new local command, if the name is available for use.\n**import** <id> [name] (moderator only) - Imports a new local command from Poopy's command template database (`commandtemplates` command) by ID.\n**edit** <commandname> <phrase> (moderator only) - Edits the local command, if it exists.\n**delete** <commandname> (moderator only) - Deletes the local command, if it exists."
+var text = "**list** - Gets a list of disabled commands.\n**toggle** <command> (moderator only) - Disables/enables a command, if it exists."
 var output = text.split('\n').map(text => getArgs(text))
 
 console.log(JSON.stringify(output))

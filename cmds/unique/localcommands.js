@@ -260,6 +260,6 @@ module.exports = {
         name: 'localcommands/localcmds/servercommands/servercmds <option>',
         value: 'Allows you to add custom commands to the server! Use the command alone for more info.'
     },
-    cooldown: 5000,
+    cooldown: 2500,
     type: 'Unique'
 }

@@ -17,7 +17,6 @@ module.exports = {
                     parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
-            await msg.channel.sendTyping().catch(() => { })
             return
         }
 

@@ -5,57 +5,29 @@ module.exports = {
         let poopy = this
 
         await msg.channel.sendTyping().catch(() => { })
-        if (args[1] === undefined) {
-            var avatar = new poopy.modules.Discord.MessageAttachment(msg.author.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }));
+
+        var member = (msg.mentions.members.first() && msg.mentions.members.first().user) ??
+            await poopy.bot.users.fetch(args[1]).catch(() => { }) ??
+            msg.author
+
+        if (!member) {
             await msg.reply({
-                content: msg.author.username + '\'s avatar is:',
+                content: `Invalid user id: **${args[1]}**`,
                 allowedMentions: {
                     parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
-                },
-                files: [avatar]
-            }).catch(() => { })
-            await msg.channel.sendTyping().catch(() => { })
-            return;
-        };
-        if (!msg.mentions.members.size) {
-            async function getMember(id) {
-                var member = await poopy.bot.users.fetch(id)
-                    .catch(async () => {
-                        await msg.reply({
-                            content: 'Invalid user id: **' + id + '**',
-                            allowedMentions: {
-                                parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
-                            }
-                        }).catch(() => { })
-                        await msg.channel.sendTyping().catch(() => { })
-                        return
-                    })
-
-                if (member) {
-                    var avatar = new poopy.modules.Discord.MessageAttachment(member.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }));
-                    await msg.reply({
-                        content: member.username + '\'s avatar is:',
-                        allowedMentions: {
-                            parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
-                        },
-                        files: [avatar]
-                    }).catch(() => { })
                 }
-            }
-
-            await getMember(args[1]);
-        } else {
-            var mention = msg.mentions.members.first();
-            var avatar = new poopy.modules.Discord.MessageAttachment(mention.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }));
-            await msg.reply({
-                content: mention.user.username + '\'s avatar is:',
-                allowedMentions: {
-                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
-                },
-                files: [avatar]
             }).catch(() => { })
+            return
         }
-        await msg.channel.sendTyping().catch(() => { })
+
+        var avatar = new poopy.modules.Discord.MessageAttachment(member.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }));
+        await msg.reply({
+            content: member.username + '\'s avatar is:',
+            allowedMentions: {
+                parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+            },
+            files: [avatar]
+        }).catch(() => { })
     },
     help: {
         name: 'avatar/av/pfp [user]',
