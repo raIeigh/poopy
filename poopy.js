@@ -263,27 +263,27 @@ class Poopy {
         }
 
         var channelSend = poopy.modules.Discord.BaseGuildTextChannel.prototype.send
-        poopy.modules.Discord.BaseGuildTextChannel.prototype.send = async function send(payload) {
+        poopy.modules.Discord.BaseGuildTextChannel.prototype.send = async function (payload) {
             var channel = this
 
             await poopy.functions.waitMessageCooldown()
             if ((channel.type == 'DM' || channel.type == 'GROUP_DM') &&
                 poopy.tempdata[channel.guild.id][channel.id]['shut']) return
 
-            return await channelSend.call(channel, payload)/*.then(poopy.functions.setMessageCooldown)*/
+            return await channelSend.call(channel, payload).then(poopy.functions.setMessageCooldown)
         }
 
         var messageReply = poopy.modules.Discord.Message.prototype.reply
-        poopy.modules.Discord.Message.prototype.reply = async function reply(payload) {
+        poopy.modules.Discord.Message.prototype.reply = async function (payload) {
             var message = this
 
             await poopy.functions.waitMessageCooldown()
             if ((message.channel.type == 'DM' || message.channel.type == 'GROUP_DM') &&
                 poopy.tempdata[message.guild.id][message.channel.id]['shut']) return
 
-            if (poopy.config.allowbotusage) return await message.channel.send(payload)/*.then(poopy.functions.setMessageCooldown)*/
-            else return await messageReply.call(message, payload)/*.then(poopy.functions.setMessageCooldown)*/.catch(() => { }) ??
-                await message.channel.send(payload)/*.then(poopy.functions.setMessageCooldown)*/
+            if (poopy.config.allowbotusage) return await message.channel.send(payload).then(poopy.functions.setMessageCooldown)
+            else return await messageReply.call(message, payload).then(poopy.functions.setMessageCooldown).catch(() => { }) ??
+                await message.channel.send(payload).then(poopy.functions.setMessageCooldown)
         }
 
         delete poopy.modules.Discord.Guild.prototype.leave
@@ -2784,13 +2784,13 @@ class Poopy {
                     return youtubeurl
                 }
             } /*else if (url.match(/^https\:\/\/((www)\.)?reddit\.com\/r\/[a-zA-Z0-9][a-zA-Z0-9_]{2,20}/)) {
-            var redditurls = await poopy.modules.youtubedl(url, {
-                format: '18',
-                'get-url': ''
-            }).catch(() => { })
+                var redditurl = await poopy.modules.youtubedl(url, {
+                    format: '18',
+                    'get-url': ''
+                }).catch(() => { })
 
-            if (youtubeurl) return youtubeurl
-        }*/ else if (url.match(/^https\:\/\/((www)\.)?(fx)?twitter\.com\/\w{4,15}\/status\/\d+/)) {
+                if (redditurl) return redditurl
+            }*/ else if (url.match(/^https\:\/\/((www)\.)?(fx)?twitter\.com\/\w{4,15}\/status\/\d+/)) {
                 async function getImageUrl(url) {
                     return new Promise((resolve) => {
                         poopy.modules.axios.request(url).then(async (res) => {
@@ -3927,7 +3927,7 @@ class Poopy {
         poopy.functions.waitMessageCooldown = async function () {
             if (poopy.config.msgcooldown <= 0) return
 
-            var elapsed = Date.now() - poopy.vars.lastMsgCooldown
+            var elapsed = Date.now() - poopy.vars.msgcooldown
             while (elapsed < poopy.config.msgcooldown) {
                 await poopy.functions.sleep(poopy.config.msgcooldown - elapsed)
             }
@@ -4877,7 +4877,7 @@ class Poopy {
 
                         await interaction.deferReply().catch(() => { })
 
-                        interaction.reply = async function reply(payload) {
+                        interaction.reply = async function (payload) {
                             var interaction = this
 
                             if (interaction.replied) return await interaction.channel.send(payload)
@@ -5378,7 +5378,7 @@ class Poopy {
         if (!poopy.config.apiMode) {
             poopy.bot.on('messageCreate', (msg) => {
                 var reply = msg.reply
-                msg.reply = async function reply(payload) {
+                msg.reply = async function (payload) {
                     var message = this
 
                     if (message.replied) return await message.channel.send(payload)
