@@ -242,6 +242,26 @@ class Poopy {
         poopy.vars.cps = 0
 
         // modifying discord.js stuff haha
+        class FakeCollection {
+            constructor() {
+                this.get = () => { }
+                this.find = () => { }
+                this.forEach = () => { }
+                this.map = () => { }
+                this.first = () => { }
+                this.size = 0
+            }
+        }
+        
+        class FakeCollector {
+            constructor() {
+                this.on = () => { }
+                this.once = () => { }
+                this.resetTimer = () => { }
+                this.stop = () => { }
+            }
+        }
+
         var channelSend = poopy.modules.Discord.BaseGuildTextChannel.prototype.send
         poopy.modules.Discord.BaseGuildTextChannel.prototype.send = async function (payload) {
             var channel = this
@@ -4843,43 +4863,13 @@ class Poopy {
                         interaction.content = `${prefix}${content}`
                         interaction.author = interaction.user
                         interaction.bot = false
-                        interaction.attachments = {
-                            get: () => { },
-                            find: () => { },
-                            forEach: () => { },
-                            map: () => { },
-                            size: 0
-                        }
+                        interaction.attachments = new FakeCollection()
                         interaction.embeds = []
-                        interaction.stickers = {
-                            get: () => { },
-                            find: () => { },
-                            forEach: () => { },
-                            map: () => { },
-                            size: 0
-                        }
+                        interaction.stickers = new FakeCollection()
                         interaction.mentions = {
-                            users: {
-                                get: () => { },
-                                find: () => { },
-                                forEach: () => { },
-                                map: () => { },
-                                size: 0
-                            },
-                            members: {
-                                get: () => { },
-                                find: () => { },
-                                forEach: () => { },
-                                map: () => { },
-                                size: 0
-                            },
-                            roles: {
-                                get: () => { },
-                                find: () => { },
-                                forEach: () => { },
-                                map: () => { },
-                                size: 0
-                            }
+                            users: new FakeCollection(),
+                            members: new FakeCollection(),
+                            roles: new FakeCollection()
                         }
 
                         interaction.edit = interaction.editReply
@@ -4887,22 +4877,8 @@ class Poopy {
                         interaction.react = async () => { }
                         interaction.fetchWebhook = async () => { }
                         interaction.fetchReference = async () => { }
-                        interaction.createReactionCollector = () => {
-                            return {
-                                on: () => { },
-                                once: () => { },
-                                resetTimer: () => { },
-                                stop: () => { }
-                            }
-                        }
-                        interaction.createMessageComponentCollector = () => {
-                            return {
-                                on: () => { },
-                                once: () => { },
-                                resetTimer: () => { },
-                                stop: () => { }
-                            }
-                        }
+                        interaction.createReactionCollector = () => new FakeCollector()
+                        interaction.createMessageComponentCollector = () => new FakeCollector()
 
                         await poopy.callbacks.messageCallback(interaction).catch(() => { })
 

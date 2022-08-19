@@ -54,7 +54,7 @@ module.exports = {
         }
 
         var member = (msg.mentions.members.first() && msg.mentions.members.first().user) ??
-            await poopy.bot.users.fetch(args[1]).catch(() => { })
+            await poopy.bot.users.fetch((args[1].match(/\d+/) ?? [args[1]])[0]).catch(() => { })
 
         if (!member) {
             await msg.reply({
