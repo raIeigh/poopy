@@ -54,11 +54,7 @@ module.exports = {
                 "name": "commandname",
                 "required": true,
                 "specifarg": false,
-                "orig": "<commandname>",
-                "autocomplete": function (interaction) {
-                    let poopy = this
-                    return poopy.data['guild-data'][interaction.guild.id]['localcmds'].map(cmd => cmd.name)
-                }
+                "orig": "<commandname>"
             },
                 {
                     "name": "phrase",
@@ -74,7 +70,11 @@ module.exports = {
                 "name": "id",
                 "required": true,
                 "specifarg": false,
-                "orig": "<id>"
+                "orig": "<id>",
+                "autocomplete": function (interaction) {
+                    let poopy = this
+                    return poopy.functions.globalData()['bot-data']['commandTemplates'].map(cmd => cmd.id)
+                }
             },
                 {
                     "name": "name",
