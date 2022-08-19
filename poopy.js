@@ -247,7 +247,7 @@ class Poopy {
             var channel = this
 
             await poopy.functions.waitMessageCooldown()
-            if ((msg.channel.type == 'DM' || msg.channel.type == 'GROUP_DM') && 
+            if ((channel.type == 'DM' || channel.type == 'GROUP_DM') && 
                 poopy.tempdata[channel.guild.id][channel.id]['shut']) return
 
             return await channelSend.call(channel, payload)
@@ -258,8 +258,8 @@ class Poopy {
             var message = this
 
             await poopy.functions.waitMessageCooldown()
-            if ((msg.channel.type == 'DM' || msg.channel.type == 'GROUP_DM') && 
-                poopy.tempdata[channel.guild.id][channel.id]['shut']) return
+            if ((message.channel.type == 'DM' || message.channel.type == 'GROUP_DM') && 
+                poopy.tempdata[message.guild.id][message.channel.id]['shut']) return
 
             if (poopy.config.allowbotusage) return await message.channel.send(payload)
             else return await messageReply.call(message, payload)
