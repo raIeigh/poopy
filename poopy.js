@@ -270,7 +270,7 @@ class Poopy {
             if ((channel.type == 'DM' || channel.type == 'GROUP_DM') &&
                 poopy.tempdata[channel.guild.id][channel.id]['shut']) return
 
-            return await channelSend.call(channel, payload).then(poopy.functions.setMessageCooldown)
+            return await channelSend.call(channel, payload)/*.then(poopy.functions.setMessageCooldown)*/
         }
 
         var messageReply = poopy.modules.Discord.Message.prototype.reply
@@ -281,9 +281,9 @@ class Poopy {
             if ((message.channel.type == 'DM' || message.channel.type == 'GROUP_DM') &&
                 poopy.tempdata[message.guild.id][message.channel.id]['shut']) return
 
-            if (poopy.config.allowbotusage) return await message.channel.send(payload).then(poopy.functions.setMessageCooldown)
-            else return await messageReply.call(message, payload).then(poopy.functions.setMessageCooldown).catch(() => { }) ??
-                await message.channel.send(payload).then(poopy.functions.setMessageCooldown)
+            if (poopy.config.allowbotusage) return await message.channel.send(payload)/*.then(poopy.functions.setMessageCooldown)*/
+            else return await messageReply.call(message, payload)/*.then(poopy.functions.setMessageCooldown)*/.catch(() => { }) ??
+                await message.channel.send(payload)/*.then(poopy.functions.setMessageCooldown)*/
         }
 
         delete poopy.modules.Discord.Guild.prototype.leave
