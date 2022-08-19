@@ -3930,6 +3930,7 @@ class Poopy {
             var elapsed = Date.now() - poopy.vars.msgcooldown
             while (elapsed < poopy.config.msgcooldown) {
                 await poopy.functions.sleep(poopy.config.msgcooldown - elapsed)
+                elapsed = Date.now() - poopy.vars.msgcooldown
             }
         }
 
