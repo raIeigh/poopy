@@ -1,6 +1,6 @@
 module.exports = {
     name: ['compile'],
-    args: [{"name":"language","required":true,"specifarg":false,"orig":"<language>"},{"name":"code","required":true,"specifarg":false,"orig":"<code>"}],
+    args: [{ "name": "language", "required": true, "specifarg": false, "orig": "<language>" }, { "name": "code", "required": true, "specifarg": false, "orig": "<code>" }],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -19,6 +19,16 @@ module.exports = {
             }
         }
 
+        var langresponse = await poopy.modules.axios.get('https://wandbox.org/api/list.json').catch(() => { })
+
+        if (!langresponse) return
+
+        var languages = langresponse.data.filter((lang, index) => langresponse.data.findIndex(l => l.templates[0] === lang.templates[0]) === index).sort((a, b) => {
+            if (a.templates[0] < b.templates[0]) return -1
+            if (a.templates[0] > b.templates[0]) return 1
+            return 0
+        })
+
         if (language === undefined) {
             await msg.channel.send(`What is the programming language?! Available ones are:\n${languages.map(lang => `\`${lang.templates[0]}\``).join(', ')}`).catch(() => { })
             return
@@ -26,26 +36,16 @@ module.exports = {
 
         saidMessage = args.slice(cl > -1 ? 1 : 2).join(' ')
         if (codeBlock) saidMessage = saidMessage.substring(cl > -1 ? cl : 3, saidMessage.length - 3).trim()
-
-        var langresponse = await poopy.modules.axios.get('https://wandbox.org/api/list.json').catch(() => { })
         var langVersion
 
-        if (langresponse) {
-            var languages = langresponse.data.filter((lang, index) => langresponse.data.findIndex(l => l.templates[0] === lang.templates[0]) === index).sort((a, b) => {
-                if (a.templates[0] < b.templates[0]) return -1
-                if (a.templates[0] > b.templates[0]) return 1
-                return 0
-            })
+        var findLang = languages.find(lang => lang.templates[0] === language.toLowerCase())
 
-            var findLang = languages.find(lang => lang.templates[0] === language.toLowerCase())
-
-            if (findLang) {
-                langVersion = findLang.name
-            } else {
-                await msg.channel.send(`Not a valid programming language.\nAvailable ones are: ${languages.map(lang => `\`${lang.templates[0]}\``).join(', ')}`).catch(() => { })
-                return
-            }
-        } else return
+        if (findLang) {
+            langVersion = findLang.name
+        } else {
+            await msg.channel.send(`Not a valid programming language.\nAvailable ones are: ${languages.map(lang => `\`${lang.templates[0]}\``).join(', ')}`).catch(() => { })
+            return
+        }
 
         var response = await poopy.modules.axios.request({
             url: 'https://wandbox.org/api/compile.ndjson',

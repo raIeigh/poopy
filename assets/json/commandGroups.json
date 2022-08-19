@@ -1,648 +1,214 @@
 [
     {
+        "name": "animate",
+        "cmds": [
+            "blob",
+            "bouncy",
+            "circle",
+            "infinity",
+            "jumpscare",
+            "loophole",
+            "morph",
+            "piranha",
+            "spazz",
+            "spin",
+            "squishy",
+            "transition",
+            "tween",
+            "wackywebm"
+        ],
+        "description": "Move and animate a file in an indefinite amount of ways."
+    },
+    {
+        "name": "area",
+        "cmds": [
+            "contract",
+            "crop",
+            "expand",
+            "expandscale",
+            "hcontract",
+            "hexpand",
+            "hremove",
+            "vcontract",
+            "vexpand",
+            "vremove"
+        ],
+        "description": "Expand or crop the area of some file."
+    },
+    {
         "name": "audio",
         "cmds": [
             "addaudio",
-            "mixaudio"
-        ],
-        "description": "Add and mix file audio.",
-        "args": [
-            {
-                "name": "file",
-                "required": false,
-                "specifarg": false,
-                "orig": "{file}"
-            },
-            {
-                "name": "audio",
-                "required": false,
-                "specifarg": false,
-                "orig": "{audio}"
-            },
-            {
-                "name": "offset",
-                "required": false,
-                "specifarg": true,
-                "orig": "[-offset <seconds (you can use hh:mm:ss)>]"
-            },
-            {
-                "name": "waituntilend",
-                "required": false,
-                "specifarg": true,
-                "orig": "[-waituntilend]"
-            }
-        ]
-    },
-    {
-        "name": "filter",
-        "cmds": [
             "bassy",
-            "trebly"
+            "distort",
+            "echo",
+            "gradualhighpitch",
+            "graduallowpitch",
+            "gradualslowpitch",
+            "gradualspeedpitch",
+            "higherpitch",
+            "lowerpitch",
+            "mixaudio",
+            "mute",
+            "reverb",
+            "slowpitch",
+            "speedpitch",
+            "tospectrogram",
+            "trebly",
+            "tremolo",
+            "vibrato",
+            "volume"
         ],
-        "description": "Audio filters to make them bassy or trebly.",
-        "args": [
-            {
-                "name": "file",
-                "required": false,
-                "specifarg": false,
-                "orig": "{file}"
-            }
-        ]
+        "description": "Add an effect to an input's audio."
     },
     {
-        "name": "markov",
+        "name": "caption",
         "cmds": [
-            "markov",
-            "markov2"
+            "caption",
+            "cooltext",
+            "inspiration",
+            "lefishe",
+            "meme",
+            "motivator",
+            "newcaption",
+            "snapchat",
+            "stuff",
+            "tenorcaption"
         ],
-        "description": "Markov GAY CHAINS. commands!",
-        "args": [
-            {
-                "name": "message",
-                "required": false,
-                "specifarg": false,
-                "orig": "[message] (markov)"
-            },
-            {
-                "name": "words",
-                "required": false,
-                "specifarg": true,
-                "orig": "[-words <wordNumber>] (markov)"
-            },
-            {
-                "name": "nopunctuation",
-                "required": false,
-                "specifarg": true,
-                "orig": "[-nopunctuation] (markov)"
-            },
-            {
-                "name": "keepcase",
-                "required": false,
-                "specifarg": true,
-                "orig": "[-keepcase] (markov)"
-            },
-            {
-                "name": "randlerp",
-                "required": false,
-                "specifarg": true,
-                "orig": "[-randlerp <number (from 0 to 1)>] (markov)"
-            },
-            {
-                "name": "minlength",
-                "required": false,
-                "specifarg": true,
-                "orig": "[-minlength <charNumber>] (markov2)"
-            },
-            {
-                "name": "randomsentences",
-                "required": false,
-                "specifarg": true,
-                "orig": "[-randomsentences] (markov and markov2)"
-            }
-        ]
+        "description": "Add a caption to an input."
     },
     {
-        "name": "textchangers",
+        "name": "color",
         "cmds": [
-            "stroke",
-            "opposite",
-            "engrish",
-            "tobf"
+            "brightcontrast",
+            "colordark",
+            "colorlight",
+            "curves",
+            "hsl",
+            "opacity",
+            "pseudocolor",
+            "rainbow",
+            "tint"
         ],
-        "description": "Commands that change and replace the text with different words.",
-        "args": [
-            {
-                "name": "message",
-                "required": true,
-                "specifarg": false,
-                "orig": "<message>"
-            }
-        ]
-    },
-    {
-        "name": "media2text",
-        "cmds": [
-            "ascii",
-            "describeimage",
-            "ocr",
-            "speechtotext"
-        ],
-        "description": "Commands that convert media to text output.",
-        "args": [
-            {
-                "name": "file",
-                "required": false,
-                "specifarg": false,
-                "orig": "{file}"
-            }
-        ]
-    },
-    {
-        "name": "translate",
-        "cmds": [
-            "tr",
-            "badtr"
-        ],
-        "description": "Translate the input text between different languages.",
-        "args": [
-            {
-                "name": "message",
-                "required": true,
-                "specifarg": false,
-                "orig": "<message>"
-            },
-            {
-                "name": "source",
-                "required": false,
-                "specifarg": true,
-                "orig": "[-source <language>]"
-            },
-            {
-                "name": "target",
-                "required": false,
-                "specifarg": true,
-                "orig": "[-target <language>]"
-            },
-            {
-                "name": "languages",
-                "required": false,
-                "specifarg": true,
-                "orig": "[-languages <number (max 25)>] (badtr only)"
-            }
-        ]
-    },
-    {
-        "name": "bossfight",
-        "cmds": [
-            "circle",
-            "infinity"
-        ],
-        "description": "Commands that make the file move around in a bossfight.",
-        "args": [
-            {
-                "name": "file",
-                "required": false,
-                "specifarg": false,
-                "orig": "{file}"
-            },
-            {
-                "name": "width",
-                "required": false,
-                "specifarg": true,
-                "orig": "[-width <pixels>]"
-            },
-            {
-                "name": "height",
-                "required": false,
-                "specifarg": true,
-                "orig": "[-height <pixels>]"
-            },
-            {
-                "name": "owidth",
-                "required": false,
-                "specifarg": true,
-                "orig": "[-owidth <pixels>]"
-            },
-            {
-                "name": "oheight",
-                "required": false,
-                "specifarg": true,
-                "orig": "[-oheight <pixels>]"
-            },
-            {
-                "name": "duration",
-                "required": false,
-                "specifarg": true,
-                "orig": "[-duration <seconds (max 10)>]"
-            }
-        ]
+        "description": "Change an input's colors."
     },
     {
         "name": "compress",
         "cmds": [
             "crunch",
-            "extracrunch"
+            "extracrunch",
+            "jpeg",
+            "lossygif",
+            "reencode",
+            "setaudiobitrate",
+            "setbitrate",
+            "setcrf",
+            "setfps",
+            "reducecolors"
         ],
-        "description": "Commands that lower the file's quality.",
-        "args": [
-            {
-                "name": "file",
-                "required": false,
-                "specifarg": false,
-                "orig": "{file}"
-            }
-        ]
+        "description": "Useful commands for file compression."
     },
     {
-        "name": "animate",
+        "name": "convert",
         "cmds": [
-            "blob",
-            "bouncy",
-            "loophole",
-            "piranha",
-            "spin",
-            "squishy",
-            "rainbow"
+            "frames",
+            "makegif",
+            "makewebm",
+            "toapng",
+            "togif",
+            "tomp3",
+            "tomp4",
+            "topng"
         ],
-        "description": "Commands that move and jiggle the file.",
-        "args": [
-            {
-                "name": "file",
-                "required": false,
-                "specifarg": false,
-                "orig": "{file}"
-            },
-            {
-                "name": "duration",
-                "required": false,
-                "specifarg": true,
-                "orig": "[-duration <seconds (max 10)>] (works for most)"
-            }
-        ]
+        "description": "Convert a file between various different formats."
     },
     {
-        "name": "trim",
+        "name": "dimensions",
         "cmds": [
-            "trim",
-            "remove"
+            "fix",
+            "fixratio",
+            "magik",
+            "perspective",
+            "pixenlarge",
+            "superresolution",
+            "unmagik",
+            "waifu2x"
         ],
-        "description": "Trim and remove sections of a file.",
-        "args": [
-            {
-                "name": "start",
-                "required": false,
-                "specifarg": true,
-                "orig": "[-start <timestamp (you can use hh:mm:ss)>]"
-            },
-            {
-                "name": "end",
-                "required": false,
-                "specifarg": true,
-                "orig": "[-end <timestamp (you can use hh:mm:ss)>]"
-            },
-            {
-                "name": "file",
-                "required": false,
-                "specifarg": false,
-                "orig": "{file}"
-            }
-        ]
+        "description": "Change and fix the dimensions of a file in some way."
     },
     {
-        "name": "playback",
+        "name": "duration",
         "cmds": [
-            "boomerang",
+            "duration",
+            "gradualslowdown",
+            "gradualspeedup",
             "loop",
-            "reverse",
-            "reverseboomerang"
+            "noloop",
+            "offset",
+            "remove",
+            "slowdown",
+            "speedup",
+            "trim"
         ],
-        "description": "Commands that change the file's playback.",
-        "args": [
-            {
-                "name": "file",
-                "required": false,
-                "specifarg": false,
-                "orig": "{file}"
-            },
-            {
-                "name": "times",
-                "required": false,
-                "specifarg": false,
-                "orig": "[times] (loop only)"
-            }
-        ]
+        "description": "Change the duration of a video, GIF or audio."
     },
     {
-        "name": "transition",
+        "name": "effect",
         "cmds": [
-            "transition",
-            "morph"
-        ],
-        "description": "Transition a file between another.",
-        "args": [
-            {
-                "name": "file",
-                "required": false,
-                "specifarg": false,
-                "orig": "{file}"
-            },
-            {
-                "name": "file2",
-                "required": false,
-                "specifarg": false,
-                "orig": "{file2}"
-            },
-            {
-                "name": "transition",
-                "required": false,
-                "specifarg": false,
-                "orig": "{transition (default is fade)} (transition only)"
-            },
-            {
-                "name": "duration",
-                "required": false,
-                "specifarg": true,
-                "orig": "[-duration <seconds (max 10)>] (transition only)"
-            },
-            {
-                "name": "waituntilend",
-                "required": false,
-                "specifarg": true,
-                "orig": "[-waituntilend] (transition only)"
-            }
-        ]
-    },
-    {
-        "name": "removebg",
-        "cmds": [
+            "60fps",
+            "alphaextract",
+            "blur",
+            "boomerang",
+            "chew",
+            "chromakeybg",
+            "convolution",
+            "dilate",
+            "dizzy",
+            "erode",
+            "glow",
+            "hd",
+            "invert",
+            "melt",
+            "nervous",
+            "outline",
+            "pixelate",
             "removebg",
-            "chromabg"
+            "reverse",
+            "reverseboomerang",
+            "rotate",
+            "ytp"
         ],
-        "description": "Remove the background of a file from AI or chroma key.",
-        "args": [
-            {
-                "name": "file",
-                "required": false,
-                "specifarg": false,
-                "orig": "{file}"
-            },
-            {
-                "name": "color",
-                "required": false,
-                "specifarg": true,
-                "orig": "[-color <r> <g> <b>] (chromabg only)"
-            },
-            {
-                "name": "similarity",
-                "required": false,
-                "specifarg": true,
-                "orig": "[-similarity <number (from 0 to 100)>] (chromabg only)"
-            },
-            {
-                "name": "blend",
-                "required": false,
-                "specifarg": true,
-                "orig": "[-blend <number (from 0 to 100)>] (chromabg only)"
-            }
-        ]
+        "description": "A wide range of commands that change the way the file looks."
     },
     {
-        "name": "complexeffects",
+        "name": "generate",
         "cmds": [
-            "curves",
-            "convolution"
+            "cleverbot",
+            "compose",
+            "dalle",
+            "describeimage",
+            "generatetext",
+            "newimage",
+            "spectrogram",
+            "uberduck",
+            "weirdcore"
         ],
-        "description": "Complex effects you can apply on files, like curves and convolution matrix.",
-        "args": [
-            {
-                "name": "file",
-                "required": false,
-                "specifarg": false,
-                "orig": "{file}"
-            },
-            {
-                "name": "data",
-                "required": false,
-                "specifarg": true,
-                "orig": "\"{data}\""
-            }
-        ]
+        "description": "Generate a new file from an AI or not."
     },
     {
-        "name": "flange",
+        "name": "hex",
         "cmds": [
-            "vibrato",
-            "tremolo"
+            "crasher",
+            "dividelength",
+            "donotplaytwice",
+            "enlongate",
+            "multlength",
+            "virus"
         ],
-        "description": "Flanges the file's audio.",
-        "args": [
-            {
-                "name": "file",
-                "required": false,
-                "specifarg": false,
-                "orig": "{file}"
-            },
-            {
-                "name": "frequency",
-                "required": false,
-                "specifarg": true,
-                "orig": "[-frequency <hz (from 0.1 to 20000)>]"
-            },
-            {
-                "name": "depth",
-                "required": false,
-                "specifarg": true,
-                "orig": "[-depth <percentage>]"
-            }
-        ]
+        "description": "Manipulate the file's Hex Code to make it shorter, longer, etc."
     },
     {
-        "name": "overlay",
-        "cmds": [
-            "overlay",
-            "chromakey",
-            "blend",
-            "mask"
-        ],
-        "description": "Overlay a file on another.",
-        "args": [
-            {
-                "name": "file",
-                "required": false,
-                "specifarg": false,
-                "orig": "{file}"
-            },
-            {
-                "name": "file2",
-                "required": false,
-                "specifarg": false,
-                "orig": "{file2}"
-            },
-            {
-                "name": "origin",
-                "required": false,
-                "specifarg": true,
-                "orig": "[-origin <x (left/center/right)> <y (top/middle/bottom)>]"
-            },
-            {
-                "name": "offsetpos",
-                "required": false,
-                "specifarg": true,
-                "orig": "[-offsetpos <x> <y>]"
-            },
-            {
-                "name": "width",
-                "required": false,
-                "specifarg": true,
-                "orig": "[-width <pixels or percentage>]"
-            },
-            {
-                "name": "height",
-                "required": false,
-                "specifarg": true,
-                "orig": "[-height <pixels or percentage>]"
-            },
-            {
-                "name": "keepaspectratio",
-                "required": false,
-                "specifarg": true,
-                "orig": "[-keepaspectratio <mode (increase or decrease)>]"
-            },
-            {
-                "name": "color",
-                "required": false,
-                "specifarg": true,
-                "orig": "[-color <r> <g> <b>] (chromakey)"
-            },
-            {
-                "name": "similarity",
-                "required": false,
-                "specifarg": true,
-                "orig": "[-similarity <number (from 0 to 100)>] (chromakey)"
-            },
-            {
-                "name": "blend",
-                "required": false,
-                "specifarg": true,
-                "orig": "[-blend <number (from 0 to 100)>] (chromakey)"
-            },
-            {
-                "name": "mode",
-                "required": false,
-                "specifarg": true,
-                "orig": "[-mode <mode>] (blend)"
-            },
-            {
-                "name": "keep",
-                "required": false,
-                "specifarg": true,
-                "orig": "[-keep] (mask)"
-            }
-        ]
-    },
-    {
-        "name": "caption",
-        "cmds": [
-            "meme",
-            "motivator",
-            "caption",
-            "tenorcaption",
-            "snapchat",
-            "inspiration",
-            "stuff",
-            "fishe"
-        ],
-        "description": "Captioning commands that add a caption to the file.",
-        "args": [
-            {
-                "name": "textes",
-                "required": false,
-                "specifarg": false,
-                "orig": "\"{text1}\"..."
-            },
-            {
-                "name": "file",
-                "required": false,
-                "specifarg": false,
-                "orig": "{file}"
-            },
-            {
-                "name": "size",
-                "required": false,
-                "specifarg": false,
-                "orig": "[-size <multiplier (from 0.5 to 5)>] (only works with some commands)"
-            }
-        ]
-    },
-    {
-        "name": "meme",
-        "cmds": [
-            "allaboutme",
-            "backrooms",
-            "battlecats",
-            "bisexual",
-            "country",
-            "crewmate",
-            "dababy",
-            "desktopdestroy",
-            "dontrepost",
-            "fail",
-            "favorite",
-            "heaven",
-            "hell",
-            "install",
-            "pillow",
-            "playbutton",
-            "playvideo",
-            "rap",
-            "rowley",
-            "skin",
-            "tshirt"
-        ],
-        "description": "Meme based commands.",
-        "args": [
-            {
-                "name": "file",
-                "required": false,
-                "specifarg": false,
-                "orig": "{file}"
-            }
-        ]
-    },
-    {
-        "name": "memecaption",
-        "cmds": [
-            "amazon",
-            "benson",
-            "choicegif",
-            "bloxys",
-            "phonecall",
-            "annoyingorange",
-            "pvz",
-            "twitterban",
-            "twitterartist",
-            "reddit",
-            "robloxgame",
-            "undertale"
-        ],
-        "description": "Meme and caption based commands.",
-        "args": [
-            {
-                "name": "textes",
-                "required": false,
-                "specifarg": false,
-                "orig": "\"{text1}\"..."
-            },
-            {
-                "name": "file",
-                "required": false,
-                "specifarg": false,
-                "orig": "{file}"
-            }
-        ]
-    },
-    {
-        "name": "mirror",
-        "cmds": [
-            "hflip",
-            "vflip",
-            "bottommirror",
-            "topmirror",
-            "rightmirror",
-            "leftmirror"
-        ],
-        "description": "Commands that mirror and flip the file on different axes.",
-        "args": [
-            {
-                "name": "file",
-                "required": false,
-                "specifarg": false,
-                "orig": "{file}"
-            }
-        ]
-    },
-    {
-        "name": "insidejoke",
+        "name": "inside-joke",
         "cmds": [
             "babis",
             "coin",
@@ -653,140 +219,127 @@
             "larry",
             "phexintro",
             "phexoutro",
+            "ps",
+            "pspasta",
+            "sayori",
+            "sayoriart",
+            "sayorichoice",
             "srlogo",
+            "tango",
+            "tdumpy",
             "tord",
             "zekk"
         ],
-        "description": "Can Izzy dab?",
-        "args": [
-            {
-                "name": "file",
-                "required": false,
-                "specifarg": false,
-                "orig": "{file}"
-            }
-        ]
+        "description": "phexonia studios"
     },
     {
-        "name": "pitchspeed",
+        "name": "json",
         "cmds": [
-            "gradualhighpitch",
-            "graduallowpitch",
-            "gradualslowpitch",
-            "gradualspeedpitch",
-            "higherpitch",
-            "lowerpitch",
-            "slowpitch",
-            "speedpitch",
-            "gradualslowdown",
-            "gradualspeedup",
-            "slowdown",
-            "speedup"
+            "addtojson",
+            "displayjson",
+            "removefromjson"
         ],
-        "description": "Change the file's speed and pitch.",
-        "args": [
-            {
-                "name": "multiplier",
-                "required": false,
-                "specifarg": false,
-                "orig": "[multiplier <number>]"
-            },
-            {
-                "name": "file",
-                "required": false,
-                "specifarg": false,
-                "orig": "{file}"
-            }
-        ]
+        "description": "Exclusive to some people for editing the JSONs used by Poopy."
     },
     {
-        "name": "color",
+        "name": "memes",
         "cmds": [
-            "colorlight",
-            "colordark"
+            "allaboutme",
+            "backrooms",
+            "battlecats",
+            "benson",
+            "bisexual",
+            "canyoufind",
+            "countdown",
+            "country",
+            "crewmate",
+            "dababy",
+            "desktopdestroy",
+            "dontrepost",
+            "dumpy",
+            "fail",
+            "favorite",
+            "heaven",
+            "hell",
+            "install",
+            "notclickbait",
+            "pillow",
+            "playbutton",
+            "rap",
+            "rowley",
+            "skin",
+            "tshirt"
         ],
-        "description": "Give a file a new color depending on RGB values."
+        "description": "Integrate an input in many different meme formats."
     },
     {
-        "name": "bitrate",
+        "name": "meme-captions",
         "cmds": [
-            "setaudiobitrate",
-            "setbitrate"
+            "amazon",
+            "bloxys",
+            "call",
+            "choicegif",
+            "error",
+            "iceberg",
+            "makesweet",
+            "pvz",
+            "reddit",
+            "robloxgame",
+            "twitterban",
+            "undertale",
+            "yall"
         ],
-        "description": "Sets the file's video or audio bitrate.",
-        "args": [
-            {
-                "name": "bitrate",
-                "required": true,
-                "specifarg": false,
-                "orig": "<bitrate>"
-            },
-            {
-                "name": "file",
-                "required": false,
-                "specifarg": false,
-                "orig": "{file}"
-            }
-        ]
+        "description": "Create memes with files and captions."
     },
     {
-        "name": "convert",
+        "name": "mirror",
         "cmds": [
-            "toapng",
-            "togif",
-            "topng",
-            "tomp3",
-            "tomp4"
+            "bottommirror",
+            "hflip",
+            "leftmirror",
+            "rightmirror",
+            "topmirror",
+            "vflip"
         ],
-        "description": "Converts a file to many formats.",
-        "args": [
-            {
-                "name": "file",
-                "required": false,
-                "specifarg": false,
-                "orig": "{file}"
-            },
-            {
-                "name": "duration",
-                "required": false,
-                "specifarg": true,
-                "orig": "[-duration <seconds (max 60)>]"
-            },
-            {
-                "name": "fps",
-                "required": false,
-                "specifarg": true,
-                "orig": "[-fps <fps (max 50)>]"
-            },
-            {
-                "name": "framepos",
-                "required": false,
-                "specifarg": true,
-                "orig": "[-framepos <number>]"
-            }
-        ]
+        "description": "Flip or mirror a file in different axes."
     },
     {
-        "name": "morphology",
+        "name": "owner",
         "cmds": [
-            "dilate",
-            "erode"
+            "dalle2",
+            "destroy",
+            "eval",
+            "reset",
+            "setstatus"
         ],
-        "description": "Dilate or erode the file's colors.",
-        "args": [
-            {
-                "name": "file",
-                "required": false,
-                "specifarg": false,
-                "orig": "{file}"
-            },
-            {
-                "name": "strength",
-                "required": false,
-                "specifarg": true,
-                "orig": "[-strength <number (max 100)>]"
-            }
-        ]
+        "description": "salami commands"
+    },
+    {
+        "name": "overlay",
+        "cmds": [
+            "blend",
+            "chromakey",
+            "hmerge",
+            "hstack",
+            "mask",
+            "move",
+            "overlay",
+            "vmerge",
+            "vstack"
+        ],
+        "description": "For stacking or overlaying a file on top of another."
+    },
+    {
+        "name": "random",
+        "cmds": [
+            "randomcmd",
+            "randomgif",
+            "randomimage",
+            "randomname",
+            "randomsentence",
+            "randomword"
+        ],
+        "description": "Send a random value from a collection of values."
     },
     {
         "name": "search",
@@ -798,159 +351,20 @@
             "rule34",
             "youtube"
         ],
-        "description": "Search for media in the web.",
-        "args": [
-            {
-                "name": "query",
-                "required": true,
-                "specifarg": false,
-                "orig": "<query>"
-            },
-            {
-                "name": "page",
-                "required": false,
-                "specifarg": true,
-                "orig": "[-page <number>]"
-            }
-        ]
+        "description": "Search for things on the web."
     },
     {
-        "name": "hex",
+        "name": "size",
         "cmds": [
-            "crasher",
-            "enlongate",
-            "dividelength",
-            "donotplaytwice",
-            "multlength",
-            "virus"
+            "enlarge",
+            "hshrink",
+            "hstretch",
+            "scale",
+            "shrink",
+            "vshrink",
+            "vstretch"
         ],
-        "description": "Manipulate the file's Hex Code.",
-        "args": [
-            {
-                "name": "multiplier",
-                "required": false,
-                "specifarg": false,
-                "orig": "[multiplier (from 1 to 6)] (only works in length commands)"
-            },
-            {
-                "name": "file",
-                "required": false,
-                "specifarg": false,
-                "orig": "{file}"
-            }
-        ]
-    },
-    {
-        "name": "merge",
-        "cmds": [
-            "hmerge",
-            "vmerge"
-        ],
-        "description": "Merge the first file with the second one.",
-        "args": [
-            {
-                "name": "file",
-                "required": false,
-                "specifarg": false,
-                "orig": "{file}"
-            },
-            {
-                "name": "file2",
-                "required": false,
-                "specifarg": false,
-                "orig": "{file2}"
-            },
-            {
-                "name": "swap",
-                "required": false,
-                "specifarg": true,
-                "orig": "[-swap]"
-            }
-        ]
-    },
-    {
-        "name": "stack",
-        "cmds": [
-            "hstack",
-            "vstack"
-        ],
-        "description": "Stacks the file horizontally or vertically.",
-        "args": [
-            {
-                "name": "file",
-                "required": false,
-                "specifarg": false,
-                "orig": "{file}"
-            },
-            {
-                "name": "stack",
-                "required": false,
-                "specifarg": true,
-                "orig": "[-stack <number (from 1 to 10)>]"
-            }
-        ]
-    },
-    {
-        "name": "magik",
-        "cmds": [
-            "magik",
-            "unmagik"
-        ],
-        "description": "Liquid-rescales the file.",
-        "args": [
-            {
-                "name": "file",
-                "required": false,
-                "specifarg": false,
-                "orig": "{file}"
-            },
-            {
-                "name": "scale",
-                "required": false,
-                "specifarg": true,
-                "orig": "[-scale <multiplier>]"
-            }
-        ]
-    },
-    {
-        "name": "fix",
-        "cmds": [
-            "fixgif",
-            "fixratio"
-        ],
-        "description": "Fixes some aspects of files."
-    },
-    {
-        "name": "expand",
-        "cmds": [
-            "contract",
-            "expand",
-            "hcontract",
-            "hexpand",
-            "vcontract",
-            "vexpand"
-        ],
-        "description": "Contract or expand the width and height of a file.",
-        "args": [
-            {
-                "name": "multiplier",
-                "required": false,
-                "specifarg": false,
-                "orig": "[multiplier (from 1 to 6)]"
-            },
-            {
-                "name": "file",
-                "required": false,
-                "specifarg": false,
-                "orig": "{file}"
-            },
-            {
-                "name": "origin",
-                "required": false,
-                "specifarg": true,
-                "orig": "[-origin <x (left/center/right)> <y (top/middle/bottom)>]"
-            }
-        ]
+        "description": "Scale the size of some file."
     },
     {
         "name": "zoom",
@@ -960,254 +374,9 @@
             "vzoomin",
             "vzoomout",
             "zoomin",
-            "zoomout"
+            "zoomout",
+            "zoomscale"
         ],
-        "description": "Zooms a file in or out.",
-        "args": [
-            {
-                "name": "multiplier",
-                "required": false,
-                "specifarg": false,
-                "orig": "[multiplier (from 1 to 6)]"
-            },
-            {
-                "name": "file",
-                "required": false,
-                "specifarg": false,
-                "orig": "{file}"
-            },
-            {
-                "name": "origin",
-                "required": false,
-                "specifarg": true,
-                "orig": "[-origin <x (left/center/right)> <y (top/middle/bottom)>]"
-            },
-            {
-                "name": "flags",
-                "required": false,
-                "specifarg": true,
-                "orig": "[-flags <algorithm>]"
-            }
-        ]
-    },
-    {
-        "name": "size",
-        "cmds": [
-            "enlarge",
-            "hshrink",
-            "hstretch",
-            "shrink",
-            "vshrink",
-            "vstretch",
-            "superresolution",
-            "waifu2x",
-            "pixenlarge"
-        ],
-        "description": "Resize a file.",
-        "args": [
-            {
-                "name": "multiplier",
-                "required": false,
-                "specifarg": false,
-                "orig": "[multiplier]"
-            },
-            {
-                "name": "file",
-                "required": false,
-                "specifarg": false,
-                "orig": "{file}"
-            },
-            {
-                "name": "flags",
-                "required": false,
-                "specifarg": true,
-                "orig": "[-flags <algorithm>]"
-            }
-        ]
-    },
-    {
-        "name": "json",
-        "cmds": [
-            "addtojson",
-            "removefromjson",
-            "displayjson"
-        ],
-        "description": "Adds a new value to JSONs like Phexonia Studio's files.",
-        "args": [
-            {
-                "name": "json",
-                "required": true,
-                "specifarg": false,
-                "orig": "<json (psfiles, pspasta, funnygif, poop, dmphrases)>"
-            },
-            {
-                "name": "value",
-                "required": true,
-                "specifarg": false,
-                "orig": "<value>"
-            }
-        ]
-    },
-    {
-        "name": "death",
-        "cmds": [
-            "destroy",
-            "reset"
-        ],
-        "description": "Shutdown or restart Poopy.",
-        "args": [
-            
-        ]
-    },
-    {
-        "name": "random",
-        "cmds": [
-            "araboword",
-            "randomword",
-            "clickhole",
-            "funnygif",
-            "ps",
-            "pspasta",
-            "randomgif",
-            "randomimage",
-            "randomname",
-            "randomsentence",
-            "ronald",
-            "sayori",
-            "sayoriart",
-            "garbage",
-            "randomcmd"
-        ],
-        "description": "Random output generators.",
-        "args": [
-            {
-                "name": "args",
-                "required": false,
-                "specifarg": false,
-                "orig": "[args] (sayori or randomcmd)"
-            },
-            {
-                "name": "type",
-                "required": false,
-                "specifarg": true,
-                "orig": "[-type <extension (image/video/gif)>] (ps)"
-            },
-            {
-                "name": "cmdtype",
-                "required": false,
-                "specifarg": true,
-                "orig": "[-cmdtype <commandType>] (randomcmd)"
-            }
-        ]
-    },
-    {
-        "name": "info",
-        "cmds": [
-            "avatar",
-            "fileinfo",
-            "help",
-            "specialkeys",
-            "battlestats",
-            "stats",
-            "invite"
-        ],
-        "description": "Get info of a user, file, or the bot itself.",
-        "args": [
-            {
-                "name": "input",
-                "required": false,
-                "specifarg": false,
-                "orig": "[input]"
-            }
-        ]
-    },
-    {
-        "name": "settings",
-        "cmds": [
-            "toggledms",
-            "togglensfw",
-            "chaincommands",
-            "setprefix"
-        ],
-        "description": "Toggle and change some Poopy settings.",
-        "args": [
-            {
-                "name": "prefix",
-                "required": false,
-                "specifarg": false,
-                "orig": "<prefix> (setprefix)"
-            }
-        ]
-    },
-    {
-        "name": "fight",
-        "cmds": [
-            "punch",
-            "chainpunch",
-            "slam",
-            "slap",
-            "poopallover"
-        ],
-        "description": "Fight against someone or something!",
-        "args": [
-            {
-                "name": "subject",
-                "required": true,
-                "specifarg": false,
-                "orig": "<subject>"
-            }
-        ]
-    },
-    {
-        "name": "dumpy",
-        "cmds": [
-            "dumpy",
-            "tdumpy"
-        ],
-        "description": "Fun Fact: poopy has 3 among us related commands",
-        "args": [
-            {
-                "name": "image",
-                "required": true,
-                "specifarg": false,
-                "orig": "<image>"
-            },
-            {
-                "name": "resolution",
-                "required": false,
-                "specifarg": true,
-                "orig": "[-resolution <number>]"
-            }
-        ]
-    },
-    {
-        "name": "og",
-        "cmds": [
-            "baldi",
-            "canigetadmin",
-            "heyapple",
-            "poop",
-            "ratemyfarts"
-        ],
-        "description": "YO MAMA!",
-        "args": []
-    },
-    {
-        "name": "manage",
-        "cmds": [
-            "togglecommands",
-            "commandtemplates",
-            "localcommands",
-            "messages"
-        ],
-        "description": "Manage different databases, like local commands, messages, toggled commands or command templates.",
-        "args": [
-            {
-                "name": "option",
-                "required": false,
-                "specifarg": false,
-                "orig": "{option}"
-            }
-        ]
+        "description": "Zoom some file in or out."
     }
 ]

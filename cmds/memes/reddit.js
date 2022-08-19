@@ -102,5 +102,5 @@ module.exports = {
         value: 'The kind stranger has arrived.'
     },
     cooldown: 2500,
-    type: 'Memes'
+    type: 'Meme Captions'
 }

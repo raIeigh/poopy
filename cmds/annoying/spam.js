@@ -4,13 +4,10 @@ module.exports = {
     execute: async function (msg, args) {
         let poopy = this
 
-        await msg.channel.send('this is temporarily disabled').catch(() => { })
-        return
-
         await msg.channel.sendTyping().catch(() => { })
         if (msg.member.permissions.has('MANAGE_GUILD')  || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || poopy.config.ownerids.find(id => id == msg.author.id)) {
             if (args[1] === undefined && args[2] === undefined) {
-                await msg.channel.send('How much do I spam?!').catch(() => { })
+                await msg.reply('How much do I spam?!').catch(() => { })
                 return;
             }
             var del = true
@@ -29,7 +26,7 @@ module.exports = {
             var attachments = msg.attachments.map(attachment => new poopy.modules.Discord.MessageAttachment(attachment.url, attachment.name))
             var numToRepeat = Number(args[1]);
             if (isNaN(numToRepeat)) {
-                await msg.channel.send({
+                await msg.reply({
                     content: 'Invalid number: **' + args[1] + '**',
                     allowedMentions: {
                         parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
@@ -38,11 +35,11 @@ module.exports = {
                 return;
             }
             else if (numToRepeat > 25) {
-                await msg.channel.send('Number must be smaller or equal to **25**.').catch(() => { })
+                await msg.reply('Number must be smaller or equal to **25**.').catch(() => { })
                 return;
             }
             if (args[2] === undefined && attachments.length <= 0) {
-                await msg.channel.send('What is the message to spam?!').catch(() => { })
+                await msg.reply('What is the message to spam?!').catch(() => { })
                 return;
             };
             var sendObject = {
@@ -59,13 +56,21 @@ module.exports = {
             if (del) {
                 msg.delete().catch(() => { })
             }
+            var reply = await msg.fetchReference().catch(() => { })
             for (var i = 0; i < numToRepeat; i++) {
                 if (poopy.tempdata[msg.guild.id][msg.channel.id]['shut']) break
-                await poopy.functions.waitMessageCooldown()
-                await msg.channel.send(sendObject).catch(() => { })
+                if (reply) {
+                    await reply.reply(sendObject).catch(() => { })
+                } else {
+                    if (msg.isCommand && msg.isCommand() && !msg.replied && !del) {
+                        await msg.reply(sendObject).catch(() => { })
+                    } else {
+                        await msg.channel.send(sendObject).catch(() => { })
+                    }
+                }
             };
         } else {
-            await msg.channel.send('You need to have the manage messages permission to execute that!').catch(() => { })
+            await msg.reply('You need to have the manage messages permission to execute that!').catch(() => { })
             return;
         };
     },

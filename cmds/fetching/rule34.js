@@ -11,8 +11,7 @@ module.exports = {
 
         await msg.channel.sendTyping().catch(() => { })
         if (args[1] === undefined) {
-            await msg.channel.send('What do I search for?!').catch(() => { })
-            await msg.channel.sendTyping().catch(() => { })
+            await msg.reply('What do I search for?!').catch(() => { })
             return;
         }
 
@@ -27,8 +26,7 @@ module.exports = {
         var body = await poopy.modules.axios.request(`https://api.rule34.xxx/index.php?page=dapi&s=post&q=index&json=1&limit=100&tags=${encodeURIComponent(search)}`).catch(() => { })
 
         if (!body) {
-            await msg.channel.send('Error.').catch(() => { })
-            await msg.channel.sendTyping().catch(() => { })
+            await msg.reply('Error.').catch(() => { })
             return;
         }
 
@@ -50,8 +48,7 @@ module.exports = {
         });
 
         if (!urls.length) {
-            await msg.channel.send('Not found.').catch(() => { })
-            await msg.channel.sendTyping().catch(() => { })
+            await msg.reply('Not found.').catch(() => { })
             return;
         }
 

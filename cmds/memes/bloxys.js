@@ -57,5 +57,5 @@ module.exports = {
     },
     help: { name: 'bloxys/bloxy "{name}" {file}', value: 'YOU WON A BLOXY!' },
     cooldown: 2500,
-    type: 'Memes'
+    type: 'Meme Captions'
 }

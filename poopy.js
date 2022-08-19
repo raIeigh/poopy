@@ -153,10 +153,10 @@ class Poopy {
         poopy.modules.xml2json = require('xml2js').parseStringPromise
         poopy.modules.util = require('util')
         poopy.modules.md5 = require('md5')
-        if (poopy.modules.fs.existsSync('node_modules/@jimp/plugin-print')) {
+        if (poopy.modules.fs.existsSync('node_modules/@jimp/plugin-print'))
             poopy.modules.fs.rmSync('node_modules/@jimp/plugin-print', { force: true, recursive: true })
+        if (!poopy.modules.fs.existsSync('node_modules/@jimp/plugin-print'))
             poopy.modules.fs.copySync('modules/plugin-print', 'node_modules/@jimp/plugin-print', { recursive: true })
-        }
         poopy.modules.Jimp = require('jimp')
         poopy.modules.whatwg = require('whatwg-url')
         poopy.modules.deepai = require('deepai')
@@ -240,6 +240,24 @@ class Poopy {
         poopy.vars.statusChanges = 'true'
         poopy.vars.filecount = 0
         poopy.vars.cps = 0
+
+        // modifying discord.js stuff haha
+        var channelSend = poopy.modules.Discord.BaseGuildTextChannel.prototype.send
+        poopy.modules.Discord.BaseGuildTextChannel.prototype.send = async function (payload) {
+            var channel = this
+            await poopy.functions.waitMessageCooldown()
+            if (poopy.tempdata[channel.guild.id][channel.id]['shut']) return
+            return await channelSend.call(channel, payload)
+        }
+
+        var messageReply = poopy.modules.Discord.Message.prototype.reply
+        poopy.modules.Discord.Message.prototype.reply = async function (payload) {
+            var message = this
+            await poopy.functions.waitMessageCooldown()
+            if (poopy.tempdata[message.guild.id][message.channel.id]['shut']) return
+            return await messageReply.call(message, payload)
+        }
+
         delete poopy.modules.Discord.Guild.prototype.leave
 
         poopy.statuses = [
@@ -673,7 +691,7 @@ class Poopy {
                         return
                     }*/
 
-                    var result = await poopy.functions.processTask(execData).catch((e) => console.log(e))
+                    var result = await poopy.functions.processTask(execData).catch(() => { })
 
                     if (!result) {
                         return 'No output.'
@@ -1589,7 +1607,7 @@ class Poopy {
             return array
         }
 
-        poopy.functions.yesno = async function (channel, content, who, btdata) {
+        poopy.functions.yesno = async function (channel, content, who, btdata, reply) {
             return new Promise(async (resolve) => {
                 if (poopy.config.forcetrue) {
                     resolve(true)
@@ -1654,8 +1672,7 @@ class Poopy {
                     sendObject.components = components
                 }
 
-                await poopy.functions.waitMessageCooldown()
-                var yesnoMsg = await channel.send(sendObject).catch(() => { })
+                var yesnoMsg = await ((reply && !poopy.config.allowbotusage) ? reply : channel)[(reply && !poopy.config.allowbotusage) ? 'reply' : 'send'](sendObject).catch(() => { })
 
                 if (!yesnoMsg) {
                     resolve(false)
@@ -1757,7 +1774,6 @@ class Poopy {
                 menuRow.addComponents([menu])
                 sendObject.components = [menuRow]
 
-                await poopy.functions.waitMessageCooldown()
                 var selectMsg = await channel.send(sendObject).catch(() => { })
 
                 if (!selectMsg) {
@@ -1958,7 +1974,6 @@ class Poopy {
             if (poopy.config.textEmbeds) sendObject.content = resultEmbed
             else sendObject.embeds = [resultEmbed]
 
-            await poopy.functions.waitMessageCooldown()
             var resultsMsg = await ((reply && !poopy.config.allowbotusage) ? reply : channel)[(reply && !poopy.config.allowbotusage) ? 'reply' : 'send'](sendObject).catch(() => { })
 
             if (!resultsMsg) {
@@ -3327,7 +3342,6 @@ class Poopy {
             try {
                 poopy.modules.fs.readFileSync(`${filepath}/${filename}`)
             } catch (_) {
-                await poopy.functions.waitMessageCooldown()
                 await sending[poopy.config.allowbotusage ? 'send' : 'reply']('Couldn\'t send file.').catch(() => { })
                 poopy.functions.infoPost(`Couldn\'t send file`)
 
@@ -3354,12 +3368,10 @@ class Poopy {
                         if (isUrl) {
                             poopy.functions.addLastUrl(msg, fileLink)
                         } else {
-                            await poopy.functions.waitMessageCooldown()
                             await sending[poopy.config.allowbotusage ? 'send' : 'reply'](fileLink.includes('retard') ? 'ok so what happened right here is i tried to upload a gif with a size bigger than 20 mb to catbox.moe but apparently you cant do it so uhhhhhh haha no link for you' : fileLink).catch(() => { })
                             poopy.functions.infoPost(`Couldn\'t upload catbox.moe file, reason:\n\`${fileLink.includes('retard') ? 'ok so what happened right here is i tried to upload a gif with a size bigger than 20 mb to catbox.moe but apparently you cant do it so uhhhhhh haha no link for you' : fileLink}\``)
                         }
                     } else {
-                        await poopy.functions.waitMessageCooldown()
                         await sending[poopy.config.allowbotusage ? 'send' : 'reply'](fileLink.includes('retard') ? 'ok so what happened right here is i tried to upload a gif with a size bigger than 20 mb to catbox.moe but apparently you cant do it so uhhhhhh haha no link for you' : fileLink).catch(() => { })
                         if (!isUrl) {
                             poopy.functions.infoPost(`Couldn\'t upload catbox.moe file, reason:\n\`${fileLink.includes('retard') ? 'ok so what happened right here is i tried to upload a gif with a size bigger than 20 mb to catbox.moe but apparently you cant do it so uhhhhhh haha no link for you' : fileLink}\``)
@@ -3409,24 +3421,20 @@ class Poopy {
 
                 if (extraOptions.content) sendObject.content = extraOptions.content
 
-                await poopy.functions.waitMessageCooldown()
                 var fileMsg = await sending[poopy.config.allowbotusage ? 'send' : 'reply'](sendObject).catch(() => { })
 
                 if (!fileMsg) {
-                    await poopy.functions.waitMessageCooldown()
                     await sending[poopy.config.allowbotusage ? 'send' : 'reply']('The output file is too large, so I\'m uploading it to catbox.moe.').catch(() => { })
                     poopy.functions.infoPost(`Failed to send file to channel, uploading to catbox.moe`)
                     var fileLink = await poopy.vars.Catbox.upload(`${filepath}/${filename}`).catch(() => { })
                     if (fileLink) {
                         var isUrl = poopy.vars.validUrl.test(fileLink)
-                        await poopy.functions.waitMessageCooldown()
                         await msg.channel.send(fileLink.includes('retard') ? 'ok so what happened right here is i tried to upload a gif with a size bigger than 20 mb to catbox.moe but apparently you cant do it so uhhhhhh haha no link for you' : fileLink).catch(() => { })
 
                         if (!isUrl) {
                             poopy.functions.infoPost(`Couldn\'t upload catbox.moe file, reason:\n\`${fileLink.includes('retard') ? 'ok so what happened right here is i tried to upload a gif with a size bigger than 20 mb to catbox.moe but apparently you cant do it so uhhhhhh haha no link for you' : fileLink}\``)
                         } else returnUrl = fileLink
                     } else {
-                        await poopy.functions.waitMessageCooldown()
                         await msg.channel.send('Couldn\'t send file.').catch(() => { })
                         poopy.functions.infoPost(`Couldn\'t upload catbox.moe file`)
                     }
@@ -3792,7 +3800,7 @@ class Poopy {
                     type: 'datasave',
                     mongodatabase: poopy.config.mongodatabase,
                     data: { data: poopy.data, globaldata: poopy.functions.globalData() }
-                }).catch((e) => console.log(e))
+                }).catch(() => { })
                 await poopy.functions.updateAllData(poopy.config.mongodatabase, { data: poopy.data, globaldata: poopy.functions.globalData() }).catch(() => { })
             }
 
@@ -3858,7 +3866,7 @@ class Poopy {
                 var cmdData = require(`./cmds/${category}/${name}`)
 
                 if ((poopy.config.poosonia && poopy.config.poosoniablacklist.find(cmdname => cmdname == cmd)) ||
-                !poopy.functions.envsExist(cmdData.envRequired ?? [])) return
+                    !poopy.functions.envsExist(cmdData.envRequired ?? [])) return
 
                 poopy.commands.push(cmdData)
             })
@@ -3882,80 +3890,6 @@ class Poopy {
             return 0
         })
 
-        poopy.slashBuilders = {}
-        poopy.commandGroups = poopy.functions.requireJSON(`assets/json/commandGroups.json`)
-
-        function findGroup(cmdData) {
-            var cmdFind = cmd => cmdData.name.find(name => name == cmd)
-            var groupFind = group => group.cmds.find(cmdFind)
-
-            return poopy.commandGroups.find(groupFind)
-        }
-
-        function findCmdInGroup(cmdData) {
-            var cmdFind = cmd => cmdData.name.find(name => name == cmd)
-            var commandGroup = findGroup(cmdData)
-
-            return commandGroup.cmds.find(cmdFind)
-        }
-
-        function addArgs(builder, args) {
-            args.forEach(arg =>
-                builder.addStringOption(option =>
-                    option.setName(arg.name.toLowerCase())
-                        .setDescription(arg.orig)
-                        .setRequired(arg.required)
-                )
-            )
-
-            builder.addStringOption(option =>
-                option.setName('extra')
-                    .setDescription('Extra payload you can specify for the command.')
-                    .setRequired(false)
-            )
-        }
-
-        poopy.commands.forEach(cmdData => {
-            var slashCmd = cmdData.name[0]
-            var args = cmdData.args.sort((x, y) => (x.required === y.required) ? 0 : x.required ? -1 : 1)
-            var description = cmdData.help.value.match(/[^\n.!?]+[.!?]*/)[0].substring(0, 100)
-
-            var commandGroup = findGroup(cmdData)
-
-            if (commandGroup) {
-                slashCmd = commandGroup.name
-                description = commandGroup.description
-            }
-
-            if (poopy.slashBuilders[slashCmd]) return
-
-            var slashBuilder = new poopy.modules.DiscordBuilders.SlashCommandBuilder()
-
-            slashBuilder.setName(slashCmd)
-                .setDescription(description)
-
-            if (commandGroup) {
-                commandGroup.cmds.forEach(cmd => {
-                    var fcmdData = poopy.functions.findCommand(cmd)
-
-                    var args = fcmdData.args.sort((x, y) => (x.required === y.required) ? 0 : x.required ? -1 : 1)
-                    var description = fcmdData.help.value.match(/[^\n.!?]+[.!?]*/)[0].substring(0, 100)
-
-                    slashBuilder.addSubcommand(subcommand => {
-                        subcommand
-                            .setName(cmd)
-                            .setDescription(description)
-
-                        addArgs(subcommand, args)
-                    })
-                })
-            } else {
-                addArgs(slashBuilder, args)
-            }
-
-            poopy.slashBuilders[slashCmd] = slashBuilder
-        })
-
         poopy.functions.updateSlashCommands = async function () {
             var slashBuilders = Object.values(poopy.slashBuilders)
             await poopy.vars.rest.put(poopy.modules.Routes.applicationCommands(poopy.bot.user.id), { body: slashBuilders }).catch((e) => console.log(e))
@@ -3977,6 +3911,96 @@ class Poopy {
                 setTimeout(() => poopy.vars.msgcooldown = false, poopy.config.msgcooldown)
             }
         }
+
+        poopy.slashBuilders = {}
+        poopy.commandGroups = poopy.functions.requireJSON(`assets/json/commandGroups.json`)
+
+        function findGroup(cmdData) {
+            var cmdFind = cmd => typeof cmdData == 'object' ? cmdData.name.find(name => name == cmd) : cmdData == cmd
+            var groupFind = group => group.cmds.find(cmdFind)
+
+            return poopy.commandGroups.find(groupFind)
+        }
+
+        function addArgs(builder, args) {
+            args.forEach(arg =>
+                builder.addStringOption(option =>
+                    option.setName(arg.name.toLowerCase())
+                        .setDescription(arg.orig)
+                        .setRequired(arg.required)
+                )
+            )
+
+            builder.addStringOption(option =>
+                option.setName('extrapayload')
+                    .setDescription('Extra payload you can specify for the command.')
+                    .setRequired(false)
+            )
+        }
+
+        poopy.commands.forEach(cmdData => {
+            var slashCmd = cmdData.name[0]
+            var args = cmdData.args.sort((x, y) => (x.required === y.required) ? 0 : x.required ? -1 : 1)
+            var description = cmdData.help.value.match(/[^\n.!?]+[.!?]*/)[0].substring(0, 100)
+
+            var commandGroup = findGroup(cmdData)
+            var subcommands = cmdData.subcommands
+
+            if (commandGroup) {
+                slashCmd = commandGroup.name
+                description = commandGroup.description
+            }
+
+            if (poopy.slashBuilders[slashCmd]) return
+
+            var slashBuilder = new poopy.modules.DiscordBuilders.SlashCommandBuilder()
+
+            slashBuilder.setName(slashCmd)
+                .setDescription(description)
+
+            if (commandGroup) {
+                commandGroup.cmds.forEach(cmd => {
+                    var fcmdData = poopy.functions.findCommand(cmd)
+
+                    if (!fcmdData) {
+                        return
+                    }
+
+                    var args = fcmdData.args.sort((x, y) => (x.required === y.required) ? 0 : x.required ? -1 : 1)
+                    var description = fcmdData.help.value.match(/[^\n.!?]+[.!?]*/)[0].substring(0, 100)
+
+                    slashBuilder.addSubcommand(subcommand => {
+                        subcommand
+                            .setName(cmd)
+                            .setDescription(description)
+
+                        addArgs(subcommand, args)
+
+                        return subcommand
+                    })
+                })
+            } else if (subcommands) {
+                subcommands.forEach(subcommand => {
+                    var name = subcommand.name
+                    var args = subcommand.args.sort((x, y) => (x.required === y.required) ? 0 : x.required ? -1 : 1)
+                    var description = subcommand.description.match(/[^\n.!?]+[.!?]*/)[0].substring(0, 100)
+
+                    slashBuilder.addSubcommand(subcommand => {
+                        subcommand
+                            .setName(name)
+                            .setDescription(description)
+
+                        addArgs(subcommand, args)
+
+                        return subcommand
+                    })
+                })
+            } else {
+                addArgs(slashBuilder, args)
+            }
+
+            poopy.slashBuilders[slashCmd] = slashBuilder
+        })
 
         poopy.vars.helpCmds = []
         poopy.vars.jsonCmds = []
@@ -4091,6 +4115,7 @@ class Poopy {
             'JSON Club': 'Exclusive to some people for editing the JSONs used by Poopy.',
             Main: 'Poopy\'s main commands.',
             Memes: 'Integrate an input in many different meme formats.',
+            'Meme Captions': 'Create memes with files and captions.',
             Mirroring: 'Flip or mirror a file in different axes.',
             OG: 'They were there since the very beginning...',
             Owner: 'salami commands',
@@ -4107,7 +4132,6 @@ class Poopy {
             var sending = poopy.config.allowbotusage ? msg.channel : msg
 
             if (!poopy.config.ownerids.find(id => id == msg.author.id) && poopy.config.testing && !poopy.config.allowtesting) {
-                await poopy.functions.waitMessageCooldown()
                 await sending[poopy.config.allowbotusage ? 'send' : 'reply']('you won\'t use me any time soon')
                 return
             }
@@ -4117,13 +4141,12 @@ class Poopy {
             if (msg.channel.type === 'DM' || msg.channel.type === 'GROUP_DM') {
                 if (msg.author.bot || msg.author.id == poopy.bot.user.id) return
                 await poopy.functions.sleep(Math.floor(Math.random() * 500) + 500)
-                await poopy.functions.waitMessageCooldown()
                 await msg.channel.send(poopy.arrays.dmPhrases[Math.floor(Math.random() * poopy.arrays.dmPhrases.length)]
                     .replace(/{mention}/, `<@${msg.author.id}>`)).catch(() => { })
                 return
             }
 
-            await poopy.functions.gatherData(msg).catch((e) => console.log(e))
+            await poopy.functions.gatherData(msg).catch(() => { })
             msg.channel.onsfw = msg.channel.nsfw
             msg.channel.nsfw = poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['nsfw']
             setTimeout(() => {
@@ -4185,17 +4208,14 @@ class Poopy {
                             if (webhooks ? webhooks.size : undefined) {
                                 var findWebhook = webhooks.find(webhook => poopy.bot.user === webhook.owner)
                                 if (findWebhook) {
-                                    await poopy.functions.waitMessageCooldown()
                                     await findWebhook.send(sendObject).then(() => {
                                         msg.delete().catch(() => { })
                                     }).catch(() => { })
                                 } else {
                                     var createdWebhook = await msg.channel.createWebhook('Poopyhook', { avatar: 'https://cdn.discordapp.com/attachments/760223418968047629/835923489834664056/poopy2.png' }).catch(() => { })
                                     if (!createdWebhook) {
-                                        await poopy.functions.waitMessageCooldown()
                                         await sending[poopy.config.allowbotusage ? 'send' : 'reply'](`I need the manage webhooks permission to turn you into ${poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['custom']['name']}.`).catch(() => { })
                                     } else {
-                                        await poopy.functions.waitMessageCooldown()
                                         await createdWebhook.send(sendObject).then(() => {
                                             msg.delete().catch(() => { })
                                         }).catch(() => { })
@@ -4204,10 +4224,8 @@ class Poopy {
                             } else {
                                 var createdWebhook = await msg.channel.createWebhook('Poopyhook', { avatar: 'https://cdn.discordapp.com/attachments/760223418968047629/835923489834664056/poopy2.png' }).catch(() => { })
                                 if (!createdWebhook) {
-                                    await poopy.functions.waitMessageCooldown()
                                     await sending[poopy.config.allowbotusage ? 'send' : 'reply'](`I need the manage webhooks permission to turn you into ${poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['custom']['name']}.`).catch(() => { })
                                 } else {
-                                    await poopy.functions.waitMessageCooldown()
                                     await createdWebhook.send(sendObject).then(() => {
                                         msg.delete().catch(() => { })
                                     }).catch(() => { })
@@ -4235,7 +4253,6 @@ class Poopy {
                             if (webhooks ? webhooks.size : undefined) {
                                 var findWebhook = webhooks.find(webhook => poopy.bot.user === webhook.owner)
                                 if (findWebhook) {
-                                    await poopy.functions.waitMessageCooldown()
                                     await findWebhook.send(sendObject).then(() => {
                                         msg.delete().catch(() => { })
                                     }).catch(() => { })
@@ -4243,10 +4260,8 @@ class Poopy {
                                 } else {
                                     var createdWebhook = await msg.channel.createWebhook('Poopyhook', { avatar: 'https://cdn.discordapp.com/attachments/760223418968047629/835923489834664056/poopy2.png' }).catch(() => { })
                                     if (!createdWebhook) {
-                                        await poopy.functions.waitMessageCooldown()
                                         await sending[poopy.config.allowbotusage ? 'send' : 'reply'](`I need the manage webhooks permission to turn you into the impostor.`).catch(() => { })
                                     } else {
-                                        await poopy.functions.waitMessageCooldown()
                                         await createdWebhook.send(sendObject).then(() => {
                                             msg.delete().catch(() => { })
                                         }).catch(() => { })
@@ -4255,10 +4270,8 @@ class Poopy {
                             } else {
                                 var createdWebhook = await msg.channel.createWebhook('Poopyhook', { avatar: 'https://cdn.discordapp.com/attachments/760223418968047629/835923489834664056/poopy2.png' }).catch(() => { })
                                 if (!createdWebhook) {
-                                    await poopy.functions.waitMessageCooldown()
                                     await sending[poopy.config.allowbotusage ? 'send' : 'reply'](`I need the manage webhooks permission to turn you into the impostor.`).catch(() => { })
                                 } else {
-                                    await poopy.functions.waitMessageCooldown()
                                     await createdWebhook.send(sendObject).then(() => {
                                         msg.delete().catch(() => { })
                                     }).catch(() => { })
@@ -4279,7 +4292,6 @@ class Poopy {
 
                     if (!(ignored.find(name => cmd.toLowerCase().includes(name.toLowerCase()))) && ((!msg.author.bot && msg.author.id != poopy.bot.user.id) || poopy.config.allowbotusage)) {
                         var change = await poopy.functions.getKeywordsFor(cmd, msg, false, { resetattempts: true }).catch(async err => {
-                            await poopy.functions.waitMessageCooldown()
                             await sending[poopy.config.allowbotusage ? 'send' : 'reply']({
                                 content: err.stack,
                                 allowedMentions: {
@@ -4309,7 +4321,6 @@ class Poopy {
                         string: msg.content
                     }).catch(async err => {
                         try {
-                            await poopy.functions.waitMessageCooldown()
                             await sending[poopy.config.allowbotusage ? 'send' : 'reply']({
                                 content: err.stack,
                                 allowedMentions: {
@@ -4327,7 +4338,6 @@ class Poopy {
                         }
 
                         if (poopy.functions.globalData()['bot-data']['shit'].find(id => id === msg.author.id)) {
-                            await poopy.functions.waitMessageCooldown()
                             await sending[poopy.config.allowbotusage ? 'send' : 'reply']('shit').catch(() => { })
                             return
                         }
@@ -4335,7 +4345,6 @@ class Poopy {
                         if (poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown']) {
                             if ((poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] - Date.now()) > 0 &&
                                 poopy.tempdata[msg.author.id]['cooler'] !== msg.id) {
-                                await poopy.functions.waitMessageCooldown()
                                 await sending[poopy.config.allowbotusage ? 'send' : 'reply'](`Calm down! Wait more ${(poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] - Date.now()) / 1000} seconds.`).catch(() => { })
                                 return
                             } else {
@@ -4378,20 +4387,17 @@ class Poopy {
                         if (findCmd) {
                             notExecuted = false
                             if (poopy.data['guild-data'][msg.guild.id]['disabled'].find(cmd => cmd.find(n => n === args[0].toLowerCase()))) {
-                                await poopy.functions.waitMessageCooldown()
                                 await sending[poopy.config.allowbotusage ? 'send' : 'reply']('This command is disabled in this server.').catch(() => { })
                             } else {
                                 var increaseCount = !(findCmd.execute.toString().includes('sendFile') && args.includes('-nosend'))
 
                                 if (increaseCount) {
                                     if (poopy.tempdata[msg.author.id][msg.id]['execCount'] >= 1 && poopy.data['guild-data'][msg.guild.id]['chaincommands'] == false) {
-                                        await poopy.functions.waitMessageCooldown()
                                         await sending[poopy.config.allowbotusage ? 'send' : 'reply']('You can\'t chain commands in this server.').catch(() => { })
                                         return
                                     }
 
                                     if (poopy.tempdata[msg.author.id][msg.id]['execCount'] >= poopy.config.commandLimit * ((msg.member.permissions.has('MANAGE_GUILD') || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID) ? 5 : 1)) {
-                                        await poopy.functions.waitMessageCooldown()
                                         await sending[poopy.config.allowbotusage ? 'send' : 'reply'](`Number of commands to run at the same time must be smaller or equal to **${poopy.config.commandLimit * ((msg.member.permissions.has('MANAGE_GUILD') || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID) ? 5 : 1)}**!`).catch(() => { })
                                         return
                                     }
@@ -4412,7 +4418,6 @@ class Poopy {
                                 poopy.functions.infoPost(`Command \`${args[0].toLowerCase()}\` used`)
                                 await findCmd.execute.call(this, msg, args, {}).catch(async err => {
                                     try {
-                                        await poopy.functions.waitMessageCooldown()
                                         await sending[poopy.config.allowbotusage ? 'send' : 'reply']({
                                             content: err.stack,
                                             allowedMentions: {
@@ -4438,13 +4443,11 @@ class Poopy {
 
                             if (increaseCount) {
                                 if (poopy.tempdata[msg.author.id][msg.id]['execCount'] >= 1 && poopy.data['guild-data'][msg.guild.id]['chaincommands'] == false) {
-                                    await poopy.functions.waitMessageCooldown()
                                     await sending[poopy.config.allowbotusage ? 'send' : 'reply']('You can\'t chain commands in this server.').catch(() => { })
                                     return
                                 }
 
                                 if (poopy.tempdata[msg.author.id][msg.id]['execCount'] >= poopy.config.commandLimit * ((msg.member.permissions.has('MANAGE_GUILD') || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID) ? 5 : 1)) {
-                                    await poopy.functions.waitMessageCooldown()
                                     await sending[poopy.config.allowbotusage ? 'send' : 'reply'](`Number of commands to run at the same time must be smaller or equal to **${poopy.config.commandLimit * ((msg.member.permissions.has('MANAGE_GUILD') || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID) ? 5 : 1)}**!`).catch(() => { })
                                     return
                                 }
@@ -4453,8 +4456,7 @@ class Poopy {
                             }
 
                             if (poopy.tempdata[msg.guild.id][msg.channel.id]['shut']) break
-                            await poopy.functions.waitMessageCooldown()
-                            await msg.channel.send({
+                            await msg.reply({
                                 content: phrase,
                                 allowedMentions: {
                                     parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
@@ -4468,7 +4470,6 @@ class Poopy {
                             if (useCmd) {
                                 if (similarCmds[0].type === 'cmd') {
                                     if (poopy.data['guild-data'][msg.guild.id]['disabled'].find(cmd => cmd.find(n => n === similarCmds[0].name))) {
-                                        await poopy.functions.waitMessageCooldown()
                                         await sending[poopy.config.allowbotusage ? 'send' : 'reply']('This command is disabled in this server.').catch(() => { })
                                     } else {
                                         var findCmd = poopy.functions.findCommand(similarCmds[0].name)
@@ -4477,13 +4478,11 @@ class Poopy {
 
                                         if (increaseCount) {
                                             if (poopy.tempdata[msg.author.id][msg.id]['execCount'] >= 1 && poopy.data['guild-data'][msg.guild.id]['chaincommands'] == false) {
-                                                await poopy.functions.waitMessageCooldown()
                                                 await sending[poopy.config.allowbotusage ? 'send' : 'reply']('You can\'t chain commands in this server.').catch(() => { })
                                                 return
                                             }
 
                                             if (poopy.tempdata[msg.author.id][msg.id]['execCount'] >= poopy.config.commandLimit * ((msg.member.permissions.has('MANAGE_GUILD') || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID) ? 5 : 1)) {
-                                                await poopy.functions.waitMessageCooldown()
                                                 await sending[poopy.config.allowbotusage ? 'send' : 'reply'](`Number of commands to run at the same time must be smaller or equal to **${poopy.config.commandLimit * ((msg.member.permissions.has('MANAGE_GUILD') || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID) ? 5 : 1)}**!`).catch(() => { })
                                                 return
                                             }
@@ -4504,7 +4503,6 @@ class Poopy {
                                         poopy.functions.infoPost(`Command \`${similarCmds[0].name}\` used`)
                                         await findCmd.execute.call(this, msg, args, {}).catch(async err => {
                                             try {
-                                                await poopy.functions.waitMessageCooldown()
                                                 await sending[poopy.config.allowbotusage ? 'send' : 'reply']({
                                                     content: err.stack,
                                                     allowedMentions: {
@@ -4531,13 +4529,11 @@ class Poopy {
 
                                     if (increaseCount) {
                                         if (poopy.tempdata[msg.author.id][msg.id]['execCount'] >= 1 && poopy.data['guild-data'][msg.guild.id]['chaincommands'] == false) {
-                                            await poopy.functions.waitMessageCooldown()
                                             await sending[poopy.config.allowbotusage ? 'send' : 'reply']('You can\'t chain commands in this server.').catch(() => { })
                                             return
                                         }
 
                                         if (poopy.tempdata[msg.author.id][msg.id]['execCount'] >= poopy.config.commandLimit * ((msg.member.permissions.has('MANAGE_GUILD') || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID) ? 5 : 1)) {
-                                            await poopy.functions.waitMessageCooldown()
                                             await sending[poopy.config.allowbotusage ? 'send' : 'reply'](`Number of commands to run at the same time must be smaller or equal to **${poopy.config.commandLimit * ((msg.member.permissions.has('MANAGE_GUILD') || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID) ? 5 : 1)}**!`).catch(() => { })
                                             return
                                         }
@@ -4547,8 +4543,7 @@ class Poopy {
 
                                     if (poopy.tempdata[msg.guild.id][msg.channel.id]['shut']) return
 
-                                    await poopy.functions.waitMessageCooldown()
-                                    await msg.channel.send({
+                                    await msg.reply({
                                         content: phrase,
                                         allowedMentions: {
                                             parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
@@ -4568,7 +4563,6 @@ class Poopy {
             msg.content = allcontents.length > 0 ? allcontents.join(' -|- ') : msg.content
 
             if (poopy.functions.globalData()['bot-data']['shit'].find(id => id === msg.author.id)) {
-                await poopy.functions.waitMessageCooldown()
                 await sending[poopy.config.allowbotusage ? 'send' : 'reply']('shit').catch(() => { })
                 return
             }
@@ -4650,7 +4644,6 @@ class Poopy {
                     var resp = await poopy.functions.cleverbot(msg.content, msg.author.id).catch(() => { })
 
                     if (resp) {
-                        await poopy.functions.waitMessageCooldown()
                         await sending[poopy.config.allowbotusage ? 'send' : 'reply'](resp).catch(() => { })
                     }
                 } else if (msg.content.includes('prefix') && msg.content.includes('reset')) {
@@ -4661,8 +4654,7 @@ class Poopy {
                     }
 
                     await findCmd.execute.call(this, msg, ['setprefix', poopy.config.globalPrefix]).catch(async err => {
-                        await poopy.functions.waitMessageCooldown()
-                        await msg.channel.send({
+                        await msg.reply({
                             content: err.stack,
                             allowedMentions: {
                                 parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
@@ -4671,12 +4663,10 @@ class Poopy {
                         await msg.channel.sendTyping().catch(() => { })
                     })
                 } else if (msg.content.toLowerCase().includes('lore')) {
-                    await poopy.functions.waitMessageCooldown()
                     await msg.channel.send(`Well... If you played a little bit with \`${poopy.config.globalPrefix}poop\`, I could give you some...`).catch(() => { })
                 } else if ((msg.content.toLowerCase().includes('how') && msg.content.toLowerCase().includes('are') && msg.content.toLowerCase().includes('you')) || (msg.content.toLowerCase().includes('what') && msg.content.toLowerCase().includes('up')) || (msg.content.toLowerCase().includes('what') && msg.content.toLowerCase().includes('doing')) || msg.content.toLowerCase().includes('wassup') || (msg.content.toLowerCase().includes('how') && msg.content.toLowerCase().includes('it') && msg.content.toLowerCase().includes('going'))) {
                     var activity = poopy.bot.user.presence.activities[0]
                     if (activity) {
-                        await poopy.functions.waitMessageCooldown()
                         await msg.channel.send({
                             content: `Ya know, just ${activity.type.toLowerCase()} ${((activity.type === "COMPETING" && 'in ') || (activity.type === "LISTENING" && 'to ') || '')}${activity.name.replace(new RegExp(`${poopy.functions.regexClean(` | ${poopy.config.globalPrefix}help`)}$`), '')}.`,
                             allowedMentions: {
@@ -4685,27 +4675,20 @@ class Poopy {
                         }).catch(() => { })
                     }
                 } else if (msg.content.toLowerCase().includes('\?') || msg.content.toLowerCase().includes('do you') || msg.content.toLowerCase().includes('are you') || msg.content.toLowerCase().includes('did you') || msg.content.toLowerCase().includes('will you') || msg.content.toLowerCase().includes('were you') || msg.content.toLowerCase().includes('do you') || msg.content.toLowerCase().includes('when') || msg.content.toLowerCase().includes('where') || msg.content.toLowerCase().includes('how') || msg.content.toLowerCase().includes('why') || msg.content.toLowerCase().includes('what') || msg.content.toLowerCase().includes('who')) {
-                    await poopy.functions.waitMessageCooldown()
                     await msg.channel.send(poopy.functions.randomChoice(poopy.arrays.eightball)).catch(() => { })
                 } else if (msg.content.toLowerCase().includes('thank') || msg.content.toLowerCase().includes('thx')) {
-                    await poopy.functions.waitMessageCooldown()
                     await msg.channel.send('You\'re welcome!').catch(() => { })
                 } else if (msg.content.toLowerCase().includes('mom') || msg.content.toLowerCase().includes('bitch') || msg.content.toLowerCase().includes('goatfucker') || msg.content.toLowerCase().includes('loser') || msg.content.toLowerCase().includes('asshole') || msg.content.toLowerCase().includes('dipshit') || msg.content.toLowerCase().includes('fucker') || msg.content.toLowerCase().includes('retard') || msg.content.toLowerCase().includes('shitass') || msg.content.toLowerCase().includes('moron') || msg.content.toLowerCase().includes('buffoon') || msg.content.toLowerCase().includes('idiot') || msg.content.toLowerCase().includes('stupid') || msg.content.toLowerCase().includes('gay') || msg.content.toLowerCase().includes('dumbass')) {
-                    await poopy.functions.waitMessageCooldown()
                     await msg.channel.send('Shut up.').catch(() => { })
                 } else if (msg.content.toLowerCase().includes('hi') || msg.content.toLowerCase().includes('yo') || msg.content.toLowerCase().includes('hello') || msg.content.toLowerCase().includes('howdy')) {
-                    await poopy.functions.waitMessageCooldown()
                     await msg.channel.send('Yo! What\'s up?').catch(() => { })
                 } else if (msg.content.toLowerCase().includes('no') || msg.content.toLowerCase().includes('nah')) {
-                    await poopy.functions.waitMessageCooldown()
                     await msg.channel.send(':(').catch(() => { })
                 } else if (msg.content.toLowerCase().includes('ye') || msg.content.toLowerCase().includes('yup')) {
-                    await poopy.functions.waitMessageCooldown()
                     await msg.channel.send(':)').catch(() => { })
                 } else {
                     var lastMention = Date.now() - poopy.tempdata[msg.author.id]['eggphrases']['lastmention']
                     if (lastMention > 60000) poopy.tempdata[msg.author.id]['eggphrases']['phrase'] = 0
-                    await poopy.functions.waitMessageCooldown()
                     await msg.channel.send(eggPhrases[poopy.tempdata[msg.author.id]['eggphrases']['phrase']]).catch(() => { })
                     if (poopy.tempdata[msg.author.id]['eggphrases']['phrase'] < eggPhrases.length) poopy.tempdata[msg.author.id]['eggphrases']['phrase']++
                     poopy.tempdata[msg.author.id]['eggphrases']['lastmention'] = Date.now()
@@ -4761,7 +4744,6 @@ class Poopy {
                     poopy.data['guild-data'][guild.id]['joins'] = 0
                 }
 
-                await poopy.functions.waitMessageCooldown()
                 channel.send({
                     content: joinPhrases[poopy.data['guild-data'][guild.id]['joins'] % joinPhrases.length],
                     allowedMentions: {
@@ -4777,113 +4759,159 @@ class Poopy {
             poopy.functions.infoPost(`Left a server (${poopy.bot.guilds.cache.size} in total)`)
         }
 
-        poopy.callbacks.interactionCallback = async interaction => {
-            if (!interaction.isCommand || !interaction.isCommand()) {
-                return
-            }
-
-            var findCmd = poopy.functions.findCommand(interaction.options.getSubcommand() ?? interaction.commandName)
-
-            if (!findCmd) {
-                await interaction.reply('Fake.').catch(() => { })
-                return
-            }
-
-            var cmdargs = findCmd.args
-
-            var prefix = poopy.data['guild-data'][interaction.guild.id]['prefix']
-            var argcontent = []
-
-            var extracontent = interaction.options.getString('extra') ?? ''
-
-            for (var { name, value } of interaction.options.data) {
-                var cmdargi = cmdargs.findIndex(arg => arg.name.toLowerCase() == name)
-                if (cmdargi > -1) {
-                    var cmdarg = cmdargs[cmdargi]
-                    argcontent[cmdargi] = `${cmdarg.specifarg ? `-${name} ` : ''}${value}`
-                }
-            }
-
-            argcontent = argcontent.flat().join(' ')
-
-            var cmd = interaction.options.getString('command') ?? interaction.commandName
-            var content = [cmd]
-
-            if (argcontent) content.push(argcontent)
-            if (extracontent) content.push(extracontent)
-
-            content = content.join(' ')
-
-            await interaction.deferReply().catch(() => { })
-
-            var followUp = interaction.followUp
-            var editReply = interaction.editReply
-
-            interaction.reply = async function (payload) {
-                var interaction = this
-
-                var message = await (interaction.replied ? followUp : editReply).call(interaction, payload)
-                interaction.replied = message
-
-                return message
-            }
-
-            interaction.content = `${prefix}${content}`
-            interaction.author = interaction.user
-            interaction.bot = false
-            interaction.attachments = new Map()
-            interaction.embeds = []
-            interaction.stickers = new Map()
-            interaction.mentions = {
-                users: {
-                    get: () => { },
-                    find: () => { },
-                    forEach: () => { },
-                    map: () => { },
-                    size: 0
+        poopy.callbacks.interactionCallback = async (interaction) => {
+            var interactionFunctions = [
+                {
+                    type: interaction.isAutocomplete && interaction.isAutocomplete(),
+                    execute: async () => {
+                        var focusedValue = interaction.options.getFocused()
+                        var choices = ['-filename <name>', '-catbox', '-nosend']
+                        var filtered = choices.filter(choice => choice.startsWith(focusedValue))
+                        await interaction.respond(
+                            filtered.map(choice => ({ name: choice, value: choice }))
+                        )
+                    }
                 },
-                members: {
-                    get: () => { },
-                    find: () => { },
-                    forEach: () => { },
-                    map: () => { },
-                    size: 0
-                },
-                roles: {
-                    get: () => { },
-                    find: () => { },
-                    forEach: () => { },
-                    map: () => { },
-                    size: 0
-                }
-            }
 
-            interaction.react = async () => { }
-            interaction.delete = interaction.deleteReply
-            interaction.fetchWebhook = async () => { }
-            interaction.fetchReference = async () => { }
-            interaction.createReactionCollector = () => {
-                return {
-                    on: () => { },
-                    once: () => { },
-                    resetTimer: () => { },
-                    stop: () => { }
-                }
-            }
-            interaction.createMessageComponentCollector = () => {
-                return {
-                    on: () => { },
-                    once: () => { },
-                    resetTimer: () => { },
-                    stop: () => { }
-                }
-            }
+                {
+                    type: interaction.isCommand && interaction.isCommand(),
+                    execute: async () => {
+                        var cmd = interaction.commandName
+                        var subcommand = interaction.options.getSubcommand(false)
+                        var commandGroup = findGroup(subcommand ?? cmd)
 
-            await poopy.callbacks.messageCallback(interaction).catch(() => { })
+                        if (subcommand && commandGroup) cmd = subcommand
 
-            await poopy.functions.sleep(1000)
-            if (!interaction.replied) interaction.deleteReply().catch(() => { })
-            else await poopy.callbacks.messageCallback(interaction.replied).catch(() => { })
+                        var findCmd = poopy.functions.findCommand(cmd)
+
+                        if (!findCmd) {
+                            await interaction.reply('No.').catch(() => { })
+                            return
+                        }
+
+                        if (subcommand && !commandGroup) {
+                            cmd += ` ${subcommand}`
+                            findCmd = findCmd.subcommands.find(subcmd => subcmd.name == subcommand)
+                        }
+
+                        var cmdargs = findCmd.args
+
+                        var prefix = poopy.data['guild-data'][interaction.guild.id]['prefix']
+                        var argcontent = []
+
+                        var extracontent = interaction.options.getString('extrapayload') ?? ''
+
+                        for (var i in cmdargs) {
+                            var cmdarg = cmdargs[i]
+                            var value = interaction.options.getString(cmdarg.name.toLowerCase())
+                            if (value) {
+                                if (cmdarg.orig.match(/^"([\s\S]*?)"$/)) {
+                                    poopy.vars.symbolreplacements.forEach(symbolReplacement => {
+                                        symbolReplacement.target.forEach(target => {
+                                            value = value.replace(new RegExp(target, 'ig'), symbolReplacement.replacement)
+                                        })
+                                    })
+                                    value = `"${value.replace(/"/g, "''")}"`
+                                }
+                                argcontent[i] = (`${cmdarg.specifarg ? `-${cmdarg.name}` : ''} ${!(cmdarg.specifarg && cmdarg.orig == `[-${cmdarg.name}]`) ? value : ''}`).trim()
+                            }
+                        }
+
+                        argcontent = argcontent.flat().join(' ')
+
+                        var content = [cmd]
+
+                        if (argcontent) content.push(argcontent)
+                        if (extracontent) content.push(extracontent)
+
+                        content = content.join(' ')
+
+                        await interaction.deferReply().catch(() => { })
+
+                        interaction.reply = async function (payload) {
+                            var interaction = this
+
+                            if (interaction.replied) return await interaction.channel.send(payload)
+                            else return interaction.replied = await interaction.editReply(payload)
+                        }
+
+                        console.log(`${prefix}${content}`)
+
+                        interaction.content = `${prefix}${content}`
+                        interaction.author = interaction.user
+                        interaction.bot = false
+                        interaction.attachments = {
+                            get: () => { },
+                            find: () => { },
+                            forEach: () => { },
+                            map: () => { },
+                            size: 0
+                        }
+                        interaction.embeds = []
+                        interaction.stickers = {
+                            get: () => { },
+                            find: () => { },
+                            forEach: () => { },
+                            map: () => { },
+                            size: 0
+                        }
+                        interaction.mentions = {
+                            users: {
+                                get: () => { },
+                                find: () => { },
+                                forEach: () => { },
+                                map: () => { },
+                                size: 0
+                            },
+                            members: {
+                                get: () => { },
+                                find: () => { },
+                                forEach: () => { },
+                                map: () => { },
+                                size: 0
+                            },
+                            roles: {
+                                get: () => { },
+                                find: () => { },
+                                forEach: () => { },
+                                map: () => { },
+                                size: 0
+                            }
+                        }
+
+                        interaction.edit = interaction.editReply
+                        interaction.delete = interaction.deleteReply
+                        interaction.react = async () => { }
+                        interaction.fetchWebhook = async () => { }
+                        interaction.fetchReference = async () => { }
+                        interaction.createReactionCollector = () => {
+                            return {
+                                on: () => { },
+                                once: () => { },
+                                resetTimer: () => { },
+                                stop: () => { }
+                            }
+                        }
+                        interaction.createMessageComponentCollector = () => {
+                            return {
+                                on: () => { },
+                                once: () => { },
+                                resetTimer: () => { },
+                                stop: () => { }
+                            }
+                        }
+
+                        await poopy.callbacks.messageCallback(interaction).catch(() => { })
+
+                        await poopy.functions.sleep(1000)
+                        if (!interaction.replied) interaction.deleteReply().catch(() => { })
+                        else await poopy.callbacks.messageCallback(interaction.replied).catch(() => { })
+                    }
+                }
+            ]
+
+            var interactionFunction = interactionFunctions.find(interaction => interaction.type)
+            if (interactionFunction) await interactionFunction.execute().catch((e) => console.log(e))
         }
     }
 
@@ -4935,7 +4963,7 @@ class Poopy {
                         type: 'dataget',
                         mongodatabase: poopy.config.mongodatabase,
                         global: Object.keys(poopy.functions.globalData()).length <= 0
-                    }).catch((e) => console.log(e))
+                    }).catch(() => { })
                 }
 
                 if (!result || !result.data || (Object.keys(poopy.functions.globalData()).length <= 0 && !result.globaldata)) {
@@ -4949,7 +4977,6 @@ class Poopy {
 
         console.log(`${poopy.bot.user.username} is online, RUN`)
         await poopy.functions.infoPost(`${poopy.bot.user.username} woke up to ash and dust`)
-        await poopy.functions.waitMessageCooldown()
         poopy.bot.guilds.cache.get('834431435704107018')?.channels.cache.get('947167169718923341')?.send(!poopy.config.stfu ? 'i wake up to ash and dust' : '').catch(() => { })
         poopy.config.ownerids.push(poopy.bot.user.id)
         poopy.bot.user.setPresence({
@@ -5343,11 +5370,18 @@ class Poopy {
             wakecount += 'th'
         }
 
-        await poopy.functions.waitMessageCooldown()
         poopy.bot.guilds.cache.get('834431435704107018')?.channels.cache.get('947167169718923341')?.send(!poopy.config.stfu ? (poopy.config.testing ? 'raleigh is testing' : `this is the ${wakecount} time this happens`) : '').catch(() => { })
 
         if (!poopy.config.apiMode) {
             poopy.bot.on('messageCreate', (msg) => {
+                var reply = msg.reply
+                msg.reply = async function (payload) {
+                    var message = this
+
+                    if (message.replied) return message.channel.send(payload)
+                    else return message.replied = reply.call(message, payload)
+                }
+
                 poopy.callbacks.messageCallback(msg).catch(() => { })
             })
             poopy.bot.on('guildCreate', (guild) => {
@@ -5357,7 +5391,7 @@ class Poopy {
                 poopy.callbacks.guildDeleteCallback(guild).catch(() => { })
             })
             poopy.bot.on('interactionCreate', (interaction) => {
-                poopy.callbacks.interactionCallback(interaction).catch((e) => console.log(e))
+                poopy.callbacks.interactionCallback(interaction).catch(() => { })
             })
         }
     }

@@ -211,5 +211,5 @@ module.exports = {
             'Example usage: p:iceberg -stage1words Stolen Assets | Deinx -stage1image https://cdn.discordapp.com/attachments/760223418968047629/862409703392149554/c85e3e8144c1012764074e60607c5e56.png -stage10words Vordath is Transexual -stage10image https://cdn.discordapp.com/attachments/760223418968047629/862410091814322216/output.png'
     },
     cooldown: 2500,
-    type: 'Memes'
+    type: 'Meme Captions'
 }

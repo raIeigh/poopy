@@ -65,7 +65,6 @@ module.exports = {
 
         var phrase = await cmd.execute.call(poopy, msg, args).catch(() => { }) ?? 'error'
         if (poopy.tempdata[msg.guild.id][msg.channel.id]['shut']) return
-        await poopy.functions.waitMessageCooldown()
         if (cmd.type == 'Local') {
             await msg.channel.send({
                 content: phrase,

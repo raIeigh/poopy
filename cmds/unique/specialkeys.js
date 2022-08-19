@@ -1,5 +1,5 @@
 module.exports = {
-    name: ['special', 'keywords', 'functions'],
+    name: ['specialkeys', 'keywords', 'functions'],
     args: [],
     execute: async function (msg) {
         let poopy = this
@@ -79,7 +79,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'special/keywords/functions',
+        name: 'specialkeys/keywords/functions',
         value: 'DMs you a list of special keywords that can be used for all commands, and some info about them.'
     },
     cooldown: 2500,

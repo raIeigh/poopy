@@ -6,8 +6,7 @@ module.exports = {
 
         await msg.channel.sendTyping().catch(() => { })
         if (args[1] === undefined) {
-            await msg.channel.send('What do I search for?!').catch(() => { })
-            await msg.channel.sendTyping().catch(() => { })
+            await msg.reply('What do I search for?!').catch(() => { })
             return;
         }
 
@@ -28,8 +27,7 @@ module.exports = {
         }).catch(() => { })
 
         if (!body) {
-            await msg.channel.send('Error.').catch(() => { })
-            await msg.channel.sendTyping().catch(() => { })
+            await msg.reply('Error.').catch(() => { })
             return;
         }
 
@@ -49,8 +47,7 @@ module.exports = {
         });
 
         if (!urls.length) {
-            await msg.channel.send('Not found.').catch(() => { })
-            await msg.channel.sendTyping().catch(() => { })
+            await msg.reply('Not found.').catch(() => { })
             return;
         }
 

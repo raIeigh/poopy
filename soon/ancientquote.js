@@ -1,5 +1,6 @@
 module.exports = {
     name: ['ancientquote'],
+    args: [{"name":"prompt","required":true,"specifarg":false,"orig":"<prompt>"}],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -128,5 +129,5 @@ module.exports = {
         value: 'very important!1!!! Try it yourself at https://intromaker.com/intro/408/ancient-quote'
     },
     cooldown: 2500,
-    type: 'Generation'
+    type: 'Captions'
 }

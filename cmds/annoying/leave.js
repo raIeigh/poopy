@@ -4,9 +4,6 @@ module.exports = {
     execute: async function (msg) {
         let poopy = this
 
-        await msg.channel.send('this is temporarily disabled').catch(() => { })
-        return
-
         if (msg.member.permissions.has('MANAGE_GUILD') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || poopy.config.ownerids.find(id => id == msg.author.id)) {
             var phrases = [
                 'idiot',
@@ -39,7 +36,7 @@ module.exports = {
                 'brought oil',
                 'father figure',
                 '<https://pikmin3.nintendo.com/buy-now/>',
-                `<@${msg.author.id}>`,
+                msg.member.toString(),
                 'cum sock',
                 'quesadilla',
                 'pig',
@@ -47,14 +44,14 @@ module.exports = {
                 'mug',
                 ''
             ]
-            var confirm = await poopy.functions.yesno(msg.channel, 'are you sure about this', msg.member).catch(() => { })
+            var confirm = await poopy.functions.yesno(msg.channel, 'are you sure about this', msg.member, undefined, msg).catch(() => { })
 
             if (confirm) {
-                await msg.channel.send(phrases[Math.floor(Math.random() * phrases.length)]).catch(() => { })
+                await msg.reply(phrases[Math.floor(Math.random() * phrases.length)]).catch(() => { })
                 msg.guild.leave().catch(() => { })
             }
         } else {
-            await msg.channel.send('You need the manage server permission to execute that!').catch(() => { })
+            await msg.reply('You need the manage server permission to execute that!').catch(() => { })
             return
         }
     },

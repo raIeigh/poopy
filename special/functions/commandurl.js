@@ -65,7 +65,6 @@ module.exports = {
                         }, 1000)
 
                         poopy.functions.infoPost(`Command \`${commandname}\` used`)
-                        await poopy.functions.waitMessageCooldown()
                         var url = await command.execute.call(poopy, msg, [commandname].concat(args.split(' ')), { ownermode: opts.ownermode }).catch(err => {
                             error = err.stack
                         })

@@ -1,6 +1,6 @@
 module.exports = {
     name: ['say', 'talk', 'speak'],
-    args: [{"name":"message","required":true,"specifarg":false,"orig":"<message>"},{"name":"nodelete","required":false,"specifarg":true,"orig":"[-nodelete]"},{"name":"tts","required":false,"specifarg":true,"orig":"[-tts]"}],
+    args: [{ "name": "message", "required": true, "specifarg": false, "orig": "<message>" }, { "name": "nodelete", "required": false, "specifarg": true, "orig": "[-nodelete]" }, { "name": "tts", "required": false, "specifarg": true, "orig": "[-tts]" }],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -20,7 +20,7 @@ module.exports = {
         var saidMessage = args.slice(1).join(' ')
         var attachments = msg.attachments.map(attachment => new poopy.modules.Discord.MessageAttachment(attachment.url, attachment.name))
         if (args[1] === undefined && attachments.length <= 0) {
-            await msg.channel.send('What is the message to say?!').catch(() => { })
+            await msg.reply('What is the message to say?!').catch(() => { })
             return;
         };
         var sendObject = {
@@ -38,9 +38,13 @@ module.exports = {
         if (reply) {
             await reply.reply(sendObject).catch(() => { })
         } else {
-            await msg.channel.send(sendObject).catch(() => { })
+            if (msg.isCommand && msg.isCommand() && !msg.replied && !del) {
+                await msg.reply(sendObject).catch(() => { })
+            } else {
+                await msg.channel.send(sendObject).catch(() => { })
+            }
         }
-        if (del) {
+        if (!msg.isCommand && del) {
             msg.delete().catch(() => { })
         }
     },

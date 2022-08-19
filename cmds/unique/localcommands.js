@@ -1,6 +1,7 @@
 module.exports = {
     name: ['localcommands', 'localcmds', 'servercommands', 'servercmds'],
     args: [{"name":"option","required":true,"specifarg":false,"orig":"<option>"}],
+    subcommands: [{"name":"list","args":[],"description":"Gets a list of local commands."},{"name":"phrase","args":[{"name":"commandname","required":true,"specifarg":false,"orig":"<commandname>"}],"description":"Displays the phrase of a specific command."},{"name":"execute","args":[{"name":"commandname","required":true,"specifarg":false,"orig":"<commandname>"},{"name":"args","required":false,"specifarg":false,"orig":"[args]"}],"description":"Execute a specific command."},{"name":"add","args":[{"name":"commandname","required":true,"specifarg":false,"orig":"<commandname>"},{"name":"phrase","required":true,"specifarg":false,"orig":"<phrase>"}],"description":"Adds a new local command, if the name is available for use."},{"name":"import","args":[{"name":"id","required":true,"specifarg":false,"orig":"<id>"},{"name":"name","required":false,"specifarg":false,"orig":"[name]"}],"description":"Imports a new local command from Poopy's command template database (`commandtemplates` command) by ID."},{"name":"edit","args":[{"name":"commandname","required":true,"specifarg":false,"orig":"<commandname>"},{"name":"phrase","required":true,"specifarg":false,"orig":"<phrase>"}],"description":"Edits the local command, if it exists."},{"name":"delete","args":[{"name":"commandname","required":true,"specifarg":false,"orig":"<commandname>"}],"description":"Deletes the local command, if it exists."}],
     execute: async function (msg, args, opts) {
         let poopy = this
 
@@ -13,8 +14,8 @@ module.exports = {
                 }
 
                 if (localCmdsArray.length <= 0) {
-                    if (poopy.config.textEmbeds) msg.channel.send('None.').catch(() => { })
-                    else msg.channel.send({
+                    if (poopy.config.textEmbeds) await msg.channel.send('None.').catch(() => { })
+                    else await msg.channel.send({
                         "title": `List of local commands for ${msg.guild.name}`,
                         "description": 'None.',
                         "color": 0x472604,

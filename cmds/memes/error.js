@@ -124,5 +124,5 @@ module.exports = {
         value: 'Sonic is hacking your computer'
     },
     cooldown: 2500,
-    type: 'Memes'
+    type: 'Meme Captions'
 }
