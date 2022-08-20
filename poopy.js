@@ -1191,8 +1191,8 @@ class Poopy {
                         await ch.deleteQueue(q.queue).catch(() => { })
                         await ch.deleteQueue(qrash.queue).catch(() => { })
                         await ch.close().catch(() => { })
-                        if (poopy.modules.fs.existsSync(`tasks/${correlationId}.json`))
-                            poopy.modules.fs.rm(`tasks/${correlationId}.json`, { force: true, recursive: true })
+                        if (poopy.modules.fs.existsSync(`tasks/${poopy.config.mongodatabase}/${correlationId}.json`))
+                            poopy.modules.fs.rm(`tasks/${poopy.config.mongodatabase}/${correlationId}.json`, { force: true, recursive: true })
                     }
 
                     var chunkdata = []
@@ -1228,9 +1228,9 @@ class Poopy {
                         reject(msg.content.toString())
                     }, { noAck: true }).catch(reject)
 
-                    poopy.modules.fs.writeFileSync(`tasks/${correlationId}.json`, JSON.stringify(data))
+                    poopy.modules.fs.writeFileSync(`tasks/${poopy.config.mongodatabase}/${correlationId}.json`, JSON.stringify(data))
 
-                    ch.sendToQueue('tasks', Buffer.from(`${process.env.BOTWEBSITE}/tasks/${correlationId}?auth=${process.env.AUTHTOKEN}`), {
+                    ch.sendToQueue('tasks', Buffer.from(`${process.env.BOTWEBSITE}/tasks/${poopy.config.mongodatabase}/${correlationId}?auth=${process.env.AUTHTOKEN}`), {
                         correlationId: correlationId,
                         replyTo: q.queue
                     })
@@ -2913,7 +2913,7 @@ class Poopy {
 
                         if (tempfile) {
                             poopy.functions.infoPost(`Tempfile detected`)
-                            return options.tempdir ? `tempfiles/${tempfile.name}` : url
+                            return options.tempdir ? `tempfiles/${poopy.config.mongodatabase}/${tempfile.name}` : url
                         }
                     }
                 },
@@ -3050,7 +3050,7 @@ class Poopy {
                     urlsGlobal.splice(i, 1)
                     return poopy.functions.lastUrl(msg, i, tempdir)
                 } else if (tempdir) {
-                    url = `tempfiles/${tempfile.name}`
+                    url = `tempfiles/${poopy.config.mongodatabase}/${tempfile.name}`
                 }
             }
 
@@ -3080,7 +3080,7 @@ class Poopy {
                         i--
                         continue
                     } else if (tempdir) {
-                        urls[i] = `tempfiles/${tempfile.name}`
+                        urls[i] = `tempfiles/${poopy.config.mongodatabase}/${tempfile.name}`
                     }
                 }
             }
@@ -3318,7 +3318,7 @@ class Poopy {
 
             if (!options.buffer && url.startsWith('temp:')) {
                 options.buffer = true
-                url = poopy.modules.fs.readFileSync(`tempfiles/${poopy.tempfiles[url.substring(5)].name}`)
+                url = poopy.modules.fs.readFileSync(`tempfiles/${poopy.config.mongodatabase}/${poopy.tempfiles[url.substring(5)].name}`)
             }
 
             if (options.buffer) {
@@ -3372,7 +3372,7 @@ class Poopy {
 
                 if (extraOptions.keep ||
                     filepath == undefined ||
-                    filepath == 'tempfiles') return
+                    filepath.startsWith('tempfiles')) return
 
                 poopy.modules.fs.rm(filepath, { force: true, recursive: true })
                 return
@@ -3411,7 +3411,7 @@ class Poopy {
             } else if (extraOptions.nosend) {
                 poopy.functions.infoPost(`Saving file temporarily`)
 
-                var id = poopy.functions.generateId(poopy.modules.fs.readdirSync('tempfiles').map(file => {
+                var id = poopy.functions.generateId(poopy.modules.fs.readdirSync(`tempfiles/${poopy.config.mongodatabase}`).map(file => {
                     var name = file.split('.')
                     if (name.length > 1) name = name.slice(0, name.length - 1)
                     else name = name[0]
@@ -3422,7 +3422,7 @@ class Poopy {
                 if (ext.length > 1) ext = `.${ext[ext.length - 1]}`
                 else ext = ''
 
-                poopy.modules.fs.copyFileSync(`${filepath}/${filename}`, `tempfiles/${id}${ext}`)
+                poopy.modules.fs.copyFileSync(`${filepath}/${filename}`, `tempfiles/${poopy.config.mongodatabase}/${id}${ext}`)
 
                 poopy.tempfiles[id] = {
                     name: `${id}${ext}`,
@@ -3435,7 +3435,7 @@ class Poopy {
                 returnUrl = `temp:${id}`
 
                 setTimeout(() => {
-                    poopy.modules.fs.rmSync(`tempfiles/${id}${ext}`, { force: true, recursive: true })
+                    poopy.modules.fs.rmSync(`tempfiles/${poopy.config.mongodatabase}/${id}${ext}`, { force: true, recursive: true })
                     delete poopy.tempfiles[id]
                 }, 600000)
             } else {
@@ -3468,7 +3468,7 @@ class Poopy {
 
             if (extraOptions.keep ||
                 filepath == undefined ||
-                filepath == 'tempfiles') return returnUrl
+                filepath.startsWith('tempfiles')) return returnUrl
 
             poopy.functions.infoPost(`Deleting \`${filepath}/${filename}\` and its folder`)
 
@@ -3624,7 +3624,7 @@ class Poopy {
                 }
 
                 if (url.startsWith('temp:')) {
-                    if (poopy.tempfiles[url.substring(5)]) await poopy.functions.validateFileFromPath(`tempfiles/${poopy.tempfiles[url.substring(5)].name}`, exception, rejectMessages)
+                    if (poopy.tempfiles[url.substring(5)]) await poopy.functions.validateFileFromPath(`tempfiles/${poopy.config.mongodatabase}/${poopy.tempfiles[url.substring(5)].name}`, exception, rejectMessages)
                         .then(res => resolve(res))
                         .catch(res => reject(res))
                     else reject('Tempfile unavailable.')
@@ -4993,18 +4993,19 @@ class Poopy {
             ]
         })
 
-        if (!poopy.modules.fs.existsSync('temp')) {
-            poopy.modules.fs.mkdirSync('temp')
-        }
-        if (!poopy.modules.fs.existsSync(`temp/${poopy.config.mongodatabase}`)) {
-            poopy.modules.fs.mkdirSync(`temp/${poopy.config.mongodatabase}`)
-        }
-        if (!poopy.modules.fs.existsSync('tempfiles')) {
-            poopy.modules.fs.mkdirSync('tempfiles')
-        }
-        if (!poopy.modules.fs.existsSync('tasks') && process.env.CLOUDAMQP_URL && process.env.BOTWEBSITE) {
-            poopy.modules.fs.mkdirSync('tasks')
-        }
+        var poopyDirectories = ['temp', 'tempfiles', 'tasks']
+
+        poopyDirectories.forEach(poopyDirectory => {
+            if (!poopy.modules.fs.existsSync(poopyDirectory)) {
+                poopy.modules.fs.mkdirSync(poopyDirectory)
+            }
+            if (!poopy.modules.fs.existsSync(`${poopyDirectory}/${poopy.config.mongodatabase}`)) {
+                poopy.modules.fs.mkdirSync(`${poopyDirectory}/${poopy.config.mongodatabase}`)
+            }
+            poopy.modules.fs.readdirSync(`${poopyDirectory}/${poopy.config.mongodatabase}`).forEach(folder => {
+                poopy.modules.fs.rm(`${poopyDirectory}/${poopy.config.mongodatabase}/${folder}`, { force: true, recursive: true })
+            })
+        })
 
         await poopy.functions.infoPost(`Gathering data in \`${poopy.config.mongodatabase}\``)
         if (process.env.CLOUDAMQP_URL) poopy.amqpconn = await require('amqplib').connect(process.env.CLOUDAMQP_URL)

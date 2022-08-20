@@ -306,7 +306,8 @@
     {
         "name": "owner",
         "cmds": [
-            "dalle2",
+            "dalle2text",
+            "dalle2variations",
             "destroy",
             "eval",
             "reset",
