@@ -83,16 +83,17 @@ async function start() {
             res.type('json').send(globalData()['bot-data']['pspasta'])
         })
     
-        app.get('/tasks/:id', async function (req, res) {
+        app.get('/tasks/:data/:id', async function (req, res) {
             const auth = req.query.auth
+            const data = req.params.data
             const taskid = req.params.id
 
-            if (process.env.AUTHTOKEN != auth || !fs.existsSync(`tasks/${taskid}.json`)) {
+            if (process.env.AUTHTOKEN != auth || !fs.existsSync(`tasks/${data}/${taskid}.json`)) {
                 res.end()
                 return
             }
     
-            const taskdata = fs.readFileSync(`tasks/${taskid}.json`).toString()
+            const taskdata = fs.readFileSync(`tasks/${data}/${taskid}.json`).toString()
             res.type('json').send(taskdata)
         })
     
