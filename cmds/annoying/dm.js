@@ -12,7 +12,7 @@ module.exports = {
             var memberKeys = Object.keys(memberData).sort((a, b) => memberData[b].messages - memberData[a].messages)
 
             return memberKeys.map(id => {
-                return { name: memberReturn[memberData[id].username], value: id }
+                return { name: memberData[id].username, value: id }
             })
         }
     },
