@@ -8,6 +8,8 @@ module.exports = {
 
         if (poopy.tempdata[msg.guild.id][msg.channel.id]['shut']) return ''
 
+        if (poopy.functions.globalData()['bot-data']['shit'].find(id => id === msg.author.id)) return 'shit'
+
         if (poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown']) {
             if ((poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] - Date.now()) > 0 &&
                 poopy.tempdata[msg.author.id]['cooler'] !== msg.id) {

@@ -4358,10 +4358,12 @@ class Poopy {
 
                     if (msg.content.toLowerCase().startsWith(prefix.toLowerCase()) && ((!msg.author.bot && msg.author.id != poopy.bot.user.id) || poopy.config.allowbotusage)) {
                         if (!msg.channel.permissionsFor(msg.guild.me).has('SEND_MESSAGES', false)) {
+                            notExecuted = false
                             await msg.react(poopy.functions.randomChoice([...msg.guild.emojis.cache.keys()])).catch(() => { })
                         }
 
                         if (poopy.functions.globalData()['bot-data']['shit'].find(id => id === msg.author.id)) {
+                            notExecuted = false
                             await msg.reply('shit').catch(() => { })
                             return
                         }
@@ -4585,12 +4587,6 @@ class Poopy {
             })().catch(async (e) => await msg.reply(e.message).catch(() => { })))
 
             msg.content = allcontents.length > 0 ? allcontents.join(' -|- ') : msg.content
-
-            if (poopy.functions.globalData()['bot-data']['shit'].find(id => id === msg.author.id)) {
-                await msg.reply('shit').catch(() => { })
-                delete poopy.tempdata[msg.author.id][msg.id]
-                return
-            }
 
             if (!webhooked) await webhookify().catch(() => { })
 
