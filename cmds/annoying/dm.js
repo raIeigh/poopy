@@ -5,10 +5,10 @@ module.exports = {
         "required": true,
         "specifarg": false,
         "orig": "<user>",
-        "autocomplete": function () {
+        "autocomplete": function (interaction) {
             let poopy = this
 
-            var memberData = poopy.data['guild-data'][msg.guild.id]['members']
+            var memberData = poopy.data['guild-data'][interaction.guild.id]['members']
             var memberKeys = Object.keys(memberData).sort((a, b) => memberData[b].messages - memberData[a].messages)
 
             return memberKeys.map(id => {
