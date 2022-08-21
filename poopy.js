@@ -1004,12 +1004,6 @@ class Poopy {
                     poopy.tempdata[msg.author.id][msg.id]['execCount'] = 0
                 }
 
-                poopy.tempdata[msg.author.id][msg.id]['lastUrls'] = poopy.functions.lastUrls(msg, false, true)
-
-                if (!poopy.tempdata[msg.author.id][msg.id]['keyattempts']) {
-                    poopy.tempdata[msg.author.id][msg.id]['keyattempts'] = 0
-                }
-
                 if (!poopy.tempdata[msg.author.id]['cooler']) {
                     poopy.tempdata[msg.author.id]['cooler'] = msg.id
                 }
@@ -3032,7 +3026,9 @@ class Poopy {
         }
 
         poopy.functions.lastUrl = function (msg, i, tempdir, global) {
-            var urlsGlobal = global ? poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrls'] : poopy.tempdata[msg.author.id][msg.id]['lastUrls']
+            var urlsGlobal = !global &&
+                poopy.tempdata[msg.author.id][msg.id]['lastUrls'] ||
+                poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrls']
             var urls = urlsGlobal.slice()
             var url = urls[i]
 
@@ -3058,7 +3054,9 @@ class Poopy {
         }
 
         poopy.functions.lastUrls = function (msg, tempdir, global) {
-            var urlsGlobal = global ? poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrls'] : poopy.tempdata[msg.author.id][msg.id]['lastUrls']
+            var urlsGlobal = !global &&
+                poopy.tempdata[msg.author.id][msg.id]['lastUrls'] ||
+                poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrls']
             var urls = urlsGlobal.slice()
 
             for (var i = 0; i < urls.length; i++) {
@@ -3091,13 +3089,13 @@ class Poopy {
         poopy.functions.addLastUrl = function (msg, url) {
             if (!url) return
 
-            var lastUrls = [url].concat(poopy.functions.lastUrls(msg))
-            lastUrls.splice(100)
-            poopy.tempdata[msg.author.id][msg.id]['lastUrls'] = lastUrls
-
             var lastUrls = [url].concat(poopy.functions.lastUrls(msg, false, true))
             lastUrls.splice(100)
             poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrls'] = lastUrls
+
+            var lastUrls = [url].concat(poopy.functions.lastUrls(msg))
+            lastUrls.splice(100)
+            poopy.tempdata[msg.author.id][msg.id]['lastUrls'] = lastUrls
         }
 
         poopy.functions.getKeywordsFor = async function (string, msg, isBot, { extrakeys = {}, extrafuncs = {}, resetattempts = false, ownermode = false, declaredonly = false } = {}) {
@@ -3109,30 +3107,6 @@ class Poopy {
                 poopy.tempdata[msg.author.id][msg.id] = {}
             }
 
-            if (!poopy.tempdata[msg.author.id][msg.id]['keyattempts']) {
-                poopy.tempdata[msg.author.id][msg.id]['keyattempts'] = 0
-            }
-
-            if (!poopy.tempdata[msg.author.id][msg.id]['keywordsExecuted']) {
-                poopy.tempdata[msg.author.id][msg.id]['keywordsExecuted'] = []
-            }
-
-            if (!poopy.tempdata[msg.author.id]['arrays']) {
-                poopy.tempdata[msg.author.id]['arrays'] = {}
-            }
-
-            if (!poopy.tempdata[msg.author.id]['declared']) {
-                poopy.tempdata[msg.author.id]['declared'] = {}
-            }
-
-            if (!poopy.tempdata[msg.author.id]['keydeclared']) {
-                poopy.tempdata[msg.author.id]['keydeclared'] = {}
-            }
-
-            if (!poopy.tempdata[msg.author.id]['funcdeclared']) {
-                poopy.tempdata[msg.author.id]['funcdeclared'] = {}
-            }
-
             var startTime = Date.now()
             var extradkeys = declaredonly ? { ...poopy.tempdata[msg.author.id]['keydeclared'] } : { ...extrakeys, ...poopy.tempdata[msg.author.id]['keydeclared'] }
             var extradfuncs = declaredonly ? { ...poopy.tempdata[msg.author.id]['funcdeclared'] } : { ...extrafuncs, ...poopy.tempdata[msg.author.id]['funcdeclared'] }
@@ -3142,6 +3116,30 @@ class Poopy {
             }
 
             while (poopy.functions.getKeyFunc(string, { extrakeys: extradkeys, extrafuncs: extradfuncs, declaredonly: declaredonly }) !== false && poopy.tempdata[msg.author.id][msg.id]['return'] == undefined) {
+                if (!poopy.tempdata[msg.author.id][msg.id]['keyattempts']) {
+                    poopy.tempdata[msg.author.id][msg.id]['keyattempts'] = 0
+                }
+    
+                if (!poopy.tempdata[msg.author.id][msg.id]['keywordsExecuted']) {
+                    poopy.tempdata[msg.author.id][msg.id]['keywordsExecuted'] = []
+                }
+    
+                if (!poopy.tempdata[msg.author.id]['arrays']) {
+                    poopy.tempdata[msg.author.id]['arrays'] = {}
+                }
+    
+                if (!poopy.tempdata[msg.author.id]['declared']) {
+                    poopy.tempdata[msg.author.id]['declared'] = {}
+                }
+    
+                if (!poopy.tempdata[msg.author.id]['keydeclared']) {
+                    poopy.tempdata[msg.author.id]['keydeclared'] = {}
+                }
+    
+                if (!poopy.tempdata[msg.author.id]['funcdeclared']) {
+                    poopy.tempdata[msg.author.id]['funcdeclared'] = {}
+                }
+
                 if (poopy.tempdata[msg.author.id][msg.id]['keyattempts'] >= poopy.config.keyLimit) {
                     poopy.functions.infoPost(`Keyword attempts value exceeded`)
                     return 'Keyword attempts value exceeded.'
@@ -3221,7 +3219,7 @@ class Poopy {
                 await poopy.functions.sleep()
             }
 
-            if (resetattempts) {
+            if (resetattempts && poopy.tempdata[msg.author.id][msg.id]['keywordsExecuted']) {
                 if (poopy.tempdata[msg.author.id][msg.id]['keywordsExecuted'].length) {
                     poopy.functions.infoPost(`Took ${(Date.now() - startTime) / 1000} seconds to execute keywords/functions: ${poopy.tempdata[msg.author.id][msg.id]['keywordsExecuted'].map(k => `\`${k}\``).join(', ')}`)
                 }
@@ -4174,11 +4172,6 @@ class Poopy {
             await poopy.functions.gatherData(msg).catch(() => { })
             msg.channel.onsfw = msg.channel.nsfw
             msg.channel.nsfw = poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['nsfw']
-            setTimeout(() => {
-                try {
-                    delete poopy.tempdata[msg.author.id][msg.id]
-                } catch (_) { }
-            }, 600000)
 
             var guildfilter = poopy.config.guildfilter
             var channelfilter = poopy.config.channelfilter
@@ -4192,13 +4185,19 @@ class Poopy {
                 (channelfilter.gids.includes(msg.guild.id) &&
                     ((channelfilter.blacklist && channelfilter.ids.includes(msg.channel.id)) ||
                         (!(channelfilter.blacklist) && !(channelfilter.ids.includes(msg.channel.id)))))
-            ) return
+            ) {
+                delete poopy.tempdata[msg.author.id][msg.id]
+                return
+            }
 
             var prefix = poopy.data['guild-data'][msg.guild.id]['prefix']
             var ignored = ['eval', 'execute', 'localcommands', 'localcmds', 'servercommands', 'servercmds', 'commandtemplates', 'cmdtemplates', 'messages', 'compile']
             var webhook = await msg.fetchWebhook().catch(() => { })
 
-            if (webhook || !msg.guild || !msg.channel) return
+            if (webhook || !msg.guild || !msg.channel) {
+                delete poopy.tempdata[msg.author.id][msg.id]
+                return
+            }
 
             var cmds = poopy.data['guild-data'][msg.guild.id]['chaincommands'] == true ? msg.content.split(/ ?-\|- ?/) : [msg.content]
             var allcontents = []
@@ -4589,6 +4588,7 @@ class Poopy {
 
             if (poopy.functions.globalData()['bot-data']['shit'].find(id => id === msg.author.id)) {
                 await msg.reply('shit').catch(() => { })
+                delete poopy.tempdata[msg.author.id][msg.id]
                 return
             }
 
@@ -4607,7 +4607,11 @@ class Poopy {
                 }
             }
 
-            if (!msg.guild || !msg.channel || poopy.tempdata[msg.guild.id][msg.channel.id]['shut']) return
+            delete poopy.tempdata[msg.author.id][msg.id]
+
+            if (!msg.guild || !msg.channel || poopy.tempdata[msg.guild.id][msg.channel.id]['shut']) {
+                return
+            }
 
             if (msg.mentions.members.find(member => member.user.id === poopy.bot.user.id) && ((!msg.author.bot && msg.author.id != poopy.bot.user.id) || poopy.config.allowbotusage) && !usedCommand) {
                 var eggPhrases = [
