@@ -6,6 +6,8 @@ module.exports = {
         "specifarg": false,
         "orig": "<user>",
         "autocomplete": function () {
+            let poopy = this
+
             var memberData = poopy.data['guild-data'][msg.guild.id]['members']
             var memberKeys = Object.keys(memberData).sort((a, b) => memberData[b].messages - memberData[a].messages)
 
