@@ -1,41 +1,164 @@
 module.exports = {
     name: ['tween'],
-    args: [{"name":"file","required":false,"specifarg":false,"orig":"{file}"},{"name":"width","required":false,"specifarg":true,"orig":"[-width <pixels>]"},{"name":"height","required":false,"specifarg":true,"orig":"[-height <pixels>]"},{"name":"duration","required":false,"specifarg":true,"orig":"[-duration <seconds (max 10)>]"},{"name":"startsize","required":false,"specifarg":true,"orig":"[-(start/end)size <x> <y>]"},{"name":"endsize","required":false,"specifarg":true,"orig":"[-(start/end)size <x> <y>]"},{"name":"origin","required":false,"specifarg":true,"orig":"[-origin <x (left/center/right)> <y (top/middle/bottom)>]"},{"name":"startoffset","required":false,"specifarg":true,"orig":"[-(start/end)offset <x> <y>]"},{"name":"endoffset","required":false,"specifarg":true,"orig":"[-(start/end)offset <x> <y>]"},{"name":"startangle","required":false,"specifarg":true,"orig":"[-(start/end)angle <degrees>]"},{"name":"endangle","required":false,"specifarg":true,"orig":"[-(start/end)angle <degrees>]"},{"name":"fitangle","required":false,"specifarg":true,"orig":"[-fitangle]"},{"name":"easing","required":false,"specifarg":true,"orig":"[-easing <style>]"}],
+    args: [{
+        "name": "file",
+        "required": false,
+        "specifarg": false,
+        "orig": "{file}"
+    },
+        {
+            "name": "width",
+            "required": false,
+            "specifarg": true,
+            "orig": "[-width <pixels>]"
+        },
+        {
+            "name": "height",
+            "required": false,
+            "specifarg": true,
+            "orig": "[-height <pixels>]"
+        },
+        {
+            "name": "duration",
+            "required": false,
+            "specifarg": true,
+            "orig": "[-duration <seconds (max 10)>]"
+        },
+        {
+            "name": "startsize",
+            "required": false,
+            "specifarg": true,
+            "orig": "[-(start/end)size <x> <y>]"
+        },
+        {
+            "name": "endsize",
+            "required": false,
+            "specifarg": true,
+            "orig": "[-(start/end)size <x> <y>]"
+        },
+        {
+            "name": "origin",
+            "required": false,
+            "specifarg": true,
+            "orig": "[-origin <x (left/center/right)> <y (top/middle/bottom)>]",
+            "autocomplete": [
+                'left top',
+                'center top',
+                'right top',
+                'left middle',
+                'center middle',
+                'right middle',
+                'left bottom',
+                'center bottom',
+                'right bottom',
+            ]
+        },
+        {
+            "name": "startoffset",
+            "required": false,
+            "specifarg": true,
+            "orig": "[-(start/end)offset <x> <y>]"
+        },
+        {
+            "name": "endoffset",
+            "required": false,
+            "specifarg": true,
+            "orig": "[-(start/end)offset <x> <y>]"
+        },
+        {
+            "name": "startangle",
+            "required": false,
+            "specifarg": true,
+            "orig": "[-(start/end)angle <degrees>]"
+        },
+        {
+            "name": "endangle",
+            "required": false,
+            "specifarg": true,
+            "orig": "[-(start/end)angle <degrees>]"
+        },
+        {
+            "name": "fitangle",
+            "required": false,
+            "specifarg": true,
+            "orig": "[-fitangle]"
+        },
+        {
+            "name": "easing",
+            "required": false,
+            "specifarg": true,
+            "orig": "[-easing <style>]",
+            "autocomplete": [
+                'linear',
+                'easeinsine',
+                'easeoutsine',
+                'easeinoutsine',
+                'easeinquad',
+                'easeoutquad',
+                'easeinoutquad',
+                'easeincubic',
+                'easeoutcubic',
+                'easeinoutcubic',
+                'easeinquart',
+                'easeoutquart',
+                'easeinoutquart',
+                'easeinquint',
+                'easeoutquint',
+                'easeinoutquint',
+                'easeinexpo',
+                'easeoutexpo',
+                'easeinoutexpo',
+                'easeincirc',
+                'easeoutcirc',
+                'easeinoutcirc',
+                'easeinback',
+                'easeoutback',
+                'easeinoutback',
+                'easeinelastic',
+                'easeoutelastic',
+                'easeinoutelastic',
+                'easeinbounce',
+                'easeoutbounce',
+                'easeinoutbounce'
+            ]
+        }],
     execute: async function (msg, args) {
         let poopy = this
 
-        await msg.channel.sendTyping().catch(() => { })
+        await msg.channel.sendTyping().catch(() => {})
         if (poopy.functions.lastUrl(msg, 0) === undefined && args[1] === undefined) {
-            await msg.reply('What is the file?!').catch(() => { })
-            await msg.channel.sendTyping().catch(() => { })
+            await msg.reply('What is the file?!').catch(() => {})
+            await msg.channel.sendTyping().catch(() => {})
             return;
         };
         var duration = 1
         var durationindex = args.indexOf('-duration')
         if (durationindex > -1) {
-            duration = isNaN(Number(args[durationindex + 1])) ? 1 : Number(args[durationindex + 1]) <= 0.05 ? 0.05 : Number(args[durationindex + 1]) >= 10 ? 10 : Number(args[durationindex + 1]) || 1
+            duration = isNaN(Number(args[durationindex + 1])) ? 1: Number(args[durationindex + 1]) <= 0.05 ? 0.05: Number(args[durationindex + 1]) >= 10 ? 10: Number(args[durationindex + 1]) || 1
         }
         var width = 300
         var widthindex = args.indexOf('-width')
         if (widthindex > -1) {
-            width = isNaN(Number(args[widthindex + 1])) ? 300 : Number(args[widthindex + 1]) <= 1 ? 1 : Number(args[widthindex + 1]) >= 1000 ? 1000 : Number(args[widthindex + 1]) || 300
+            width = isNaN(Number(args[widthindex + 1])) ? 300: Number(args[widthindex + 1]) <= 1 ? 1: Number(args[widthindex + 1]) >= 1000 ? 1000: Number(args[widthindex + 1]) || 300
         }
         var height = 300
         var heightindex = args.indexOf('-height')
         if (heightindex > -1) {
-            height = isNaN(Number(args[heightindex + 1])) ? 300 : Number(args[heightindex + 1]) <= 1 ? 1 : Number(args[heightindex + 1]) >= 1000 ? 1000 : Number(args[heightindex + 1]) || 300
+            height = isNaN(Number(args[heightindex + 1])) ? 300: Number(args[heightindex + 1]) <= 1 ? 1: Number(args[heightindex + 1]) >= 1000 ? 1000: Number(args[heightindex + 1]) || 300
         }
-        var startsize = [100, 100]
+        var startsize = [100,
+            100]
         var startsizeindex = args.indexOf('-startsize')
         if (startsizeindex > -1) {
-            startsize[0] = isNaN(Number(args[startsizeindex + 1])) ? 100 : Number(args[startsizeindex + 1]) <= 1 ? 1 : Number(args[startsizeindex + 1]) >= 3000 ? 3000 : Number(args[startsizeindex + 1]) || 100
-            startsize[1] = isNaN(Number(args[startsizeindex + 2])) ? 100 : Number(args[startsizeindex + 2]) <= 1 ? 1 : Number(args[startsizeindex + 1]) >= 3000 ? 3000 : Number(args[startsizeindex + 2]) || 100
+            startsize[0] = isNaN(Number(args[startsizeindex + 1])) ? 100: Number(args[startsizeindex + 1]) <= 1 ? 1: Number(args[startsizeindex + 1]) >= 3000 ? 3000: Number(args[startsizeindex + 1]) || 100
+            startsize[1] = isNaN(Number(args[startsizeindex + 2])) ? 100: Number(args[startsizeindex + 2]) <= 1 ? 1: Number(args[startsizeindex + 1]) >= 3000 ? 3000: Number(args[startsizeindex + 2]) || 100
         }
-        var endsize = [startsize[0], startsize[1]]
+        var endsize = [startsize[0],
+            startsize[1]]
         var endsizeindex = args.indexOf('-endsize')
         if (endsizeindex > -1) {
-            endsize[0] = isNaN(Number(args[endsizeindex + 1])) ? endsize[0] : Number(args[endsizeindex + 2]) <= 1 ? 1 : Number(args[endsizeindex + 1]) >= 3000 ? 3000 : Number(args[endsizeindex + 1]) || endsize[0]
-            endsize[1] = isNaN(Number(args[endsizeindex + 2])) ? endsize[1] : Number(args[endsizeindex + 2]) <= 1 ? 1 : Number(args[endsizeindex + 1]) >= 3000 ? 3000 : Number(args[endsizeindex + 2]) || endsize[1]
+            endsize[0] = isNaN(Number(args[endsizeindex + 1])) ? endsize[0]: Number(args[endsizeindex + 2]) <= 1 ? 1: Number(args[endsizeindex + 1]) >= 3000 ? 3000: Number(args[endsizeindex + 1]) || endsize[0]
+            endsize[1] = isNaN(Number(args[endsizeindex + 2])) ? endsize[1]: Number(args[endsizeindex + 2]) <= 1 ? 1: Number(args[endsizeindex + 1]) >= 3000 ? 3000: Number(args[endsizeindex + 2]) || endsize[1]
         }
         var easings = {
             linear: `'lerp({start},{end},(t/${duration}))'`,
@@ -76,7 +199,7 @@ module.exports = {
             if (easings[args[easingindex + 1].toLowerCase()]) {
                 easing = args[easingindex + 1]
             } else {
-                await msg.reply('Not a supported easing style.').catch(() => { })
+                await msg.reply('Not a supported easing style.').catch(() => {})
                 return
             }
         }
@@ -103,32 +226,34 @@ module.exports = {
             originx = origins.x[args[originindex + 1]] || '(W-w)/2'
             originy = origins.y[args[originindex + 2]] || '(H-h)/2'
         }
-        var startpos = [0, 0]
+        var startpos = [0,
+            0]
         var startposindex = args.indexOf('-startoffset')
         if (startposindex > -1) {
-            startpos[0] = isNaN(Number(args[startposindex + 1])) ? 0 : (Number(args[startposindex + 1])) || 0
-            startpos[1] = isNaN(Number(args[startposindex + 2])) ? 0 : Number(args[startposindex + 2]) || 0
+            startpos[0] = isNaN(Number(args[startposindex + 1])) ? 0: (Number(args[startposindex + 1])) || 0
+            startpos[1] = isNaN(Number(args[startposindex + 2])) ? 0: Number(args[startposindex + 2]) || 0
         }
-        var endpos = [startpos[0], startpos[1]]
+        var endpos = [startpos[0],
+            startpos[1]]
         var endposindex = args.indexOf('-endoffset')
         if (endposindex > -1) {
-            endpos[0] = isNaN(Number(args[endposindex + 1])) ? startpos[0] : (Number(args[endposindex + 1]) || 0) ?? startpos[0]
-            endpos[1] = isNaN(Number(args[endposindex + 2])) ? startpos[1] : (Number(args[endposindex + 2]) || 0) ?? startpos[1]
+            endpos[0] = isNaN(Number(args[endposindex + 1])) ? startpos[0]: (Number(args[endposindex + 1]) || 0) ?? startpos[0]
+            endpos[1] = isNaN(Number(args[endposindex + 2])) ? startpos[1]: (Number(args[endposindex + 2]) || 0) ?? startpos[1]
         }
         var startangle = 0
         var startangleindex = args.indexOf('-startangle')
         if (startangleindex > -1) {
-            startangle = isNaN(Number(args[startangleindex + 1])) ? 0 : Number(args[startangleindex + 1]) || 0
+            startangle = isNaN(Number(args[startangleindex + 1])) ? 0: Number(args[startangleindex + 1]) || 0
         }
         var endangle = startangle
         var endangleindex = args.indexOf('-endangle')
         if (endangleindex > -1) {
-            endangle = isNaN(Number(args[endangleindex + 1])) ? startangle : (Number(args[endangleindex + 1]) || 0) ?? startangle
+            endangle = isNaN(Number(args[endangleindex + 1])) ? startangle: (Number(args[endangleindex + 1]) || 0) ?? startangle
         }
         var currenturl = poopy.functions.lastUrl(msg, 0) || args[1]
         var fileinfo = await poopy.functions.validateFile(currenturl).catch(async error => {
-            await msg.reply(error).catch(() => { })
-            await msg.channel.sendTyping().catch(() => { })
+            await msg.reply(error).catch(() => {})
+            await msg.channel.sendTyping().catch(() => {})
             return;
         })
 
@@ -140,7 +265,7 @@ module.exports = {
                 fileinfo: fileinfo
             })
             var filename = `input.${fileinfo.shortext}`
-            await poopy.functions.execPromise(`ffmpeg -stream_loop -1 -t ${duration} -i ${filepath}/${filename} -r 50 -stream_loop -1 -t ${duration} -i assets/transparent.png -filter_complex "[0:v]fps=50,rotate=${easingstring(startangle, endangle)}*PI/180${args.find(arg => arg === '-fitangle') ? `:ow=rotw(45*PI/180):oh=roth(45*PI/180)` : ''}:c=0x00000000,scale=${easingstring(startsize[0], endsize[0])}:${easingstring(startsize[1], endsize[1])}:eval=frame[overlay];[1:v]scale=${width}:${height}[transparent];[transparent][overlay]overlay=x=${originx}+${easingstring(startpos[0], endpos[0])}:y=${originy}+${easingstring(startpos[1], endpos[1])}:format=auto,split[pout][ppout];[ppout]palettegen=reserve_transparent=1[palette];[pout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} -gifflags -offsetting -r 50 -t ${duration} ${filepath}/output.gif`)
+            await poopy.functions.execPromise(`ffmpeg -stream_loop -1 -t ${duration} -i ${filepath}/${filename} -r 50 -stream_loop -1 -t ${duration} -i assets/transparent.png -filter_complex "[0:v]fps=50,rotate=${easingstring(startangle, endangle)}*PI/180${args.find(arg => arg === '-fitangle') ? `:ow=rotw(45*PI/180):oh=roth(45*PI/180)`: ''}:c=0x00000000,scale=${easingstring(startsize[0], endsize[0])}:${easingstring(startsize[1], endsize[1])}:eval=frame[overlay];[1:v]scale=${width}:${height}[transparent];[transparent][overlay]overlay=x=${originx}+${easingstring(startpos[0], endpos[0])}:y=${originy}+${easingstring(startpos[1], endpos[1])}:format=auto,split[pout][ppout];[ppout]palettegen=reserve_transparent=1[palette];[pout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} -gifflags -offsetting -r 50 -t ${duration} ${filepath}/output.gif`)
             return await poopy.functions.sendFile(msg, filepath, `output.gif`)
         } else {
             await msg.reply({
@@ -148,8 +273,8 @@ module.exports = {
                 allowedMentions: {
                     parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
-            }).catch(() => { })
-            await msg.channel.sendTyping().catch(() => { })
+            }).catch(() => {})
+            await msg.channel.sendTyping().catch(() => {})
             return
         }
     },

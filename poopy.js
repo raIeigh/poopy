@@ -4809,15 +4809,17 @@ class Poopy {
 
                         var focused = interaction.options.getFocused(true)
                         var findArg = findCmd.args.find(arg => arg.name.toLowerCase() == focused.name)
-                        var autocompleteValues = await findArg.autocomplete.call(poopy, interaction)
+                        var autocompleteValues = typeof findArg.autocomplete == 'function' ?
+                            await findArg.autocomplete.call(poopy, interaction) :
+                            findArg.autocomplete
 
                         var choices = autocompleteValues.sort((a, b) =>
-                            Math.abs(1 - poopy.functions.similarity(a, focused.value)) -
-                            Math.abs(1 - poopy.functions.similarity(b, focused.value))
+                            Math.abs(1 - poopy.functions.similarity(a.name ?? a, focused.value)) -
+                            Math.abs(1 - poopy.functions.similarity(b.name ?? b, focused.value))
                         ).slice(0, 25)
 
                         await interaction.respond(
-                            choices.map(choice => ({ name: choice.replace(/\n|\r/g, ' ').substring(0, 100) || '(blank)', value: choice }))
+                            choices.map(choice => ({ name: (choice.name ?? choice).replace(/\n|\r/g, ' ').substring(0, 100) || '(blank)', value: choice.value ?? choice }))
                         )
                     }
                 },
@@ -4853,7 +4855,7 @@ class Poopy {
                         for (var i in cmdargs) {
                             var cmdarg = cmdargs[i]
                             var value = interaction.options.getString(cmdarg.name.toLowerCase())
-                            if (value) {
+                            if (value != null) {
                                 if (cmdarg.orig.match(/^"([\s\S]*?)"$/)) {
                                     poopy.vars.symbolreplacements.forEach(symbolReplacement => {
                                         symbolReplacement.target.forEach(target => {

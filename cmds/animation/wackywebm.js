@@ -1,13 +1,44 @@
 module.exports = {
-    name: ['wackywebm', 'wackyscale', 'wackyresize'],
-    args: [{"name":"video","required":true,"specifarg":false,"orig":"<video>"},{"name":"mode","required":false,"specifarg":true,"orig":"[-mode <value (bounce, shutter, sporadic, bounce+shutter)>]"},{"name":"delta","required":false,"specifarg":true,"orig":"[-delta <number (default 2)>]"},{"name":"bps","required":false,"specifarg":true,"orig":"[-bps <number (default 1.9)>]"}],
+    name: ['wackywebm',
+        'wackyscale',
+        'wackyresize'],
+    args: [{
+        "name": "video",
+        "required": true,
+        "specifarg": false,
+        "orig": "<video>"
+    },
+        {
+            "name": "mode",
+            "required": false,
+            "specifarg": true,
+            "orig": "[-mode <value (bounce, shutter, sporadic, bounce+shutter)>]",
+            "autocomplete": [
+                'bounce',
+                'shutter',
+                'sporadic',
+                'bounce+shutter'
+            ]
+        },
+        {
+            "name": "delta",
+            "required": false,
+            "specifarg": true,
+            "orig": "[-delta <number (default 2)>]"
+        },
+        {
+            "name": "bps",
+            "required": false,
+            "specifarg": true,
+            "orig": "[-bps <number (default 1.9)>]"
+        }],
     execute: async function (msg, args) {
         let poopy = this
 
-        await msg.channel.sendTyping().catch(() => { })
+        await msg.channel.sendTyping().catch(() => {})
         if (poopy.functions.lastUrl(msg, 0) === undefined && args[1] === undefined) {
-            await msg.reply('What is the file?!').catch(() => { })
-            await msg.channel.sendTyping().catch(() => { })
+            await msg.reply('What is the file?!').catch(() => {})
+            await msg.channel.sendTyping().catch(() => {})
             return;
         };
         var currenturl = poopy.functions.lastUrl(msg, 0) || args[1]
@@ -19,18 +50,30 @@ module.exports = {
             'bounce+shutter'
         ]
 
-        var mode = poopy.functions.getOption(args, 'mode', { dft: 'bounce', func: (mode) => poopy.functions.parseString(mode, modes, { lower: true }) })
+        var mode = poopy.functions.getOption(args, 'mode', {
+            dft: 'bounce', func: (mode) => poopy.functions.parseString(mode, modes, {
+                lower: true
+            })
+        })
         if (!mode) {
-            await msg.reply('Not a supported mode.').catch(() => { })
+            await msg.reply('Not a supported mode.').catch(() => {})
             return
         }
 
-        var delta = poopy.functions.getOption(args, 'delta', { dft: 2, func: (delta) => poopy.functions.parseNumber(delta, { dft: 2, min: 0.01, max: 100 }) })
-        var bps = poopy.functions.getOption(args, 'bps', { dft: 1.9, func: (bps) => poopy.functions.parseNumber(bps, { dft: 1.9, min: 0.01, max: 100 }) })
+        var delta = poopy.functions.getOption(args, 'delta', {
+            dft: 2, func: (delta) => poopy.functions.parseNumber(delta, {
+                dft: 2, min: 0.01, max: 100
+            })
+        })
+        var bps = poopy.functions.getOption(args, 'bps', {
+            dft: 1.9, func: (bps) => poopy.functions.parseNumber(bps, {
+                dft: 1.9, min: 0.01, max: 100
+            })
+        })
 
         var fileinfo = await poopy.functions.validateFile(currenturl).catch(async error => {
-            await msg.reply(error).catch(() => { })
-            await msg.channel.sendTyping().catch(() => { })
+            await msg.reply(error).catch(() => {})
+            await msg.channel.sendTyping().catch(() => {})
             return;
         })
 
@@ -55,8 +98,8 @@ module.exports = {
                 allowedMentions: {
                     parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
-            }).catch(() => { })
-            await msg.channel.sendTyping().catch(() => { })
+            }).catch(() => {})
+            await msg.channel.sendTyping().catch(() => {})
             return
         }
     },
