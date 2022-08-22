@@ -25,7 +25,7 @@
             "contract",
             "crop",
             "expand",
-            "expandscale",
+            "areascale",
             "hcontract",
             "hexpand",
             "hremove",

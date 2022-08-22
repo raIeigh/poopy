@@ -1,6 +1,39 @@
 module.exports = {
     name: ['zoomscale'],
-    args: [{"name":"width","required":true,"specifarg":false,"orig":"<width>"},{"name":"height","required":true,"specifarg":false,"orig":"<height>"},{"name":"file","required":false,"specifarg":false,"orig":"{file}"},{"name":"flags","required":false,"specifarg":true,"orig":"[-flags <algorithm>]"},{"name":"origin","required":false,"specifarg":true,"orig":"[-origin <x (left/center/right)> <y (top/middle/bottom)>]"},{"name":"keepaspectratio","required":false,"specifarg":true,"orig":"[-keepaspectratio <mode (increase or decrease)>]"}],
+    args: [{ "name": "width", "required": true, "specifarg": false, "orig": "<width>" }, { "name": "height", "required": true, "specifarg": false, "orig": "<height>" }, { "name": "file", "required": false, "specifarg": false, "orig": "{file}" }, {
+        "name": "origin", "required": false, "specifarg": true, "orig": "[-origin <x (left/center/right)> <y (top/middle/bottom)>]",
+        "autocomplete": [
+            'left top',
+            'center top',
+            'right top',
+            'left middle',
+            'center middle',
+            'right middle',
+            'left bottom',
+            'center bottom',
+            'right bottom',
+        ]
+    }, {
+        "name": "flags", "required": false, "specifarg": true, "orig": "[-flags <algorithm>]",
+        "autocomplete": [
+            'fast_bilinear',
+            'bilinear',
+            'bicubic',
+            'experimental',
+            'neighbor',
+            'area',
+            'bicublin',
+            'gauss',
+            'sinc',
+            'lanczos',
+            'spline',
+            'print_info',
+            'accurate_rnd',
+            'full_chroma_int',
+            'full_chroma_inp',
+            'bitexact'
+        ]
+    }, { "name": "keepaspectratio", "required": false, "specifarg": true, "orig": "[-keepaspectratio <mode (increase or decrease)>]", "autocomplete": ['increase', 'decrease'] }],
     execute: async function (msg, args) {
         let poopy = this
 

@@ -1,6 +1,12 @@
 module.exports = {
     name: ['help', 'commands', 'cmds'],
-    args: [{"name":"command","required":false,"specifarg":false,"orig":"[command]"}],
+    args: [{ "name": "command", "required": false, "specifarg": false, "orig": "[command]", "autocomplete": function () {
+        let poopy = this
+
+        return poopy.commands.map(cmd => {
+            return { name: cmd.name.join('/'), value: cmd.name[0] }
+        })
+    } }],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -87,7 +93,7 @@ module.exports = {
                 value: cat
             }
         })
-        
+
         var helped = false
 
         var dmChannel = await msg.author.createDM().catch(() => { })
@@ -105,14 +111,14 @@ module.exports = {
                 "fields": poopy.vars.shelpCmds[page - 1].commands,
                 "menuText": poopy.vars.shelpCmds[page - 1].type
             }
-            
+
             if (helped) {
                 helpEmbedText = `**${poopy.vars.shelpCmds[page - 1].type} Commands**\n\n` + poopy.vars.shelpCmds[page - 1].commands.map(k => `\`${k.name}\`\n> ${k.value}`).join('\n') + `\n\nPage ${page}/${poopy.vars.shelpCmds.length}`
                 delete helpEmbed.description
             }
-            
+
             helped = true
-            
+
             if (poopy.config.textEmbeds) return helpEmbedText.substring(helpEmbedText.length - 2000).replace(new RegExp(poopy.vars.validUrl, 'g'), (url) => `<${url}>`)
             else return helpEmbed
         }, poopy.vars.shelpCmds.length, msg.author.id, poopy.config.useReactions ? [{

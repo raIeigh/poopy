@@ -1,6 +1,19 @@
 module.exports = {
-    name: ['expandscale'],
-    args: [{"name":"width","required":true,"specifarg":false,"orig":"<width>"},{"name":"height","required":true,"specifarg":false,"orig":"<height>"},{"name":"file","required":false,"specifarg":false,"orig":"{file}"},{"name":"origin","required":false,"specifarg":true,"orig":"[-origin <x (left/center/right)> <y (top/middle/bottom)>]"},{"name":"keepaspectratio","required":false,"specifarg":true,"orig":"[-keepaspectratio <mode (increase or decrease)>]"}],
+    name: ['areascale', 'expandscale'],
+    args: [{ "name": "width", "required": true, "specifarg": false, "orig": "<width>" }, { "name": "height", "required": true, "specifarg": false, "orig": "<height>" }, { "name": "file", "required": false, "specifarg": false, "orig": "{file}" }, {
+        "name": "origin", "required": false, "specifarg": true, "orig": "[-origin <x (left/center/right)> <y (top/middle/bottom)>]",
+        "autocomplete": [
+            'left top',
+            'center top',
+            'right top',
+            'left middle',
+            'center middle',
+            'right middle',
+            'left bottom',
+            'center bottom',
+            'right bottom',
+        ]
+    }, { "name": "keepaspectratio", "required": false, "specifarg": true, "orig": "[-keepaspectratio <mode (increase or decrease)>]", "autocomplete": ['increase', 'decrease'] }],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -107,8 +120,8 @@ module.exports = {
         }
     },
     help: {
-        name: 'expandscale <width> <height> {file} [-origin <x (left/center/right)> <y (top/middle/bottom)>] [-keepaspectratio <mode (increase or decrease)>]',
-        value: 'Expands or contracts the file to correspond to the specified width and height.'
+        name: 'areascale/expandscale <width> <height> {file} [-origin <x (left/center/right)> <y (top/middle/bottom)>] [-keepaspectratio <mode (increase or decrease)>]',
+        value: 'Expands or contracts the area of the file to correspond to the specified width and height.'
     },
     cooldown: 2500,
     type: 'Resizing'

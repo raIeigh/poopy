@@ -1,6 +1,15 @@
 module.exports = {
     name: ['makesweet', 'heartlocket'],
-    args: [{"name":"textes","required":false,"specifarg":false,"orig":"\"{text1}\"..."},{"name":"files","required":false,"specifarg":false,"orig":"{file1}..."},{"name":"textfirst","required":false,"specifarg":true,"orig":"[-textfirst]"},{"name":"template","required":false,"specifarg":true,"orig":"[-template <name>]"}],
+    args: [{ "name": "textes", "required": false, "specifarg": false, "orig": "\"{text1}\"..." }, { "name": "files", "required": false, "specifarg": false, "orig": "{file1}..." }, { "name": "textfirst", "required": false, "specifarg": true, "orig": "[-textfirst]" }, {
+        "name": "template", "required": false, "specifarg": true, "orig": "[-template <name>]", "autocomplete": [
+            'billboard-cityscape',
+            'circuit-board',
+            'flag',
+            'flying-bear',
+            'heart-locket',
+            'nesting-doll'
+        ]
+    }],
     execute: async function (msg, args) {
         let poopy = this
 

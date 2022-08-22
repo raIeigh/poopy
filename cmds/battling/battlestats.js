@@ -1,6 +1,18 @@
 module.exports = {
     name: ['battlestats', 'userstats'],
-    args: [{ "name": "user", "required": false, "specifarg": false, "orig": "{user}" }],
+    args: [{
+        "name": "user", "required": false, "specifarg": false, "orig": "{user}",
+        "autocomplete": function (interaction) {
+            let poopy = this
+
+            var memberData = poopy.data['guild-data'][interaction.guild.id]['members']
+            var memberKeys = Object.keys(memberData).sort((a, b) => memberData[b].messages - memberData[a].messages)
+
+            return memberKeys.map(id => {
+                return { name: memberData[id].username, value: id }
+            })
+        }
+    }],
     execute: async function (msg, args) {
         let poopy = this
 

@@ -1,6 +1,14 @@
 module.exports = {
     name: ['addtojson'],
-    args: [{"name":"json","required":true,"specifarg":false,"orig":"<json (psfiles, pspasta, funnygif, poop, dmphrases)>"},{"name":"value","required":true,"specifarg":false,"orig":"<value>"}],
+    args: [{
+        "name": "json", "required": true, "specifarg": false, "orig": "<json (psfiles, pspasta, funnygif, poop, dmphrases)>", "autocomplete": [
+            'psfiles',
+            'pspasta',
+            'funnygif',
+            'poop',
+            'dmphrases'
+        ]
+    }, { "name": "value", "required": true, "specifarg": false, "orig": "<value>" }],
     execute: async function (msg, args) {
         let poopy = this
 

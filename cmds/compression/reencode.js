@@ -1,6 +1,19 @@
 module.exports = {
     name: ['reencode'],
-    args: [{"name":"file","required":false,"specifarg":false,"orig":"{file}"},{"name":"encodingpreset","required":false,"specifarg":true,"orig":"[-encodingpreset <preset>]"},{"name":"codec","required":false,"specifarg":true,"orig":"[-codec <codec>]"}],
+    args: [{ "name": "file", "required": false, "specifarg": false, "orig": "{file}" }, {
+        "name": "encodingpreset", "required": false, "specifarg": true, "orig": "[-encodingpreset <preset>]",
+        "autocomplete": [
+            'ultrafast',
+            'superfast',
+            'veryfast',
+            'faster',
+            'fast',
+            'medium',
+            'slow',
+            'slower',
+            'veryslow'
+        ]
+    }],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -74,8 +87,8 @@ module.exports = {
         }
     },
     help: {
-        name: 'reencode {file} [-encodingpreset <preset>] [-codec <codec>]',
-        value: 'Reencodes the file to other preset, codec or audio codec. A list of presets can be found at https://trac.ffmpeg.org/wiki/Encode/H.264#a2.Chooseapresetandtune\n' +
+        name: 'reencode {file} [-encodingpreset <preset>]',
+        value: 'Reencodes the file to other preset. A list of presets can be found at https://trac.ffmpeg.org/wiki/Encode/H.264#a2.Chooseapresetandtune\n' +
             'Pro Tip: These options can be used in ANY file manipulation command!'
     },
     cooldown: 2500,

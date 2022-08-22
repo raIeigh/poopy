@@ -1,6 +1,14 @@
 module.exports = {
     name: ['displayjson'],
-    args: [{"name":"json","required":true,"specifarg":false,"orig":"<json (psfiles, pspasta, funnygif, poop, dmphrases)>"}],
+    args: [{
+        "name": "json", "required": true, "specifarg": false, "orig": "<json (psfiles, pspasta, funnygif, poop, dmphrases)>", "autocomplete": [
+            'psfiles',
+            'pspasta',
+            'funnygif',
+            'poop',
+            'dmphrases'
+        ]
+    }],
     execute: async function (msg, args) {
         let poopy = this
 

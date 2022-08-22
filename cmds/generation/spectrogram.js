@@ -1,6 +1,34 @@
 module.exports = {
     name: ['spectrogram'],
-    args: [{"name":"file","required":false,"specifarg":false,"orig":"{file}"},{"name":"color","required":false,"specifarg":true,"orig":"[-color <mode>]"},{"name":"scale","required":false,"specifarg":true,"orig":"[-scale <scale>]"},{"name":"saturation","required":false,"specifarg":true,"orig":"[-saturation <number (from -10 to 10)>]"}],
+    args: [{ "name": "file", "required": false, "specifarg": false, "orig": "{file}" }, {
+        "name": "color", "required": false, "specifarg": true, "orig": "[-color <mode>]",
+        "autocomplete": [
+            'channel',
+            'intensity',
+            'rainbow',
+            'moreland',
+            'nebulae',
+            'fire',
+            'fiery',
+            'fruit',
+            'cool',
+            'magma',
+            'green',
+            'viridis',
+            'plasma',
+            'cividis',
+            'terrain'
+        ]
+    }, {
+        "name": "scale", "required": false, "specifarg": true, "orig": "[-scale <scale>]", "autocomplete": [
+            'lin',
+            'sqrt',
+            'cbrt',
+            'log',
+            '4thrt',
+            '5thrt'
+        ]
+    }, { "name": "saturation", "required": false, "specifarg": true, "orig": "[-saturation <number (from -10 to 10)>]" }],
     execute: async function (msg, args) {
         let poopy = this
 

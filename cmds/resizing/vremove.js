@@ -1,7 +1,7 @@
 module.exports = {
     name: ['vremove', 'vreversecrop'],
-    args: [{"name":"y","required":true,"specifarg":false,"orig":"<y>"},{"name":"h","required":true,"specifarg":false,"orig":"<h>"},{"name":"file","required":false,"specifarg":false,"orig":"{file}"}],
-    execute: async function (msg, args, opts) {
+    args: [{ "name": "y", "required": true, "specifarg": false, "orig": "<y>" }, { "name": "h", "required": true, "specifarg": false, "orig": "<h>" }, { "name": "file", "required": false, "specifarg": false, "orig": "{file}" }],
+    execute: async function (msg, args) {
         let poopy = this
 
         await msg.channel.sendTyping().catch(() => { })

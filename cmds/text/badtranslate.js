@@ -1,6 +1,22 @@
 module.exports = {
     name: ['badtranslate', 'badtr'],
-    args: [{"name":"message","required":true,"specifarg":false,"orig":"<message>"},{"name":"source","required":false,"specifarg":true,"orig":"[-source <language>]"},{"name":"target","required":false,"specifarg":true,"orig":"[-target <language>]"},{"name":"languages","required":false,"specifarg":true,"orig":"[-languages <number (max 25)>]"}],
+    args: [{ "name": "message", "required": true, "specifarg": false, "orig": "<message>" }, {
+        "name": "source", "required": false, "specifarg": true, "orig": "[-source <language>]",
+        "autocomplete": function () {
+            let poopy = this
+            return poopy.vars.languages.map(lang => {
+                return { name: lang.name, value: lang.language }
+            })
+        }
+    }, {
+        "name": "target", "required": false, "specifarg": true, "orig": "[-target <language>]",
+        "autocomplete": function () {
+            let poopy = this
+            return poopy.vars.languages.map(lang => {
+                return { name: lang.name, value: lang.language }
+            })
+        }
+    }, { "name": "languages", "required": false, "specifarg": true, "orig": "[-languages <number (max 25)>]" }],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -10,28 +26,14 @@ module.exports = {
             await msg.channel.sendTyping().catch(() => { })
             return;
         }
-        var lresponse = await poopy.modules.axios.request({
-            method: 'GET',
-            url: 'https://microsoft-translator-text.p.rapidapi.com/languages',
-            params: { 'api-version': '3.0' },
-            headers: {
-                'x-rapidapi-host': 'microsoft-translator-text.p.rapidapi.com',
-                'x-rapidapi-key': poopy.functions.randomKey('RAPIDAPIKEY')
-            }
-        }).catch(() => { })
-        var languages = []
-        for (var i in lresponse.data.translation) {
-            lresponse.data.translation[i].language = i
-            languages.push(lresponse.data.translation[i])
-        }
 
         var source = null
         var sourceindex = args.indexOf('-source')
         if (sourceindex > -1) {
-            if (languages.find(language => (language.language === args[sourceindex + 1].toLowerCase()) || (language.name === args[sourceindex + 1].toLowerCase()))) {
-                source = languages.find(language => (language.language === args[sourceindex + 1].toLowerCase()) || (language.name === args[sourceindex + 1].toLowerCase())).language
+            if (poopy.vars.languages.find(language => (language.language === args[sourceindex + 1].toLowerCase()) || (language.name === args[sourceindex + 1].toLowerCase()))) {
+                source = poopy.vars.languages.find(language => (language.language === args[sourceindex + 1].toLowerCase()) || (language.name === args[sourceindex + 1].toLowerCase())).language
             } else {
-                await msg.reply(`Not a supported source language. A list of supported languages are:\n${languages.map(language => `${language.name} (${language.language})`).join(', ')}`).catch(() => { })
+                await msg.reply(`Not a supported source language. A list of supported languages are:\n${poopy.vars.languages.map(language => `\`${language.language}\``).join(', ')}`).catch(() => { })
                 return
             }
             args.splice(sourceindex, 2)
@@ -40,10 +42,10 @@ module.exports = {
         var target = 'en'
         var targetindex = args.indexOf('-target')
         if (targetindex > -1) {
-            if (languages.find(language => (language.language === args[targetindex + 1].toLowerCase()) || (language.name === args[targetindex + 1].toLowerCase()))) {
-                target = languages.find(language => (language.language === args[targetindex + 1].toLowerCase()) || (language.name === args[targetindex + 1].toLowerCase())).language
+            if (poopy.vars.languages.find(language => (language.language === args[targetindex + 1].toLowerCase()) || (language.name === args[targetindex + 1].toLowerCase()))) {
+                target = poopy.vars.languages.find(language => (language.language === args[targetindex + 1].toLowerCase()) || (language.name === args[targetindex + 1].toLowerCase())).language
             } else {
-                await msg.reply(`Not a supported target language. A list of supported languages are:\n${languages.map(language => `${language.name} (\`${language.language}\`)`).join(', ')}`).catch(() => { })
+                await msg.reply(`Not a supported target language. A list of supported languages are:\n${poopy.vars.languages.map(language => `\`${language.language}\``).join(', ')}`).catch(() => { })
                 return
             }
             args.splice(targetindex, 2)
@@ -66,9 +68,9 @@ module.exports = {
 
         var output = saidMessage
         var lastlanguage = source
-        var currentlanguage = languages[Math.floor(Math.random() * languages.length)].language
+        var currentlanguage = poopy.vars.languages[Math.floor(Math.random() * poopy.vars.languages.length)].language
 
-        var lmessage = await msg.reply(`Translating from ${languages.find(language => language.language === lastlanguage) ? languages.find(language => language.language === lastlanguage).name : 'Auto'} to ${languages.find(language => language.language === currentlanguage).name}. (${output})`).catch(() => { })
+        var lmessage = await msg.reply(`Translating from ${poopy.vars.languages.find(language => language.language === lastlanguage) ? poopy.vars.languages.find(language => language.language === lastlanguage).name : 'Auto'} to ${poopy.vars.languages.find(language => language.language === currentlanguage).name}. (${output})`).catch(() => { })
 
         for (var i = 0; i < repeat; i++) {
             var options = {
@@ -93,9 +95,9 @@ module.exports = {
 
             output = response.data[0].translations[0].text
             lastlanguage = currentlanguage
-            currentlanguage = i == repeat - 2 ? target : languages[Math.floor(Math.random() * languages.length)].language
+            currentlanguage = i == repeat - 2 ? target : poopy.vars.languages[Math.floor(Math.random() * poopy.vars.languages.length)].language
             if (lmessage && i != repeat - 1) {
-                await lmessage.edit(`Translating from ${languages.find(language => language.language === lastlanguage) ? languages.find(language => language.language === lastlanguage).name : 'Auto'} to ${languages.find(language => language.language === currentlanguage).name}. (${output})`).catch(() => { })
+                await lmessage.edit(`Translating from ${poopy.vars.languages.find(language => language.language === lastlanguage) ? poopy.vars.languages.find(language => language.language === lastlanguage).name : 'Auto'} to ${poopy.vars.languages.find(language => language.language === currentlanguage).name}. (${output})`).catch(() => { })
             }
         }
 

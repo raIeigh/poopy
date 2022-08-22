@@ -1,6 +1,24 @@
 module.exports = {
     name: ['pseudocolor'],
-    args: [{"name":"file","required":false,"specifarg":false,"orig":"{file}"},{"name":"preset","required":false,"specifarg":true,"orig":"[-preset <preset>]"}],
+    args: [{ "name": "file", "required": false, "specifarg": false, "orig": "{file}" }, {
+        "name": "preset", "required": false, "specifarg": true, "orig": "[-preset <preset>]",
+        "autocomplete": [
+            'magma',
+            'inferno',
+            'plasma',
+            'viridis',
+            'turbo',
+            'cividis',
+            'range1',
+            'range2',
+            'shadows',
+            'highlights',
+            'solar',
+            'nominal',
+            'preferred',
+            'total'
+        ]
+    }],
     execute: async function (msg, args) {
         let poopy = this
 

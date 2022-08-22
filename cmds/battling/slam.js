@@ -1,11 +1,23 @@
 module.exports = {
     name: ['slam'],
-    args: [{"name":"subject","required":true,"specifarg":false,"orig":"<subject>"}],
+    args: [{
+        "name": "subject", "required": true, "specifarg": false, "orig": "<subject>",
+        "autocomplete": function (interaction) {
+            let poopy = this
+
+            var memberData = poopy.data['guild-data'][interaction.guild.id]['members']
+            var memberKeys = Object.keys(memberData).sort((a, b) => memberData[b].messages - memberData[a].messages)
+
+            return memberKeys.map(id => {
+                return { name: memberData[id].username, value: id }
+            })
+        }
+    }],
     execute: async function (msg, args) {
         let poopy = this
         var action = 'slammed'
         var damage = 30
-        var chance = 1/4
+        var chance = 1 / 4
 
         await msg.channel.sendTyping().catch(() => { })
         var saidMessage = args.slice(1).join(' ')

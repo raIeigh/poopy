@@ -1,6 +1,14 @@
 module.exports = {
     name: ['uberduck', 'tts'],
-    args: [{"name":"voice","required":true,"specifarg":false,"orig":"<voice>"},{"name":"text","required":true,"specifarg":false,"orig":"<text>"}],
+    args: [{
+        "name": "voice", "required": true, "specifarg": false, "orig": "<voice>", "autocomplete": function () {
+            let poopy = this
+
+            return poopy.vars.ubervoices.map(voice => {
+                return { name: voice.display_name.trim(), value: voice.name }
+            })
+        }
+    }, { "name": "text", "required": true, "specifarg": false, "orig": "<text>" }],
     execute: async function (msg, args) {
         let poopy = this
 

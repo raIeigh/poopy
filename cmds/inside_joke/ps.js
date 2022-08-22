@@ -1,6 +1,12 @@
 module.exports = {
     name: ['ps', 'phexoniastudios'],
-    args: [{"name":"type","required":false,"specifarg":true,"orig":"[-type <extension (image/video/gif)>]"}],
+    args: [{
+        "name": "type", "required": false, "specifarg": true, "orig": "[-type <extension (image/video/gif)>]", "autocomplete": [
+            'image',
+            'video',
+            'gif'
+        ]
+    }],
     execute: async function (msg, args) {
         let poopy = this
 

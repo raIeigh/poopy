@@ -1,6 +1,62 @@
 module.exports = {
     name: ['blend'],
-    args: [{"name":"file","required":false,"specifarg":false,"orig":"{file}"},{"name":"file2","required":false,"specifarg":false,"orig":"{file2}"},{"name":"mode","required":false,"specifarg":true,"orig":"[-mode <mode>]"},{"name":"origin","required":false,"specifarg":true,"orig":"[-origin <x (left/center/right)> <y (top/middle/bottom)>]"},{"name":"offsetpos","required":false,"specifarg":true,"orig":"[-offsetpos <x> <y>]"},{"name":"width","required":false,"specifarg":true,"orig":"[-width <pixels or percentage>]"},{"name":"height","required":false,"specifarg":true,"orig":"[-height <pixels or percentage>]"},{"name":"keepaspectratio","required":false,"specifarg":true,"orig":"[-keepaspectratio <mode (increase or decrease)>]"}],
+    args: [{ "name": "file", "required": false, "specifarg": false, "orig": "{file}" }, { "name": "file2", "required": false, "specifarg": false, "orig": "{file2}" }, {
+        "name": "mode", "required": false, "specifarg": true, "orig": "[-mode <mode>]",
+        "autocomplete": [
+            'addition',
+            'grainmerge',
+            'and',
+            'average',
+            'burn',
+            'bleach',
+            'darken',
+            'difference',
+            'grainextract',
+            'divide',
+            'dodge',
+            'freeze',
+            'exclusion',
+            'extremity',
+            'geometric',
+            'glow',
+            'hardlight',
+            'hardoverlay',
+            'interpolate',
+            'hardmix',
+            'heat',
+            'lighten',
+            'linearlight',
+            'multiply',
+            'multiply128',
+            'negation',
+            'normal',
+            'or',
+            'overlay',
+            'phoenix',
+            'pinlight',
+            'reflect',
+            'screen',
+            'stain',
+            'softlight',
+            'softdifference',
+            'subtract',
+            'vividlight',
+            'xor'
+        ]
+    }, {
+        "name": "origin", "required": false, "specifarg": true, "orig": "[-origin <x (left/center/right)> <y (top/middle/bottom)>]",
+        "autocomplete": [
+            'left top',
+            'center top',
+            'right top',
+            'left middle',
+            'center middle',
+            'right middle',
+            'left bottom',
+            'center bottom',
+            'right bottom',
+        ]
+    }, { "name": "offsetpos", "required": false, "specifarg": true, "orig": "[-offsetpos <x> <y>]" }, { "name": "width", "required": false, "specifarg": true, "orig": "[-width <pixels or percentage>]" }, { "name": "height", "required": false, "specifarg": true, "orig": "[-height <pixels or percentage>]" }, { "name": "keepaspectratio", "required": false, "specifarg": true, "orig": "[-keepaspectratio <mode (increase or decrease)>]", "autocomplete": ['increase', 'decrease'] }],
     execute: async function (msg, args) {
         let poopy = this
 

@@ -13,20 +13,22 @@ module.exports = {
         "args": [],
         "description": "Gets a list of disabled commands."
     },
-        {
-            "name": "toggle",
-            "args": [{
-                "name": "command",
-                "required": true,
-                "specifarg": false,
-                "orig": "<command>",
-                "autocomplete": function (interaction) {
-                    let poopy = this
-                    return poopy.commands.map(cmd => cmd.name[0])
-                }
-            }],
-            "description": "Disables/enables a command, if it exists."
+    {
+        "name": "toggle",
+        "args": [{
+            "name": "command",
+            "required": true,
+            "specifarg": false,
+            "orig": "<command>",
+            "autocomplete": function () {
+                let poopy = this
+                return poopy.commands.map(cmd => {
+                    return { name: cmd.name.join('/'), value: cmd.name[0] }
+                })
+            }
         }],
+        "description": "Disables/enables a command, if it exists."
+    }],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -59,10 +61,10 @@ module.exports = {
                     allowedMentions: {
                         parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                     }
-                }).catch(() => {})
+                }).catch(() => { })
                 else msg.reply({
                     embeds: [listEmbed]
-                }).catch(() => {})
+                }).catch(() => { })
             },
 
             toggle: async (msg, args) => {
@@ -102,7 +104,7 @@ module.exports = {
                         return
                     }
                 } else {
-                    await msg.reply('You need to be a moderator to execute that!').catch(() => {})
+                    await msg.reply('You need to be a moderator to execute that!').catch(() => { })
                     return;
                 };
             },
@@ -114,7 +116,7 @@ module.exports = {
                 allowedMentions: {
                     parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
-            }).catch(() => {})
+            }).catch(() => { })
             else msg.reply({
                 embeds: [{
                     "title": "Available Options",
@@ -127,7 +129,7 @@ module.exports = {
                         "text": poopy.bot.user.username
                     },
                 }]
-            }).catch(() => {})
+            }).catch(() => { })
             return
         }
 

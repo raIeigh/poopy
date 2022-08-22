@@ -30,17 +30,10 @@ module.exports = {
 
     if (codeBlock) word = word.substring(cl > -1 ? cl : 3, word.length - 3).trim()
 
-    var langresponse = await poopy.modules.axios.get('https://wandbox.org/api/list.json').catch(() => { })
     var langVersion
 
-    if (langresponse) {
-      var languages = langresponse.data.filter((lang, index) => langresponse.data.findIndex(l => l.templates[0] === lang.templates[0]) === index).sort((a, b) => {
-        if (a.templates[0] < b.templates[0]) return -1
-        if (a.templates[0] > b.templates[0]) return 1
-        return 0
-      })
-
-      var findLang = languages.find(lang => lang.templates[0] === language.toLowerCase())
+    if (poopy.vars.codelanguages) {
+      var findLang = poopy.vars.codelanguages.find(lang => lang.templates[0] === language.toLowerCase())
 
       if (findLang) {
         langVersion = findLang.name

@@ -1,6 +1,22 @@
 module.exports = {
     name: ['translate', 'tr'],
-    args: [{"name":"message","required":true,"specifarg":false,"orig":"<message>"},{"name":"source","required":false,"specifarg":true,"orig":"[-source <language>]"},{"name":"target","required":false,"specifarg":true,"orig":"[-target <language>]"}],
+    args: [{ "name": "message", "required": true, "specifarg": false, "orig": "<message>" }, {
+        "name": "source", "required": false, "specifarg": true, "orig": "[-source <language>]",
+        "autocomplete": function () {
+            let poopy = this
+            return poopy.vars.languages.map(lang => {
+                return { name: lang.name, value: lang.language }
+            })
+        }
+    }, {
+        "name": "target", "required": false, "specifarg": true, "orig": "[-target <language>]",
+        "autocomplete": function () {
+            let poopy = this
+            return poopy.vars.languages.map(lang => {
+                return { name: lang.name, value: lang.language }
+            })
+        }
+    }],
     execute: async function (msg, args) {
         let poopy = this
 

@@ -173,12 +173,9 @@ class Poopy {
 
         // these are functions
         poopy.functions.getEmojis = require('@jimp/plugin-print/emojis')
-        poopy.functions.braille = require('./modules/braille')
         poopy.functions.lingo = require('./modules/lingo')
         poopy.functions.gibberish = require('./modules/gibberish')
         poopy.functions.markov = require('./modules/markov')
-        poopy.functions.averageColor = require('./modules/averageColor')
-        poopy.functions.spectrogram = require('./modules/spectrogram')
         poopy.functions.wackywebm = require('./modules/wackywebm')
         poopy.functions.getAllData = require('./modules/dataGathering').getAllData
         poopy.functions.updateAllData = require('./modules/dataGathering').updateAllData
@@ -186,6 +183,11 @@ class Poopy {
         poopy.functions.brainfuck = require('./modules/brainfuck')
         poopy.functions.tobrainfuck = require('./modules/tobrainfuck')
         poopy.functions.generateSayori = require('./modules/sayorimessagegenerator')
+        if (!poopy.config.testing) {
+            poopy.functions.braille = require('./modules/braille')
+            poopy.functions.averageColor = require('./modules/averageColor')
+            poopy.functions.spectrogram = require('./modules/spectrogram')
+        }
 
         // bot and variables now
         poopy.bot = new poopy.modules.Discord.Client({
@@ -237,7 +239,7 @@ class Poopy {
                 return text.toUpperCase().substring(0, 1) + text.toLowerCase().substring(1)
             }
         ]
-        poopy.vars.statusChanges = 'true'
+        poopy.vars.statusChanges = true
         poopy.vars.filecount = 0
         poopy.vars.cps = 0
 
@@ -1238,7 +1240,7 @@ class Poopy {
             if (poopy.config.stfu || poopy.config.noInfoPost) return
 
             var avatar = poopy.bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' })
-            var color = await poopy.functions.averageColor(avatar)
+            var color = poopy.config.testing ? { r: 255, g: 255, b: 255 } : await poopy.functions.averageColor(avatar)
 
             var infoMsg
             if (poopy.config.textEmbeds) infoMsg = await poopy.bot.guilds.cache.get('834431435704107018')?.channels.cache.get('967083645619830834')?.send({
@@ -3119,23 +3121,23 @@ class Poopy {
                 if (!poopy.tempdata[msg.author.id][msg.id]['keyattempts']) {
                     poopy.tempdata[msg.author.id][msg.id]['keyattempts'] = 0
                 }
-    
+
                 if (!poopy.tempdata[msg.author.id][msg.id]['keywordsExecuted']) {
                     poopy.tempdata[msg.author.id][msg.id]['keywordsExecuted'] = []
                 }
-    
+
                 if (!poopy.tempdata[msg.author.id]['arrays']) {
                     poopy.tempdata[msg.author.id]['arrays'] = {}
                 }
-    
+
                 if (!poopy.tempdata[msg.author.id]['declared']) {
                     poopy.tempdata[msg.author.id]['declared'] = {}
                 }
-    
+
                 if (!poopy.tempdata[msg.author.id]['keydeclared']) {
                     poopy.tempdata[msg.author.id]['keydeclared'] = {}
                 }
-    
+
                 if (!poopy.tempdata[msg.author.id]['funcdeclared']) {
                     poopy.tempdata[msg.author.id]['funcdeclared'] = {}
                 }
@@ -3794,7 +3796,7 @@ class Poopy {
         }
 
         poopy.functions.changeStatus = function () {
-            if (poopy.bot && poopy.vars.statusChanges === 'true') {
+            if (poopy.bot && poopy.vars.statusChanges) {
                 var choosenStatus = poopy.statuses[Math.floor(Math.random() * poopy.statuses.length)]
                 poopy.functions.infoPost(`Status changed to ${choosenStatus.type.toLowerCase()} ${((choosenStatus.type === "COMPETING" && 'in ') || (choosenStatus.type === "LISTENING" && 'to ') || '')}${choosenStatus.name}`)
                 poopy.bot.user.setPresence({
@@ -4813,10 +4815,12 @@ class Poopy {
                             await findArg.autocomplete.call(poopy, interaction) :
                             findArg.autocomplete
 
-                        var choices = autocompleteValues.sort((a, b) =>
-                            Math.abs(1 - poopy.functions.similarity(a.name ?? a, focused.value)) -
-                            Math.abs(1 - poopy.functions.similarity(b.name ?? b, focused.value))
-                        ).slice(0, 25)
+                        var choices = autocompleteValues
+                            .filter(choice => (choice.name ?? choice).toLowerCase().includes(focused.value.toLowerCase()))
+                            .sort((a, b) =>
+                                Math.abs(1 - poopy.functions.similarity(a.name ?? a, focused.value)) -
+                                Math.abs(1 - poopy.functions.similarity(b.name ?? b, focused.value))
+                            ).slice(0, 25)
 
                         await interaction.respond(
                             choices.map(choice => ({ name: (choice.name ?? choice).replace(/\n|\r/g, ' ').substring(0, 100) || '(blank)', value: choice.value ?? choice }))
@@ -5305,6 +5309,7 @@ class Poopy {
         }
 
         await poopy.functions.infoPost(`Finishing extra steps...`)
+
         var voiceResponse = await poopy.modules.axios.request({
             method: 'GET',
             url: 'https://api.uberduck.ai/voices?mode=tts-basic',
@@ -5337,6 +5342,7 @@ class Poopy {
                 return 0
             })
         }
+
         var lresponse = await poopy.modules.axios.request({
             method: 'GET',
             url: 'https://microsoft-translator-text.p.rapidapi.com/languages',
@@ -5346,14 +5352,21 @@ class Poopy {
                 'x-rapidapi-key': poopy.functions.randomKey('RAPIDAPIKEY')
             }
         }).catch(() => { })
-        if (lresponse) {
-            poopy.vars.languages = Object.values(lresponse.data.translation)
-            for (var i in lresponse.data.translation) {
-                lresponse.data.translation[i].language = i
-                poopy.vars.languages.push(lresponse.data.translation[i])
-            }
+        if (lresponse) poopy.vars.languages = Object.keys(lresponse.data.translation).map(lang => {
+            return { ...lresponse.data.translation[lang], language: lang }
+        })
+
+        var clresponse = await poopy.modules.axios.get('https://wandbox.org/api/list.json').catch(() => { })
+        if (clresponse) {
+            poopy.vars.codelanguages = clresponse.data.filter((lang, index, self) => self.findIndex(l => l.templates[0] === lang.templates[0]) === index).sort((a, b) => {
+                if (a.templates[0] < b.templates[0]) return -1
+                if (a.templates[0] > b.templates[0]) return 1
+                return 0
+            })
         }
+
         poopy.json.emojiJSON = await poopy.functions.getEmojis().catch(() => { })
+
         console.log(`${poopy.bot.user.username}: emojis`)
         //await poopy.functions.updateSlashCommands()
         poopy.functions.saveData()

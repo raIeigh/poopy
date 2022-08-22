@@ -1,6 +1,12 @@
 module.exports = {
     name: ['randomcmd'],
-    args: [{"name":"args","required":false,"specifarg":false,"orig":"[args]"},{"name":"cmdtype","required":false,"specifarg":true,"orig":"[-cmdtype <commandType>]"}],
+    args: [{ "name": "args", "required": false, "specifarg": false, "orig": "[args]" }, {
+        "name": "cmdtype", "required": false, "specifarg": true, "orig": "[-cmdtype <commandType>]",
+        "autocomplete": function () {
+            let poopy = this
+            return poopy.vars.types
+        }
+    }],
     execute: async function (msg, args) {
         let poopy = this
 

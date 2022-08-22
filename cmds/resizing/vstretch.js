@@ -1,6 +1,26 @@
 module.exports = {
     name: ['vstretch'],
-    args: [{"name":"multiplier","required":false,"specifarg":false,"orig":"[multiplier (from 1 to 6)]"},{"name":"file","required":false,"specifarg":false,"orig":"{file}"},{"name":"flags","required":false,"specifarg":true,"orig":"[-flags <algorithm>]"}],
+    args: [{ "name": "multiplier", "required": false, "specifarg": false, "orig": "[multiplier (from 1 to 6)]" }, { "name": "file", "required": false, "specifarg": false, "orig": "{file}" }, {
+        "name": "flags", "required": false, "specifarg": true, "orig": "[-flags <algorithm>]",
+        "autocomplete": [
+            'fast_bilinear',
+            'bilinear',
+            'bicubic',
+            'experimental',
+            'neighbor',
+            'area',
+            'bicublin',
+            'gauss',
+            'sinc',
+            'lanczos',
+            'spline',
+            'print_info',
+            'accurate_rnd',
+            'full_chroma_int',
+            'full_chroma_inp',
+            'bitexact'
+        ]
+    }],
     execute: async function (msg, args) {
         let poopy = this
 

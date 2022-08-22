@@ -1,6 +1,6 @@
 module.exports = {
     name: ['hremove', 'hreversecrop'],
-    args: [{"name":"x","required":true,"specifarg":false,"orig":"<x>"},{"name":"w","required":true,"specifarg":false,"orig":"<w>"},{"name":"file","required":false,"specifarg":false,"orig":"{file}"}],
+    args: [{ "name": "x", "required": true, "specifarg": false, "orig": "<x>" }, { "name": "w", "required": true, "specifarg": false, "orig": "<w>" }, { "name": "file", "required": false, "specifarg": false, "orig": "{file}" }],
     execute: async function (msg, args, opts) {
         let poopy = this
 

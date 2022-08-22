@@ -1,6 +1,28 @@
 module.exports = {
     name: ['undertale', 'deltarune'],
-    args: [{"name":"text","required":false,"specifarg":false,"orig":"\"{text}\""},{"name":"mode","required":false,"specifarg":true,"orig":"[-mode <mode (regular or darkworld)>]"},{"name":"boxstyle","required":false,"specifarg":true,"orig":"[-boxstyle <style (read description)>]"},{"name":"font","required":false,"specifarg":true,"orig":"[-font <font (read description)>]"},{"name":"boxcolor","required":false,"specifarg":true,"orig":"[-(box/asterisk)color <r> <g> <b>]"},{"name":"asteriskcolor","required":false,"specifarg":true,"orig":"[-(box/asterisk)color <r> <g> <b>]"},{"name":"nofile","required":false,"specifarg":true,"orig":"[-no(file/asterisk)]"},{"name":"noasterisk","required":false,"specifarg":true,"orig":"[-no(file/asterisk)]"},{"name":"small","required":false,"specifarg":true,"orig":"[-small]"},{"name":"file","required":false,"specifarg":false,"orig":"{file}"}],
+    args: [{ "name": "text", "required": false, "specifarg": false, "orig": "\"{text}\"" }, { "name": "mode", "required": false, "specifarg": true, "orig": "[-mode <mode (regular or darkworld)>]", choices: ['regular', 'darkworld'] }, {
+        "name": "boxstyle", "required": false, "specifarg": true, "orig": "[-boxstyle <style (read description)>]", "autocomplete": [
+            'undertale',
+            'deltarune',
+            'earthbound',
+            'underswap',
+            'underfell',
+            'octagonal',
+            'shadedground',
+            'tubertale',
+            'stubertale',
+            'fnastale',
+            'derp'
+        ]
+    }, {
+        "name": "font", "required": false, "specifarg": true, "orig": "[-font <font (read description)>]", "autocomplete": [
+            'determination',
+            'sans',
+            'papyrus',
+            'earthbound',
+            'wingdings'
+        ]
+    }, { "name": "boxcolor", "required": false, "specifarg": true, "orig": "[-(box/asterisk)color <r> <g> <b>]" }, { "name": "asteriskcolor", "required": false, "specifarg": true, "orig": "[-(box/asterisk)color <r> <g> <b>]" }, { "name": "nofile", "required": false, "specifarg": true, "orig": "[-no(file/asterisk)]" }, { "name": "noasterisk", "required": false, "specifarg": true, "orig": "[-no(file/asterisk)]" }, { "name": "small", "required": false, "specifarg": true, "orig": "[-small]" }, { "name": "file", "required": false, "specifarg": false, "orig": "{file}" }],
     execute: async function (msg, args) {
         let poopy = this
 
