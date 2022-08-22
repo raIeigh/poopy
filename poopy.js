@@ -269,7 +269,7 @@ class Poopy {
             var channel = this
 
             await poopy.functions.waitMessageCooldown()
-            if (channel.guild && poopy.tempdata[channel.guild.id][channel.id]['shut']) return
+            if (poopy.tempdata[channel.guild?.id]?.[channel.id]?.['shut']) return
 
             return await channelSend.call(channel, payload).then(poopy.functions.setMessageCooldown)
         }
@@ -279,37 +279,17 @@ class Poopy {
             var message = this
 
             await poopy.functions.waitMessageCooldown()
-            if (message.guild && poopy.tempdata[message.guild.id][message.channel.id]['shut']) return
+            if (poopy.tempdata[message.guild?.id]?.[message.channel?.id]?.['shut']) return
 
             if (poopy.config.allowbotusage) return await message.channel.send(payload).then(poopy.functions.setMessageCooldown)
             else return await messageReply.call(message, payload).then(poopy.functions.setMessageCooldown).catch(() => { }) ??
                 await message.channel.send(payload).then(poopy.functions.setMessageCooldown)
         }
 
-        Object.defineProperty(poopy.modules.Discord.DMChannel.prototype, 'guild', {
-            get: function() {
-                return {
-                    ownerId: this.recipient.id,
-                    id: `DM${this.recipient.id}`,
-                    name: `${this.recipient.username}'s DMs`,
-                    fetchAuditLogs: async () => {
-                        return {
-                            entries: new FakeCollection()
-                        }
-                    },
-                    emojis: {
-                        cache: new FakeCollection()
-                    },
-                    channels: {
-                        cache: new FakeCollection()
-                    },
-                    members: {
-                        fetch: async () => { },
-                        cache: new FakeCollection()
-                    }
-                }
-            }
-        })
+        poopy.modules.Discord.User.prototype.permissions = { has: () => true }
+        poopy.modules.Discord.DMChannel.prototype.permissionsFor = () => {
+            return { has: () => true }
+        }
 
         delete poopy.modules.Discord.Guild.prototype.leave
 
@@ -4181,7 +4161,61 @@ class Poopy {
         poopy.callbacks.messageCallback = async msg => {
             poopy.data['bot-data']['messages']++
 
-            if (!msg.guild) {
+            if (!msg.member) Object.defineProperty(msg, 'member', {
+                value: msg.author
+            })
+
+            if (!msg.guild) Object.defineProperty(msg, 'guild', {
+                value: {
+                    ownerId: msg.author.id,
+                    id: `DM${msg.author.id}`,
+                    name: `${msg.author.username}'s DMs`,
+                    fetchAuditLogs: async () => {
+                        return {
+                            entries: new FakeCollection()
+                        }
+                    },
+                    emojis: {
+                        cache: new FakeCollection()
+                    },
+                    channels: {
+                        cache: new FakeCollection()
+                    },
+                    members: {
+                        fetch: async () => { },
+                        resolve: () => { },
+                        cache: new FakeCollection()
+                    }
+                }
+            })
+
+            if (!msg.channel.guild) Object.defineProperty(msg.channel, 'guild', {
+                value: {
+                    ownerId: msg.author.id,
+                    id: `DM${msg.author.id}`,
+                    name: `${msg.author.username}'s DMs`,
+                    fetchAuditLogs: async () => {
+                        return {
+                            entries: new FakeCollection()
+                        }
+                    },
+                    emojis: {
+                        cache: new FakeCollection()
+                    },
+                    channels: {
+                        cache: new FakeCollection()
+                    },
+                    members: {
+                        fetch: async () => { },
+                        resolve: () => { },
+                        cache: new FakeCollection()
+                    }
+                }
+            })
+
+            var prefix = poopy.data['guild-data'][msg.guild.id]?.['prefix'] ?? poopy.config.globalPrefix
+
+            if (msg.channel.type == 'DM' && !msg.isCommand && !msg.includes(prefix)) {
                 if (msg.author.bot || msg.author.id == poopy.bot.user.id) return
                 await msg.channel.sendTyping().catch(() => { })
                 await poopy.functions.sleep(Math.floor(Math.random() * 500) + 500)
@@ -4216,7 +4250,6 @@ class Poopy {
                 return
             }
 
-            var prefix = poopy.data['guild-data'][msg.guild.id]['prefix']
             var ignored = ['eval', 'execute', 'localcommands', 'localcmds', 'servercommands', 'servercmds', 'commandtemplates', 'cmdtemplates', 'messages', 'compile']
             var webhook = await msg.fetchWebhook().catch(() => { })
 
@@ -4340,7 +4373,7 @@ class Poopy {
 
                     msg.oldcontent = cmd
 
-                    if (!(ignored.find(name => cmd.toLowerCase().includes(name.toLowerCase()))) && ((!msg.author.bot && msg.author.id != poopy.bot.user.id) || poopy.config.allowbotusage)) {
+                    if (!(ignored.find(name => cmd.toLowerCase().startsWith(`${prefix.toLowerCase()}${name.toLowerCase()}`))) && ((!msg.author.bot && msg.author.id != poopy.bot.user.id) || poopy.config.allowbotusage)) {
                         var change = await poopy.functions.getKeywordsFor(cmd, msg, false, { resetattempts: true }).catch(async err => {
                             await msg.reply({
                                 content: err.stack,
@@ -4875,7 +4908,7 @@ class Poopy {
 
                         var cmdargs = findCmd.args
 
-                        var prefix = poopy.data['guild-data'][interaction.guild?.id]?.prefix ?? poopy.config.globalPrefix
+                        var prefix = poopy.data['guild-data'][interaction.guild?.id]?.['prefix'] ?? poopy.config.globalPrefix
                         var argcontent = []
 
                         var extracontent = interaction.options.getString('extrapayload') ?? ''
@@ -4928,7 +4961,7 @@ class Poopy {
 
                         if (!interaction.guild) {
                             Object.defineProperty(interaction, 'guild', {
-                                get: function() {
+                                get: function () {
                                     return {
                                         ownerId: this.user.id,
                                         id: `DM${this.user.id}`,
