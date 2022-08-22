@@ -269,8 +269,7 @@ class Poopy {
             var channel = this
 
             await poopy.functions.waitMessageCooldown()
-            if ((channel.type == 'DM' || channel.type == 'GROUP_DM') &&
-                poopy.tempdata[channel.guild.id][channel.id]['shut']) return
+            if (channel.guild && poopy.tempdata[channel.guild.id][channel.id]['shut']) return
 
             return await channelSend.call(channel, payload).then(poopy.functions.setMessageCooldown)
         }
@@ -280,8 +279,7 @@ class Poopy {
             var message = this
 
             await poopy.functions.waitMessageCooldown()
-            if ((message.channel.type == 'DM' || message.channel.type == 'GROUP_DM') &&
-                poopy.tempdata[message.guild.id][message.channel.id]['shut']) return
+            if (message.guild && poopy.tempdata[message.guild.id][message.channel.id]['shut']) return
 
             if (poopy.config.allowbotusage) return await message.channel.send(payload).then(poopy.functions.setMessageCooldown)
             else return await messageReply.call(message, payload).then(poopy.functions.setMessageCooldown).catch(() => { }) ??
@@ -4158,11 +4156,12 @@ class Poopy {
         poopy.callbacks.messageCallback = async msg => {
             poopy.data['bot-data']['messages']++
 
-            if (msg.channel.type === 'DM' || msg.channel.type === 'GROUP_DM') {
+            if (!msg.guild) {
                 if (msg.author.bot || msg.author.id == poopy.bot.user.id) return
+                await msg.channel.sendTyping().catch(() => { })
                 await poopy.functions.sleep(Math.floor(Math.random() * 500) + 500)
                 await msg.channel.send(poopy.arrays.dmPhrases[Math.floor(Math.random() * poopy.arrays.dmPhrases.length)]
-                    .replace(/{mention}/, `<@${msg.author.id}>`)).catch(() => { })
+                    .replace(/{mention}/, msg.author.toString())).catch(() => { })
                 return
             }
 
@@ -4851,7 +4850,7 @@ class Poopy {
 
                         var cmdargs = findCmd.args
 
-                        var prefix = poopy.data['guild-data'][interaction.guild.id]['prefix']
+                        var prefix = poopy.data['guild-data'][interaction.guild.id]?.prefix ?? poopy.config.globalPrefix
                         var argcontent = []
 
                         var extracontent = interaction.options.getString('extrapayload') ?? ''
@@ -4900,6 +4899,29 @@ class Poopy {
                             users: new FakeCollection(),
                             members: new FakeCollection(),
                             roles: new FakeCollection()
+                        }
+
+                        if (!interaction.guild) {
+                            interaction.guild = {
+                                ownerId: interaction.user.id,
+                                id: `DM${interaction.user.id}`,
+                                name: `${interaction.user.username}'s DMs`,
+                                fetchAuditLogs: async () => {
+                                    return {
+                                        entries: new FakeCollection()
+                                    }
+                                },
+                                emojis: {
+                                    cache: new FakeCollection()
+                                },
+                                channels: {
+                                    cache: new FakeCollection()
+                                },
+                                members: {
+                                    fetch: async () => { },
+                                    cache: new FakeCollection()
+                                }
+                            }
                         }
 
                         interaction.edit = interaction.editReply
