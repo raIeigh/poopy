@@ -286,6 +286,31 @@ class Poopy {
                 await message.channel.send(payload).then(poopy.functions.setMessageCooldown)
         }
 
+        Object.defineProperty(poopy.modules.Discord.DMChannel.prototype, 'guild', {
+            get: function() {
+                return {
+                    ownerId: this.recipient.id,
+                    id: `DM${this.recipient.id}`,
+                    name: `${this.recipient.username}'s DMs`,
+                    fetchAuditLogs: async () => {
+                        return {
+                            entries: new FakeCollection()
+                        }
+                    },
+                    emojis: {
+                        cache: new FakeCollection()
+                    },
+                    channels: {
+                        cache: new FakeCollection()
+                    },
+                    members: {
+                        fetch: async () => { },
+                        cache: new FakeCollection()
+                    }
+                }
+            }
+        })
+
         delete poopy.modules.Discord.Guild.prototype.leave
 
         poopy.statuses = [
@@ -4902,26 +4927,30 @@ class Poopy {
                         }
 
                         if (!interaction.guild) {
-                            interaction.guild = {
-                                ownerId: interaction.user.id,
-                                id: `DM${interaction.user.id}`,
-                                name: `${interaction.user.username}'s DMs`,
-                                fetchAuditLogs: async () => {
+                            Object.defineProperty(interaction, 'guild', {
+                                get: function() {
                                     return {
-                                        entries: new FakeCollection()
+                                        ownerId: this.user.id,
+                                        id: `DM${this.user.id}`,
+                                        name: `${this.user.username}'s DMs`,
+                                        fetchAuditLogs: async () => {
+                                            return {
+                                                entries: new FakeCollection()
+                                            }
+                                        },
+                                        emojis: {
+                                            cache: new FakeCollection()
+                                        },
+                                        channels: {
+                                            cache: new FakeCollection()
+                                        },
+                                        members: {
+                                            fetch: async () => { },
+                                            cache: new FakeCollection()
+                                        }
                                     }
-                                },
-                                emojis: {
-                                    cache: new FakeCollection()
-                                },
-                                channels: {
-                                    cache: new FakeCollection()
-                                },
-                                members: {
-                                    fetch: async () => { },
-                                    cache: new FakeCollection()
                                 }
-                            }
+                            })
                         }
 
                         interaction.edit = interaction.editReply
