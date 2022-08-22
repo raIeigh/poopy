@@ -173,12 +173,12 @@ class Poopy {
 
         // these are functions
         poopy.functions.getEmojis = require('@jimp/plugin-print/emojis')
-        //poopy.functions.braille = require('./modules/braille')
+        poopy.functions.braille = require('./modules/braille')
         poopy.functions.lingo = require('./modules/lingo')
         poopy.functions.gibberish = require('./modules/gibberish')
         poopy.functions.markov = require('./modules/markov')
-        //poopy.functions.averageColor = require('./modules/averageColor')
-        //poopy.functions.spectrogram = require('./modules/spectrogram')
+        poopy.functions.averageColor = require('./modules/averageColor')
+        poopy.functions.spectrogram = require('./modules/spectrogram')
         poopy.functions.wackywebm = require('./modules/wackywebm')
         poopy.functions.getAllData = require('./modules/dataGathering').getAllData
         poopy.functions.updateAllData = require('./modules/dataGathering').updateAllData
@@ -1238,7 +1238,7 @@ class Poopy {
             if (poopy.config.stfu || poopy.config.noInfoPost) return
 
             var avatar = poopy.bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' })
-            var color = { r: 255, b: 255, g: 255 }//await poopy.functions.averageColor(avatar)
+            var color = await poopy.functions.averageColor(avatar)
 
             var infoMsg
             if (poopy.config.textEmbeds) infoMsg = await poopy.bot.guilds.cache.get('834431435704107018')?.channels.cache.get('967083645619830834')?.send({
