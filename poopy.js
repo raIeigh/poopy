@@ -4850,7 +4850,7 @@ class Poopy {
 
                         var cmdargs = findCmd.args
 
-                        var prefix = poopy.data['guild-data'][interaction.guild.id]?.prefix ?? poopy.config.globalPrefix
+                        var prefix = poopy.data['guild-data'][interaction.guild?.id]?.prefix ?? poopy.config.globalPrefix
                         var argcontent = []
 
                         var extracontent = interaction.options.getString('extrapayload') ?? ''
