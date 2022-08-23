@@ -22,7 +22,7 @@ module.exports = {
             var fCmds = poopy.commands.filter(cmd => 
                 cmd.name.find(name => name.toLowerCase().includes(saidMessage.toLowerCase()))
             ).concat(
-                poopy.data['guild-data'][interaction.guild.id]['localcmds'].filter(cmd =>
+                poopy.data['guild-data'][msg.guild.id]['localcmds'].filter(cmd =>
                     cmd.name.toLowerCase().includes(saidMessage.toLowerCase())
                 ).map(lcmd => {
                     return {

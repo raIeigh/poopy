@@ -4942,7 +4942,6 @@ class Poopy {
                             findArg.autocomplete
 
                         var choices = autocompleteValues
-                            .filter(choice => (choice.name ?? choice).toLowerCase().includes(focused.value.toLowerCase()))
                             .sort((a, b) =>
                                 Math.abs(
                                     1 - poopy.functions.similarity(a.name ?? a, focused.value) +
