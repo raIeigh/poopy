@@ -142,6 +142,7 @@ class Poopy {
         poopy.modules.REST = require('@discordjs/rest').REST
         poopy.modules.Routes = require('discord-api-types/v9').Routes
         poopy.modules.DiscordBuilders = require('@discordjs/builders')
+        poopy.modules.DiscordCollection = require('@discordjs/collection')
         poopy.modules.fs = require('fs-extra')
         poopy.modules.nodefs = require('fs')
         poopy.modules.archiver = require('archiver')
@@ -246,17 +247,6 @@ class Poopy {
         poopy.vars.cps = 0
 
         // modifying discord.js stuff haha
-        class FakeCollection {
-            constructor() {
-                this.get = () => { }
-                this.find = () => { }
-                this.forEach = () => { }
-                this.map = () => { }
-                this.first = () => { }
-                this.size = 0
-            }
-        }
-
         class FakeCollector {
             constructor() {
                 this.on = () => { }
@@ -286,11 +276,6 @@ class Poopy {
             if (poopy.config.allowbotusage) return await message.channel.send(payload).then(poopy.functions.setMessageCooldown)
             else return await messageReply.call(message, payload).then(poopy.functions.setMessageCooldown).catch(() => { }) ??
                 await message.channel.send(payload).then(poopy.functions.setMessageCooldown)
-        }
-
-        poopy.modules.Discord.User.prototype.permissions = { has: () => true }
-        poopy.modules.Discord.DMChannel.prototype.permissionsFor = () => {
-            return { has: () => true }
         }
 
         delete poopy.modules.Discord.Guild.prototype.leave
@@ -3153,51 +3138,56 @@ class Poopy {
 
             if (!msg.guild && (msg.user || msg.author)) Object.defineProperty(msg, 'guild', {
                 value: {
-                    ownerId: (msg.user || msg.author).id,
-                    id: `DM${(msg.user || msg.author).id}`,
-                    name: `${(msg.user || msg.author).username}'s DMs`,
+                    ownerId: msg.channel.ownerId || (msg.user || msg.author).id,
+                    id: msg.channel.id,
+                    name: msg.channel.name || `${(msg.user || msg.author).username}'s DMs`,
                     fetchAuditLogs: async () => {
                         return {
-                            entries: new FakeCollection()
+                            entries: new poopy.modules.DiscordCollection.Collection()
                         }
                     },
                     emojis: {
-                        cache: new FakeCollection()
+                        cache: new poopy.modules.DiscordCollection.Collection()
                     },
                     channels: {
-                        cache: new FakeCollection()
+                        cache: new poopy.modules.DiscordCollection.Collection([[msg.channel.id, msg.channel]])
                     },
                     members: {
-                        fetch: async () => { },
-                        resolve: () => { },
-                        cache: new FakeCollection()
+                        fetch: async () => msg.channel.recipient ? (msg.channel.recipient.id == id && msg.channel.recipient) : msg.channel.recipients && msg.channel.recipients.get(id),
+                        resolve: (id) => msg.channel.recipient ? (msg.channel.recipient.id == id && msg.channel.recipient) : msg.channel.recipients && msg.channel.recipients.get(id),
+                        cache: new poopy.modules.DiscordCollection.Collection(msg.channel.recipients ? msg.channel.recipients.map(user => [user.id, user]) : [[msg.channel.recipient.id, msg.channel.recipient]])
                     }
                 }
             })
 
             if (!msg.channel.guild && (msg.user || msg.author)) Object.defineProperty(msg.channel, 'guild', {
                 value: {
-                    ownerId: (msg.user || msg.author).id,
-                    id: `DM${(msg.user || msg.author).id}`,
-                    name: `${(msg.user || msg.author).username}'s DMs`,
+                    ownerId: msg.channel.ownerId || (msg.user || msg.author).id,
+                    id: msg.channel.id,
+                    name: msg.channel.name || `${(msg.user || msg.author).username}'s DMs`,
                     fetchAuditLogs: async () => {
                         return {
-                            entries: new FakeCollection()
+                            entries: new poopy.modules.DiscordCollection.Collection()
                         }
                     },
                     emojis: {
-                        cache: new FakeCollection()
+                        cache: new poopy.modules.DiscordCollection.Collection()
                     },
                     channels: {
-                        cache: new FakeCollection()
+                        cache: new poopy.modules.DiscordCollection.Collection([[msg.channel.id, msg.channel]])
                     },
                     members: {
-                        fetch: async () => { },
-                        resolve: () => { },
-                        cache: new FakeCollection()
+                        fetch: async () => msg.channel.recipient ? (msg.channel.recipient.id == id && msg.channel.recipient) : msg.channel.recipients && msg.channel.recipients.get(id),
+                        resolve: (id) => msg.channel.recipient ? (msg.channel.recipient.id == id && msg.channel.recipient) : msg.channel.recipients && msg.channel.recipients.get(id),
+                        cache: new poopy.modules.DiscordCollection.Collection(msg.channel.recipients ? msg.channel.recipients.map(user => [user.id, user]) : [[msg.channel.recipient.id, msg.channel.recipient]])
                     }
                 }
             })
+
+            if (!(msg.user || msg.author).permissions) (msg.user || msg.author).permissions = { has: () => true }
+            if (!msg.channel.permissionsFor) msg.channel.permissionsFor = () => {
+                return { has: () => true }
+            }
         }
 
         poopy.functions.getKeywordsFor = async function (string, msg, isBot, { extrakeys = {}, extrafuncs = {}, resetattempts = false, ownermode = false, declaredonly = false } = {}) {
@@ -4263,9 +4253,9 @@ class Poopy {
         }
 
         poopy.callbacks.messageCallback = async msg => {
-            poopy.data['bot-data']['messages']++
-
             poopy.functions.dmSupport(msg)
+
+            poopy.data['bot-data']['messages']++
 
             var prefix = poopy.data['guild-data'][msg.guild.id]?.['prefix'] ?? poopy.config.globalPrefix
 
@@ -4284,8 +4274,8 @@ class Poopy {
             }
 
             await poopy.functions.gatherData(msg).catch(() => { })
-            msg.channel.onsfw = msg.channel.nsfw
-            msg.channel.nsfw = poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['nsfw']
+            msg.channel.onsfw = !!msg.channel.nsfw
+            msg.channel.nsfw = !!poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['nsfw']
 
             var guildfilter = poopy.config.guildfilter
             var channelfilter = poopy.config.channelfilter
@@ -5027,40 +5017,13 @@ class Poopy {
                         interaction.content = `${prefix}${content}`
                         interaction.author = interaction.user
                         interaction.bot = false
-                        interaction.attachments = new FakeCollection()
+                        interaction.attachments = new poopy.modules.DiscordCollection.Collection()
                         interaction.embeds = []
-                        interaction.stickers = new FakeCollection()
+                        interaction.stickers = new poopy.modules.DiscordCollection.Collection()
                         interaction.mentions = {
-                            users: new FakeCollection(),
-                            members: new FakeCollection(),
-                            roles: new FakeCollection()
-                        }
-
-                        if (!interaction.guild) {
-                            Object.defineProperty(interaction, 'guild', {
-                                get: function () {
-                                    return {
-                                        ownerId: this.user.id,
-                                        id: `DM${this.user.id}`,
-                                        name: `${this.user.username}'s DMs`,
-                                        fetchAuditLogs: async () => {
-                                            return {
-                                                entries: new FakeCollection()
-                                            }
-                                        },
-                                        emojis: {
-                                            cache: new FakeCollection()
-                                        },
-                                        channels: {
-                                            cache: new FakeCollection()
-                                        },
-                                        members: {
-                                            fetch: async () => { },
-                                            cache: new FakeCollection()
-                                        }
-                                    }
-                                }
-                            })
+                            users: new poopy.modules.DiscordCollection.Collection(),
+                            members: new poopy.modules.DiscordCollection.Collection(),
+                            roles: new poopy.modules.DiscordCollection.Collection()
                         }
 
                         interaction.edit = interaction.editReply
