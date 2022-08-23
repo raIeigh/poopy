@@ -4307,6 +4307,9 @@ class Poopy {
             var webhook = await msg.fetchWebhook().catch(() => { })
 
             if (webhook || !msg.guild || !msg.channel) {
+                console.log(msg.author.id)
+                console.log(msg.id)
+                console.log(poopy.tempdata[msg.author.id])
                 delete poopy.tempdata[msg.author.id][msg.id]
                 return
             }
