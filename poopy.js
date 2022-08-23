@@ -4285,7 +4285,7 @@ class Poopy {
                 return
             }
 
-            await poopy.functions.gatherData(msg).catch(() => { })
+            await poopy.functions.gatherData(msg).catch((e) => console.log(e))
             msg.channel.onsfw = !!msg.channel.nsfw
             msg.channel.nsfw = !!poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['nsfw']
 
