@@ -4944,11 +4944,11 @@ class Poopy {
                         var choices = autocompleteValues
                             .sort((a, b) =>
                                 Math.abs(
-                                    1 - poopy.functions.similarity(a.name ?? a, focused.value) +
-                                    (a.name ?? a).toLowerCase().includes(focused.value.toLowerCase())
+                                    1 - (poopy.functions.similarity(a.name ?? a, focused.value) +
+                                    (a.name ?? a).toLowerCase().includes(focused.value.toLowerCase()))
                                 ) - Math.abs(
-                                    1 - poopy.functions.similarity(b.name ?? b, focused.value) +
-                                    (b.name ?? b).toLowerCase().includes(focused.value.toLowerCase())
+                                    1 - (poopy.functions.similarity(b.name ?? b, focused.value) +
+                                    (b.name ?? b).toLowerCase().includes(focused.value.toLowerCase()))
                                 )
                             ).slice(0, 25)
 

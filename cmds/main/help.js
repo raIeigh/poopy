@@ -26,7 +26,7 @@ module.exports = {
                     cmd.name.toLowerCase().includes(saidMessage.toLowerCase())
                 ).map(lcmd => {
                     return {
-                        name: lcmd,
+                        name: [lcmd],
                         help: {
                             name: `${lcmd.name}${lcmd.syntax ? ` ${lcmd.syntax}` : ''}`,
                             value: lcmd.description
