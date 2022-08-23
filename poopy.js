@@ -3230,7 +3230,7 @@ class Poopy {
                 return string
             }
 
-            while (poopy.functions.getKeyFunc(string, { extrakeys: extradkeys, extrafuncs: extradfuncs, declaredonly: declaredonly }) !== false && poopy.tempdata[msg.author.id][msg.id].?['return'] == undefined) {
+            while (poopy.functions.getKeyFunc(string, { extrakeys: extradkeys, extrafuncs: extradfuncs, declaredonly: declaredonly }) !== false && poopy.tempdata[msg.author.id][msg.id]?.['return'] == undefined) {
                 if (!started || !poopy.tempdata[msg.author.id][msg.id]) {
                     if (!poopy.tempdata[msg.author.id][msg.id]) {
                         poopy.tempdata[msg.author.id][msg.id] = {}
