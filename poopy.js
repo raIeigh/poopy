@@ -3190,8 +3190,12 @@ class Poopy {
             }
             
             if (msg.mentions) {
-                if (!msg.mentions.members) msg.mentions.members = msg.mentions.users || new poopy.modules.DiscordCollection.Collection()
-                if (!msg.mentions.users) msg.mentions.users = msg.mentions.members || new poopy.modules.DiscordCollection.Collection()
+                if (!msg.mentions.members) Object.defineProperty(msg.mentions, 'members', {
+                    value: msg.mentions.users || new poopy.modules.DiscordCollection.Collection()
+                })
+                if (!msg.mentions.users) Object.defineProperty(msg.mentions, 'users', {
+                    value: msg.mentions.members || new poopy.modules.DiscordCollection.Collection()
+                })
             }
         }
 
