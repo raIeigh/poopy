@@ -26,7 +26,7 @@ module.exports = {
                     cmd.name.toLowerCase().includes(saidMessage.toLowerCase())
                 ).map(lcmd => {
                     return {
-                        name: [lcmd],
+                        name: [lcmd.name],
                         help: {
                             name: `${lcmd.name}${lcmd.syntax ? ` ${lcmd.syntax}` : ''}`,
                             value: lcmd.description
@@ -37,7 +37,10 @@ module.exports = {
             )
 
             if (fCmds.length) {
-                fCmds.sort((a, b) => Math.abs(1 - poopy.functions.similarity(a.name.find(name => name.toLowerCase().includes(saidMessage.toLowerCase())), saidMessage)) - Math.abs(1 - poopy.functions.similarity(b.name.find(name => name.toLowerCase().includes(saidMessage.toLowerCase())), saidMessage)))
+                fCmds.sort((a, b) => 
+                    Math.abs(1 - poopy.functions.similarity(a.name.find(name => name.toLowerCase().includes(saidMessage.toLowerCase())), saidMessage)) -
+                    Math.abs(1 - poopy.functions.similarity(b.name.find(name => name.toLowerCase().includes(saidMessage.toLowerCase())), saidMessage))
+                )
 
                 var findCmds = fCmds.map(cmd => {
                     return {

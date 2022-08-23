@@ -4944,13 +4944,16 @@ class Poopy {
                         var choices = autocompleteValues
                             .sort((a, b) =>
                                 Math.abs(
-                                    1 - (poopy.functions.similarity(a.name ?? a, focused.value) +
-                                    (a.name ?? a).toLowerCase().includes(focused.value.toLowerCase()))
+                                    1 - poopy.functions.similarity(a.name ?? a, focused.value)
                                 ) - Math.abs(
-                                    1 - (poopy.functions.similarity(b.name ?? b, focused.value) +
-                                    (b.name ?? b).toLowerCase().includes(focused.value.toLowerCase()))
+                                    1 - poopy.functions.similarity(b.name ?? b, focused.value)
                                 )
-                            ).slice(0, 25)
+                            ).sort((a, b) => {
+                                var x = (a.name ?? a).toLowerCase().includes(focused.value.toLowerCase())
+                                var y = (b.name ?? b).toLowerCase().includes(focused.value.toLowerCase())
+
+                                return (x === y) ? 0 : x ? -1 : 1
+                            }).slice(0, 25)
 
                         await interaction.respond(
                             choices.map(choice => ({ name: (choice.name ?? choice).replace(/\n|\r/g, ' ').substring(0, 100) || '(blank)', value: choice.value ?? choice }))
