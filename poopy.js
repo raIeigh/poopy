@@ -3160,7 +3160,7 @@ class Poopy {
                 }
             })
 
-            if (!msg.channel.guild && (msg.user || msg.author)) Object.defineProperty(msg.channel, 'guild', {
+            if (msg.channel && !msg.channel.guild && (msg.user || msg.author)) Object.defineProperty(msg.channel, 'guild', {
                 value: {
                     ownerId: msg.channel.ownerId || (msg.user || msg.author).id,
                     id: msg.channel.id,
@@ -4911,12 +4911,12 @@ class Poopy {
         }
 
         poopy.callbacks.interactionCallback = async (interaction) => {
-            poopy.functions.dmSupport(interaction)
-
             var interactionFunctions = [
                 {
                     type: interaction.isAutocomplete && interaction.isAutocomplete(),
                     execute: async () => {
+                        poopy.functions.dmSupport(interaction)
+
                         var cmd = interaction.commandName
                         var subcommand = interaction.options.getSubcommand(false)
                         var commandGroup = findGroup(subcommand ?? cmd)
@@ -5032,6 +5032,7 @@ class Poopy {
                         interaction.mentions = {
                             users: new poopy.modules.DiscordCollection.Collection(),
                             members: new poopy.modules.DiscordCollection.Collection(),
+                            users: new poopy.modules.DiscordCollection.Collection(),
                             roles: new poopy.modules.DiscordCollection.Collection()
                         }
 
