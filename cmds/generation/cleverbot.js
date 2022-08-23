@@ -1,6 +1,6 @@
 module.exports = {
     name: ['cleverbot', 'respond'],
-    args: [{"name":"message","required":false,"specifarg":false,"orig":"{message}"},{"name":"once","required":false,"specifarg":true,"orig":"[-once]"}],
+    args: [{ "name": "message", "required": false, "specifarg": false, "orig": "{message}" }, { "name": "once", "required": false, "specifarg": true, "orig": "[-once]" }],
     execute: async function (msg, args) {
         let poopy = this
 
@@ -57,8 +57,11 @@ module.exports = {
             poopy.tempdata[guildid][channelid][authorid].messageCollector = collector
 
             collector.on('collect', async m => {
-                if (poopy.tempdata[msg.guild.id][msg.channel.id]['shut']) return
                 try {
+                    poopy.functions.dmSupport(m)
+
+                    if (poopy.tempdata[msg.guild.id][msg.channel.id]['shut']) return
+
                     var content = await poopy.functions.getKeywordsFor(m.content ?? '', m, false).catch(() => { }) ?? m.content
 
                     collector.resetTimer()
@@ -83,8 +86,8 @@ module.exports = {
             })
 
             collector.on('end', async (_, reason) => {
-                if (poopy.tempdata[msg.guild.id][msg.channel.id]['shut']) return
                 try {
+                    if (poopy.tempdata[msg.guild.id][msg.channel.id]['shut']) return
                     delete poopy.tempdata[guildid][channelid][authorid].messageCollector
                     if (reason === 'time') {
                         channel.send({

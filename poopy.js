@@ -119,6 +119,8 @@ class Poopy {
             },
             commandLimit: 5 / 2,
             keyLimit: 500 / 2,
+            rateLimit: 3,
+            rateLimitTime: 60000 * 2,
             memLimit: 0,
             quitOnDestroy: false
         }
@@ -1709,6 +1711,8 @@ class Poopy {
                     var collector = yesnoMsg.createReactionCollector({ time: 60_000 })
 
                     collector.on('collect', (reaction, user) => {
+                        poopy.functions.dmSupport(reaction)
+
                         if (!(user.id === who && ((user.id !== poopy.bot.user.id && !user.bot) || poopy.config.allowbotusage))) {
                             return
                         }
@@ -1741,6 +1745,8 @@ class Poopy {
                     var collector = yesnoMsg.createMessageComponentCollector({ time: 60_000 })
 
                     collector.on('collect', (button) => {
+                        poopy.functions.dmSupport(button)
+
                         button.deferUpdate().catch(() => { })
 
                         if (!(button.user.id === who && ((button.user.id !== poopy.bot.user.id && !button.user.bot) || poopy.config.allowbotusage))) {
@@ -1810,6 +1816,8 @@ class Poopy {
                 var collector = selectMsg.createMessageComponentCollector({ time: 60_000 })
 
                 collector.on('collect', (option) => {
+                    poopy.functions.dmSupport(option)
+
                     option.deferUpdate().catch(() => { })
 
                     if (!(option.user.id === who && ((option.user.id !== poopy.bot.user.id && !option.user.bot) || poopy.config.allowbotusage))) {
@@ -1879,6 +1887,8 @@ class Poopy {
                             var pageCollector = channel.createMessageCollector({ time: 30000 })
 
                             pageCollector.on('collect', (msg) => {
+                                poopy.functions.dmSupport(msg)
+
                                 if (!(msg.author.id === who && ((msg.author.id !== poopy.bot.user.id && !msg.author.bot) || poopy.config.allowbotusage))) {
                                     return
                                 }
@@ -2013,6 +2023,8 @@ class Poopy {
                 var collector = resultsMsg.createReactionCollector({ time: 60_000 })
 
                 collector.on('collect', async (reaction, user) => {
+                    poopy.functions.dmSupport(reaction)
+
                     if (!(user.id === who && ((user.id !== poopy.bot.user.id && !user.bot) || poopy.config.allowbotusage)) || usingButton) {
                         return
                     }
@@ -2073,6 +2085,8 @@ class Poopy {
                 var collector = resultsMsg.createMessageComponentCollector({ time: 60_000 })
 
                 collector.on('collect', async (button) => {
+                    poopy.functions.dmSupport(button)
+
                     if (!(button.user.id === who && ((button.user.id !== poopy.bot.user.id && !button.user.bot) || poopy.config.allowbotusage)) || usingButton) {
                         button.deferUpdate().catch(() => { })
                         return
@@ -2095,7 +2109,7 @@ class Poopy {
 
                             page = newpage
 
-                            var resultEmbed = await pageFunc(page).catch(() => { })
+                            var resultEmbed = await pageFunc(page).catch((e) => console.log(e))
                             var sendObject = {
                                 components: components.slice()
                             }
@@ -2120,7 +2134,7 @@ class Poopy {
                             else sendObject.embeds = [resultEmbed]
 
                             resultsMsg.edit(sendObject).catch(() => { })
-                        }
+                        } else console.log('rehtard')
                         usingButton = false
                     }
                 })
@@ -3032,7 +3046,7 @@ class Poopy {
 
         poopy.functions.lastUrl = function (msg, i, tempdir, global) {
             var urlsGlobal = !global &&
-                poopy.tempdata[msg.author.id][msg.id]['lastUrls'] ||
+                poopy.tempdata[msg.author.id][msg.id]?.['lastUrls'] ||
                 poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrls']
             var urls = urlsGlobal.slice()
             var url = urls[i]
@@ -3060,7 +3074,7 @@ class Poopy {
 
         poopy.functions.lastUrls = function (msg, tempdir, global) {
             var urlsGlobal = !global &&
-                poopy.tempdata[msg.author.id][msg.id]['lastUrls'] ||
+                poopy.tempdata[msg.author.id][msg.id]?.['lastUrls'] ||
                 poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrls']
             var urls = urlsGlobal.slice()
 
@@ -3098,9 +3112,92 @@ class Poopy {
             lastUrls.splice(100)
             poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrls'] = lastUrls
 
+            if (!poopy.tempdata[msg.author.id][msg.id]) return
+
             var lastUrls = [url].concat(poopy.functions.lastUrls(msg))
             lastUrls.splice(100)
             poopy.tempdata[msg.author.id][msg.id]['lastUrls'] = lastUrls
+        }
+
+        poopy.functions.rateLimit = async function (msg) {
+            if (!poopy.tempdata[msg.author.id]) poopy.tempdata[msg.author.id] = {}
+
+            poopy.tempdata[msg.author.id]['ratelimit'] = (poopy.tempdata[msg.author.id]['ratelimit'] ?? 0) + 1
+            setTimeout(() => poopy.tempdata[msg.author.id]['ratelimit'] - 1, 60000)
+
+            if (poopy.tempdata[msg.author.id]['ratelimit'] >= poopy.config.rateLimit) {
+                poopy.tempdata[msg.author.id]['ratelimits'] = (poopy.tempdata[msg.author.id]['ratelimits'] ?? 0.5) * 2
+                var rateLimitTime = poopy.config.rateLimitTime * poopy.tempdata[msg.author.id]['ratelimits']
+                setTimeout(() => {
+                    poopy.tempdata[msg.author.id]['ratelimits'] -= 1
+                }, rateLimitTime * 2)
+
+                await msg.reply(`you've been banned from using commands for ${rateLimitTime / 60000} minutes for crashing the file processor ${poopy.config.rateLimit * poopy.tempdata[msg.author.id]['ratelimits']} times LMAO!!!`).catch(() => { })
+                poopy.tempdata[msg.author.id]['ratelimited'] = Date.now() + rateLimitTime
+                setTimeout(() => {
+                    delete poopy.tempdata[msg.author.id]['ratelimited']
+                }, rateLimitTime)
+                return true
+            }
+
+            return false
+        }
+
+        poopy.functions.dmSupport = function (msg) {
+            if (!msg.author && msg.user) msg.author = msg.user
+            if (!msg.user && msg.author) msg.user = msg.author
+
+            if (!msg.member && (msg.user || msg.author)) Object.defineProperty(msg, 'member', {
+                value: (msg.user || msg.author)
+            })
+
+            if (!msg.guild && (msg.user || msg.author)) Object.defineProperty(msg, 'guild', {
+                value: {
+                    ownerId: (msg.user || msg.author).id,
+                    id: `DM${(msg.user || msg.author).id}`,
+                    name: `${(msg.user || msg.author).username}'s DMs`,
+                    fetchAuditLogs: async () => {
+                        return {
+                            entries: new FakeCollection()
+                        }
+                    },
+                    emojis: {
+                        cache: new FakeCollection()
+                    },
+                    channels: {
+                        cache: new FakeCollection()
+                    },
+                    members: {
+                        fetch: async () => { },
+                        resolve: () => { },
+                        cache: new FakeCollection()
+                    }
+                }
+            })
+
+            if (!msg.channel.guild && (msg.user || msg.author)) Object.defineProperty(msg.channel, 'guild', {
+                value: {
+                    ownerId: (msg.user || msg.author).id,
+                    id: `DM${(msg.user || msg.author).id}`,
+                    name: `${(msg.user || msg.author).username}'s DMs`,
+                    fetchAuditLogs: async () => {
+                        return {
+                            entries: new FakeCollection()
+                        }
+                    },
+                    emojis: {
+                        cache: new FakeCollection()
+                    },
+                    channels: {
+                        cache: new FakeCollection()
+                    },
+                    members: {
+                        fetch: async () => { },
+                        resolve: () => { },
+                        cache: new FakeCollection()
+                    }
+                }
+            })
         }
 
         poopy.functions.getKeywordsFor = async function (string, msg, isBot, { extrakeys = {}, extrafuncs = {}, resetattempts = false, ownermode = false, declaredonly = false } = {}) {
@@ -3116,7 +3213,7 @@ class Poopy {
             var extradkeys = declaredonly ? { ...poopy.tempdata[msg.author.id]['keydeclared'] } : { ...extrakeys, ...poopy.tempdata[msg.author.id]['keydeclared'] }
             var extradfuncs = declaredonly ? { ...poopy.tempdata[msg.author.id]['funcdeclared'] } : { ...extrafuncs, ...poopy.tempdata[msg.author.id]['funcdeclared'] }
 
-            if (poopy.functions.globalData()['bot-data']['shit'].find(id => id === msg.author.id)) {
+            if (poopy.tempdata[msg.author.id]['ratelimited'] || poopy.functions.globalData()['bot-data']['shit'].find(id => id === msg.author.id)) {
                 return string
             }
 
@@ -3143,6 +3240,10 @@ class Poopy {
 
                 if (!poopy.tempdata[msg.author.id]['funcdeclared']) {
                     poopy.tempdata[msg.author.id]['funcdeclared'] = {}
+                }
+
+                if (poopy.tempdata[msg.author.id]['ratelimited'] || poopy.functions.globalData()['bot-data']['shit'].find(id => id === msg.author.id)) {
+                    return string
                 }
 
                 if (poopy.tempdata[msg.author.id][msg.id]['keyattempts'] >= poopy.config.keyLimit) {
@@ -3372,6 +3473,7 @@ class Poopy {
             } catch (_) {
                 await msg.reply('Couldn\'t send file.').catch(() => { })
                 poopy.functions.infoPost(`Couldn\'t send file`)
+                await poopy.functions.rateLimit(msg)
 
                 if (extraOptions.keep ||
                     filepath == undefined ||
@@ -3410,6 +3512,7 @@ class Poopy {
                 } else {
                     await msg.reply('Couldn\'t send file.').catch(() => { })
                     poopy.functions.infoPost(`Couldn\'t upload catbox.moe file`)
+                    await poopy.functions.rateLimit(msg)
                 }
             } else if (extraOptions.nosend) {
                 poopy.functions.infoPost(`Saving file temporarily`)
@@ -3465,6 +3568,7 @@ class Poopy {
                     } else {
                         await msg.reply('Couldn\'t send file.').catch(() => { })
                         poopy.functions.infoPost(`Couldn\'t upload catbox.moe file`)
+                        await poopy.functions.rateLimit(msg)
                     }
                 } else returnUrl = fileMsg.attachments.first().url
             }
@@ -4161,61 +4265,11 @@ class Poopy {
         poopy.callbacks.messageCallback = async msg => {
             poopy.data['bot-data']['messages']++
 
-            if (!msg.member) Object.defineProperty(msg, 'member', {
-                value: msg.author
-            })
-
-            if (!msg.guild) Object.defineProperty(msg, 'guild', {
-                value: {
-                    ownerId: msg.author.id,
-                    id: `DM${msg.author.id}`,
-                    name: `${msg.author.username}'s DMs`,
-                    fetchAuditLogs: async () => {
-                        return {
-                            entries: new FakeCollection()
-                        }
-                    },
-                    emojis: {
-                        cache: new FakeCollection()
-                    },
-                    channels: {
-                        cache: new FakeCollection()
-                    },
-                    members: {
-                        fetch: async () => { },
-                        resolve: () => { },
-                        cache: new FakeCollection()
-                    }
-                }
-            })
-
-            if (!msg.channel.guild) Object.defineProperty(msg.channel, 'guild', {
-                value: {
-                    ownerId: msg.author.id,
-                    id: `DM${msg.author.id}`,
-                    name: `${msg.author.username}'s DMs`,
-                    fetchAuditLogs: async () => {
-                        return {
-                            entries: new FakeCollection()
-                        }
-                    },
-                    emojis: {
-                        cache: new FakeCollection()
-                    },
-                    channels: {
-                        cache: new FakeCollection()
-                    },
-                    members: {
-                        fetch: async () => { },
-                        resolve: () => { },
-                        cache: new FakeCollection()
-                    }
-                }
-            })
+            poopy.functions.dmSupport(msg)
 
             var prefix = poopy.data['guild-data'][msg.guild.id]?.['prefix'] ?? poopy.config.globalPrefix
 
-            if (msg.channel.type == 'DM' && !msg.isCommand && !msg.includes(prefix)) {
+            if (msg.channel.type == 'DM' && !msg.isCommand && !msg.content.includes(prefix)) {
                 if (msg.author.bot || msg.author.id == poopy.bot.user.id) return
                 await msg.channel.sendTyping().catch(() => { })
                 await poopy.functions.sleep(Math.floor(Math.random() * 500) + 500)
@@ -4388,7 +4442,9 @@ class Poopy {
                         msg.content = cmd
                     }
 
-                    if (!msg.guild || !msg.channel) return
+                    if (!msg.guild || !msg.channel) {
+                        return
+                    }
 
                     allcontents.push(msg.content)
 
@@ -4419,6 +4475,27 @@ class Poopy {
                         if (!msg.channel.permissionsFor(msg.guild.me).has('SEND_MESSAGES', false)) {
                             notExecuted = false
                             await msg.react(poopy.functions.randomChoice([...msg.guild.emojis.cache.keys()])).catch(() => { })
+                        }
+
+                        if (poopy.tempdata[msg.author.id]['ratelimited']) {
+                            notExecuted = false
+
+                            var totalSeconds = (poopy.tempdata[msg.author.id]['ratelimited'] - Date.now()) / 1000
+                            var days = Math.floor(totalSeconds / 86400);
+                            totalSeconds %= 86400;
+                            var hours = Math.floor(totalSeconds / 3600);
+                            totalSeconds %= 3600;
+                            var minutes = Math.floor(totalSeconds / 60);
+                            var seconds = totalSeconds % 60
+                            var times = []
+
+                            if (days) times.push(days)
+                            if (hours) times.push(hours)
+                            if (minutes) times.push(minutes)
+                            if (seconds) times.push(seconds)
+
+                            await msg.reply(`You are being rate limited. (\`${times.join(':')}\`)`).catch(() => { })
+                            return
                         }
 
                         if (poopy.functions.globalData()['bot-data']['shit'].find(id => id === msg.author.id)) {
@@ -5485,7 +5562,7 @@ class Poopy {
                     else return message.replied = await reply.call(message, payload).catch(() => { }) ?? await message.channel.send(payload)
                 }
 
-                poopy.callbacks.messageCallback(msg).catch(() => { })
+                poopy.callbacks.messageCallback(msg).catch((e) => console.log(e))
             })
             poopy.bot.on('guildCreate', (guild) => {
                 poopy.callbacks.guildCallback(guild).catch(() => { })

@@ -35,6 +35,8 @@ module.exports = {
 
             collector.on('collect', async m => {
                 try {
+                    poopy.functions.dmSupport(m)
+
                     if (poopy.tempdata[msg.guild.id][msg.channel.id]['shut']) return
                     var content = await poopy.functions.getKeywordsFor(m.content ?? '', m, false).catch(() => { }) ?? m.content
 
