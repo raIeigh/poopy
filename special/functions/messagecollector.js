@@ -38,7 +38,7 @@ module.exports = {
                     poopy.functions.dmSupport(m)
 
                     if (poopy.tempdata[msg.guild.id][msg.channel.id]['shut']) return
-                    var content = await poopy.functions.getKeywordsFor(m.content ?? '', m, false).catch(() => { }) ?? m.content
+                    var content = await poopy.functions.getKeywordsFor(m.content ?? '', m, false).catch((e) => console.log(e)) ?? m.content
 
                     var valOpts = { ...opts }
                     valOpts.extrakeys._msg = {
@@ -47,7 +47,7 @@ module.exports = {
                         }
                     }
 
-                    var filterStringM = await poopy.functions.getKeywordsFor(filterString, m, true, valOpts).catch(() => { }) ?? filterString
+                    var filterStringM = await poopy.functions.getKeywordsFor(filterString, m, true, valOpts).catch((e) => console.log(e)) ?? filterString
 
                     if (filterStringM) {
                         valOpts.extrafuncs.resettimer = {
@@ -64,24 +64,18 @@ module.exports = {
                             }
                         }
 
-                        var collect = await poopy.functions.getKeywordsFor(collectphrase, m, true, valOpts).catch(() => { }) ?? ''
+                        var collect = await poopy.functions.getKeywordsFor(collectphrase, m, true, valOpts).catch((e) => console.log(e)) ?? ''
 
                         collected.push(content)
 
-                        await poopy.functions.waitMessageCooldown(true)
                         var collectMsg = await channel.send({
                             content: collect,
                             allowedMentions: {
                                 parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && authorid !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                             }
-                        }).catch(() => { })
-                        
-                        if (collectMsg) {
-                            poopy.vars.msgcooldown = true
-                            setTimeout(() => poopy.vars.msgcooldown = false, poopy.config.msgcooldown)
-                        }
+                        }).catch((e) => console.log(e))
                     }
-                } catch (_) { }
+                } catch (e) {console.log(e)}
             })
 
             collector.on('end', async (_, reason) => {
@@ -98,18 +92,12 @@ module.exports = {
 
                         var finishphrasek = await poopy.functions.getKeywordsFor(finishphrase, msg, isBot, valOpts).catch(() => { }) ?? ''
 
-                        await poopy.functions.waitMessageCooldown(true)
                         var finishMsg = await channel.send({
                             content: finishphrasek,
                             allowedMentions: {
                                 parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && authorid !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                             }
                         }).catch(() => { })
-                        
-                        if (finishMsg) {
-                            poopy.vars.msgcooldown = true
-                            setTimeout(() => poopy.vars.msgcooldown = false, poopy.config.msgcooldown)
-                        }
                     }
                 } catch (_) { }
             })
