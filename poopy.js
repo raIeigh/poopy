@@ -3185,8 +3185,13 @@ class Poopy {
             })
 
             if ((msg.user || msg.author) && !(msg.user || msg.author).permissions) (msg.user || msg.author).permissions = { has: () => true }
-            if (!msg.channel.permissionsFor) msg.channel.permissionsFor = () => {
+            if (msg.channel && !msg.channel.permissionsFor) msg.channel.permissionsFor = () => {
                 return { has: () => true }
+            }
+            
+            if (msg.mentions) {
+                if (!msg.mentions.members) msg.mentions.members = msg.mentions.users || new poopy.modules.DiscordCollection.Collection()
+                if (!msg.mentions.users) msg.mentions.users = msg.mentions.members || new poopy.modules.DiscordCollection.Collection()
             }
         }
 
