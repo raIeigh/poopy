@@ -3184,7 +3184,7 @@ class Poopy {
                 }
             })
 
-            if (!(msg.user || msg.author).permissions) (msg.user || msg.author).permissions = { has: () => true }
+            if ((msg.user || msg.author) && !(msg.user || msg.author).permissions) (msg.user || msg.author).permissions = { has: () => true }
             if (!msg.channel.permissionsFor) msg.channel.permissionsFor = () => {
                 return { has: () => true }
             }
