@@ -278,7 +278,7 @@ class Poopy {
                 await message.channel.send(payload).then(poopy.functions.setMessageCooldown)
         }
 
-        delete poopy.modules.Discord.Guild.prototype.leave
+        if (!poopy.config.self) delete poopy.modules.Discord.Guild.prototype.leave
 
         poopy.statuses = [
             {

@@ -4,6 +4,11 @@ module.exports = {
     execute: async function (msg) {
         let poopy = this
 
+        if (msg.channel.type == 'DM') {
+            await msg.reply(`You can't get rid of me.`).catch(() => { })
+            return
+        }
+
         if (msg.member.permissions.has('MANAGE_GUILD') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || poopy.config.ownerids.find(id => id == msg.author.id)) {
             var phrases = [
                 'idiot',
@@ -48,7 +53,9 @@ module.exports = {
 
             if (confirm) {
                 await msg.reply(phrases[Math.floor(Math.random() * phrases.length)]).catch(() => { })
-                msg.guild.leave().catch(() => { })
+                
+                if (msg.channel.type == 'GROUP_DM') msg.channel.delete().catch(() => { })
+                else msg.guild.leave().catch(() => { })
             }
         } else {
             await msg.reply('You need the manage server permission to execute that!').catch(() => { })
