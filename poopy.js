@@ -3191,10 +3191,13 @@ class Poopy {
             
             if (msg.mentions) {
                 if (!msg.mentions.members) Object.defineProperty(msg.mentions, 'members', {
-                    value: msg.mentions.users || new poopy.modules.DiscordCollection.Collection()
+                    value: new poopy.modules.DiscordCollection.Collection(msg.mentions.users ? msg.mentions.users.map(user => {
+                        if (!user.user) user.user = user
+                        return [user.id, user]
+                    }) : [])
                 })
                 if (!msg.mentions.users) Object.defineProperty(msg.mentions, 'users', {
-                    value: msg.mentions.members || new poopy.modules.DiscordCollection.Collection()
+                    value: new poopy.modules.DiscordCollection.Collection(msg.mentions.members ? msg.mentions.members.map(member => [member.user.id, member.user]) : [])
                 })
             }
         }
