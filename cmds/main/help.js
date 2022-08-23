@@ -19,8 +19,22 @@ module.exports = {
 
         var saidMessage = args.slice(1).join(' ')
         if (saidMessage) {
-            var fCmds = poopy.commands.filter(cmd => cmd.name.find(name => name.toLowerCase().includes(saidMessage.toLowerCase())))
-                .concat(poopy.data['guild-data'][interaction.guild.id]['localcmds'].filter(cmd => cmd.name.toLowerCase().includes(saidMessage.toLowerCase())))
+            var fCmds = poopy.commands.filter(cmd => 
+                cmd.name.find(name => name.toLowerCase().includes(saidMessage.toLowerCase()))
+            ).concat(
+                poopy.data['guild-data'][interaction.guild.id]['localcmds'].filter(cmd =>
+                    cmd.name.toLowerCase().includes(saidMessage.toLowerCase())
+                ).map(lcmd => {
+                    return {
+                        name: lcmd,
+                        help: {
+                            name: `${lcmd.name}${lcmd.syntax ? ` ${lcmd.syntax}` : ''}`,
+                            value: lcmd.description
+                        },
+                        type: 'Local'
+                    }
+                })
+            )
 
             if (fCmds.length) {
                 fCmds.sort((a, b) => Math.abs(1 - poopy.functions.similarity(a.name.find(name => name.toLowerCase().includes(saidMessage.toLowerCase())), saidMessage)) - Math.abs(1 - poopy.functions.similarity(b.name.find(name => name.toLowerCase().includes(saidMessage.toLowerCase())), saidMessage)))
@@ -31,7 +45,7 @@ module.exports = {
                         fields: [
                             {
                                 "name": "Description",
-                                "value": cmd.help.value
+                                "value": cmd.help.value || 'No description.'
                             },
                             {
                                 "name": "Cooldown",
