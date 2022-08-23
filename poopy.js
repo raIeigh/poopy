@@ -4911,6 +4911,8 @@ class Poopy {
         }
 
         poopy.callbacks.interactionCallback = async (interaction) => {
+            poopy.functions.dmSupport(interaction)
+
             var interactionFunctions = [
                 {
                     type: interaction.isAutocomplete && interaction.isAutocomplete(),
