@@ -1,7 +1,7 @@
 module.exports = {
     name: ['help', 'commands', 'cmds'],
     args: [{
-        "name": "command", "required": false, "specifarg": false, "orig": "[command]", "autocomplete": function () {
+        "name": "command", "required": false, "specifarg": false, "orig": "[command]", "autocomplete": function (interaction) {
             let poopy = this
 
             var cmds = poopy.commands.map(cmd => {
