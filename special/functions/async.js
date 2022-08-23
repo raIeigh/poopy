@@ -5,7 +5,8 @@ module.exports = {
     let poopy = this
 
     var word = matches[1]
-    poopy.functions.getKeywordsFor(word, msg, isBot, opts).catch(() => { })
+    poopy.functions.getKeywordsFor(word, msg, isBot, opts)
+        .then(() => poopy.functions.deleteMsgData(msg)).catch(() => { })
     return ''
   },
   raw: true

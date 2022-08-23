@@ -3128,6 +3128,16 @@ class Poopy {
             return false
         }
 
+        poopy.functions.deleteMsgData = function (msg) {
+            if (
+                poopy.tempdata[msg.author.id] &&
+                poopy.tempdata[msg.author.id][msg.id] &&
+                poopy.tempdata[msg.author.id][msg.id]['keyexecuting'] <= 0
+            ) {
+                delete poopy.tempdata[msg.author.id][msg.id]
+            }
+        }
+
         poopy.functions.dmSupport = function (msg) {
             if (!msg.author && msg.user) msg.author = msg.user
             if (!msg.user && msg.author) msg.user = msg.author
@@ -3214,34 +3224,48 @@ class Poopy {
             var startTime = Date.now()
             var extradkeys = declaredonly ? { ...poopy.tempdata[msg.author.id]['keydeclared'] } : { ...extrakeys, ...poopy.tempdata[msg.author.id]['keydeclared'] }
             var extradfuncs = declaredonly ? { ...poopy.tempdata[msg.author.id]['funcdeclared'] } : { ...extrafuncs, ...poopy.tempdata[msg.author.id]['funcdeclared'] }
+            var started = false
 
             if (poopy.tempdata[msg.author.id]['ratelimited'] || poopy.functions.globalData()['bot-data']['shit'].find(id => id === msg.author.id)) {
                 return string
             }
 
-            while (poopy.functions.getKeyFunc(string, { extrakeys: extradkeys, extrafuncs: extradfuncs, declaredonly: declaredonly }) !== false && poopy.tempdata[msg.author.id][msg.id]['return'] == undefined) {
-                if (!poopy.tempdata[msg.author.id][msg.id]['keyattempts']) {
-                    poopy.tempdata[msg.author.id][msg.id]['keyattempts'] = 0
-                }
+            while (poopy.functions.getKeyFunc(string, { extrakeys: extradkeys, extrafuncs: extradfuncs, declaredonly: declaredonly }) !== false && poopy.tempdata[msg.author.id][msg.id].?['return'] == undefined) {
+                if (!started || !poopy.tempdata[msg.author.id][msg.id]) {
+                    if (!poopy.tempdata[msg.author.id][msg.id]) {
+                        poopy.tempdata[msg.author.id][msg.id] = {}
+                    }
 
-                if (!poopy.tempdata[msg.author.id][msg.id]['keywordsExecuted']) {
-                    poopy.tempdata[msg.author.id][msg.id]['keywordsExecuted'] = []
-                }
+                    if (!poopy.tempdata[msg.author.id][msg.id]['keyattempts']) {
+                        poopy.tempdata[msg.author.id][msg.id]['keyattempts'] = 0
+                    }
 
-                if (!poopy.tempdata[msg.author.id]['arrays']) {
-                    poopy.tempdata[msg.author.id]['arrays'] = {}
-                }
+                    if (!poopy.tempdata[msg.author.id][msg.id]['keyexecuting']) {
+                        poopy.tempdata[msg.author.id][msg.id]['keyexecuting'] = 0
+                    }
 
-                if (!poopy.tempdata[msg.author.id]['declared']) {
-                    poopy.tempdata[msg.author.id]['declared'] = {}
-                }
+                    if (!poopy.tempdata[msg.author.id][msg.id]['keywordsExecuted']) {
+                        poopy.tempdata[msg.author.id][msg.id]['keywordsExecuted'] = []
+                    }
 
-                if (!poopy.tempdata[msg.author.id]['keydeclared']) {
-                    poopy.tempdata[msg.author.id]['keydeclared'] = {}
-                }
+                    if (!poopy.tempdata[msg.author.id]['arrays']) {
+                        poopy.tempdata[msg.author.id]['arrays'] = {}
+                    }
 
-                if (!poopy.tempdata[msg.author.id]['funcdeclared']) {
-                    poopy.tempdata[msg.author.id]['funcdeclared'] = {}
+                    if (!poopy.tempdata[msg.author.id]['declared']) {
+                        poopy.tempdata[msg.author.id]['declared'] = {}
+                    }
+
+                    if (!poopy.tempdata[msg.author.id]['keydeclared']) {
+                        poopy.tempdata[msg.author.id]['keydeclared'] = {}
+                    }
+
+                    if (!poopy.tempdata[msg.author.id]['funcdeclared']) {
+                        poopy.tempdata[msg.author.id]['funcdeclared'] = {}
+                    }
+
+                    if (resetattempts) poopy.tempdata[msg.author.id][msg.id]['keyexecuting']++
+                    started = true
                 }
 
                 if (poopy.tempdata[msg.author.id]['ratelimited'] || poopy.functions.globalData()['bot-data']['shit'].find(id => id === msg.author.id)) {
@@ -3327,11 +3351,16 @@ class Poopy {
                 await poopy.functions.sleep()
             }
 
-            if (resetattempts && poopy.tempdata[msg.author.id][msg.id]['keywordsExecuted']) {
-                if (poopy.tempdata[msg.author.id][msg.id]['keywordsExecuted'].length) {
-                    poopy.functions.infoPost(`Took ${(Date.now() - startTime) / 1000} seconds to execute keywords/functions: ${poopy.tempdata[msg.author.id][msg.id]['keywordsExecuted'].map(k => `\`${k}\``).join(', ')}`)
+            if (resetattempts) {
+                if (poopy.tempdata[msg.author.id][msg.id]['keywordsExecuted']) {
+                    if (poopy.tempdata[msg.author.id][msg.id]['keywordsExecuted'].length) {
+                        poopy.functions.infoPost(`Took ${(Date.now() - startTime) / 1000} seconds to execute keywords/functions: ${poopy.tempdata[msg.author.id][msg.id]['keywordsExecuted'].map(k => `\`${k}\``).join(', ')}`)
+                    }
+                    poopy.tempdata[msg.author.id][msg.id]['keywordsExecuted'] = []
                 }
-                poopy.tempdata[msg.author.id][msg.id]['keywordsExecuted'] = []
+
+                if (poopy.tempdata[msg.author.id][msg.id]['keyexecuting'])
+                    poopy.tempdata[msg.author.id][msg.id]['keyexecuting']--
             }
 
             if (poopy.tempdata[msg.author.id][msg.id]['return'] != undefined) {
@@ -4302,7 +4331,7 @@ class Poopy {
                     ((channelfilter.blacklist && channelfilter.ids.includes(msg.channel.id)) ||
                         (!(channelfilter.blacklist) && !(channelfilter.ids.includes(msg.channel.id)))))
             ) {
-                delete poopy.tempdata[msg.author.id][msg.id]
+                poopy.functions.deleteMsgData(msg)
                 return
             }
 
@@ -4310,10 +4339,7 @@ class Poopy {
             var webhook = await msg.fetchWebhook().catch(() => { })
 
             if (webhook || !msg.guild || !msg.channel) {
-                console.log(msg.author.id)
-                console.log(msg.id)
-                console.log(poopy.tempdata[msg.author.id])
-                delete poopy.tempdata[msg.author.id][msg.id]
+                poopy.functions.deleteMsgData(msg)
                 return
             }
 
@@ -4744,9 +4770,8 @@ class Poopy {
                 }
             }
 
-            delete poopy.tempdata[msg.author.id][msg.id]
-
             if (!msg.guild || !msg.channel || poopy.tempdata[msg.guild.id][msg.channel.id]['shut']) {
+                poopy.functions.deleteMsgData(msg)
                 return
             }
 
@@ -4859,6 +4884,8 @@ class Poopy {
                     if (poopy.tempdata[msg.author.id]['eggphrases']['phrase'] < eggPhrases.length) poopy.tempdata[msg.author.id]['eggphrases']['phrase']++
                     poopy.tempdata[msg.author.id]['eggphrases']['lastmention'] = Date.now()
                 }
+
+                poopy.functions.deleteMsgData(msg)
             }
         }
 

@@ -83,6 +83,8 @@ module.exports = {
                         }).catch(() => { })
                     }
                 } catch (_) { }
+
+                poopy.functions.deleteMsgData(m)
             })
 
             collector.on('end', async (_, reason) => {

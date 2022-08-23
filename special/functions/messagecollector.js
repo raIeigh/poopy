@@ -38,7 +38,7 @@ module.exports = {
                     poopy.functions.dmSupport(m)
 
                     if (poopy.tempdata[msg.guild.id][msg.channel.id]['shut']) return
-                    var content = await poopy.functions.getKeywordsFor(m.content ?? '', m, false).catch((e) => console.log(e)) ?? m.content
+                    var content = await poopy.functions.getKeywordsFor(m.content ?? '', m, false).catch(() => { }) ?? m.content
 
                     var valOpts = { ...opts }
                     valOpts.extrakeys._msg = {
@@ -47,7 +47,7 @@ module.exports = {
                         }
                     }
 
-                    var filterStringM = await poopy.functions.getKeywordsFor(filterString, m, true, valOpts).catch((e) => console.log(e)) ?? filterString
+                    var filterStringM = await poopy.functions.getKeywordsFor(filterString, m, true, valOpts).catch(() => { }) ?? filterString
 
                     if (filterStringM) {
                         valOpts.extrafuncs.resettimer = {
@@ -64,7 +64,7 @@ module.exports = {
                             }
                         }
 
-                        var collect = await poopy.functions.getKeywordsFor(collectphrase, m, true, valOpts).catch((e) => console.log(e)) ?? ''
+                        var collect = await poopy.functions.getKeywordsFor(collectphrase, m, true, valOpts).catch(() => { }) ?? ''
 
                         collected.push(content)
 
@@ -73,9 +73,11 @@ module.exports = {
                             allowedMentions: {
                                 parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && authorid !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                             }
-                        }).catch((e) => console.log(e))
+                        }).catch(() => { })
                     }
-                } catch (e) {console.log(e)}
+                } catch (_) { }
+
+                poopy.functions.deleteMsgData(m)
             })
 
             collector.on('end', async (_, reason) => {
@@ -100,6 +102,8 @@ module.exports = {
                         }).catch(() => { })
                     }
                 } catch (_) { }
+
+                poopy.functions.deleteMsgData(msg)
             })
 
             return ''
