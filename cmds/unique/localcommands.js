@@ -71,9 +71,11 @@ module.exports = {
             "required": true,
             "specifarg": false,
             "orig": "<id>",
-            "autocomplete": function (interaction) {
+            "autocomplete": function () {
                 let poopy = this
-                return poopy.functions.globalData()['bot-data']['commandTemplates'].map(cmd => cmd.id)
+                return poopy.functions.globalData()['bot-data']['commandTemplates'].map(cmd => {
+                    return { name: `${cmd.name} (${cmd.id})`, value: cmd.id }
+                })
             }
         },
         {

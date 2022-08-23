@@ -1,25 +1,26 @@
 module.exports = {
     name: ['help', 'commands', 'cmds'],
-    args: [{ "name": "command", "required": false, "specifarg": false, "orig": "[command]", "autocomplete": function () {
-        let poopy = this
+    args: [{
+        "name": "command", "required": false, "specifarg": false, "orig": "[command]", "autocomplete": function () {
+            let poopy = this
 
-        return poopy.commands.map(cmd => {
-            return { name: cmd.name.join('/'), value: cmd.name[0] }
-        })
-    } }],
+            var cmds = poopy.commands.map(cmd => {
+                return { name: cmd.name.join('/'), value: cmd.name[0] }
+            })
+            var lcmds = poopy.data['guild-data'][interaction.guild.id]['localcmds'].map(lcmd => {
+                return { name: lcmd.name, value: lcmd.name }
+            })
+
+            return cmds.concat(lcmds)
+        }
+    }],
     execute: async function (msg, args) {
         let poopy = this
 
         var saidMessage = args.slice(1).join(' ')
         if (saidMessage) {
-            var fCmds = []
-
-            if (saidMessage) poopy.commands.forEach(cmd => {
-                if (cmd.name.find(name => name.toLowerCase().includes(saidMessage.toLowerCase()))) {
-                    fCmds.push(cmd)
-                }
-            })
-            else fCmds = poopy.commands
+            var fCmds = poopy.commands.filter(cmd => cmd.name.find(name => name.toLowerCase().includes(saidMessage.toLowerCase())))
+                .concat(poopy.data['guild-data'][interaction.guild.id]['localcmds'].filter(cmd => cmd.name.toLowerCase().includes(saidMessage.toLowerCase())))
 
             if (fCmds.length) {
                 fCmds.sort((a, b) => Math.abs(1 - poopy.functions.similarity(a.name.find(name => name.toLowerCase().includes(saidMessage.toLowerCase())), saidMessage)) - Math.abs(1 - poopy.functions.similarity(b.name.find(name => name.toLowerCase().includes(saidMessage.toLowerCase())), saidMessage)))
