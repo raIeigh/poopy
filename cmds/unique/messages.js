@@ -27,6 +27,28 @@ module.exports = {
             "description": "Sends a random message from the database to the channel."
         },
         {
+            "name": "member",
+            "args": [{
+                "name": "id",
+                "required": true,
+                "specifarg": false,
+                "orig": "<id>",
+                "autocomplete": function (interaction) {
+                    let poopy = this
+
+                    var memberData = poopy.data['guild-data'][interaction.guild.id]['members']
+                    var memberKeys = Object.keys(memberData).sort((a, b) => memberData[b].messages - memberData[a].messages)
+
+                    return memberKeys.map(id => {
+                        return {
+                            name: memberData[id].username, value: id
+                        }
+                    })
+                }
+            }],
+            "description": "Sends a random message from that member to the channel."
+        },
+        {
             "name": "add",
             "args": [{
                 "name": "message",
@@ -117,7 +139,35 @@ module.exports = {
             },
 
             random: async (msg) => {
-                await msg.reply(poopy.data['guild-data'][msg.guild.id]['messages'][Math.floor(Math.random() * poopy.data['guild-data'][msg.guild.id]['messages'].length)].content).catch(() => {})
+                var messages = poopy.data['guild-data'][msg.guild.id]['messages']
+
+                if (!messages.length) {
+                    await msg.reply('No messages!').catch(() => { })
+                    return
+                }
+
+                await msg.reply(messages[Math.floor(Math.random() * messages.length)].content).catch(() => {})
+            },
+
+            member: async (msg, args) => {
+                if (args[1] === undefined) {
+                    await msg.reply('Who is the member?!').catch(() => { })
+                    return
+                }
+
+                args[1] = args[1] ?? ''
+
+                var member = (msg.mentions.members.first() && msg.mentions.members.first().user) ??
+                await poopy.bot.users.fetch((args[1].match(/\d+/) ?? [args[1]])[0]).catch(() => {})
+
+                var messages = poopy.data['guild-data'][msg.guild.id]['messages'].filter(m => m.author == member.id)
+
+                if (!messages.length) {
+                    await msg.reply('No messages!').catch(() => { })
+                    return
+                }
+
+                await msg.reply(messages[Math.floor(Math.random() * messages.length)].content).catch(() => {})
             },
 
             add: async (msg, args) => {
@@ -226,11 +276,11 @@ module.exports = {
         }
 
         if (!args[1]) {
-            if (poopy.config.textEmbeds) msg.reply("**list** - Sends a text file with a list of all messages that exist within the guild's message database.\n\n**search** <query> - Searches for every message in the server that matches the query.\n\n**random** - Sends a random message from the database to the channel.\n\n**add** <message> - Adds a new message to the guild's database, if it is available for use.\n\n**delete** <message> - Deletes the message, if it exists.\n\n**clear** (manage server only) - Clears ALL the messages from the database.\n\n**read** (moderator only) - Toggles whether the bot can read the messages from the channel or not.\n\n**readall** (manage server only) - Toggles whether the bot can read the messages from all channels or not.").catch(() => {})
+            if (poopy.config.textEmbeds) msg.reply("**list** - Sends a text file with a list of all messages that exist within the guild's message database.\n\n**search** <query> - Searches for every message in the server that matches the query.\n\n**random** - Sends a random message from the database to the channel.\n\n**member** <id> - Sends a random message from that member to the channel.\n\n**add** <message> - Adds a new message to the guild's database, if it is available for use.\n\n**delete** <message> - Deletes the message, if it exists.\n\n**clear** (manage server only) - Clears ALL the messages from the database.\n\n**read** (moderator only) - Toggles whether the bot can read the messages from the channel or not.\n\n**readall** (manage server only) - Toggles whether the bot can read the messages from all channels or not.").catch(() => {})
             else msg.reply({
                 embeds: [{
                     "title": "Available Options",
-                    "description": "**list** - Sends a text file with a list of all messages that exist within the guild's message database.\n\n**search** <query> - Searches for every message in the server that matches the query.\n\n**random** - Sends a random message from the database to the channel.\n\n**add** <message> - Adds a new message to the guild's database, if it is available for use.\n\n**delete** <message> - Deletes the message, if it exists.\n\n**clear** (manage server only) - Clears ALL the messages from the database.\n\n**read** (moderator only) - Toggles whether the bot can read the messages from the channel or not.\n\n**readall** (manage server only) - Toggles whether the bot can read the messages from all channels or not.",
+                    "description": "**list** - Sends a text file with a list of all messages that exist within the guild's message database.\n\n**search** <query> - Searches for every message in the server that matches the query.\n\n**random** - Sends a random message from the database to the channel.\n\n**member** <id> - Sends a random message from that member to the channel.\n\n**add** <message> - Adds a new message to the guild's database, if it is available for use.\n\n**delete** <message> - Deletes the message, if it exists.\n\n**clear** (manage server only) - Clears ALL the messages from the database.\n\n**read** (moderator only) - Toggles whether the bot can read the messages from the channel or not.\n\n**readall** (manage server only) - Toggles whether the bot can read the messages from all channels or not.",
                     "color": 0x472604,
                     "footer": {
                         "icon_url": poopy.bot.user.displayAvatarURL({
