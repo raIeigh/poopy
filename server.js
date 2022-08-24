@@ -598,6 +598,14 @@ async function start() {
             },
 
             {
+                TOKEN: process.env.POOSONIATOKEN,
+                config: {
+                    globalPrefix: 'ps:',
+                    mongodatabase: 'poopypsdata'
+                }
+            },
+
+            {
                 TOKEN: process.env.INDIATOKEN,
                 config: {
                     self: true,
