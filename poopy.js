@@ -3385,7 +3385,7 @@ class Poopy {
                 attachments.push(new poopy.modules.Discord.MessageAttachment(attachment.url))
             });
     
-            if (subject === undefined && attachments.length <= 0) {
+            if (!subject && attachments.length <= 0) {
                 await msg.reply('What/who is the subject?!').catch(() => { })
                 return;
             };
@@ -3395,15 +3395,13 @@ class Poopy {
                 return
             }
     
-            subject = subject ?? ''
-    
             var member = (msg.mentions.members.first() && msg.mentions.members.first().user) ??
                 await poopy.bot.users.fetch((subject.match(/\d+/) ?? [subject])[0]).catch(() => { })
     
             await msg.reply({
                 content: action
                     .replace('{src}', msg.author.username)
-                    .replace('{trgt}', member.username ?? subject ?? 'this')
+                    .replace('{trgt}', (member && member.username) ?? subject ?? 'this')
                     .replace('{dmg}', damage),
                 allowedMentions: {
                     parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
