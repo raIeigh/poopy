@@ -3390,7 +3390,7 @@ class Poopy {
                 return;
             };
     
-            if (Math.random() < chance) {
+            if (Math.random() >= chance) {
                 await msg.reply('You missed!').catch(() => { })
                 return
             }
