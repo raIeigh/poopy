@@ -1700,7 +1700,7 @@ class Poopy {
                 }
 
                 if (poopy.config.useReactions) {
-                    var collector = yesnoMsg.createReactionCollector({ time: 60_000 })
+                    var collector = yesnoMsg.createReactionCollector({ time: 30_000 })
 
                     collector.on('collect', (reaction, user) => {
                         poopy.functions.dmSupport(reaction)
@@ -1734,7 +1734,7 @@ class Poopy {
                         await yesnoMsg.react(bdata.reactemoji).catch(() => { })
                     }
                 } else {
-                    var collector = yesnoMsg.createMessageComponentCollector({ time: 60_000 })
+                    var collector = yesnoMsg.createMessageComponentCollector({ time: 30_000 })
 
                     collector.on('collect', (button) => {
                         poopy.functions.dmSupport(button)
@@ -2011,8 +2011,11 @@ class Poopy {
 
             var usingButton = false
 
+            var lastCollector = poopy.tempdata[msg.author.id]['navigateCollector']
+            if (lastCollector && lastCollector.stop) lastCollector.stop()
+
             if (poopy.config.useReactions) {
-                var collector = resultsMsg.createReactionCollector({ time: 60_000 })
+                var collector = poopy.tempdata[msg.author.id]['navigateCollector'] = resultsMsg.createReactionCollector({ time: 60_000 })
 
                 collector.on('collect', async (reaction, user) => {
                     poopy.functions.dmSupport(reaction)
@@ -2055,6 +2058,8 @@ class Poopy {
                 })
 
                 collector.on('end', async (_, reason) => {
+                    delete poopy.tempdata[msg.author.id]['navigateCollector']
+
                     var resultEmbed = await pageFunc(page, true).catch(() => { })
                     var sendObject = {}
 
@@ -2074,7 +2079,7 @@ class Poopy {
                     await resultsMsg.react(bdata.reactemoji).catch(() => { })
                 }
             } else {
-                var collector = resultsMsg.createMessageComponentCollector({ time: 60_000 })
+                var collector = poopy.tempdata[msg.author.id]['navigateCollector'] = resultsMsg.createMessageComponentCollector({ time: 60_000 })
 
                 collector.on('collect', async (button) => {
                     poopy.functions.dmSupport(button)
@@ -2132,6 +2137,8 @@ class Poopy {
                 })
 
                 collector.on('end', async (_, reason) => {
+                    delete poopy.tempdata[msg.author.id]['navigateCollector']
+
                     var resultEmbed = await pageFunc(page, true).catch(() => { })
                     var sendObject = {
                         components: []
@@ -3139,7 +3146,10 @@ class Poopy {
             if (
                 poopy.tempdata[msg.author.id] &&
                 poopy.tempdata[msg.author.id][msg.id] &&
-                poopy.tempdata[msg.author.id][msg.id]['keyexecuting'] <= 0
+                (
+                    !poopy.tempdata[msg.author.id][msg.id]['keyexecuting'] ||
+                    poopy.tempdata[msg.author.id][msg.id]['keyexecuting'] <= 0
+                )
             ) {
                 delete poopy.tempdata[msg.author.id][msg.id]
             }
