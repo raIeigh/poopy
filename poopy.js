@@ -3378,31 +3378,33 @@ class Poopy {
             return string
         }
 
-        poopy.functions.battle = async function (msg, args, action, damage, chance) {
+        poopy.functions.battle = async function (msg, subject, action, damage, chance) {
             await msg.channel.sendTyping().catch(() => { })
-            var saidMessage = args.slice(1).join(' ')
             var attachments = []
             msg.attachments.forEach(attachment => {
                 attachments.push(new poopy.modules.Discord.MessageAttachment(attachment.url))
             });
     
-            if (args[1] === undefined && attachments.length <= 0) {
+            if (subject === undefined && attachments.length <= 0) {
                 await msg.reply('What/who is the subject?!').catch(() => { })
                 return;
             };
     
-            if (Math.random() <= chance) {
+            if (Math.random() < chance) {
                 await msg.reply('You missed!').catch(() => { })
                 return
             }
     
-            args[1] = args[1] ?? ''
+            subject = subject ?? ''
     
             var member = (msg.mentions.members.first() && msg.mentions.members.first().user) ??
-                await poopy.bot.users.fetch((args[1].match(/\d+/) ?? [args[1]])[0]).catch(() => { })
+                await poopy.bot.users.fetch((subject.match(/\d+/) ?? [subject])[0]).catch(() => { })
     
             await msg.reply({
-                content: `${msg.author.toString()} ${action} **${member.username ?? saidMessage ?? 'this'}**! It did **${damage}** damage!`,
+                content: action
+                    .replace('{src}', msg.author.username)
+                    .replace('{trgt}', member.username ?? subject ?? 'this')
+                    .replace('{dmg}', damage),
                 allowedMentions: {
                     parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 },
