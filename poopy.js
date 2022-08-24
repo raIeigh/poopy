@@ -4839,8 +4839,9 @@ class Poopy {
                 }
             }
 
+            poopy.functions.deleteMsgData(msg)
+
             if (!msg.guild || !msg.channel || poopy.tempdata[msg.guild.id][msg.channel.id]['shut']) {
-                poopy.functions.deleteMsgData(msg)
                 return
             }
 
@@ -4953,8 +4954,6 @@ class Poopy {
                     if (poopy.tempdata[msg.author.id]['eggphrases']['phrase'] < eggPhrases.length) poopy.tempdata[msg.author.id]['eggphrases']['phrase']++
                     poopy.tempdata[msg.author.id]['eggphrases']['lastmention'] = Date.now()
                 }
-
-                poopy.functions.deleteMsgData(msg)
             }
         }
 
