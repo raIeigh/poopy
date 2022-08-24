@@ -896,6 +896,10 @@ class Poopy {
                 poopy.data['guild-data'][msg.guild.id]['chaincommands'] = true
             }
 
+            if (!poopy.data['guild-data'][msg.guild.id]['lastuse']) {
+                poopy.data['guild-data'][msg.guild.id]['lastuse'] = Date.now()
+            }
+
             if (poopy.data['guild-data'][msg.guild.id]['prefix'] === undefined) {
                 poopy.data['guild-data'][msg.guild.id]['prefix'] = poopy.config.globalPrefix
             }
@@ -4503,6 +4507,8 @@ class Poopy {
                     if (poopy.tempdata[msg.guild.id][msg.channel.id]['shut']) break
 
                     if (msg.content.toLowerCase().startsWith(prefix.toLowerCase()) && ((!msg.author.bot && msg.author.id != poopy.bot.user.id) || poopy.config.allowbotusage)) {
+                        poopy.data['guild-data'][msg.guild.id]['lastuse'] = Date.now()
+
                         if (!msg.channel.permissionsFor(msg.guild.me).has('SEND_MESSAGES', false)) {
                             notExecuted = false
                             await msg.react(poopy.functions.randomChoice([...msg.guild.emojis.cache.keys()])).catch(() => { })
@@ -4931,6 +4937,10 @@ class Poopy {
 
                 if (!poopy.data['guild-data'][guild.id]) {
                     poopy.data['guild-data'][guild.id] = {}
+                }
+
+                if (!poopy.data['guild-data'][guild.id]['lastuse']) {
+                    poopy.data['guild-data'][guild.id]['lastuse'] = Date.now()
                 }
 
                 if (!poopy.data['guild-data'][guild.id]['joins']) {
