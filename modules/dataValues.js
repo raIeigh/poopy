@@ -107,9 +107,9 @@ dataValues.functions.globalData = require('./globalData')
 dataValues.functions.brainfuck = require('./brainfuck')
 dataValues.functions.tobrainfuck = require('./tobrainfuck')
 dataValues.functions.generateSayori = require('./sayorimessagegenerator')
-//dataValues.functions.braille = require('./braille')
-//dataValues.functions.averageColor = require('./averageColor')
-//dataValues.functions.spectrogram = require('./spectrogram')
+dataValues.functions.braille = require('./braille')
+dataValues.functions.averageColor = require('./averageColor')
+dataValues.functions.spectrogram = require('./spectrogram')
 
 dataValues.functions.lerp = function (start, end, amt) {
     return (1 - amt) * start + amt * end
