@@ -20,25 +20,19 @@ module.exports = async function () {
 
     var res = await axios.get(`https://emojipedia.org/twitter/`).catch(() => { })
     var $ = cheerio.load(res.data)
-    var gridEmojis = $('.emoji-grid').children()
-    var emj = []
+    var gridEmojis = [...$('.emoji-grid li a img')]
+    var emojiData = gridEmojis.map(emoji => {
+        var emojiUrl = (emoji.attribs['data-srcset'] || emoji.attribs.srcset).replace('/144/', '/240/').replace(' 2x', '')
+        var unicode = emojiUrl.replace(/https:\/\/emojipedia-us\.s3\.dualstack\.us-west-1\.amazonaws.com\/thumbs\/[0-9]+\/twitter\/[0-9]+\/[a-z0-9-]+(_[a-z0-9-]+tone)?/, '').substring(1).replace(/(_[a-z0-9]+)?\.png$/, '')
 
-    for (var i in gridEmojis) {
-        if (!isNaN(Number(i))) {
-            var emoji = gridEmojis[i]
-            var emojisAttribs = emoji.children.find(child => child.name === 'a').children.find(child => child.name === 'img').attribs
-            var emojiUrl = (emojisAttribs['data-srcset'] || emojisAttribs.srcset).replace('/144/', '/240/').replace(' 2x', '')
-            var unicode = emojiUrl.replace(/https:\/\/emojipedia-us\.s3\.dualstack\.us-west-1\.amazonaws.com\/thumbs\/[0-9]+\/twitter\/[0-9]+\/[a-z0-9-]+(_[a-z0-9-]+tone)?/, '').substring(1).replace(/(_[a-z0-9]+)?\.png$/, '')
-
-            emj.push({
-                url: emojiUrl,
-                emoji: unicode.split('-').map(u => String.fromCodePoint(parseInt(u, 16))).join(''),
-                unicode: unicode
-            })
+        return {
+            url: emojiUrl,
+            emoji: unicode.split('-').map(u => String.fromCodePoint(parseInt(u, 16))).join(''),
+            unicode: unicode
         }
-    }
+    })
 
-    emojis = emj
+    if (emojiData) emojis = emojiData
     gatheringEmojis = false
     return emojis
 }
