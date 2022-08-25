@@ -3,9 +3,19 @@ const axios = require('axios')
 var dataGotten = {}
 var dataGetting = {}
 
+function randomKey(name) {
+    var i = 1
+    var keys = []
+    while (process.env[name + (i != 1 ? i: '')]) {
+        keys.push(process.env[name + (i != 1 ? i: '')])
+        i++
+    }
+    return keys[Math.floor(Math.random() * keys.length)]
+}
+
 var dataGetters = {
     codeLanguages: async function () {
-        var clresponse = await axios.get('https://wandbox.org/api/list.json').catch(() => { })
+        var clresponse = await axios.get('https://wandbox.org/api/list.json').catch((e) => console.log(e))
 
         if (clresponse) {
             return clresponse.data.filter((lang, index, self) => self.findIndex(l => l.templates[0] === lang.templates[0]) === index).sort((a, b) => {
@@ -17,13 +27,13 @@ var dataGetters = {
     },
     
     languages: async function () {
-        var lresponse = await poopy.modules.axios.request({
+        var lresponse = await axios.request({
             method: 'GET',
             url: 'https://microsoft-translator-text.p.rapidapi.com/languages',
             params: { 'api-version': '3.0' },
             headers: {
                 'x-rapidapi-host': 'microsoft-translator-text.p.rapidapi.com',
-                'x-rapidapi-key': poopy.functions.randomKey('RAPIDAPIKEY')
+                'x-rapidapi-key': randomKey('RAPIDAPIKEY')
             }
         }).catch(() => { })
 
@@ -33,7 +43,7 @@ var dataGetters = {
     },
     
     uberduck: async function () {
-        var voiceResponse = await poopy.modules.axios.request({
+        var voiceResponse = await axios.request({
             method: 'GET',
             url: 'https://api.uberduck.ai/voices?mode=tts-basic',
             headers: {
@@ -82,7 +92,7 @@ for (var name in dataGetters) {
         if (dataGotten[name]) return dataGotten[name]
 
         dataGetting[name] = true
-        var result = await dataGet().catch(() => { })
+        var result = await dataGet().catch((e) => console.log(e))
 
         if (result) dataGotten[name] = result
         delete dataGetting[name]

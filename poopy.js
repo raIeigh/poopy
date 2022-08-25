@@ -4673,7 +4673,7 @@ class Poopy {
 
         poopy.vars.languages = await poopy.dataGetters.languages().catch(() => { })
 
-        poopy.vars.codelanguages = await poopy.dataGetters.codeLanguages().catch(() => { })
+        poopy.vars.codelanguages = await poopy.dataGetters.codeLanguages().catch((e) => console.log(e))
 
         poopy.json.emojiJSON = await poopy.functions.getEmojis().catch(() => { })
 
