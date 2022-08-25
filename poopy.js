@@ -2131,13 +2131,11 @@ class Poopy {
 
             var reply = await msg.fetchReference().catch(() => { })
             if (reply && !options.replied && msg.author.id != poopy.bot.user.id && prefixFound) {
-                if (reply.guild) {
-                    urls = urls.concat(await poopy.functions.getUrls(reply, {
-                        replied: true,
-                        max: max - urls.length,
-                        tempdir: options.tempdir
-                    }) ?? [])
-                }
+                urls = urls.concat(await poopy.functions.getUrls(reply, {
+                    replied: true,
+                    max: max - urls.length,
+                    tempdir: options.tempdir
+                }) ?? [])
             }
 
             if (options.update) {
@@ -2218,6 +2216,7 @@ class Poopy {
         }
 
         poopy.functions.addLastUrl = function (msg, url) {
+            console.log(url)
             if (!url) return
 
             var lastUrls = [url].concat(poopy.functions.lastUrls(msg, false, true))
