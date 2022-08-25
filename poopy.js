@@ -2262,6 +2262,30 @@ class Poopy {
             }
         }
 
+        poopy.vars.dmGuild = class DMGuild {
+            constructor(msg) {
+                this.ownerId = msg.channel.ownerId || (msg.user || msg.author).id
+                this.id = msg.channel.id
+                this.name = msg.channel.name || `${(msg.user || msg.author).username}'s DMs`
+                this.fetchAuditLogs = async () => {
+                    return {
+                        entries: new poopy.modules.DiscordCollection.Collection()
+                    }
+                }
+                this.emojis = {
+                    cache: new poopy.modules.DiscordCollection.Collection()
+                }
+                this.channels = {
+                    cache: new poopy.modules.DiscordCollection.Collection([[msg.channel.id, msg.channel]])
+                }
+                this.members = {
+                    fetch: async () => msg.channel.recipient ? (msg.channel.recipient.id == id && msg.channel.recipient) : msg.channel.recipients && msg.channel.recipients.get(id),
+                    resolve: (id) => msg.channel.recipient ? (msg.channel.recipient.id == id && msg.channel.recipient) : msg.channel.recipients && msg.channel.recipients.get(id),
+                    cache: new poopy.modules.DiscordCollection.Collection(msg.channel.recipients ? msg.channel.recipients.map(user => [user.id, user]) : [[msg.channel.recipient.id, msg.channel.recipient]])
+                }
+            }
+        }
+
         poopy.functions.dmSupport = function (msg) {
             if (!msg.author && msg.user) msg.author = msg.user
             if (!msg.user && msg.author) msg.user = msg.author
@@ -2271,58 +2295,18 @@ class Poopy {
             })
 
             if (!msg.guild && (msg.user || msg.author)) Object.defineProperty(msg, 'guild', {
-                value: {
-                    ownerId: msg.channel.ownerId || (msg.user || msg.author).id,
-                    id: msg.channel.id,
-                    name: msg.channel.name || `${(msg.user || msg.author).username}'s DMs`,
-                    fetchAuditLogs: async () => {
-                        return {
-                            entries: new poopy.modules.DiscordCollection.Collection()
-                        }
-                    },
-                    emojis: {
-                        cache: new poopy.modules.DiscordCollection.Collection()
-                    },
-                    channels: {
-                        cache: new poopy.modules.DiscordCollection.Collection([[msg.channel.id, msg.channel]])
-                    },
-                    members: {
-                        fetch: async () => msg.channel.recipient ? (msg.channel.recipient.id == id && msg.channel.recipient) : msg.channel.recipients && msg.channel.recipients.get(id),
-                        resolve: (id) => msg.channel.recipient ? (msg.channel.recipient.id == id && msg.channel.recipient) : msg.channel.recipients && msg.channel.recipients.get(id),
-                        cache: new poopy.modules.DiscordCollection.Collection(msg.channel.recipients ? msg.channel.recipients.map(user => [user.id, user]) : [[msg.channel.recipient.id, msg.channel.recipient]])
-                    }
-                }
+                value: new poopy.vars.dmGuild(msg)
             })
 
             if (msg.channel && !msg.channel.guild && (msg.user || msg.author)) Object.defineProperty(msg.channel, 'guild', {
-                value: {
-                    ownerId: msg.channel.ownerId || (msg.user || msg.author).id,
-                    id: msg.channel.id,
-                    name: msg.channel.name || `${(msg.user || msg.author).username}'s DMs`,
-                    fetchAuditLogs: async () => {
-                        return {
-                            entries: new poopy.modules.DiscordCollection.Collection()
-                        }
-                    },
-                    emojis: {
-                        cache: new poopy.modules.DiscordCollection.Collection()
-                    },
-                    channels: {
-                        cache: new poopy.modules.DiscordCollection.Collection([[msg.channel.id, msg.channel]])
-                    },
-                    members: {
-                        fetch: async () => msg.channel.recipient ? (msg.channel.recipient.id == id && msg.channel.recipient) : msg.channel.recipients && msg.channel.recipients.get(id),
-                        resolve: (id) => msg.channel.recipient ? (msg.channel.recipient.id == id && msg.channel.recipient) : msg.channel.recipients && msg.channel.recipients.get(id),
-                        cache: new poopy.modules.DiscordCollection.Collection(msg.channel.recipients ? msg.channel.recipients.map(user => [user.id, user]) : [[msg.channel.recipient.id, msg.channel.recipient]])
-                    }
-                }
+                value: new poopy.vars.dmGuild(msg)
             })
 
             if ((msg.user || msg.author) && !(msg.user || msg.author).permissions) (msg.user || msg.author).permissions = { has: () => true }
             if (msg.channel && !msg.channel.permissionsFor) msg.channel.permissionsFor = () => {
                 return { has: () => true }
             }
-            
+
             if (msg.mentions) {
                 if (!msg.mentions.members) Object.defineProperty(msg.mentions, 'members', {
                     value: new poopy.modules.DiscordCollection.Collection(msg.mentions.users ? msg.mentions.users.map(user => {
@@ -2501,20 +2485,20 @@ class Poopy {
             msg.attachments.forEach(attachment => {
                 attachments.push(new poopy.modules.Discord.MessageAttachment(attachment.url))
             });
-    
+
             if (!subject && attachments.length <= 0) {
                 await msg.reply('What/who is the subject?!').catch(() => { })
                 return;
             };
-    
+
             if (Math.random() >= chance) {
                 await msg.reply('You missed!').catch(() => { })
                 return
             }
-    
+
             var member = (msg.mentions.members.first() && msg.mentions.members.first().user) ??
                 await poopy.bot.users.fetch((subject.match(/\d+/) ?? [subject])[0]).catch(() => { })
-    
+
             await msg.reply({
                 content: action
                     .replace('{src}', msg.author.username)
@@ -2525,14 +2509,14 @@ class Poopy {
                 },
                 files: attachments
             }).catch(() => { })
-    
+
             if (!member) return
-    
+
             if (!poopy.data['user-data'][member.id]) {
                 poopy.data['user-data'][member.id] = {}
                 poopy.data['user-data'][member.id]['health'] = 100
             }
-    
+
             poopy.data['user-data'][member.id]['health'] = poopy.data['user-data'][member.id]['health'] - damage
             if (poopy.data['user-data'][member.id]['health'] <= 0) {
                 poopy.data['user-data'][member.id]['health'] = 100
@@ -3631,7 +3615,7 @@ class Poopy {
 
                     msg.oldcontent = cmd
 
-                    if (!(commands.find(c => c.raw && c.name.find(n => n.toLowerCase().startsWith(`${prefix.toLowerCase()}${name.toLowerCase()}`)))) && ((!msg.author.bot && msg.author.id != poopy.bot.user.id) || poopy.config.allowbotusage)) {
+                    if (!(poopy.commands.find(c => c.raw && c.name.find(n => cmd.toLowerCase().startsWith(`${prefix.toLowerCase()}${n.toLowerCase()}`)))) && ((!msg.author.bot && msg.author.id != poopy.bot.user.id) || poopy.config.allowbotusage)) {
                         var change = await poopy.functions.getKeywordsFor(cmd, msg, false, { resetattempts: true }).catch(async err => {
                             await msg.reply({
                                 content: err.stack,

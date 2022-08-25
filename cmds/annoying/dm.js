@@ -130,7 +130,24 @@ module.exports = {
                 return
             }
 
-            member.send({
+            var channel = msg.channel
+            var guild = msg.guild
+
+            var dmChannel = await member.createDM().catch(() => { })
+            dmChannel.onsfw = !!dmChannel.nsfw
+            dmChannel.nsfw = !!poopy.data['guild-data'][dmChannel.id]?.['channels']?.[dmChannel.id]?.['nsfw']
+
+            Object.defineProperty(msg, 'channel', { value: dmChannel, writable: true })
+            Object.defineProperty(msg, 'guild', { value: new poopy.vars.dmGuild(msg), writable: true })
+
+            poopy.functions.dmSupport(msg)
+
+            saidMessage = await poopy.functions.getKeywordsFor(saidMessage, msg, false).catch(() => { }) ?? 'error'
+            
+            Object.defineProperty(msg, 'channel', { value: channel })
+            Object.defineProperty(msg, 'guild', { value: guild })
+            
+            dmChannel.send({
                 content: `${!anon ? `${msg.author.tag} from ${msg.guild.name}:\n\n`: ''}${saidMessage}`,
                 files: attachments
             }).then(async () => {
