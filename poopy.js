@@ -2291,15 +2291,18 @@ class Poopy {
             if (!msg.user && msg.author) msg.user = msg.author
 
             if (!msg.member && (msg.user || msg.author)) Object.defineProperty(msg, 'member', {
-                value: (msg.user || msg.author)
+                value: (msg.user || msg.author),
+                writable: true
             })
 
             if (!msg.guild && (msg.user || msg.author)) Object.defineProperty(msg, 'guild', {
-                value: new poopy.vars.dmGuild(msg)
+                value: new poopy.vars.dmGuild(msg),
+                writable: true
             })
 
             if (msg.channel && !msg.channel.guild && (msg.user || msg.author)) Object.defineProperty(msg.channel, 'guild', {
-                value: new poopy.vars.dmGuild(msg)
+                value: new poopy.vars.dmGuild(msg),
+                writable: true
             })
 
             if ((msg.user || msg.author) && !(msg.user || msg.author).permissions) (msg.user || msg.author).permissions = { has: () => true }
@@ -2312,10 +2315,12 @@ class Poopy {
                     value: new poopy.modules.DiscordCollection.Collection(msg.mentions.users ? msg.mentions.users.map(user => {
                         if (!user.user) user.user = user
                         return [user.id, user]
-                    }) : [])
+                    }) : []),
+                    writable: true
                 })
                 if (!msg.mentions.users) Object.defineProperty(msg.mentions, 'users', {
-                    value: new poopy.modules.DiscordCollection.Collection(msg.mentions.members ? msg.mentions.members.map(member => [member.user.id, member.user]) : [])
+                    value: new poopy.modules.DiscordCollection.Collection(msg.mentions.members ? msg.mentions.members.map(member => [member.user.id, member.user]) : []),
+                    writable: true
                 })
             }
         }

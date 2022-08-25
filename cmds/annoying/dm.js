@@ -130,6 +130,8 @@ module.exports = {
                 return
             }
 
+            var infoMessage = !anon ? `${msg.author.tag} from ${msg.guild.name}:\n\n`: ''
+
             var channel = msg.channel
             var guild = msg.guild
 
@@ -144,11 +146,11 @@ module.exports = {
 
             saidMessage = await poopy.functions.getKeywordsFor(saidMessage, msg, false).catch(() => { }) ?? 'error'
             
-            Object.defineProperty(msg, 'channel', { value: channel })
-            Object.defineProperty(msg, 'guild', { value: guild })
+            Object.defineProperty(msg, 'channel', { value: channel, writable: true })
+            Object.defineProperty(msg, 'guild', { value: guild, writable: true })
             
             dmChannel.send({
-                content: `${!anon ? `${msg.author.tag} from ${msg.guild.name}:\n\n`: ''}${saidMessage}`,
+                content: `${infoMessage}${saidMessage}`,
                 files: attachments
             }).then(async () => {
                 msg.react('✅').catch(() => {})
