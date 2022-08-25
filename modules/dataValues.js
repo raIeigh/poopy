@@ -16,8 +16,6 @@ dataValues.modules.axios = axios
 dataValues.modules.request = request
 dataValues.modules.google = google
 
-dataValues.modules.Discord = require('@discordjs/rest').REST
-dataValues.modules.DiscordSelf = require('@discordjs/rest').REST
 dataValues.modules.REST = require('@discordjs/rest').REST
 dataValues.modules.Routes = require('discord-api-types/v10').Routes
 dataValues.modules.DiscordBuilders = require('@discordjs/builders')

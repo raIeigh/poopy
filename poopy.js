@@ -142,7 +142,7 @@ class Poopy {
         poopy.dataGetters = require('./modules/dataGetters')
 
         // module trash
-        poopy.modules.Discord = require(`discord.js${poopy.config.self ? '-selfbot-v13' : ''}`)
+        poopy.modules.Discord = { ...require(`discord.js${poopy.config.self ? '-selfbot-v13' : ''}`) }
 
         for (var key in poopy.dataValues.modules) {
             var val = poopy.dataValues.modules[key]
