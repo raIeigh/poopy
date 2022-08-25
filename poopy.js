@@ -4669,9 +4669,9 @@ class Poopy {
             poopy.modules.fs.writeFileSync(`data/globaldata.json`, JSON.stringify(poopy.functions.globalData()))
         }
 
-        await poopy.functions.infoPost(`Finishing extra steps...`)
+        await poopy.functions.infoPost(`Finishing extra steps...`);
 
-        [poopy.vars.ubervoices, poopy.vars.ubercategories] = await poopy.dataGetters.uberduck().catch(() => { }) ?? [null, null]
+        [poopy.vars.ubervoices, poopy.vars.ubercategories] = await poopy.dataGetters.uberduck().catch(() => { }) ?? [null, null];
 
         poopy.vars.languages = await poopy.dataGetters.languages().catch(() => { })
 
