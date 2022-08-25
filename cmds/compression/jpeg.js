@@ -56,10 +56,8 @@ module.exports = {
             var fps = fileinfo.info.fps.includes('0/0') ? '50' : fileinfo.info.fps
             poopy.modules.fs.mkdirSync(`${filepath}/frames`)
             poopy.modules.fs.mkdirSync(`${filepath}/mframes`)
-            await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -filter_complex "[0:v]alphaextract,split[pout][ppout];[ppout]palettegen=reserve_transparent=1[palette];[pout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} -gifflags -offsetting ${filepath}/mask.gif`)
             await poopy.functions.execPromise(`magick ${filepath}/${filename} -coalesce -quality ${quality} ${filepath}/frames/frame_%d.jpg`)
-            await poopy.functions.execPromise(`magick ${filepath}/mask.gif -coalesce -quality ${quality} ${filepath}/mframes/mframe_%d.jpg`)
-            await poopy.functions.execPromise(`ffmpeg -r ${fps} -i ${filepath}/frames/frame_%d.jpg -r ${fps} -i ${filepath}/mframes/mframe_%d.jpg -filter_complex "[0:v][1:v]alphamerge,split[pout][ppout];[ppout]palettegen=reserve_transparent=1[palette];[pout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} -vsync 0 -gifflags -offsetting ${filepath}/output.gif`)
+            await poopy.functions.execPromise(`ffmpeg -r ${fps} -i ${filepath}/frames/frame_%d.jpg -filter_complex "[0:v]split[pout][ppout];[ppout]palettegen=reserve_transparent=1[palette];[pout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} -vsync 0 -gifflags -offsetting ${filepath}/output.gif`)
             return await poopy.functions.sendFile(msg, filepath, `output.gif`)
         } else {
             await msg.reply({
