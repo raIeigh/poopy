@@ -19,7 +19,7 @@ module.exports = async function () {
     gatheringEmojis = true
 
     var res = await axios.get(`https://emojipedia.org/twitter/`).catch(() => { })
-    var $ = cheerio.load(res.body)
+    var $ = cheerio.load(res.data)
     var gridEmojis = $('.emoji-grid').children()
     var emj = []
 
