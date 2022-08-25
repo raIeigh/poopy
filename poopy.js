@@ -4669,7 +4669,9 @@ class Poopy {
 
         await poopy.functions.infoPost(`Finishing extra steps...`);
 
-        [poopy.vars.ubervoices, poopy.vars.ubercategories] = await poopy.dataGetters.uberduck().catch(() => { }) ?? [null, null];
+        var uberduck = await poopy.dataGetters.uberduck().catch(() => { })
+        poopy.vars.ubervoices = uberduck[0]
+        poopy.vars.ubercategories = uberduck[1]
 
         poopy.vars.languages = await poopy.dataGetters.languages().catch(() => { })
 

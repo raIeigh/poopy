@@ -47,7 +47,7 @@ dataValues.modules.itob = require('istextorbinary')
 dataValues.modules.os = require('os')
 
 dataValues.modules.deepai.setApiKey(process.env.DEEPAIKEY)
-dataValues.modules.noblox.setCookie(process.env.ROBLOXCOOKIE)
+dataValues.modules.noblox.setCookie(process.env.ROBLOXCOOKIE).catch(() => { })
 
 dataValues.vars.validUrl = /(http|https):\/\/([!#$&-;=?-[\]_a-z~]|%[0-9a-fA-F]{2})+/
 dataValues.vars.emojiRegex = require('emoji-regex')()
