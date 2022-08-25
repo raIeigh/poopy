@@ -593,6 +593,7 @@ async function start() {
                 TOKEN: process.env.POOPYTOKEN,
                 config: {
                     globalPrefix: 'p:',
+                    public: true,
                     quitOnDestroy: true
                 }
             },

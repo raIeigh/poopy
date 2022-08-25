@@ -143,10 +143,6 @@ class Poopy {
 
         // module trash
         poopy.modules.Discord = require(`discord.js${poopy.config.self ? '-selfbot-v13' : ''}`)
-        poopy.modules.REST = require('@discordjs/rest').REST
-        poopy.modules.Routes = require('discord-api-types/v9').Routes
-        poopy.modules.DiscordBuilders = require('@discordjs/builders')
-        poopy.modules.DiscordCollection = require('@discordjs/collection')
 
         for (var key in poopy.dataValues.modules) {
             var val = poopy.dataValues.modules[key]
@@ -212,7 +208,7 @@ class Poopy {
                 await message.channel.send(payload).then(poopy.functions.setMessageCooldown)
         }
 
-        if (!poopy.config.self) {
+        if (poopy.config.public) {
             poopy.functions.guildLeave = poopy.modules.Discord.Guild.prototype.leave
             delete poopy.modules.Discord.Guild.prototype.leave
         }

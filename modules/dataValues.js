@@ -16,6 +16,10 @@ dataValues.modules.axios = axios
 dataValues.modules.request = request
 dataValues.modules.google = google
 
+dataValues.modules.REST = require('@discordjs/rest').REST
+dataValues.modules.Routes = require('discord-api-types/v10').Routes
+dataValues.modules.DiscordBuilders = require('@discordjs/builders')
+dataValues.modules.DiscordCollection = require('@discordjs/collection')
 dataValues.modules.nodefs = require('fs')
 dataValues.modules.archiver = require('archiver')
 dataValues.modules.spawn = require('child_process').spawn
@@ -27,11 +31,11 @@ dataValues.modules.xml2json = require('xml2js').parseStringPromise
 dataValues.modules.util = require('util')
 dataValues.modules.md5 = require('md5')
 if (fs.existsSync('node_modules/@jimp/plugin-print'))
-fs.rmSync('node_modules/@jimp/plugin-print', {
+    fs.rmSync('node_modules/@jimp/plugin-print', {
     force: true, recursive: true
 })
 if (!fs.existsSync('node_modules/@jimp/plugin-print'))
-fs.copySync('modules/plugin-print', 'node_modules/@jimp/plugin-print', {
+    fs.copySync('modules/plugin-print', 'node_modules/@jimp/plugin-print', {
     recursive: true
 })
 dataValues.modules.Jimp = require('jimp')
@@ -47,7 +51,7 @@ dataValues.modules.itob = require('istextorbinary')
 dataValues.modules.os = require('os')
 
 dataValues.modules.deepai.setApiKey(process.env.DEEPAIKEY)
-dataValues.modules.noblox.setCookie(process.env.ROBLOXCOOKIE).catch(() => { })
+dataValues.modules.noblox.setCookie(process.env.ROBLOXCOOKIE).catch(() => {})
 
 dataValues.vars.validUrl = /(http|https):\/\/([!#$&-;=?-[\]_a-z~]|%[0-9a-fA-F]{2})+/
 dataValues.vars.emojiRegex = require('emoji-regex')()
