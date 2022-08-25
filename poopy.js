@@ -129,6 +129,7 @@ class Poopy {
             poopy.config[i] = config[i]
         }
 
+        // setting objects
         poopy.modules = {}
         poopy.functions = {}
         poopy.callbacks = {}
@@ -137,111 +138,44 @@ class Poopy {
         poopy.tempdata = {}
         poopy.tempfiles = {}
 
+        poopy.dataValues = require('./modules/dataValues')
+        poopy.dataGetters = require('./modules/dataGetters')
+
         // module trash
         poopy.modules.Discord = require(`discord.js${poopy.config.self ? '-selfbot-v13' : ''}`)
         poopy.modules.REST = require('@discordjs/rest').REST
         poopy.modules.Routes = require('discord-api-types/v9').Routes
         poopy.modules.DiscordBuilders = require('@discordjs/builders')
         poopy.modules.DiscordCollection = require('@discordjs/collection')
-        poopy.modules.fs = require('fs-extra')
-        poopy.modules.nodefs = require('fs')
-        poopy.modules.archiver = require('archiver')
-        poopy.modules.spawn = require('child_process').spawn
-        poopy.modules.exec = require('child_process').exec
-        poopy.modules.fileType = require('file-type')
-        poopy.modules.axios = require('axios').default
-        poopy.modules.request = require('request')
-        poopy.modules.FormData = require('form-data')
-        poopy.modules.cheerio = require('cheerio')
-        poopy.modules.xml2json = require('xml2js').parseStringPromise
-        poopy.modules.util = require('util')
-        poopy.modules.md5 = require('md5')
-        if (poopy.modules.fs.existsSync('node_modules/@jimp/plugin-print'))
-            poopy.modules.fs.rmSync('node_modules/@jimp/plugin-print', { force: true, recursive: true })
-        if (!poopy.modules.fs.existsSync('node_modules/@jimp/plugin-print'))
-            poopy.modules.fs.copySync('modules/plugin-print', 'node_modules/@jimp/plugin-print', { recursive: true })
-        poopy.modules.Jimp = require('jimp')
-        poopy.modules.whatwg = require('whatwg-url')
-        poopy.modules.deepai = require('deepai')
-        poopy.modules.noblox = require('noblox.js')
-        poopy.modules.youtubedl = require('yt-dlp-exec')
-        poopy.modules.google = require('googleapis').google
-        //poopy.modules.Twitter = require('twitter')
-        poopy.modules.gis = require('g-i-s')
-        poopy.modules.catbox = require('catbox.moe')
-        poopy.modules.mathjs = require('mathjs')
-        poopy.modules.prettyBytes = require('pretty-bytes')
-        poopy.modules.itob = require('istextorbinary')
-        poopy.modules.os = require('os')
 
-        // these are functions
-        poopy.functions.getEmojis = require('@jimp/plugin-print/emojis')
-        poopy.functions.lingo = require('./modules/lingo')
-        poopy.functions.gibberish = require('./modules/gibberish')
-        poopy.functions.markov = require('./modules/markov')
-        poopy.functions.wackywebm = require('./modules/wackywebm')
-        poopy.functions.getAllData = require('./modules/dataGathering').getAllData
-        poopy.functions.updateAllData = require('./modules/dataGathering').updateAllData
-        poopy.functions.globalData = require('./modules/globalData')
-        poopy.functions.brainfuck = require('./modules/brainfuck')
-        poopy.functions.tobrainfuck = require('./modules/tobrainfuck')
-        poopy.functions.generateSayori = require('./modules/sayorimessagegenerator')
-        if (!poopy.config.testing) {
-            poopy.functions.braille = require('./modules/braille')
-            poopy.functions.averageColor = require('./modules/averageColor')
-            poopy.functions.spectrogram = require('./modules/spectrogram')
+        for (var key in poopy.dataValues.modules) {
+            var val = poopy.dataValues.modules[key]
+            poopy.modules[key] = val
         }
 
-        // bot and variables now
+        // functions and variables now
+        for (var key in poopy.dataValues.functions) {
+            var val = poopy.dataValues.functions[key]
+            poopy.functions[key] = val
+        }
+
+        for (var key in poopy.dataValues.vars) {
+            var val = poopy.dataValues.vars[key]
+            poopy.vars[key] = val
+        }
+
+        // bote
         poopy.bot = new poopy.modules.Discord.Client({
             intents: new poopy.modules.Discord.Intents(poopy.config.intents),
             partials: ['CHANNEL'],
             failIfNotExists: false
         })
+        poopy.rest = new poopy.modules.REST({
+            version: '10'
+        })
         poopy.package = JSON.parse(poopy.modules.fs.readFileSync('package.json'))
 
         poopy.vars.msgcooldown = false
-        poopy.vars.validUrl = /(http|https):\/\/([!#$&-;=?-[\]_a-z~]|%[0-9a-fA-F]{2})+/
-        poopy.vars.emojiRegex = require('emoji-regex')()
-        poopy.vars.Catbox = new poopy.modules.catbox.Catbox()
-        poopy.vars.Litterbox = new poopy.modules.catbox.Litterbox()
-        poopy.vars.youtube = poopy.modules.google.youtube({
-            version: 'v3',
-            auth: process.env.GOOGLEKEY
-        })
-        poopy.modules.deepai.setApiKey(process.env.DEEPAIKEY)
-        /*poopy.vars.twitterClient = new poopy.modulesitter({
-            consumer_key: process.env.TWITTERCONSUMERKEY,
-            consumer_secret: process.env.TWITTERCONSUMERSECRET,
-            access_token_key: process.env.TWITTERACCESSTOKENKEY,
-            access_token_secret: process.env.TWITTERACCESSTOKENSECRET
-        })*/
-        poopy.vars.rest = new poopy.modules.REST({ version: '10' })
-        poopy.vars.gifFormats = ['gif', 'apng']
-        poopy.vars.jimpFormats = ['png', 'jpeg', 'jpg', 'gif', 'bmp', 'tiff']
-        poopy.vars.processingTools = require('./modules/processingTools')
-        poopy.vars.symbolreplacements = [
-            {
-                target: ['‘', '’', '‛', '❛', '❜'],
-                replacement: '\''
-            },
-            {
-                target: ['“', '”', '‟'],
-                replacement: '"'
-            },
-        ]
-        poopy.vars.punctuation = ['?', '.', '!', '...']
-        poopy.vars.caseModifiers = [
-            function (text) {
-                return text.toUpperCase()
-            },
-            function (text) {
-                return text.toLowerCase()
-            },
-            function (text) {
-                return text.toUpperCase().substring(0, 1) + text.toLowerCase().substring(1)
-            }
-        ]
         poopy.vars.statusChanges = true
         poopy.vars.filecount = 0
         poopy.vars.cps = 0
@@ -283,420 +217,12 @@ class Poopy {
             delete poopy.modules.Discord.Guild.prototype.leave
         }
 
-        poopy.statuses = [
-            {
-                name: "the cycle of poopy",
-                type: "WATCHING"
-            },
-            {
-                name: "berezaa",
-                type: "WATCHING"
-            },
-            {
-                name: "beans",
-                type: "WATCHING"
-            },
-            {
-                name: "Deinx abusing admin",
-                type: "LISTENING"
-            },
-            {
-                name: "Soup",
-                type: "PLAYING"
-            },
-            {
-                name: "Garfield Kart",
-                type: "PLAYING"
-            },
-            {
-                name: "Troll Boxing",
-                type: "COMPETING"
-            },
-            {
-                name: "the Annoying Orange",
-                type: "STREAMING"
-            },
-            {
-                name: "",
-                type: "WATCHING"
-            },
-            {
-                name: "nine",
-                type: "STREAMING"
-            },
-            {
-                name: "simple steps on how to make a chocolate generator",
-                type: "STREAMING"
-            },
-            {
-                name: "me doing arson",
-                type: "STREAMING"
-            },
-            {
-                name: "the quadrillionth 2 minute long video with dramatic music",
-                type: "LISTENING"
-            },
-            {
-                name: "edgar",
-                type: "LISTENING"
-            },
-            {
-                name: "the sky",
-                type: "WATCHING"
-            },
-            {
-                name: "sprikrjdbdondpipopiekprjtiet (luigi remix)",
-                type: "LISTENING"
-            },
-            {
-                name: "the brown note",
-                type: "LISTENING"
-            },
-            {
-                name: "you",
-                type: "WATCHING"
-            },
-            {
-                name: "the salami lid",
-                type: "COMPETING"
-            },
-            {
-                name: "deals",
-                type: "WATCHING"
-            },
-            {
-                name: "the server get filled with femboys",
-                type: "WATCHING"
-            },
-            {
-                name: "drama",
-                type: "LISTENING"
-            },
-            {
-                name: "HELL",
-                type: "COMPETING"
-            },
-            {
-                name: "tenor gif search",
-                type: "WATCHING"
-            },
-            {
-                name: "myself getting banned from Roblox for no reason for uploading multiple frames of a banana GIF",
-                type: "WATCHING"
-            },
-            {
-                name: "The Furry Community",
-                type: "PLAYING"
-            },
-            {
-                name: "the economy fall",
-                type: "WATCHING"
-            },
-            {
-                name: "O RALSEI GARCELLO É UM MEME DOIDO! Mod Deltarune Friday Night Funkin",
-                type: "WATCHING"
-            },
-            {
-                name: "my funny video playlist",
-                type: "WATCHING"
-            },
-            {
-                name: "pilgrammed soundtrack",
-                type: "LISTENING"
-            },
-            {
-                name: "bagel timelapse",
-                type: "STREAMING"
-            },
-            {
-                name: "Intel(R) Xeon(R) Platinum 8259CL CPU @ 2.50GHz",
-                type: "WATCHING"
-            },
-            {
-                name: "t",
-                type: "LISTENING"
-            },
-            {
-                name: "bowsers big bean burrito",
-                type: "WATCHING"
-            },
-            {
-                name: "fnaf",
-                type: "PLAYING"
-            },
-            {
-                name: "New",
-                type: "PLAYING"
-            },
-            {
-                name: "_______.exe",
-                type: "PLAYING"
-            },
-            {
-                name: "rogue lineage",
-                type: "PLAYING"
-            },
-            {
-                name: "I only said the death threats because they angered me",
-                type: "LISTENING"
-            },
-            {
-                name: "squid games by mr nick",
-                type: "WATCHING"
-            },
-            {
-                name: "Emote Game 3",
-                type: "STREAMING"
-            },
-            {
-                name: "crjypptoland",
-                type: "COMPETING"
-            },
-            {
-                name: "le nft rouge",
-                type: "WATCHING"
-            },
-            {
-                name: "a blender",
-                type: "STREAMING"
-            },
-            {
-                name: "fl studio",
-                type: "LISTENING"
-            },
-            {
-                name: "... A D",
-                type: "COMPETING"
-            },
-            {
-                name: "sayorine",
-                type: "WATCHING"
-            },
-            {
-                name: "YOUR HOUSE LOL",
-                type: "STREAMING"
-            },
-            {
-                name: "as a robloxian studying with a pencil on the book",
-                type: "PLAYING"
-            },
-            {
-                name: "Roblox 🏅",
-                type: "COMPETING"
-            },
-            {
-                name: "poopy crash count",
-                type: "STREAMING"
-            },
-            {
-                name: "with your files",
-                type: "PLAYING"
-            },
-            {
-                name: "node.js",
-                type: "PLAYING"
-            },
-            {
-                name: "UNDERTALE",
-                type: "STREAMING"
-            },
-            {
-                name: "evil js programmer be like i do not want to kill myself",
-                type: "PLAYING"
-            },
-            {
-                name: "terraria babis mod",
-                type: "PLAYING"
-            },
-            {
-                name: "tModLoader",
-                type: "PLAYING"
-            },
-            {
-                name: "PLANTS VS ZOMBIES GARDEN WARFARE БОСС МОД NIG",
-                type: "PLAYING"
-            },
-            {
-                name: "What are the true capabilities of Nr N? What is his purpose?",
-                type: "LISTENING"
-            },
-            {
-                name: "https://media.discordapp.net/attachments/535469236802551811/932928601735692349/EXEHOTVIdle.gif",
-                type: "STREAMING"
-            },
-            {
-                name: "gurt",
-                type: "WATCHING"
-            }
-        ]
-
         // objects and arrays for things like the arab dictionary
-        poopy.json = {
-            wordJSON: JSON.parse(poopy.modules.fs.readFileSync('./assets/json/words.json')),
-            fakeWordJSON: JSON.parse(poopy.modules.fs.readFileSync('./assets/json/fakeWords.json')),
-            continentJSON: JSON.parse(poopy.modules.fs.readFileSync('./assets/json/continents.json')),
-            countryJSON: JSON.parse(poopy.modules.fs.readFileSync('./assets/json/countries.json')),
-            languageJSON: JSON.parse(poopy.modules.fs.readFileSync('./assets/json/languages.json')),
-            cityJSON: JSON.parse(poopy.modules.fs.readFileSync('./assets/json/cities.json')),
-            restaurantJSON: JSON.parse(poopy.modules.fs.readFileSync('./assets/json/foods.json')),
-            sentenceJSON: JSON.parse(poopy.modules.fs.readFileSync('./assets/json/sentences.json')),
-            nounJSON: JSON.parse(poopy.modules.fs.readFileSync('./assets/json/nouns.json')),
-            verbJSON: JSON.parse(poopy.modules.fs.readFileSync('./assets/json/verbs.json')),
-            adjJSON: JSON.parse(poopy.modules.fs.readFileSync('./assets/json/adjectives.json')),
-            imageJSON: JSON.parse(poopy.modules.fs.readFileSync('./assets/json/images.json')),
-            nameJSON: JSON.parse(poopy.modules.fs.readFileSync('./assets/json/names.json')),
-            emojiJSON: []
-        }
-        poopy.arrays = {
-            arabDictionary: [
-                '4chan', 'the poopening', 'negro', 'feet', 'GIANT COCK', 'orgy',
-                'e621', 'cum', 'r34', 'mug', 'Talking Tom', 'Talking Ben', 'Talking Angela',
-                'IShowSpeed', 'deepwoken', 'pilgrammed', 'lean', '🤓', 'punapea6', 'dream', 'soup land',
-                'phexonia studios', 'idfsgs', 'penis', 'sex', 'hentai', 'area', 'World', 'throat',
-                'Mongolian', 'finnish', 'Malagasy', 'Iraqi', 'polish', 'ethiopian', 'canadian',
-                'ukrainian', 'iranian', 'irish', 'swedish', 'danish', 'french', 'chips', 'spanish',
-                'racist', 'superbrohouse', 'deinx', 'bubbley', 'deinbag', 'another', 'crypyth',
-                'tordenask', 'lead', 'wovxzers', 'dootings', 'bartekoklol', 'tuca', 'ballfish', 'kleio',
-                'crazy', 'cinna', 'btn', 'tree', 'gritzy', 'ruki', 'henry', 'empsy', 'maks', 'henhen',
-                'phex', 'icre8', 'bilon', 'fnepp', 'zekkriel', 'tranzst', 'mance', 'luigistar', 'makos',
-                'spellbunny', 'scriptedsand', 'puppet', 'josh', 'spooky', 'catfishhotdog', 'robuk',
-                'pl0x7', 'lemoardo', 'dundeed', 'notsam', 'luigiluis', 'trongal', 'mysterymeatwad',
-                'carlito', 'azureblob', 'simpremove', 'gobby', 'sayori', 'concern', 'betteruser', 'tix',
-                'charleh', 'jlol', 'Featured', 'Vesteria', 'Rogue Lineage', 'madness', 'tricky', 'zardy',
-                'madness combat', 'splatoon', 'babis', 'wiki', 'fandom', 'milk', 'carrot', 'vinegar',
-                'mushroom', 'stew', 'shroom', 'peashooter', 'eyed', 'pea', 'frank', 'carl', 'oil',
-                'sunflower', 'chomper', 'piranha', 'fishes', 'fishe', 'fish', 'salami', 'lid', '≥w≤',
-                'furry', 'nya', 'uwu', 'owo', '^w^', 'freedom', 'dick', 'flip', 'bottle', 'pork',
-                'demotion', 'promotion', 'Error', 'Scream', 'spoon', 'knife', 'all over', 'african',
-                'land', '😂', 'yup', 'pee', 'piss', 'stranger language', 'edition', 'version', 'turtle',
-                'language', 'stranger', 'persian', 'people', 'Freddy', 'FNAF', 'giraffe', 'hippopotamus',
-                'program', 'coding', 'ocean', 'treasure', 'egg', 'tool', 'lad', 'lad village', 'GPU',
-                'CPU', 'lag', 'imposter', 'Among Us', 'sus', 'homework', 'markov', 'moment', 'nervous',
-                'shy', 'CHICKEN', 'sosig', 'brogle', 'Dad', 'Grand', 'Windows 95', 'Windows XP',
-                'big fat', 'blender', 'group', 'Phexonia', 'venezuelan', 'tf2', 'Bastard', 'obby',
-                'david', 'WARIO', 'sandals', 'livestream', 'youtube', 'minimum', 'pickle', 'NSFW',
-                'hot', 'RALEIGH', 'PEED FAMILY', 'gif', 'nostalgia critic', 'Britain', 'America',
-                'United Kingdom', 'soup', 'United States of America', 'WOMEN', 'wife', 'cat',
-                'marselo', 'tech support', 'indian', 'australian', 'japanese', 'Plants vs Zombies',
-                'Joe Biden', 'chinese', 'Chinese Republic', 'french fries', 'german', 'SWITZERLAND',
-                'denmark', 'Donald Trump', 'portuguese', 'nigerian', 'russian', 'beach', 'alpha',
-                'beta', 'theaters', 'Movie', 'Trailer', 'Lego', 'chalk', 'Documentation', 'mcdrive',
-                'Boner', 'Big', 'Giant', 'Small', 'Awesome', 'STOLEN', 'no', 'yes', 'car', 'Rigby',
-                'Mordecai', 'BENSON', 'park', 'blaster', 'gaster', 'Undertale', 'phil', 'Anvil',
-                'halloween', 'pumpkin', 'shut up', 'platinum', 'cheats', 'farms', 'GOLD', 'cake day',
-                'pizza slice', 'lasagna', 'quesadilla', 'enchilada', 'Miner\'s Haven', 'berezaa',
-                'LEGENDARY', 'Bee Swarm Simulator', 'beta tester', 'member', 'creator', 'family',
-                'Empire', 'Warfare', 'upvotes', 'downvotes', 'redditor', 'reddit', 'reddit arguments',
-                'twitter', 'twitter arguments', 'amongla', 'virus', 'viruses', 'INSTALL NOW',
-                'FL Studio VST', 'Torrent', 'Github', 'the ESSENCE', 'soup satan', 'soup god',
-                'quesley', 'empsy', 'illegal', 'legal', 'regal', 'deflorestation', 'DONKEY KONG',
-                'piss shit come', 'gay chains', 'Tss crazed', 'ralsei', '👶', '✅', 'PIG', 'cucumber',
-                'mark\'s pizzeria', 'dominus pizza', 'pizza hut', 'wendy\'s', 'hat', 'tool',
-                'burger king', 'mcdonalds', 'nugget', 'fat', 'WTF', 'ROFL', 'XD', 'LMAO', 'LOL', 'Lad',
-                'Piid', 'LOUD', 'griefed', 'Fitmc', '2b2t', 'POPBOB', 'mommy', 'Survival', 'Jeff',
-                'Slender', 'Piggy', '🐖', 'artistic', 'Burrito', 'fart channel', '💓', 'Banjo',
-                'guitarist', 'guitar', 'chords', 'instruments', 'bingus', 'sussy', 'Big ass',
-                'crewmate', 'Imposter', 'choccy milk', 'thwomp', '🐡', 'brain rot', 'your mom', 'baby',
-                'baby farting', 'Admin', 'EMOTE GAME', 'Sega', 'Sega Genesis', 'Newgrounds', 'Gamejolt',
-                'Steam', 'Epic Games', 'basket', 'update released', 'Soup Land', 'ROCKET',
-                'clash of clans', 'clothes', 'lore', 'fart machine', 'mech', 'Angry Birds',
-                'Bad Piggies', 'vlog', 'Poopy', 'machine', 'Thanos', 'porn', 'New emote', 'bought',
-                'Sun', 'Moon', 'Friday Night Funkin', 'Mod', 'Minecraft', 'Terraria', 'Roblox',
-                'Shaders', '2012', '2016', 'peter', 'GTA 6', 'GTA', 'bananas', 'shanky', 'PEED',
-                'Hollow Knight', 'Burrito Bison', 'Taco', 'taxes', 'budget', 'dollars', 'british',
-                'fluffy', 'brocolli', 'brain', 'SHIT', 'HELL', 'naked', 'babis', 'kingdom', 'HAHAHA',
-                'arabic', 'Rocket League', 'Fortnite', 'mrflimflam', 'Flamingo', 'rap', 'bitch',
-                'Poop', 'MARIO', 'crAck', 'Harambe', 'hellish', 'crimes', 'cordy', 'Halal', 'HARAM',
-                'Chungus', 'president', 'santa', 'idiot', 'WOW', 'SANS', 'FART', 'Garfield', 'POG',
-                'DEINX', 'discord', 'Super', 'Market', 'Mark', 'EXPLOSIVE', 'combat', 'oyster',
-                'Epico', 'Grammar', 'SUS', 'fresh', 'matilda', 'sonic', 'corpses', 'Egyptian', 'White',
-                'BLACK', 'wacky', 'card', 'credit', 'Tycoon', 'tunas', 'Israelite', 'Saudi',
-                'brazilian', 'Luigi', 'shawty'
-            ],
-            tenorDictionary: [
-                'mug', 'Talking Tom', 'Talking Ben', 'Talking Angela', 'IShowSpeed',
-                'deepwoken', 'pilgrammed', 'lean', '🤓', 'punapea6', 'dream', 'soup land',
-                'phexonia studios', 'idfsgs', 'chips', 'racist', 'superbrohouse', 'deinx', 'bubbley',
-                'deinbag', 'another', 'crypyth', 'tordenask', 'lead', 'wovxzers', 'dootings',
-                'bartekoklol', 'tuca', 'ballfish', 'kleio', 'crazy', 'cinna', 'btn', 'tree', 'gritzy',
-                'ruki', 'henry', 'empsy', 'maks', 'henhen', 'phex', 'icre8', 'bilon', 'fnepp',
-                'zekkriel', 'tranzst', 'mance', 'luigistar', 'makos', 'spellbunny', 'scriptedsand',
-                'puppet', 'josh', 'spooky', 'catfishhotdog', 'robuk', 'pl0x7', 'lemoardo', 'dundeed',
-                'notsam', 'luigiluis', 'trongal', 'mysterymeatwad', 'carlito', 'azureblob',
-                'simpremove', 'gobby', 'sayori', 'concern', 'betteruser', 'tix', 'charleh', 'jlol',
-                'Vesteria', 'Rogue Lineage', 'tricky', 'zardy', 'madness combat', 'splatoon', 'babis',
-                'carrot', 'vinegar', 'mushroom', 'stew', 'shroom', 'peashooter', 'frank', 'carl',
-                'oil', 'sunflower', 'chomper', 'piranha', 'fishes', 'fishe', 'fish', 'salami', 'furry',
-                'uwu', 'owo', 'flip', 'bottle', 'pork', 'demotion', 'promotion', 'Error', 'spoon',
-                'knife', 'african', '😂', 'yup', 'turtle', 'persian', 'Freddy', 'FNAF', 'giraffe',
-                'hippopotamus', 'coding', 'ocean', 'egg', 'tool', 'lad', 'lad village', 'GPU', 'CPU',
-                'lag', 'imposter', 'Among Us', 'sus', 'homework', 'CHICKEN', 'sosig', 'brogle',
-                'Windows 95', 'Windows XP', 'blender', 'Phexonia', 'tf2', 'Bastard', 'obby', 'david',
-                'WARIO', 'sandals', 'livestream', 'youtube', 'pickle', 'hot', 'RALEIGH', 'PEED FAMILY',
-                'gif', 'nostalgia critic', 'Britain', 'America', 'United Kingdom', 'soup',
-                'United States of America', 'WOMEN', 'cat', 'marselo', 'tech support', 'indian',
-                'japanese', 'Plants vs Zombies', 'Joe Biden', 'chinese', 'Chinese Republic',
-                'french fries', 'german', 'SWITZERLAND', 'denmark', 'Donald Trump', 'portuguese',
-                'nigerian', 'russian', 'beach', 'Lego', 'Documentation', 'mcdrive', 'no', 'yes',
-                'Rigby', 'Mordecai', 'BENSON', 'park', 'phil', 'Anvil', 'halloween', 'pumpkin',
-                'shut up', 'platinum', 'cheats', 'GOLD', 'cake day', 'pizza slice', 'lasagna',
-                'quesadilla', 'enchilada', 'Miner\'s Haven', 'berezaa', 'LEGENDARY',
-                'Bee Swarm Simulator', 'beta tester', 'creator', 'upvotes', 'downvotes', 'redditor',
-                'reddit', 'reddit arguments', 'twitter', 'twitter arguments', 'amongla', 'virus',
-                'viruses', 'INSTALL NOW', 'Torrent', 'Github', 'the ESSENCE', 'soup satan', 'soup god',
-                'quesley', 'empsy', 'regal', 'deflorestation', 'DONKEY KONG', 'gay chains',
-                'Tss crazed', 'ralsei', '👶', '✅', 'PIG', 'cucumber', 'mark\'s pizzeria',
-                'dominus pizza', 'pizza hut', 'wendy\'s', 'burger king', 'mcdonalds', 'nugget', 'fat',
-                'WTF', 'ROFL', 'XD', 'LMAO', 'LOL', 'Lad', 'griefed', 'Fitmc', '2b2t', 'POPBOB',
-                'Jeff', 'Slender', 'Piggy', '🐖', 'Burrito', 'fart channel', '💓', 'Banjo',
-                'guitarist', 'guitar', 'instruments', 'bingus', 'sussy', 'crewmate', 'Imposter',
-                'choccy milk', 'thwomp', '🐡', 'baby', 'Admin', 'EMOTE GAME', 'Sega', 'Sega Genesis',
-                'Newgrounds', 'Gamejolt', 'Steam', 'Epic Games', 'basket', 'update released',
-                'Soup Land', 'ROCKET', 'clash of clans', 'lore', 'mech', 'Angry Birds', 'Bad Piggies',
-                'machine', 'Thanos', 'Sun', 'Moon', 'Friday Night Funkin', 'Mod', 'Minecraft',
-                'Terraria', 'Roblox', 'Shaders', '2012', '2016', 'peter', 'GTA 6', 'GTA', 'bananas',
-                'Hollow Knight', 'Burrito Bison', 'Taco', 'taxes', 'budget', 'dollars', 'british',
-                'brocolli', 'HELL', 'babis', 'kingdom', 'HAHAHA', 'arabic', 'Rocket League',
-                'Fortnite', 'mrflimflam', 'Flamingo', 'rap', 'MARIO', 'crimes', 'cordy', 'Halal',
-                'HARAM', 'Chungus', 'president', 'santa', 'WOW', 'FART', 'Garfield', 'POG', 'DEINX',
-                'discord', 'Market', 'Mark', 'EXPLOSIVE', 'combat', 'oyster', 'Epico', 'Grammar',
-                'SUS', 'fresh', 'matilda', 'sonic', 'Egyptian', 'White', 'BLACK', 'Tycoon', 'tunas',
-                'brazilian', 'Luigi'
-            ],
-            arabConnectors: [
-                'basically', 'literally', 'unexpected', 'expected', 'lost',
-                'lost his shit', 'grinds', 'since', 'I\'m', 'he\'s', 'she\'s', 'le', 'now', 'says',
-                'shitted', 'promoted', 'demoted', 'buttered', 'lagging', 'praying', 'died',
-                'streaming', 'skydiving', 'trolled', 'goes viral', 'fight', 'gets fired', 'like',
-                'love', 'driving', 'could', 'can', 'that', 'this', 'these', 'those', 'who', 'WHEN',
-                'so', 'called out', 'on', 'sued', 'cancelled', 'installed', 'removed', 'muting', 'am',
-                'are', 'arrested', 'i', 'you', 'he', 'his', 'her', 'she', 'it', 'that', 'the', 'is',
-                'was', 'a', 'an', 'watch', 'play', 'gotta', 'get', 'gaming', 'balling', 'yours',
-                'mine', 'your', 'you\'re', 'we\'re', 'they\'re', 'our', 'we', 'they', 'them', 'their',
-                'wipe', 'born', 'pissing', 'taken off', 'holed', 'off', 'out', 'flood', 'spamming',
-                'buy', 'hacking', 'smelling', 'have', 'become', 'be', 'watching', 'Added'
-            ],
-            psFiles: ['i broke the json'],
-            psPasta: ['i broke the json'],
-            funnygifs: ['i broke the json'],
-            poopPhrases: ['i broke the json'],
-            dmPhrases: ['i broke the json'],
-            eightball: [
-                'I don\'t know.', 'Maybe...', 'I think so.', 'Of course.', 'I don\'t think so.',
-                'I can afirm.', 'No, that\'s wrong.', 'Yes, that\'s right.', 'I assume so.', 'Yes.',
-                'No.', 'I have no answers.', 'That\'s true.', 'That\'s false.', 'Isn\'t it obvious?'
-            ]
-        }
+        poopy.statuses = dataValues.statuses
+        poopy.json = dataValues.json
+        poopy.arrays = poopy.dataValues.arrays
 
         // more functions!!1!!!!
-        poopy.functions.lerp = function (start, end, amt) {
-            return (1 - amt) * start + amt * end
-        }
-
-        poopy.functions.sleep = function (ms) {
-            return new Promise(resolve => setTimeout(resolve, ms ?? 0))
-        }
-
         poopy.functions.execPromise = function (code) {
             return new Promise(async (resolve) => {
                 var args = code.match(/("[^"\\]*(?:\\[\S\s][^"\\]*)*"|'[^'\\]*(?:\\[\S\s][^'\\]*)*'|\/[^\/\\]*(?:\\[\S\s][^\/\\]*)*\/[gimy]*(?=\s|$)|(?:\\\s|\S)+)/g)
@@ -802,70 +328,6 @@ class Poopy {
                     handleExit()
                 })
             })
-        }
-
-        poopy.functions.getPsFiles = async function () {
-            return new Promise((resolve, reject) => {
-                poopy.modules.axios.get('https://raw.githubusercontent.com/raIeigh/ps-media-json/main/psfiles.json').then((res) => {
-                    try {
-                        resolve(res.data.data)
-                    } catch (err) {
-                        reject(err)
-                    }
-                })
-            })
-        }
-
-        poopy.functions.getPsPasta = async function () {
-            return new Promise((resolve, reject) => {
-                poopy.modules.axios.get('https://raw.githubusercontent.com/raIeigh/ps-media-json/main/pspasta.json').then((res) => {
-                    try {
-                        resolve(res.data.data)
-                    } catch (err) {
-                        reject(err)
-                    }
-                })
-            })
-        }
-
-        poopy.functions.getFunny = async function () {
-            return new Promise((resolve, reject) => {
-                poopy.modules.axios.get('https://raw.githubusercontent.com/raIeigh/ps-media-json/main/funnygif.json').then((res) => {
-                    try {
-                        resolve(res.data.data)
-                    } catch (err) {
-                        reject(err)
-                    }
-                })
-            })
-        }
-
-        poopy.functions.request = async function (options) {
-            return new Promise((resolve, reject) => {
-                poopy.modules.request(options, function (error, response, body) {
-                    if (error) {
-                        reject(error)
-                        return
-                    }
-
-                    try {
-                        body = JSON.parse(body)
-                    } catch (_) { }
-
-                    resolve({
-                        request: options,
-                        status: response.statusCode,
-                        statusText: response.statusMessage,
-                        headers: response.headers,
-                        url: response.request.href,
-                        data: body
-                    })
-                })
-            })
-        }
-
-        poopy.functions.requireJSON = function (path) {
-            return JSON.parse(poopy.modules.fs.readFileSync(path).toString())
         }
 
         poopy.functions.gatherData = async function (msg) {
@@ -1179,6 +641,7 @@ class Poopy {
                     ch.bindQueue(qrash.queue, 'crash', '')
 
                     async function closeAll() {
+                        clearTimeout(idleTimeout)
                         await ch.cancel(consumer.consumerTag).catch(() => { })
                         await ch.cancel(crashconsumer.consumerTag).catch(() => { })
                         await ch.deleteQueue(q.queue).catch(() => { })
@@ -1221,6 +684,11 @@ class Poopy {
                         reject(msg.content.toString())
                     }, { noAck: true }).catch(reject)
 
+                    var idleTimeout = setTimeout(function () {
+                        closeAll()
+                        reject(`Task idle duration exceeded`)
+                    }, 300000)
+
                     poopy.modules.fs.writeFileSync(`tasks/${poopy.config.mongodatabase}/${correlationId}.json`, JSON.stringify(data))
 
                     ch.sendToQueue('tasks', Buffer.from(`${process.env.BOTWEBSITE}/tasks/${poopy.config.mongodatabase}/${correlationId}?auth=${process.env.AUTHTOKEN}`), {
@@ -1261,84 +729,6 @@ class Poopy {
                 poopy.vars.msgcooldown = true
                 setTimeout(() => poopy.vars.msgcooldown = false, poopy.config.msgcooldown)
             }
-        }
-
-        poopy.functions.regexClean = function (str) {
-            return str.replace(/[\\^$.|?*+()[{]/g, (match) => `\\${match}`)
-        }
-
-        poopy.functions.unescapeHTML = function (value) {
-            return value
-                .replace(/&amp;/g, '&')
-                .replace(/&lt;/g, '<')
-                .replace(/&gt;/g, '>')
-                .replace(/&quot;/g, '"')
-                .replace(/&apos;/g, '\'')
-                .replace(/&#\d+;/g, (match) => {
-                    return String.fromCharCode(match.substring(2, match.length - 1))
-                })
-        }
-
-        poopy.functions.parMatch = function (string) {
-            var lastParenthesesIndex = -1
-            var llastParenthesesIndex = -1
-            var parindex = 0
-
-            for (var i in string) {
-                var char = string[i]
-
-                switch (char) {
-                    case '(':
-                        if (parindex <= 0) lastParenthesesIndex = Number(i) // set the index of the last parentheses
-                        parindex++ // open parentheses found
-                        break
-
-                    case ')':
-                        if (string[i - 1] !== '\\') {
-                            parindex-- // closed parentheses found
-                            llastParenthesesIndex = Number(i) + 1
-                            if (parindex <= 0) {
-                                return string.substring(lastParenthesesIndex, Number(i) + 1)
-                            }
-                        }
-                        break
-                }
-            }
-
-            if (llastParenthesesIndex > -1) {
-                lastParenthesesIndex++
-                return string.substring(lastParenthesesIndex, llastParenthesesIndex)
-            }
-
-            return null
-        }
-
-        poopy.functions.matchLongestKey = function (str, keys) {
-            if (keys.length <= 0) return ['']
-            var longest = ['']
-            var matched = false
-            for (var i in keys) {
-                var match = str.match(new RegExp(`^${poopy.functions.regexClean(keys[i])}`))
-                if (match && match[0].length >= longest[0].length) {
-                    matched = true
-                    longest = match
-                }
-            }
-            return matched && longest
-        }
-
-        poopy.functions.matchLongestFunc = function (str, funcs) {
-            if (funcs.length <= 0) return ['']
-            var longest = ['']
-            var matched = false
-            for (var i in funcs) {
-                var match = str.match(new RegExp(`${poopy.functions.regexClean(funcs[i])}$`))
-                if (match && match[0].length >= longest[0].length) {
-                    matched = true
-                    longest = match
-                }
-            }
-            return matched && longest
         }
 
         poopy.functions.getKeyFunc = function (string, { extrakeys = {}, extrafuncs = {}, declaredonly = false } = {}) {
@@ -1571,60 +961,6 @@ class Poopy {
             split.push(string.substring(lastSplitIndex))
 
             return split.map(val => isDefaultSeparator ? val.replace(/\\\|/, '|') : val)
-        }
-
-        poopy.functions.getIndexOption = function (args, i, { dft = undefined, n = 1 } = {}) {
-            return args.slice(i, i + n) || dft
-        }
-
-        poopy.functions.getOption = function (args, name, { dft = undefined, n = 1, splice = false, join = true, func = (opt) => opt } = {}) {
-            var optionindex = args.indexOf(`-${name}`)
-            if (optionindex > -1) {
-                var option = []
-                for (var i = 1; i <= n; i++) {
-                    option.push(func(args[optionindex + i], i))
-                }
-                if (splice) args.splice(optionindex, n + 1)
-                if (join) option = option.join(' ')
-                return n == 0 ? true : option
-            }
-            return dft
-        }
-
-        poopy.functions.parseNumber = function (str, { dft = undefined, min = -Infinity, max = Infinity, round = false } = {}) {
-            if (str === undefined || str === '') return dft
-            var number = Number(str)
-            return isNaN(number) ? dft : (round ? Math.round(Math.max(Math.min(number, max), min)) : Math.max(Math.min(number, max), min)) ?? dft
-        }
-
-        poopy.functions.parseString = function (str, validList, { dft = undefined, lower = false, upper = false } = {}) {
-            if (str == undefined || str === '') return dft
-            var query = upper ? str.toUpperCase() : lower ? str.toLowerCase() : str
-            return validList.find(q => q == query) || dft
-        }
-
-        poopy.functions.equalValues = function (arr, val) {
-            var count = 0
-            arr.forEach(v => v == val && count++)
-            return count
-        }
-
-        poopy.functions.randomChoice = function (arr) {
-            return arr[Math.floor(Math.random() * arr.length)]
-        }
-
-        poopy.functions.shuffle = function (array) {
-            var currentIndex = array.length, randomIndex
-
-            while (currentIndex != 0) {
-                randomIndex = Math.floor(Math.random() * currentIndex);
-                currentIndex--
-
-                [array[currentIndex], array[randomIndex]] = [
-                    array[randomIndex], array[currentIndex]]
-            }
-
-            return array
         }
 
         poopy.functions.yesno = async function (channel, content, who, btdata, reply) {
@@ -2011,11 +1347,11 @@ class Poopy {
 
             var usingButton = false
 
-            var lastCollector = poopy.tempdata[msg.author.id]['navigateCollector']
+            var lastCollector = poopy.tempdata[who]['navigateCollector']
             if (lastCollector && lastCollector.stop) lastCollector.stop()
 
             if (poopy.config.useReactions) {
-                var collector = poopy.tempdata[msg.author.id]['navigateCollector'] = resultsMsg.createReactionCollector({ time: 60_000 })
+                var collector = poopy.tempdata[who]['navigateCollector'] = resultsMsg.createReactionCollector({ time: 60_000 })
 
                 collector.on('collect', async (reaction, user) => {
                     poopy.functions.dmSupport(reaction)
@@ -2058,7 +1394,7 @@ class Poopy {
                 })
 
                 collector.on('end', async (_, reason) => {
-                    delete poopy.tempdata[msg.author.id]['navigateCollector']
+                    delete poopy.tempdata[who]['navigateCollector']
 
                     var resultEmbed = await pageFunc(page, true).catch(() => { })
                     var sendObject = {}
@@ -2079,7 +1415,7 @@ class Poopy {
                     await resultsMsg.react(bdata.reactemoji).catch(() => { })
                 }
             } else {
-                var collector = poopy.tempdata[msg.author.id]['navigateCollector'] = resultsMsg.createMessageComponentCollector({ time: 60_000 })
+                var collector = poopy.tempdata[who]['navigateCollector'] = resultsMsg.createMessageComponentCollector({ time: 60_000 })
 
                 collector.on('collect', async (button) => {
                     poopy.functions.dmSupport(button)
@@ -2131,13 +1467,13 @@ class Poopy {
                             else sendObject.embeds = [resultEmbed]
 
                             resultsMsg.edit(sendObject).catch(() => { })
-                        } else console.log('rehtard')
+                        }
                         usingButton = false
                     }
                 })
 
                 collector.on('end', async (_, reason) => {
-                    delete poopy.tempdata[msg.author.id]['navigateCollector']
+                    delete poopy.tempdata[who]['navigateCollector']
 
                     var resultEmbed = await pageFunc(page, true).catch(() => { })
                     var sendObject = {
@@ -2154,229 +1490,6 @@ class Poopy {
                     if (endFunc) endFunc(reason, page, resultsMsg)
                 })
             }
-        }
-
-        poopy.functions.similarity = function (s1, s2) {
-            function editDistance(s1, s2) {
-                s1 = s1.toLowerCase()
-                s2 = s2.toLowerCase()
-
-                var costs = new Array()
-                for (var i = 0; i <= s1.length; i++) {
-                    var lastValue = i
-                    for (var j = 0; j <= s2.length; j++) {
-                        if (i == 0)
-                            costs[j] = j
-                        else {
-                            if (j > 0) {
-                                var newValue = costs[j - 1]
-                                if (s1.charAt(i - 1) != s2.charAt(j - 1))
-                                    newValue = Math.min(Math.min(newValue, lastValue),
-                                        costs[j]) + 1
-                                costs[j - 1] = lastValue
-                                lastValue = newValue
-                            }
-                        }
-                    }
-                    if (i > 0)
-                        costs[s2.length] = lastValue
-                }
-                return costs[s2.length]
-            }
-
-            var longer = s1
-            var shorter = s2
-            if (s1.length < s2.length) {
-                longer = s2
-                shorter = s1
-            }
-            var longerLength = longer.length
-            if (longerLength == 0) {
-                return 1.0
-            }
-            return (longerLength - editDistance(longer, shorter)) / parseFloat(longerLength)
-        }
-
-        poopy.functions.chunkArray = function (myArray, chunk_size) {
-            var arrayLength = myArray.length
-            var tempArray = []
-
-            for (var index = 0; index < arrayLength; index += chunk_size) {
-                var myChunk = myArray.slice(index, index + chunk_size)
-                tempArray.push(myChunk)
-            }
-
-            return tempArray;
-        }
-
-        poopy.functions.chunkObject = function (object, chunk_size) {
-            var values = Object.values(object)
-            var final = []
-            var counter = 0
-            var portion = {}
-
-            for (var key in object) {
-                if (counter !== 0 && counter % chunk_size === 0) {
-                    final.push(portion)
-                    portion = {}
-                }
-                portion[key] = values[counter]
-                counter++
-            }
-            final.push(portion)
-
-            return final
-        }
-
-        poopy.functions.generateId = function (existing, length = 10) {
-            var charset = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_'
-            var id = ''
-
-            for (var i = 0; i < length; i++) {
-                id += charset[Math.floor(Math.random() * charset.length)]
-            }
-
-            if (existing && existing.includes(id)) return poopy.functions.generateId(existing, length)
-
-            return id
-        }
-
-        poopy.functions.replaceAsync = async function (str, regex, asyncFn) {
-            var promises = []
-            str.replace(regex, (match, ...args) => {
-                var promise = asyncFn(match, ...args)
-                promises.push(promise)
-            })
-            var data = await Promise.all(promises)
-            return str.replace(regex, () => data.shift())
-        }
-
-        poopy.functions.findAsync = async function (arr, asyncCallback) {
-            var promises = arr.map(asyncCallback)
-            var results = await Promise.all(promises)
-            var index = results.findIndex(result => result)
-            return arr[index]
-        }
-
-        poopy.functions.findIndexAsync = async function (arr, asyncCallback) {
-            var promises = arr.map(asyncCallback)
-            var results = await Promise.all(promises)
-            var index = results.findIndex(result => result)
-            return index
-        }
-
-        poopy.functions.markovChainGenerator = function (text) {
-            var textArr = text.split(' ')
-            var markovChain = []
-            markovChain.findChain = function (w) {
-                return this.find(chain => chain.word === w)
-            }
-            markovChain.random = function () {
-                return this[Math.floor(Math.random() * this.length)]
-            }
-            for (var i = 0; i < textArr.length; i++) {
-                var word = textArr[i]
-                if (word) {
-                    if (!markovChain.findChain(word.toLowerCase())) {
-                        markovChain.push({
-                            word: word.toLowerCase(),
-                            forms: [],
-                            next: [],
-                            repeated: 0
-                        })
-                    }
-                    markovChain.findChain(word.toLowerCase()).forms.push(word)
-                    markovChain.findChain(word.toLowerCase()).repeated++
-                    if (textArr[i + 1]) {
-                        markovChain.findChain(word.toLowerCase()).next.push(textArr[i + 1]);
-                    }
-                }
-            }
-            markovChain.sort((a, b) => {
-                return b.repeated - a.repeated
-            })
-            return markovChain
-        }
-
-        poopy.functions.markovMe = function (markovChain, text = '', options = {}) {
-            var words = markovChain.map(chain => chain.word)
-
-            if (words.length <= 0) return 'no markov data for guild, arabotto 2020'
-
-            var wordNumber = options.wordNumber
-            var nopunctuation = options.nopunctuation
-            var keepcase = options.keepcase
-            var randlerp = options.randomlerp ?? 0.4
-
-            var result = text ? text.split(' ') : []
-            var chain = markovChain.random()
-            var word = result[result.length - 1] || chain.forms[Math.floor(Math.random() * chain.forms.length)]
-            result.splice(result.length - 1)
-            var maxrepeat = markovChain[0].repeated
-            var randomchance = 0
-            for (var i = 0; i < (wordNumber || Math.min(words.length, Math.floor(Math.random() * 20) + 1)); i++) {
-                result.push(word);
-                if (poopy.vars.validUrl.test(word) && !wordNumber) break
-                var markov = markovChain.findChain(word.toLowerCase())
-                var newWord = markov.next[Math.floor(Math.random() * markov.next.length)]
-                word = newWord
-                randomchance = poopy.functions.lerp(randomchance, maxrepeat, randlerp)
-                if (!word || !markovChain.findChain(word.toLowerCase()) || Math.floor(Math.random() * randomchance) >= maxrepeat * 0.5) {
-                    randomchance = 0
-                    chain = markovChain.random()
-                    word = chain.forms[Math.floor(Math.random() * chain.forms.length)]
-                }
-            }
-            result = result.join(' ')
-            if (!poopy.vars.punctuation.find(p => result.match(new RegExp(`[${p}]$`))) && Math.floor(Math.random() * 5) === 0 && !nopunctuation) {
-                result += poopy.vars.punctuation[Math.floor(Math.random() * poopy.vars.punctuation.length)]
-            }
-            if (Math.floor(Math.random() * 5) === 0 && !keepcase) {
-                result = poopy.vars.caseModifiers[Math.floor(Math.random() * poopy.vars.caseModifiers.length)](result)
-            }
-            return result
-        }
-
-        poopy.functions.findpreset = function (args) {
-            var presets = [
-                'ultrafast',
-                'superfast',
-                'veryfast',
-                'faster',
-                'fast',
-                'medium',
-                'slow',
-                'slower',
-                'veryslow'
-            ]
-            var preset = 'ultrafast'
-            var presetindex = args.indexOf('-encodingpreset')
-            if (presetindex > -1) {
-                if (presets.find(preset => preset === args[presetindex + 1].toLowerCase())) {
-                    preset = args[presetindex + 1]
-                }
-            }
-            return preset
-        }
-
-        poopy.functions.randomKey = function (name) {
-            var i = 1
-            var keys = []
-            while (process.env[name + (i != 1 ? i : '')]) {
-                keys.push(process.env[name + (i != 1 ? i : '')])
-                i++
-            }
-            return keys[Math.floor(Math.random() * keys.length)]
-        }
-
-        poopy.functions.envsExist = function (envs = []) {
-            var exist = true
-
-            envs.forEach(env => {
-                if (!process.env[env]) exist = false
-            })
-
-            return exist
         }
 
         poopy.functions.correctUrl = async function (url) {
@@ -4122,7 +3235,7 @@ class Poopy {
 
         poopy.functions.updateSlashCommands = async function () {
             var slashBuilders = Object.values(poopy.slashBuilders)
-            await poopy.vars.rest.put(poopy.modules.Routes.applicationCommands(poopy.bot.user.id), { body: slashBuilders }).catch((e) => console.log(e))
+            await poopy.rest.put(poopy.modules.Routes.applicationCommands(poopy.bot.user.id), { body: slashBuilders }).catch((e) => console.log(e))
         }
 
         poopy.functions.findCommand = function (name) {
@@ -5183,7 +4296,7 @@ class Poopy {
             writable: false
         })
 
-        poopy.vars.rest.setToken(poopy.__TOKEN)
+        poopy.rest.setToken(poopy.__TOKEN)
         await poopy.bot.login(poopy.__TOKEN)
 
         async function requestData() {
@@ -5558,60 +4671,11 @@ class Poopy {
 
         await poopy.functions.infoPost(`Finishing extra steps...`)
 
-        var voiceResponse = await poopy.modules.axios.request({
-            method: 'GET',
-            url: 'https://api.uberduck.ai/voices?mode=tts-basic',
-            headers: {
-                Accept: 'application/json',
-                Authorization: `Basic ${btoa(`${process.env.UBERDUCKKEY}:${process.env.UBERDUCKSECRET}`)}`
-            }
-        }).catch(() => { })
-        if (voiceResponse) {
-            poopy.vars.ubervoices = voiceResponse.data
-            poopy.vars.ubervoices.sort((va, vb) => {
-                var x = va.display_name.toLowerCase()
-                var y = vb.display_name.toLowerCase()
-                if (x < y) return -1
-                if (x > y) return 1
-                return 0
-            })
-            poopy.vars.ubercategories = []
-            for (var i in poopy.vars.ubervoices) {
-                var voice = poopy.vars.ubervoices[i]
+        [poopy.vars.ubervoices, poopy.vars.ubercategories] = await poopy.dataGetters.uberduck().catch(() => { }) ?? [null, null]
 
-                if (!poopy.vars.ubercategories.find(category => category.name == voice.category)) poopy.vars.ubercategories.push({ name: voice.category, voices: [] })
-                poopy.vars.ubercategories.find(category => category.name == voice.category).voices.push(voice)
-            }
-            poopy.vars.ubercategories.sort((ca, cb) => {
-                var x = ca.name.toLowerCase()
-                var y = cb.name.toLowerCase()
-                if (x < y) return -1
-                if (x > y) return 1
-                return 0
-            })
-        }
+        poopy.vars.languages = await poopy.dataGetters.languages().catch(() => { })
 
-        var lresponse = await poopy.modules.axios.request({
-            method: 'GET',
-            url: 'https://microsoft-translator-text.p.rapidapi.com/languages',
-            params: { 'api-version': '3.0' },
-            headers: {
-                'x-rapidapi-host': 'microsoft-translator-text.p.rapidapi.com',
-                'x-rapidapi-key': poopy.functions.randomKey('RAPIDAPIKEY')
-            }
-        }).catch(() => { })
-        if (lresponse) poopy.vars.languages = Object.keys(lresponse.data.translation).map(lang => {
-            return { ...lresponse.data.translation[lang], language: lang }
-        })
-
-        var clresponse = await poopy.modules.axios.get('https://wandbox.org/api/list.json').catch(() => { })
-        if (clresponse) {
-            poopy.vars.codelanguages = clresponse.data.filter((lang, index, self) => self.findIndex(l => l.templates[0] === lang.templates[0]) === index).sort((a, b) => {
-                if (a.templates[0] < b.templates[0]) return -1
-                if (a.templates[0] > b.templates[0]) return 1
-                return 0
-            })
-        }
+        poopy.vars.codelanguages = await poopy.dataGetters.codeLanguages().catch(() => { })
 
         poopy.json.emojiJSON = await poopy.functions.getEmojis().catch(() => { })
 
