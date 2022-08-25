@@ -86,16 +86,19 @@ function sleep(ms) {
 }
 
 for (var name in dataGetters) {
-    var dataGet = dataGetters[name]
-    dataGetters[name] = async function () {
-        while (dataGetting[name]) await sleep()
-        if (dataGotten[name]) return dataGotten[name]
+    var dataType = name
+    var dataGet = dataGetters[dataType]
+    console.log(dataType)
+    dataGetters[dataType] = async function () {
+        console.log(dataType)
+        while (dataGetting[dataType]) await sleep()
+        if (dataGotten[dataType]) return dataGotten[dataType]
 
-        dataGetting[name] = true
+        dataGetting[dataType] = true
         var result = await dataGet().catch((e) => console.log(e))
 
-        if (result) dataGotten[name] = result
-        delete dataGetting[name]
+        if (result) dataGotten[dataType] = result
+        delete dataGetting[dataType]
 
         return result
     }
