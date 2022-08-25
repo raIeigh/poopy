@@ -85,12 +85,9 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-for (var name in dataGetters) {
-    var dataType = name
+function createData(dataType) {
     var dataGet = dataGetters[dataType]
-    console.log(dataType)
     dataGetters[dataType] = async function () {
-        console.log(dataType)
         while (dataGetting[dataType]) await sleep()
         if (dataGotten[dataType]) return dataGotten[dataType]
 
@@ -102,6 +99,10 @@ for (var name in dataGetters) {
 
         return result
     }
+}
+
+for (var name in dataGetters) {
+    createData(name)
 }
 
 module.exports = dataGetters
