@@ -247,6 +247,16 @@ async function processJob(data) {
     }
 }
 
+let chunkdata = {}
+
+function tryJSONparse(obj) {
+    try {
+        return JSON.parse(obj)
+    } catch (_) {
+        return null
+    }
+}
+
 async function start(id) {
     console.log(`worker ${id} started`)
 
@@ -263,23 +273,35 @@ async function start(id) {
     await ch.prefetch(1)
 
     await ch.consume('tasks', async function (msg) {
-        var location = msg.content.toString()
-        var data = await axios.get(location).then(res => res.data).catch(() => { })
-        var res = data ? (await processJob(data).catch(() => { }) ?? {}) : {}
+        var content = msg.content.toString()
+        if (!chunkdata[msg.properties.replyTo]) chunkdata[msg.properties.replyTo] = []
 
-        var resdata = Buffer.from(JSON.stringify(res))
-        var reschunks = []
+        var order = Number(content.substring(0, 3))
+        var chunk = content.substring(3)
+        chunkdata[msg.properties.replyTo].push({ order, chunk })
+        chunkdata[msg.properties.replyTo].sort((a, b) => a.order - b.order)
 
-        for (var i = 0; i < Math.ceil(resdata.length / msgSizeLimit); i++) {
-            var chunk = resdata.subarray(msgSizeLimit * i, msgSizeLimit * (i + 1))
-            var ordchunk = Buffer.concat([Buffer.from(String(i).padStart(3, '0')), chunk])
-            reschunks.push(ordchunk)
-        }
+        var chunkjoin = chunkdata[msg.properties.replyTo].map(c => c.chunk).join('')
+        var data = tryJSONparse(chunkjoin)
+        if (data) {
+            delete chunkdata[msg.properties.replyTo]
 
-        for (var chunk of reschunks) {
-            ch.sendToQueue(msg.properties.replyTo, chunk, {
-                correlationId: msg.properties.correlationId
-            })
+            var res = data ? (await processJob(data).catch(() => { }) ?? {}) : {}
+    
+            var resdata = Buffer.from(JSON.stringify(res))
+            var reschunks = []
+    
+            for (var i = 0; i < Math.ceil(resdata.length / msgSizeLimit); i++) {
+                var chunk = resdata.subarray(msgSizeLimit * i, msgSizeLimit * (i + 1))
+                var ordchunk = Buffer.concat([Buffer.from(String(i).padStart(3, '0')), chunk])
+                reschunks.push(ordchunk)
+            }
+    
+            for (var chunk of reschunks) {
+                ch.sendToQueue(msg.properties.replyTo, chunk, {
+                    correlationId: msg.properties.correlationId
+                })
+            }
         }
     }, { noAck: true })
 }
