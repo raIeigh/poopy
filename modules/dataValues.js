@@ -10,6 +10,45 @@ dataValues.functions = {}
 dataValues.vars = {}
 dataValues.modules = {}
 
+dataValues.modules.fs = fs
+dataValues.modules.catbox = catbox
+dataValues.modules.axios = axios
+dataValues.modules.request = request
+dataValues.modules.google = google
+
+dataValues.modules.nodefs = require('fs')
+dataValues.modules.archiver = require('archiver')
+dataValues.modules.spawn = require('child_process').spawn
+dataValues.modules.exec = require('child_process').exec
+dataValues.modules.fileType = require('file-type')
+dataValues.modules.FormData = require('form-data')
+dataValues.modules.cheerio = require('cheerio')
+dataValues.modules.xml2json = require('xml2js').parseStringPromise
+dataValues.modules.util = require('util')
+dataValues.modules.md5 = require('md5')
+if (fs.existsSync('node_modules/@jimp/plugin-print'))
+fs.rmSync('node_modules/@jimp/plugin-print', {
+    force: true, recursive: true
+})
+if (!fs.existsSync('node_modules/@jimp/plugin-print'))
+fs.copySync('modules/plugin-print', 'node_modules/@jimp/plugin-print', {
+    recursive: true
+})
+dataValues.modules.Jimp = require('jimp')
+dataValues.modules.whatwg = require('whatwg-url')
+dataValues.modules.deepai = require('deepai')
+dataValues.modules.noblox = require('noblox.js')
+dataValues.modules.youtubedl = require('yt-dlp-exec')
+//dataValues.modules.Twitter = require('twitter')
+dataValues.modules.gis = require('g-i-s')
+dataValues.modules.mathjs = require('mathjs')
+dataValues.modules.prettyBytes = require('pretty-bytes')
+dataValues.modules.itob = require('istextorbinary')
+dataValues.modules.os = require('os')
+
+dataValues.modules.deepai.setApiKey(process.env.DEEPAIKEY)
+dataValues.modules.noblox.setCookie(process.env.ROBLOXCOOKIE)
+
 dataValues.vars.validUrl = /(http|https):\/\/([!#$&-;=?-[\]_a-z~]|%[0-9a-fA-F]{2})+/
 dataValues.vars.emojiRegex = require('emoji-regex')()
 dataValues.vars.Catbox = new catbox.Catbox()
@@ -53,7 +92,7 @@ dataValues.vars.caseModifiers = [
         return text.toUpperCase().substring(0, 1) + text.toLowerCase().substring(1)
     }]
 
-dataValues.functions.getEmojis = require('./plugin-print/emojis')
+dataValues.functions.getEmojis = require('@jimp/plugin-print/emojis')
 dataValues.functions.lingo = require('./lingo')
 dataValues.functions.gibberish = require('./gibberish')
 dataValues.functions.markov = require('./markov')
@@ -663,44 +702,5 @@ dataValues.arrays = {
         'No.', 'I have no answers.', 'That\'s true.', 'That\'s false.', 'Isn\'t it obvious?'
     ]
 }
-
-dataValues.modules.fs = fs
-dataValues.modules.catbox = catbox
-dataValues.modules.axios = axios
-dataValues.modules.request = request
-dataValues.modules.google = google
-
-dataValues.modules.nodefs = require('fs')
-dataValues.modules.archiver = require('archiver')
-dataValues.modules.spawn = require('child_process').spawn
-dataValues.modules.exec = require('child_process').exec
-dataValues.modules.fileType = require('file-type')
-dataValues.modules.FormData = require('form-data')
-dataValues.modules.cheerio = require('cheerio')
-dataValues.modules.xml2json = require('xml2js').parseStringPromise
-dataValues.modules.util = require('util')
-dataValues.modules.md5 = require('md5')
-if (fs.existsSync('node_modules/@jimp/plugin-print'))
-fs.rmSync('node_modules/@jimp/plugin-print', {
-    force: true, recursive: true
-})
-if (!fs.existsSync('node_modules/@jimp/plugin-print'))
-fs.copySync('modules/plugin-print', 'node_modules/@jimp/plugin-print', {
-    recursive: true
-})
-dataValues.modules.Jimp = require('jimp')
-dataValues.modules.whatwg = require('whatwg-url')
-dataValues.modules.deepai = require('deepai')
-dataValues.modules.noblox = require('noblox.js')
-dataValues.modules.youtubedl = require('yt-dlp-exec')
-//dataValues.modules.Twitter = require('twitter')
-dataValues.modules.gis = require('g-i-s')
-dataValues.modules.mathjs = require('mathjs')
-dataValues.modules.prettyBytes = require('pretty-bytes')
-dataValues.modules.itob = require('istextorbinary')
-dataValues.modules.os = require('os')
-
-dataValues.modules.deepai.setApiKey(process.env.DEEPAIKEY)
-dataValues.modules.noblox.setCookie(process.env.ROBLOXCOOKIE)
 
 module.exports = dataValues
