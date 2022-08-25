@@ -43,7 +43,7 @@ class Poopy {
             apiMode: false,
             self: false,
             noInfoPost: false,
-            poosoniablacklist: ['dm', 'tdms', 'spam', 'eval', 'leave', 'shutup'],
+            poosoniablacklist: ['dm', 'tdms', 'spam', 'eval', 'leave'],
             poosoniakeywordblacklist: [],
             poosoniafunctionblacklist: ['messagecollector', 'stopcollector', 'stopallcollectors'],
             allowtesting: true,
