@@ -218,8 +218,8 @@ class Poopy {
         }
 
         // objects and arrays for things like the arab dictionary
-        poopy.statuses = dataValues.statuses
-        poopy.json = dataValues.json
+        poopy.statuses = poopy.dataValues.statuses
+        poopy.json = poopy.dataValues.json
         poopy.arrays = poopy.dataValues.arrays
 
         // more functions!!1!!!!
