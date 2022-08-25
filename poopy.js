@@ -4677,9 +4677,9 @@ class Poopy {
 
         poopy.vars.codelanguages = await poopy.dataGetters.codeLanguages().catch((e) => console.log(e))
 
-        poopy.json.emojiJSON = await poopy.functions.getEmojis().catch(() => { })
+        poopy.json.emojiJSON = await poopy.functions.getEmojis().catch(() => { }) ?? []
 
-        console.log(`${poopy.bot.user.username}: emojis`)
+        console.log(`${poopy.bot.user.username}: some jsons`)
         //await poopy.functions.updateSlashCommands()
         poopy.functions.saveData()
         poopy.vars.saveInterval = setInterval(function () {
