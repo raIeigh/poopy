@@ -5,7 +5,7 @@ module.exports = {
     let poopy = this
 
     if (msg.member.permissions.has('MANAGE_GUILD') || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || poopy.config.ownerids.find(id => id == msg.author.id)) {
-      if (!msg.channel.onsfw && !msg.channel.nsfw) {
+      if (!msg.channel.onsfw && !msg.channel.nsfw && !msg.channel.type.includes('DM')) {
         await msg.reply('go touch grass').catch(() => { })
         return;
       }
