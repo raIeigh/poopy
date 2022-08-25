@@ -602,7 +602,8 @@ async function start() {
                 TOKEN: process.env.POOSONIATOKEN,
                 config: {
                     globalPrefix: 'ps:',
-                    mongodatabase: 'poopypsdata'
+                    mongodatabase: 'poopypsdata',
+                    poosonia: true
                 }
             },
 
