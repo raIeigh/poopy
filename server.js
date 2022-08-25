@@ -603,7 +603,7 @@ async function start() {
                 config: {
                     globalPrefix: 'ps:',
                     mongodatabase: 'poopypsdata',
-                    poosonia: true
+                    //poosonia: true
                 }
             },
 

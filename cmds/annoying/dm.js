@@ -125,7 +125,7 @@ module.exports = {
                 pending.edit('Couldn\'t send a message to this user. Make sure they share any of the servers I\'m in, or not have me blocked.').catch(() => {})
             }
         } else {
-            if (poopy.data['user-data'][member.id]['dms'] === false) {
+            if (poopy.data['user-data'][member.id]['dms'] === false && member.id != msg.author.id) {
                 await msg.reply('I don\'t have the permission to send unrelated DMs to this user.').catch(() => {})
                 return
             }
