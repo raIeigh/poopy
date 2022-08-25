@@ -1442,7 +1442,7 @@ class Poopy {
 
                             page = newpage
 
-                            var resultEmbed = await pageFunc(page).catch((e) => console.log(e))
+                            var resultEmbed = await pageFunc(page).catch(() => { })
                             var sendObject = {
                                 components: components.slice()
                             }
@@ -2216,18 +2216,17 @@ class Poopy {
         }
 
         poopy.functions.addLastUrl = function (msg, url) {
-            console.log(url)
             if (!url) return
+
+            if (poopy.tempdata[msg.author.id][msg.id]) {
+                var lastUrls = [url].concat(poopy.functions.lastUrls(msg))
+                lastUrls.splice(100)
+                poopy.tempdata[msg.author.id][msg.id]['lastUrls'] = lastUrls
+            }
 
             var lastUrls = [url].concat(poopy.functions.lastUrls(msg, false, true))
             lastUrls.splice(100)
             poopy.data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrls'] = lastUrls
-
-            if (!poopy.tempdata[msg.author.id][msg.id]) return
-
-            var lastUrls = [url].concat(poopy.functions.lastUrls(msg))
-            lastUrls.splice(100)
-            poopy.tempdata[msg.author.id][msg.id]['lastUrls'] = lastUrls
         }
 
         poopy.functions.rateLimit = async function (msg) {
