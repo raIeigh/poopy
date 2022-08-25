@@ -305,5 +305,6 @@ module.exports = {
         value: "Allows you to see or manage the server's message database. Used by the `_message` keyword and has a 10k messages limit. Use the command alone for more info."
     },
     cooldown: 2500,
+    raw: true,
     type: 'Unique'
 }

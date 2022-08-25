@@ -49,5 +49,6 @@ module.exports = {
         name: 'eval/execute {code}',
         value: 'Evaluation command. (pretty much execute the code you want)'
     },
+    raw: true,
     type: 'Owner'
 }

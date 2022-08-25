@@ -655,5 +655,6 @@ module.exports = {
         value: 'Gives you access to a global database of command templates you can use in your servers! Anyone can contribute to it. Use the command alone for more info.'
     },
     cooldown: 5000,
+    raw: true,
     type: 'Unique'
 }

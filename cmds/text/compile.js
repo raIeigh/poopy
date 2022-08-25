@@ -90,5 +90,6 @@ module.exports = {
         value: 'Compiles the code in the specified language using Wandbox.\n' +
             'Pro Tip: You can also just write a code block with the language at the start.'
     },
+    raw: true,
     type: 'Text'
 }

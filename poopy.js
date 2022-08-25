@@ -3509,7 +3509,6 @@ class Poopy {
                 return
             }
 
-            var ignored = ['eval', 'execute', 'localcommands', 'localcmds', 'servercommands', 'servercmds', 'commandtemplates', 'cmdtemplates', 'messages', 'compile']
             var webhook = await msg.fetchWebhook().catch(() => { })
 
             if (webhook || !msg.guild || !msg.channel) {
@@ -3632,7 +3631,7 @@ class Poopy {
 
                     msg.oldcontent = cmd
 
-                    if (!(ignored.find(name => cmd.toLowerCase().startsWith(`${prefix.toLowerCase()}${name.toLowerCase()}`))) && ((!msg.author.bot && msg.author.id != poopy.bot.user.id) || poopy.config.allowbotusage)) {
+                    if (!(commands.find(c => c.raw && c.name.find(n => n.toLowerCase().startsWith(`${prefix.toLowerCase()}${name.toLowerCase()}`)))) && ((!msg.author.bot && msg.author.id != poopy.bot.user.id) || poopy.config.allowbotusage)) {
                         var change = await poopy.functions.getKeywordsFor(cmd, msg, false, { resetattempts: true }).catch(async err => {
                             await msg.reply({
                                 content: err.stack,

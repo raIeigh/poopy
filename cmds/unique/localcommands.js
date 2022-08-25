@@ -395,5 +395,6 @@ module.exports = {
         value: 'Allows you to add custom commands to the server! Use the command alone for more info.'
     },
     cooldown: 2500,
+    raw: true,
     type: 'Unique'
 }

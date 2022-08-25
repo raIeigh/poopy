@@ -32,6 +32,8 @@ module.exports = {
         let poopy = this
 
         await msg.channel.sendTyping().catch(() => {})
+        args = poopy.functions.splitKeyFunc(args.join(' '), { separator: ' ' })
+        args[1] = await poopy.functions.getKeywordsFor(args[1], msg, false).catch(() => { }) ?? 'error'
         if (args[1] === undefined) {
             await msg.reply('Who do I DM?!').catch(() => {})
             return;
@@ -143,5 +145,6 @@ module.exports = {
         name: 'dm <user> <message> [-anonymous]',
         value: 'Allows Poopy to DM an user the message inside the command.'
     },
+    raw: true,
     type: 'Annoying'
 }
