@@ -321,7 +321,9 @@ module.exports = {
 
                                     poopy.data['guild-data'][msg.guild.id]['localcmds'].push({
                                         name: name,
-                                        phrase: findCommandTemplate.phrase
+                                        phrase: findCommandTemplate.phrase,
+                                        description: findCommandTemplate.description,
+                                        syntax: findCommandTemplate.syntax
                                     })
 
                                     await msg.reply({
@@ -480,7 +482,9 @@ module.exports = {
 
                                     poopy.data['guild-data'][msg.guild.id]['localcmds'].push({
                                         name: name,
-                                        phrase: findCommandTemplate.phrase
+                                        phrase: findCommandTemplate.phrase,
+                                        description: findCommandTemplate.description,
+                                        syntax: findCommandTemplate.syntax
                                     })
 
                                     await msg.reply({
