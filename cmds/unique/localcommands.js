@@ -17,10 +17,10 @@ module.exports = {
     {
         "name": "phrase",
         "args": [{
-            "name": "commandname",
+            "name": "command",
             "required": true,
             "specifarg": false,
-            "orig": "<commandname>",
+            "orig": "<command>",
             "autocomplete": function (interaction) {
                 let poopy = this
                 return poopy.data['guild-data'][interaction.guild.id]['localcmds'].map(cmd => cmd.name)
@@ -31,10 +31,10 @@ module.exports = {
     {
         "name": "execute",
         "args": [{
-            "name": "commandname",
+            "name": "command",
             "required": true,
             "specifarg": false,
-            "orig": "<commandname>",
+            "orig": "<command>",
             "autocomplete": function (interaction) {
                 let poopy = this
                 return poopy.data['guild-data'][interaction.guild.id]['localcmds'].map(cmd => cmd.name)
@@ -51,16 +51,28 @@ module.exports = {
     {
         "name": "add",
         "args": [{
-            "name": "commandname",
+            "name": "command",
             "required": true,
             "specifarg": false,
-            "orig": "<commandname>"
+            "orig": "<command>"
         },
         {
             "name": "phrase",
             "required": true,
             "specifarg": false,
             "orig": "<phrase>"
+        },
+        {
+            "name": "description",
+            "required": false,
+            "specifarg": true,
+            "orig": "{-description <text>}"
+        },
+        {
+            "name": "syntax",
+            "required": false,
+            "specifarg": true,
+            "orig": "[-syntax <text>]"
         }],
         "description": "Adds a new local command, if the name is available for use."
     },
@@ -89,10 +101,10 @@ module.exports = {
     {
         "name": "edit",
         "args": [{
-            "name": "commandname",
+            "name": "command",
             "required": true,
             "specifarg": false,
-            "orig": "<commandname>",
+            "orig": "<command>",
             "autocomplete": function (interaction) {
                 let poopy = this
                 return poopy.data['guild-data'][interaction.guild.id]['localcmds'].map(cmd => cmd.name)
@@ -103,16 +115,28 @@ module.exports = {
             "required": true,
             "specifarg": false,
             "orig": "<phrase>"
+        },
+        {
+            "name": "description",
+            "required": false,
+            "specifarg": true,
+            "orig": "[-description <text>]"
+        },
+        {
+            "name": "syntax",
+            "required": false,
+            "specifarg": true,
+            "orig": "[-syntax <text>]"
         }],
         "description": "Edits the local command, if it exists."
     },
     {
         "name": "delete",
         "args": [{
-            "name": "commandname",
+            "name": "command",
             "required": true,
             "specifarg": false,
-            "orig": "<commandname>",
+            "orig": "<command>",
             "autocomplete": function (interaction) {
                 let poopy = this
                 return poopy.data['guild-data'][interaction.guild.id]['localcmds'].map(cmd => cmd.name)
@@ -234,20 +258,54 @@ module.exports = {
                         return
                     }
 
+                    var name = args[1].toLowerCase()
+        
+                    var params = { name }
+        
                     var saidMessage = args.slice(2).join(' ')
-                    var findCommand = poopy.commands.find(cmd => cmd.name.find(n => n === args[1].toLowerCase())) || poopy.data['guild-data'][msg.guild.id]['localcmds'].find(cmd => cmd.name === args[1].toLowerCase())
+        
+                    var optionIndex = args.findIndex(arg => arg.match(/^-(description|syntax)$/))
+                    var argmatches = saidMessage.match(/^-(description|syntax)$/g)
+                    if (argmatches) {
+                        for (var i in argmatches) {
+                            var argmatch = argmatches[i]
+                            var argIndex = args.indexOf(argmatch)
+                            var nextArgs = args.slice(argIndex + 1)
+                            var arg = ''
+                            for (var j in nextArgs) {
+                                var nextArg = nextArgs[j]
+                                if (nextArg.match(/^-(description|syntax)$/)) break
+                                arg += `${nextArg} `
+                            }
+                            arg = arg.substring(0, arg.length - 1)
+        
+                            params[argmatch.substring(1)] = arg
+                        }
+                    }
+        
+                    var phraseArgs = args
+                    if (optionIndex > -1) {
+                        phraseArgs.splice(optionIndex)
+                    }
+                    phraseArgs.splice(0, 2)
+        
+                    if (phraseArgs.length <= 0) {
+                        await msg.reply('You gotta specify the phrase!').catch(() => { })
+                        return
+                    }
+        
+                    params.phrase = phraseArgs.join(' ')
+
+                    var findCommand = poopy.commands.find(cmd => cmd.name.find(n => n === name.toLowerCase())) || poopy.data['guild-data'][msg.guild.id]['localcmds'].find(cmd => cmd.name === name.toLowerCase())
 
                     if (findCommand) {
                         await msg.reply(`That name was already taken!`).catch(() => { })
                         return
                     } else {
-                        poopy.data['guild-data'][msg.guild.id]['localcmds'].push({
-                            name: args[1].toLowerCase(),
-                            phrase: saidMessage
-                        })
+                        poopy.data['guild-data'][msg.guild.id]['localcmds'].push(params)
 
                         await msg.reply({
-                            content: `✅ Added \`${args[1].toLowerCase()}\` command with phrase \`${saidMessage}\``,
+                            content: `✅ Added \`${name.toLowerCase()}\` command with phrase \`${saidMessage}\``,
                             allowedMentions: {
                                 parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                             }
@@ -313,17 +371,51 @@ module.exports = {
                         return
                     }
 
+                    var name = args[1].toLowerCase()
+        
+                    var params = { name }
+        
                     var saidMessage = args.slice(2).join(' ')
-                    var findCommand = poopy.data['guild-data'][msg.guild.id]['localcmds'].findIndex(cmd => cmd.name === args[1].toLowerCase())
+        
+                    var optionIndex = args.findIndex(arg => arg.match(/^-(description|syntax)$/))
+                    var argmatches = saidMessage.match(/^-(description|syntax)$/g)
+                    if (argmatches) {
+                        for (var i in argmatches) {
+                            var argmatch = argmatches[i]
+                            var argIndex = args.indexOf(argmatch)
+                            var nextArgs = args.slice(argIndex + 1)
+                            var arg = ''
+                            for (var j in nextArgs) {
+                                var nextArg = nextArgs[j]
+                                if (nextArg.match(/^-(description|syntax)$/)) break
+                                arg += `${nextArg} `
+                            }
+                            arg = arg.substring(0, arg.length - 1)
+        
+                            params[argmatch.substring(1)] = arg
+                        }
+                    }
+        
+                    var phraseArgs = args
+                    if (optionIndex > -1) {
+                        phraseArgs.splice(optionIndex)
+                    }
+                    phraseArgs.splice(0, 2)
+        
+                    if (phraseArgs.length <= 0) {
+                        await msg.reply('You gotta specify the phrase!').catch(() => { })
+                        return
+                    }
+        
+                    params.phrase = phraseArgs.join(' ')
+
+                    var findCommand = poopy.data['guild-data'][msg.guild.id]['localcmds'].findIndex(cmd => cmd.name === name.toLowerCase())
 
                     if (findCommand > -1) {
-                        poopy.data['guild-data'][msg.guild.id]['localcmds'][findCommand] = {
-                            name: args[1].toLowerCase(),
-                            phrase: saidMessage
-                        }
+                        poopy.data['guild-data'][msg.guild.id]['localcmds'][findCommand] = params
 
                         await msg.reply({
-                            content: `✅ Edited \`${args[1].toLowerCase()}\` command with phrase \`${saidMessage}\``,
+                            content: `✅ Edited \`${name.toLowerCase()}\` command with phrase \`${saidMessage}\``,
                             allowedMentions: {
                                 parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                             }
@@ -348,10 +440,10 @@ module.exports = {
                     var findCommand = poopy.data['guild-data'][msg.guild.id]['localcmds'].findIndex(cmd => cmd.name === args[1].toLowerCase())
 
                     if (findCommand > -1) {
-                        poopy.data['guild-data'][msg.guild.id]['localcmds'].splice(findCommand, 1)
+                        var removed = poopy.data['guild-data'][msg.guild.id]['localcmds'].splice(findCommand, 1)
 
                         await msg.reply({
-                            content: `✅ Removed \`${args[1].toLowerCase()}\` command.`,
+                            content: `✅ Removed \`${removed.name}\ command with phrase \`${removed.phrase}\``,
                             allowedMentions: {
                                 parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                             }
@@ -368,11 +460,11 @@ module.exports = {
         }
 
         if (!args[1]) {
-            if (poopy.config.textEmbeds) msg.reply("**list** - Gets a list of local commands.\n**phrase** <commandname> - Displays the phrase of a specific command.\n**execute** <commandname> [args] - Execute a specific command.\n**add** <commandname> <phrase> (moderator only) - Adds a new local command, if the name is available for use.\n**import** <id> [name] (moderator only) - Imports a new local command from Poopy's command template database (`commandtemplates` command) by ID.\n**edit** <commandname> <phrase> (moderator only) - Edits the local command, if it exists.\n**delete** <commandname> (moderator only) - Deletes the local command, if it exists.").catch(() => { })
+            if (poopy.config.textEmbeds) msg.reply("**list** - Gets a list of local commands.\n**phrase** <command> - Displays the phrase of a specific command.\n**execute** <command> [args] - Execute a specific command.\n**add** <command> <phrase> {-description <text>} [-syntax <text>] (moderator only) - Adds a new local command, if the name is available for use.\n**import** <id> [name] (moderator only) - Imports a new local command from Poopy's command template database (`commandtemplates` command) by ID.\n**edit** <command> <phrase> [-description <text>] [-syntax <text>] (moderator only) - Edits the local command, if it exists.\n**delete** <command> (moderator only) - Deletes the local command, if it exists.").catch(() => { })
             else msg.reply({
                 embeds: [{
                     "title": "Available Options",
-                    "description": "**list** - Gets a list of local commands.\n**phrase** <commandname> - Displays the phrase of a specific command.\n**execute** <commandname> [args] - Execute a specific command.\n**add** <commandname> <phrase> (moderator only) - Adds a new local command, if the name is available for use.\n**import** <id> [name] (moderator only) - Imports a new local command from Poopy's command template database (`commandtemplates` command) by ID.\n**edit** <commandname> <phrase> (moderator only) - Edits the local command, if it exists.\n**delete** <commandname> (moderator only) - Deletes the local command, if it exists.",
+                    "description": "**list** - Gets a list of local commands.\n**phrase** <command> - Displays the phrase of a specific command.\n**execute** <command> [args] - Execute a specific command.\n**add** <command> <phrase> {-description <text>} [-syntax <text>] (moderator only) - Adds a new local command, if the name is available for use.\n**import** <id> [name] (moderator only) - Imports a new local command from Poopy's command template database (`commandtemplates` command) by ID.\n**edit** <command> <phrase> [-description <text>] [-syntax <text>] (moderator only) - Edits the local command, if it exists.\n**delete** <command> (moderator only) - Deletes the local command, if it exists.",
                     "color": 0x472604,
                     "footer": {
                         "icon_url": poopy.bot.user.displayAvatarURL({

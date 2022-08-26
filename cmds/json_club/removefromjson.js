@@ -42,10 +42,10 @@ module.exports = {
                 return
             }
 
-            poopy.functions.globalData()['bot-data'][type].splice(poopy.functions.globalData()['bot-data'][type].findIndex(v => v === saidMessage), 1)
+            var removed = poopy.functions.globalData()['bot-data'][type].splice(poopy.functions.globalData()['bot-data'][type].findIndex(v => v === saidMessage), 1)
 
             await msg.reply({
-                content: '✅ Removed.',
+                content: '✅ Removed ' + removed[0],
                 allowedMentions: {
                     parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }

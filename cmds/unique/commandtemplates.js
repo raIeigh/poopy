@@ -133,8 +133,11 @@ module.exports = {
             }
 
             var name = args[1].toLowerCase()
+            var id = poopy.functions.generateId(poopy.functions.globalData()['bot-data']['commandTemplates'].map(c => c.id))
+            var creator = msg.author.id
+            var date = Math.floor(Date.now() / 1000)
 
-            var params = {}
+            var params = { name, id, creator, date }
 
             var imageindex = args.indexOf('-image')
             if (imageindex > -1 && args[imageindex + 1]) {
@@ -148,8 +151,8 @@ module.exports = {
 
             var saidMessage = args.slice(2).join(' ')
 
-            var optionIndex = args.findIndex(arg => arg.match(/-(description|syntax|image)/))
-            var argmatches = saidMessage.match(/-(description|syntax)/g)
+            var optionIndex = args.findIndex(arg => arg.match(/^-(description|syntax|image)$/))
+            var argmatches = saidMessage.match(/^-(description|syntax)$/g)
             if (argmatches) {
                 for (var i in argmatches) {
                     var argmatch = argmatches[i]
@@ -158,7 +161,7 @@ module.exports = {
                     var arg = ''
                     for (var j in nextArgs) {
                         var nextArg = nextArgs[j]
-                        if (nextArg.match(/-(description|syntax|image)/)) break
+                        if (nextArg.match(/^-(description|syntax|image)$/)) break
                         arg += `${nextArg} `
                     }
                     arg = arg.substring(0, arg.length - 1)
@@ -186,18 +189,7 @@ module.exports = {
                 await msg.reply(`You've already created a command with that name! (ID: \`${findCommand.id}\`)`).catch(() => { })
                 return
             } else {
-                var id = poopy.functions.generateId(poopy.functions.globalData()['bot-data']['commandTemplates'].map(c => c.id))
-
-                var commands = [{
-                    name: name,
-                    description: params.description,
-                    phrase: params.phrase,
-                    image: params.image,
-                    syntax: params.syntax,
-                    id: id,
-                    creator: msg.author.id,
-                    date: Math.floor(Date.now() / 1000)
-                }].concat(poopy.functions.globalData()['bot-data']['commandTemplates'])
+                var commands = [params].concat(poopy.functions.globalData()['bot-data']['commandTemplates'])
                 poopy.functions.globalData()['bot-data']['commandTemplates'] = commands
 
                 await msg.reply({
@@ -567,7 +559,7 @@ module.exports = {
 
                     var saidMessage = args.slice(2).join(' ')
 
-                    var argmatches = saidMessage.match(/-(phrase|description|syntax)/g)
+                    var argmatches = saidMessage.match(/^-(phrase|description|syntax)$/g)
                     if (argmatches) {
                         for (var i in argmatches) {
                             var argmatch = argmatches[i]
@@ -576,7 +568,7 @@ module.exports = {
                             var arg = ''
                             for (var j in nextArgs) {
                                 var nextArg = nextArgs[j]
-                                if (nextArg.match(/-(phrase|description|syntax|name|image)/)) break
+                                if (nextArg.match(/^-(phrase|description|syntax|name|image)$/)) break
                                 arg += `${nextArg} `
                             }
                             arg = arg.substring(0, arg.length - 1)
