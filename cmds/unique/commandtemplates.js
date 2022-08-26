@@ -143,45 +143,35 @@ module.exports = {
             if (imageindex > -1 && args[imageindex + 1]) {
                 if (poopy.vars.validUrl.test(args[imageindex + 1])) {
                     params.image = args[imageindex + 1]
+                    args.splice(imageindex, 2)
                 } else {
                     await msg.reply('Not a valid image URL.').catch(() => { })
                     return
                 }
             }
 
-            var saidMessage = args.slice(2).join(' ')
+            args = args.reverse()
 
-            var optionIndex = args.findIndex(arg => arg.match(/^-(description|syntax|image)$/))
-            var argmatches = saidMessage.match(/^-(description|syntax)$/g)
-            if (argmatches) {
-                for (var i in argmatches) {
-                    var argmatch = argmatches[i]
-                    var argIndex = args.indexOf(argmatch)
-                    var nextArgs = args.slice(argIndex + 1)
-                    var arg = ''
-                    for (var j in nextArgs) {
-                        var nextArg = nextArgs[j]
-                        if (nextArg.match(/^-(description|syntax|image)$/)) break
-                        arg += `${nextArg} `
-                    }
-                    arg = arg.substring(0, arg.length - 1)
-
-                    params[argmatch.substring(1)] = arg
+            for (var i = 0; i < args.length; i++) {
+                var arg = args[i]
+                var argmatch = (arg.match(/^-(description|syntax)$/) ?? [])[0]
+                if (argmatch) {
+                    var val = args.splice(0, i + 1).reverse().slice(1).join(' ')
+                    params[argmatch.substring(1)] = val
+                    i = -1
                 }
             }
 
-            var phraseArgs = args
-            if (optionIndex > -1) {
-                phraseArgs.splice(optionIndex)
-            }
-            phraseArgs.splice(0, 2)
+            args = args.reverse()
 
-            if (phraseArgs.length <= 0) {
+            var saidMessage = args.slice(2).join(' ')
+
+            if (!saidMessage) {
                 await msg.reply('You gotta specify the phrase!').catch(() => { })
                 return
             }
 
-            params.phrase = phraseArgs.join(' ')
+            params.phrase = saidMessage
 
             var findCommand = poopy.functions.globalData()['bot-data']['commandTemplates'].find(cmd => cmd.name === name && cmd.creator === msg.author.id)
 
@@ -545,37 +535,33 @@ module.exports = {
                     var nameindex = args.indexOf('-name')
                     if (nameindex > -1 && args[nameindex + 1]) {
                         params.name = args[nameindex + 1].toLowerCase()
+                        args.splice(nameindex, 2)
                     }
 
                     var imageindex = args.indexOf('-image')
                     if (imageindex > -1 && args[imageindex + 1]) {
                         if (poopy.vars.validUrl.test(args[imageindex + 1])) {
                             params.image = args[imageindex + 1]
+                            args.splice(imageindex, 2)
                         } else {
                             await msg.reply('Not a valid image URL.').catch(() => { })
                             return
                         }
                     }
 
-                    var saidMessage = args.slice(2).join(' ')
+                    args = args.reverse()
 
-                    var argmatches = saidMessage.match(/^-(phrase|description|syntax)$/g)
-                    if (argmatches) {
-                        for (var i in argmatches) {
-                            var argmatch = argmatches[i]
-                            var argIndex = args.indexOf(argmatch)
-                            var nextArgs = args.slice(argIndex + 1)
-                            var arg = ''
-                            for (var j in nextArgs) {
-                                var nextArg = nextArgs[j]
-                                if (nextArg.match(/^-(phrase|description|syntax|name|image)$/)) break
-                                arg += `${nextArg} `
-                            }
-                            arg = arg.substring(0, arg.length - 1)
-
-                            params[argmatch.substring(1)] = arg
+                    for (var i = 0; i < args.length; i++) {
+                        var arg = args[i]
+                        var argmatch = (arg.match(/^-(description|syntax|phrase)$/) ?? [])[0]
+                        if (argmatch) {
+                            var val = args.splice(0, i + 1).reverse().slice(1).join(' ')
+                            params[argmatch.substring(1)] = val
+                            i = -1
                         }
                     }
+
+                    args = args.reverse()
 
                     if (params.name) {
                         var findCommand = poopy.functions.globalData()['bot-data']['commandTemplates'].find(cmd => cmd.name === params.name && cmd.creator === msg.author.id)

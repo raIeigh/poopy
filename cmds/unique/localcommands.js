@@ -259,42 +259,31 @@ module.exports = {
                     }
 
                     var name = args[1].toLowerCase()
-        
+
                     var params = { name }
-        
-                    var saidMessage = args.slice(2).join(' ')
-        
-                    var optionIndex = args.findIndex(arg => arg.match(/^-(description|syntax)$/))
-                    var argmatches = saidMessage.match(/^-(description|syntax)$/g)
-                    if (argmatches) {
-                        for (var i in argmatches) {
-                            var argmatch = argmatches[i]
-                            var argIndex = args.indexOf(argmatch)
-                            var nextArgs = args.slice(argIndex + 1)
-                            var arg = ''
-                            for (var j in nextArgs) {
-                                var nextArg = nextArgs[j]
-                                if (nextArg.match(/^-(description|syntax)$/)) break
-                                arg += `${nextArg} `
-                            }
-                            arg = arg.substring(0, arg.length - 1)
-        
-                            params[argmatch.substring(1)] = arg
+
+                    args = args.reverse()
+
+                    for (var i = 0; i < args.length; i++) {
+                        var arg = args[i]
+                        var argmatch = (arg.match(/^-(description|syntax)$/) ?? [])[0]
+                        if (argmatch) {
+                            var val = args.splice(0, i + 1).reverse().slice(1).join(' ')
+                            params[argmatch.substring(1)] = val
+                            i = -1
                         }
                     }
-        
-                    var phraseArgs = args
-                    if (optionIndex > -1) {
-                        phraseArgs.splice(optionIndex)
-                    }
-                    phraseArgs.splice(0, 2)
-        
-                    if (phraseArgs.length <= 0) {
+
+                    args = args.reverse()
+
+                    var saidMessage = args.slice(2).join(' ')
+
+                    if (!saidMessage) {
                         await msg.reply('You gotta specify the phrase!').catch(() => { })
                         return
                     }
-        
-                    params.phrase = phraseArgs.join(' ')
+
+                    params.phrase = saidMessage
 
                     var findCommand = poopy.commands.find(cmd => cmd.name.find(n => n === name.toLowerCase())) || poopy.data['guild-data'][msg.guild.id]['localcmds'].find(cmd => cmd.name === name.toLowerCase())
 
@@ -372,47 +361,38 @@ module.exports = {
                     }
 
                     var name = args[1].toLowerCase()
-        
-                    var params = { name }
-        
-                    var saidMessage = args.slice(2).join(' ')
-        
-                    var optionIndex = args.findIndex(arg => arg.match(/^-(description|syntax)$/))
-                    var argmatches = saidMessage.match(/^-(description|syntax)$/g)
-                    if (argmatches) {
-                        for (var i in argmatches) {
-                            var argmatch = argmatches[i]
-                            var argIndex = args.indexOf(argmatch)
-                            var nextArgs = args.slice(argIndex + 1)
-                            var arg = ''
-                            for (var j in nextArgs) {
-                                var nextArg = nextArgs[j]
-                                if (nextArg.match(/^-(description|syntax)$/)) break
-                                arg += `${nextArg} `
-                            }
-                            arg = arg.substring(0, arg.length - 1)
-        
-                            params[argmatch.substring(1)] = arg
+
+                    var params = {}
+
+                    args = args.reverse()
+
+                    for (var i = 0; i < args.length; i++) {
+                        var arg = args[i]
+                        var argmatch = (arg.match(/^-(description|syntax)$/) ?? [])[0]
+                        if (argmatch) {
+                            var val = args.splice(0, i + 1).reverse().slice(1).join(' ')
+                            params[argmatch.substring(1)] = val
+                            i = -1
                         }
                     }
-        
-                    var phraseArgs = args
-                    if (optionIndex > -1) {
-                        phraseArgs.splice(optionIndex)
-                    }
-                    phraseArgs.splice(0, 2)
-        
-                    if (phraseArgs.length <= 0) {
+
+                    args = args.reverse()
+
+                    var saidMessage = args.slice(2).join(' ')
+
+                    if (!saidMessage) {
                         await msg.reply('You gotta specify the phrase!').catch(() => { })
                         return
                     }
-        
-                    params.phrase = phraseArgs.join(' ')
+
+                    params.phrase = saidMessage
 
                     var findCommand = poopy.data['guild-data'][msg.guild.id]['localcmds'].findIndex(cmd => cmd.name === name.toLowerCase())
 
                     if (findCommand > -1) {
-                        poopy.data['guild-data'][msg.guild.id]['localcmds'][findCommand] = params
+                        for (var param in params) {
+                            poopy.data['guild-data'][msg.guild.id]['localcmds'][findCommand][param] = params[param]
+                        }
 
                         await msg.reply({
                             content: `✅ Edited \`${name.toLowerCase()}\` command with phrase \`${saidMessage}\``,
@@ -443,7 +423,7 @@ module.exports = {
                         var removed = poopy.data['guild-data'][msg.guild.id]['localcmds'].splice(findCommand, 1)
 
                         await msg.reply({
-                            content: `✅ Removed \`${removed.name}\ command with phrase \`${removed.phrase}\``,
+                            content: `✅ Removed \`${removed[0].name}\` command with phrase \`${removed[0].phrase}\``,
                             allowedMentions: {
                                 parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                             }
