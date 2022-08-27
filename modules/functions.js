@@ -2647,7 +2647,7 @@ functions.getKeywordsFor = async function (string, msg, isBot, { extrakeys = {},
     let poopy = this
     let config = poopy.config
     let special = poopy.special
-    let data = poopy.tempdata
+    let data = poopy.data
     let tempdata = poopy.tempdata
     let globaldata = poopy.globaldata
     let { getKeyFunc, infoPost, equalValues, sleep } = poopy.functions
