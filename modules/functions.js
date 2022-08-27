@@ -15,9 +15,9 @@ functions.updateAllData = require('./dataGathering').updateAllData
 functions.brainfuck = require('./brainfuck')
 functions.tobrainfuck = require('./tobrainfuck')
 functions.generateSayori = require('./sayorimessagegenerator')
-functions.braille = require('./braille')
-functions.averageColor = require('./averageColor')
-functions.spectrogram = require('./spectrogram')
+//functions.braille = require('./braille')
+//functions.averageColor = require('./averageColor')
+//functions.spectrogram = require('./spectrogram')
 
 functions.lerp = function (start, end, amt) {
     return (1 - amt) * start + amt * end
@@ -176,15 +176,18 @@ functions.getIndexOption = function (args, i, {
 }
 
 functions.getOption = function (args, name, {
-    dft = undefined, n = 1, splice = false, join = true, func = (opt) => opt
+    dft = undefined, n = 1, splice = false, join = true, func = (opt) => opt, stopMatch = []
 } = {}) {
     var optionindex = args.indexOf(`-${name}`)
     if (optionindex > -1) {
         var option = []
-        for (var i = 1; i <= n; i++) {
+        var splicecount = 0
+        for (var i = 1; i <= Math.min(n, args.length - optionindex - 1); i++) {
+            if (stopMatch.includes(args[optionindex + i])) break
+            splicecount++
             option.push(func(args[optionindex + i], i))
         }
-        if (splice) args.splice(optionindex, n + 1)
+        if (splice) args.splice(optionindex, splicecount + 1)
         if (join) option = option.join(' ')
         return n == 0 ? true : option
     }
