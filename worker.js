@@ -8,7 +8,7 @@ var url = process.env.CLOUDAMQP_URL || "amqp://localhost";
 let memLimit = 0;
 let msgSizeLimit = 1024 * 1024 * 8 - 3;
 let procs = [];
-let workers = process.env.WEB_CONCURRENCY || 2;
+let workers = 1//process.env.WEB_CONCURRENCY || 2;
 let datastores = {};
 let globaldata;
 
