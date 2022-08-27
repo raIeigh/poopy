@@ -3,6 +3,8 @@ module.exports = {
     args: [{"name":"query","required":true,"specifarg":false,"orig":"<query>"},{"name":"page","required":false,"specifarg":true,"orig":"[-page <number>]"}],
     execute: async function (msg, args) {
         let poopy = this
+        let { fetchImages, navigateEmbed, addLastUrl } = poopy.functions
+        let config = poopy.config
 
         await msg.channel.sendTyping().catch(() => { })
         if (args[1] === undefined) {
@@ -19,7 +21,7 @@ module.exports = {
 
         var search = args.slice(1).join(" ");
 
-        var urls = await poopy.functions.fetchImages(search, false, !msg.channel.nsfw).catch(() => { })
+        var urls = await fetchImages(search, false, !msg.channel.nsfw).catch(() => { })
 
         if (!urls) {
             await msg.reply('Error.').catch(() => { })
@@ -35,10 +37,10 @@ module.exports = {
         if (number > urls.length) number = urls.length;
         if (number < 1) number = 1
 
-        await poopy.functions.navigateEmbed(msg.channel, async (page) => {
-            poopy.functions.addLastUrl(msg, urls[page - 1])
+        await navigateEmbed(msg.channel, async (page) => {
+            addLastUrl(msg, urls[page - 1])
 
-            if (poopy.config.textEmbeds) return `${urls[page - 1]}\n\nImage ${page}/${urls.length}`
+            if (config.textEmbeds) return `${urls[page - 1]}\n\nImage ${page}/${urls.length}`
             else return {
                 "title": "Google Image Search Results For " + search,
                 "description": "Use the arrows to navigate.",

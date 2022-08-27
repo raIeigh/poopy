@@ -124,9 +124,10 @@ module.exports = {
         }],
     execute: async function (msg, args) {
         let poopy = this
+        let { lastUrl, validateFile, downloadFile, execPromise, findpreset, sendFile } = poopy.functions
 
         await msg.channel.sendTyping().catch(() => {})
-        if (poopy.functions.lastUrl(msg, 0) === undefined && args[1] === undefined) {
+        if (lastUrl(msg, 0) === undefined && args[1] === undefined) {
             await msg.reply('What is the file?!').catch(() => {})
             await msg.channel.sendTyping().catch(() => {})
             return;
@@ -250,8 +251,8 @@ module.exports = {
         if (endangleindex > -1) {
             endangle = isNaN(Number(args[endangleindex + 1])) ? startangle: (Number(args[endangleindex + 1]) || 0) ?? startangle
         }
-        var currenturl = poopy.functions.lastUrl(msg, 0) || args[1]
-        var fileinfo = await poopy.functions.validateFile(currenturl).catch(async error => {
+        var currenturl = lastUrl(msg, 0) || args[1]
+        var fileinfo = await validateFile(currenturl).catch(async error => {
             await msg.reply(error).catch(() => {})
             await msg.channel.sendTyping().catch(() => {})
             return;
@@ -261,17 +262,17 @@ module.exports = {
         var type = fileinfo.type
 
         if (type.mime.startsWith('image') || type.mime.startsWith('video')) {
-            var filepath = await poopy.functions.downloadFile(currenturl, `input.${fileinfo.shortext}`, {
+            var filepath = await downloadFile(currenturl, `input.${fileinfo.shortext}`, {
                 fileinfo: fileinfo
             })
             var filename = `input.${fileinfo.shortext}`
-            await poopy.functions.execPromise(`ffmpeg -stream_loop -1 -t ${duration} -i ${filepath}/${filename} -r 50 -stream_loop -1 -t ${duration} -i assets/transparent.png -filter_complex "[0:v]fps=50,rotate=${easingstring(startangle, endangle)}*PI/180${args.find(arg => arg === '-fitangle') ? `:ow=rotw(45*PI/180):oh=roth(45*PI/180)`: ''}:c=0x00000000,scale=${easingstring(startsize[0], endsize[0])}:${easingstring(startsize[1], endsize[1])}:eval=frame[overlay];[1:v]scale=${width}:${height}[transparent];[transparent][overlay]overlay=x=${originx}+${easingstring(startpos[0], endpos[0])}:y=${originy}+${easingstring(startpos[1], endpos[1])}:format=auto,split[pout][ppout];[ppout]palettegen=reserve_transparent=1[palette];[pout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} -gifflags -offsetting -r 50 -t ${duration} ${filepath}/output.gif`)
-            return await poopy.functions.sendFile(msg, filepath, `output.gif`)
+            await execPromise(`ffmpeg -stream_loop -1 -t ${duration} -i ${filepath}/${filename} -r 50 -stream_loop -1 -t ${duration} -i assets/transparent.png -filter_complex "[0:v]fps=50,rotate=${easingstring(startangle, endangle)}*PI/180${args.find(arg => arg === '-fitangle') ? `:ow=rotw(45*PI/180):oh=roth(45*PI/180)`: ''}:c=0x00000000,scale=${easingstring(startsize[0], endsize[0])}:${easingstring(startsize[1], endsize[1])}:eval=frame[overlay];[1:v]scale=${width}:${height}[transparent];[transparent][overlay]overlay=x=${originx}+${easingstring(startpos[0], endpos[0])}:y=${originy}+${easingstring(startpos[1], endpos[1])}:format=auto,split[pout][ppout];[ppout]palettegen=reserve_transparent=1[palette];[pout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -preset ${findpreset(args)} -gifflags -offsetting -r 50 -t ${duration} ${filepath}/output.gif`)
+            return await sendFile(msg, filepath, `output.gif`)
         } else {
             await msg.reply({
                 content: `Unsupported file: \`${currenturl}\``,
                 allowedMentions: {
-                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => {})
             await msg.channel.sendTyping().catch(() => {})

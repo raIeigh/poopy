@@ -3,14 +3,18 @@ module.exports = {
     args: [{"name":"image","required":true,"specifarg":false,"orig":"<image>"}],
     execute: async function (msg, args) {
         let poopy = this
+        let { lastUrl, validateFile, sendFile } = poopy.functions
+        let modules = poopy.modules
+        let vars = poopy.vars
+        let config = poopy.config
 
         await msg.channel.sendTyping().catch(() => { })
-        if (poopy.functions.lastUrl(msg, 0) === undefined && args[1] === undefined) {
+        if (lastUrl(msg, 0) === undefined && args[1] === undefined) {
             await msg.reply('What is the file?!').catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
         };
-        var currenturl = poopy.functions.lastUrl(msg, 0) || args[1]
+        var currenturl = lastUrl(msg, 0) || args[1]
         var chewings = []
         var chewnumber = Math.floor(Math.random() * 11) + 20
         for (var i = 0; i < chewnumber; i++) {
@@ -21,8 +25,8 @@ module.exports = {
                 chewoffset: { x: Math.floor(Math.random() * 61) - 30, y: Math.floor(Math.random() * 61) - 30 },
                 repetitions: Math.floor(Math.random() * 9) + 1,
                 chew: async (frame, maskpos, masksize, maskangle, chewoffset) => {
-                    var patchmask = await poopy.modules.Jimp.read(`assets/chewmask.png`)
-                    var black = await poopy.modules.Jimp.read(`assets/black.png`)
+                    var patchmask = await modules.Jimp.read(`assets/chewmask.png`)
+                    var black = await modules.Jimp.read(`assets/black.png`)
                     frame2 = frame.clone()
                     patchmask.resize(frame2.bitmap.width / masksize.x, frame2.bitmap.height / masksize.y)
                     patchmask.rotate(maskangle)
@@ -33,7 +37,7 @@ module.exports = {
                 }
             })
         }
-        var fileinfo = await poopy.functions.validateFile(currenturl).catch(async error => {
+        var fileinfo = await validateFile(currenturl).catch(async error => {
             await msg.reply(error).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
@@ -42,12 +46,12 @@ module.exports = {
         if (!fileinfo) return
         var type = fileinfo.type
 
-        if (type.mime.startsWith('image') && !(poopy.vars.gifFormats.find(f => f === type.ext)) && poopy.vars.jimpFormats.find(f => f === type.ext)) {
-            var currentcount = poopy.vars.filecount
-            poopy.vars.filecount++
-            var filepath = `temp/${poopy.config.mongodatabase}/file${currentcount}`
-            poopy.modules.fs.mkdirSync(`${filepath}`)
-            var frame = await poopy.modules.Jimp.read(currenturl)
+        if (type.mime.startsWith('image') && !(vars.gifFormats.find(f => f === type.ext)) && vars.jimpFormats.find(f => f === type.ext)) {
+            var currentcount = vars.filecount
+            vars.filecount++
+            var filepath = `temp/${config.mongodatabase}/file${currentcount}`
+            modules.fs.mkdirSync(`${filepath}`)
+            var frame = await modules.Jimp.read(currenturl)
             for (var i = 0; i < chewings.length; i++) {
                 var origoffset = chewings[i].chewoffset
                 var offset = chewings[i].chewoffset
@@ -58,12 +62,12 @@ module.exports = {
                 }
             }
             await frame.writeAsync(`${filepath}/output.png`);
-            return await poopy.functions.sendFile(msg, filepath, `output.png`)
+            return await sendFile(msg, filepath, `output.png`)
         } else {
             await msg.reply({
                 content: `Unsupported file: \`${currenturl}\``,
                 allowedMentions: {
-                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })

@@ -3,6 +3,10 @@ module.exports = {
     args: [{"name":"message","required":false,"specifarg":false,"orig":"[message]"},{"name":"words","required":false,"specifarg":true,"orig":"[-words <wordNumber>]"},{"name":"noextrawords","required":false,"specifarg":true,"orig":"[-noextrawords]"},{"name":"nopunctuation","required":false,"specifarg":true,"orig":"[-nopunctuation]"}],
     execute: async function (msg, args) {
         let poopy = this
+        let vars = poopy.vars
+        let arrays = poopy.arrays
+        let config = poopy.config
+        let modules = poopy.modules
 
         await msg.channel.sendTyping().catch(() => { })
         var wordNumber = Math.floor(Math.random() * 40) + 1
@@ -32,17 +36,17 @@ module.exports = {
                 if (randomFactor === 7) {
                     dict = 1
                     conn = 1
-                    arabArray.push(msg.member.nickname || msg.author.username + (((Math.floor(Math.random() * 5) === 4 && !nopunctuation) && poopy.vars.punctuation[Math.floor(Math.random() * poopy.vars.punctuation.length)]) || ''))
+                    arabArray.push(msg.member.nickname || msg.author.username + (((Math.floor(Math.random() * 5) === 4 && !nopunctuation) && vars.punctuation[Math.floor(Math.random() * vars.punctuation.length)]) || ''))
                 } else {
                     function chooseWord() {
                         if (Math.floor(Math.random() * dict) + 1 === (dict === 3 ? 0 : 1)) {
                             conn = 1
                             dict++
-                            arabArray.push(poopy.arrays.arabDictionary[Math.floor(Math.random() * poopy.arrays.arabDictionary.length)] + (((Math.floor(Math.random() * 5) === 4 && !nopunctuation) && poopy.vars.punctuation[Math.floor(Math.random() * poopy.vars.punctuation.length)]) || ''))
+                            arabArray.push(arrays.arabDictionary[Math.floor(Math.random() * arrays.arabDictionary.length)] + (((Math.floor(Math.random() * 5) === 4 && !nopunctuation) && vars.punctuation[Math.floor(Math.random() * vars.punctuation.length)]) || ''))
                         } else if (Math.floor(Math.random() * conn) + 1 === (conn === 3 ? 0 : 1)) {
                             dict = 1
                             conn++
-                            arabArray.push(poopy.arrays.arabConnectors[Math.floor(Math.random() * poopy.arrays.arabConnectors.length)] + (((Math.floor(Math.random() * 5) === 4 && !nopunctuation) && poopy.vars.punctuation[Math.floor(Math.random() * poopy.vars.punctuation.length)]) || ''))
+                            arabArray.push(arrays.arabConnectors[Math.floor(Math.random() * arrays.arabConnectors.length)] + (((Math.floor(Math.random() * 5) === 4 && !nopunctuation) && vars.punctuation[Math.floor(Math.random() * vars.punctuation.length)]) || ''))
                         } else {
                             chooseWord()
                         }
@@ -54,18 +58,18 @@ module.exports = {
             await msg.reply({
                 content: arabArray.join(' '),
                 allowedMentions: {
-                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(async () => {
-                var currentcount = poopy.vars.filecount
-                poopy.vars.filecount++
-                var filepath = `temp/${poopy.config.mongodatabase}/file${currentcount}`
-                poopy.modules.fs.mkdirSync(`${filepath}`)
-                poopy.modules.fs.writeFileSync(`${filepath}/arabottify.txt`, arabArray.join(' '))
+                var currentcount = vars.filecount
+                vars.filecount++
+                var filepath = `temp/${config.mongodatabase}/file${currentcount}`
+                modules.fs.mkdirSync(`${filepath}`)
+                modules.fs.writeFileSync(`${filepath}/arabottify.txt`, arabArray.join(' '))
                 await msg.reply({
-                    files: [new poopy.modules.Discord.MessageAttachment(`${filepath}/arabottify.txt`)]
+                    files: [new modules.Discord.MessageAttachment(`${filepath}/arabottify.txt`)]
                 }).catch(() => { })
-                poopy.modules.fs.rmSync(`${filepath}`, { force: true, recursive: true })
+                modules.fs.rmSync(`${filepath}`, { force: true, recursive: true })
             })
             await msg.channel.sendTyping().catch(() => { })
             return;
@@ -74,16 +78,16 @@ module.exports = {
         var arabArray2 = []
         arabArray.forEach(word => {
             for (var i = 0; i < ((Math.floor(Math.random() * 5) === 1 && (noextrawords ? 1 : 2)) || 1); i++) {
-                arabArray2.push({ word: word + (((Math.floor(Math.random() * 7) === 4 && !nopunctuation) && poopy.vars.punctuation[Math.floor(Math.random() * poopy.vars.punctuation.length)]) || ''), randomness: Math.random() })
+                arabArray2.push({ word: word + (((Math.floor(Math.random() * 7) === 4 && !nopunctuation) && vars.punctuation[Math.floor(Math.random() * vars.punctuation.length)]) || ''), randomness: Math.random() })
             }
             if (Math.floor(Math.random() * 4) === 3 && !noextrawords) {
                 var randomFactor = Math.floor(Math.random() * 8)
                 if (randomFactor === 7) {
-                    arabArray2.push({ word: msg.member.nickname || msg.author.username + (((Math.floor(Math.random() * 7) === 4 && !nopunctuation) && poopy.vars.punctuation[Math.floor(Math.random() * poopy.vars.punctuation.length)]) || ''), randomness: Math.random() })
+                    arabArray2.push({ word: msg.member.nickname || msg.author.username + (((Math.floor(Math.random() * 7) === 4 && !nopunctuation) && vars.punctuation[Math.floor(Math.random() * vars.punctuation.length)]) || ''), randomness: Math.random() })
                 } else if (randomFactor >= 0 && randomFactor <= 3) {
-                    arabArray2.push({ word: poopy.arrays.arabDictionary[Math.floor(Math.random() * poopy.arrays.arabDictionary.length)] + (((Math.floor(Math.random() * 7) === 4 && !nopunctuation) && poopy.vars.punctuation[Math.floor(Math.random() * poopy.vars.punctuation.length)]) || ''), randomness: Math.random() })
+                    arabArray2.push({ word: arrays.arabDictionary[Math.floor(Math.random() * arrays.arabDictionary.length)] + (((Math.floor(Math.random() * 7) === 4 && !nopunctuation) && vars.punctuation[Math.floor(Math.random() * vars.punctuation.length)]) || ''), randomness: Math.random() })
                 } else {
-                    arabArray2.push({ word: poopy.arrays.arabConnectors[Math.floor(Math.random() * poopy.arrays.arabConnectors.length)] + (((Math.floor(Math.random() * 7) === 4 && !nopunctuation) && poopy.vars.punctuation[Math.floor(Math.random() * poopy.vars.punctuation.length)]) || ''), randomness: Math.random() })
+                    arabArray2.push({ word: arrays.arabConnectors[Math.floor(Math.random() * arrays.arabConnectors.length)] + (((Math.floor(Math.random() * 7) === 4 && !nopunctuation) && vars.punctuation[Math.floor(Math.random() * vars.punctuation.length)]) || ''), randomness: Math.random() })
                 }
             }
         })
@@ -100,18 +104,18 @@ module.exports = {
         await msg.reply({
             content: arabArray.join(' '),
             allowedMentions: {
-                parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
             }
         }).catch(async () => {
-            var currentcount = poopy.vars.filecount
-            poopy.vars.filecount++
-            var filepath = `temp/${poopy.config.mongodatabase}/file${currentcount}`
-            poopy.modules.fs.mkdirSync(`${filepath}`)
-            poopy.modules.fs.writeFileSync(`${filepath}/arabottify.txt`, arabArray.join(' '))
+            var currentcount = vars.filecount
+            vars.filecount++
+            var filepath = `temp/${config.mongodatabase}/file${currentcount}`
+            modules.fs.mkdirSync(`${filepath}`)
+            modules.fs.writeFileSync(`${filepath}/arabottify.txt`, arabArray.join(' '))
             await msg.reply({
-                files: [new poopy.modules.Discord.MessageAttachment(`${filepath}/arabottify.txt`)]
+                files: [new modules.Discord.MessageAttachment(`${filepath}/arabottify.txt`)]
             }).catch(() => { })
-            poopy.modules.fs.rmSync(`${filepath}`, { force: true, recursive: true })
+            modules.fs.rmSync(`${filepath}`, { force: true, recursive: true })
         })
         await msg.channel.sendTyping().catch(() => { })
     },

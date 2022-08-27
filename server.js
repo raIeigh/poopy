@@ -13,8 +13,7 @@ async function start() {
         const fileType = require('file-type')
         const axios = require('axios')
         const md5 = require('md5')
-        let globalData = require('./modules/globalData')
-    
+
         const PORT = process.env.PORT || 8080
         const app = express()
     
@@ -64,23 +63,23 @@ async function start() {
         })
     
         app.get('/api/psfiles', async function (req, res) {
-            if (req.query.nowait && Object.keys(globalData()).length <= 0) {
+            if (req.query.nowait && !poopyStarted) {
                 res.end()
                 return
             }
     
-            while (Object.keys(globalData()).length <= 0) await sleep(1000)
-            res.type('json').send(globalData()['bot-data']['psfiles'])
+            while (!poopyStarted) await sleep(1000)
+            res.type('json').send(mainPoopy.globaldata['bot-data']['psfiles'])
         })
     
         app.get('/api/pspasta', async function (req, res) {
-            if (req.query.nowait && Object.keys(globalData()).length <= 0) {
+            if (req.query.nowait && !poopyStarted) {
                 res.end()
                 return
             }
     
-            while (Object.keys(globalData()).length <= 0) await sleep(1000)
-            res.type('json').send(globalData()['bot-data']['pspasta'])
+            while (!poopyStarted) await sleep(1000)
+            res.type('json').send(mainPoopy.globaldata['bot-data']['pspasta'])
         })
     
         app.get('/tasks/:data/:id', async function (req, res) {
@@ -99,11 +98,12 @@ async function start() {
     
         app.get('/ubervoices', async function (_, res) {
             while (!poopyStarted) await sleep(1000)
+            let vars = mainPoopy.vars
             var listings = [[], [], []]
             var li = 0
     
-            for (var i in mainPoopy.vars.ubercategories) {
-                var category = mainPoopy.vars.ubercategories[i]
+            for (var i in vars.ubercategories) {
+                var category = vars.ubercategories[i]
                 listings[li % listings.length].push(category)
                 li++
             }
@@ -114,6 +114,14 @@ async function start() {
         app.post('/api/command', async function (req, res) {
             while (!poopyStarted) await sleep(1000)
     
+            let config = mainPoopy.config
+            let { validateFile, validateFileFromPath,
+                replaceAsync, gatherData, getKeywordsFor,
+                getUrls, findCommand, infoPost } = mainPoopy.functions
+            let vars = mainPoopy.vars
+            let data = mainPoopy.data
+            let tempdata = mainPoopy.tempdata
+            let bot = mainPoopy.bot
             let sent = false
     
             var restype = req.body.restype ?? 'html'
@@ -126,7 +134,7 @@ async function start() {
     
             // mockup message
             let msg = {
-                content: `${mainPoopy.config.globalPrefix}${req.body.args}`,
+                content: `${config.globalPrefix}${req.body.args}`,
     
                 id: 'apimessage',
     
@@ -203,7 +211,7 @@ async function start() {
                     }
                 },
     
-                owner: mainPoopy.bot.user,
+                owner: bot.user,
     
                 nsfw: false,
     
@@ -257,10 +265,10 @@ async function start() {
             async function createEmbed(url, linkEmbed) {
                 var fileinfo
     
-                if (mainPoopy.vars.validUrl.test(url)) {
-                    fileinfo = await mainPoopy.functions.validateFile(url, 'very true').catch(() => { })
+                if (vars.validUrl.test(url)) {
+                    fileinfo = await validateFile(url, 'very true').catch(() => { })
                 } else {
-                    fileinfo = await mainPoopy.functions.validateFileFromPath(url, 'very true').catch(() => { })
+                    fileinfo = await validateFileFromPath(url, 'very true').catch(() => { })
                 }
     
                 if (!fileinfo) return
@@ -306,8 +314,8 @@ async function start() {
                         for (var i in payload.files) {
                             var attachment = payload.files[i].attachment
     
-                            if (!mainPoopy.vars.validUrl.test(attachment)) {
-                                var fileinfo = await mainPoopy.functions.validateFileFromPath(attachment, 'very true').catch(() => { })
+                            if (!vars.validUrl.test(attachment)) {
+                                var fileinfo = await validateFileFromPath(attachment, 'very true').catch(() => { })
     
                                 if (!fileinfo) continue
     
@@ -339,7 +347,7 @@ async function start() {
     
                     if (attachment) {
                         sent = true
-                        if (mainPoopy.vars.validUrl.test(attachment)) {
+                        if (vars.validUrl.test(attachment)) {
                             res.redirect(attachment)
                         } else {
                             await new Promise(resolve => res.sendFile(`${__dirname}/${attachment}`, resolve))
@@ -400,7 +408,7 @@ async function start() {
     
                 for (var i in contents) {
                     var valid = 0
-                    contents[i] = await mainPoopy.functions.replaceAsync(contents[i], new RegExp(mainPoopy.vars.validUrl, 'g'), async (url) => {
+                    contents[i] = await replaceAsync(contents[i], new RegExp(vars.validUrl, 'g'), async (url) => {
                         if (valid < 10) {
                             const attachEmbed = await createEmbed(url, true)
                             if (attachEmbed) {
@@ -448,62 +456,62 @@ async function start() {
             msg.guild = guild
             // done
     
-            if (globalData()['bot-data']['shit'].find(id => id === msg.author.id)) {
+            if (mainPoopy.globaldata['bot-data']['shit'].find(id => id === msg.author.id)) {
                 return res.type('text').status(400).send('shit')
             }
     
-            await mainPoopy.functions.gatherData(msg).catch(() => { })
+            await gatherData(msg).catch(() => { })
     
-            if (mainPoopy.tempdata[msg.guild.id][msg.channel.id]['shut']) {
+            if (tempdata[msg.guild.id][msg.channel.id]['shut']) {
                 return res.type('text').status(400).send('shut')
             }
     
-            if (mainPoopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown']) {
-                if ((mainPoopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] - Date.now()) > 0) {
-                    return res.type('text').status(400).send(`Calm down! Wait more ${(mainPoopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] - Date.now()) / 1000} seconds.`)
+            if (data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown']) {
+                if ((data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] - Date.now()) > 0) {
+                    return res.type('text').status(400).send(`Calm down! Wait more ${(data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] - Date.now()) / 1000} seconds.`)
                 } else {
-                    mainPoopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] = false
+                    data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] = false
                 }
             }
     
-            const change = await mainPoopy.functions.getKeywordsFor(msg.content, msg, false, { resetattempts: true }).catch(() => { }) ?? 'error'
+            const change = await getKeywordsFor(msg.content, msg, false, { resetattempts: true }).catch(() => { }) ?? 'error'
     
             msg.oldcontent = msg.content
             msg.content = change
     
-            await mainPoopy.functions.getUrls(msg, { update: true }).catch(() => { })
+            await getUrls(msg, { update: true }).catch(() => { })
     
-            const args = msg.content.substring(mainPoopy.config.globalPrefix.length).split(' ')
+            const args = msg.content.substring(config.globalPrefix.length).split(' ')
             const commandname = args.slice(0, 1)[0].toLowerCase()
     
-            const command = mainPoopy.functions.findCommand(commandname)
-            const localCommand = mainPoopy.data['guild-data'][msg.guild.id]['localcmds'].find(cmd => cmd.name === commandname)
+            const command = findCommand(commandname)
+            const localCommand = data['guild-data'][msg.guild.id]['localcmds'].find(cmd => cmd.name === commandname)
     
             if (command || localCommand) {
-                if (mainPoopy.data['guild-data'][msg.guild.id]['disabled'].find(cmd => cmd.find(n => n === commandname))) {
+                if (data['guild-data'][msg.guild.id]['disabled'].find(cmd => cmd.find(n => n === commandname))) {
                     return res.type('text').status(400).send('This command is disabled here.')
                 }
     
                 if (command) {
                     if (command.cooldown) {
-                        mainPoopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] = (mainPoopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] || Date.now()) + command.cooldown / ((msg.member.permissions.has('MANAGE_GUILD') || msg.member.roles.cache.find(role => role.name.match(/mod|dev|admin|owner|creator|founder|staff/ig)) || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID) && (command.type === 'Text' || command.type === 'Main') ? 5 : 1)
+                        data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] = (data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] || Date.now()) + command.cooldown / ((msg.member.permissions.has('MANAGE_GUILD') || msg.member.roles.cache.find(role => role.name.match(/mod|dev|admin|owner|creator|founder|staff/ig)) || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID) && (command.type === 'Text' || command.type === 'Main') ? 5 : 1)
                     }
     
-                    mainPoopy.vars.cps++
-                    mainPoopy.data['bot-data']['commands']++
+                    vars.cps++
+                    data['bot-data']['commands']++
                     let t = setTimeout(() => {
-                        mainPoopy.vars.cps--;
+                        vars.cps--;
                         clearTimeout(t)
                     }, 1000)
     
-                    mainPoopy.functions.infoPost(`Command \`${commandname}\` used`)
+                    infoPost(`Command \`${commandname}\` used`)
                     await command.execute.call(mainPoopy, msg, args).catch((e) => {
                         if (restype == 'json') messages.push({
                             content: e.stack
                         })
                         else messages.push(`<div class="message"><div class="contents">${escapeHTML(e.stack)}</div></div>`)
                     })
-                    mainPoopy.data['bot-data']['filecount'] = mainPoopy.vars.filecount
+                    data['bot-data']['filecount'] = vars.filecount
                     if (!sent) {
                         sent = true
                         if (restype == 'json') {
@@ -516,21 +524,21 @@ async function start() {
                         }
                     }
                 } else if (localCommand) {
-                    mainPoopy.vars.cps++
-                    mainPoopy.data['bot-data']['commands']++
+                    vars.cps++
+                    data['bot-data']['commands']++
                     var t = setTimeout(() => {
-                        mainPoopy.vars.cps--;
+                        vars.cps--;
                         clearTimeout(t)
                     }, 60000)
     
-                    mainPoopy.functions.infoPost(`Command \`${commandname}\` used`)
-                    var phrase = await mainPoopy.functions.getKeywordsFor(localCommand.phrase, msg, true).catch((e) => {
+                    infoPost(`Command \`${commandname}\` used`)
+                    var phrase = await getKeywordsFor(localCommand.phrase, msg, true).catch((e) => {
                         if (restype == 'json') messages.push({
                             content: e.stack
                         })
                         else messages.push(`<div class="message"><div class="contents">${escapeHTML(e.stack)}</div></div>`)
                     }) ?? 'error'
-                    mainPoopy.data['bot-data']['filecount'] = mainPoopy.vars.filecount
+                    data['bot-data']['filecount'] = vars.filecount
                     if (!sent) {
                         sent = true
                         if (restype == 'json') {
@@ -555,7 +563,7 @@ async function start() {
     
         app.get('/psfile', function (_, res) {
             if (poopyStarted) {
-                const psfiles = globalData()['bot-data']['psfiles']
+                const psfiles = mainPoopy.globaldata['bot-data']['psfiles']
                 res.redirect(psfiles[Math.floor(Math.random() * psfiles.length)])
             } else {
                 res.sendFile(`${__dirname}/html/startPage.html`)

@@ -2,8 +2,9 @@ module.exports = {
   desc: 'Returns a random active member from the server, this is calculated by the number of messages each one has sent.',
   func: function (msg) {
     let poopy = this
+    let data = poopy.data
 
-    var datamembers = poopy.data['guild-data'][msg.guild.id]['members']
+    var datamembers = data['guild-data'][msg.guild.id]['members']
     var usermembers = {}
     for (var id in datamembers) {
       var datamember = datamembers[id]

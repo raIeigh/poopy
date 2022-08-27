@@ -3,8 +3,9 @@ module.exports = {
     args: [{"name":"message","required":false,"specifarg":false,"orig":"{message}"}],
     execute: async function (msg, args) {
         let poopy = this
+        let config = poopy.config
         
-        if (poopy.config.textEmbeds) {
+        if (config.textEmbeds) {
             await msg.reply('but how').catch(() => { })
             return
         }
@@ -25,7 +26,7 @@ module.exports = {
         };
         await msg.reply({
             allowedMentions: {
-                parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
             },
             embeds: [tangoEmbed]
         }).catch(() => { })

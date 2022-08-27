@@ -103,7 +103,6 @@ dataValues.functions.markov = require('./markov')
 dataValues.functions.wackywebm = require('./wackywebm')
 dataValues.functions.getAllData = require('./dataGathering').getAllData
 dataValues.functions.updateAllData = require('./dataGathering').updateAllData
-dataValues.functions.globalData = require('./globalData')
 dataValues.functions.brainfuck = require('./brainfuck')
 dataValues.functions.tobrainfuck = require('./tobrainfuck')
 dataValues.functions.generateSayori = require('./sayorimessagegenerator')
@@ -706,5 +705,7 @@ dataValues.arrays = {
         'No.', 'I have no answers.', 'That\'s true.', 'That\'s false.', 'Isn\'t it obvious?'
     ]
 }
+
+dataValues.globaldata = {}
 
 module.exports = dataValues

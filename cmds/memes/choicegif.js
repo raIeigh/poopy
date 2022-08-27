@@ -3,6 +3,10 @@ module.exports = {
     args: [{"name":"name","required":false,"specifarg":false,"orig":"\"{name}\""},{"name":"file","required":false,"specifarg":false,"orig":"{file}"}],
     execute: async function (msg, args) {
         let poopy = this
+        let modules = poopy.modules
+        let { lastUrl, validateFile, downloadFile, execPromise, sendFile } = poopy.functions
+        let vars = poopy.vars
+        let config = poopy.config
 
         const gifframes = [
             {
@@ -105,8 +109,8 @@ module.exports = {
 
             {
                 edit: async function (frame) {
-                    frame.resize(frame.bitmap.width / 4, frame.bitmap.height / 4, poopy.modules.Jimp.RESIZE_NEAREST_NEIGHBOR)
-                    frame.resize(frame.bitmap.width * 4, frame.bitmap.height * 4, poopy.modules.Jimp.RESIZE_NEAREST_NEIGHBOR)
+                    frame.resize(frame.bitmap.width / 4, frame.bitmap.height / 4, modules.Jimp.RESIZE_NEAREST_NEIGHBOR)
+                    frame.resize(frame.bitmap.width * 4, frame.bitmap.height * 4, modules.Jimp.RESIZE_NEAREST_NEIGHBOR)
                 },
                 name: '8-bit {text}',
                 filename: '9.png'
@@ -321,8 +325,8 @@ module.exports = {
 
             {
                 edit: async function (frame) {
-                    frame.resize(frame.bitmap.width, 1, poopy.modules.Jimp.RESIZE_NEAREST_NEIGHBOR)
-                    frame.resize(frame.bitmap.width, 500, poopy.modules.Jimp.RESIZE_NEAREST_NEIGHBOR)
+                    frame.resize(frame.bitmap.width, 1, modules.Jimp.RESIZE_NEAREST_NEIGHBOR)
+                    frame.resize(frame.bitmap.width, 500, modules.Jimp.RESIZE_NEAREST_NEIGHBOR)
                 },
                 name: '{text}\n{text}\n{text}\n{text}\n{text}\n{text}\n{text}',
                 filename: '26.png'
@@ -330,7 +334,7 @@ module.exports = {
 
             {
                 edit: async function (frame) {
-                    var stripes = await poopy.modules.Jimp.read('assets/stripes.png')
+                    var stripes = await modules.Jimp.read('assets/stripes.png')
                     frame.greyscale()
                     stripes.resize(frame.bitmap.width, frame.bitmap.height)
                     frame.composite(stripes, 0, 0)
@@ -346,7 +350,7 @@ module.exports = {
 
             {
                 edit: async function (frame) {
-                    var jail = await poopy.modules.Jimp.read('assets/jailed.png')
+                    var jail = await modules.Jimp.read('assets/jailed.png')
                     jail.resize(frame.bitmap.width, frame.bitmap.height)
                     frame.composite(jail, 0, 0)
                 },
@@ -355,13 +359,13 @@ module.exports = {
             },
         ]
         await msg.channel.sendTyping().catch(() => { })
-        if (poopy.functions.lastUrl(msg, 0) === undefined && args[1] === undefined) {
+        if (lastUrl(msg, 0) === undefined && args[1] === undefined) {
             await msg.reply('What is the file?!').catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
         };
         var saidMessage = args.slice(1).join(' ')
-        poopy.vars.symbolreplacements.forEach(symbolReplacement => {
+        vars.symbolreplacements.forEach(symbolReplacement => {
             symbolReplacement.target.forEach(target => {
                 saidMessage = saidMessage.replace(new RegExp(target, 'ig'), symbolReplacement.replacement)
             })
@@ -371,8 +375,8 @@ module.exports = {
             matchedTextes = ['""', '']
         }
         var text = matchedTextes[1]
-        var currenturl = poopy.functions.lastUrl(msg, 0) || args[1]
-        var fileinfo = await poopy.functions.validateFile(currenturl).catch(async error => {
+        var currenturl = lastUrl(msg, 0) || args[1]
+        var fileinfo = await validateFile(currenturl).catch(async error => {
             await msg.reply(error).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
@@ -381,67 +385,67 @@ module.exports = {
         if (!fileinfo) return
         var type = fileinfo.type
 
-        if (type.mime.startsWith('image') && !(poopy.vars.gifFormats.find(f => f === type.ext))) {
-            var filepath = await poopy.functions.downloadFile(currenturl, `input.png`, {
+        if (type.mime.startsWith('image') && !(vars.gifFormats.find(f => f === type.ext))) {
+            var filepath = await downloadFile(currenturl, `input.png`, {
                 fileinfo: fileinfo
             })
             var filename = `input.png`
-            poopy.modules.fs.mkdirSync(`${filepath}/frames`)
+            modules.fs.mkdirSync(`${filepath}/frames`)
 
             for (var i = 0; i < gifframes.length; i++) {
                 var framedata = gifframes[i]
-                var frame = await poopy.modules.Jimp.read(`${filepath}/${filename}`)
-                var white = await poopy.modules.Jimp.read(`assets/white.png`)
-                var arialsmall = await poopy.modules.Jimp.loadFont('assets/fonts/ArialSmall/ArialSmall.fnt')
-                var arialbig = await poopy.modules.Jimp.loadFont('assets/fonts/ArialBig/ArialBig.fnt')
+                var frame = await modules.Jimp.read(`${filepath}/${filename}`)
+                var white = await modules.Jimp.read(`assets/white.png`)
+                var arialsmall = await modules.Jimp.loadFont('assets/fonts/ArialSmall/ArialSmall.fnt')
+                var arialbig = await modules.Jimp.loadFont('assets/fonts/ArialBig/ArialBig.fnt')
                 var squareS = { value: ((frame.bitmap.height === frame.bitmap.width) && frame.bitmap.width) || ((frame.bitmap.height > frame.bitmap.width) && frame.bitmap.height) || frame.bitmap.width, constraint: ((frame.bitmap.height === frame.bitmap.width) && 'both') || ((frame.bitmap.height > frame.bitmap.width) && 'height') || 'width' }
-                frame.resize(squareS.constraint === 'width' || squareS.constraint === 'both' ? 180 : poopy.modules.Jimp.AUTO, squareS.constraint === 'height' || squareS.constraint === 'both' ? 180 : poopy.modules.Jimp.AUTO)
+                frame.resize(squareS.constraint === 'width' || squareS.constraint === 'both' ? 180 : modules.Jimp.AUTO, squareS.constraint === 'height' || squareS.constraint === 'both' ? 180 : modules.Jimp.AUTO)
                 white.resize(304, 361)
                 if (framedata.edit) {
                     await framedata.edit(frame)
                 }
                 white.composite(frame, white.bitmap.width / 2 - frame.bitmap.width / 2, white.bitmap.height / 2 - frame.bitmap.height / 2)
-                await white.print(arialbig, 8, 8, { text: poopy.modules.Discord.Util.cleanContent('Choose your {text}'.replace(/{text}/g, text), msg), alignmentX: poopy.modules.Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: poopy.modules.Jimp.VERTICAL_ALIGN_MIDDLE }, 288, 73)
-                await white.print(arialsmall, 8, 280, { text: poopy.modules.Discord.Util.cleanContent(framedata.name.replace(/{text}/g, text), msg), alignmentX: poopy.modules.Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: poopy.modules.Jimp.VERTICAL_ALIGN_MIDDLE }, 288, 73)
+                await white.print(arialbig, 8, 8, { text: modules.Discord.Util.cleanContent('Choose your {text}'.replace(/{text}/g, text), msg), alignmentX: modules.Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: modules.Jimp.VERTICAL_ALIGN_MIDDLE }, 288, 73)
+                await white.print(arialsmall, 8, 280, { text: modules.Discord.Util.cleanContent(framedata.name.replace(/{text}/g, text), msg), alignmentX: modules.Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: modules.Jimp.VERTICAL_ALIGN_MIDDLE }, 288, 73)
                 await white.writeAsync(`${filepath}/frames/${framedata.filename}`)
             }
 
-            await poopy.functions.execPromise(`ffmpeg -i ${filepath}/frames/%d.png -vf palettegen=reserve_transparent=1 ${filepath}/palette.png`)
-            await poopy.functions.execPromise(`ffmpeg -i ${filepath}/frames/%d.png -i ${filepath}/palette.png -lavfi "paletteuse=alpha_threshold=128" -gifflags -offsetting ${filepath}/output.gif`)
-            return await poopy.functions.sendFile(msg, filepath, `output.gif`)
-        } else if (type.mime.startsWith('video') || (type.mime.startsWith('image') && poopy.vars.gifFormats.find(f => f === type.ext))) {
-            var currentcount = poopy.vars.filecount
-            poopy.vars.filecount++
-            var filepath = `temp/${poopy.config.mongodatabase}/file${currentcount}`
-            poopy.modules.fs.mkdirSync(`${filepath}`)
-            poopy.modules.fs.mkdirSync(`${filepath}/frames`)
+            await execPromise(`ffmpeg -i ${filepath}/frames/%d.png -vf palettegen=reserve_transparent=1 ${filepath}/palette.png`)
+            await execPromise(`ffmpeg -i ${filepath}/frames/%d.png -i ${filepath}/palette.png -lavfi "paletteuse=alpha_threshold=128" -gifflags -offsetting ${filepath}/output.gif`)
+            return await sendFile(msg, filepath, `output.gif`)
+        } else if (type.mime.startsWith('video') || (type.mime.startsWith('image') && vars.gifFormats.find(f => f === type.ext))) {
+            var currentcount = vars.filecount
+            vars.filecount++
+            var filepath = `temp/${config.mongodatabase}/file${currentcount}`
+            modules.fs.mkdirSync(`${filepath}`)
+            modules.fs.mkdirSync(`${filepath}/frames`)
 
-            await poopy.functions.execPromise(`ffmpeg -i "${currenturl}" -vframes 1 ${filepath}/output.png`)
+            await execPromise(`ffmpeg -i "${currenturl}" -vframes 1 ${filepath}/output.png`)
             for (var i = 0; i < gifframes.length; i++) {
                 var framedata = gifframes[i]
-                var frame = await poopy.modules.Jimp.read(`${filepath}/output.png`)
-                var white = await poopy.modules.Jimp.read(`assets/white.png`)
-                var arialsmall = await poopy.modules.Jimp.loadFont('assets/fonts/ArialSmall/ArialSmall.fnt')
-                var arialbig = await poopy.modules.Jimp.loadFont('assets/fonts/ArialBig/ArialBig.fnt')
+                var frame = await modules.Jimp.read(`${filepath}/output.png`)
+                var white = await modules.Jimp.read(`assets/white.png`)
+                var arialsmall = await modules.Jimp.loadFont('assets/fonts/ArialSmall/ArialSmall.fnt')
+                var arialbig = await modules.Jimp.loadFont('assets/fonts/ArialBig/ArialBig.fnt')
                 var squareS = { value: ((frame.bitmap.height === frame.bitmap.width) && frame.bitmap.width) || ((frame.bitmap.height > frame.bitmap.width) && frame.bitmap.height) || frame.bitmap.width, constraint: ((frame.bitmap.height === frame.bitmap.width) && 'both') || ((frame.bitmap.height > frame.bitmap.width) && 'height') || 'width' }
-                frame.resize(squareS.constraint === 'width' || squareS.constraint === 'both' ? 180 : poopy.modules.Jimp.AUTO, squareS.constraint === 'height' || squareS.constraint === 'both' ? 180 : poopy.modules.Jimp.AUTO)
+                frame.resize(squareS.constraint === 'width' || squareS.constraint === 'both' ? 180 : modules.Jimp.AUTO, squareS.constraint === 'height' || squareS.constraint === 'both' ? 180 : modules.Jimp.AUTO)
                 white.resize(304, 361)
                 if (framedata.edit) {
                     await framedata.edit(frame)
                 }
                 white.composite(frame, white.bitmap.width / 2 - frame.bitmap.width / 2, white.bitmap.height / 2 - frame.bitmap.height / 2)
-                await white.print(arialbig, 8, 8, { text: poopy.modules.Discord.Util.cleanContent('Choose your {text}'.replace(/{text}/g, text), msg), alignmentX: poopy.modules.Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: poopy.modules.Jimp.VERTICAL_ALIGN_MIDDLE }, 288, 73)
-                await white.print(arialsmall, 8, 280, { text: poopy.modules.Discord.Util.cleanContent(framedata.name.replace(/{text}/g, text), msg), alignmentX: poopy.modules.Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: poopy.modules.Jimp.VERTICAL_ALIGN_MIDDLE }, 288, 73)
+                await white.print(arialbig, 8, 8, { text: modules.Discord.Util.cleanContent('Choose your {text}'.replace(/{text}/g, text), msg), alignmentX: modules.Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: modules.Jimp.VERTICAL_ALIGN_MIDDLE }, 288, 73)
+                await white.print(arialsmall, 8, 280, { text: modules.Discord.Util.cleanContent(framedata.name.replace(/{text}/g, text), msg), alignmentX: modules.Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: modules.Jimp.VERTICAL_ALIGN_MIDDLE }, 288, 73)
                 await white.writeAsync(`${filepath}/frames/${framedata.filename}`)
             }
-            await poopy.functions.execPromise(`ffmpeg -i ${filepath}/frames/%d.png -vf palettegen=reserve_transparent=1 ${filepath}/palette.png`)
-            await poopy.functions.execPromise(`ffmpeg -i ${filepath}/frames/%d.png -i ${filepath}/palette.png -lavfi "paletteuse=alpha_threshold=128" -gifflags -offsetting ${filepath}/output.gif`)
-            return await poopy.functions.sendFile(msg, filepath, `output.gif`)
+            await execPromise(`ffmpeg -i ${filepath}/frames/%d.png -vf palettegen=reserve_transparent=1 ${filepath}/palette.png`)
+            await execPromise(`ffmpeg -i ${filepath}/frames/%d.png -i ${filepath}/palette.png -lavfi "paletteuse=alpha_threshold=128" -gifflags -offsetting ${filepath}/output.gif`)
+            return await sendFile(msg, filepath, `output.gif`)
         } else {
             await msg.reply({
                 content: `Unsupported file: \`${currenturl}\``,
                 allowedMentions: {
-                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })

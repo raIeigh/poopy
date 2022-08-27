@@ -9,13 +9,17 @@ module.exports = {
     ] }, { "name": "statusMessage", "required": true, "specifarg": false, "orig": "<statusMessage>" }, { "name": "permanent", "required": false, "specifarg": true, "orig": "[-permanent]" }],
     execute: async function (msg, args, opts) {
         let poopy = this
+        let config = poopy.config
+        let { getOption, infoPost } = poopy.functions
+        let bot = poopy.bot
+        let vars = poopy.vars
 
-        var ownerid = poopy.config.ownerids.find(id => id == msg.author.id);
+        var ownerid = config.ownerids.find(id => id == msg.author.id);
         if (ownerid === undefined && !opts.ownermode) {
             await msg.reply('Owner only!').catch(() => { })
             return
         } else {
-            var permanent = !!poopy.functions.getOption(args, 'permanent', { splice: true, dft: false })
+            var permanent = !!getOption(args, 'permanent', { splice: true, dft: false })
 
             if (args[1] === undefined) {
                 await msg.reply('What is the status type?! (Available: **PLAYING**, **LISTENING**, **WATCHING**, **STREAMING**, **COMPETING**)').catch(() => { })
@@ -30,22 +34,22 @@ module.exports = {
             if (args[1] === 'PLAYING' || args[1] === 'LISTENING' || args[1] === 'WATCHING' || args[1] === 'STREAMING' || args[1] === 'COMPETING') {
                 var saidMessage = args.slice(2).join(' ')
                 await msg.channel.sendTyping().catch(() => { })
-                poopy.functions.infoPost(`Status changed to ${args[1].toLowerCase() + ' ' + ((args[1] === "COMPETING" && 'in ') || (args[1] === "LISTENING" && 'to ') || '') + saidMessage}`)
-                poopy.bot.user.setPresence({
+                infoPost(`Status changed to ${args[1].toLowerCase() + ' ' + ((args[1] === "COMPETING" && 'in ') || (args[1] === "LISTENING" && 'to ') || '') + saidMessage}`)
+                bot.user.setPresence({
                     status: 'online',
                     activities: [
                         {
-                            name: saidMessage + ` | ${poopy.config.globalPrefix}help`,
+                            name: saidMessage + ` | ${config.globalPrefix}help`,
                             type: args[1],
                             url: 'https://www.youtube.com/watch?v=LDQO0ALm0gE'
                         }
                     ],
                 });
-                poopy.vars.statusChanges = permanent;
+                vars.statusChanges = permanent;
                 await msg.reply({
                     content: 'Poopy\'s status set to: **' + saidMessage + ' (' + args[1] + ')**',
                     allowedMentions: {
-                        parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                        parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                     }
                 }).catch(() => { })
                 await msg.channel.sendTyping().catch(() => { })
@@ -54,7 +58,7 @@ module.exports = {
                 await msg.reply({
                     content: 'Invalid status type: **' + args[2] + '** (Available: **PLAYING**, **LISTENING**, **WATCHING**, **STREAMING**, **COMPETING**)',
                     allowedMentions: {
-                        parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                        parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                     }
                 }).catch(() => { })
                 await msg.channel.sendTyping().catch(() => { })

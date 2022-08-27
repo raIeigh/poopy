@@ -3,6 +3,8 @@ module.exports = {
   args: [],
   execute: async function (msg) {
     let poopy = this
+    let bot = poopy.bot
+    let modules = poopy.modules
 
     var sayoriart = [
       'https://cdn.discordapp.com/attachments/551420953704267789/795630551884103730/Untitled60.png',
@@ -117,11 +119,11 @@ module.exports = {
       'https://cdn.discordapp.com/attachments/551420953704267789/846018326434021436/20210523_143344.jpg'
     ]
 
-    var sayori = await poopy.bot.users.fetch('758638862590803968')
+    var sayori = await bot.users.fetch('758638862590803968')
 
     await msg.reply({
       content: `This treasure was made by ${sayori.tag}.`,
-      files: [new poopy.modules.Discord.MessageAttachment(sayoriart[Math.floor(Math.random() * sayoriart.length)])]
+      files: [new modules.Discord.MessageAttachment(sayoriart[Math.floor(Math.random() * sayoriart.length)])]
     }).catch(() => { })
   },
   help: {

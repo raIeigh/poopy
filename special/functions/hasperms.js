@@ -3,12 +3,14 @@ module.exports = {
     desc: 'Checks whether the user in the server with the respective ID has all the specified permissions or not. (a list of permissions can be found in https://discord.com/developers/docs/topics/permissions#permissions-bitwise-permission-flags)',
     func: async function (matches, msg) {
         let poopy = this
+        let { splitKeyFunc } = poopy.functions
+        let modules = poopy.modules
 
         var word = matches[1]
-        var split = poopy.functions.splitKeyFunc(word)
+        var split = splitKeyFunc(word)
         var id = split[0] ?? ''
         var perms = split.slice(1).length ? split.slice(1) : ''
-        var permlist = poopy.modules.Discord.Permissions.FLAGS
+        var permlist = modules.Discord.Permissions.FLAGS
 
         for (var i in perms) {
             var perm = perms[i]

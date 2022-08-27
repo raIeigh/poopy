@@ -3,6 +3,9 @@ module.exports = {
     args: [{"name":"query","required":true,"specifarg":false,"orig":"<query>"},{"name":"page","required":false,"specifarg":true,"orig":"[-page <number>]"}],
     execute: async function (msg, args) {
         let poopy = this
+        let modules = poopy.modules
+        let { navigateEmbed, addLastUrl } = poopy.functions
+        let config = poopy.config
 
         await msg.channel.sendTyping().catch(() => { })
         if (args[1] === undefined) {
@@ -18,7 +21,7 @@ module.exports = {
         }
         var search = args.slice(1).join(" ");
 
-        var res = await poopy.modules.axios.request(`https://g.tenor.com/v1/search?q=${encodeURIComponent(search)}&key=${process.env.TENORKEY}&limit=100&contentfilter=${msg.channel.nsfw ? 'off' : 'medium'}`).catch(() => { })
+        var res = await modules.axios.request(`https://g.tenor.com/v1/search?q=${encodeURIComponent(search)}&key=${process.env.TENORKEY}&limit=100&contentfilter=${msg.channel.nsfw ? 'off' : 'medium'}`).catch(() => { })
 
         if (!res) {
             await msg.reply('Error.').catch(() => { })
@@ -43,10 +46,10 @@ module.exports = {
         if (number > urls.length) number = urls.length;
         if (number < 1) number = 1
 
-        await poopy.functions.navigateEmbed(msg.channel, async (page) => {
-            poopy.functions.addLastUrl(msg, urls[page - 1])
+        await navigateEmbed(msg.channel, async (page) => {
+            addLastUrl(msg, urls[page - 1])
 
-            if (poopy.config.textEmbeds) return `${urls[page - 1]}\n\nGIF ${page}/${urls.length}`
+            if (config.textEmbeds) return `${urls[page - 1]}\n\nGIF ${page}/${urls.length}`
             else return {
                 "title": "Tenor GIF Search Results For " + search,
                 "description": "Use the arrows to navigate.",

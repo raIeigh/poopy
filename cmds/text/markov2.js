@@ -3,33 +3,40 @@ module.exports = {
     args: [{"name":"minlength","required":false,"specifarg":true,"orig":"[-minlength <charNumber>]"},{"name":"randomsentences","required":false,"specifarg":true,"orig":"[-randomsentences]"}],
     execute: async function (msg, args) {
         let poopy = this
+        let { getOption, parseNumber, markov } = poopy.functions
+        let data = poopy.data
+        let json = poopy.json
+        let arrays = poopy.arrays
+        let vars = poopy.vars
+        let config = poopy.config
+        let modules = poopy.modules
 
-        var minlength = poopy.functions.getOption(args, 'minlength', { dft: 5, splice: true, n: 1, join: true, func: (opt) => poopy.functions.parseNumber(opt, { dft: 5, min: 1, max: 10000, round: true }) })
-        var randomsentences = poopy.functions.getOption(args, 'randomsentences', { dft: false, splice: true, n: 0, join: true })
+        var minlength = getOption(args, 'minlength', { dft: 5, splice: true, n: 1, join: true, func: (opt) => parseNumber(opt, { dft: 5, min: 1, max: 10000, round: true }) })
+        var randomsentences = getOption(args, 'randomsentences', { dft: false, splice: true, n: 0, join: true })
 
-        var messages = poopy.data['guild-data'][msg.guild.id]['messages'].slice().map(m => m.content)
+        var messages = data['guild-data'][msg.guild.id]['messages'].slice().map(m => m.content)
         if (messages.length <= 0 || randomsentences) {
-            messages = poopy.json.sentenceJSON.data.map(s => s.sentence).concat(poopy.arrays.psPasta)
+            messages = json.sentenceJSON.data.map(s => s.sentence).concat(arrays.psPasta)
         }
         await msg.channel.sendTyping().catch(() => { })
 
-        var markov = poopy.functions.markov(messages, minlength)
+        var markovString = markov(messages, minlength)
 
         await msg.reply({
-            content: markov,
+            content: markovString,
             allowedMentions: {
-                parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
             }
         }).catch(async () => {
-            var currentcount = poopy.vars.filecount
-            poopy.vars.filecount++
-            var filepath = `temp/${poopy.config.mongodatabase}/file${currentcount}`
-            poopy.modules.fs.mkdirSync(`${filepath}`)
-            poopy.modules.fs.writeFileSync(`${filepath}/markov.txt`, markov)
+            var currentcount = vars.filecount
+            vars.filecount++
+            var filepath = `temp/${config.mongodatabase}/file${currentcount}`
+            modules.fs.mkdirSync(`${filepath}`)
+            modules.fs.writeFileSync(`${filepath}/markov.txt`, markovString)
             await msg.reply({
-                files: [new poopy.modules.Discord.MessageAttachment(`${filepath}/markov.txt`)]
+                files: [new modules.Discord.MessageAttachment(`${filepath}/markov.txt`)]
             }).catch(() => { })
-            poopy.modules.fs.rmSync(`${filepath}`, { force: true, recursive: true })
+            modules.fs.rmSync(`${filepath}`, { force: true, recursive: true })
         })
     },
     help: {

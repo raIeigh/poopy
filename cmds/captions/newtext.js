@@ -15,9 +15,13 @@ module.exports = {
     }],
     execute: async function (msg, args) {
         let poopy = this
+        let modules = poopy.modules
+        let vars = poopy.vars
+        let config = poopy.config
+        let { execPromise, sendFile } = poopy.functions
 
         await msg.channel.sendTyping().catch(() => { })
-        var fonts = poopy.modules.fs.readdirSync('assets/fonts')
+        var fonts = modules.fs.readdirSync('assets/fonts')
         if (!args[1]) {
             await msg.reply(`No font specified. A valid list of fonts is ${fonts.join(', ')}`).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
@@ -91,27 +95,27 @@ module.exports = {
 
         var origins = {
             x: {
-                left: poopy.modules.Jimp.HORIZONTAL_ALIGN_LEFT,
-                center: poopy.modules.Jimp.HORIZONTAL_ALIGN_CENTER,
-                right: poopy.modules.Jimp.HORIZONTAL_ALIGN_RIGHT
+                left: modules.Jimp.HORIZONTAL_ALIGN_LEFT,
+                center: modules.Jimp.HORIZONTAL_ALIGN_CENTER,
+                right: modules.Jimp.HORIZONTAL_ALIGN_RIGHT
             },
 
             y: {
-                top: poopy.modules.Jimp.VERTICAL_ALIGN_TOP,
-                middle: poopy.modules.Jimp.VERTICAL_ALIGN_MIDDLE,
-                bottom: poopy.modules.Jimp.VERTICAL_ALIGN_BOTTOM
+                top: modules.Jimp.VERTICAL_ALIGN_TOP,
+                middle: modules.Jimp.VERTICAL_ALIGN_MIDDLE,
+                bottom: modules.Jimp.VERTICAL_ALIGN_BOTTOM
             },
         }
-        var originx = poopy.modules.Jimp.HORIZONTAL_ALIGN_CENTER
-        var originy = poopy.modules.Jimp.VERTICAL_ALIGN_MIDDLE
+        var originx = modules.Jimp.HORIZONTAL_ALIGN_CENTER
+        var originy = modules.Jimp.VERTICAL_ALIGN_MIDDLE
         var originindex = args.indexOf('-origin')
         if (originindex > -1) {
-            originx = origins.x[args[originindex + 1]] || poopy.modules.Jimp.HORIZONTAL_ALIGN_CENTER
-            originy = origins.y[args[originindex + 2]] || poopy.modules.Jimp.VERTICAL_ALIGN_MIDDLE
+            originx = origins.x[args[originindex + 1]] || modules.Jimp.HORIZONTAL_ALIGN_CENTER
+            originy = origins.y[args[originindex + 2]] || modules.Jimp.VERTICAL_ALIGN_MIDDLE
         }
 
         var saidMessage = args.slice(1).join(' ').replace(/’/g, '\'')
-        poopy.vars.symbolreplacements.forEach(symbolReplacement => {
+        vars.symbolreplacements.forEach(symbolReplacement => {
             symbolReplacement.target.forEach(target => {
                 saidMessage = saidMessage.replace(new RegExp(target, 'ig'), symbolReplacement.replacement)
             })
@@ -122,20 +126,20 @@ module.exports = {
         }
         var text = matchedTextes[0].substring(1, matchedTextes[0].length - 1)
 
-        var currentcount = poopy.vars.filecount
-        poopy.vars.filecount++
-        var filepath = `temp/${poopy.config.mongodatabase}/file${currentcount}`
-        poopy.modules.fs.mkdirSync(`${filepath}`)
+        var currentcount = vars.filecount
+        vars.filecount++
+        var filepath = `temp/${config.mongodatabase}/file${currentcount}`
+        modules.fs.mkdirSync(`${filepath}`)
 
-        var transparent = await poopy.modules.Jimp.read('assets/transparent.png')
-        var loadedfont = await poopy.modules.Jimp.loadFont(`assets/fonts/${font}/${font}.fnt`)
+        var transparent = await modules.Jimp.read('assets/transparent.png')
+        var loadedfont = await modules.Jimp.loadFont(`assets/fonts/${font}/${font}.fnt`)
         var defaultheight = loadedfont.common.lineHeight
-        var textwidth = maxwidth || poopy.modules.Jimp.measureText(loadedfont, text)
-        var textheight = poopy.modules.Jimp.measureTextHeight(loadedfont, text, maxwidth || textwidth)
+        var textwidth = maxwidth || modules.Jimp.measureText(loadedfont, text)
+        var textheight = modules.Jimp.measureTextHeight(loadedfont, text, maxwidth || textwidth)
         var width = textwidth + padding.left + padding.right
         var height = textheight + padding.top + padding.bottom
         transparent.resize(width, height)
-        await transparent.print(loadedfont, padding.left, padding.top, { text: poopy.modules.Discord.Util.cleanContent(text, msg), alignmentX: originx, alignmentY: originy }, textwidth, textheight)
+        await transparent.print(loadedfont, padding.left, padding.top, { text: modules.Discord.Util.cleanContent(text, msg), alignmentX: originx, alignmentY: originy }, textwidth, textheight)
         if (args.find(arg => arg === '-resetcolor')) {
             transparent.color([
                 {
@@ -168,8 +172,8 @@ module.exports = {
         ])
         await transparent.writeAsync(`${filepath}/caption.png`)
 
-        await poopy.functions.execPromise(`ffmpeg -i ${filepath}/caption.png -f lavfi -i "color=0x${rgba.r.toString(16).padStart(2, '0')}${rgba.g.toString(16).padStart(2, '0')}${rgba.b.toString(16).padStart(2, '0')}${rgba.a.toString(16).padStart(2, '0')}:s=${width}x${height},format=rgba" -filter_complex "[1:v][0:v]overlay=x=0:y=0:format=auto[out]" -map "[out]" ${filepath}/output.png`)
-        return await poopy.functions.sendFile(msg, filepath, `output.png`, {
+        await execPromise(`ffmpeg -i ${filepath}/caption.png -f lavfi -i "color=0x${rgba.r.toString(16).padStart(2, '0')}${rgba.g.toString(16).padStart(2, '0')}${rgba.b.toString(16).padStart(2, '0')}${rgba.a.toString(16).padStart(2, '0')}:s=${width}x${height},format=rgba" -filter_complex "[1:v][0:v]overlay=x=0:y=0:format=auto[out]" -map "[out]" ${filepath}/output.png`)
+        return await sendFile(msg, filepath, `output.png`, {
             content: `Font Height: **${defaultheight} pixels**`
         })
     },

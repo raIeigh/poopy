@@ -3,8 +3,12 @@ module.exports = {
     args: [{"name":"prompt","required":true,"specifarg":false,"orig":"<prompt>"}],
     execute: async function (msg, args, opts) {
         let poopy = this
+        let config = poopy.config
+        let modules = poopy.modules
+        let { sleep, navigateEmbed } = poopy.functions
+        let bot = poopy.bot
 
-        var ownerid = poopy.config.ownerids.find(id => id == msg.author.id);
+        var ownerid = config.ownerids.find(id => id == msg.author.id);
         if (ownerid === undefined && !opts.ownermode) {
             await msg.reply('Owner only!').catch(() => { })
             return
@@ -31,7 +35,7 @@ module.exports = {
         }
 
         async function dalle2Request() {
-            var taskRes = await poopy.modules.axios.request({
+            var taskRes = await modules.axios.request({
                 url: 'https://labs.openai.com/api/labs/tasks',
                 method: 'POST',
                 data: {
@@ -55,9 +59,9 @@ module.exports = {
             var imageRes
 
             while (!imageRes) {
-                await poopy.functions.sleep(20000)
+                await sleep(20000)
 
-                var taskCompleteRes = await poopy.modules.axios.request({
+                var taskCompleteRes = await modules.axios.request({
                     url: `https://labs.openai.com/api/labs/tasks/${taskId}`,
                     method: 'GET',
                     headers: {
@@ -87,10 +91,10 @@ module.exports = {
         var imageRes = await dalle2Request().catch(() => { })
         if (!imageRes) return
 
-        var images = imageRes.data.generations.data.map(gdata => gdata.generation.image_path)
+        var images = imageRes.data.generatidata.map(gdata => gdata.generation.image_path)
 
-        await poopy.functions.navigateEmbed(msg.channel, async (page) => {
-            if (poopy.config.textEmbeds) return `${images[page - 1]}\n\nImage ${page}/${images.length}`
+        await navigateEmbed(msg.channel, async (page) => {
+            if (config.textEmbeds) return `${images[page - 1]}\n\nImage ${page}/${images.length}`
             else return {
                 "title": `DALL·E 2 results for ${text}`,
                 "color": 0x472604,
@@ -98,7 +102,7 @@ module.exports = {
                     "url": images[page - 1]
                 },
                 "footer": {
-                    "icon_url": poopy.bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
+                    "icon_url": bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
                     "text": `Image ${page}/${images.length}`
                 },
             }

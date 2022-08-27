@@ -3,8 +3,15 @@ module.exports = {
     args: [],
     execute: async function (msg) {
         let poopy = this
+        let bot = poopy.bot
+        let modules = poopy.modules
+        let config = poopy.config
+        let data = poopy.data
+        let pkg = poopy.package
+        let commands = poopy.commands
+        let vars = poopy.vars
 
-        var totalSeconds = (poopy.bot.uptime / 1000);
+        var totalSeconds = (bot.uptime / 1000);
         var days = Math.floor(totalSeconds / 86400);
         totalSeconds %= 86400;
         var hours = Math.floor(totalSeconds / 3600);
@@ -16,25 +23,25 @@ module.exports = {
         var rss = usage.rss / 1024 / 1024
         var cusage = process.cpuUsage()
         var cused = (cusage.user + cusage.system) / 1024 / 1024
-        var cpu = poopy.modules.os.cpus()[0].model
-        var servers = poopy.bot.guilds.cache.size
-        var channels = poopy.bot.channels.cache.size
-        var emojis = poopy.bot.emojis.cache.size
-        var files = poopy.modules.fs.readdirSync(`temp/${poopy.config.mongodatabase}`).length
-        var messages = poopy.data['bot-data']['messages']
-        var users = Object.keys(poopy.data['user-data']).length
-        var pcommands = poopy.data['bot-data']['commands']
-        var reboots = poopy.data['bot-data']['reboots']
+        var cpu = modules.os.cpus()[0].model
+        var servers = bot.guilds.cache.size
+        var channels = bot.channels.cache.size
+        var emojis = bot.emojis.cache.size
+        var files = modules.fs.readdirSync(`temp/${config.mongodatabase}`).length
+        var messages = data['bot-data']['messages']
+        var users = Object.keys(data['user-data']).length
+        var pcommands = data['bot-data']['commands']
+        var reboots = data['bot-data']['reboots']
         var members = 0
 
-        poopy.bot.guilds.cache.forEach(guild => members += guild.memberCount)
+        bot.guilds.cache.forEach(guild => members += guild.memberCount)
 
         var statsEmbed = {
-            title: `${poopy.bot.user.username}'s Stats`,
+            title: `${bot.user.username}'s Stats`,
             color: 0x472604,
             footer: {
-                icon_url: poopy.bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
-                text: `${poopy.bot.user.username} - v${poopy.package.version}`
+                icon_url: bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
+                text: `${bot.user.username} - v${pkg.version}`
             },
             fields: [
                 {
@@ -74,7 +81,7 @@ module.exports = {
                 },
                 {
                     name: "Commands",
-                    value: poopy.commands.length.toString(),
+                    value: commands.length.toString(),
                     inline: true
                 },
                 {
@@ -84,12 +91,12 @@ module.exports = {
                 },
                 {
                     name: "Commands per Minute",
-                    value: poopy.vars.cps.toString(),
+                    value: vars.cps.toString(),
                     inline: true
                 },
                 {
                     name: "File Count",
-                    value: poopy.vars.filecount.toString(),
+                    value: vars.filecount.toString(),
                     inline: true
                 },
                 {
@@ -125,10 +132,10 @@ module.exports = {
             ]
         }
 
-        if (poopy.config.textEmbeds) msg.reply({
-            content: `${statsEmbed.fields.map(p => `**${p.name}**: ${p.value}`).join('\n')}\n\nv${poopy.package.version}`,
+        if (config.textEmbeds) msg.reply({
+            content: `${statsEmbed.fields.map(p => `**${p.name}**: ${p.value}`).join('\n')}\n\nv${package.version}`,
             allowedMentions: {
-                parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
             }
         }).catch(() => { })
         else msg.reply({

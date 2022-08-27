@@ -4,9 +4,13 @@ module.exports = {
     noargchange: true,
     execute: async function (msg, args) {
         let poopy = this
+        let { lastUrl, validateFile, lastUrls, downloadFile, sendFile } = poopy.functions
+        let vars = poopy.vars
+        let config = poopy.config
+        let modules = poopy.modules
 
         await msg.channel.sendTyping().catch(() => { })
-        if (poopy.functions.lastUrl(msg, 0) === undefined && args[1] === undefined) {
+        if (lastUrl(msg, 0) === undefined && args[1] === undefined) {
             await msg.reply('What are the files?!').catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
@@ -78,7 +82,7 @@ module.exports = {
 
             async function inspect(url) {
                 var lasturlerror
-                var fileinfo = await poopy.functions.validateFile(url, false, {
+                var fileinfo = await validateFile(url, false, {
                     size: `one of the files exceeds the size limit of {param} mb hahahaha (try to use the shrink, setfps, trim or crunch commands)`,
                     frames: `the frames of one of the files exceed the limit of {param} hahahaha (try to use the setfps or the trim commands)`,
                     width: `the width of one of the files exceeds the limit of {param} hahahaha (try to use the shrink command)`,
@@ -89,7 +93,7 @@ module.exports = {
                 })
                 if (lasturlerror || !fileinfo) return false
                 var filetype = fileinfo.type
-                if (!filetype || !(filetype.mime.startsWith('image') && !(poopy.vars.gifFormats.find(f => f === filetype.ext)) && poopy.vars.jimpFormats.find(f => f === filetype.ext))) {
+                if (!filetype || !(filetype.mime.startsWith('image') && !(vars.gifFormats.find(f => f === filetype.ext)) && vars.jimpFormats.find(f => f === filetype.ext))) {
                     lasturlerror = error
                     lasturlserror = `Unsupported file: ${url}`
                     return false
@@ -101,10 +105,10 @@ module.exports = {
                 return true
             }
 
-            var lastUrls = poopy.functions.lastUrls(msg)
+            var lasturls = lastUrls(msg)
 
-            for (var i in lastUrls) {
-                var url = lastUrls[i]
+            for (var i in lasturls) {
+                var url = lasturls[i]
                 var success = await inspect(url).catch(() => { })
                 if (success) validfilecount += 1
                 if (validfilecount >= stages) break
@@ -115,7 +119,7 @@ module.exports = {
             await msg.reply({
                 content: lasturlserror,
                 allowedMentions: {
-                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
@@ -126,7 +130,7 @@ module.exports = {
             if (!filetypes[stage] || !infos[stage]) {
                 var error
                 var imageurl = stageimages[stage]
-                var fileinfo = await poopy.functions.validateFile(imageurl, false, {
+                var fileinfo = await validateFile(imageurl, false, {
                     size: `one of the files exceeds the size limit of {param} mb hahahaha (try to use the shrink, setfps, trim or crunch commands)`,
                     frames: `the frames of one of the files exceed the limit of {param} hahahaha (try to use the setfps or the trim commands)`,
                     width: `the width of one of the files exceeds the limit of {param} hahahaha (try to use the shrink command)`,
@@ -138,19 +142,19 @@ module.exports = {
                     await msg.reply({
                         content: error,
                         allowedMentions: {
-                            parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                            parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                         }
                     }).catch(() => { })
                     await msg.channel.sendTyping().catch(() => { })
                     return
                 }
                 var filetype = fileinfo.type
-                if (!(filetype.mime.startsWith('image') && !(poopy.vars.gifFormats.find(f => f === filetype.ext)) && poopy.vars.jimpFormats.find(f => f === filetype.ext))) error = `Unsupported file: \`${imageurl}\``
+                if (!(filetype.mime.startsWith('image') && !(vars.gifFormats.find(f => f === filetype.ext)) && vars.jimpFormats.find(f => f === filetype.ext))) error = `Unsupported file: \`${imageurl}\``
                 if (error) {
                     await msg.reply({
                         content: error,
                         allowedMentions: {
-                            parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                            parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                         }
                     }).catch(() => { })
                     await msg.channel.sendTyping().catch(() => { })
@@ -161,13 +165,13 @@ module.exports = {
             }
         }
 
-        var currentcount = poopy.vars.filecount
-        poopy.vars.filecount++
-        var filepath = `temp/${poopy.config.mongodatabase}/file${currentcount}`
-        poopy.modules.fs.mkdirSync(`${filepath}`)
+        var currentcount = vars.filecount
+        vars.filecount++
+        var filepath = `temp/${config.mongodatabase}/file${currentcount}`
+        modules.fs.mkdirSync(`${filepath}`)
 
-        var iceberg = await poopy.modules.Jimp.read(`assets/iceberg.png`)
-        var arialr = await poopy.modules.Jimp.loadFont(`assets/fonts/ArialRed/ArialRed.fnt`)
+        var iceberg = await modules.Jimp.read(`assets/iceberg.png`)
+        var arialr = await modules.Jimp.loadFont(`assets/fonts/ArialRed/ArialRed.fnt`)
 
         for (var i in stageimages) {
             var imageurl = stageimages[i]
@@ -175,11 +179,11 @@ module.exports = {
             var info = infos[i]
             var dimensions = stageimgdimensions[i]
 
-            await poopy.functions.downloadFile(imageurl, `${i}.png`, {
+            await downloadFile(imageurl, `${i}.png`, {
                 fileinfo: info,
                 filepath: filepath
             })
-            var image = await poopy.modules.Jimp.read(`${filepath}/${i}.png`)
+            var image = await modules.Jimp.read(`${filepath}/${i}.png`)
             image.resize(dimensions[2], dimensions[3])
             iceberg.composite(image, dimensions[0], dimensions[1])
         }
@@ -196,14 +200,14 @@ module.exports = {
             var text = wordsS.join('')
             var dimensions = stagewrdsdimensions[i]
 
-            await iceberg.print(arialr, dimensions[0], dimensions[1], { text: poopy.modules.Discord.Util.cleanContent(text, msg), alignmentX: poopy.modules.Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: poopy.modules.Jimp.VERTICAL_ALIGN_MIDDLE }, dimensions[2], dimensions[3])
+            await iceberg.print(arialr, dimensions[0], dimensions[1], { text: modules.Discord.Util.cleanContent(text, msg), alignmentX: modules.Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: modules.Jimp.VERTICAL_ALIGN_MIDDLE }, dimensions[2], dimensions[3])
         }
 
         iceberg.crop(0, 0, iceberg.bitmap.width, stagewrdsdimensions['stage' + stages][1] + stagewrdsdimensions['stage' + stages][3])
 
         await iceberg.writeAsync(`${filepath}/output.png`)
 
-        return await poopy.functions.sendFile(msg, filepath, `output.png`)
+        return await sendFile(msg, filepath, `output.png`)
     },
     help: {
         name: 'iceberg {-stage<stagenumber>words <word1 | word2 | ...>} {-stage<stagenumber>image <image>} [-stages <stagenumber (from 1 to 10)>]',

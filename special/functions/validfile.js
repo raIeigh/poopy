@@ -3,14 +3,15 @@ module.exports = {
   desc: 'Returns true if the specified file is valid for use, else returns why it isn\'t.',
   func: async function (matches) {
     let poopy = this
+    let { splitKeyFunc, validateFile } = poopy.functions
 
     var word = matches[1]
-    var split = poopy.functions.splitKeyFunc(word, { args: 2 })
+    var split = splitKeyFunc(word, { args: 2 })
     var url = split[0] ?? ''
     var exception = split[1] ?? false
 
     var error
-    await poopy.functions.validateFile(url, exception).catch(err => {
+    await validateFile(url, exception).catch(err => {
       error = err
     })
     if (error) return error

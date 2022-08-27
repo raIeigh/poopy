@@ -1,8 +1,9 @@
 module.exports = {
     desc: 'Returns a random fake word.', func: function () {
         let poopy = this
+        let json = poopy.json
 
-        var fakeWordJSON = poopy.json.fakeWordJSON
+        var fakeWordJSON = json.fakeWordJSON
         return fakeWordJSON.data[Math.floor(Math.random() * fakeWordJSON.data.length)].word
     }
 }

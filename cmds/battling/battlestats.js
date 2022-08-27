@@ -15,52 +15,55 @@ module.exports = {
     }],
     execute: async function (msg, args) {
         let poopy = this
+        let bot = poopy.bot
+        let data = poopy.data
+        let config = poopy.config
 
         await msg.channel.sendTyping().catch(() => { })
 
         args[1] = args[1] ?? ''
 
-        var member = (msg.mentions.members.first() && msg.mentions.members.first().user) ??
-            await poopy.bot.users.fetch((args[1].match(/\d+/) ?? [args[1]])[0]).catch(() => { }) ??
+        var member = (msg.mentimembers.first() && msg.mentimembers.first().user) ??
+            await bot.users.fetch((args[1].match(/\d+/) ?? [args[1]])[0]).catch(() => { }) ??
             msg.author
 
         if (!member) {
             await msg.reply({
                 content: `Invalid user id: **${args[1]}**`,
                 allowedMentions: {
-                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
             return
         }
 
-        if (!poopy.data['user-data'][member.id]) {
-            poopy.data['user-data'][member.id] = {}
+        if (!data['user-data'][member.id]) {
+            data['user-data'][member.id] = {}
         }
-        if (!poopy.data['user-data'][member.id]['health']) {
-            poopy.data['user-data'][member.id]['health'] = 100
+        if (!data['user-data'][member.id]['health']) {
+            data['user-data'][member.id]['health'] = 100
         }
         var sendObject = {
             embeds: [{
                 title: `${member.username}\'s Stats`,
                 color: 0x472604,
                 footer: {
-                    icon_url: poopy.bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
-                    text: poopy.bot.user.username
+                    icon_url: bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
+                    text: bot.user.username
                 },
                 fields: [
                     {
                         name: "Health",
-                        value: `${poopy.data['user-data'][member.id]['health']} HP`
+                        value: `${data['user-data'][member.id]['health']} HP`
                     }
                 ]
             }],
-            content: `**${member.username}'s Stats**\n\nHealth: \`${poopy.data['user-data'][member.id]['health']} HP\``,
+            content: `**${member.username}'s Stats**\n\nHealth: \`${data['user-data'][member.id]['health']} HP\``,
             allowedMentions: {
-                parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
             }
         }
-        if (poopy.config.textEmbeds) delete sendObject.embeds
+        if (config.textEmbeds) delete sendObject.embeds
         else delete sendObject.content
         await msg.reply(sendObject).catch(() => { })
         await msg.channel.sendTyping().catch(() => { })

@@ -3,9 +3,10 @@ module.exports = {
     desc: 'Replaces all of the nouns in the phrase with different ones.',
     func: function (matches) {
         let poopy = this
+        let json = poopy.json
 
         var word = matches[1]
-        var nounJSON = poopy.json.nounJSON
+        var nounJSON = json.nounJSON
         var nouns = []
         var nounsR = []
         for (var i in nounJSON.data) {

@@ -19,6 +19,8 @@ module.exports = {
     }],
     execute: async function (msg, args) {
         let poopy = this
+        let { parseNumber, sleep, downloadFile, sendFile } = poopy.functions
+        let modules = poopy.modules
 
         await msg.channel.sendTyping().catch(() => { })
 
@@ -51,7 +53,7 @@ module.exports = {
         var density = densities[Math.floor(Math.random() * densities.length)]
         var densityindex = args.indexOf('-density')
         if (densityindex > -1) {
-            density = densities[poopy.functions.parseNumber(args[densityindex + 1], { dft: Math.floor(Math.random() * densities.length), min: 0, max: densities.length - 1, round: true })]
+            density = densities[parseNumber(args[densityindex + 1], { dft: Math.floor(Math.random() * densities.length), min: 0, max: densities.length - 1, round: true })]
         }
 
         var temperatures = [
@@ -63,10 +65,10 @@ module.exports = {
         var temperature = temperatures[Math.floor(Math.random() * temperatures.length)]
         var temperatureindex = args.indexOf('-temperature')
         if (temperatureindex > -1) {
-            temperature = temperatures[poopy.functions.parseNumber(args[temperatureindex + 1], { dft: Math.floor(Math.random() * temperatures.length), min: 0, max: temperatures.length - 1, round: true })]
+            temperature = temperatures[parseNumber(args[temperatureindex + 1], { dft: Math.floor(Math.random() * temperatures.length), min: 0, max: temperatures.length - 1, round: true })]
         }
 
-        var createResponse = await poopy.modules.axios.request({
+        var createResponse = await modules.axios.request({
             method: 'POST',
             url: 'https://hf.space/embed/ai-guru/composer/task/create',
             headers: {
@@ -84,10 +86,10 @@ module.exports = {
         if (!createResponse) return
 
         async function finishMusic() {
-            var res = await poopy.modules.axios.get(`https://hf.space/embed/ai-guru/composer/task/poll?task_id=${createResponse.data.task_id}`).catch(() => { })
+            var res = await modules.axios.get(`https://hf.space/embed/ai-guru/composer/task/poll?task_id=${createResponse.data.task_id}`).catch(() => { })
 
             if (!res || res.data.status != 'completed') {
-                await poopy.functions.sleep(2000)
+                await sleep(2000)
                 return finishMusic()
             }
 
@@ -96,10 +98,10 @@ module.exports = {
 
         var musicData = await finishMusic().catch(() => { })
 
-        var filepath = await poopy.functions.downloadFile(musicData, `output.wav`, {
+        var filepath = await downloadFile(musicData, `output.wav`, {
             buffer: true
         })
-        return await poopy.functions.sendFile(msg, filepath, `output.wav`)
+        return await sendFile(msg, filepath, `output.wav`)
     },
     help: {
         name: 'compose/generatemusic [-style <musicStyle>] [-density <value (from 0 to 2)>] [-temperature <value (from 0 to 3))>]',

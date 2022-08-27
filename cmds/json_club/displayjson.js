@@ -11,8 +11,12 @@ module.exports = {
     }],
     execute: async function (msg, args) {
         let poopy = this
+        let config = poopy.config
+        let vars = poopy.vars
+        let modules = poopy.modules
+        let globaldata = poopy.globaldata
 
-        var jsonid = poopy.config.ownerids.find(id => id == msg.author.id) || poopy.config.jsoning.find(id => id == msg.author.id);
+        var jsonid = config.ownerids.find(id => id == msg.author.id) || config.jsoning.find(id => id == msg.author.id);
         if (jsonid === undefined) {
             await msg.reply('json club only').catch(() => { })
             return
@@ -33,15 +37,15 @@ module.exports = {
                 return
             }
 
-            var currentcount = poopy.vars.filecount
-            poopy.vars.filecount++
-            var filepath = `temp/${poopy.config.mongodatabase}/file${currentcount}`
-            poopy.modules.fs.mkdirSync(filepath)
-            poopy.modules.fs.writeFileSync(`${filepath}/jsonlist.txt`, poopy.functions.globalData()['bot-data'][type].join('\n\n-----------------------------------------------\n\n') || 'lmao theres nothing')
+            var currentcount = vars.filecount
+            vars.filecount++
+            var filepath = `temp/${config.mongodatabase}/file${currentcount}`
+            modules.fs.mkdirSync(filepath)
+            modules.fs.writeFileSync(`${filepath}/jsonlist.txt`, globaldata['bot-data'][type].join('\n\n-----------------------------------------------\n\n') || 'lmao theres nothing')
             await msg.reply({
-                files: [new poopy.modules.Discord.MessageAttachment(`${filepath}/jsonlist.txt`)]
+                files: [new modules.Discord.MessageAttachment(`${filepath}/jsonlist.txt`)]
             }).catch(() => { })
-            poopy.modules.fs.rmSync(`${filepath}`, { force: true, recursive: true })
+            modules.fs.rmSync(`${filepath}`, { force: true, recursive: true })
         };
     },
     help: {

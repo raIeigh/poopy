@@ -3,9 +3,13 @@ module.exports = {
     args: [{"name":"query","required":true,"specifarg":false,"orig":"<query>"},{"name":"page","required":false,"specifarg":true,"orig":"[-page <number>]"}],
     execute: async function (msg, args) {
         let poopy = this
+        let { findCommand, navigateEmbed, addLastUrl } = poopy.functions
+        let modules = poopy.modules
+        let package = poopy.package
+        let config = poopy.config
 
         if (!msg.channel.nsfw) {
-            await poopy.functions.findCommand('gif').execute.call(poopy, msg, ['gif', 'mario']).catch(() => { })
+            await findCommand('gif').execute.call(poopy, msg, ['gif', 'mario']).catch(() => { })
             return;
         }
 
@@ -23,7 +27,7 @@ module.exports = {
         }
         var search = args.slice(1).join(" ");
 
-        var body = await poopy.modules.axios.request({
+        var body = await modules.axios.request({
             url: 'https://e621.net/posts.json',
             method: 'GET',
             data: {
@@ -31,7 +35,7 @@ module.exports = {
                 limit: 100
             },
             headers: {
-                "User-Agent": `PoopyBOT/${poopy.package.version}`
+                "User-Agent": `PoopyBOT/${package.version}`
             }
         }).catch(() => { })
 
@@ -72,10 +76,10 @@ module.exports = {
         if (number > urls.length) number = urls.length;
         if (number < 1) number = 1
 
-        await poopy.functions.navigateEmbed(msg.channel, async (page) => {
-            poopy.functions.addLastUrl(msg, urls[page - 1].url)
+        await navigateEmbed(msg.channel, async (page) => {
+            addLastUrl(msg, urls[page - 1].url)
 
-            if (poopy.config.textEmbeds) return `${urls[page - 1].url}\n**Rating**: ${urls[page - 1].rating}\n**Score**: ${urls[page - 1].score}\n**Favcount**: ${urls[page - 1].favcount}\n\nPost ${page}/${urls.length}`
+            if (config.textEmbeds) return `${urls[page - 1].url}\n**Rating**: ${urls[page - 1].rating}\n**Score**: ${urls[page - 1].score}\n**Favcount**: ${urls[page - 1].favcount}\n\nPost ${page}/${urls.length}`
             else return {
                 "title": "E621 Post Search Results For " + search,
                 "description": `**[${urls[page - 1].title}](${urls[page - 1].posturl})**\n[Media Url](${urls[page - 1].url})\n**Rating**: ${urls[page - 1].rating}\n**Score**: ${urls[page - 1].score}\n**Favcount**: ${urls[page - 1].favcount}`,

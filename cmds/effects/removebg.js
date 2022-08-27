@@ -3,15 +3,18 @@ module.exports = {
     args: [{"name":"file","required":false,"specifarg":false,"orig":"{file}"}],
     execute: async function (msg, args) {
         let poopy = this
+        let { lastUrl, validateFile, downloadFile, randomKey, sendFile } = poopy.functions
+        let vars = poopy.vars
+        let modules = poopy.modules
 
         await msg.channel.sendTyping().catch(() => { })
-        if (poopy.functions.lastUrl(msg, 0) === undefined && args[1] === undefined) {
+        if (lastUrl(msg, 0) === undefined && args[1] === undefined) {
             await msg.reply('What is the file?!').catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
         };
-        var currenturl = poopy.functions.lastUrl(msg, 0) || args[1]
-        var fileinfo = await poopy.functions.validateFile(currenturl).catch(async error => {
+        var currenturl = lastUrl(msg, 0) || args[1]
+        var fileinfo = await validateFile(currenturl).catch(async error => {
             await msg.reply(error).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
@@ -20,24 +23,24 @@ module.exports = {
         if (!fileinfo) return
         var type = fileinfo.type
 
-        if (type.mime.startsWith('image') && !(poopy.vars.gifFormats.find(f => f === type.ext))) {
-            var filepath = await poopy.functions.downloadFile(currenturl, `input.png`, {
+        if (type.mime.startsWith('image') && !(vars.gifFormats.find(f => f === type.ext))) {
+            var filepath = await downloadFile(currenturl, `input.png`, {
                 fileinfo: fileinfo
             })
             var filename = `input.png`
 
-            var form = new poopy.modules.FormData()
+            var form = new modules.FormData()
             form.append('size', 'auto')
-            form.append('image_file', poopy.modules.fs.readFileSync(`${filepath}/${filename}`), filename)
+            form.append('image_file', modules.fs.readFileSync(`${filepath}/${filename}`), filename)
 
             var rejected = false
-            var response = await poopy.modules.axios.request({
+            var response = await modules.axios.request({
                 url: 'https://api.remove.bg/v1.0/removebg',
                 method: 'POST',
                 data: form,
                 headers: {
                     ...form.getHeaders(),
-                    'X-Api-Key': poopy.functions.randomKey('REMOVEBGKEY')
+                    'X-Api-Key': randomKey('REMOVEBGKEY')
                 },
                 encoding: null,
                 responseType: 'arraybuffer'
@@ -56,20 +59,20 @@ module.exports = {
                 var code = response.status
 
                 await msg.reply(m + (code == 402 ? '. You can go to https://www.remove.bg/ and upload an image manually though.' : '')).catch(() => { })
-                poopy.modules.fs.rmSync(`${filepath}`, { force: true, recursive: true })
+                modules.fs.rmSync(`${filepath}`, { force: true, recursive: true })
                 return
             }
 
-            await poopy.functions.downloadFile(response.data, `output.png`, {
+            await downloadFile(response.data, `output.png`, {
                 buffer: true,
                 filepath: filepath
             })
-            return await poopy.functions.sendFile(msg, filepath, `output.png`)
+            return await sendFile(msg, filepath, `output.png`)
         } else {
             await msg.reply({
                 content: `Unsupported file: \`${currenturl}\``,
                 allowedMentions: {
-                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })

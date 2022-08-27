@@ -3,10 +3,11 @@ module.exports = {
   desc: 'Reverses the array with that name.',
   func: function (matches, msg) {
     let poopy = this
+    let tempdata = poopy.tempdata
 
     var word = matches[1]
 
-    var array = poopy.tempdata[msg.author.id]['arrays'][word]
+    var array = tempdata[msg.author.id]['arrays'][word]
     if (!array) return ''
 
     array = array.reverse()

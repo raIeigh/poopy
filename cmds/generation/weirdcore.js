@@ -3,6 +3,8 @@ module.exports = {
     args: [{"name":"message","required":true,"specifarg":false,"orig":"<message>"}],
     execute: async function (msg, args) {
         let poopy = this
+        let vars = poopy.vars
+        let modules = poopy.modules
 
         await msg.channel.sendTyping().catch(() => { })
         var saidMessage = args.slice(1).join(' ')
@@ -11,24 +13,24 @@ module.exports = {
             await msg.channel.sendTyping().catch(() => { })
             return;
         }
-        if (poopy.vars.validUrl.test(saidMessage)) {
+        if (vars.validUrl.test(saidMessage)) {
             await msg.reply('URLs in this command will break it.').catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return
         }
-        var resp = await poopy.modules.deepai.callStandardApi("text2img", {
+        var resp = await modules.deepai.callStandardApi("text2img", {
             text: saidMessage,
         }).catch(async err => {
             await msg.reply({
                 content: err.stack,
                 allowedMentions: {
-                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
         })
         if (resp) {
             await msg.reply({
-                files: [new poopy.modules.Discord.MessageAttachment(resp.output_url)]
+                files: [new modules.Discord.MessageAttachment(resp.output_url)]
             }).catch(() => { })
         }
         await msg.channel.sendTyping().catch(() => { })

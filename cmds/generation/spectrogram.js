@@ -31,14 +31,16 @@ module.exports = {
     }, { "name": "saturation", "required": false, "specifarg": true, "orig": "[-saturation <number (from -10 to 10)>]" }],
     execute: async function (msg, args) {
         let poopy = this
+        let { lastUrl, validateFile, downloadFile, execPromise, sendFile } = poopy.functions
+        let modules = poopy.modules
 
         await msg.channel.sendTyping().catch(() => { })
-        if (poopy.functions.lastUrl(msg, 0) === undefined && args[2] === undefined) {
+        if (lastUrl(msg, 0) === undefined && args[2] === undefined) {
             await msg.reply('What is the file?!').catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
         };
-        var currenturl = poopy.functions.lastUrl(msg, 0)
+        var currenturl = lastUrl(msg, 0)
         var colors = [
             'channel',
             'intensity',
@@ -89,7 +91,7 @@ module.exports = {
         if (saturationindex > -1) {
             saturation = isNaN(Number(args[saturationindex + 1])) ? 1 : Number(args[saturationindex + 1]) <= -10 ? -10 : Number(args[saturationindex + 1]) >= 10 ? 10 : Number(args[saturationindex + 1]) ?? 1
         }
-        var fileinfo = await poopy.functions.validateFile(currenturl).catch(async error => {
+        var fileinfo = await validateFile(currenturl).catch(async error => {
             await msg.reply(error).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
@@ -99,33 +101,33 @@ module.exports = {
         var type = fileinfo.type
 
         if (type.mime.startsWith('video')) {
-            var filepath = await poopy.functions.downloadFile(currenturl, `input.mp4`, {
+            var filepath = await downloadFile(currenturl, `input.mp4`, {
                 fileinfo: fileinfo
             })
             var filename = `input.mp4`
             var audio = fileinfo.info.audio
 
             if (audio) {
-                await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -lavfi "showspectrumpic=size=1280x512:mode=separate:color=${color}:scale=${scale}:saturation=${saturation}" ${filepath}/output.png`)
-                return await poopy.functions.sendFile(msg, filepath, `output.png`)
+                await execPromise(`ffmpeg -i ${filepath}/${filename} -lavfi "showspectrumpic=size=1280x512:mode=separate:color=${color}:scale=${scale}:saturation=${saturation}" ${filepath}/output.png`)
+                return await sendFile(msg, filepath, `output.png`)
             } else {
                 await msg.reply('No audio stream detected.').catch(() => { })
                 await msg.channel.sendTyping().catch(() => { })
-                poopy.modules.fs.rmSync(`${filepath}`, { force: true, recursive: true })
+                modules.fs.rmSync(`${filepath}`, { force: true, recursive: true })
             }
         } else if (type.mime.startsWith('audio')) {
-            var filepath = await poopy.functions.downloadFile(currenturl, `input.mp3`, {
+            var filepath = await downloadFile(currenturl, `input.mp3`, {
                 fileinfo: fileinfo
             })
             var filename = `input.mp3`
 
-            await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -lavfi "showspectrumpic=size=1280x512:mode=separate:color=${color}:scale=${scale}:saturation=${saturation}" ${filepath}/output.png`)
-            return await poopy.functions.sendFile(msg, filepath, `output.png`)
+            await execPromise(`ffmpeg -i ${filepath}/${filename} -lavfi "showspectrumpic=size=1280x512:mode=separate:color=${color}:scale=${scale}:saturation=${saturation}" ${filepath}/output.png`)
+            return await sendFile(msg, filepath, `output.png`)
         } else {
             await msg.reply({
                 content: `Unsupported file: \`${currenturl}\``,
                 allowedMentions: {
-                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })

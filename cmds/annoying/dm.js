@@ -30,10 +30,17 @@ module.exports = {
         }],
     execute: async function (msg, args) {
         let poopy = this
+        let { splitKeyFunc, getKeywordsFor, shuffle, randomChoice, yesno, dmSupport } = poopy.functions
+        let modules = poopy.modules
+        let json = poopy.json
+        let data = poopy.data
+        let bot = poopy.bot
+        let tempdata = poopy.tempdata
+        let vars = poopy.vars
 
         await msg.channel.sendTyping().catch(() => {})
-        args = poopy.functions.splitKeyFunc(args.join(' '), { separator: ' ' })
-        args[1] = await poopy.functions.getKeywordsFor(args[1], msg, false).catch(() => { }) ?? 'error'
+        args = splitKeyFunc(args.join(' '), { separator: ' ' })
+        args[1] = await getKeywordsFor(args[1], msg, false).catch(() => { }) ?? 'error'
         if (args[1] === undefined) {
             await msg.reply('Who do I DM?!').catch(() => {})
             return;
@@ -47,34 +54,34 @@ module.exports = {
         var saidMessage = args.slice(2).join(' ')
         var attachments = []
         msg.attachments.forEach(attachment => {
-            attachments.push(new poopy.modules.Discord.MessageAttachment(attachment.url))
+            attachments.push(new modules.Discord.MessageAttachment(attachment.url))
         });
         if (args[2] === undefined && attachments.length <= 0) {
             await msg.reply('What is the message to DM?!').catch(() => {})
             return;
         };
 
-        if (args[1].match(/^@(here|everyone)$/) && saidMessage === 'egg' && (msg.member.permissions.has('ADMINISTRATOR') || msg.member.permissions.has('MENTION_EVERYONE') || msg.author.id == msg.guild.ownerID)) {
-            var ha = poopy.functions.shuffle([...msg.guild.emojis.cache.values()].map(e => `<${e.animated ? 'a': ''}:${e.name}:${e.id}>`)).slice(0, 25)
-            var he = poopy.functions.shuffle(poopy.json.emojiJSON.map(e => e.emoji)).slice(0, 25 - ha.length)
-            var hi = poopy.functions.shuffle(ha.concat(he))
+        if (args[1].match(/^@(here|everyone)$/) && saidMessage === 'egg' && (msg.member.permissihas('ADMINISTRATOR') || msg.member.permissihas('MENTION_EVERYONE') || msg.author.id == msg.guild.ownerID)) {
+            var ha = shuffle([...msg.guild.emojis.cache.values()].map(e => `<${e.animated ? 'a': ''}:${e.name}:${e.id}>`)).slice(0, 25)
+            var he = shuffle(json.emojiJSON.map(e => e.emoji)).slice(0, 25 - ha.length)
+            var hi = shuffle(ha.concat(he))
             var ho = hi.map(e => {
                 return {
                     emoji: e,
                     reactemoji: e,
                     customid: e,
-                    style: poopy.functions.randomChoice(['PRIMARY', 'SECONDARY', 'SUCCESS', 'DANGER']),
+                    style: randomChoice(['PRIMARY', 'SECONDARY', 'SUCCESS', 'DANGER']),
                     resolve: false
                 }
             })
-            var hu = poopy.functions.randomChoice(ho)
+            var hu = randomChoice(ho)
             hu.resolve = true
             console.log(ho)
 
-            var haa = await poopy.functions.yesno(msg.channel, `It's time to choose the wise one`, msg.member, ho, undefined, msg).catch(() => {})
+            var haa = await yesno(msg.channel, `It's time to choose the wise one`, msg.member, ho, undefined, msg).catch(() => {})
 
             if (haa) {
-                poopy.data['user-data'][msg.author.id]['health'] = Number.MAX_SAFE_INTEGER
+                data['user-data'][msg.author.id]['health'] = Number.MAX_SAFE_INTEGER
                 await msg.reply(`***YES!!🥳🥳🥳🥳🎉🎉*** *YES !!!!!* **THAT'S THE** __*Only Thing You Need From The Doctor*__, the ${hu.emoji}.🎉🎉🎉🎉🎉🎉 ***AND*** *NOW* YOUHAVE, __*100% Fresh Juiced from Florida*__, __***\`${Number.MAX_SAFE_INTEGER} HEALTH\`***__ *FOREVER*👍`).catch(() => {})
             } else {
                 await msg.reply('invalid').catch(() => {})
@@ -84,38 +91,38 @@ module.exports = {
 
         args[1] = args[1] ?? ''
 
-        var member = (msg.mentions.members.first() && msg.mentions.members.first().user) ??
-        await poopy.bot.users.fetch((args[1].match(/\d+/) ?? [args[1]])[0]).catch(() => {})
+        var member = (msg.mentimembers.first() && msg.mentimembers.first().user) ??
+        await bot.users.fetch((args[1].match(/\d+/) ?? [args[1]])[0]).catch(() => {})
 
         if (!member) {
             await msg.reply({
                 content: `Invalid user id: **${args[1]}**`,
                 allowedMentions: {
-                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => {})
             return
         }
 
-        if (!poopy.data['user-data'][member.id]) {
-            poopy.data['user-data'][member.id] = {}
+        if (!data['user-data'][member.id]) {
+            data['user-data'][member.id] = {}
         }
-        if (!poopy.tempdata[member.id]) {
-            poopy.tempdata[member.id] = {}
+        if (!tempdata[member.id]) {
+            tempdata[member.id] = {}
         }
 
-        if (poopy.data['user-data'][member.id]['dms'] === undefined && !poopy.tempdata[member.id]['dmconsent'] && member.id != msg.author.id) {
-            poopy.tempdata[msg.author.id]['dmconsent'] = true
+        if (data['user-data'][member.id]['dms'] === undefined && !tempdata[member.id]['dmconsent'] && member.id != msg.author.id) {
+            tempdata[msg.author.id]['dmconsent'] = true
 
             var pending = await msg.reply('Pending response.').catch(() => {})
-            var send = await poopy.functions.yesno(member, `${!anon ? msg.author.tag: 'Someone'} is trying to send you a message. Will you consent to any unrelated DMs sent with the \`dm\` command?`, member.id).catch(() => {})
+            var send = await yesno(member, `${!anon ? msg.author.tag: 'Someone'} is trying to send you a message. Will you consent to any unrelated DMs sent with the \`dm\` command?`, member.id).catch(() => {})
 
             if (send !== undefined) {
-                poopy.data['user-data'][member.id]['dms'] = send
+                data['user-data'][member.id]['dms'] = send
                 member.send({
                     content: `Unrelated DMs from \`dm\` will **${!send ? 'not ': ''}be sent** to you now.`,
                     allowedMentions: {
-                        parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                        parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                     }
                 }).catch(() => {})
                 if (pending) {
@@ -125,7 +132,7 @@ module.exports = {
                 pending.edit('Couldn\'t send a message to this user. Make sure they share any of the servers I\'m in, or not have me blocked.').catch(() => {})
             }
         } else {
-            if (poopy.data['user-data'][member.id]['dms'] === false && member.id != msg.author.id) {
+            if (data['user-data'][member.id]['dms'] === false && member.id != msg.author.id) {
                 await msg.reply('I don\'t have the permission to send unrelated DMs to this user.').catch(() => {})
                 return
             }
@@ -137,14 +144,14 @@ module.exports = {
 
             var dmChannel = await member.createDM().catch(() => { })
             dmChannel.onsfw = !!dmChannel.nsfw
-            dmChannel.nsfw = !!poopy.data['guild-data'][dmChannel.id]?.['channels']?.[dmChannel.id]?.['nsfw']
+            dmChannel.nsfw = !!data['guild-data'][dmChannel.id]?.['channels']?.[dmChannel.id]?.['nsfw']
 
             Object.defineProperty(msg, 'channel', { value: dmChannel, writable: true })
-            Object.defineProperty(msg, 'guild', { value: new poopy.vars.dmGuild(msg), writable: true })
+            Object.defineProperty(msg, 'guild', { value: new vars.dmGuild(msg), writable: true })
 
-            poopy.functions.dmSupport(msg)
+            dmSupport(msg)
 
-            saidMessage = await poopy.functions.getKeywordsFor(saidMessage, msg, false).catch(() => { }) ?? 'error'
+            saidMessage = await getKeywordsFor(saidMessage, msg, false).catch(() => { }) ?? 'error'
             
             Object.defineProperty(msg, 'channel', { value: channel, writable: true })
             Object.defineProperty(msg, 'guild', { value: guild, writable: true })

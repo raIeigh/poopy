@@ -3,9 +3,10 @@ module.exports = {
   args: [],
   execute: async function (msg) {
     let poopy = this
+    let modules = poopy.modules
 
     await msg.channel.sendTyping().catch(() => { })
-    var attachment = new poopy.modules.Discord.MessageAttachment('assets/no.mp4')
+    var attachment = new modules.Discord.MessageAttachment('assets/no.mp4')
     await msg.reply({
       files: [attachment]
     }).catch(() => { })

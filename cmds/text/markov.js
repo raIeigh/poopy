@@ -3,24 +3,31 @@ module.exports = {
     args: [{"name":"message","required":false,"specifarg":false,"orig":"[message]"},{"name":"words","required":false,"specifarg":true,"orig":"[-words <wordNumber>]"},{"name":"nopunctuation","required":false,"specifarg":true,"orig":"[-nopunctuation]"},{"name":"keepcase","required":false,"specifarg":true,"orig":"[-keepcase]"},{"name":"randlerp","required":false,"specifarg":true,"orig":"[-randlerp <number (from 0 to 1)>]"},{"name":"randomsentences","required":false,"specifarg":true,"orig":"[-randomsentences]"}],
     execute: async function (msg, args) {
         let poopy = this
+        let { getOption, parseNumber, markovChainGenerator, markovMe } = poopy.functions
+        let data = poopy.data
+        let json = poopy.json
+        let arrays = poopy.arrays
+        let vars = poopy.vars
+        let config = poopy.config
+        let modules = poopy.modules
 
-        var wordNumber = poopy.functions.getOption(args, 'words', { dft: Math.floor(Math.random() * 20) + 1, splice: true, n: 1, join: true, func: (opt) => poopy.functions.parseNumber(opt, { dft: Math.floor(Math.random() * 20) + 1, min: 1, max: 10000, round: true }) })
-        var nopunctuation = poopy.functions.getOption(args, 'nopunctuation', { dft: false, splice: true, n: 0, join: true })
-        var keepcase = poopy.functions.getOption(args, 'keepcase', { dft: false, splice: true, n: 0, join: true })
-        var randlerp = poopy.functions.getOption(args, 'randlerp', { dft: 0.4, splice: true, n: 1, join: true })
-        var randomsentences = poopy.functions.getOption(args, 'randomsentences', { dft: false, splice: true, n: 0, join: true })
+        var wordNumber = getOption(args, 'words', { dft: Math.floor(Math.random() * 20) + 1, splice: true, n: 1, join: true, func: (opt) => parseNumber(opt, { dft: Math.floor(Math.random() * 20) + 1, min: 1, max: 10000, round: true }) })
+        var nopunctuation = getOption(args, 'nopunctuation', { dft: false, splice: true, n: 0, join: true })
+        var keepcase = getOption(args, 'keepcase', { dft: false, splice: true, n: 0, join: true })
+        var randlerp = getOption(args, 'randlerp', { dft: 0.4, splice: true, n: 1, join: true })
+        var randomsentences = getOption(args, 'randomsentences', { dft: false, splice: true, n: 0, join: true })
 
         var saidMessage = args.join(' ').substring((args[0] || '').length + 1)
-        var messages = poopy.data['guild-data'][msg.guild.id]['messages'].slice().map(m => m.content)
+        var messages = data['guild-data'][msg.guild.id]['messages'].slice().map(m => m.content)
         if (messages.length <= 0 || randomsentences) {
-            messages = poopy.json.sentenceJSON.data.map(s => s.sentence).concat(poopy.arrays.psPasta)
+            messages = json.sentenceJSON.data.map(s => s.sentence).concat(arrays.psPasta)
         }
         if (saidMessage) {
             messages.push(saidMessage)
         }
         await msg.channel.sendTyping().catch(() => { })
-        var markovChain = poopy.functions.markovChainGenerator(messages.join('  '))
-        var markov = poopy.functions.markovMe(markovChain, saidMessage, {
+        var markovChain = markovChainGenerator(messages.join('  '))
+        var markov = markovMe(markovChain, saidMessage, {
             wordNumber: wordNumber,
             nopunctuation: nopunctuation,
             keepcase: keepcase,
@@ -29,18 +36,18 @@ module.exports = {
         await msg.reply({
             content: markov,
             allowedMentions: {
-                parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
             }
         }).catch(async () => {
-            var currentcount = poopy.vars.filecount
-            poopy.vars.filecount++
-            var filepath = `temp/${poopy.config.mongodatabase}/file${currentcount}`
-            poopy.modules.fs.mkdirSync(`${filepath}`)
-            poopy.modules.fs.writeFileSync(`${filepath}/markov.txt`, markov)
+            var currentcount = vars.filecount
+            vars.filecount++
+            var filepath = `temp/${config.mongodatabase}/file${currentcount}`
+            modules.fs.mkdirSync(`${filepath}`)
+            modules.fs.writeFileSync(`${filepath}/markov.txt`, markov)
             await msg.reply({
-                files: [new poopy.modules.Discord.MessageAttachment(`${filepath}/markov.txt`)]
+                files: [new modules.Discord.MessageAttachment(`${filepath}/markov.txt`)]
             }).catch(() => { })
-            poopy.modules.fs.rmSync(`${filepath}`, { force: true, recursive: true })
+            modules.fs.rmSync(`${filepath}`, { force: true, recursive: true })
         })
     },
     help: {

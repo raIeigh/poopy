@@ -9,13 +9,18 @@ module.exports = {
     }],
     execute: async function (msg, args) {
         let poopy = this
+        let commands = poopy.commands
+        let data = poopy.data
+        let { getKeywordsFor } = poopy.functions
+        let vars = poopy.vars
+        let tempdata = poopy.tempdata
 
         var type
-        var allCmds = poopy.commands.concat(poopy.data['guild-data'][msg.guild.id]['localcmds'].map(lcmd => {
+        var allCmds = commands.concat(data['guild-data'][msg.guild.id]['localcmds'].map(lcmd => {
             return {
                 name: [lcmd.name],
                 type: 'Local',
-                execute: async () => await poopy.functions.getKeywordsFor(lcmd.phrase, msg, true, { resetattempts: true, ownermode: lcmd.ownermode }).catch(() => { }) ?? 'error'
+                execute: async () => await getKeywordsFor(lcmd.phrase, msg, true, { resetattempts: true, ownermode: lcmd.ownermode }).catch(() => { }) ?? 'error'
             }
         }))
 
@@ -24,7 +29,7 @@ module.exports = {
                 var foundCmds = []
                 for (var i in allCmds) {
                     var cmd = allCmds[i]
-                    if (cmd.type === type && !(cmd.type === 'Owner' || cmd.type === 'JSON Club' || cmd.perms || poopy.data['guild-data'][msg.guild.id]['disabled'].find(c => c.find(n => n === cmd.name.find(nn => nn === n))))) {
+                    if (cmd.type === type && !(cmd.type === 'Owner' || cmd.type === 'JSON Club' || cmd.perms || data['guild-data'][msg.guild.id]['disabled'].find(c => c.find(n => n === cmd.name.find(nn => nn === n))))) {
                         foundCmds.push(cmd)
                     }
                 }
@@ -36,7 +41,7 @@ module.exports = {
                 return allCmds[Math.floor(Math.random() * allCmds.length)]
             } else {
                 var cmd = allCmds[Math.floor(Math.random() * allCmds.length)]
-                if (cmd.type === 'Owner' || cmd.type === 'JSON Club' || cmd.perms || poopy.data['guild-data'][msg.guild.id]['disabled'].find(c => c.find(n => n === cmd.name.find(nn => nn === n)))) {
+                if (cmd.type === 'Owner' || cmd.type === 'JSON Club' || cmd.perms || data['guild-data'][msg.guild.id]['disabled'].find(c => c.find(n => n === cmd.name.find(nn => nn === n)))) {
                     return chooseCmd()
                 }
                 return cmd
@@ -45,8 +50,8 @@ module.exports = {
 
         var typeindex = args.indexOf('-cmdtype')
         if (typeindex > -1) {
-            if (poopy.vars.types.find(type => type.toLowerCase() === args.slice(typeindex + 1).join(' ').toLowerCase())) {
-                type = poopy.vars.types.find(type => type.toLowerCase() === args.slice(typeindex + 1).join(' ').toLowerCase())
+            if (vars.types.find(type => type.toLowerCase() === args.slice(typeindex + 1).join(' ').toLowerCase())) {
+                type = vars.types.find(type => type.toLowerCase() === args.slice(typeindex + 1).join(' ').toLowerCase())
                 args.splice(typeindex)
             }
         }
@@ -60,7 +65,7 @@ module.exports = {
 
         var cmdmessage = await msg.reply(`Executing \`${cmd.name[0]}\`.`).catch(() => { })
         if (cmd.cooldown) {
-            poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] = (poopy.data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] || Date.now()) + cmd.cooldown / ((msg.member.permissions.has('MANAGE_GUILD') || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID) && (cmd.type === 'Text' || cmd.type === 'Main') ? 5 : 1)
+            data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] = (data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] || Date.now()) + cmd.cooldown / ((msg.member.permissihas('MANAGE_GUILD') || msg.member.permissihas('MANAGE_MESSAGES') || msg.member.permissihas('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID) && (cmd.type === 'Text' || cmd.type === 'Main') ? 5 : 1)
         }
 
         var deletetimeout = setTimeout(() => {
@@ -70,12 +75,12 @@ module.exports = {
         }, 3000)
 
         var phrase = await cmd.execute.call(poopy, msg, args).catch(() => { }) ?? 'error'
-        if (poopy.tempdata[msg.guild.id][msg.channel.id]['shut']) return
+        if (tempdata[msg.guild.id][msg.channel.id]['shut']) return
         if (cmd.type == 'Local') {
             await msg.reply({
                 content: phrase,
                 allowedMentions: {
-                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
         }

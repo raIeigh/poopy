@@ -1,8 +1,9 @@
 module.exports = {
     desc: 'Returns a random restaurant.', func: function () {
         let poopy = this
+        let json = poopy.json
 
-        var restaurantJSON = poopy.json.restaurantJSON
+        var restaurantJSON = json.restaurantJSON
         return restaurantJSON[Math.floor(Math.random() * restaurantJSON.length)].restaurant
     }
 }

@@ -3,9 +3,11 @@ module.exports = {
     args: [{"name":"file","required":false,"specifarg":false,"orig":"{file}"},{"name":"radius","required":false,"specifarg":true,"orig":"[-radius <number>]"},{"name":"seed","required":false,"specifarg":true,"orig":"[-seed <number>]"},{"name":"rescale","required":false,"specifarg":true,"orig":"[-rescale]"}],
     execute: async function (msg, args) {
         let poopy = this
+        let { lastUrl, validateFile, downloadFile, execPromise, findpreset, sendFile } = poopy.functions
+        let vars = poopy.vars
 
         await msg.channel.sendTyping().catch(() => { })
-        if (poopy.functions.lastUrl(msg, 0) === undefined && args[1] === undefined) {
+        if (lastUrl(msg, 0) === undefined && args[1] === undefined) {
             await msg.reply('What is the file?!').catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
@@ -20,8 +22,8 @@ module.exports = {
         if (radiusindex > -1) {
             radius = isNaN(Number(args[radiusindex + 1])) ? 50 : Number(args[radiusindex + 1]) <= 0 ? 0 : Number(args[radiusindex + 1]) ?? 50
         }
-        var currenturl = poopy.functions.lastUrl(msg, 0) || args[1]
-        var fileinfo = await poopy.functions.validateFile(currenturl).catch(async error => {
+        var currenturl = lastUrl(msg, 0) || args[1]
+        var fileinfo = await validateFile(currenturl).catch(async error => {
             await msg.reply(error).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
@@ -31,28 +33,28 @@ module.exports = {
         var type = fileinfo.type
 
         if (type.mime.startsWith('image')) {
-            var filepath = await poopy.functions.downloadFile(currenturl, `input.${fileinfo.shortext}`, {
+            var filepath = await downloadFile(currenturl, `input.${fileinfo.shortext}`, {
                 fileinfo: fileinfo
             })
             var filename = `input.${fileinfo.shortext}`
             var width = fileinfo.info.width
             var height = fileinfo.info.height
-            await poopy.functions.execPromise(`ffmpeg ${!(poopy.vars.gifFormats.find(f => f === type.ext)) ? `-r 50 -stream_loop -1 -t 2 ` : ''}-i ${filepath}/${filename} ${!(poopy.vars.gifFormats.find(f => f === type.ext)) ? `-r 50 -stream_loop -1 -t 2 ` : ''}-i assets/transparent.png -filter_complex "[1:v][0:v]scale2ref${args.find(arg => arg === '-rescale') ? `=w=iw+${radius}:h=ih+${radius}` : ''}[transparent][overlay];[transparent][overlay]overlay=x=(W-w)/2+${radius / 2}-random(t*(random(0)*${seed}))*${radius}:y=(H-h)/2+${radius / 2}-random(t*(random(0)*${seed}))*${radius}:format=auto,scale='min(400,iw)':min'(400,ih)':force_original_aspect_ratio=decrease,split[pout][ppout];[ppout]palettegen=reserve_transparent=1[palette];[pout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -aspect ${width}:${height} -preset ${poopy.functions.findpreset(args)} -gifflags -offsetting ${filepath}/output.gif`)
-            return await poopy.functions.sendFile(msg, filepath, `output.gif`)
+            await execPromise(`ffmpeg ${!(vars.gifFormats.find(f => f === type.ext)) ? `-r 50 -stream_loop -1 -t 2 ` : ''}-i ${filepath}/${filename} ${!(vars.gifFormats.find(f => f === type.ext)) ? `-r 50 -stream_loop -1 -t 2 ` : ''}-i assets/transparent.png -filter_complex "[1:v][0:v]scale2ref${args.find(arg => arg === '-rescale') ? `=w=iw+${radius}:h=ih+${radius}` : ''}[transparent][overlay];[transparent][overlay]overlay=x=(W-w)/2+${radius / 2}-random(t*(random(0)*${seed}))*${radius}:y=(H-h)/2+${radius / 2}-random(t*(random(0)*${seed}))*${radius}:format=auto,scale='min(400,iw)':min'(400,ih)':force_original_aspect_ratio=decrease,split[pout][ppout];[ppout]palettegen=reserve_transparent=1[palette];[pout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -aspect ${width}:${height} -preset ${findpreset(args)} -gifflags -offsetting ${filepath}/output.gif`)
+            return await sendFile(msg, filepath, `output.gif`)
         } else if (type.mime.startsWith('video')) {
-            var filepath = await poopy.functions.downloadFile(currenturl, `input.mp4`, {
+            var filepath = await downloadFile(currenturl, `input.mp4`, {
                 fileinfo: fileinfo
             })
             var filename = `input.${fileinfo.shortext}`
             var width = fileinfo.info.width
             var height = fileinfo.info.height
-            await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -i assets/transparent.png -filter_complex "[1:v][0:v]scale2ref${args.find(arg => arg === '-rescale') ? `=w=iw+${radius}:h=ih+${radius}` : ''}[transparent][overlay];[transparent][overlay]overlay=x=(W-w)/2+${radius / 2}-random(t*(random(0)*${seed}))*${radius}:y=(H-h)/2+${radius / 2}-random(t*(random(0)*${seed}))*${radius}:format=auto[out]" -map "[out]" -map 0:a? -c:v libx264 -pix_fmt yuv420p -aspect ${width}:${height} -preset ${poopy.functions.findpreset(args)} ${filepath}/output.mp4`)
-            return await poopy.functions.sendFile(msg, filepath, `output.mp4`)
+            await execPromise(`ffmpeg -i ${filepath}/${filename} -i assets/transparent.png -filter_complex "[1:v][0:v]scale2ref${args.find(arg => arg === '-rescale') ? `=w=iw+${radius}:h=ih+${radius}` : ''}[transparent][overlay];[transparent][overlay]overlay=x=(W-w)/2+${radius / 2}-random(t*(random(0)*${seed}))*${radius}:y=(H-h)/2+${radius / 2}-random(t*(random(0)*${seed}))*${radius}:format=auto[out]" -map "[out]" -map 0:a? -c:v libx264 -pix_fmt yuv420p -aspect ${width}:${height} -preset ${findpreset(args)} ${filepath}/output.mp4`)
+            return await sendFile(msg, filepath, `output.mp4`)
         } else {
             await msg.reply({
                 content: `Unsupported file: \`${currenturl}\``,
                 allowedMentions: {
-                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })

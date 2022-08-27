@@ -2,7 +2,8 @@ module.exports = {
   desc: 'Returns a random Unicode emoji.',
   func: function () {
     let poopy = this
+    let json = poopy.json
 
-    return poopy.json.emojiJSON[Math.floor(Math.random() * poopy.json.emojiJSON.length)].emoji
+    return json.emojiJSON[Math.floor(Math.random() * json.emojiJSON.length)].emoji
   }
 }

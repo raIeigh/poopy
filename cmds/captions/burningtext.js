@@ -15,13 +15,14 @@ module.exports = {
     }, { "name": "id", "required": false, "specifarg": true, "orig": "[-id <number (default 4)>]" }],
     execute: async function (msg, args) {
         let poopy = this
+        let { parseNumber, request, validateFile, downloadFile, sendFile } = poopy.functions
 
         await msg.channel.sendTyping().catch(() => { })
 
         var id = 4
         var idIndex = args.indexOf('-id')
         if (idIndex > -1) {
-            id = poopy.functions.parseNumber(args[idIndex + 1], { dft: 4, round: true })
+            id = parseNumber(args[idIndex + 1], { dft: 4, round: true })
             args.splice(idIndex, 2)
         }
 
@@ -75,7 +76,7 @@ module.exports = {
 
         if (fontsize != undefined) form.FontSize = fontsize
 
-        var response = await poopy.functions.request({
+        var response = await request({
             url: 'https://cooltext.com/PostChange',
             method: 'POST',
             formData: form
@@ -86,7 +87,7 @@ module.exports = {
             return
         }
 
-        var fileinfo = await poopy.functions.validateFile(response.data.renderLocation.replace('https', 'http'), 'very true').catch(async error => {
+        var fileinfo = await validateFile(response.data.renderLocation.replace('https', 'http'), 'very true').catch(async error => {
             await msg.reply(error).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return
@@ -94,8 +95,8 @@ module.exports = {
 
         if (!fileinfo) return
 
-        var filepath = await poopy.functions.downloadFile(response.data.renderLocation.replace('https', 'http'), `output.${fileinfo.type.ext}`)
-        return await poopy.functions.sendFile(msg, filepath, `output.${fileinfo.type.ext}`)
+        var filepath = await downloadFile(response.data.renderLocation.replace('https', 'http'), `output.${fileinfo.type.ext}`)
+        return await sendFile(msg, filepath, `output.${fileinfo.type.ext}`)
     },
     help: {
         name: 'burningtext/flamingtext/cooltext <prompt> [-fontsize <pixels>] [-origin <x (left/center/right)> <y (top/middle/bottom)>] [-id <number (default 4)>]',

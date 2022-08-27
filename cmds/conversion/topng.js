@@ -3,15 +3,17 @@ module.exports = {
     args: [{"name":"file","required":false,"specifarg":false,"orig":"{file}"},{"name":"framepos","required":false,"specifarg":true,"orig":"[-framepos <number>]"}],
     execute: async function (msg, args) {
         let poopy = this
+        let { lastUrl, validateFile, downloadFile, execPromise, findpreset, sendFile } = poopy.functions
+        let vars = poopy.vars
 
         await msg.channel.sendTyping().catch(() => { })
-        if (poopy.functions.lastUrl(msg, 0) === undefined && args[1] === undefined) {
+        if (lastUrl(msg, 0) === undefined && args[1] === undefined) {
             await msg.reply('What is the file?!').catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
         };
-        var currenturl = poopy.functions.lastUrl(msg, 0) || args[1]
-        var fileinfo = await poopy.functions.validateFile(currenturl, true).catch(async error => {
+        var currenturl = lastUrl(msg, 0) || args[1]
+        var fileinfo = await validateFile(currenturl, true).catch(async error => {
             await msg.reply(error).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
@@ -20,8 +22,8 @@ module.exports = {
         if (!fileinfo) return
         var type = fileinfo.type
 
-        if (type.mime.startsWith('video') || type.mime.startsWith('image') && poopy.vars.gifFormats.find(f => f === type.ext)) {
-            var filepath = await poopy.functions.downloadFile(currenturl, `input.${fileinfo.shortext}`, {
+        if (type.mime.startsWith('video') || type.mime.startsWith('image') && vars.gifFormats.find(f => f === type.ext)) {
+            var filepath = await downloadFile(currenturl, `input.${fileinfo.shortext}`, {
                 fileinfo: fileinfo
             })
             var filename = `input.${fileinfo.shortext}`
@@ -33,13 +35,13 @@ module.exports = {
                 pos = isNaN(Number(args[posindex + 1])) ? 1 : Number(args[posindex + 1]) <= 1 ? 1 : Number(args[posindex + 1]) >= frames ? frames : Math.round(Number(args[posindex + 1])) || 1
             }
 
-            await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -filter_complex "[0:v]select='eq(n,${pos - 1})'[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} ${filepath}/output.png`)
-            return await poopy.functions.sendFile(msg, filepath, `output.png`)
+            await execPromise(`ffmpeg -i ${filepath}/${filename} -filter_complex "[0:v]select='eq(n,${pos - 1})'[out]" -map "[out]" -preset ${findpreset(args)} ${filepath}/output.png`)
+            return await sendFile(msg, filepath, `output.png`)
         } else {
             await msg.reply({
                 content: `Unsupported file: \`${currenturl}\``,
                 allowedMentions: {
-                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })

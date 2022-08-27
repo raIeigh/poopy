@@ -3,6 +3,10 @@ module.exports = {
   args: [{"name":"width","required":true,"specifarg":false,"orig":"<width (max 2000)>"},{"name":"height","required":true,"specifarg":false,"orig":"<height (max 2000)>"},{"name":"r","required":true,"specifarg":false,"orig":"<r>"},{"name":"g","required":true,"specifarg":false,"orig":"<g>"},{"name":"b","required":true,"specifarg":false,"orig":"<b>"},{"name":"a","required":false,"specifarg":false,"orig":"[a]"}],
   execute: async function (msg, args) {
     let poopy = this
+    let vars = poopy.vars
+    let config = poopy.config
+    let modules = poopy.modules
+    let { execPromise, sendFile } = poopy.functions
 
     await msg.channel.sendTyping().catch(() => { })
     if (args.length < 6) {
@@ -18,13 +22,13 @@ module.exports = {
     var b = (isNaN(Number(String(args[5]).replace(/,/g, ''))) ? 0 : Number(String(args[5]).replace(/,/g, '')) <= 0 ? 0 : Number(String(args[5]).replace(/,/g, '')) >= 255 ? 255 : Number(String(args[5]).replace(/,/g, '')) || 0).toString(16).padStart(2, '0')
     var a = (isNaN(Number(String(args[6]).replace(/,/g, ''))) ? 255 : Number(String(args[6]).replace(/,/g, '')) <= 0 ? 0 : Number(String(args[6]).replace(/,/g, '')) >= 255 ? 255 : Number(String(args[6]).replace(/,/g, '')) ?? 255).toString(16).padStart(2, '0')
 
-    var currentcount = poopy.vars.filecount
-    poopy.vars.filecount++
-    var filepath = `temp/${poopy.config.mongodatabase}/file${currentcount}`
-    poopy.modules.fs.mkdirSync(`${filepath}`)
+    var currentcount = vars.filecount
+    vars.filecount++
+    var filepath = `temp/${config.mongodatabase}/file${currentcount}`
+    modules.fs.mkdirSync(`${filepath}`)
 
-    await poopy.functions.execPromise(`ffmpeg -f lavfi -i "color=0x${r}${g}${b}${a}:s=${width}x${height},format=rgba" ${filepath}/output.png`)
-    return await poopy.functions.sendFile(msg, filepath, `output.png`)
+    await execPromise(`ffmpeg -f lavfi -i "color=0x${r}${g}${b}${a}:s=${width}x${height},format=rgba" ${filepath}/output.png`)
+    return await sendFile(msg, filepath, `output.png`)
   },
   help: {
     name: 'newimage/makeimage <width (max 2000)> <height (max 2000)> <r> <g> <b> [a]',

@@ -2,7 +2,8 @@ module.exports = {
   desc: 'Returns a random punctuation mark.',
   func: function () {
     let poopy = this
+    let vars = poopy.vars
 
-    return poopy.vars.punctuation[Math.floor(Math.random() * poopy.vars.punctuation.length)]
+    return vars.punctuation[Math.floor(Math.random() * vars.punctuation.length)]
   }
 }

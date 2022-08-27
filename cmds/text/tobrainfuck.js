@@ -3,6 +3,10 @@ module.exports = {
     args: [{"name":"message","required":true,"specifarg":false,"orig":"<message>"}],
     execute: async function (msg, args) {
         let poopy = this
+        let { tobrainfuck } = poopy.functions
+        let vars = poopy.vars
+        let config = poopy.config
+        let modules = poopy.modules
 
         await msg.channel.sendTyping().catch(() => { })
         var saidMessage = args.slice(1).join(' ')
@@ -12,20 +16,20 @@ module.exports = {
             return;
         };
         await msg.reply({
-            content: poopy.functions.tobrainfuck(saidMessage),
+            content: tobrainfuck(saidMessage),
             allowedMentions: {
-                parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
             }
         }).catch(async () => {
-            var currentcount = poopy.vars.filecount
-            poopy.vars.filecount++
-            var filepath = `temp/${poopy.config.mongodatabase}/file${currentcount}`
-            poopy.modules.fs.mkdirSync(`${filepath}`)
-            poopy.modules.fs.writeFileSync(`${filepath}/tobrainfuck.txt`, poopy.functions.tobrainfuck(saidMessage))
+            var currentcount = vars.filecount
+            vars.filecount++
+            var filepath = `temp/${config.mongodatabase}/file${currentcount}`
+            modules.fs.mkdirSync(`${filepath}`)
+            modules.fs.writeFileSync(`${filepath}/tobrainfuck.txt`, tobrainfuck(saidMessage))
             await msg.reply({
-                files: [new poopy.modules.Discord.MessageAttachment(`${filepath}/tobrainfuck.txt`)]
+                files: [new modules.Discord.MessageAttachment(`${filepath}/tobrainfuck.txt`)]
             }).catch(() => { })
-            poopy.modules.fs.rmSync(`${filepath}`, { force: true, recursive: true })
+            modules.fs.rmSync(`${filepath}`, { force: true, recursive: true })
         })
         await msg.channel.sendTyping().catch(() => { })
     },

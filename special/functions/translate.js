@@ -3,21 +3,24 @@ module.exports = {
   desc: 'Translates the phrase inside the function from source to target, otherwise auto.',
   func: async function (matches) {
     let poopy = this
+    let { splitKeyFunc, randomKey } = poopy.functions
+    let vars = poopy.vars
+    let modules = poopy.modules
 
     var word = matches[1]
-    var split = poopy.functions.splitKeyFunc(word, { args: 3 })
+    var split = splitKeyFunc(word, { args: 3 })
     var phrase = split[0] ?? ''
     var target = split[1] ?? 'en'
     var source = split[2] ?? ''
 
-    if (poopy.vars.languages.find(language => (language.language.toLowerCase() === target.toLowerCase()) || (language.name.toLowerCase() === target.toLowerCase()))) {
-      target = poopy.vars.languages.find(language => (language.language.toLowerCase() === target.toLowerCase()) || (language.name.toLowerCase() === target.toLowerCase())).language
+    if (vars.languages.find(language => (language.language.toLowerCase() === target.toLowerCase()) || (language.name.toLowerCase() === target.toLowerCase()))) {
+      target = vars.languages.find(language => (language.language.toLowerCase() === target.toLowerCase()) || (language.name.toLowerCase() === target.toLowerCase())).language
     } else {
       target = 'en'
     }
 
-    if (poopy.vars.languages.find(language => (language.language.toLowerCase() === source.toLowerCase()) || (language.name.toLowerCase() === source.toLowerCase()))) {
-      source = poopy.vars.languages.find(language => (language.language.toLowerCase() === source.toLowerCase()) || (language.name.toLowerCase() === source.toLowerCase())).language
+    if (vars.languages.find(language => (language.language.toLowerCase() === source.toLowerCase()) || (language.name.toLowerCase() === source.toLowerCase()))) {
+      source = vars.languages.find(language => (language.language.toLowerCase() === source.toLowerCase()) || (language.name.toLowerCase() === source.toLowerCase())).language
     } else {
       source = ''
     }
@@ -29,12 +32,12 @@ module.exports = {
       headers: {
         'content-type': 'application/json',
         'x-rapidapi-host': 'microsoft-translator-text.p.rapidapi.com',
-        'x-rapidapi-key': poopy.functions.randomKey('RAPIDAPIKEY')
+        'x-rapidapi-key': randomKey('RAPIDAPIKEY')
       },
       data: [{ Text: phrase }]
     };
 
-    var response = await poopy.modules.axios.request(options).catch(() => { })
+    var response = await modules.axios.request(options).catch(() => { })
 
     if (response) {
       return response.data[0].translations[0].text

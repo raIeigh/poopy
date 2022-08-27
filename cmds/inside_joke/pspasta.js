@@ -3,8 +3,9 @@ module.exports = {
   args: [],
   execute: async function (msg) {
     let poopy = this
+    let arrays = poopy.arrays
 
-    await msg.reply(poopy.arrays.psPasta[Math.floor(Math.random() * poopy.arrays.psPasta.length)]).catch(() => { })
+    await msg.reply(arrays.psPasta[Math.floor(Math.random() * arrays.psPasta.length)]).catch(() => { })
   },
   help: {
     name: 'pspasta/phexoniastudiospasta',

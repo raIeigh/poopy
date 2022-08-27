@@ -3,15 +3,20 @@ module.exports = {
     args: [{"name":"file","required":false,"specifarg":false,"orig":"{file}"}],
     execute: async function (msg, args) {
         let poopy = this
+        let { lastUrl, validateFile, execPromise } = poopy.functions
+        let modules = poopy.modules
+        let vars = poopy.vars
+        let bot = poopy.bot
+        let config = poopy.config
 
         await msg.channel.sendTyping().catch(() => { })
-        if (poopy.functions.lastUrl(msg, 0) === undefined && args[4] === undefined) {
+        if (lastUrl(msg, 0) === undefined && args[4] === undefined) {
             await msg.reply('What is the file?!').catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
         };
-        var currenturl = poopy.functions.lastUrl(msg, 0)
-        var fileinfo = await poopy.functions.validateFile(currenturl, 'very true').catch(async error => {
+        var currenturl = lastUrl(msg, 0)
+        var fileinfo = await validateFile(currenturl, 'very true').catch(async error => {
             await msg.reply(error).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
@@ -21,7 +26,7 @@ module.exports = {
         var type = fileinfo.type
 
         var jsoninfo = {}
-        var formattedSize = poopy.modules.prettyBytes(fileinfo.info.realsize)
+        var formattedSize = modules.prettyBytes(fileinfo.info.realsize)
         var size = `${formattedSize}${formattedSize.endsWith(' B') ? '' : ` (${fileinfo.info.realsize} B)`}`
         var params = [
             `**File Size**: ${size}`,
@@ -30,13 +35,13 @@ module.exports = {
         ]
         var paramFunctions
 
-        var json = await poopy.functions.execPromise(`ffprobe -of json -show_streams -show_format "${currenturl}"`)
+        var json = await execPromise(`ffprobe -of json -show_streams -show_format "${currenturl}"`)
         if (json) {
             jsoninfo = JSON.parse(json)
         }
 
         if (jsoninfo["streams"]) {
-            if (type.mime.startsWith('image') && !(poopy.vars.gifFormats.find(f => f === type.ext))) {
+            if (type.mime.startsWith('image') && !(vars.gifFormats.find(f => f === type.ext))) {
                 var videoStream = jsoninfo["streams"].find(stream => stream["codec_type"] === 'video')
 
                 if (videoStream) {
@@ -177,7 +182,7 @@ module.exports = {
                         }
                     ]
                 }
-            } else if (type.mime.startsWith('image') && poopy.vars.gifFormats.find(f => f === type.ext)) {
+            } else if (type.mime.startsWith('image') && vars.gifFormats.find(f => f === type.ext)) {
                 var videoStream = jsoninfo["streams"].find(stream => stream["codec_type"] === 'video')
 
                 if (videoStream) {
@@ -292,19 +297,19 @@ module.exports = {
             "url": currenturl,
             "color": 0x472604,
             "footer": {
-                "icon_url": poopy.bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
-                "text": poopy.bot.user.username
+                "icon_url": bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
+                "text": bot.user.username
             },
             "thumbnail": {
                 "url": currenturl
             }
         }
 
-        if (poopy.config.textEmbeds) msg.reply({
+        if (config.textEmbeds) msg.reply({
             content: `\`${fileinfo.name}\`\n\n${params.join('\n')}`,
             allowedMentions: {
-                parse: (!msg.member.permissions.has('ADMINISTRATOR') &&
-                    !msg.member.permissions.has('MENTION_EVERYONE') &&
+                parse: (!msg.member.permissihas('ADMINISTRATOR') &&
+                    !msg.member.permissihas('MENTION_EVERYONE') &&
                     msg.author.id !== msg.guild.ownerID) ?
                     ['users'] : ['users', 'everyone', 'roles']
             }

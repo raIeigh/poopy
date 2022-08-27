@@ -16,13 +16,19 @@ module.exports = {
     }],
     execute: async function (msg, args) {
         let poopy = this
+        let commands = poopy.commands
+        let data = poopy.data
+        let { similarity, navigateEmbed } = poopy.functions
+        let config = poopy.config
+        let bot = poopy.bot
+        let vars = poopy.vars
 
         var saidMessage = args.slice(1).join(' ')
         if (saidMessage) {
-            var fCmds = poopy.commands.filter(cmd => 
+            var fCmds = commands.filter(cmd => 
                 cmd.name.find(name => name.toLowerCase().includes(saidMessage.toLowerCase()))
             ).concat(
-                poopy.data['guild-data'][msg.guild.id]['localcmds'].filter(cmd =>
+                data['guild-data'][msg.guild.id]['localcmds'].filter(cmd =>
                     cmd.name.toLowerCase().includes(saidMessage.toLowerCase())
                 ).map(lcmd => {
                     return {
@@ -38,8 +44,8 @@ module.exports = {
 
             if (fCmds.length) {
                 fCmds.sort((a, b) => 
-                    Math.abs(1 - poopy.functions.similarity(a.name.find(name => name.toLowerCase().includes(saidMessage.toLowerCase())), saidMessage)) -
-                    Math.abs(1 - poopy.functions.similarity(b.name.find(name => name.toLowerCase().includes(saidMessage.toLowerCase())), saidMessage))
+                    Math.abs(1 - similarity(a.name.find(name => name.toLowerCase().includes(saidMessage.toLowerCase())), saidMessage)) -
+                    Math.abs(1 - similarity(b.name.find(name => name.toLowerCase().includes(saidMessage.toLowerCase())), saidMessage))
                 )
 
                 var findCmds = fCmds.map(cmd => {
@@ -62,28 +68,28 @@ module.exports = {
                     }
                 })
 
-                await poopy.functions.navigateEmbed(msg.channel, async (page) => {
-                    if (poopy.config.textEmbeds) return `\`${fCmds[page - 1].help.name}\`\n\n**Description:** ${fCmds[page - 1].help.value || 'No description.'}\n**Cooldown:** ${fCmds[page - 1].cooldown ? `${fCmds[page - 1].cooldown / 1000} seconds` : 'None'}\n**Type:** ${fCmds[page - 1].type}\n\nCommand ${page}/${findCmds.length}`
+                await navigateEmbed(msg.channel, async (page) => {
+                    if (config.textEmbeds) return `\`${fCmds[page - 1].help.name}\`\n\n**Description:** ${fCmds[page - 1].help.value || 'No description.'}\n**Cooldown:** ${fCmds[page - 1].cooldown ? `${fCmds[page - 1].cooldown / 1000} seconds` : 'None'}\n**Type:** ${fCmds[page - 1].type}\n\nCommand ${page}/${findCmds.length}`
                     else return {
                         "title": findCmds[page - 1].title,
                         "color": 0x472604,
                         "footer": {
-                            "icon_url": poopy.bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
+                            "icon_url": bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
                             "text": `Command ${page}/${findCmds.length}`
                         },
                         "fields": findCmds[page - 1].fields,
                     }
                 }, findCmds.length, msg.member, undefined, undefined, undefined, undefined, undefined, msg)
             } else {
-                if (poopy.config.textEmbeds) msg.reply("No commands match your search.").catch(() => { })
+                if (config.textEmbeds) msg.reply("No commands match your search.").catch(() => { })
                 else msg.reply({
                     embeds: [
                         {
                             "description": "No commands match your search.",
                             "color": 0x472604,
                             "footer": {
-                                "icon_url": poopy.bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
-                                "text": poopy.bot.user.username
+                                "icon_url": bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
+                                "text": bot.user.username
                             },
                         }
                     ]
@@ -92,13 +98,13 @@ module.exports = {
             return
         }
 
-        var jsonid = poopy.config.ownerids.find(id => id == msg.author.id) || poopy.config.jsoning.find(id => id == msg.author.id);
-        var ownerid = poopy.config.ownerids.find(id => id == msg.author.id);
+        var jsonid = config.ownerids.find(id => id == msg.author.id) || config.jsoning.find(id => id == msg.author.id);
+        var ownerid = config.ownerids.find(id => id == msg.author.id);
 
         var categoryOptions = {}
 
-        for (var i in poopy.vars.shelpCmds) {
-            var shelp = poopy.vars.shelpCmds[i]
+        for (var i in vars.shelpCmds) {
+            var shelp = vars.shelpCmds[i]
             if (categoryOptions[shelp.type] == undefined) {
                 categoryOptions[shelp.type] = Number(i) + 1
             }
@@ -107,7 +113,7 @@ module.exports = {
         var categoriesMenu = Object.keys(categoryOptions).map(cat => {
             return {
                 label: cat,
-                description: poopy.vars.categories[cat] || '',
+                description: vars.categories[cat] || '',
                 value: cat
             }
         })
@@ -116,30 +122,30 @@ module.exports = {
 
         var dmChannel = await msg.author.createDM().catch(() => { })
 
-        if (dmChannel) await poopy.functions.navigateEmbed(dmChannel, async (page) => {
-            var helpEmbedText = `**${poopy.vars.shelpCmds[page - 1].type} Commands**\n\n` + "Arguments between \"<>\" are required.\nArguments between \"[]\" are optional.\nArguments between \"{}\" are optional but should normally be supplied.\nMultiple commands can be executed separating them with \"-|-\".\nFile manipulation commands have special options that can be used:\n`-encodingpreset <preset>` - More info in `reencode` command.\n`-filename <name>` - Saves the file as the specified name.\n`-catbox` - Forces the file to be uploaded to catbox.moe.\n`-nosend` - Does not send the file, but stores its catbox.moe URL in the channel's last urls.\n\n" + poopy.vars.shelpCmds[page - 1].commands.map(k => `\`${k.name}\`\n> ${k.value}`).join('\n') + `\n\nPage ${page}/${poopy.vars.shelpCmds.length}`
+        if (dmChannel) await navigateEmbed(dmChannel, async (page) => {
+            var helpEmbedText = `**${vars.shelpCmds[page - 1].type} Commands**\n\n` + "Arguments between \"<>\" are required.\nArguments between \"[]\" are optional.\nArguments between \"{}\" are optional but should normally be supplied.\nMultiple commands can be executed separating them with \"-|-\".\nFile manipulation commands have special options that can be used:\n`-encodingpreset <preset>` - More info in `reencode` command.\n`-filename <name>` - Saves the file as the specified name.\n`-catbox` - Forces the file to be uploaded to catbox.moe.\n`-nosend` - Does not send the file, but stores its catbox.moe URL in the channel's last urls.\n\n" + vars.shelpCmds[page - 1].commands.map(k => `\`${k.name}\`\n> ${k.value}`).join('\n') + `\n\nPage ${page}/${vars.shelpCmds.length}`
             var helpEmbed = {
-                "title": `${poopy.vars.shelpCmds[page - 1].type} Commands`,
+                "title": `${vars.shelpCmds[page - 1].type} Commands`,
                 "description": "Arguments between \"<>\" are required.\nArguments between \"[]\" are optional.\nArguments between \"{}\" are optional but should normally be supplied.\nMultiple commands can be executed separating them with \"-|-\".\nFile manipulation commands have special options that can be used:\n`-encodingpreset <preset>` - More info in `reencode` command.\n`-filename <name>` - Saves the file as the specified name.\n`-catbox` - Forces the file to be uploaded to catbox.moe.\n`-nosend` - Does not send the file, but stores its catbox.moe URL in the channel's last urls.",
                 "color": 0x472604,
                 "footer": {
-                    "icon_url": poopy.bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
-                    "text": `Page ${page}/${poopy.vars.shelpCmds.length}`
+                    "icon_url": bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
+                    "text": `Page ${page}/${vars.shelpCmds.length}`
                 },
-                "fields": poopy.vars.shelpCmds[page - 1].commands,
-                "menuText": poopy.vars.shelpCmds[page - 1].type
+                "fields": vars.shelpCmds[page - 1].commands,
+                "menuText": vars.shelpCmds[page - 1].type
             }
 
             if (helped) {
-                helpEmbedText = `**${poopy.vars.shelpCmds[page - 1].type} Commands**\n\n` + poopy.vars.shelpCmds[page - 1].commands.map(k => `\`${k.name}\`\n> ${k.value}`).join('\n') + `\n\nPage ${page}/${poopy.vars.shelpCmds.length}`
+                helpEmbedText = `**${vars.shelpCmds[page - 1].type} Commands**\n\n` + vars.shelpCmds[page - 1].commands.map(k => `\`${k.name}\`\n> ${k.value}`).join('\n') + `\n\nPage ${page}/${vars.shelpCmds.length}`
                 delete helpEmbed.description
             }
 
             helped = true
 
-            if (poopy.config.textEmbeds) return helpEmbedText.substring(helpEmbedText.length - 2000).replace(new RegExp(poopy.vars.validUrl, 'g'), (url) => `<${url}>`)
+            if (config.textEmbeds) return helpEmbedText.substring(helpEmbedText.length - 2000).replace(new RegExp(vars.validUrl, 'g'), (url) => `<${url}>`)
             else return helpEmbed
-        }, poopy.vars.shelpCmds.length, msg.author.id, poopy.config.useReactions ? [{
+        }, vars.shelpCmds.length, msg.author.id, config.useReactions ? [{
             emoji: '🔠',
             reactemoji: '🔠',
             customid: 'category',
@@ -151,7 +157,7 @@ module.exports = {
                 var newpage = page
 
                 pageCollector.on('collect', (m) => {
-                    if (!(m.author.id === msg.author.id && ((m.author.id !== poopy.bot.user.id && !m.author.bot) || poopy.config.allowbotusage))) {
+                    if (!(m.author.id === msg.author.id && ((m.author.id !== bot.user.id && !m.author.bot) || config.allowbotusage))) {
                         return
                     }
 
@@ -166,7 +172,7 @@ module.exports = {
                 })
             }),
             page: true
-        }] : undefined, undefined, !poopy.config.useReactions ? {
+        }] : undefined, undefined, !config.useReactions ? {
             text: 'Select Category',
             customid: 'category',
             options: categoriesMenu,
@@ -178,12 +184,12 @@ module.exports = {
                     "title": "JSON Club Commands",
                     "color": 0x472604,
                     "footer": {
-                        "icon_url": poopy.bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
-                        "text": poopy.bot.user.username
+                        "icon_url": bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
+                        "text": bot.user.username
                     },
-                    "fields": poopy.vars.jsonCmds
+                    "fields": vars.jsonCmds
                 };
-                if (poopy.config.textEmbeds) await msg.author.send(`**JSON Club Commands**\n\n${poopy.vars.jsonCmds.map(k => `\`${k.name}\`\n> ${k.value}`).join('\n')}`).catch(() => { })
+                if (config.textEmbeds) await msg.author.send(`**JSON Club Commands**\n\n${vars.jsonCmds.map(k => `\`${k.name}\`\n> ${k.value}`).join('\n')}`).catch(() => { })
                 else await msg.author.send({
                     embeds: [jsoncmdEmbed]
                 }).catch(() => { })
@@ -193,12 +199,12 @@ module.exports = {
                     "title": "Owner Commands",
                     "color": 0x472604,
                     "footer": {
-                        "icon_url": poopy.bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
-                        "text": poopy.bot.user.username
+                        "icon_url": bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
+                        "text": bot.user.username
                     },
-                    "fields": poopy.vars.devCmds
+                    "fields": vars.devCmds
                 };
-                if (poopy.config.textEmbeds) await msg.author.send(`**Owner Commands**\n\n${poopy.vars.devCmds.map(k => `\`${k.name}\`\n> ${k.value}`).join('\n')}`).catch(() => { })
+                if (config.textEmbeds) await msg.author.send(`**Owner Commands**\n\n${vars.devCmds.map(k => `\`${k.name}\`\n> ${k.value}`).join('\n')}`).catch(() => { })
                 else await msg.author.send({
                     embeds: [devcmdEmbed]
                 }).catch(() => { })

@@ -10,6 +10,8 @@ module.exports = {
     }, { "name": "code", "required": true, "specifarg": false, "orig": "<code>" }],
     execute: async function (msg, args) {
         let poopy = this
+        let vars = poopy.vars
+        let modules = poopy.modules
 
         await msg.channel.sendTyping().catch(() => { })
 
@@ -35,16 +37,16 @@ module.exports = {
         if (codeBlock) saidMessage = saidMessage.substring(cl > -1 ? cl : 3, saidMessage.length - 3).trim()
         var langVersion
 
-        var findLang = poopy.vars.codelanguages.find(lang => lang.templates[0] === language.toLowerCase())
+        var findLang = vars.codelanguages.find(lang => lang.templates[0] === language.toLowerCase())
 
         if (findLang) {
             langVersion = findLang.name
         } else {
-            await msg.reply(`Not a valid programming language.\nAvailable ones are: ${poopy.vars.codelanguages.map(lang => `\`${lang.templates[0]}\``).join(', ')}`).catch(() => { })
+            await msg.reply(`Not a valid programming language.\nAvailable ones are: ${vars.codelanguages.map(lang => `\`${lang.templates[0]}\``).join(', ')}`).catch(() => { })
             return
         }
 
-        var response = await poopy.modules.axios.request({
+        var response = await modules.axios.request({
             url: 'https://wandbox.org/api/compile.ndjson',
             method: 'POST',
             data: {
@@ -62,7 +64,7 @@ module.exports = {
             await msg.reply({
                 content: err.stack,
                 allowedMentions: {
-                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
         })
@@ -71,8 +73,8 @@ module.exports = {
 
         var jsons = response.data.trim().split('\n').map(json => JSON.parse(json))
 
-        var stdOut = jsons.find(json => json.type === 'StdOut')
-        var stdErr = jsons.find(json => json.type === 'StdErr')
+        var stdOut = jsfind(json => json.type === 'StdOut')
+        var stdErr = jsfind(json => json.type === 'StdErr')
         var output
 
         if (stdOut && stdErr) output = `StdOut: ${stdOut.data}\n\nStdErr: ${stdErr.data}`
@@ -81,7 +83,7 @@ module.exports = {
         await msg.reply({
             content: output,
             allowedMentions: {
-                parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
             }
         }).catch(() => { })
     },

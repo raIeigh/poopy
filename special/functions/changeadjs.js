@@ -3,9 +3,10 @@ module.exports = {
     desc: 'Replaces all of the adjectives in the phrase with different ones.',
     func: function (matches) {
         let poopy = this
+        let json = poopy.json
 
         var word = matches[1]
-        var adjJSON = poopy.json.adjJSON
+        var adjJSON = json.adjJSON
         var adjs = []
         var adjsR = []
         for (var i in adjJSON.data) {

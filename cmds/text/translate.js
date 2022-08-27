@@ -19,10 +19,13 @@ module.exports = {
     }],
     execute: async function (msg, args) {
         let poopy = this
+        let vars = poopy.vars
+        let { randomKey } = poopy.functions
+        let modules = poopy.modules
 
         await msg.channel.sendTyping().catch(() => { })
         if (args[1] === undefined) {
-            await msg.reply(`What is the text to translate?! A list of supported languages are:\n${poopy.vars.languages.map(language => `\`${language.language}\``).join(', ')}`).catch(() => { })
+            await msg.reply(`What is the text to translate?! A list of supported languages are:\n${vars.languages.map(language => `\`${language.language}\``).join(', ')}`).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
         }
@@ -30,10 +33,10 @@ module.exports = {
         var source = ''
         var sourceindex = args.indexOf('-source')
         if (sourceindex > -1) {
-            if (poopy.vars.languages.find(language => (language.language.toLowerCase() === args[sourceindex + 1].toLowerCase()) || (language.name.toLowerCase() === args[sourceindex + 1].toLowerCase()))) {
-                source = poopy.vars.languages.find(language => (language.language.toLowerCase() === args[sourceindex + 1].toLowerCase()) || (language.name.toLowerCase() === args[sourceindex + 1].toLowerCase())).language
+            if (vars.languages.find(language => (language.language.toLowerCase() === args[sourceindex + 1].toLowerCase()) || (language.name.toLowerCase() === args[sourceindex + 1].toLowerCase()))) {
+                source = vars.languages.find(language => (language.language.toLowerCase() === args[sourceindex + 1].toLowerCase()) || (language.name.toLowerCase() === args[sourceindex + 1].toLowerCase())).language
             } else {
-                await msg.reply(`Not a supported source language. A list of supported languages are:\n${poopy.vars.languages.map(language => `\`${language.language}\``).join(', ')}`).catch(() => { })
+                await msg.reply(`Not a supported source language. A list of supported languages are:\n${vars.languages.map(language => `\`${language.language}\``).join(', ')}`).catch(() => { })
                 return
             }
             args.splice(sourceindex, 2)
@@ -42,10 +45,10 @@ module.exports = {
         var target = 'en'
         var targetindex = args.indexOf('-target')
         if (targetindex > -1) {
-            if (poopy.vars.languages.find(language => (language.language.toLowerCase() === args[targetindex + 1].toLowerCase()) || (language.name.toLowerCase() === args[targetindex + 1].toLowerCase()))) {
-                target = poopy.vars.languages.find(language => (language.language.toLowerCase() === args[targetindex + 1].toLowerCase()) || (language.name.toLowerCase() === args[targetindex + 1].toLowerCase())).language
+            if (vars.languages.find(language => (language.language.toLowerCase() === args[targetindex + 1].toLowerCase()) || (language.name.toLowerCase() === args[targetindex + 1].toLowerCase()))) {
+                target = vars.languages.find(language => (language.language.toLowerCase() === args[targetindex + 1].toLowerCase()) || (language.name.toLowerCase() === args[targetindex + 1].toLowerCase())).language
             } else {
-                await msg.reply(`Not a supported target language. A list of supported languages are:\n${poopy.vars.languages.map(language => `\`${language.language}\``).join(', ')}`).catch(() => { })
+                await msg.reply(`Not a supported target language. A list of supported languages are:\n${vars.languages.map(language => `\`${language.language}\``).join(', ')}`).catch(() => { })
                 return
             }
             args.splice(targetindex, 2)
@@ -60,19 +63,19 @@ module.exports = {
             headers: {
                 'content-type': 'application/json',
                 'x-rapidapi-host': 'microsoft-translator-text.p.rapidapi.com',
-                'x-rapidapi-key': poopy.functions.randomKey('RAPIDAPIKEY')
+                'x-rapidapi-key': randomKey('RAPIDAPIKEY')
             },
             data: [{ Text: saidMessage }]
         };
 
-        var response = await poopy.modules.axios.request(options).catch(async () => {
+        var response = await modules.axios.request(options).catch(async () => {
             await msg.reply('Error.').catch(() => { })
         })
 
         await msg.reply({
             content: response.data[0].translations[0].text,
             allowedMentions: {
-                parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
             }
         }).catch(() => { })
         await msg.channel.sendTyping().catch(() => { })

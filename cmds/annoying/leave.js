@@ -3,13 +3,15 @@ module.exports = {
     args: [],
     execute: async function (msg) {
         let poopy = this
+        let config = poopy.config
+        let { yesno } = poopy.functions
 
         if (msg.channel.type == 'DM') {
             await msg.reply(`You can't get rid of me.`).catch(() => { })
             return
         }
 
-        if (msg.member.permissions.has('MANAGE_GUILD') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || poopy.config.ownerids.find(id => id == msg.author.id)) {
+        if (msg.member.permissihas('MANAGE_GUILD') || msg.member.permissihas('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
             var phrases = [
                 'idiot',
                 'the salt',
@@ -49,7 +51,7 @@ module.exports = {
                 'mug',
                 ''
             ]
-            var confirm = await poopy.functions.yesno(msg.channel, 'are you sure about this', msg.member, undefined, msg).catch(() => { })
+            var confirm = await yesno(msg.channel, 'are you sure about this', msg.member, undefined, msg).catch(() => { })
 
             if (confirm) {
                 await msg.reply(phrases[Math.floor(Math.random() * phrases.length)]).catch(() => { })

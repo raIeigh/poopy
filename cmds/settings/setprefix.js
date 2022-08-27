@@ -3,8 +3,10 @@ module.exports = {
     args: [{"name":"prefix","required":true,"specifarg":false,"orig":"<prefix>"}],
     execute: async function (msg, args) {
         let poopy = this
+        let config = poopy.config
+        let data = poopy.data
 
-        if (msg.member.permissions.has('MANAGE_GUILD') || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || poopy.config.ownerids.find(id => id == msg.author.id)) {
+        if (msg.member.permissihas('MANAGE_GUILD') || msg.member.permissihas('MANAGE_MESSAGES') || msg.member.permissihas('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
             if (args[1] === undefined) {
                 await msg.reply('You must specify a prefix!').catch(() => { })
                 return
@@ -20,7 +22,7 @@ module.exports = {
                 await msg.reply('The prefix can\'t be bigger than 20 characters.').catch(() => { })
                 return
             }
-            poopy.data['guild-data'][msg.guild.id]['prefix'] = saidMessage
+            data['guild-data'][msg.guild.id]['prefix'] = saidMessage
             await msg.reply(`The prefix was set to \`${saidMessage}\` (if this is wrong, mention me with "reset prefix")`).catch(() => { })
         } else {
             await msg.reply('You need to be a moderator to execute that!').catch(() => { })

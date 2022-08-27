@@ -3,10 +3,13 @@ module.exports = {
   desc: 'Compiles the code in the specified language using Wandbox. Only declared variables and functions can be used here (to prevent confusion with functions in that language)',
   func: async function (matches, msg, isBot, _, opts) {
     let poopy = this
+    let { getKeywordsFor, splitKeyFunc } = poopy.functions
+    let vars = poopy.vars
+    let modules = poopy.modules
 
     var declopts = { ...opts }
     declopts.declaredonly = true
-    var word = await poopy.functions.getKeywordsFor(matches[1], msg, isBot, declopts).catch(() => { }) ?? ''
+    var word = await getKeywordsFor(matches[1], msg, isBot, declopts).catch(() => { }) ?? ''
 
     var language
 
@@ -21,7 +24,7 @@ module.exports = {
     }
 
     if (cl <= -1) {
-      var split = poopy.functions.splitKeyFunc(word, { args: 2 })
+      var split = splitKeyFunc(word, { args: 2 })
       language = split[0]
       word = split[1]
     }
@@ -32,8 +35,8 @@ module.exports = {
 
     var langVersion
 
-    if (poopy.vars.codelanguages) {
-      var findLang = poopy.vars.codelanguages.find(lang => lang.templates[0] === language.toLowerCase())
+    if (vars.codelanguages) {
+      var findLang = vars.codelanguages.find(lang => lang.templates[0] === language.toLowerCase())
 
       if (findLang) {
         langVersion = findLang.name
@@ -42,7 +45,7 @@ module.exports = {
       }
     } else return word
 
-    var response = await poopy.modules.axios.request({
+    var response = await modules.axios.request({
       url: 'https://wandbox.org/api/compile.ndjson',
       method: 'POST',
       data: {

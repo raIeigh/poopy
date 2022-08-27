@@ -3,16 +3,18 @@ module.exports = {
     desc: 'Finds the key of the value in the array that matches the function.',
     func: async function (matches, msg, isBot, _, opts) {
         let poopy = this
+        let { splitKeyFunc, getKeywordsFor, findIndexAsync } = poopy.functions
+        let tempdata = poopy.tempdata
 
         var word = matches[1]
-        var split = poopy.functions.splitKeyFunc(word, { args: 2 })
-        var name = await poopy.functions.getKeywordsFor(split[0] ?? '', msg, isBot, opts).catch(() => { }) ?? ''
+        var split = splitKeyFunc(word, { args: 2 })
+        var name = await getKeywordsFor(split[0] ?? '', msg, isBot, opts).catch(() => { }) ?? ''
         var func = split[1] ?? ''
 
-        var array = poopy.tempdata[msg.author.id]['arrays'][name]
+        var array = tempdata[msg.author.id]['arrays'][name]
         if (!array) return ''
 
-        return await poopy.functions.findIndexAsync(array, async (val) => {
+        return await findIndexAsync(array, async (val) => {
             var valOpts = { ...opts }
             valOpts.extrakeys._val = {
                 func: async () => {
@@ -20,7 +22,7 @@ module.exports = {
                 }
             }
 
-            var found = await poopy.functions.getKeywordsFor(func, msg, isBot, valOpts).catch(() => { }) ?? ''
+            var found = await getKeywordsFor(func, msg, isBot, valOpts).catch(() => { }) ?? ''
 
             return found
         }).catch(() => { }) ?? ''

@@ -11,8 +11,11 @@ module.exports = {
     }, { "name": "value", "required": true, "specifarg": false, "orig": "<value>" }],
     execute: async function (msg, args) {
         let poopy = this
+        let config = poopy.config
+        let globaldata = poopy.globaldata
+        let arrays = poopy.arrays
 
-        var jsonid = poopy.config.ownerids.find(id => id == msg.author.id) || poopy.config.jsoning.find(id => id == msg.author.id);
+        var jsonid = config.ownerids.find(id => id == msg.author.id) || config.jsoning.find(id => id == msg.author.id);
         if (jsonid === undefined) {
             await msg.reply('json club only').catch(() => { })
             return
@@ -37,25 +40,25 @@ module.exports = {
             }
             var saidMessage = args.slice(2).join(' ')
 
-            if (poopy.functions.globalData()['bot-data'][type].find(v => v === saidMessage)) {
+            if (globaldata['bot-data'][type].find(v => v === saidMessage)) {
                 await msg.reply('Already exists.').catch(() => { })
                 return
             }
 
-            poopy.functions.globalData()['bot-data'][type].push(saidMessage)
+            globaldata['bot-data'][type].push(saidMessage)
 
             await msg.reply({
                 content: '✅ Added ' + saidMessage,
                 allowedMentions: {
-                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
 
-            poopy.arrays.psFiles = poopy.functions.globalData()['bot-data']['psfiles']
-            poopy.arrays.psPasta = poopy.functions.globalData()['bot-data']['pspasta']
-            poopy.arrays.funnygifs = poopy.functions.globalData()['bot-data']['funnygif']
-            poopy.arrays.poopPhrases = poopy.functions.globalData()['bot-data']['poop']
-            poopy.arrays.dmPhrases = poopy.functions.globalData()['bot-data']['dmphrases']
+            arrays.psFiles = globaldata['bot-data']['psfiles']
+            arrays.psPasta = globaldata['bot-data']['pspasta']
+            arrays.funnygifs = globaldata['bot-data']['funnygif']
+            arrays.poopPhrases = globaldata['bot-data']['poop']
+            arrays.dmPhrases = globaldata['bot-data']['dmphrases']
         };
     },
     help: {

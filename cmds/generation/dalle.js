@@ -3,6 +3,11 @@ module.exports = {
     args: [{"name":"prompt","required":true,"specifarg":false,"orig":"<prompt>"}],
     execute: async function (msg, args) {
         let poopy = this
+        let modules = poopy.modules
+        let { sleep, navigateEmbed, sendFile } = poopy.functions
+        let vars = poopy.vars
+        let config = poopy.config
+        let bot = poopy.bot
 
         if (!args[1]) {
             await msg.reply('What is the text?!').catch(() => { })
@@ -22,7 +27,7 @@ module.exports = {
         var retries = 0
 
         async function dalleRequest() {
-            var imageRes = await poopy.modules.axios.request({
+            var imageRes = await modules.axios.request({
                 url: 'https://backend.craiyon.com/generate',
                 method: 'POST',
                 data: { prompt: text }
@@ -37,7 +42,7 @@ module.exports = {
                 }
 
                 if (waitMsg) waitMsg.edit(`Haha... This might take a century (attempt ${retries})`).catch(() => { })
-                await poopy.functions.sleep(2000)
+                await sleep(2000)
                 return await dalleRequest()
             }
 
@@ -52,36 +57,36 @@ module.exports = {
 
         var images = imageRes.data.images
 
-        var currentcount = poopy.vars.filecount
-        poopy.vars.filecount++
-        var filepath = `temp/${poopy.config.mongodatabase}/file${currentcount}`
-        poopy.modules.fs.mkdirSync(`${filepath}`)
-        poopy.modules.fs.mkdirSync(`${filepath}/images`)
+        var currentcount = vars.filecount
+        vars.filecount++
+        var filepath = `temp/${config.mongodatabase}/file${currentcount}`
+        modules.fs.mkdirSync(`${filepath}`)
+        modules.fs.mkdirSync(`${filepath}/images`)
 
         var i = 0
 
         images.forEach(data => {
             i++
-            poopy.modules.fs.writeFileSync(`${filepath}/images/image${i}.png`, Buffer.from(data, 'base64'))
+            modules.fs.writeFileSync(`${filepath}/images/image${i}.png`, Buffer.from(data, 'base64'))
         })
 
-        var output = poopy.modules.fs.createWriteStream(`${filepath}/output.zip`)
-        var archive = poopy.modules.archiver('zip')
+        var output = modules.fs.createWriteStream(`${filepath}/output.zip`)
+        var archive = modules.archiver('zip')
 
         await new Promise(async resolve => {
             output.on('finish', async () => {
-                var frames = poopy.modules.fs.readdirSync(`${filepath}/images`)
+                var frames = modules.fs.readdirSync(`${filepath}/images`)
                 var catboxframes = {}
     
-                await poopy.functions.navigateEmbed(msg.channel, async (page, ended) => {
-                    var frameurl = ended ? await poopy.vars.Catbox.upload(`${filepath}/images/${frames[page - 1]}`).catch(() => { }) : catboxframes[frames[page - 1]]
+                await navigateEmbed(msg.channel, async (page, ended) => {
+                    var frameurl = ended ? await vars.Catbox.upload(`${filepath}/images/${frames[page - 1]}`).catch(() => { }) : catboxframes[frames[page - 1]]
     
                     if (!frameurl && !ended) {
-                        frameurl = await poopy.vars.Litterbox.upload(`${filepath}/images/${frames[page - 1]}`).catch(() => { }) ?? ''
+                        frameurl = await vars.Litterbox.upload(`${filepath}/images/${frames[page - 1]}`).catch(() => { }) ?? ''
                         catboxframes[frames[page - 1]] = frameurl
                     }
     
-                    if (poopy.config.textEmbeds) return `${frameurl}\n\nImage ${page}/${frames.length}`
+                    if (config.textEmbeds) return `${frameurl}\n\nImage ${page}/${frames.length}`
                     else return {
                         "title": `DALL·E results for ${text}`,
                         "color": 0x472604,
@@ -89,7 +94,7 @@ module.exports = {
                             "url": frameurl
                         },
                         "footer": {
-                            "icon_url": poopy.bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
+                            "icon_url": bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
                             "text": `Image ${page}/${frames.length}`
                         },
                     }
@@ -102,7 +107,7 @@ module.exports = {
                         function: async (_, __, resultsMsg, collector) => {
                             collector.stop()
                             resultsMsg.delete().catch(() => { })
-                            poopy.functions.sendFile(msg, filepath, `output.zip`)
+                            sendFile(msg, filepath, `output.zip`)
                         },
                         page: false
                     },
@@ -119,7 +124,7 @@ module.exports = {
                         page: false
                     }
                 ], undefined, undefined, undefined, (reason) => {
-                    if (reason == 'time') poopy.modules.fs.rmSync(filepath, { force: true, recursive: true })
+                    if (reason == 'time') modules.fs.rmSync(filepath, { force: true, recursive: true })
                 }, msg)
                 resolve()
             })

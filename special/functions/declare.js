@@ -3,18 +3,20 @@ module.exports = {
     desc: 'Declares a variable with the name and value specified. Variables can be used by typing in {variableName}.',
     func: async function (matches, msg, isBot, string, opts) {
         let poopy = this
+        let { splitKeyFunc, getKeywordsFor, regexClean } = poopy.functions
+        let tempdata = poopy.tempdata
 
         var word = matches[1]
         var fullword = `${matches[0]}(${matches[1]})`
-        var split = poopy.functions.splitKeyFunc(word, { args: 2 })
-        var name = await poopy.functions.getKeywordsFor(split[0] ?? '', msg, isBot, opts).catch(() => { }) ?? ''
-        name = poopy.functions.regexClean(name)
-        var value = await poopy.functions.getKeywordsFor(split[1] ?? '', msg, isBot, opts).catch(() => { }) ?? ''
-        var phrase = string.replace(new RegExp(`${poopy.functions.regexClean(fullword)}\\s*`, 'i'), '')
-        poopy.tempdata[msg.author.id]['declared'][`{${name}}`] = value.replace(new RegExp(`\\{${name}\\}`, 'ig'), poopy.tempdata[msg.author.id]['declared'][`{${name}}`] || '')
-        poopy.tempdata[msg.author.id]['keydeclared'][`{${name}}`] = {
+        var split = splitKeyFunc(word, { args: 2 })
+        var name = await getKeywordsFor(split[0] ?? '', msg, isBot, opts).catch(() => { }) ?? ''
+        name = regexClean(name)
+        var value = await getKeywordsFor(split[1] ?? '', msg, isBot, opts).catch(() => { }) ?? ''
+        var phrase = string.replace(new RegExp(`${regexClean(fullword)}\\s*`, 'i'), '')
+        tempdata[msg.author.id]['declared'][`{${name}}`] = value.replace(new RegExp(`\\{${name}\\}`, 'ig'), tempdata[msg.author.id]['declared'][`{${name}}`] || '')
+        tempdata[msg.author.id]['keydeclared'][`{${name}}`] = {
             func: async function (msg)  {
-                return value.replace(new RegExp(`\\{${name}\\}`, 'ig'), poopy.tempdata[msg.author.id]['declared'][`{${name}}`] || '')
+                return value.replace(new RegExp(`\\{${name}\\}`, 'ig'), tempdata[msg.author.id]['declared'][`{${name}}`] || '')
             }
         }
         return [phrase, true]

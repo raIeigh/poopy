@@ -3,11 +3,12 @@ module.exports = {
   desc: 'Fetches the FPS of the specified file.',
   func: async function (matches) {
     let poopy = this
+    let { validateFile } = poopy.functions
 
     var word = matches[1]
 
     var error
-    var fileinfo = await poopy.functions.validateFile(word, 'very true').catch(err => {
+    var fileinfo = await validateFile(word, 'very true').catch(err => {
       error = err
     })
     if (error) return error

@@ -19,6 +19,9 @@ module.exports = {
     }, { "name": "languages", "required": false, "specifarg": true, "orig": "[-languages <number (max 25)>]" }],
     execute: async function (msg, args) {
         let poopy = this
+        let vars = poopy.vars
+        let { randomKey } = poopy.functions
+        let modules = poopy.modules
 
         await msg.channel.sendTyping().catch(() => { })
         if (args[1] === undefined) {
@@ -30,10 +33,10 @@ module.exports = {
         var source = null
         var sourceindex = args.indexOf('-source')
         if (sourceindex > -1) {
-            if (poopy.vars.languages.find(language => (language.language === args[sourceindex + 1].toLowerCase()) || (language.name === args[sourceindex + 1].toLowerCase()))) {
-                source = poopy.vars.languages.find(language => (language.language === args[sourceindex + 1].toLowerCase()) || (language.name === args[sourceindex + 1].toLowerCase())).language
+            if (vars.languages.find(language => (language.language === args[sourceindex + 1].toLowerCase()) || (language.name === args[sourceindex + 1].toLowerCase()))) {
+                source = vars.languages.find(language => (language.language === args[sourceindex + 1].toLowerCase()) || (language.name === args[sourceindex + 1].toLowerCase())).language
             } else {
-                await msg.reply(`Not a supported source language. A list of supported languages are:\n${poopy.vars.languages.map(language => `\`${language.language}\``).join(', ')}`).catch(() => { })
+                await msg.reply(`Not a supported source language. A list of supported languages are:\n${vars.languages.map(language => `\`${language.language}\``).join(', ')}`).catch(() => { })
                 return
             }
             args.splice(sourceindex, 2)
@@ -42,10 +45,10 @@ module.exports = {
         var target = 'en'
         var targetindex = args.indexOf('-target')
         if (targetindex > -1) {
-            if (poopy.vars.languages.find(language => (language.language === args[targetindex + 1].toLowerCase()) || (language.name === args[targetindex + 1].toLowerCase()))) {
-                target = poopy.vars.languages.find(language => (language.language === args[targetindex + 1].toLowerCase()) || (language.name === args[targetindex + 1].toLowerCase())).language
+            if (vars.languages.find(language => (language.language === args[targetindex + 1].toLowerCase()) || (language.name === args[targetindex + 1].toLowerCase()))) {
+                target = vars.languages.find(language => (language.language === args[targetindex + 1].toLowerCase()) || (language.name === args[targetindex + 1].toLowerCase())).language
             } else {
-                await msg.reply(`Not a supported target language. A list of supported languages are:\n${poopy.vars.languages.map(language => `\`${language.language}\``).join(', ')}`).catch(() => { })
+                await msg.reply(`Not a supported target language. A list of supported languages are:\n${vars.languages.map(language => `\`${language.language}\``).join(', ')}`).catch(() => { })
                 return
             }
             args.splice(targetindex, 2)
@@ -68,9 +71,9 @@ module.exports = {
 
         var output = saidMessage
         var lastlanguage = source
-        var currentlanguage = poopy.vars.languages[Math.floor(Math.random() * poopy.vars.languages.length)].language
+        var currentlanguage = vars.languages[Math.floor(Math.random() * vars.languages.length)].language
 
-        var lmessage = await msg.reply(`Translating from ${poopy.vars.languages.find(language => language.language === lastlanguage) ? poopy.vars.languages.find(language => language.language === lastlanguage).name : 'Auto'} to ${poopy.vars.languages.find(language => language.language === currentlanguage).name}. (${output})`).catch(() => { })
+        var lmessage = await msg.reply(`Translating from ${vars.languages.find(language => language.language === lastlanguage) ? vars.languages.find(language => language.language === lastlanguage).name : 'Auto'} to ${vars.languages.find(language => language.language === currentlanguage).name}. (${output})`).catch(() => { })
 
         for (var i = 0; i < repeat; i++) {
             var options = {
@@ -80,12 +83,12 @@ module.exports = {
                 headers: {
                     'content-type': 'application/json',
                     'x-rapidapi-host': 'microsoft-translator-text.p.rapidapi.com',
-                    'x-rapidapi-key': poopy.functions.randomKey('RAPIDAPIKEY')
+                    'x-rapidapi-key': randomKey('RAPIDAPIKEY')
                 },
                 data: [{ Text: output }]
             };
 
-            var response = await poopy.modules.axios.request(options).catch(async () => {
+            var response = await modules.axios.request(options).catch(async () => {
                 await msg.reply('Error.').catch(() => { })
             })
 
@@ -95,9 +98,9 @@ module.exports = {
 
             output = response.data[0].translations[0].text
             lastlanguage = currentlanguage
-            currentlanguage = i == repeat - 2 ? target : poopy.vars.languages[Math.floor(Math.random() * poopy.vars.languages.length)].language
+            currentlanguage = i == repeat - 2 ? target : vars.languages[Math.floor(Math.random() * vars.languages.length)].language
             if (lmessage && i != repeat - 1) {
-                await lmessage.edit(`Translating from ${poopy.vars.languages.find(language => language.language === lastlanguage) ? poopy.vars.languages.find(language => language.language === lastlanguage).name : 'Auto'} to ${poopy.vars.languages.find(language => language.language === currentlanguage).name}. (${output})`).catch(() => { })
+                await lmessage.edit(`Translating from ${vars.languages.find(language => language.language === lastlanguage) ? vars.languages.find(language => language.language === lastlanguage).name : 'Auto'} to ${vars.languages.find(language => language.language === currentlanguage).name}. (${output})`).catch(() => { })
             }
         }
 
@@ -108,7 +111,7 @@ module.exports = {
         await msg.reply({
             content: output,
             allowedMentions: {
-                parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
             }
         }).catch(() => { })
         await msg.channel.sendTyping().catch(() => { })

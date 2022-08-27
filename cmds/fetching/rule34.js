@@ -3,9 +3,13 @@ module.exports = {
     args: [{"name":"query","required":true,"specifarg":false,"orig":"<query>"},{"name":"page","required":false,"specifarg":true,"orig":"[-page <number>]"}],
     execute: async function (msg, args) {
         let poopy = this
+        let { findCommand, unescapeHTML, navigateEmbed, addLastUrl } = poopy.functions
+        let modules = poopy.modules
+        let vars = poopy.vars
+        let config = poopy.config
 
         if (!msg.channel.nsfw) {
-            await poopy.functions.findCommand('img').execute.call(poopy, msg, ['img', 'snail']).catch(() => { })
+            await findCommand('img').execute.call(poopy, msg, ['img', 'snail']).catch(() => { })
             return;
         }
 
@@ -23,7 +27,7 @@ module.exports = {
         }
         var search = args.slice(1).join(" ");
 
-        var body = await poopy.modules.axios.request(`https://api.rule34.xxx/index.php?page=dapi&s=post&q=index&json=1&limit=100&tags=${encodeURIComponent(search)}`).catch(() => { })
+        var body = await modules.axios.request(`https://api.rule34.xxx/index.php?page=dapi&s=post&q=index&json=1&limit=100&tags=${encodeURIComponent(search)}`).catch(() => { })
 
         if (!body) {
             await msg.reply('Error.').catch(() => { })
@@ -33,7 +37,7 @@ module.exports = {
         var results = body.data
 
         var urls = results.map(result => {
-            var tags = poopy.functions.unescapeHTML(result.tags)
+            var tags = unescapeHTML(result.tags)
             if (tags.length > 50) tags = `${tags.substring(0, 50)}...`
             var isMP4 = result.tags.split(' ').includes('animated') && !result.image.endsWith('gif')
 
@@ -43,7 +47,7 @@ module.exports = {
                 title: tags,
                 thumb: isMP4 ? result.sample_url : result.file_url,
                 score: result.score,
-                rating: poopy.vars.caseModifiers[2](result.rating)
+                rating: vars.caseModifiers[2](result.rating)
             }
         });
 
@@ -56,10 +60,10 @@ module.exports = {
         if (number > urls.length) number = urls.length;
         if (number < 1) number = 1
 
-        await poopy.functions.navigateEmbed(msg.channel, async (page) => {
-            poopy.functions.addLastUrl(msg, urls[page - 1].url)
+        await navigateEmbed(msg.channel, async (page) => {
+            addLastUrl(msg, urls[page - 1].url)
 
-            if (poopy.config.textEmbeds) return `${urls[page - 1].url}\n**Rating**: ${urls[page - 1].rating}\n**Score**: ${urls[page - 1].score}\n\nPost ${page}/${urls.length}`
+            if (config.textEmbeds) return `${urls[page - 1].url}\n**Rating**: ${urls[page - 1].rating}\n**Score**: ${urls[page - 1].score}\n\nPost ${page}/${urls.length}`
             else return {
                 "title": "Rule 34 Post Search Results For " + search,
                 "description": `**[${urls[page - 1].title}](${urls[page - 1].posturl})**\n[Media Url](${urls[page - 1].url})\n**Rating**: ${urls[page - 1].rating}\n**Score**: ${urls[page - 1].score}`,

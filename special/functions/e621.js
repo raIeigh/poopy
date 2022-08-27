@@ -3,14 +3,17 @@ module.exports = {
     desc: 'e621',
     func: async function (matches, msg) {
         let poopy = this
+        let { splitKeyFunc, getIndexOption, parseNumber } = poopy.functions
+        let modules = poopy.modules
+        let package = poopy.package
         
         if (!msg.channel.nsfw) return 'no'
 
         var word = matches[1]
-        var split = poopy.functions.splitKeyFunc(word, { args: 2 })
-        var query = poopy.functions.getIndexOption(split, 0)[0]
-        var page = poopy.functions.getIndexOption(split, 1, { n: Infinity }).join(' | ')
-        var res = await poopy.modules.axios.request({
+        var split = splitKeyFunc(word, { args: 2 })
+        var query = getIndexOption(split, 0)[0]
+        var page = getIndexOption(split, 1, { n: Infinity }).join(' | ')
+        var res = await modules.axios.request({
             url: 'https://e621.net/posts.json',
             method: 'GET',
             data: {
@@ -18,7 +21,7 @@ module.exports = {
                 limit: 100
             },
             headers: {
-                "User-Agent": `PoopyBOT/${poopy.package.version}`
+                "User-Agent": `PoopyBOT/${package.version}`
             }
         }).catch(() => { })
         
@@ -28,7 +31,7 @@ module.exports = {
         
         if (!urls || !urls.length) return word
 
-        var page = poopy.functions.parseNumber(page, { dft: Math.floor(Math.random() * urls.length), min: 0, max: urls.length - 1, round: true })
+        var page = parseNumber(page, { dft: Math.floor(Math.random() * urls.length), min: 0, max: urls.length - 1, round: true })
 
         return urls[page]
     },

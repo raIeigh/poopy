@@ -2,7 +2,8 @@ module.exports = {
   desc: 'Returns a random Phexonia Studios related file.',
   func: function () {
     let poopy = this
+    let arrays = poopy.arrays
 
-    return poopy.arrays.psFiles[Math.floor(Math.random() * poopy.arrays.psFiles.length)]
+    return arrays.psFiles[Math.floor(Math.random() * arrays.psFiles.length)]
   }
 }

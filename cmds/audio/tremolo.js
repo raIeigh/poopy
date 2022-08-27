@@ -3,9 +3,11 @@ module.exports = {
     args: [{"name":"file","required":false,"specifarg":false,"orig":"{file}"},{"name":"frequency","required":false,"specifarg":true,"orig":"[-frequency <hz (from 0.1 to 20000)>]"},{"name":"depth","required":false,"specifarg":true,"orig":"[-depth <percentage>]"}],
     execute: async function (msg, args) {
         let poopy = this
+        let { lastUrl, validateFile, downloadFile, execPromise, findpreset, sendFile } = poopy.functions
+        let modules = poopy.modules
 
         await msg.channel.sendTyping().catch(() => { })
-        if (poopy.functions.lastUrl(msg, 0) === undefined && args[2] === undefined) {
+        if (lastUrl(msg, 0) === undefined && args[2] === undefined) {
             await msg.reply('What is the file?!').catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
@@ -20,8 +22,8 @@ module.exports = {
         if (depthindex > -1) {
             depth = isNaN(Number(args[depthindex + 1])) ? 50 : Number(args[depthindex + 1]) <= 0 ? 0 : Number(args[depthindex + 1]) >= 100 ? 100 : Number(args[depthindex + 1]) || 50
         }
-        var currenturl = poopy.functions.lastUrl(msg, 0)
-        var fileinfo = await poopy.functions.validateFile(currenturl).catch(async error => {
+        var currenturl = lastUrl(msg, 0)
+        var fileinfo = await validateFile(currenturl).catch(async error => {
             await msg.reply(error).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
@@ -31,32 +33,32 @@ module.exports = {
         var type = fileinfo.type
 
         if (type.mime.startsWith('video')) {
-            var filepath = await poopy.functions.downloadFile(currenturl, `input.mp4`, {
+            var filepath = await downloadFile(currenturl, `input.mp4`, {
                 fileinfo: fileinfo
             })
             var filename = `input.mp4`
             var audio = fileinfo.info.audio
 
             if (audio) {
-                await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -filter_complex "[0:v]scale=ceil(iw/2)*2:ceil(ih/2)*2[v];[0:a]tremolo=f=${frequency}:d=${depth / 100}[a]" -map "[v]" -map "[a]" -preset ${poopy.functions.findpreset(args)} -c:v libx264 -pix_fmt yuv420p ${filepath}/output.mp4`)
-                return await poopy.functions.sendFile(msg, filepath, `output.mp4`)
+                await execPromise(`ffmpeg -i ${filepath}/${filename} -filter_complex "[0:v]scale=ceil(iw/2)*2:ceil(ih/2)*2[v];[0:a]tremolo=f=${frequency}:d=${depth / 100}[a]" -map "[v]" -map "[a]" -preset ${findpreset(args)} -c:v libx264 -pix_fmt yuv420p ${filepath}/output.mp4`)
+                return await sendFile(msg, filepath, `output.mp4`)
             } else {
                 await msg.reply('No audio stream detected.').catch(() => { })
                 await msg.channel.sendTyping().catch(() => { })
-                poopy.modules.fs.rmSync(`${filepath}`, { force: true, recursive: true })
+                modules.fs.rmSync(`${filepath}`, { force: true, recursive: true })
             }
         } else if (type.mime.startsWith('audio')) {
-            var filepath = await poopy.functions.downloadFile(currenturl, `input.mp3`, {
+            var filepath = await downloadFile(currenturl, `input.mp3`, {
                 fileinfo: fileinfo
             })
             var filename = `input.mp3`
-            await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -filter_complex "[0:a]tremolo=f=${frequency}:d=${depth / 100}[a]" -map "[a]" -preset ${poopy.functions.findpreset(args)} ${filepath}/output.mp3`)
-            return await poopy.functions.sendFile(msg, filepath, `output.mp3`)
+            await execPromise(`ffmpeg -i ${filepath}/${filename} -filter_complex "[0:a]tremolo=f=${frequency}:d=${depth / 100}[a]" -map "[a]" -preset ${findpreset(args)} ${filepath}/output.mp3`)
+            return await sendFile(msg, filepath, `output.mp3`)
         } else {
             await msg.reply({
                 content: `Unsupported file: \`${currenturl}\``,
                 allowedMentions: {
-                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })

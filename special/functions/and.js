@@ -3,9 +3,10 @@ module.exports = {
   desc: 'Returns the last phrase if none are blank.',
   func: function (matches) {
     let poopy = this
+    let { splitKeyFunc } = poopy.functions
 
     var word = matches[1]
-    var split = poopy.functions.splitKeyFunc(word)
+    var split = splitKeyFunc(word)
     var and = ''
     for (var i in split) {
       var phrase = split[i]

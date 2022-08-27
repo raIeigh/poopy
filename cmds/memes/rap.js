@@ -3,6 +3,10 @@ module.exports = {
     args: [{"name":"file","required":false,"specifarg":false,"orig":"{file}"}],
     execute: async function (msg, args) {
         let poopy = this
+        let { lastUrl, validateFile, execPromise, sendFile } = poopy.functions
+        let vars = poopy.vars
+        let config = poopy.config
+        let modules = poopy.modules
 
         const rapping = [
             {
@@ -47,13 +51,13 @@ module.exports = {
             }
         ]
         await msg.channel.sendTyping().catch(() => { })
-        if (poopy.functions.lastUrl(msg, 0) === undefined && args[1] === undefined) {
+        if (lastUrl(msg, 0) === undefined && args[1] === undefined) {
             await msg.reply('What is the file?!').catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
         };
-        var currenturl = poopy.functions.lastUrl(msg, 0) || args[1]
-        var fileinfo = await poopy.functions.validateFile(currenturl).catch(async error => {
+        var currenturl = lastUrl(msg, 0) || args[1]
+        var fileinfo = await validateFile(currenturl).catch(async error => {
             await msg.reply(error).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
@@ -62,21 +66,21 @@ module.exports = {
         if (!fileinfo) return
         var type = fileinfo.type
 
-        if (type.mime.startsWith('image') && !(poopy.vars.gifFormats.find(f => f === type.ext))) {
-            var currentcount = poopy.vars.filecount
-            poopy.vars.filecount++
-            var filepath = `temp/${poopy.config.mongodatabase}/file${currentcount}`
-            poopy.modules.fs.mkdirSync(`${filepath}`)
-            poopy.modules.fs.mkdirSync(`${filepath}/frames`)
+        if (type.mime.startsWith('image') && !(vars.gifFormats.find(f => f === type.ext))) {
+            var currentcount = vars.filecount
+            vars.filecount++
+            var filepath = `temp/${config.mongodatabase}/file${currentcount}`
+            modules.fs.mkdirSync(`${filepath}`)
+            modules.fs.mkdirSync(`${filepath}/frames`)
             for (var i = 0; i < rapping.length; i++) {
                 var rapFrame = rapping[i]
-                var frame = await poopy.modules.Jimp.read(currenturl)
-                var rap = await poopy.modules.Jimp.read(`assets/rapping/${rapFrame.name}.png`)
-                var rapm = await poopy.modules.Jimp.read(`assets/rappingmask/${rapFrame.name}.png`)
-                var stage = await poopy.modules.Jimp.read(`assets/stage.png`)
-                var transparent = await poopy.modules.Jimp.read(`assets/transparent.png`)
+                var frame = await modules.Jimp.read(currenturl)
+                var rap = await modules.Jimp.read(`assets/rapping/${rapFrame.name}.png`)
+                var rapm = await modules.Jimp.read(`assets/rappingmask/${rapFrame.name}.png`)
+                var stage = await modules.Jimp.read(`assets/stage.png`)
+                var transparent = await modules.Jimp.read(`assets/transparent.png`)
                 var squareS = { value: ((frame.bitmap.height === frame.bitmap.width) && frame.bitmap.width) || ((frame.bitmap.height > frame.bitmap.width) && frame.bitmap.height) || frame.bitmap.width, constraint: ((frame.bitmap.height === frame.bitmap.width) && 'both') || ((frame.bitmap.height > frame.bitmap.width) && 'height') || 'width' }
-                frame.resize(squareS.constraint === 'width' || squareS.constraint === 'both' ? 70 : poopy.modules.Jimp.AUTO, squareS.constraint === 'height' || squareS.constraint === 'both' ? 70 : poopy.modules.Jimp.AUTO)
+                frame.resize(squareS.constraint === 'width' || squareS.constraint === 'both' ? 70 : modules.Jimp.AUTO, squareS.constraint === 'height' || squareS.constraint === 'both' ? 70 : modules.Jimp.AUTO)
                 frame.rotate(rapFrame.angle)
                 transparent.resize(stage.bitmap.width, stage.bitmap.height)
                 transparent.composite(frame, rapFrame.position[0] - frame.bitmap.width / 2, rapFrame.position[1] - frame.bitmap.height + 10)
@@ -85,25 +89,25 @@ module.exports = {
                 stage.composite(rap, 0, 0)
                 await stage.writeAsync(`${filepath}/frames/${rapFrame.name}.png`)
             }
-            await poopy.functions.execPromise(`ffmpeg -i ${filepath}/frames/%d.png -vf palettegen=reserve_transparent=1 ${filepath}/palette.png`)
-            await poopy.functions.execPromise(`ffmpeg -r 25/2 -i ${filepath}/frames/%d.png -i ${filepath}/palette.png -lavfi "paletteuse=alpha_threshold=128" -gifflags -offsetting ${filepath}/output.gif`)
-            return await poopy.functions.sendFile(msg, filepath, `output.gif`)
-        } else if (type.mime.startsWith('video') || (type.mime.startsWith('image') && poopy.vars.gifFormats.find(f => f === type.ext))) {
-            var currentcount = poopy.vars.filecount
-            poopy.vars.filecount++
-            var filepath = `temp/${poopy.config.mongodatabase}/file${currentcount}`
-            poopy.modules.fs.mkdirSync(`${filepath}`)
-            poopy.modules.fs.mkdirSync(`${filepath}/frames`)
-            await poopy.functions.execPromise(`ffmpeg -i "${currenturl}" -vframes 1 ${filepath}/output.png`)
+            await execPromise(`ffmpeg -i ${filepath}/frames/%d.png -vf palettegen=reserve_transparent=1 ${filepath}/palette.png`)
+            await execPromise(`ffmpeg -r 25/2 -i ${filepath}/frames/%d.png -i ${filepath}/palette.png -lavfi "paletteuse=alpha_threshold=128" -gifflags -offsetting ${filepath}/output.gif`)
+            return await sendFile(msg, filepath, `output.gif`)
+        } else if (type.mime.startsWith('video') || (type.mime.startsWith('image') && vars.gifFormats.find(f => f === type.ext))) {
+            var currentcount = vars.filecount
+            vars.filecount++
+            var filepath = `temp/${config.mongodatabase}/file${currentcount}`
+            modules.fs.mkdirSync(`${filepath}`)
+            modules.fs.mkdirSync(`${filepath}/frames`)
+            await execPromise(`ffmpeg -i "${currenturl}" -vframes 1 ${filepath}/output.png`)
             for (var i = 0; i < rapping.length; i++) {
                 var rapFrame = rapping[i]
-                var frame = await poopy.modules.Jimp.read(`${filepath}/output.png`)
-                var rap = await poopy.modules.Jimp.read(`assets/rapping/${rapFrame.name}.png`)
-                var rapm = await poopy.modules.Jimp.read(`assets/rappingmask/${rapFrame.name}.png`)
-                var stage = await poopy.modules.Jimp.read(`assets/stage.png`)
-                var transparent = await poopy.modules.Jimp.read(`assets/transparent.png`)
+                var frame = await modules.Jimp.read(`${filepath}/output.png`)
+                var rap = await modules.Jimp.read(`assets/rapping/${rapFrame.name}.png`)
+                var rapm = await modules.Jimp.read(`assets/rappingmask/${rapFrame.name}.png`)
+                var stage = await modules.Jimp.read(`assets/stage.png`)
+                var transparent = await modules.Jimp.read(`assets/transparent.png`)
                 var squareS = { value: ((frame.bitmap.height === frame.bitmap.width) && frame.bitmap.width) || ((frame.bitmap.height > frame.bitmap.width) && frame.bitmap.height) || frame.bitmap.width, constraint: ((frame.bitmap.height === frame.bitmap.width) && 'both') || ((frame.bitmap.height > frame.bitmap.width) && 'height') || 'width' }
-                frame.resize(squareS.constraint === 'width' || squareS.constraint === 'both' ? 70 : poopy.modules.Jimp.AUTO, squareS.constraint === 'height' || squareS.constraint === 'both' ? 70 : poopy.modules.Jimp.AUTO)
+                frame.resize(squareS.constraint === 'width' || squareS.constraint === 'both' ? 70 : modules.Jimp.AUTO, squareS.constraint === 'height' || squareS.constraint === 'both' ? 70 : modules.Jimp.AUTO)
                 frame.rotate(rapFrame.angle)
                 transparent.resize(stage.bitmap.width, stage.bitmap.height)
                 transparent.composite(frame, rapFrame.position[0] - frame.bitmap.width / 2, rapFrame.position[1] - frame.bitmap.height + 10)
@@ -112,14 +116,14 @@ module.exports = {
                 stage.composite(rap, 0, 0)
                 await stage.writeAsync(`${filepath}/frames/${rapFrame.name}.png`)
             }
-            await poopy.functions.execPromise(`ffmpeg -i ${filepath}/frames/%d.png -vf palettegen=reserve_transparent=1 ${filepath}/palette.png`)
-            await poopy.functions.execPromise(`ffmpeg -r 25/2 -i ${filepath}/frames/%d.png -i ${filepath}/palette.png -lavfi "paletteuse=alpha_threshold=128" -gifflags -offsetting ${filepath}/output.gif`)
-            return await poopy.functions.sendFile(msg, filepath, `output.gif`)
+            await execPromise(`ffmpeg -i ${filepath}/frames/%d.png -vf palettegen=reserve_transparent=1 ${filepath}/palette.png`)
+            await execPromise(`ffmpeg -r 25/2 -i ${filepath}/frames/%d.png -i ${filepath}/palette.png -lavfi "paletteuse=alpha_threshold=128" -gifflags -offsetting ${filepath}/output.gif`)
+            return await sendFile(msg, filepath, `output.gif`)
         } else {
             await msg.reply({
                 content: `Unsupported file: \`${currenturl}\``,
                 allowedMentions: {
-                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })

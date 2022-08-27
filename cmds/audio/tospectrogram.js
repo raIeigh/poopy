@@ -3,9 +3,13 @@ module.exports = {
     args: [{"name":"file","required":false,"specifarg":false,"orig":"{file}"},{"name":"duration","required":false,"specifarg":true,"orig":"[-duration <seconds (from 1 to 20)>]"},{"name":"frequency","required":false,"specifarg":true,"orig":"[-frequency <hz (from 20 to 40000)>]"},{"name":"density","required":false,"specifarg":true,"orig":"[-density <number (from 1 to 10)>]"}],
     execute: async function (msg, args) {
         let poopy = this
+        let { lastUrl, validateFile, spectrogram, sendFile } = poopy.functions
+        let vars = poopy.vars
+        let config = poopy.config
+        let modules = poopy.modules
 
         await msg.channel.sendTyping().catch(() => { })
-        if (poopy.functions.lastUrl(msg, 0, true) === undefined && args[2] === undefined) {
+        if (lastUrl(msg, 0, true) === undefined && args[2] === undefined) {
             await msg.reply('What is the file?!').catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
@@ -25,8 +29,8 @@ module.exports = {
         if (densityindex > -1) {
             density = isNaN(Number(args[densityindex + 1])) ? 1 : Number(args[densityindex + 1]) <= 1 ? 1 : Number(args[densityindex + 1]) >= 10 ? 10 : Number(args[densityindex + 1]) || 1
         }
-        var currenturl = poopy.functions.lastUrl(msg, 0, true)
-        var fileinfo = await poopy.functions.validateFile(currenturl).catch(async error => {
+        var currenturl = lastUrl(msg, 0, true)
+        var fileinfo = await validateFile(currenturl).catch(async error => {
             await msg.reply(error).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
@@ -36,25 +40,25 @@ module.exports = {
         var type = fileinfo.type
 
         if (type.mime.startsWith('image')) {
-            var currentcount = poopy.vars.filecount
-            poopy.vars.filecount++
-            var filepath = `temp/${poopy.config.mongodatabase}/file${currentcount}`
-            poopy.modules.fs.mkdirSync(`${filepath}`)
+            var currentcount = vars.filecount
+            vars.filecount++
+            var filepath = `temp/${config.mongodatabase}/file${currentcount}`
+            modules.fs.mkdirSync(`${filepath}`)
 
-            var spectrogramData = await poopy.functions.spectrogram(currenturl, {
+            var spectrogramData = await spectrogram(currenturl, {
                 o_length: duration,
                 o_freq: frequency,
                 o_factor: density
             }).catch(() => { })
 
-            poopy.modules.fs.writeFileSync(`${filepath}/output.wav`, spectrogramData)
+            modules.fs.writeFileSync(`${filepath}/output.wav`, spectrogramData)
 
-            return await poopy.functions.sendFile(msg, filepath, `output.wav`)
+            return await sendFile(msg, filepath, `output.wav`)
         } else {
             await msg.reply({
                 content: `Unsupported file: \`${currenturl}\``,
                 allowedMentions: {
-                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })

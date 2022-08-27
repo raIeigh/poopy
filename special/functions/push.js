@@ -3,13 +3,15 @@ module.exports = {
   desc: 'Pushes a new value to an array.',
   func: function (matches, msg) {
     let poopy = this
+    let { splitKeyFunc } = poopy.functions
+    let tempdata = poopy.tempdata
 
     var word = matches[1]
-    var split = poopy.functions.splitKeyFunc(word, { args: 2 })
+    var split = splitKeyFunc(word, { args: 2 })
     var name = split[0] ?? ''
     var value = split[1] ?? ''
 
-    var array = poopy.tempdata[msg.author.id]['arrays'][name]
+    var array = tempdata[msg.author.id]['arrays'][name]
     if (!array) return ''
 
     array.push(value)

@@ -3,16 +3,19 @@ module.exports = {
     args: [{"name":"file","required":false,"specifarg":false,"orig":"{file}"}],
     execute: async function (msg, args) {
         let poopy = this
+        let config = poopy.config
+        let { lastUrl, validateFile, downloadFile, execPromise, findpreset, sendFile } = poopy.functions
+        let modules = poopy.modules
 
-        if (msg.member.permissions.has('MANAGE_GUILD') || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || poopy.config.ownerids.find(id => id == msg.author.id)) {
+        if (msg.member.permissihas('MANAGE_GUILD') || msg.member.permissihas('MANAGE_MESSAGES') || msg.member.permissihas('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
             await msg.channel.sendTyping().catch(() => { })
-            if (poopy.functions.lastUrl(msg, 0) === undefined && args[1] === undefined) {
+            if (lastUrl(msg, 0) === undefined && args[1] === undefined) {
                 await msg.reply('What is the file?!').catch(() => { })
                 await msg.channel.sendTyping().catch(() => { })
                 return;
             };
-            var currenturl = poopy.functions.lastUrl(msg, 0) || args[1]
-            var fileinfo = await poopy.functions.validateFile(currenturl).catch(async error => {
+            var currenturl = lastUrl(msg, 0) || args[1]
+            var fileinfo = await validateFile(currenturl).catch(async error => {
                 await msg.reply(error).catch(() => { })
                 await msg.channel.sendTyping().catch(() => { })
                 return;
@@ -22,21 +25,21 @@ module.exports = {
             var type = fileinfo.type
 
             if (type.mime.startsWith('image') || type.mime.startsWith('video')) {
-                var filepath = await poopy.functions.downloadFile(currenturl, `input.${fileinfo.shortext}`, {
+                var filepath = await downloadFile(currenturl, `input.${fileinfo.shortext}`, {
                     fileinfo: fileinfo
                 })
                 var filename = `input.${fileinfo.shortext}`
-                poopy.modules.fs.copyFileSync(`assets/crash.webm`, `${filepath}/crash.webm`)
+                modules.fs.copyFileSync(`assets/crash.webm`, `${filepath}/crash.webm`)
 
-                await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -pix_fmt yuv444p -preset ${poopy.functions.findpreset(args)} ${filepath}/webm.webm`)
-                poopy.modules.fs.writeFileSync(`${filepath}/concat.txt`, `file 'webm.webm'\nfile 'crash.webm'`)
-                await poopy.functions.execPromise(`ffmpeg -f concat -i ${filepath}/concat.txt -codec copy -preset ${poopy.functions.findpreset(args)} ${filepath}/output.webm`)
-                return await poopy.functions.sendFile(msg, filepath, `output.webm`)
+                await execPromise(`ffmpeg -i ${filepath}/${filename} -pix_fmt yuv444p -preset ${findpreset(args)} ${filepath}/webm.webm`)
+                modules.fs.writeFileSync(`${filepath}/concat.txt`, `file 'webm.webm'\nfile 'crash.webm'`)
+                await execPromise(`ffmpeg -f concat -i ${filepath}/concat.txt -codec copy -preset ${findpreset(args)} ${filepath}/output.webm`)
+                return await sendFile(msg, filepath, `output.webm`)
             } else {
                 await msg.reply({
                     content: `Unsupported file: \`${currenturl}\``,
                     allowedMentions: {
-                        parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                        parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                     }
                 }).catch(() => { })
                 await msg.channel.sendTyping().catch(() => { })

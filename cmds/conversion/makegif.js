@@ -3,9 +3,13 @@ module.exports = {
     args: [{"name":"frameurls","required":false,"specifarg":false,"orig":"<frames>"},{"name":"frame","required":false,"specifarg":true,"orig":"[-frames <framenumber (max 100)>]"},{"name":"fps","required":false,"specifarg":false,"orig":"{fps (max 50)}"}],
     execute: async function (msg, args) {
         let poopy = this
+        let { lastUrls, getUrls, validateFile, execPromise, findpreset, sendFile } = poopy.functions
+        let vars = poopy.vars
+        let config = poopy.config
+        let modules = poopy.modules
 
         await msg.channel.sendTyping().catch(() => { })
-        if (args[1] === undefined && msg.attachments.size <= 0 && !(poopy.functions.lastUrls(msg).length)) {
+        if (args[1] === undefined && msg.attachments.size <= 0 && !(lastUrls(msg).length)) {
             await msg.reply('What are the frames?!').catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
@@ -31,7 +35,7 @@ module.exports = {
         var infos = {}
 
         console.log(msg.content)
-        var fetched = await poopy.functions.getUrls(msg, { tempdir: true }).catch(() => { }) ?? []
+        var fetched = await getUrls(msg, { tempdir: true }).catch(() => { }) ?? []
         console.log(fetched)
         var nofiles = false
         if (fetched.length <= 0) nofiles = true
@@ -46,7 +50,7 @@ module.exports = {
 
             async function inspect(url) {
                 var lasturlerror
-                var fileinfo = await poopy.functions.validateFile(url, false, {
+                var fileinfo = await validateFile(url, false, {
                     size: `one of the files exceeds the size limit of {param} mb hahahaha (try to use the shrink, setfps, trim or crunch commands)`,
                     frames: `the frames of one of the files exceed the limit of {param} hahahaha (try to use the setfps or the trim commands)`,
                     width: `the width of one of the files exceeds the limit of {param} hahahaha (try to use the shrink command)`,
@@ -57,7 +61,7 @@ module.exports = {
                 })
                 if (lasturlerror || !fileinfo) return false
                 var filetype = fileinfo.type
-                if (!filetype || !(filetype.mime.startsWith('image') && !(poopy.vars.gifFormats.find(f => f === filetype.ext)) && poopy.vars.jimpFormats.find(f => f === filetype.ext))) {
+                if (!filetype || !(filetype.mime.startsWith('image') && !(vars.gifFormats.find(f => f === filetype.ext)) && vars.jimpFormats.find(f => f === filetype.ext))) {
                     lasturlerror = error
                     lasturlserror = `Unsupported file: \`${url}\``
                     return false
@@ -69,10 +73,10 @@ module.exports = {
                 return true
             }
 
-            var lastUrls = poopy.functions.lastUrls(msg, true)
+            var lasturls = lastUrls(msg, true)
 
-            for (var i in lastUrls) {
-                var url = lastUrls[i]
+            for (var i in lasturls) {
+                var url = lasturls[i]
                 var success = await inspect(url).catch(() => { })
                 if (success) validfilecount += 1
                 if (validfilecount >= framenumber) break
@@ -88,7 +92,7 @@ module.exports = {
             await msg.reply({
                 content: lasturlserror,
                 allowedMentions: {
-                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
@@ -99,7 +103,7 @@ module.exports = {
             if (!filetypes[i] || !infos[i]) {
                 var error
                 var imageurl = frameurls[i]
-                var fileinfo = await poopy.functions.validateFile(imageurl, false, {
+                var fileinfo = await validateFile(imageurl, false, {
                     size: `one of the files exceeds the size limit of {param} mb hahahaha (try to use the shrink, setfps, trim or crunch commands)`,
                     frames: `the frames of one of the files exceed the limit of {param} hahahaha (try to use the setfps or the trim commands)`,
                     width: `the width of one of the files exceeds the limit of {param} hahahaha (try to use the shrink command)`,
@@ -111,19 +115,19 @@ module.exports = {
                     await msg.reply({
                         content: error,
                         allowedMentions: {
-                            parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                            parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                         }
                     }).catch(() => { })
                     await msg.channel.sendTyping().catch(() => { })
                     return
                 }
                 var filetype = fileinfo.type
-                if (!(filetype.mime.startsWith('image') && !(poopy.vars.gifFormats.find(f => f === filetype.ext)) && poopy.vars.jimpFormats.find(f => f === filetype.ext))) error = `Unsupported file: \`${imageurl}\``
+                if (!(filetype.mime.startsWith('image') && !(vars.gifFormats.find(f => f === filetype.ext)) && vars.jimpFormats.find(f => f === filetype.ext))) error = `Unsupported file: \`${imageurl}\``
                 if (error) {
                     await msg.reply({
                         content: error,
                         allowedMentions: {
-                            parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                            parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                         }
                     }).catch(() => { })
                     await msg.channel.sendTyping().catch(() => { })
@@ -134,12 +138,12 @@ module.exports = {
             }
         }
 
-        var currentcount = poopy.vars.filecount
-        poopy.vars.filecount++
-        var filepath = `temp/${poopy.config.mongodatabase}/file${currentcount}`
+        var currentcount = vars.filecount
+        vars.filecount++
+        var filepath = `temp/${config.mongodatabase}/file${currentcount}`
 
-        poopy.modules.fs.mkdirSync(`${filepath}`)
-        poopy.modules.fs.mkdirSync(`${filepath}/frames`)
+        modules.fs.mkdirSync(`${filepath}`)
+        modules.fs.mkdirSync(`${filepath}/frames`)
         var framesizes
         for (var i in frameurls) {
             var frameurl = frameurls[i]
@@ -147,13 +151,13 @@ module.exports = {
                 framesizes = { x: infos[i].info.width, y: infos[i].info.height }
             }
 
-            var image = await poopy.modules.Jimp.read(frameurl)
+            var image = await modules.Jimp.read(frameurl)
             image.resize(framesizes.x, framesizes.y)
             await image.writeAsync(`${filepath}/frames/${i.padStart(3, '0')}.png`)
         }
 
-        await poopy.functions.execPromise(`ffmpeg -r ${fps} -i ${filepath}/frames/%03d.png -filter_complex "[0:v]scale='min(400,iw)':min'(400,ih)':force_original_aspect_ratio=decrease,split[gif][pgif];[pgif]palettegen=reserve_transparent=1[palette];[gif][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} -vsync 0 -gifflags -offsetting ${filepath}/output.gif`)
-        return await poopy.functions.sendFile(msg, filepath, `output.gif`)
+        await execPromise(`ffmpeg -r ${fps} -i ${filepath}/frames/%03d.png -filter_complex "[0:v]scale='min(400,iw)':min'(400,ih)':force_original_aspect_ratio=decrease,split[gif][pgif];[pgif]palettegen=reserve_transparent=1[palette];[gif][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -preset ${findpreset(args)} -vsync 0 -gifflags -offsetting ${filepath}/output.gif`)
+        return await sendFile(msg, filepath, `output.gif`)
     },
     help: {
         name: 'makegif <frameurls> [-frames <framenumber (max 100)> {fps (max 50)}',

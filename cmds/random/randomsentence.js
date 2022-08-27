@@ -3,8 +3,9 @@ module.exports = {
   args: [],
   execute: async function (msg) {
     let poopy = this
+    let json = poopy.json
 
-    var sentenceJSON = poopy.json.sentenceJSON
+    var sentenceJSON = json.sentenceJSON
     await msg.reply(sentenceJSON.data[Math.floor(Math.random() * sentenceJSON.data.length)].sentence).catch(() => { })
   },
   help: { name: 'randomsentence', value: 'Generates a random sentence.' },

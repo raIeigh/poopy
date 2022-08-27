@@ -3,17 +3,20 @@ module.exports = {
   desc: "Repeats the function while the condition is met.",
   func: async function (matches, msg, isBot, _, opts) {
     let poopy = this
+    let { splitKeyFunc, getKeywordsFor, sleep } = poopy.functions
+    let tempdata = poopy.tempdata
+    let config = poopy.config
 
     var word = matches[1]
-    var split = poopy.functions.splitKeyFunc(word, { args: 2 })
+    var split = splitKeyFunc(word, { args: 2 })
     var condition = split[0] ?? ''
     var func = split[1] ?? ''
 
-    while (await poopy.functions.getKeywordsFor(condition, msg, isBot, opts).catch(() => { }) ?? '') {
-      await poopy.functions.getKeywordsFor(func, msg, isBot, opts).catch(() => { })
-      await poopy.functions.sleep()
-      poopy.tempdata[msg.author.id][msg.id]['keyattempts']++
-      if (poopy.tempdata[msg.author.id][msg.id]['keyattempts'] >= poopy.config.keyLimit) break
+    while (await getKeywordsFor(condition, msg, isBot, opts).catch(() => { }) ?? '') {
+      await getKeywordsFor(func, msg, isBot, opts).catch(() => { })
+      await sleep()
+      tempdata[msg.author.id][msg.id]['keyattempts']++
+      if (tempdata[msg.author.id][msg.id]['keyattempts'] >= config.keyLimit) break
     }
 
     return ''

@@ -3,6 +3,7 @@ module.exports = {
   args: [{"name":"message","required":true,"specifarg":false,"orig":"<message>"}],
   execute: async function (msg, args) {
     let poopy = this
+    let { lingo } = poopy.functions
 
     await msg.channel.sendTyping().catch(() => { })
     var saidMessage = args.slice(1).join(' ')
@@ -22,9 +23,9 @@ module.exports = {
     }
 
     await msg.reply({
-      content: poopy.functions.lingo(saidMessage, translateSettings),
+      content: lingo(saidMessage, translateSettings),
       allowedMentions: {
-        parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+        parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
       }
     }).catch(() => { })
     await msg.channel.sendTyping().catch(() => { })

@@ -3,6 +3,10 @@ module.exports = {
     args: [{"name":"query","required":true,"specifarg":false,"orig":"<query>"},{"name":"page","required":false,"specifarg":true,"orig":"[-page <number>]"}],
     execute: async function (msg, args) {
         let poopy = this
+        let vars = poopy.vars
+        let { unescapeHTML, navigateEmbed, addLastUrl } = poopy.functions
+        let modules = poopy.modules
+        let config = poopy.config
 
         await msg.channel.sendTyping().catch(() => { })
         if (args[1] === undefined) {
@@ -18,7 +22,7 @@ module.exports = {
         }
         var search = args.slice(1).join(" ");
 
-        var body = await poopy.vars.youtube.search.list({
+        var body = await vars.youtube.search.list({
             type: 'video',
             q: search,
             part: 'snippet',
@@ -34,8 +38,8 @@ module.exports = {
         var results = body.data.items
 
         var urls = results.map(result => {
-            var title = poopy.functions.unescapeHTML(result.snippet.title)
-            var description = poopy.functions.unescapeHTML(result.snippet.description)
+            var title = unescapeHTML(result.snippet.title)
+            var description = unescapeHTML(result.snippet.description)
             if (description.length > 200) description = `${description.substring(0, 200)}...`
 
             return {
@@ -55,15 +59,15 @@ module.exports = {
         if (number > urls.length) number = urls.length;
         if (number < 1) number = 1
 
-        await poopy.functions.navigateEmbed(msg.channel, async (page) => {
-            poopy.modules.youtubedl(urls[page - 1].url, {
+        await navigateEmbed(msg.channel, async (page) => {
+            modules.youtubedl(urls[page - 1].url, {
                 format: '18',
                 'get-url': ''
-            }).then(youtubeurl => poopy.functions.addLastUrl(msg, youtubeurl)).catch(() => { })
+            }).then(youtubeurl => addLastUrl(msg, youtubeurl)).catch(() => { })
 
-            var thumbresponse = await poopy.modules.axios.request(urls[page - 1].thumb.replace('hqdefault', 'hq720')).catch(() => { })
+            var thumbresponse = await modules.axios.request(urls[page - 1].thumb.replace('hqdefault', 'hq720')).catch(() => { })
 
-            if (poopy.config.textEmbeds) return `${urls[page - 1].url}\n\nVideo ${page}/${urls.length}`
+            if (config.textEmbeds) return `${urls[page - 1].url}\n\nVideo ${page}/${urls.length}`
             else return {
                 "title": "YouTube Video Search Results For " + search,
                 "description": `**[${urls[page - 1].title}](${urls[page - 1].url})**\n${urls[page - 1].description}`,

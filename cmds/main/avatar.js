@@ -22,32 +22,34 @@ module.exports = {
     }],
     execute: async function (msg, args) {
         let poopy = this
+        let bot = poopy.bot
+        let modules = poopy.modules
 
         await msg.channel.sendTyping().catch(() => {})
 
         args[1] = args[1] ?? ''
 
-        var member = (msg.mentions.members.first() && msg.mentions.members.first().user) ??
-        await poopy.bot.users.fetch((args[1].match(/\d+/) ?? [args[1]])[0]).catch(() => {}) ??
+        var member = (msg.mentimembers.first() && msg.mentimembers.first().user) ??
+        await bot.users.fetch((args[1].match(/\d+/) ?? [args[1]])[0]).catch(() => {}) ??
         msg.author
 
         if (!member) {
             await msg.reply({
                 content: `Invalid user id: **${args[1]}**`,
                 allowedMentions: {
-                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => {})
             return
         }
 
-        var avatar = new poopy.modules.Discord.MessageAttachment(member.displayAvatarURL({
+        var avatar = new modules.Discord.MessageAttachment(member.displayAvatarURL({
             dynamic: true, size: 1024, format: 'png'
         }));
         await msg.reply({
             content: member.username + '\'s avatar is:',
             allowedMentions: {
-                parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
             },
             files: [avatar]
         }).catch(() => {})

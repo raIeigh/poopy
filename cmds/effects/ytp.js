@@ -3,9 +3,12 @@ module.exports = {
     args: [{"name":"file","required":false,"specifarg":false,"orig":"{file}"},{"name":"clips","required":false,"specifarg":true,"orig":"[-clips <number (max 200)>]"},{"name":"repetitions","required":false,"specifarg":true,"orig":"[-repetitions <number (max 10)>]"},{"name":"norandomize","required":false,"specifarg":true,"orig":"[-norandomize]"}],
     execute: async function (msg, args) {
         let poopy = this
+        let { lastUrl, validateFile, downloadFile, execPromise, findpreset, sendFile } = poopy.functions
+        let modules = poopy.modules
+        let vars = poopy.vars
 
         await msg.channel.sendTyping().catch(() => { })
-        if (poopy.functions.lastUrl(msg, 0) === undefined && args[1] === undefined) {
+        if (lastUrl(msg, 0) === undefined && args[1] === undefined) {
             await msg.reply('What is the file?!').catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
@@ -63,8 +66,8 @@ module.exports = {
             return;
         }
 
-        var currenturl = poopy.functions.lastUrl(msg, 0) || args[1]
-        var fileinfo = await poopy.functions.validateFile(currenturl).catch(async error => {
+        var currenturl = lastUrl(msg, 0) || args[1]
+        var fileinfo = await validateFile(currenturl).catch(async error => {
             await msg.reply(error).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
@@ -74,11 +77,11 @@ module.exports = {
         var type = fileinfo.type
 
         if (type.mime.startsWith('video')) {
-            var filepath = await poopy.functions.downloadFile(currenturl, `input.mp4`, {
+            var filepath = await downloadFile(currenturl, `input.mp4`, {
                 fileinfo: fileinfo
             })
             var filename = `input.mp4`
-            poopy.modules.fs.mkdirSync(`${filepath}/clips`)
+            modules.fs.mkdirSync(`${filepath}/clips`)
             var audio = fileinfo.info.audio
 
             if (audio) {
@@ -95,7 +98,7 @@ module.exports = {
                     clipfiles.push(`file '${i}.mp4'`)
                 }
 
-                poopy.modules.fs.writeFileSync(`${filepath}/clips/list.txt`, args.indexOf('-norandomize') > -1 ? clipfiles.join('\n') : clipfiles.sort(() => {
+                modules.fs.writeFileSync(`${filepath}/clips/list.txt`, args.indexOf('-norandomize') > -1 ? clipfiles.join('\n') : clipfiles.sort(() => {
                     return Math.random() - 0.5
                 }).join('\n'))
 
@@ -185,7 +188,7 @@ module.exports = {
                         var vidfilter = vidfilters.join(';')
                         var audiofilter = audiofilters.join(';')
 
-                        await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} ${audiofilter.includes('afir') ? '-i assets/church.mp3 ' : ''}-t ${clipduration} -ss ${clipduration * i} -filter_complex "${vidfilter}${vidfilter ? `;[v${vid}]` : '[0:v]'}scale=ceil(iw/2)*2:ceil(ih/2)*2[out]${audiofilter ? `;${audiofilter}` : ''}" -map "[out]" -map ${audiofilter ? `"[a${audio}]"` : '0:a'} -preset ${poopy.functions.findpreset(args)} -c:v libx264 -pix_fmt yuv420p ${filepath}/clips/${clipsmade + 1}.mp4`)
+                        await execPromise(`ffmpeg -i ${filepath}/${filename} ${audiofilter.includes('afir') ? '-i assets/church.mp3 ' : ''}-t ${clipduration} -ss ${clipduration * i} -filter_complex "${vidfilter}${vidfilter ? `;[v${vid}]` : '[0:v]'}scale=ceil(iw/2)*2:ceil(ih/2)*2[out]${audiofilter ? `;${audiofilter}` : ''}" -map "[out]" -map ${audiofilter ? `"[a${audio}]"` : '0:a'} -preset ${findpreset(args)} -c:v libx264 -pix_fmt yuv420p ${filepath}/clips/${clipsmade + 1}.mp4`)
 
                         clipsmade++
                     }
@@ -194,9 +197,9 @@ module.exports = {
                 clearInterval(clipeditinterval)
                 clipsmessage.edit(`Concatenating clips.`).catch(() => { })
 
-                await poopy.functions.execPromise(`ffmpeg -f concat -i ${filepath}/clips/list.txt -preset ${poopy.functions.findpreset(args)} -c:v libx264 -pix_fmt yuv420p ${filepath}/output.mp4`)
+                await execPromise(`ffmpeg -f concat -i ${filepath}/clips/list.txt -preset ${findpreset(args)} -c:v libx264 -pix_fmt yuv420p ${filepath}/output.mp4`)
                 if (clipsmessage) clipsmessage.delete().catch(() => { })
-                return await poopy.functions.sendFile(msg, filepath, `output.mp4`)
+                return await sendFile(msg, filepath, `output.mp4`)
             } else {
                 var fps = fileinfo.info.fps
                 var duration = Number(fileinfo.info.duration)
@@ -211,7 +214,7 @@ module.exports = {
                     clipfiles.push(`file '${i}.mp4'`)
                 }
 
-                poopy.modules.fs.writeFileSync(`${filepath}/clips/list.txt`, args.indexOf('-norandomize') > -1 ? clipfiles.join('\n') : clipfiles.sort(() => {
+                modules.fs.writeFileSync(`${filepath}/clips/list.txt`, args.indexOf('-norandomize') > -1 ? clipfiles.join('\n') : clipfiles.sort(() => {
                     return Math.random() - 0.5
                 }).join('\n'))
 
@@ -237,7 +240,7 @@ module.exports = {
 
                         var vidfilter = vidfilters.join(';')
 
-                        await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -t ${clipduration} -ss ${clipduration * i} -filter_complex "${vidfilter}${vidfilter ? `;[v${vid}]` : '[0:v]'}scale=ceil(iw/2)*2:ceil(ih/2)*2[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} -c:v libx264 -pix_fmt yuv420p ${filepath}/clips/${clipsmade + 1}.mp4`)
+                        await execPromise(`ffmpeg -i ${filepath}/${filename} -t ${clipduration} -ss ${clipduration * i} -filter_complex "${vidfilter}${vidfilter ? `;[v${vid}]` : '[0:v]'}scale=ceil(iw/2)*2:ceil(ih/2)*2[out]" -map "[out]" -preset ${findpreset(args)} -c:v libx264 -pix_fmt yuv420p ${filepath}/clips/${clipsmade + 1}.mp4`)
 
                         clipsmade++
                     }
@@ -246,14 +249,14 @@ module.exports = {
                 clearInterval(clipeditinterval)
                 clipsmessage.edit(`Concatenating clips.`).catch(() => { })
 
-                await poopy.functions.execPromise(`ffmpeg -f concat -i ${filepath}/clips/list.txt -preset ${poopy.functions.findpreset(args)} -c:v libx264 -pix_fmt yuv420p ${filepath}/output.mp4`)
+                await execPromise(`ffmpeg -f concat -i ${filepath}/clips/list.txt -preset ${findpreset(args)} -c:v libx264 -pix_fmt yuv420p ${filepath}/output.mp4`)
                 clipsmessage.delete().catch(() => { })
-                return await poopy.functions.sendFile(msg, filepath, `output.mp4`)
+                return await sendFile(msg, filepath, `output.mp4`)
             }
-        } else if (type.mime.startsWith('image') && poopy.vars.gifFormats.find(f => f === type.ext)) {
-            var filepath = await poopy.functions.downloadFile(currenturl, `input.gif`)
+        } else if (type.mime.startsWith('image') && vars.gifFormats.find(f => f === type.ext)) {
+            var filepath = await downloadFile(currenturl, `input.gif`)
             var filename = `input.gif`
-            poopy.modules.fs.mkdirSync(`${filepath}/clips`)
+            modules.fs.mkdirSync(`${filepath}/clips`)
 
             var fps = fileinfo.info.fps
             var duration = Number(fileinfo.info.duration)
@@ -268,7 +271,7 @@ module.exports = {
                 clipfiles.push(`file '${i}.gif'`)
             }
 
-            poopy.modules.fs.writeFileSync(`${filepath}/clips/list.txt`, args.indexOf('-norandomize') > -1 ? clipfiles.join('\n') : clipfiles.sort(() => {
+            modules.fs.writeFileSync(`${filepath}/clips/list.txt`, args.indexOf('-norandomize') > -1 ? clipfiles.join('\n') : clipfiles.sort(() => {
                 return Math.random() - 0.5
             }).join('\n'))
 
@@ -294,7 +297,7 @@ module.exports = {
 
                     var vidfilter = vidfilters.join(';')
 
-                    await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -t ${clipduration} -ss ${clipduration * i} -filter_complex "${vidfilter}${vidfilter ? `;[v${vid}]` : '[0:v]'}split[pout][ppout];[ppout]palettegen=reserve_transparent=1[palette];[pout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} -gifflags -offsetting ${filepath}/clips/${clipsmade + 1}.gif`)
+                    await execPromise(`ffmpeg -i ${filepath}/${filename} -t ${clipduration} -ss ${clipduration * i} -filter_complex "${vidfilter}${vidfilter ? `;[v${vid}]` : '[0:v]'}split[pout][ppout];[ppout]palettegen=reserve_transparent=1[palette];[pout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -preset ${findpreset(args)} -gifflags -offsetting ${filepath}/clips/${clipsmade + 1}.gif`)
 
                     clipsmade++
                 }
@@ -303,15 +306,15 @@ module.exports = {
             clearInterval(clipeditinterval)
             clipsmessage.edit(`Concatenating clips.`).catch(() => { })
 
-            await poopy.functions.execPromise(`ffmpeg -f concat -i ${filepath}/clips/list.txt -filter_complex "[0:v]split[pout][ppout];[ppout]palettegen=reserve_transparent=1[palette];[pout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -preset ${poopy.functions.findpreset(args)} -gifflags -offsetting ${filepath}/output.gif`)
+            await execPromise(`ffmpeg -f concat -i ${filepath}/clips/list.txt -filter_complex "[0:v]split[pout][ppout];[ppout]palettegen=reserve_transparent=1[palette];[pout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -preset ${findpreset(args)} -gifflags -offsetting ${filepath}/output.gif`)
             clipsmessage.delete().catch(() => { })
-            return await poopy.functions.sendFile(msg, filepath, `output.gif`)
+            return await sendFile(msg, filepath, `output.gif`)
         } else if (type.mime.startsWith('audio')) {
-            var filepath = await poopy.functions.downloadFile(currenturl, `input.mp3`, {
+            var filepath = await downloadFile(currenturl, `input.mp3`, {
                 fileinfo: fileinfo
             })
             var filename = `input.mp3`
-            poopy.modules.fs.mkdirSync(`${filepath}/clips`)
+            modules.fs.mkdirSync(`${filepath}/clips`)
             var duration = Number(fileinfo.info.duration)
 
             var clipduration = duration / clips
@@ -324,7 +327,7 @@ module.exports = {
                 clipfiles.push(`file '${i}.mp3'`)
             }
 
-            poopy.modules.fs.writeFileSync(`${filepath}/clips/list.txt`, args.indexOf('-norandomize') > -1 ? clipfiles.join('\n') : clipfiles.sort(() => {
+            modules.fs.writeFileSync(`${filepath}/clips/list.txt`, args.indexOf('-norandomize') > -1 ? clipfiles.join('\n') : clipfiles.sort(() => {
                 return Math.random() - 0.5
             }).join('\n'))
 
@@ -348,7 +351,7 @@ module.exports = {
 
                     var audiofilter = audiofilters.join(';')
 
-                    await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} ${audiofilter.includes('afir') ? '-i assets/church.mp3 ' : ''}-t ${clipduration} -ss ${clipduration * i} ${audiofilter ? `-filter_complex ${audiofilter} -map "[a${audio}]" ` : ''}-preset ${poopy.functions.findpreset(args)} ${filepath}/clips/${clipsmade + 1}.mp3`)
+                    await execPromise(`ffmpeg -i ${filepath}/${filename} ${audiofilter.includes('afir') ? '-i assets/church.mp3 ' : ''}-t ${clipduration} -ss ${clipduration * i} ${audiofilter ? `-filter_complex ${audiofilter} -map "[a${audio}]" ` : ''}-preset ${findpreset(args)} ${filepath}/clips/${clipsmade + 1}.mp3`)
 
                     clipsmade++
                 }
@@ -357,14 +360,14 @@ module.exports = {
             clearInterval(clipeditinterval)
             clipsmessage.edit(`Concatenating clips.`).catch(() => { })
 
-            await poopy.functions.execPromise(`ffmpeg -f concat -i ${filepath}/clips/list.txt -preset ${poopy.functions.findpreset(args)} ${filepath}/output.mp3`)
+            await execPromise(`ffmpeg -f concat -i ${filepath}/clips/list.txt -preset ${findpreset(args)} ${filepath}/output.mp3`)
             clipsmessage.delete().catch(() => { })
-            return await poopy.functions.sendFile(msg, filepath, `output.mp3`)
+            return await sendFile(msg, filepath, `output.mp3`)
         } else {
             await msg.reply({
                 content: `Unsupported file: \`${currenturl}\``,
                 allowedMentions: {
-                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })

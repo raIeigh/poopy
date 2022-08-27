@@ -34,14 +34,16 @@ module.exports = {
         }],
     execute: async function (msg, args) {
         let poopy = this
+        let { lastUrl, getOption, parseString, parseNumber, validateFile, downloadFile, wackywebm, sendFile } = poopy.functions
+        let vars = poopy.vars
 
         await msg.channel.sendTyping().catch(() => {})
-        if (poopy.functions.lastUrl(msg, 0) === undefined && args[1] === undefined) {
+        if (lastUrl(msg, 0) === undefined && args[1] === undefined) {
             await msg.reply('What is the file?!').catch(() => {})
             await msg.channel.sendTyping().catch(() => {})
             return;
         };
-        var currenturl = poopy.functions.lastUrl(msg, 0) || args[1]
+        var currenturl = lastUrl(msg, 0) || args[1]
 
         var modes = [
             'bounce',
@@ -50,8 +52,8 @@ module.exports = {
             'bounce+shutter'
         ]
 
-        var mode = poopy.functions.getOption(args, 'mode', {
-            dft: 'bounce', func: (mode) => poopy.functions.parseString(mode, modes, {
+        var mode = getOption(args, 'mode', {
+            dft: 'bounce', func: (mode) => parseString(mode, modes, {
                 lower: true
             })
         })
@@ -60,18 +62,18 @@ module.exports = {
             return
         }
 
-        var delta = poopy.functions.getOption(args, 'delta', {
-            dft: 2, func: (delta) => poopy.functions.parseNumber(delta, {
+        var delta = getOption(args, 'delta', {
+            dft: 2, func: (delta) => parseNumber(delta, {
                 dft: 2, min: 0.01, max: 100
             })
         })
-        var bps = poopy.functions.getOption(args, 'bps', {
-            dft: 1.9, func: (bps) => poopy.functions.parseNumber(bps, {
+        var bps = getOption(args, 'bps', {
+            dft: 1.9, func: (bps) => parseNumber(bps, {
                 dft: 1.9, min: 0.01, max: 100
             })
         })
 
-        var fileinfo = await poopy.functions.validateFile(currenturl).catch(async error => {
+        var fileinfo = await validateFile(currenturl).catch(async error => {
             await msg.reply(error).catch(() => {})
             await msg.channel.sendTyping().catch(() => {})
             return;
@@ -80,23 +82,23 @@ module.exports = {
         if (!fileinfo) return
         var type = fileinfo.type
 
-        if (type.mime.startsWith('image') && poopy.vars.gifFormats.find(f => f === type.ext) || type.mime.startsWith('video')) {
-            var filepath = await poopy.functions.downloadFile(currenturl, `input.${fileinfo.shortext}`, {
+        if (type.mime.startsWith('image') && vars.gifFormats.find(f => f === type.ext) || type.mime.startsWith('video')) {
+            var filepath = await downloadFile(currenturl, `input.${fileinfo.shortext}`, {
                 fileinfo: fileinfo
             })
             var filename = `input.${fileinfo.shortext}`
 
-            await poopy.functions.wackywebm.call(poopy, mode, `${filepath}/${filename}`, {
+            await wackywebm.call(poopy, mode, `${filepath}/${filename}`, {
                 delta: delta,
                 bouncesPerSecond: bps
             })
 
-            return await poopy.functions.sendFile(msg, filepath, `output.webm`)
+            return await sendFile(msg, filepath, `output.webm`)
         } else {
             await msg.reply({
                 content: `Unsupported file: \`${currenturl}\``,
                 allowedMentions: {
-                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => {})
             await msg.channel.sendTyping().catch(() => {})

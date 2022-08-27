@@ -85,7 +85,7 @@ module.exports = {
             "orig": "<id>",
             "autocomplete": function () {
                 let poopy = this
-                return poopy.functions.globalData()['bot-data']['commandTemplates'].map(cmd => {
+                return poopy.globaldata['bot-data']['commandTemplates'].map(cmd => {
                     return { name: `${cmd.name} (${cmd.id})`, value: cmd.id }
                 })
             }
@@ -146,23 +146,29 @@ module.exports = {
     }],
     execute: async function (msg, args, opts) {
         let poopy = this
+        let data = poopy.data
+        let config = poopy.config
+        let bot = poopy.bot
+        let { chunkArray, navigateEmbed, getKeywordsFor } = poopy.functions
+        let globaldata = poopy.globaldata
+        let commands = poopy.commands
 
         var options = {
             list: async (msg) => {
                 var localCmdsArray = []
-                for (var i in poopy.data['guild-data'][msg.guild.id]['localcmds']) {
-                    var cmd = poopy.data['guild-data'][msg.guild.id]['localcmds'][i]
+                for (var i in data['guild-data'][msg.guild.id]['localcmds']) {
+                    var cmd = data['guild-data'][msg.guild.id]['localcmds'][i]
                     localCmdsArray.push(`- ${cmd.name}`)
                 }
 
                 if (localCmdsArray.length <= 0) {
-                    if (poopy.config.textEmbeds) await msg.reply('None.').catch(() => { })
+                    if (config.textEmbeds) await msg.reply('None.').catch(() => { })
                     else await msg.reply({
                         "title": `List of local commands for ${msg.guild.name}`,
                         "description": 'None.',
                         "color": 0x472604,
                         "footer": {
-                            "icon_url": poopy.bot.user.displayAvatarURL({
+                            "icon_url": bot.user.displayAvatarURL({
                                 dynamic: true, size: 1024, format: 'png'
                             }),
                             "text": `Poopy`
@@ -170,17 +176,17 @@ module.exports = {
                     }).catch(() => { })
                 }
 
-                var localCmds = poopy.functions.chunkArray(localCmdsArray, 10)
+                var localCmds = chunkArray(localCmdsArray, 10)
 
-                await poopy.functions.navigateEmbed(
+                await navigateEmbed(
                     msg.channel, async (page) => {
-                        if (poopy.config.textEmbeds) return `${localCmds[page - 1].join('\n')}\n\nPage ${page}/${localCmds.length}`
+                        if (config.textEmbeds) return `${localCmds[page - 1].join('\n')}\n\nPage ${page}/${localCmds.length}`
                         else return {
                             "title": `List of local commands for ${msg.guild.name}`,
                             "description": localCmds[page - 1].join('\n'),
                             "color": 0x472604,
                             "footer": {
-                                "icon_url": poopy.bot.user.displayAvatarURL({
+                                "icon_url": bot.user.displayAvatarURL({
                                     dynamic: true, size: 1024, format: 'png'
                                 }),
                                 "text": `Page ${page}/${localCmds.length}`
@@ -204,10 +210,10 @@ module.exports = {
                     return
                 }
 
-                var findCommand = poopy.data['guild-data'][msg.guild.id]['localcmds'].findIndex(cmd => cmd.name === args[1].toLowerCase())
+                var findCommand = data['guild-data'][msg.guild.id]['localcmds'].findIndex(cmd => cmd.name === args[1].toLowerCase())
 
                 if (findCommand > -1) {
-                    await msg.reply(`\`${poopy.data['guild-data'][msg.guild.id]['localcmds'][findCommand].phrase}\``).catch(() => { })
+                    await msg.reply(`\`${data['guild-data'][msg.guild.id]['localcmds'][findCommand].phrase}\``).catch(() => { })
                 } else {
                     await msg.reply(`Not a valid command.`).catch(() => { })
                     return
@@ -220,23 +226,23 @@ module.exports = {
                     return
                 }
 
-                var findCommand = poopy.data['guild-data'][msg.guild.id]['localcmds'].findIndex(cmd => cmd.name === args[1].toLowerCase())
+                var findCommand = data['guild-data'][msg.guild.id]['localcmds'].findIndex(cmd => cmd.name === args[1].toLowerCase())
 
                 if (findCommand > -1) {
                     var content = msg.content
 
-                    msg.content = `${poopy.data['guild-data'][msg.guild.id]['prefix']}${args.slice(1).join(' ')}`
+                    msg.content = `${data['guild-data'][msg.guild.id]['prefix']}${args.slice(1).join(' ')}`
 
-                    var localCommand = poopy.data['guild-data'][msg.guild.id]['localcmds'][findCommand]
+                    var localCommand = data['guild-data'][msg.guild.id]['localcmds'][findCommand]
                     var oopts = {
                         ...opts
                     }
                     oopts.ownermode = localCommand.ownermode || oopts.ownermode
-                    var phrase = await poopy.functions.getKeywordsFor(localCommand.phrase, msg, true, opts).catch(() => { }) ?? 'error'
+                    var phrase = await getKeywordsFor(localCommand.phrase, msg, true, opts).catch(() => { }) ?? 'error'
                     await msg.reply({
                         content: phrase,
                         allowedMentions: {
-                            parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                            parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                         }
                     }).catch(() => { })
 
@@ -248,7 +254,7 @@ module.exports = {
             },
 
             add: async (msg, args) => {
-                if (msg.member.permissions.has('MANAGE_GUILD') || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || poopy.config.ownerids.find(id => id == msg.author.id)) {
+                if (msg.member.permissihas('MANAGE_GUILD') || msg.member.permissihas('MANAGE_MESSAGES') || msg.member.permissihas('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
                     if (!args[1]) {
                         await msg.reply('You gotta specify a command name!').catch(() => { })
                         return
@@ -285,18 +291,18 @@ module.exports = {
 
                     params.phrase = saidMessage
 
-                    var findCommand = poopy.commands.find(cmd => cmd.name.find(n => n === name.toLowerCase())) || poopy.data['guild-data'][msg.guild.id]['localcmds'].find(cmd => cmd.name === name.toLowerCase())
+                    var findCommand = commands.find(cmd => cmd.name.find(n => n === name.toLowerCase())) || data['guild-data'][msg.guild.id]['localcmds'].find(cmd => cmd.name === name.toLowerCase())
 
                     if (findCommand) {
                         await msg.reply(`That name was already taken!`).catch(() => { })
                         return
                     } else {
-                        poopy.data['guild-data'][msg.guild.id]['localcmds'].push(params)
+                        data['guild-data'][msg.guild.id]['localcmds'].push(params)
 
                         await msg.reply({
                             content: `✅ Added \`${name.toLowerCase()}\` command with phrase \`${saidMessage}\``,
                             allowedMentions: {
-                                parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                                parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                             }
                         }).catch(() => { })
                     }
@@ -307,7 +313,7 @@ module.exports = {
             },
 
             import: async (msg, args) => {
-                if (msg.member.permissions.has('MANAGE_GUILD') || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || poopy.config.ownerids.find(id => id == msg.author.id)) {
+                if (msg.member.permissihas('MANAGE_GUILD') || msg.member.permissihas('MANAGE_MESSAGES') || msg.member.permissihas('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
                     if (!args[1]) {
                         await msg.reply('You gotta specify the ID!').catch(() => { })
                         return
@@ -315,19 +321,19 @@ module.exports = {
 
                     var id = args[1].replace(/#/g, '')
 
-                    var findCommandTemplate = poopy.functions.globalData()['bot-data']['commandTemplates'].find(cmd => cmd.id == id)
+                    var findCommandTemplate = globaldata['bot-data']['commandTemplates'].find(cmd => cmd.id == id)
 
                     if (findCommandTemplate) {
                         var name = args[2] ? args[2].toLowerCase() : findCommandTemplate.name
 
-                        var findCommand = poopy.commands.find(cmd => cmd.name.find(n => n === name)) || poopy.data['guild-data'][msg.guild.id]['localcmds'].find(cmd => cmd.name === name)
+                        var findCommand = commands.find(cmd => cmd.name.find(n => n === name)) || data['guild-data'][msg.guild.id]['localcmds'].find(cmd => cmd.name === name)
 
                         if (findCommand) {
                             await msg.reply(`The name of that command was already taken!`).catch(() => { })
                             return
                         }
 
-                        poopy.data['guild-data'][msg.guild.id]['localcmds'].push({
+                        data['guild-data'][msg.guild.id]['localcmds'].push({
                             name: name,
                             phrase: findCommandTemplate.phrase,
                             description: findCommandTemplate.description,
@@ -337,7 +343,7 @@ module.exports = {
                         await msg.reply({
                             content: `✅ Imported \`${name}\` command from the database.`,
                             allowedMentions: {
-                                parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                                parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                             }
                         }).catch(() => { })
                     } else {
@@ -350,7 +356,7 @@ module.exports = {
             },
 
             edit: async (msg, args) => {
-                if (msg.member.permissions.has('MANAGE_GUILD') || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || poopy.config.ownerids.find(id => id == msg.author.id)) {
+                if (msg.member.permissihas('MANAGE_GUILD') || msg.member.permissihas('MANAGE_MESSAGES') || msg.member.permissihas('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
                     if (args[1] == undefined) {
                         await msg.reply('You gotta specify a command name!').catch(() => { })
                         return
@@ -387,17 +393,17 @@ module.exports = {
 
                     params.phrase = saidMessage
 
-                    var findCommand = poopy.data['guild-data'][msg.guild.id]['localcmds'].findIndex(cmd => cmd.name === name.toLowerCase())
+                    var findCommand = data['guild-data'][msg.guild.id]['localcmds'].findIndex(cmd => cmd.name === name.toLowerCase())
 
                     if (findCommand > -1) {
                         for (var param in params) {
-                            poopy.data['guild-data'][msg.guild.id]['localcmds'][findCommand][param] = params[param]
+                            data['guild-data'][msg.guild.id]['localcmds'][findCommand][param] = params[param]
                         }
 
                         await msg.reply({
                             content: `✅ Edited \`${name.toLowerCase()}\` command with phrase \`${saidMessage}\``,
                             allowedMentions: {
-                                parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                                parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                             }
                         }).catch(() => { })
                     } else {
@@ -411,21 +417,21 @@ module.exports = {
             },
 
             delete: async (msg, args) => {
-                if (msg.member.permissions.has('MANAGE_GUILD') || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || poopy.config.ownerids.find(id => id == msg.author.id)) {
+                if (msg.member.permissihas('MANAGE_GUILD') || msg.member.permissihas('MANAGE_MESSAGES') || msg.member.permissihas('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
                     if (args[1] == undefined) {
                         await msg.reply('You gotta specify a command name!').catch(() => { })
                         return
                     }
 
-                    var findCommand = poopy.data['guild-data'][msg.guild.id]['localcmds'].findIndex(cmd => cmd.name === args[1].toLowerCase())
+                    var findCommand = data['guild-data'][msg.guild.id]['localcmds'].findIndex(cmd => cmd.name === args[1].toLowerCase())
 
                     if (findCommand > -1) {
-                        var removed = poopy.data['guild-data'][msg.guild.id]['localcmds'].splice(findCommand, 1)
+                        var removed = data['guild-data'][msg.guild.id]['localcmds'].splice(findCommand, 1)
 
                         await msg.reply({
                             content: `✅ Removed \`${removed[0].name}\` command with phrase \`${removed[0].phrase}\``,
                             allowedMentions: {
-                                parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                                parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                             }
                         }).catch(() => { })
                     } else {
@@ -440,17 +446,17 @@ module.exports = {
         }
 
         if (!args[1]) {
-            if (poopy.config.textEmbeds) msg.reply("**list** - Gets a list of local commands.\n**phrase** <command> - Displays the phrase of a specific command.\n**execute** <command> [args] - Execute a specific command.\n**add** <command> <phrase> {-description <text>} [-syntax <text>] (moderator only) - Adds a new local command, if the name is available for use.\n**import** <id> [name] (moderator only) - Imports a new local command from Poopy's command template database (`commandtemplates` command) by ID.\n**edit** <command> <phrase> [-description <text>] [-syntax <text>] (moderator only) - Edits the local command, if it exists.\n**delete** <command> (moderator only) - Deletes the local command, if it exists.").catch(() => { })
+            if (config.textEmbeds) msg.reply("**list** - Gets a list of local commands.\n**phrase** <command> - Displays the phrase of a specific command.\n**execute** <command> [args] - Execute a specific command.\n**add** <command> <phrase> {-description <text>} [-syntax <text>] (moderator only) - Adds a new local command, if the name is available for use.\n**import** <id> [name] (moderator only) - Imports a new local command from Poopy's command template database (`commandtemplates` command) by ID.\n**edit** <command> <phrase> [-description <text>] [-syntax <text>] (moderator only) - Edits the local command, if it exists.\n**delete** <command> (moderator only) - Deletes the local command, if it exists.").catch(() => { })
             else msg.reply({
                 embeds: [{
                     "title": "Available Options",
                     "description": "**list** - Gets a list of local commands.\n**phrase** <command> - Displays the phrase of a specific command.\n**execute** <command> [args] - Execute a specific command.\n**add** <command> <phrase> {-description <text>} [-syntax <text>] (moderator only) - Adds a new local command, if the name is available for use.\n**import** <id> [name] (moderator only) - Imports a new local command from Poopy's command template database (`commandtemplates` command) by ID.\n**edit** <command> <phrase> [-description <text>] [-syntax <text>] (moderator only) - Edits the local command, if it exists.\n**delete** <command> (moderator only) - Deletes the local command, if it exists.",
                     "color": 0x472604,
                     "footer": {
-                        "icon_url": poopy.bot.user.displayAvatarURL({
+                        "icon_url": bot.user.displayAvatarURL({
                             dynamic: true, size: 1024, format: 'png'
                         }),
-                        "text": poopy.bot.user.username
+                        "text": bot.user.username
                     },
                 }]
             }).catch(() => { })

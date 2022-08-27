@@ -3,6 +3,7 @@ module.exports = {
   args: [{"name":"code","required":true,"specifarg":false,"orig":"<code>"}],
   execute: async function (msg, args) {
     let poopy = this
+    let { brainfuck } = poopy.functions
 
     await msg.channel.sendTyping().catch(() => { })
     var saidMessage = args.slice(1).join(' ')
@@ -11,11 +12,11 @@ module.exports = {
       await msg.channel.sendTyping().catch(() => { })
       return;
     };
-    var compiled = await poopy.functions.brainfuck(saidMessage)
+    var compiled = await brainfuck(saidMessage)
     await msg.reply({
       content: compiled || '​',
       allowedMentions: {
-        parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+        parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
       }
     }).catch(() => { })
     await msg.channel.sendTyping().catch(() => { })

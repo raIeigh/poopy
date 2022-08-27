@@ -3,8 +3,9 @@ module.exports = {
   args: [],
   execute: async function (msg) {
     let poopy = this
+    let special = poopy.special
 
-    await msg.reply(poopy.special.keys._funnygif.func.call(poopy)).catch(() => { })
+    await msg.reply(special.keys._funnygif.func.call(poopy)).catch(() => { })
   },
   help: {
     name: 'funnygif/memegif',

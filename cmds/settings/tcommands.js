@@ -31,12 +31,16 @@ module.exports = {
     }],
     execute: async function (msg, args) {
         let poopy = this
+        let data = poopy.data
+        let bot = poopy.bot
+        let config = poopy.config
+        let commands = poopy.commands
 
         var options = {
             list: async (msg) => {
                 var list = []
 
-                poopy.data['guild-data'][msg.guild.id]['disabled'].forEach(cmd => {
+                data['guild-data'][msg.guild.id]['disabled'].forEach(cmd => {
                     list.push(`- \`${cmd.join('/')}\``)
                 })
 
@@ -49,17 +53,17 @@ module.exports = {
                     description: list.join('\n'),
                     color: 0x472604,
                     footer: {
-                        icon_url: poopy.bot.user.displayAvatarURL({
+                        icon_url: bot.user.displayAvatarURL({
                             dynamic: true, size: 1024, format: 'png'
                         }),
-                        text: poopy.bot.user.username
+                        text: bot.user.username
                     }
                 }
 
-                if (poopy.config.textEmbeds) msg.reply({
+                if (config.textEmbeds) msg.reply({
                     content: list.join('\n'),
                     allowedMentions: {
-                        parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                        parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                     }
                 }).catch(() => { })
                 else msg.reply({
@@ -68,25 +72,25 @@ module.exports = {
             },
 
             toggle: async (msg, args) => {
-                if (msg.member.permissions.has('MANAGE_GUILD') || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || (poopy.config.ownerids.find(id => id == msg.author.id))) {
+                if (msg.member.permissihas('MANAGE_GUILD') || msg.member.permissihas('MANAGE_MESSAGES') || msg.member.permissihas('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || (config.ownerids.find(id => id == msg.author.id))) {
                     if (!args[2]) {
                         await msg.reply('You gotta specify a command!')
                         return
                     }
 
-                    var findCommand = poopy.commands.find(cmd => cmd.name.find(n => n === args[2].toLowerCase()))
+                    var findCommand = commands.find(cmd => cmd.name.find(n => n === args[2].toLowerCase()))
 
                     if (findCommand) {
-                        var findDCommand = poopy.data['guild-data'][msg.guild.id]['disabled'].find(cmd => cmd.find(n => n === args[2].toLowerCase()))
+                        var findDCommand = data['guild-data'][msg.guild.id]['disabled'].find(cmd => cmd.find(n => n === args[2].toLowerCase()))
 
                         if (findDCommand) {
-                            var index = poopy.data['guild-data'][msg.guild.id]['disabled'].findIndex(cmd => {
+                            var index = data['guild-data'][msg.guild.id]['disabled'].findIndex(cmd => {
                                 return cmd.find(n => {
                                     return n === args[2].toLowerCase()
                                 })
                             })
 
-                            poopy.data['guild-data'][msg.guild.id]['disabled'].splice(index, 1)
+                            data['guild-data'][msg.guild.id]['disabled'].splice(index, 1)
 
                             await msg.reply(`Enabled \`${findCommand.name.join('/')}\`.`)
                         } else {
@@ -95,7 +99,7 @@ module.exports = {
                                 return
                             }
 
-                            poopy.data['guild-data'][msg.guild.id]['disabled'].push(findCommand.name)
+                            data['guild-data'][msg.guild.id]['disabled'].push(findCommand.name)
 
                             await msg.reply(`Disabled \`${findCommand.name.join('/')}\`.`)
                         }
@@ -111,10 +115,10 @@ module.exports = {
         }
 
         if (!args[1]) {
-            if (poopy.config.textEmbeds) msg.reply({
+            if (config.textEmbeds) msg.reply({
                 content: "**list** - Gets a list of disabled commands.\n**toggle** <command> (moderator only) - Disables/enables a command, if it exists.",
                 allowedMentions: {
-                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
             else msg.reply({
@@ -123,10 +127,10 @@ module.exports = {
                     "description": "**list** - Gets a list of disabled commands.\n**toggle** <command> (moderator only) - Disables/enables a command, if it exists.",
                     "color": 0x472604,
                     "footer": {
-                        "icon_url": poopy.bot.user.displayAvatarURL({
+                        "icon_url": bot.user.displayAvatarURL({
                             dynamic: true, size: 1024, format: 'png'
                         }),
-                        "text": poopy.bot.user.username
+                        "text": bot.user.username
                     },
                 }]
             }).catch(() => { })

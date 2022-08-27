@@ -3,20 +3,24 @@ module.exports = {
     args: [{"name":"file","required":false,"specifarg":false,"orig":"{file}"}],
     execute: async function (msg, args, opts) {
         let poopy = this
+        let config = poopy.config
+        let { lastUrl, validateFile, downloadFile, execPromise, sleep, navigateEmbed } = poopy.functions
+        let modules = poopy.modules
+        let bot = poopy.bot
 
-        var ownerid = poopy.config.ownerids.find(id => id == msg.author.id);
+        var ownerid = config.ownerids.find(id => id == msg.author.id);
         if (ownerid === undefined && !opts.ownermode) {
             await msg.reply('Owner only!').catch(() => { })
             return
         }
 
-        if (poopy.functions.lastUrl(msg, 0) === undefined && args[1] === undefined) {
+        if (lastUrl(msg, 0) === undefined && args[1] === undefined) {
             await msg.reply('What is the file?!').catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
         };
-        var currenturl = poopy.functions.lastUrl(msg, 0)
-        var fileinfo = await poopy.functions.validateFile(currenturl, true).catch(async error => {
+        var currenturl = lastUrl(msg, 0)
+        var fileinfo = await validateFile(currenturl, true).catch(async error => {
             await msg.reply(error).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
@@ -26,16 +30,16 @@ module.exports = {
         var type = fileinfo.type
 
         if (type.mime.startsWith('image')) {
-            var filepath = await poopy.functions.downloadFile(currenturl, `input.png`, {
+            var filepath = await downloadFile(currenturl, `input.png`, {
                 fileinfo: fileinfo
             })
             var filename = 'input.png'
             
-            await poopy.functions.execPromise(`ffmpeg -i ${filepath}/${filename} -vf "crop=w='min(min(iw,ih),500)':h='min(min(iw,ih),500)',scale=1024:1024,setsar=1" -vframes 1 ${filepath}/output.png`)
+            await execPromise(`ffmpeg -i ${filepath}/${filename} -vf "crop=w='min(min(iw,ih),500)':h='min(min(iw,ih),500)',scale=1024:1024,setsar=1" -vframes 1 ${filepath}/output.png`)
 
-            if (!poopy.modules.fs.existsSync(`${filepath}/output.png`)) return
+            if (!modules.fs.existsSync(`${filepath}/output.png`)) return
 
-            var imageData = poopy.modules.fs.readFileSync(`${filepath}/output.png`)
+            var imageData = modules.fs.readFileSync(`${filepath}/output.png`)
 
             var waitMsg = await msg.reply(`Haha... This might take a century`).catch(() => { })
 
@@ -50,7 +54,7 @@ module.exports = {
             }
 
             async function dalle2Request() {
-                var taskRes = await poopy.modules.axios.request({
+                var taskRes = await modules.axios.request({
                     url: 'https://labs.openai.com/api/labs/tasks',
                     method: 'POST',
                     data: {
@@ -74,9 +78,9 @@ module.exports = {
                 var imageRes
 
                 while (!imageRes) {
-                    await poopy.functions.sleep(20000)
+                    await sleep(20000)
 
-                    var taskCompleteRes = await poopy.modules.axios.request({
+                    var taskCompleteRes = await modules.axios.request({
                         url: `https://labs.openai.com/api/labs/tasks/${taskId}`,
                         method: 'GET',
                         headers: {
@@ -106,10 +110,10 @@ module.exports = {
             var imageRes = await dalle2Request().catch(() => { })
             if (!imageRes) return
 
-            var images = imageRes.data.generations.data.map(gdata => gdata.generation.image_path)
+            var images = imageRes.data.generatidata.map(gdata => gdata.generation.image_path)
 
-            await poopy.functions.navigateEmbed(msg.channel, async (page) => {
-                if (poopy.config.textEmbeds) return `${images[page - 1]}\n\nImage ${page}/${images.length}`
+            await navigateEmbed(msg.channel, async (page) => {
+                if (config.textEmbeds) return `${images[page - 1]}\n\nImage ${page}/${images.length}`
                 else return {
                     "title": `DALL·E 2 generations for ${fileinfo.name}`,
                     "color": 0x472604,
@@ -117,7 +121,7 @@ module.exports = {
                         "url": images[page - 1]
                     },
                     "footer": {
-                        "icon_url": poopy.bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
+                        "icon_url": bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
                         "text": `Image ${page}/${images.length}`
                     },
                 }
@@ -138,7 +142,7 @@ module.exports = {
             await msg.reply({
                 content: `Unsupported file: \`${currenturl}\``,
                 allowedMentions: {
-                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })

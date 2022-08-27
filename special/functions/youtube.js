@@ -3,12 +3,14 @@ module.exports = {
     desc: 'Returns a random YouTube video out of the search query, if no index is specified.',
     func: async function (matches, msg) {
         let poopy = this
+        let { splitKeyFunc, getIndexOption, parseNumber } = poopy.functions
+        let vars = poopy.vars
 
         var word = matches[1]
-        var split = poopy.functions.splitKeyFunc(word, { args: 2 })
-        var query = poopy.functions.getIndexOption(split, 0)[0]
-        var page = poopy.functions.getIndexOption(split, 1, { n: Infinity }).join(' | ')
-        var res = await poopy.vars.youtube.search.list({
+        var split = splitKeyFunc(word, { args: 2 })
+        var query = getIndexOption(split, 0)[0]
+        var page = getIndexOption(split, 1, { n: Infinity }).join(' | ')
+        var res = await vars.youtube.search.list({
             type: 'video',
             q: query,
             part: 'snippet',
@@ -22,7 +24,7 @@ module.exports = {
         
         if (!urls || !urls.length) return word
 
-        var page = poopy.functions.parseNumber(page, { dft: Math.floor(Math.random() * urls.length), min: 0, max: urls.length - 1, round: true })
+        var page = parseNumber(page, { dft: Math.floor(Math.random() * urls.length), min: 0, max: urls.length - 1, round: true })
 
         return urls[page]
     },

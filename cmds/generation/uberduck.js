@@ -11,6 +11,9 @@ module.exports = {
     }, { "name": "text", "required": true, "specifarg": false, "orig": "<text>" }],
     execute: async function (msg, args) {
         let poopy = this
+        let vars = poopy.vars
+        let modules = poopy.modules
+        let { downloadFile, sendFile } = poopy.functions
 
         await msg.channel.sendTyping().catch(() => { })
 
@@ -20,7 +23,7 @@ module.exports = {
             return;
         }
 
-        if (!poopy.vars.ubervoices.find(vc => vc.name == args[1].toLowerCase())) {
+        if (!vars.ubervoices.find(vc => vc.name == args[1].toLowerCase())) {
             await msg.reply(`Invalid voice. A list can be found at ${process.env.BOTWEBSITE ? `${process.env.BOTWEBSITE}/ubervoices` : `https://app.uberduck.ai/quack-help`}`).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return
@@ -36,7 +39,7 @@ module.exports = {
         var saidMessage = args.slice(2).join(' ').replace(/'/g, '’').replace(/"/g, '\\"')
 
         var rejected = false
-        var response = await poopy.modules.axios.request({
+        var response = await modules.axios.request({
             method: 'POST',
             url: 'https://api.uberduck.ai/speak-synchronous',
             headers: {
@@ -63,8 +66,8 @@ module.exports = {
             await msg.reply({
                 content: response.data,
                 allowedMentions: {
-                    parse: (!msg.member.permissions.has('ADMINISTRATOR') &&
-                        !msg.member.permissions.has('MENTION_EVERYONE') &&
+                    parse: (!msg.member.permissihas('ADMINISTRATOR') &&
+                        !msg.member.permissihas('MENTION_EVERYONE') &&
                         msg.member.id !== msg.guild.ownerID) ?
                         ['users'] : ['users', 'everyone', 'roles']
                 }
@@ -72,10 +75,10 @@ module.exports = {
             return;
         }
 
-        var filepath = await poopy.functions.downloadFile(response.data, `output.wav`, {
+        var filepath = await downloadFile(response.data, `output.wav`, {
             buffer: true
         })
-        return await poopy.functions.sendFile(msg, filepath, `output.wav`)
+        return await sendFile(msg, filepath, `output.wav`)
     },
     help: {
         name: 'uberduck/tts <voice> <text>',

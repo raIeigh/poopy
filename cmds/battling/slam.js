@@ -15,11 +15,12 @@ module.exports = {
     }],
     execute: async function (msg, args) {
         let poopy = this
+        let { battle } = poopy.functions
         var action = '**{src}** slammed **{trgt}**! It did **{dmg}** damage!'
         var damage = 30
         var chance = 1 / 4
 
-        await poopy.functions.battle(msg, args.slice(1).join(' '), action, damage, chance)
+        await battle(msg, args.slice(1).join(' '), action, damage, chance)
     },
     help: {
         name: 'slam <subject>',

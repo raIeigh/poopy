@@ -3,6 +3,7 @@ module.exports = {
   args: [{"name":"message","required":true,"specifarg":false,"orig":"<message>"}],
   execute: async function (msg, args) {
     let poopy = this
+    let { gibberish } = poopy.functions
 
     await msg.channel.sendTyping().catch(() => { })
     var saidMessage = args.slice(1).join(' ')
@@ -12,9 +13,9 @@ module.exports = {
       return;
     };
     await msg.reply({
-      content: poopy.functions.gibberish(saidMessage),
+      content: gibberish(saidMessage),
       allowedMentions: {
-        parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+        parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
       }
     }).catch(() => { })
     await msg.channel.sendTyping().catch(() => { })

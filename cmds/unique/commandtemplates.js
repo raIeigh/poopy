@@ -97,7 +97,7 @@ module.exports = {
         "description": "Allows you to edit the command with the respective ID in the database, if it exists and you made it.",
         "autocomplete": function (interaction) {
             let poopy = this
-            return poopy.functions.globalData()['bot-data']['commandTemplates'].filter(cmd => cmd.creator == interaction.user.id).map(cmd => {
+            return poopy.globaldata['bot-data']['commandTemplates'].filter(cmd => cmd.creator == interaction.user.id).map(cmd => {
                 return { name: `${cmd.name} (${cmd.id})`, value: cmd.id }
             })
         }
@@ -113,13 +113,20 @@ module.exports = {
         "description": "Permanently deletes the command from the database with the respective ID, if it exists and YOU made it.",
         "autocomplete": function (interaction) {
             let poopy = this
-            return poopy.functions.globalData()['bot-data']['commandTemplates'].filter(cmd => cmd.creator == interaction.user.id).map(cmd => {
+            return poopy.globaldata['bot-data']['commandTemplates'].filter(cmd => cmd.creator == interaction.user.id).map(cmd => {
                 return { name: `${cmd.name} (${cmd.id})`, value: cmd.id }
             })
         }
     }],
     execute: async function (msg, args) {
         let poopy = this
+        let { generateId, navigateEmbed, similarity } = poopy.functions
+        let globaldata = poopy.globaldata
+        let vars = poopy.vars
+        let config = poopy.config
+        let bot = poopy.bot
+        let commands = poopy.commands
+        let data = poopy.data
 
         async function createCommand(msg, args) {
             if (!args[1]) {
@@ -133,7 +140,7 @@ module.exports = {
             }
 
             var name = args[1].toLowerCase()
-            var id = poopy.functions.generateId(poopy.functions.globalData()['bot-data']['commandTemplates'].map(c => c.id))
+            var id = generateId(globaldata['bot-data']['commandTemplates'].map(c => c.id))
             var creator = msg.author.id
             var date = Math.floor(Date.now() / 1000)
 
@@ -141,7 +148,7 @@ module.exports = {
 
             var imageindex = args.indexOf('-image')
             if (imageindex > -1 && args[imageindex + 1]) {
-                if (poopy.vars.validUrl.test(args[imageindex + 1])) {
+                if (vars.validUrl.test(args[imageindex + 1])) {
                     params.image = args[imageindex + 1]
                     args.splice(imageindex, 2)
                 } else {
@@ -173,19 +180,19 @@ module.exports = {
 
             params.phrase = saidMessage
 
-            var findCommand = poopy.functions.globalData()['bot-data']['commandTemplates'].find(cmd => cmd.name === name && cmd.creator === msg.author.id)
+            var findCommand = globaldata['bot-data']['commandTemplates'].find(cmd => cmd.name === name && cmd.creator === msg.author.id)
 
             if (findCommand) {
                 await msg.reply(`You've already created a command with that name! (ID: \`${findCommand.id}\`)`).catch(() => { })
                 return
             } else {
-                var commands = [params].concat(poopy.functions.globalData()['bot-data']['commandTemplates'])
-                poopy.functions.globalData()['bot-data']['commandTemplates'] = commands
+                var commands = [params].concat(globaldata['bot-data']['commandTemplates'])
+                globaldata['bot-data']['commandTemplates'] = commands
 
                 await msg.reply({
                     content: `✅ \`${name}\` was successfully registered to the command template database! (ID: \`${id}\`)`,
                     allowedMentions: {
-                        parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                        parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                     }
                 }).catch(() => { })
             }
@@ -193,20 +200,20 @@ module.exports = {
 
         var options = {
             list: async (msg) => {
-                var dcmdTemplates = poopy.functions.globalData()['bot-data']['commandTemplates']
+                var dcmdTemplates = globaldata['bot-data']['commandTemplates']
 
                 if (dcmdTemplates.length <= 0) {
-                    if (poopy.config.textEmbeds) msg.reply('there is nothing').catch(() => { })
+                    if (config.textEmbeds) msg.reply('there is nothing').catch(() => { })
                     else msg.reply({
                         embeds: [{
                             "title": `there is nothing`,
                             "description": 'wow',
                             "color": 0x472604,
                             "footer": {
-                                "icon_url": poopy.bot.user.displayAvatarURL({
+                                "icon_url": bot.user.displayAvatarURL({
                                     dynamic: true, size: 1024, format: 'png'
                                 }),
-                                "text": poopy.bot.user.username
+                                "text": bot.user.username
                             },
                         }]
                     }).catch(() => { })
@@ -251,7 +258,7 @@ module.exports = {
                             value: `<t:${date}>`
                         }],
                         "footer": {
-                            "icon_url": poopy.bot.user.displayAvatarURL({
+                            "icon_url": bot.user.displayAvatarURL({
                                 dynamic: true, size: 1024, format: 'png'
                             }),
                             "text": `Made by ${creator} - Command ${Number(i) + 1}/${dcmdTemplates.length}`
@@ -272,8 +279,8 @@ module.exports = {
                     })
                 }
 
-                await poopy.functions.navigateEmbed(msg.channel, async (page) => {
-                    if (poopy.config.textEmbeds) return cmdTemplates[page - 1].text
+                await navigateEmbed(msg.channel, async (page) => {
+                    if (config.textEmbeds) return cmdTemplates[page - 1].text
                     else return cmdTemplates[page - 1].embed
                 },
                     cmdTemplates.length,
@@ -284,16 +291,16 @@ module.exports = {
                         customid: 'import',
                         style: 'PRIMARY',
                         function: async (page, button) => {
-                            if (msg.member.permissions.has('MANAGE_GUILD') || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || poopy.config.ownerids.find(id => id == msg.author.id)) {
+                            if (msg.member.permissihas('MANAGE_GUILD') || msg.member.permissihas('MANAGE_MESSAGES') || msg.member.permissihas('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
                                 var findCommandTemplate = dcmdTemplates[page - 1]
 
                                 if (findCommandTemplate) {
                                     var name = findCommandTemplate.name
 
-                                    var findCommand = poopy.commands.find(cmd => cmd.name.find(n => n === name)) || poopy.data['guild-data'][msg.guild.id]['localcmds'].find(cmd => cmd.name === name)
+                                    var findCommand = commands.find(cmd => cmd.name.find(n => n === name)) || data['guild-data'][msg.guild.id]['localcmds'].find(cmd => cmd.name === name)
 
                                     if (findCommand) {
-                                        if (poopy.config.useReactions) msg.reply(`The name of that command was already taken!`).catch(() => { })
+                                        if (config.useReactions) msg.reply(`The name of that command was already taken!`).catch(() => { })
                                         else button.reply({
                                             content: `The name of that command was already taken!`,
                                             ephemeral: true
@@ -301,7 +308,7 @@ module.exports = {
                                         return
                                     }
 
-                                    poopy.data['guild-data'][msg.guild.id]['localcmds'].push({
+                                    data['guild-data'][msg.guild.id]['localcmds'].push({
                                         name: name,
                                         phrase: findCommandTemplate.phrase,
                                         description: findCommandTemplate.description,
@@ -311,18 +318,18 @@ module.exports = {
                                     await msg.reply({
                                         content: `✅ Imported \`${name}\` command from the database.`,
                                         allowedMentions: {
-                                            parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                                            parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                                         }
                                     }).catch(() => { })
                                 } else {
-                                    if (poopy.config.useReactions) msg.reply('Error fetching command.').catch(() => { })
+                                    if (config.useReactions) msg.reply('Error fetching command.').catch(() => { })
                                     else button.reply({
                                         content: 'Error fetching command.',
                                         ephemeral: true
                                     }).catch(() => { })
                                 }
                             } else {
-                                if (poopy.config.useReactions) msg.reply('You need to be a moderator to execute that!').catch(() => { })
+                                if (config.useReactions) msg.reply('You need to be a moderator to execute that!').catch(() => { })
                                 else button.reply({
                                     content: 'You need to be a moderator to execute that!',
                                     ephemeral: true
@@ -347,16 +354,16 @@ module.exports = {
 
                 var saidMessage = args.join('').substring(args[0].length + 1).toLowerCase()
 
-                var ddcmdTemplates = poopy.functions.globalData()['bot-data']['commandTemplates']
+                var ddcmdTemplates = globaldata['bot-data']['commandTemplates']
                 var none = {
                     "title": `there is nothing`,
                     "description": 'wow',
                     "color": 0x472604,
                     "footer": {
-                        "icon_url": poopy.bot.user.displayAvatarURL({
+                        "icon_url": bot.user.displayAvatarURL({
                             dynamic: true, size: 1024, format: 'png'
                         }),
-                        "text": poopy.bot.user.username
+                        "text": bot.user.username
                     },
                 }
 
@@ -376,7 +383,7 @@ module.exports = {
                 })
 
                 if (dcmdTemplates.length) {
-                    dcmdTemplates.sort((a, b) => Math.abs(1 - poopy.functions.similarity(a.name, saidMessage)) - Math.abs(1 - poopy.functions.similarity(b.name, saidMessage)))
+                    dcmdTemplates.sort((a, b) => Math.abs(1 - similarity(a.name, saidMessage)) - Math.abs(1 - similarity(b.name, saidMessage)))
                 } else {
                     await msg.reply({
                         embeds: [none]
@@ -412,7 +419,7 @@ module.exports = {
                             value: `<t:${date}>`
                         }],
                         "footer": {
-                            "icon_url": poopy.bot.user.displayAvatarURL({
+                            "icon_url": bot.user.displayAvatarURL({
                                 dynamic: true, size: 1024, format: 'png'
                             }),
                             "text": `Made by ${creator} - Command ${Number(i) + 1}/${dcmdTemplates.length}`
@@ -433,8 +440,8 @@ module.exports = {
                     })
                 }
 
-                await poopy.functions.navigateEmbed(msg.channel, async (page) => {
-                    if (poopy.config.textEmbeds) return cmdTemplates[page - 1].text
+                await navigateEmbed(msg.channel, async (page) => {
+                    if (config.textEmbeds) return cmdTemplates[page - 1].text
                     else return cmdTemplates[page - 1].embed
                 },
                     cmdTemplates.length,
@@ -445,16 +452,16 @@ module.exports = {
                         customid: 'import',
                         style: 'PRIMARY',
                         function: async (page, button) => {
-                            if (msg.member.permissions.has('MANAGE_GUILD') || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || poopy.config.ownerids.find(id => id == msg.author.id)) {
+                            if (msg.member.permissihas('MANAGE_GUILD') || msg.member.permissihas('MANAGE_MESSAGES') || msg.member.permissihas('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
                                 var findCommandTemplate = dcmdTemplates[page - 1]
 
                                 if (findCommandTemplate) {
                                     var name = findCommandTemplate.name
 
-                                    var findCommand = poopy.commands.find(cmd => cmd.name.find(n => n === name)) || poopy.data['guild-data'][msg.guild.id]['localcmds'].find(cmd => cmd.name === name)
+                                    var findCommand = commands.find(cmd => cmd.name.find(n => n === name)) || data['guild-data'][msg.guild.id]['localcmds'].find(cmd => cmd.name === name)
 
                                     if (findCommand) {
-                                        if (poopy.config.useReactions) msg.reply(`The name of that command was already taken!`).catch(() => { })
+                                        if (config.useReactions) msg.reply(`The name of that command was already taken!`).catch(() => { })
                                         else button.reply({
                                             content: `The name of that command was already taken!`,
                                             ephemeral: true
@@ -462,7 +469,7 @@ module.exports = {
                                         return
                                     }
 
-                                    poopy.data['guild-data'][msg.guild.id]['localcmds'].push({
+                                    data['guild-data'][msg.guild.id]['localcmds'].push({
                                         name: name,
                                         phrase: findCommandTemplate.phrase,
                                         description: findCommandTemplate.description,
@@ -472,18 +479,18 @@ module.exports = {
                                     await msg.reply({
                                         content: `✅ Imported \`${name}\` command from the database.`,
                                         allowedMentions: {
-                                            parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                                            parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                                         }
                                     }).catch(() => { })
                                 } else {
-                                    if (poopy.config.useReactions) msg.reply('Error fetching command.').catch(() => { })
+                                    if (config.useReactions) msg.reply('Error fetching command.').catch(() => { })
                                     else button.reply({
                                         content: 'Error fetching command.',
                                         ephemeral: true
                                     }).catch(() => { })
                                 }
                             } else {
-                                if (poopy.config.useReactions) msg.reply('You need to be a moderator to execute that!').catch(() => { })
+                                if (config.useReactions) msg.reply('You need to be a moderator to execute that!').catch(() => { })
                                 else button.reply({
                                     content: 'You need to be a moderator to execute that!',
                                     ephemeral: true
@@ -519,8 +526,8 @@ module.exports = {
                 }
 
                 var id = args[1].replace(/#/g, '')
-                var command = poopy.functions.globalData()['bot-data']['commandTemplates'].find(cmd => cmd.id === id)
-                var commandIndex = poopy.functions.globalData()['bot-data']['commandTemplates'].findIndex(cmd => cmd.id === id)
+                var command = globaldata['bot-data']['commandTemplates'].find(cmd => cmd.id === id)
+                var commandIndex = globaldata['bot-data']['commandTemplates'].findIndex(cmd => cmd.id === id)
 
                 if (command && commandIndex > -1) {
                     if (command.creator !== msg.author.id) {
@@ -540,7 +547,7 @@ module.exports = {
 
                     var imageindex = args.indexOf('-image')
                     if (imageindex > -1 && args[imageindex + 1]) {
-                        if (poopy.vars.validUrl.test(args[imageindex + 1])) {
+                        if (vars.validUrl.test(args[imageindex + 1])) {
                             params.image = args[imageindex + 1]
                             args.splice(imageindex, 2)
                         } else {
@@ -564,7 +571,7 @@ module.exports = {
                     args = args.reverse()
 
                     if (params.name) {
-                        var findCommand = poopy.functions.globalData()['bot-data']['commandTemplates'].find(cmd => cmd.name === params.name && cmd.creator === msg.author.id)
+                        var findCommand = globaldata['bot-data']['commandTemplates'].find(cmd => cmd.name === params.name && cmd.creator === msg.author.id)
 
                         if (findCommand) {
                             await msg.reply(`You've already created a command with that name! (ID: \`${findCommand.id}\`)`).catch(() => { })
@@ -573,7 +580,7 @@ module.exports = {
                     }
 
                     for (var param in params) {
-                        poopy.functions.globalData()['bot-data']['commandTemplates'][commandIndex][param] = params[param]
+                        globaldata['bot-data']['commandTemplates'][commandIndex][param] = params[param]
                     }
 
                     await msg.reply(`✅ Command successfully updated.`).catch(() => { })
@@ -589,8 +596,8 @@ module.exports = {
                 }
 
                 var id = args[1].replace(/#/g, '')
-                var command = poopy.functions.globalData()['bot-data']['commandTemplates'].find(cmd => cmd.id === id)
-                var commandIndex = poopy.functions.globalData()['bot-data']['commandTemplates'].findIndex(cmd => cmd.id === id)
+                var command = globaldata['bot-data']['commandTemplates'].find(cmd => cmd.id === id)
+                var commandIndex = globaldata['bot-data']['commandTemplates'].findIndex(cmd => cmd.id === id)
 
                 if (command && commandIndex > -1) {
                     if (command.creator !== msg.author.id) {
@@ -598,7 +605,7 @@ module.exports = {
                         return
                     }
 
-                    poopy.functions.globalData()['bot-data']['commandTemplates'].splice(commandIndex, 1)
+                    globaldata['bot-data']['commandTemplates'].splice(commandIndex, 1)
 
                     await msg.reply(`✅ Command successfully deleted.`).catch(() => { })
                 } else {
@@ -608,17 +615,17 @@ module.exports = {
         }
 
         if (!args[1]) {
-            if (poopy.config.textEmbeds) msg.reply("**list** - Sends a navigable embed with a list of all command templates made by the users of Poopy.\n\n**search** <query> - Searches for every command in the command database that matches the query.\n\n**register**/**add** <name> <phrase> {-description <text>} [-image <url>] [-syntax <text>] - Registers the command with the respective name, description and syntax (if supplied), it'll then be assigned an ID that can be used to import it via the `localcmds` command.\n\n**edit** <id> [-name <text>] [-phrase <text>] [-description <text>] [-image <url>] [-syntax <text>] - Allows you to edit the command with the respective ID in the database, if it exists and you made it.\n\n**delete** <id> - Permanently deletes the command from the database with the respective ID, if it exists and YOU made it.").catch(() => { })
+            if (config.textEmbeds) msg.reply("**list** - Sends a navigable embed with a list of all command templates made by the users of Poopy.\n\n**search** <query> - Searches for every command in the command database that matches the query.\n\n**register**/**add** <name> <phrase> {-description <text>} [-image <url>] [-syntax <text>] - Registers the command with the respective name, description and syntax (if supplied), it'll then be assigned an ID that can be used to import it via the `localcmds` command.\n\n**edit** <id> [-name <text>] [-phrase <text>] [-description <text>] [-image <url>] [-syntax <text>] - Allows you to edit the command with the respective ID in the database, if it exists and you made it.\n\n**delete** <id> - Permanently deletes the command from the database with the respective ID, if it exists and YOU made it.").catch(() => { })
             else msg.reply({
                 embeds: [{
                     "title": "Available Options",
                     "description": "**list** - Sends a navigable embed with a list of all command templates made by the users of Poopy.\n\n**search** <query> - Searches for every command in the command database that matches the query.\n\n**register**/**add** <name> <phrase> {-description <text>} [-image <url>] [-syntax <text>] - Registers the command with the respective name, description and syntax (if supplied), it'll then be assigned an ID that can be used to import it via the `localcmds` command.\n\n**edit** <id> [-name <text>] [-phrase <text>] [-description <text>] [-image <url>] [-syntax <text>] - Allows you to edit the command with the respective ID in the database, if it exists and you made it.\n\n**delete** <id> - Permanently deletes the command from the database with the respective ID, if it exists and YOU made it.",
                     "color": 0x472604,
                     "footer": {
-                        "icon_url": poopy.bot.user.displayAvatarURL({
+                        "icon_url": bot.user.displayAvatarURL({
                             dynamic: true, size: 1024, format: 'png'
                         }),
-                        "text": poopy.bot.user.username
+                        "text": bot.user.username
                     },
                 }]
             }).catch(() => { })

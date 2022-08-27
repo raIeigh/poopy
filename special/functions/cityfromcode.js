@@ -3,11 +3,12 @@ module.exports = {
     desc: 'Returns a random city from the country that matches the country code.',
     func: function (matches) {
         let poopy = this
+        let json = poopy.json
 
         var word = matches[1]
 
-        var countryJSON = poopy.json.countryJSON
-        var cityJSON = poopy.json.cityJSON
+        var countryJSON = json.countryJSON
+        var cityJSON = json.cityJSON
 
         if (countryJSON[word.toUpperCase()]) {
             var cities = []

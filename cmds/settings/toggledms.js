@@ -3,27 +3,28 @@ module.exports = {
     args: [],
     execute: async function (msg) {
         let poopy = this
+        let data = poopy.data
 
-        if (!poopy.data['user-data'][msg.author.id]) {
-            poopy.data['user-data'][msg.author.id] = {}
+        if (!data['user-data'][msg.author.id]) {
+            data['user-data'][msg.author.id] = {}
         }
-        if (poopy.data['user-data'][msg.author.id]['dms'] === undefined) {
-            poopy.data['user-data'][msg.author.id]['dms'] = false
+        if (data['user-data'][msg.author.id]['dms'] === undefined) {
+            data['user-data'][msg.author.id]['dms'] = false
         }
-        if (poopy.data['user-data'][msg.author.id]['dms'] === false) {
-            poopy.data['user-data'][msg.author.id]['dms'] = true
+        if (data['user-data'][msg.author.id]['dms'] === false) {
+            data['user-data'][msg.author.id]['dms'] = true
             await msg.reply({
                 content: 'Unrelated DMs from `dm` will **be sent** to you now.',
                 allowedMentions: {
-                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
         } else {
-            poopy.data['user-data'][msg.author.id]['dms'] = false
+            data['user-data'][msg.author.id]['dms'] = false
             await msg.reply({
                 content: 'Unrelated DMs from `dm` will **not be sent** to you now.',
                 allowedMentions: {
-                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
         }

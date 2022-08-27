@@ -12,6 +12,10 @@ module.exports = {
     }],
     execute: async function (msg, args) {
         let poopy = this
+        let vars = poopy.vars
+        let { getUrls, validateFile, downloadFile, sendFile } = poopy.functions
+        let config = poopy.config
+        let modules = poopy.modules
 
         await msg.channel.sendTyping().catch(() => { })
 
@@ -37,7 +41,7 @@ module.exports = {
         var textfirst = args.includes('-textfirst')
 
         var saidMessage = args.slice(1).join(' ').replace(/’/g, '\'')
-        poopy.vars.symbolreplacements.forEach(symbolReplacement => {
+        vars.symbolreplacements.forEach(symbolReplacement => {
             symbolReplacement.target.forEach(target => {
                 saidMessage = saidMessage.replace(new RegExp(target, 'ig'), symbolReplacement.replacement)
             })
@@ -46,7 +50,7 @@ module.exports = {
         var textes = (saidMessage.match(/"([\s\S]*?)"/g) ?? []).slice(0, templates[template]).map(t => t.substring(1, t.length - 1))
         var files = []
 
-        var fetched = await poopy.functions.getUrls(msg, { max: templates[template] - textes.length }).catch(() => { }) ?? []
+        var fetched = await getUrls(msg, { max: templates[template] - textes.length }).catch(() => { }) ?? []
 
         if (textes.length <= 0 && fetched.length <= 0) {
             await msg.reply('What are the arguments?!').catch(() => { })
@@ -59,7 +63,7 @@ module.exports = {
         for (var i in fetched) {
             var url = fetched[i]
 
-            var fileinfo = await poopy.functions.validateFile(url).catch(async error => {
+            var fileinfo = await validateFile(url).catch(async error => {
                 await msg.reply(error).catch(() => { })
                 await msg.channel.sendTyping().catch(() => { })
                 return
@@ -68,27 +72,27 @@ module.exports = {
             if (!fileinfo) return
 
             var filetype = fileinfo.type
-            if (!filetype || !(filetype.mime.startsWith('image') && !(poopy.vars.gifFormats.find(f => f === filetype.ext)))) {
+            if (!filetype || !(filetype.mime.startsWith('image') && !(vars.gifFormats.find(f => f === filetype.ext)))) {
                 await msg.reply({
                     content: `Unsupported file: \`${url}\``,
                     allowedMentions: {
-                        parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                        parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                     }
                 }).catch(() => { })
                 return
             }
         }
 
-        var currentcount = poopy.vars.filecount
-        poopy.vars.filecount++
-        var filepath = `temp/${poopy.config.mongodatabase}/file${currentcount}`
+        var currentcount = vars.filecount
+        vars.filecount++
+        var filepath = `temp/${config.mongodatabase}/file${currentcount}`
 
-        poopy.modules.fs.mkdirSync(`${filepath}`)
+        modules.fs.mkdirSync(`${filepath}`)
 
         for (var i in fetched) {
             var url = fetched[i]
 
-            await poopy.functions.downloadFile(url, `input${files.length}.${fileinfo.shortext}`, {
+            await downloadFile(url, `input${files.length}.${fileinfo.shortext}`, {
                 fileinfo: fileinfo,
                 filepath: filepath
             })
@@ -96,11 +100,11 @@ module.exports = {
             files.push(filename)
         }
 
-        var form = new poopy.modules.FormData()
+        var form = new modules.FormData()
 
-        files.forEach(filename => form.append('images', poopy.modules.fs.readFileSync(`${filepath}/${filename}`), filename))
+        files.forEach(filename => form.append('images', modules.fs.readFileSync(`${filepath}/${filename}`), filename))
 
-        var response = await poopy.modules.axios.request({
+        var response = await modules.axios.request({
             url: `http://api.makesweet.com/make/${template}${textes.length > 0 ? `?${textes.map(text => `text=${encodeURIComponent(text)}`).join('&')}${textfirst && templates[template] > 1 ? `&textfirst=1` : ''}` : ''}`,
             method: 'POST',
             data: form,
@@ -111,16 +115,16 @@ module.exports = {
             responseType: 'arraybuffer'
         }).catch(async (e) => {
             await msg.reply(e.response.statusText).catch(() => { })
-            poopy.modules.fs.rmSync(`${filepath}`, { force: true, recursive: true })
+            modules.fs.rmSync(`${filepath}`, { force: true, recursive: true })
         })
 
         if (!response) return
 
-        await poopy.functions.downloadFile(response.data, `output.gif`, {
+        await downloadFile(response.data, `output.gif`, {
             buffer: true,
             filepath: filepath
         })
-        return await poopy.functions.sendFile(msg, filepath, `output.gif`)
+        return await sendFile(msg, filepath, `output.gif`)
     },
     help: {
         name: 'makesweet/heartlocket "{text1}"... {file1}... [-textfirst] [-template <name>]',

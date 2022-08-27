@@ -3,18 +3,21 @@ module.exports = {
   desc: "Repeats the phrase by the times specified, but keywords and functions don't execute automatically. If the separator is specified, it'll separate each repetition with the separator.",
   func: async function (matches, msg, isBot, _, opts) {
     let poopy = this
+    let { splitKeyFunc, getKeywordsFor, sleep } = poopy.functions
+    let tempdata = poopy.tempdata
+    let config = poopy.config
 
     var word = matches[1]
-    var split = poopy.functions.splitKeyFunc(word, { args: 3 })
+    var split = splitKeyFunc(word, { args: 3 })
     var phrase = split[0] ?? ''
-    var times = Math.min(Number(await poopy.functions.getKeywordsFor(split[1] ?? '', msg, isBot, opts).catch(() => { })), 100)
-    var separator = await poopy.functions.getKeywordsFor(split[2] ?? '', msg, isBot, opts).catch(() => { }) ?? ''
+    var times = Math.min(Number(await getKeywordsFor(split[1] ?? '', msg, isBot, opts).catch(() => { })), 100)
+    var separator = await getKeywordsFor(split[2] ?? '', msg, isBot, opts).catch(() => { }) ?? ''
     var repeat = []
     for (var i = 0; i < times; i++) {
-      repeat.push(await poopy.functions.getKeywordsFor(phrase, msg, isBot, opts).catch(() => { }) ?? '')
-      await poopy.functions.sleep()
-      poopy.tempdata[msg.author.id][msg.id]['keyattempts']++
-      if (poopy.tempdata[msg.author.id][msg.id]['keyattempts'] >= poopy.config.keyLimit) break
+      repeat.push(await getKeywordsFor(phrase, msg, isBot, opts).catch(() => { }) ?? '')
+      await sleep()
+      tempdata[msg.author.id][msg.id]['keyattempts']++
+      if (tempdata[msg.author.id][msg.id]['keyattempts'] >= config.keyLimit) break
     }
     return repeat.join(separator)
   },
