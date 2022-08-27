@@ -2930,6 +2930,7 @@ functions.downloadFile = async function (url, filename, options) {
     let poopy = this
     let config = poopy.config
     let vars = poopy.vars
+    let tempfiles = poopy.tempfiles
     let { infoPost, execPromise } = poopy.functions
     let { fs, axios } = poopy.modules
 
