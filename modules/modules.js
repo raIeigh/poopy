@@ -44,19 +44,19 @@ modules.DMGuild = class DMGuild {
         this.name = msg.channel.name || `${(msg.user || msg.author).username}'s DMs`
         this.fetchAuditLogs = async () => {
             return {
-                entries: new modules.DiscordCollection.Collection()
+                entries: new modules.Collection()
             }
         }
         this.emojis = {
-            cache: new modules.DiscordCollection.Collection()
+            cache: new modules.Collection()
         }
         this.channels = {
-            cache: new modules.DiscordCollection.Collection([[msg.channel.id, msg.channel]])
+            cache: new modules.Collection([[msg.channel.id, msg.channel]])
         }
         this.members = {
             fetch: async () => msg.channel.recipient ? (msg.channel.recipient.id == id && msg.channel.recipient) : msg.channel.recipients && msg.channel.recipients.get(id),
             resolve: (id) => msg.channel.recipient ? (msg.channel.recipient.id == id && msg.channel.recipient) : msg.channel.recipients && msg.channel.recipients.get(id),
-            cache: new modules.DiscordCollection.Collection(msg.channel.recipients ? msg.channel.recipients.map(user => [user.id, user]) : [[msg.channel.recipient.id, msg.channel.recipient]])
+            cache: new modules.Collection(msg.channel.recipients ? msg.channel.recipients.map(user => [user.id, user]) : [[msg.channel.recipient.id, msg.channel.recipient]])
         }
     }
 }
