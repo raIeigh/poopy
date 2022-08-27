@@ -513,7 +513,7 @@ class Poopy {
             Duration: 'Change the duration of a video, GIF or audio.',
             Effects: 'A wide range of commands that change the way the file looks.',
             Fetching: 'Image, GIF, and video fetching commands.',
-            Generation: 'Generate a new file from an AI or not.',
+            Generation: 'Generate things from an AI or not.',
             'Hex Manipulation': 'Manipulate the file\'s Hex Code to make it shorter, longer, etc.',
             'Inside Joke': 'phexonia studios',
             'JSON Club': 'Exclusive to some people for editing the JSONs used by Poopy.',

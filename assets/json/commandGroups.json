@@ -188,12 +188,13 @@
             "dalle",
             "describeimage",
             "generatetext",
+            "inferkit",
             "newimage",
             "spectrogram",
             "uberduck",
             "weirdcore"
         ],
-        "description": "Generate a new file from an AI or not."
+        "description": "Generate media from an AI or not."
     },
     {
         "name": "hex",
