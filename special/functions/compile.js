@@ -5,7 +5,7 @@ module.exports = {
     let poopy = this
     let { getKeywordsFor, splitKeyFunc } = poopy.functions
     let vars = poopy.vars
-    let modules = poopy.modules
+    let { axios } = poopy.modules
 
     var declopts = { ...opts }
     declopts.declaredonly = true
@@ -45,7 +45,7 @@ module.exports = {
       }
     } else return word
 
-    var response = await modules.axios.request({
+    var response = await axios.request({
       url: 'https://wandbox.org/api/compile.ndjson',
       method: 'POST',
       data: {

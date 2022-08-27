@@ -11,7 +11,7 @@ module.exports = {
             return
         }
 
-        if (msg.member.permissihas('MANAGE_GUILD') || msg.member.permissihas('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
+        if (msg.member.permissions.has('MANAGE_GUILD') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
             var phrases = [
                 'idiot',
                 'the salt',

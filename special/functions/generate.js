@@ -3,13 +3,13 @@ module.exports = {
   desc: 'Generates subsequent text from the phrase inside the function.',
   func: async function (matches) {
     let poopy = this
-    let modules = poopy.modules
+    let { axios, deepai } = poopy.modules
 
     var word = matches[1]
     var models = ['j1-jumbo', 'j1-grande', 'j1-large']
 
     for (var model of models) {
-        var resp = await modules.axios.request({
+        var resp = await axios.request({
           url: 'https://api.ai21.com/studio/v1/j1-jumbo/complete',
           method: 'POST',
           data: {
@@ -55,7 +55,7 @@ module.exports = {
       }
     }
     
-    var resp = await modules.deepai.callStandardApi("text-generator", {
+    var resp = await deepai.callStandardApi("text-generator", {
       text: word,
     }).catch(() => { })
 

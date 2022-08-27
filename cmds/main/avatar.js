@@ -23,7 +23,7 @@ module.exports = {
     execute: async function (msg, args) {
         let poopy = this
         let bot = poopy.bot
-        let modules = poopy.modules
+        let { Discord } = poopy.modules
 
         await msg.channel.sendTyping().catch(() => {})
 
@@ -37,19 +37,19 @@ module.exports = {
             await msg.reply({
                 content: `Invalid user id: **${args[1]}**`,
                 allowedMentions: {
-                    parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => {})
             return
         }
 
-        var avatar = new modules.Discord.MessageAttachment(member.displayAvatarURL({
+        var avatar = new Discord.MessageAttachment(member.displayAvatarURL({
             dynamic: true, size: 1024, format: 'png'
         }));
         await msg.reply({
             content: member.username + '\'s avatar is:',
             allowedMentions: {
-                parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
             },
             files: [avatar]
         }).catch(() => {})

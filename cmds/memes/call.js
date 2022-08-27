@@ -5,7 +5,7 @@ module.exports = {
         let poopy = this
         let { lastUrl, validateFile, downloadFile, execPromise, findpreset, sendFile } = poopy.functions
         let vars = poopy.vars
-        let modules = poopy.modules
+        let { Jimp, Discord } = poopy.modules
 
         await msg.channel.sendTyping().catch(() => { })
         if (lastUrl(msg, 0) === undefined && vars.validUrl.test(args[args.length - 1]) === false) {
@@ -40,9 +40,9 @@ module.exports = {
             })
             var filename = `input.png`
 
-            var call = await modules.Jimp.read(`assets/call.png`)
-            var helvetica = await modules.Jimp.loadFont('assets/fonts/HelveticaLight/HelveticaLight.fnt')
-            await call.print(helvetica, 20, 59, { text: modules.Discord.Util.cleanContent(text, msg), alignmentX: modules.Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: modules.Jimp.VERTICAL_ALIGN_TOP }, 333, 155)
+            var call = await Jimp.read(`assets/call.png`)
+            var helvetica = await Jimp.loadFont('assets/fonts/HelveticaLight/HelveticaLight.fnt')
+            await call.print(helvetica, 20, 59, { text: Discord.Util.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_TOP }, 333, 155)
             await call.writeAsync(`${filepath}/call.png`)
 
             var width = fileinfo.info.width
@@ -62,9 +62,9 @@ module.exports = {
             })
             var filename = `input.mp4`
 
-            var call = await modules.Jimp.read(`assets/call.png`)
-            var helvetica = await modules.Jimp.loadFont('assets/fonts/HelveticaLight/HelveticaLight.fnt')
-            await call.print(helvetica, 20, 59, { text: modules.Discord.Util.cleanContent(text, msg), alignmentX: modules.Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: modules.Jimp.VERTICAL_ALIGN_TOP }, 333, 155)
+            var call = await Jimp.read(`assets/call.png`)
+            var helvetica = await Jimp.loadFont('assets/fonts/HelveticaLight/HelveticaLight.fnt')
+            await call.print(helvetica, 20, 59, { text: Discord.Util.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_TOP }, 333, 155)
             await call.writeAsync(`${filepath}/call.png`)
 
             var width = fileinfo.info.width
@@ -82,9 +82,9 @@ module.exports = {
             var filepath = await downloadFile(currenturl, `input.gif`)
             var filename = `input.gif`
 
-            var call = await modules.Jimp.read(`assets/call.png`)
-            var helvetica = await modules.Jimp.loadFont('assets/fonts/HelveticaLight/HelveticaLight.fnt')
-            await call.print(helvetica, 20, 59, { text: modules.Discord.Util.cleanContent(text, msg), alignmentX: modules.Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: modules.Jimp.VERTICAL_ALIGN_TOP }, 333, 155)
+            var call = await Jimp.read(`assets/call.png`)
+            var helvetica = await Jimp.loadFont('assets/fonts/HelveticaLight/HelveticaLight.fnt')
+            await call.print(helvetica, 20, 59, { text: Discord.Util.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_TOP }, 333, 155)
             await call.writeAsync(`${filepath}/call.png`)
 
             var width = fileinfo.info.width
@@ -102,7 +102,7 @@ module.exports = {
             await msg.reply({
                 content: `Unsupported file: \`${currenturl}\``,
                 allowedMentions: {
-                    parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })

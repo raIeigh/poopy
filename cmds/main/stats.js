@@ -4,7 +4,7 @@ module.exports = {
     execute: async function (msg) {
         let poopy = this
         let bot = poopy.bot
-        let modules = poopy.modules
+        let { os, fs } = poopy.modules
         let config = poopy.config
         let data = poopy.data
         let pkg = poopy.package
@@ -23,11 +23,11 @@ module.exports = {
         var rss = usage.rss / 1024 / 1024
         var cusage = process.cpuUsage()
         var cused = (cusage.user + cusage.system) / 1024 / 1024
-        var cpu = modules.os.cpus()[0].model
+        var cpu = os.cpus()[0].model
         var servers = bot.guilds.cache.size
         var channels = bot.channels.cache.size
         var emojis = bot.emojis.cache.size
-        var files = modules.fs.readdirSync(`temp/${config.mongodatabase}`).length
+        var files = fs.readdirSync(`temp/${config.mongodatabase}`).length
         var messages = data['bot-data']['messages']
         var users = Object.keys(data['user-data']).length
         var pcommands = data['bot-data']['commands']
@@ -135,7 +135,7 @@ module.exports = {
         if (config.textEmbeds) msg.reply({
             content: `${statsEmbed.fields.map(p => `**${p.name}**: ${p.value}`).join('\n')}\n\nv${package.version}`,
             allowedMentions: {
-                parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
             }
         }).catch(() => { })
         else msg.reply({

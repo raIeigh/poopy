@@ -5,7 +5,7 @@ module.exports = {
     let poopy = this
     let vars = poopy.vars
     let config = poopy.config
-    let modules = poopy.modules
+    let { fs } = poopy.modules
     let { execPromise, sendFile } = poopy.functions
 
     await msg.channel.sendTyping().catch(() => { })
@@ -25,7 +25,7 @@ module.exports = {
     var currentcount = vars.filecount
     vars.filecount++
     var filepath = `temp/${config.mongodatabase}/file${currentcount}`
-    modules.fs.mkdirSync(`${filepath}`)
+    fs.mkdirSync(`${filepath}`)
 
     await execPromise(`ffmpeg -f lavfi -i "color=0x${r}${g}${b}${a}:s=${width}x${height},format=rgba" ${filepath}/output.png`)
     return await sendFile(msg, filepath, `output.png`)

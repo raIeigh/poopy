@@ -5,7 +5,7 @@ module.exports = {
         let poopy = this
         let { lastUrl, validateFile, downloadFile, execPromise, sendFile } = poopy.functions
         let vars = poopy.vars
-        let modules = poopy.modules
+        let { fs } = poopy.modules
 
         await msg.channel.sendTyping().catch(() => { })
         if (lastUrl(msg, 0) === undefined && args[1] === undefined) {
@@ -31,16 +31,16 @@ module.exports = {
         if (type.mime.startsWith('image') && !(vars.gifFormats.find(f => f === type.ext))) {
             var filepath = await downloadFile(currenturl, 'input.png')
             var filename = 'input.png'
-            modules.fs.copyFileSync(`assets/amongUs.jar`, `${filepath}/amongUs.jar`)
+            fs.copyFileSync(`assets/amongUs.jar`, `${filepath}/amongUs.jar`)
 
             await execPromise(`cd ${filepath} && java -jar amongUs.jar --file ${filename} --lines ${resolution}`)
 
             try {
-                modules.fs.renameSync(`${filepath}/dumpy.gif`, `${filepath}/output.gif`)
+                fs.renameSync(`${filepath}/dumpy.gif`, `${filepath}/output.gif`)
             } catch (_) {
                 await msg.reply('Couldn\'t send file.').catch(() => { })
                 await msg.channel.sendTyping().catch(() => { })
-                modules.fs.rmSync(`${filepath}`, { force: true, recursive: true })
+                fs.rmSync(`${filepath}`, { force: true, recursive: true })
                 return
             }
             return await sendFile(msg, filepath, `output.gif`)
@@ -48,7 +48,7 @@ module.exports = {
             await msg.reply({
                 content: `Unsupported file: \`${currenturl}\``,
                 allowedMentions: {
-                    parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })

@@ -4,7 +4,7 @@ module.exports = {
     func: async function (matches, msg) {
         let poopy = this
         let { splitKeyFunc, getIndexOption, parseNumber } = poopy.functions
-        let modules = poopy.modules
+        let { axios } = poopy.modules
         
         if (!msg.channel.nsfw) return 'no'
 
@@ -12,7 +12,7 @@ module.exports = {
         var split = splitKeyFunc(word, { args: 2 })
         var query = getIndexOption(split, 0)[0]
         var page = getIndexOption(split, 1, { n: Infinity }).join(' | ')
-        var res = await modules.axios.get(`https://api.rule34.xxx/index.php?page=dapi&s=post&q=index&json=1&limit=100&tags=${encodeURIComponent(query)}`).catch(() => { })
+        var res = await axios.get(`https://api.rule34.xxx/index.php?page=dapi&s=post&q=index&json=1&limit=100&tags=${encodeURIComponent(query)}`).catch(() => { })
         
         if (!res) return word
 

@@ -6,7 +6,7 @@ module.exports = {
         let { lastUrl, validateFile, braille } = poopy.functions
         let vars = poopy.vars
         let config = poopy.config
-        let modules = poopy.modules
+        let { fs, Discord } = poopy.modules
 
         await msg.channel.sendTyping().catch(() => { })
         if (lastUrl(msg, 0, true) === undefined && args[1] === undefined) {
@@ -32,25 +32,25 @@ module.exports = {
             await msg.reply({
                 content: brailleText,
                 allowedMentions: {
-                    parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(async () => {
                 var currentcount = vars.filecount
                 vars.filecount++
                 var filepath = `temp/${config.mongodatabase}/file${currentcount}`
-                modules.fs.mkdirSync(`${filepath}`)
-                modules.fs.writeFileSync(`${filepath}/ascii.txt`, brailleText)
+                fs.mkdirSync(`${filepath}`)
+                fs.writeFileSync(`${filepath}/ascii.txt`, brailleText)
                 await msg.reply({
-                    files: [new modules.Discord.MessageAttachment(`${filepath}/ascii.txt`)]
+                    files: [new Discord.MessageAttachment(`${filepath}/ascii.txt`)]
                 }).catch(() => { })
-                modules.fs.rmSync(`${filepath}`, { force: true, recursive: true })
+                fs.rmSync(`${filepath}`, { force: true, recursive: true })
             })
             await msg.channel.sendTyping().catch(() => { })
         } else {
             await msg.reply({
                 content: `Unsupported file: \`${currenturl}\``,
                 allowedMentions: {
-                    parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })

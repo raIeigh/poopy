@@ -5,7 +5,7 @@ module.exports = {
     let poopy = this
     let { splitKeyFunc, randomKey } = poopy.functions
     let vars = poopy.vars
-    let modules = poopy.modules
+    let { axios } = poopy.modules
 
     var word = matches[1]
     var split = splitKeyFunc(word, { args: 3 })
@@ -37,7 +37,7 @@ module.exports = {
       data: [{ Text: phrase }]
     };
 
-    var response = await modules.axios.request(options).catch(() => { })
+    var response = await axios.request(options).catch(() => { })
 
     if (response) {
       return response.data[0].translations[0].text

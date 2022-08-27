@@ -4,7 +4,7 @@ module.exports = {
     execute: async function (msg, args) {
         let poopy = this
         let { lastUrl, validateFile, downloadFile, execPromise, findpreset, sendFile } = poopy.functions
-        let modules = poopy.modules
+        let { fs } = poopy.modules
         let vars = poopy.vars
 
         await msg.channel.sendTyping().catch(() => { })
@@ -81,7 +81,7 @@ module.exports = {
                 fileinfo: fileinfo
             })
             var filename = `input.mp4`
-            modules.fs.mkdirSync(`${filepath}/clips`)
+            fs.mkdirSync(`${filepath}/clips`)
             var audio = fileinfo.info.audio
 
             if (audio) {
@@ -98,7 +98,7 @@ module.exports = {
                     clipfiles.push(`file '${i}.mp4'`)
                 }
 
-                modules.fs.writeFileSync(`${filepath}/clips/list.txt`, args.indexOf('-norandomize') > -1 ? clipfiles.join('\n') : clipfiles.sort(() => {
+                fs.writeFileSync(`${filepath}/clips/list.txt`, args.indexOf('-norandomize') > -1 ? clipfiles.join('\n') : clipfiles.sort(() => {
                     return Math.random() - 0.5
                 }).join('\n'))
 
@@ -214,7 +214,7 @@ module.exports = {
                     clipfiles.push(`file '${i}.mp4'`)
                 }
 
-                modules.fs.writeFileSync(`${filepath}/clips/list.txt`, args.indexOf('-norandomize') > -1 ? clipfiles.join('\n') : clipfiles.sort(() => {
+                fs.writeFileSync(`${filepath}/clips/list.txt`, args.indexOf('-norandomize') > -1 ? clipfiles.join('\n') : clipfiles.sort(() => {
                     return Math.random() - 0.5
                 }).join('\n'))
 
@@ -256,7 +256,7 @@ module.exports = {
         } else if (type.mime.startsWith('image') && vars.gifFormats.find(f => f === type.ext)) {
             var filepath = await downloadFile(currenturl, `input.gif`)
             var filename = `input.gif`
-            modules.fs.mkdirSync(`${filepath}/clips`)
+            fs.mkdirSync(`${filepath}/clips`)
 
             var fps = fileinfo.info.fps
             var duration = Number(fileinfo.info.duration)
@@ -271,7 +271,7 @@ module.exports = {
                 clipfiles.push(`file '${i}.gif'`)
             }
 
-            modules.fs.writeFileSync(`${filepath}/clips/list.txt`, args.indexOf('-norandomize') > -1 ? clipfiles.join('\n') : clipfiles.sort(() => {
+            fs.writeFileSync(`${filepath}/clips/list.txt`, args.indexOf('-norandomize') > -1 ? clipfiles.join('\n') : clipfiles.sort(() => {
                 return Math.random() - 0.5
             }).join('\n'))
 
@@ -314,7 +314,7 @@ module.exports = {
                 fileinfo: fileinfo
             })
             var filename = `input.mp3`
-            modules.fs.mkdirSync(`${filepath}/clips`)
+            fs.mkdirSync(`${filepath}/clips`)
             var duration = Number(fileinfo.info.duration)
 
             var clipduration = duration / clips
@@ -327,7 +327,7 @@ module.exports = {
                 clipfiles.push(`file '${i}.mp3'`)
             }
 
-            modules.fs.writeFileSync(`${filepath}/clips/list.txt`, args.indexOf('-norandomize') > -1 ? clipfiles.join('\n') : clipfiles.sort(() => {
+            fs.writeFileSync(`${filepath}/clips/list.txt`, args.indexOf('-norandomize') > -1 ? clipfiles.join('\n') : clipfiles.sort(() => {
                 return Math.random() - 0.5
             }).join('\n'))
 
@@ -367,7 +367,7 @@ module.exports = {
             await msg.reply({
                 content: `Unsupported file: \`${currenturl}\``,
                 allowedMentions: {
-                    parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })

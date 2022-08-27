@@ -13,7 +13,7 @@ module.exports = {
         let poopy = this
         let config = poopy.config
         let vars = poopy.vars
-        let modules = poopy.modules
+        let { fs, Discord } = poopy.modules
         let globaldata = poopy.globaldata
 
         var jsonid = config.ownerids.find(id => id == msg.author.id) || config.jsoning.find(id => id == msg.author.id);
@@ -40,12 +40,12 @@ module.exports = {
             var currentcount = vars.filecount
             vars.filecount++
             var filepath = `temp/${config.mongodatabase}/file${currentcount}`
-            modules.fs.mkdirSync(filepath)
-            modules.fs.writeFileSync(`${filepath}/jsonlist.txt`, globaldata['bot-data'][type].join('\n\n-----------------------------------------------\n\n') || 'lmao theres nothing')
+            fs.mkdirSync(filepath)
+            fs.writeFileSync(`${filepath}/jsonlist.txt`, globaldata['bot-data'][type].join('\n\n-----------------------------------------------\n\n') || 'lmao theres nothing')
             await msg.reply({
-                files: [new modules.Discord.MessageAttachment(`${filepath}/jsonlist.txt`)]
+                files: [new Discord.MessageAttachment(`${filepath}/jsonlist.txt`)]
             }).catch(() => { })
-            modules.fs.rmSync(`${filepath}`, { force: true, recursive: true })
+            fs.rmSync(`${filepath}`, { force: true, recursive: true })
         };
     },
     help: {

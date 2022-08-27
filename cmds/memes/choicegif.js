@@ -3,7 +3,7 @@ module.exports = {
     args: [{"name":"name","required":false,"specifarg":false,"orig":"\"{name}\""},{"name":"file","required":false,"specifarg":false,"orig":"{file}"}],
     execute: async function (msg, args) {
         let poopy = this
-        let modules = poopy.modules
+        let { Jimp, fs, Discord } = poopy.modules
         let { lastUrl, validateFile, downloadFile, execPromise, sendFile } = poopy.functions
         let vars = poopy.vars
         let config = poopy.config
@@ -109,8 +109,8 @@ module.exports = {
 
             {
                 edit: async function (frame) {
-                    frame.resize(frame.bitmap.width / 4, frame.bitmap.height / 4, modules.Jimp.RESIZE_NEAREST_NEIGHBOR)
-                    frame.resize(frame.bitmap.width * 4, frame.bitmap.height * 4, modules.Jimp.RESIZE_NEAREST_NEIGHBOR)
+                    frame.resize(frame.bitmap.width / 4, frame.bitmap.height / 4, Jimp.RESIZE_NEAREST_NEIGHBOR)
+                    frame.resize(frame.bitmap.width * 4, frame.bitmap.height * 4, Jimp.RESIZE_NEAREST_NEIGHBOR)
                 },
                 name: '8-bit {text}',
                 filename: '9.png'
@@ -325,8 +325,8 @@ module.exports = {
 
             {
                 edit: async function (frame) {
-                    frame.resize(frame.bitmap.width, 1, modules.Jimp.RESIZE_NEAREST_NEIGHBOR)
-                    frame.resize(frame.bitmap.width, 500, modules.Jimp.RESIZE_NEAREST_NEIGHBOR)
+                    frame.resize(frame.bitmap.width, 1, Jimp.RESIZE_NEAREST_NEIGHBOR)
+                    frame.resize(frame.bitmap.width, 500, Jimp.RESIZE_NEAREST_NEIGHBOR)
                 },
                 name: '{text}\n{text}\n{text}\n{text}\n{text}\n{text}\n{text}',
                 filename: '26.png'
@@ -334,7 +334,7 @@ module.exports = {
 
             {
                 edit: async function (frame) {
-                    var stripes = await modules.Jimp.read('assets/stripes.png')
+                    var stripes = await Jimp.read('assets/stripes.png')
                     frame.greyscale()
                     stripes.resize(frame.bitmap.width, frame.bitmap.height)
                     frame.composite(stripes, 0, 0)
@@ -350,7 +350,7 @@ module.exports = {
 
             {
                 edit: async function (frame) {
-                    var jail = await modules.Jimp.read('assets/jailed.png')
+                    var jail = await Jimp.read('assets/jailed.png')
                     jail.resize(frame.bitmap.width, frame.bitmap.height)
                     frame.composite(jail, 0, 0)
                 },
@@ -390,23 +390,23 @@ module.exports = {
                 fileinfo: fileinfo
             })
             var filename = `input.png`
-            modules.fs.mkdirSync(`${filepath}/frames`)
+            fs.mkdirSync(`${filepath}/frames`)
 
             for (var i = 0; i < gifframes.length; i++) {
                 var framedata = gifframes[i]
-                var frame = await modules.Jimp.read(`${filepath}/${filename}`)
-                var white = await modules.Jimp.read(`assets/white.png`)
-                var arialsmall = await modules.Jimp.loadFont('assets/fonts/ArialSmall/ArialSmall.fnt')
-                var arialbig = await modules.Jimp.loadFont('assets/fonts/ArialBig/ArialBig.fnt')
+                var frame = await Jimp.read(`${filepath}/${filename}`)
+                var white = await Jimp.read(`assets/white.png`)
+                var arialsmall = await Jimp.loadFont('assets/fonts/ArialSmall/ArialSmall.fnt')
+                var arialbig = await Jimp.loadFont('assets/fonts/ArialBig/ArialBig.fnt')
                 var squareS = { value: ((frame.bitmap.height === frame.bitmap.width) && frame.bitmap.width) || ((frame.bitmap.height > frame.bitmap.width) && frame.bitmap.height) || frame.bitmap.width, constraint: ((frame.bitmap.height === frame.bitmap.width) && 'both') || ((frame.bitmap.height > frame.bitmap.width) && 'height') || 'width' }
-                frame.resize(squareS.constraint === 'width' || squareS.constraint === 'both' ? 180 : modules.Jimp.AUTO, squareS.constraint === 'height' || squareS.constraint === 'both' ? 180 : modules.Jimp.AUTO)
+                frame.resize(squareS.constraint === 'width' || squareS.constraint === 'both' ? 180 : Jimp.AUTO, squareS.constraint === 'height' || squareS.constraint === 'both' ? 180 : Jimp.AUTO)
                 white.resize(304, 361)
                 if (framedata.edit) {
                     await framedata.edit(frame)
                 }
                 white.composite(frame, white.bitmap.width / 2 - frame.bitmap.width / 2, white.bitmap.height / 2 - frame.bitmap.height / 2)
-                await white.print(arialbig, 8, 8, { text: modules.Discord.Util.cleanContent('Choose your {text}'.replace(/{text}/g, text), msg), alignmentX: modules.Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: modules.Jimp.VERTICAL_ALIGN_MIDDLE }, 288, 73)
-                await white.print(arialsmall, 8, 280, { text: modules.Discord.Util.cleanContent(framedata.name.replace(/{text}/g, text), msg), alignmentX: modules.Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: modules.Jimp.VERTICAL_ALIGN_MIDDLE }, 288, 73)
+                await white.print(arialbig, 8, 8, { text: Discord.Util.cleanContent('Choose your {text}'.replace(/{text}/g, text), msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 288, 73)
+                await white.print(arialsmall, 8, 280, { text: Discord.Util.cleanContent(framedata.name.replace(/{text}/g, text), msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 288, 73)
                 await white.writeAsync(`${filepath}/frames/${framedata.filename}`)
             }
 
@@ -417,25 +417,25 @@ module.exports = {
             var currentcount = vars.filecount
             vars.filecount++
             var filepath = `temp/${config.mongodatabase}/file${currentcount}`
-            modules.fs.mkdirSync(`${filepath}`)
-            modules.fs.mkdirSync(`${filepath}/frames`)
+            fs.mkdirSync(`${filepath}`)
+            fs.mkdirSync(`${filepath}/frames`)
 
             await execPromise(`ffmpeg -i "${currenturl}" -vframes 1 ${filepath}/output.png`)
             for (var i = 0; i < gifframes.length; i++) {
                 var framedata = gifframes[i]
-                var frame = await modules.Jimp.read(`${filepath}/output.png`)
-                var white = await modules.Jimp.read(`assets/white.png`)
-                var arialsmall = await modules.Jimp.loadFont('assets/fonts/ArialSmall/ArialSmall.fnt')
-                var arialbig = await modules.Jimp.loadFont('assets/fonts/ArialBig/ArialBig.fnt')
+                var frame = await Jimp.read(`${filepath}/output.png`)
+                var white = await Jimp.read(`assets/white.png`)
+                var arialsmall = await Jimp.loadFont('assets/fonts/ArialSmall/ArialSmall.fnt')
+                var arialbig = await Jimp.loadFont('assets/fonts/ArialBig/ArialBig.fnt')
                 var squareS = { value: ((frame.bitmap.height === frame.bitmap.width) && frame.bitmap.width) || ((frame.bitmap.height > frame.bitmap.width) && frame.bitmap.height) || frame.bitmap.width, constraint: ((frame.bitmap.height === frame.bitmap.width) && 'both') || ((frame.bitmap.height > frame.bitmap.width) && 'height') || 'width' }
-                frame.resize(squareS.constraint === 'width' || squareS.constraint === 'both' ? 180 : modules.Jimp.AUTO, squareS.constraint === 'height' || squareS.constraint === 'both' ? 180 : modules.Jimp.AUTO)
+                frame.resize(squareS.constraint === 'width' || squareS.constraint === 'both' ? 180 : Jimp.AUTO, squareS.constraint === 'height' || squareS.constraint === 'both' ? 180 : Jimp.AUTO)
                 white.resize(304, 361)
                 if (framedata.edit) {
                     await framedata.edit(frame)
                 }
                 white.composite(frame, white.bitmap.width / 2 - frame.bitmap.width / 2, white.bitmap.height / 2 - frame.bitmap.height / 2)
-                await white.print(arialbig, 8, 8, { text: modules.Discord.Util.cleanContent('Choose your {text}'.replace(/{text}/g, text), msg), alignmentX: modules.Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: modules.Jimp.VERTICAL_ALIGN_MIDDLE }, 288, 73)
-                await white.print(arialsmall, 8, 280, { text: modules.Discord.Util.cleanContent(framedata.name.replace(/{text}/g, text), msg), alignmentX: modules.Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: modules.Jimp.VERTICAL_ALIGN_MIDDLE }, 288, 73)
+                await white.print(arialbig, 8, 8, { text: Discord.Util.cleanContent('Choose your {text}'.replace(/{text}/g, text), msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 288, 73)
+                await white.print(arialsmall, 8, 280, { text: Discord.Util.cleanContent(framedata.name.replace(/{text}/g, text), msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 288, 73)
                 await white.writeAsync(`${filepath}/frames/${framedata.filename}`)
             }
             await execPromise(`ffmpeg -i ${filepath}/frames/%d.png -vf palettegen=reserve_transparent=1 ${filepath}/palette.png`)
@@ -445,7 +445,7 @@ module.exports = {
             await msg.reply({
                 content: `Unsupported file: \`${currenturl}\``,
                 allowedMentions: {
-                    parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })

@@ -4,7 +4,7 @@ module.exports = {
   execute: async function (msg) {
     let poopy = this
     let bot = poopy.bot
-    let modules = poopy.modules
+    let { Discord } = poopy.modules
 
     var sayoriart = [
       'https://cdn.discordapp.com/attachments/551420953704267789/795630551884103730/Untitled60.png',
@@ -123,7 +123,7 @@ module.exports = {
 
     await msg.reply({
       content: `This treasure was made by ${sayori.tag}.`,
-      files: [new modules.Discord.MessageAttachment(sayoriart[Math.floor(Math.random() * sayoriart.length)])]
+      files: [new Discord.MessageAttachment(sayoriart[Math.floor(Math.random() * sayoriart.length)])]
     }).catch(() => { })
   },
   help: {

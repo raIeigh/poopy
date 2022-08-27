@@ -4,7 +4,7 @@ module.exports = {
     execute: async function (msg, args) {
         let poopy = this
         let { lastUrl, validateFile, downloadFile, execPromise, findpreset, sendFile } = poopy.functions
-        let modules = poopy.modules
+        let { fs } = poopy.modules
         let vars = poopy.vars
 
         await msg.channel.sendTyping().catch(() => { })
@@ -33,7 +33,7 @@ module.exports = {
             for (var i = 0; i < numToRepeat; i++) {
                 list = `${list}file '${filename}'\n`
             }
-            modules.fs.writeFileSync(`${filepath}/list.txt`, list)
+            fs.writeFileSync(`${filepath}/list.txt`, list)
             await execPromise(`ffmpeg -f concat -i ${filepath}/list.txt -preset ${findpreset(args)} -c:v libx264 -pix_fmt yuv420p ${filepath}/output.mp4`)
             return await sendFile(msg, filepath, `output.mp4`)
         } else if (type.mime.startsWith('image') && vars.gifFormats.find(f => f === type.ext)) {
@@ -45,7 +45,7 @@ module.exports = {
             for (var i = 0; i < numToRepeat; i++) {
                 list = `${list}file '${filename}'\n`
             }
-            modules.fs.writeFileSync(`${filepath}/list.txt`, list)
+            fs.writeFileSync(`${filepath}/list.txt`, list)
             await execPromise(`ffmpeg -f concat -i ${filepath}/list.txt -preset ${findpreset(args)} -filter_complex "[0:v]split[pout][ppout];[ppout]palettegen=reserve_transparent=1[palette];[pout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -preset ${findpreset(args)} -gifflags -offsetting ${filepath}/output.gif`)
             return await sendFile(msg, filepath, `output.gif`)
         } else if (type.mime.startsWith('audio')) {
@@ -57,14 +57,14 @@ module.exports = {
             for (var i = 0; i < numToRepeat; i++) {
                 list = `${list}file '${filename}'\n`
             }
-            modules.fs.writeFileSync(`${filepath}/list.txt`, list)
+            fs.writeFileSync(`${filepath}/list.txt`, list)
             await execPromise(`ffmpeg -f concat -i ${filepath}/list.txt -preset ${findpreset(args)} ${filepath}/output.mp3`)
             return await sendFile(msg, filepath, `output.mp3`)
         } else {
             await msg.reply({
                 content: `Unsupported file: \`${currenturl}\``,
                 allowedMentions: {
-                    parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })

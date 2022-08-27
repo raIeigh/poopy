@@ -4,7 +4,7 @@ module.exports = {
     execute: async function (msg, args) {
         let poopy = this
         let { lastUrl, getUrls, validateFile, downloadFile, execPromise, findpreset, sendFile } = poopy.functions
-        let modules = poopy.modules
+        let { fs } = poopy.modules
 
         await msg.channel.sendTyping().catch(() => { })
         if (lastUrl(msg, 1) === undefined && args[2] === undefined) {
@@ -52,7 +52,7 @@ module.exports = {
                 await msg.reply({
                     content: error,
                     allowedMentions: {
-                        parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                        parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                     }
                 }).catch(() => { })
                 await msg.channel.sendTyping().catch(() => { })
@@ -65,7 +65,7 @@ module.exports = {
                 await msg.reply({
                     content: 'Unsupported file types.',
                     allowedMentions: {
-                        parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                        parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                     }
                 }).catch(() => { })
                 await msg.channel.sendTyping().catch(() => { })
@@ -82,7 +82,7 @@ module.exports = {
         })
         var filename2 = `input2.${fileinfo2.shortext}`
 
-        modules.fs.mkdirSync(`${filepath}/frames`)
+        fs.mkdirSync(`${filepath}/frames`)
 
         await execPromise(`ffmpeg -i ${filepath}/${filename} -vf "scale='min(400,iw)':min'(400,ih)':force_original_aspect_ratio=decrease" -vframes 1 ${filepath}/static.png`)
         await execPromise(`ffmpeg -i ${filepath}/${filename2} -vf "scale='min(400,iw)':min'(400,ih)':force_original_aspect_ratio=decrease" -vframes 1 ${filepath}/static2.png`)

@@ -9,7 +9,7 @@ module.exports = {
         let arrays = poopy.arrays
         let vars = poopy.vars
         let config = poopy.config
-        let modules = poopy.modules
+        let { fs, Discord } = poopy.modules
 
         var minlength = getOption(args, 'minlength', { dft: 5, splice: true, n: 1, join: true, func: (opt) => parseNumber(opt, { dft: 5, min: 1, max: 10000, round: true }) })
         var randomsentences = getOption(args, 'randomsentences', { dft: false, splice: true, n: 0, join: true })
@@ -25,18 +25,18 @@ module.exports = {
         await msg.reply({
             content: markovString,
             allowedMentions: {
-                parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
             }
         }).catch(async () => {
             var currentcount = vars.filecount
             vars.filecount++
             var filepath = `temp/${config.mongodatabase}/file${currentcount}`
-            modules.fs.mkdirSync(`${filepath}`)
-            modules.fs.writeFileSync(`${filepath}/markov.txt`, markovString)
+            fs.mkdirSync(`${filepath}`)
+            fs.writeFileSync(`${filepath}/markov.txt`, markovString)
             await msg.reply({
-                files: [new modules.Discord.MessageAttachment(`${filepath}/markov.txt`)]
+                files: [new Discord.MessageAttachment(`${filepath}/markov.txt`)]
             }).catch(() => { })
-            modules.fs.rmSync(`${filepath}`, { force: true, recursive: true })
+            fs.rmSync(`${filepath}`, { force: true, recursive: true })
         })
     },
     help: {

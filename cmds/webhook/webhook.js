@@ -6,9 +6,9 @@ module.exports = {
         let config = poopy.config
         let vars = poopy.vars
         let data = poopy.data
-        let modules = poopy.modules
+        let { axios, fileType } = poopy.modules
 
-        if (msg.member.permissihas('MANAGE_WEBHOOKS') || msg.member.permissihas('ADMINISTRATOR') || msg.member.permissihas('MANAGE_GUILD') || msg.member.permissihas('MANAGE_MESSAGES') || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
+        if (msg.member.permissions.has('MANAGE_WEBHOOKS') || msg.member.permissions.has('ADMINISTRATOR') || msg.member.permissions.has('MANAGE_GUILD') || msg.member.permissions.has('MANAGE_MESSAGES') || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
             var user = args[1]
             if (args[1] === undefined || (args[1] ? (args[1].startsWith('"') || vars.validUrl.test(args[1])) : false)) {
                 user = msg.author.id
@@ -21,7 +21,7 @@ module.exports = {
                         await msg.reply({
                             content: 'Invalid user ID: **' + id + '**',
                             allowedMentions: {
-                                parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                                parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                             }
                         }).catch(() => { })
                     })
@@ -67,7 +67,7 @@ module.exports = {
                                 await msg.reply('Invalid name.').catch(() => { })
                                 return
                             }
-                            var fetchAvatar = await modules.axios.request({
+                            var fetchAvatar = await axios.request({
                                 url: args[args.length - 1],
                                 responseType: 'stream'
                             }).catch(() => { })
@@ -75,7 +75,7 @@ module.exports = {
                                 await msg.reply('Invalid avatar.').catch(() => { })
                                 return
                             }
-                            var avatarFiletype = await modules.fileType.fromStream(fetchAvatar.data).catch(() => { })
+                            var avatarFiletype = await fileType.fromStream(fetchAvatar.data).catch(() => { })
                             if (!avatarFiletype) {
                                 await msg.reply('Invalid avatar.').catch(() => { })
                                 return
@@ -93,14 +93,14 @@ module.exports = {
                             await msg.reply({
                                 content: member.user.username + ` is now ${name}.`,
                                 allowedMentions: {
-                                    parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                                 }
                             }).catch(() => { })
                         } else {
                             await msg.reply({
                                 content: member.user.username + ` is not ${data['guild-data'][msg.guild.id]['members'][member.id]['custom']['name']}.`,
                                 allowedMentions: {
-                                    parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                                 }
                             }).catch(() => { })
                             data['guild-data'][msg.guild.id]['members'][member.id]['custom'] = false
@@ -137,7 +137,7 @@ module.exports = {
                         return
                     }
                     var name = matchedTextes[1]
-                    var fetchAvatar = await modules.axios.request({
+                    var fetchAvatar = await axios.request({
                         url: args[args.length - 1],
                         responseType: 'stream'
                     }).catch(() => { })
@@ -145,7 +145,7 @@ module.exports = {
                         await msg.reply('Invalid avatar.').catch(() => { })
                         return
                     }
-                    var avatarFiletype = await modules.fileType.fromStream(fetchAvatar.data).catch(() => { })
+                    var avatarFiletype = await fileType.fromStream(fetchAvatar.data).catch(() => { })
                     if (!avatarFiletype) {
                         await msg.reply('Invalid avatar.').catch(() => { })
                         return
@@ -163,14 +163,14 @@ module.exports = {
                     await msg.reply({
                         content: userMention.user.username + ` is now ${name}.`,
                         allowedMentions: {
-                            parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                            parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                         }
                     }).catch(() => { })
                 } else {
                     await msg.reply({
                         content: userMention.user.username + ` is not ${data['guild-data'][msg.guild.id]['members'][userMention.id]['custom']['name']}.`,
                         allowedMentions: {
-                            parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                            parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                         }
                     }).catch(() => { })
                     data['guild-data'][msg.guild.id]['members'][userMention.id]['custom'] = false

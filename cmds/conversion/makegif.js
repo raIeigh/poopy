@@ -6,7 +6,7 @@ module.exports = {
         let { lastUrls, getUrls, validateFile, execPromise, findpreset, sendFile } = poopy.functions
         let vars = poopy.vars
         let config = poopy.config
-        let modules = poopy.modules
+        let { fs, Jimp } = poopy.modules
 
         await msg.channel.sendTyping().catch(() => { })
         if (args[1] === undefined && msg.attachments.size <= 0 && !(lastUrls(msg).length)) {
@@ -92,7 +92,7 @@ module.exports = {
             await msg.reply({
                 content: lasturlserror,
                 allowedMentions: {
-                    parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
@@ -115,7 +115,7 @@ module.exports = {
                     await msg.reply({
                         content: error,
                         allowedMentions: {
-                            parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                            parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                         }
                     }).catch(() => { })
                     await msg.channel.sendTyping().catch(() => { })
@@ -127,7 +127,7 @@ module.exports = {
                     await msg.reply({
                         content: error,
                         allowedMentions: {
-                            parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                            parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                         }
                     }).catch(() => { })
                     await msg.channel.sendTyping().catch(() => { })
@@ -142,8 +142,8 @@ module.exports = {
         vars.filecount++
         var filepath = `temp/${config.mongodatabase}/file${currentcount}`
 
-        modules.fs.mkdirSync(`${filepath}`)
-        modules.fs.mkdirSync(`${filepath}/frames`)
+        fs.mkdirSync(`${filepath}`)
+        fs.mkdirSync(`${filepath}/frames`)
         var framesizes
         for (var i in frameurls) {
             var frameurl = frameurls[i]
@@ -151,7 +151,7 @@ module.exports = {
                 framesizes = { x: infos[i].info.width, y: infos[i].info.height }
             }
 
-            var image = await modules.Jimp.read(frameurl)
+            var image = await Jimp.read(frameurl)
             image.resize(framesizes.x, framesizes.y)
             await image.writeAsync(`${filepath}/frames/${i.padStart(3, '0')}.png`)
         }

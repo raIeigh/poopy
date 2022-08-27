@@ -6,7 +6,7 @@ module.exports = {
         let vars = poopy.vars
         let arrays = poopy.arrays
         let config = poopy.config
-        let modules = poopy.modules
+        let { fs, Discord } = poopy.modules
 
         await msg.channel.sendTyping().catch(() => { })
         var wordNumber = Math.floor(Math.random() * 40) + 1
@@ -58,18 +58,18 @@ module.exports = {
             await msg.reply({
                 content: arabArray.join(' '),
                 allowedMentions: {
-                    parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(async () => {
                 var currentcount = vars.filecount
                 vars.filecount++
                 var filepath = `temp/${config.mongodatabase}/file${currentcount}`
-                modules.fs.mkdirSync(`${filepath}`)
-                modules.fs.writeFileSync(`${filepath}/arabottify.txt`, arabArray.join(' '))
+                fs.mkdirSync(`${filepath}`)
+                fs.writeFileSync(`${filepath}/arabottify.txt`, arabArray.join(' '))
                 await msg.reply({
-                    files: [new modules.Discord.MessageAttachment(`${filepath}/arabottify.txt`)]
+                    files: [new Discord.MessageAttachment(`${filepath}/arabottify.txt`)]
                 }).catch(() => { })
-                modules.fs.rmSync(`${filepath}`, { force: true, recursive: true })
+                fs.rmSync(`${filepath}`, { force: true, recursive: true })
             })
             await msg.channel.sendTyping().catch(() => { })
             return;
@@ -104,18 +104,18 @@ module.exports = {
         await msg.reply({
             content: arabArray.join(' '),
             allowedMentions: {
-                parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
             }
         }).catch(async () => {
             var currentcount = vars.filecount
             vars.filecount++
             var filepath = `temp/${config.mongodatabase}/file${currentcount}`
-            modules.fs.mkdirSync(`${filepath}`)
-            modules.fs.writeFileSync(`${filepath}/arabottify.txt`, arabArray.join(' '))
+            fs.mkdirSync(`${filepath}`)
+            fs.writeFileSync(`${filepath}/arabottify.txt`, arabArray.join(' '))
             await msg.reply({
-                files: [new modules.Discord.MessageAttachment(`${filepath}/arabottify.txt`)]
+                files: [new Discord.MessageAttachment(`${filepath}/arabottify.txt`)]
             }).catch(() => { })
-            modules.fs.rmSync(`${filepath}`, { force: true, recursive: true })
+            fs.rmSync(`${filepath}`, { force: true, recursive: true })
         })
         await msg.channel.sendTyping().catch(() => { })
     },

@@ -4,7 +4,7 @@ module.exports = {
     execute: async function (msg, args) {
         let poopy = this
         let { findCommand, navigateEmbed, addLastUrl } = poopy.functions
-        let modules = poopy.modules
+        let { axios } = poopy.modules
         let package = poopy.package
         let config = poopy.config
 
@@ -27,7 +27,7 @@ module.exports = {
         }
         var search = args.slice(1).join(" ");
 
-        var body = await modules.axios.request({
+        var body = await axios.request({
             url: 'https://e621.net/posts.json',
             method: 'GET',
             data: {

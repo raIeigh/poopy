@@ -6,7 +6,7 @@ module.exports = {
         let { tobrainfuck } = poopy.functions
         let vars = poopy.vars
         let config = poopy.config
-        let modules = poopy.modules
+        let { fs, Discord } = poopy.modules
 
         await msg.channel.sendTyping().catch(() => { })
         var saidMessage = args.slice(1).join(' ')
@@ -18,18 +18,18 @@ module.exports = {
         await msg.reply({
             content: tobrainfuck(saidMessage),
             allowedMentions: {
-                parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
             }
         }).catch(async () => {
             var currentcount = vars.filecount
             vars.filecount++
             var filepath = `temp/${config.mongodatabase}/file${currentcount}`
-            modules.fs.mkdirSync(`${filepath}`)
-            modules.fs.writeFileSync(`${filepath}/tobrainfuck.txt`, tobrainfuck(saidMessage))
+            fs.mkdirSync(`${filepath}`)
+            fs.writeFileSync(`${filepath}/tobrainfuck.txt`, tobrainfuck(saidMessage))
             await msg.reply({
-                files: [new modules.Discord.MessageAttachment(`${filepath}/tobrainfuck.txt`)]
+                files: [new Discord.MessageAttachment(`${filepath}/tobrainfuck.txt`)]
             }).catch(() => { })
-            modules.fs.rmSync(`${filepath}`, { force: true, recursive: true })
+            fs.rmSync(`${filepath}`, { force: true, recursive: true })
         })
         await msg.channel.sendTyping().catch(() => { })
     },

@@ -4,7 +4,7 @@ module.exports = {
     execute: async function (msg, args) {
         let poopy = this
         let { getOption, parseNumber } = poopy.functions
-        let modules = poopy.modules
+        let { axios, fs, Discord, deepai } = poopy.modules
         let vars = poopy.vars
         let config = poopy.config
 
@@ -25,7 +25,7 @@ module.exports = {
         var models = ['j1-jumbo', 'j1-grande', 'j1-large']
 
         for (var model of models) {
-            var resp = await modules.axios.request({
+            var resp = await axios.request({
                 url: `https://api.ai21.com/studio/v1/${model}/complete`,
                 method: 'POST',
                 data: {
@@ -70,18 +70,18 @@ module.exports = {
                 await msg.reply({
                     content: `${saidMessage}${resp.data.completions[0].data.text}`,
                     allowedMentions: {
-                        parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                        parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                     }
                 }).catch(async () => {
                     var currentcount = vars.filecount
                     vars.filecount++
                     var filepath = `temp/${config.mongodatabase}/file${currentcount}`
-                    modules.fs.mkdirSync(`${filepath}`)
-                    modules.fs.writeFileSync(`${filepath}/generated.txt`, `${saidMessage}${resp.data.completions[0].data.text}`)
+                    fs.mkdirSync(`${filepath}`)
+                    fs.writeFileSync(`${filepath}/generated.txt`, `${saidMessage}${resp.data.completions[0].data.text}`)
                     await msg.reply({
-                        files: [new modules.Discord.MessageAttachment(`${filepath}/generated.txt`)]
+                        files: [new Discord.MessageAttachment(`${filepath}/generated.txt`)]
                     }).catch(() => { })
-                    modules.fs.rmSync(`${filepath}`, { force: true, recursive: true })
+                    fs.rmSync(`${filepath}`, { force: true, recursive: true })
                 })
                 return
             }
@@ -93,13 +93,13 @@ module.exports = {
             return
         }
         
-        var resp = await modules.deepai.callStandardApi("text-generator", {
+        var resp = await deepai.callStandardApi("text-generator", {
             text: saidMessage,
         }).catch(async err => {
             await msg.reply({
                 content: err.stack,
                 allowedMentions: {
-                    parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
         })
@@ -108,7 +108,7 @@ module.exports = {
             await msg.reply({
                 content: resp.output,
                 allowedMentions: {
-                    parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
         }

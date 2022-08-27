@@ -15,13 +15,13 @@ module.exports = {
     }],
     execute: async function (msg, args) {
         let poopy = this
-        let modules = poopy.modules
+        let { fs, Jimp, Discord } = poopy.modules
         let vars = poopy.vars
         let config = poopy.config
         let { execPromise, sendFile } = poopy.functions
 
         await msg.channel.sendTyping().catch(() => { })
-        var fonts = modules.fs.readdirSync('assets/fonts')
+        var fonts = fs.readdirSync('assets/fonts')
         if (!args[1]) {
             await msg.reply(`No font specified. A valid list of fonts is ${fonts.join(', ')}`).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
@@ -95,23 +95,23 @@ module.exports = {
 
         var origins = {
             x: {
-                left: modules.Jimp.HORIZONTAL_ALIGN_LEFT,
-                center: modules.Jimp.HORIZONTAL_ALIGN_CENTER,
-                right: modules.Jimp.HORIZONTAL_ALIGN_RIGHT
+                left: Jimp.HORIZONTAL_ALIGN_LEFT,
+                center: Jimp.HORIZONTAL_ALIGN_CENTER,
+                right: Jimp.HORIZONTAL_ALIGN_RIGHT
             },
 
             y: {
-                top: modules.Jimp.VERTICAL_ALIGN_TOP,
-                middle: modules.Jimp.VERTICAL_ALIGN_MIDDLE,
-                bottom: modules.Jimp.VERTICAL_ALIGN_BOTTOM
+                top: Jimp.VERTICAL_ALIGN_TOP,
+                middle: Jimp.VERTICAL_ALIGN_MIDDLE,
+                bottom: Jimp.VERTICAL_ALIGN_BOTTOM
             },
         }
-        var originx = modules.Jimp.HORIZONTAL_ALIGN_CENTER
-        var originy = modules.Jimp.VERTICAL_ALIGN_MIDDLE
+        var originx = Jimp.HORIZONTAL_ALIGN_CENTER
+        var originy = Jimp.VERTICAL_ALIGN_MIDDLE
         var originindex = args.indexOf('-origin')
         if (originindex > -1) {
-            originx = origins.x[args[originindex + 1]] || modules.Jimp.HORIZONTAL_ALIGN_CENTER
-            originy = origins.y[args[originindex + 2]] || modules.Jimp.VERTICAL_ALIGN_MIDDLE
+            originx = origins.x[args[originindex + 1]] || Jimp.HORIZONTAL_ALIGN_CENTER
+            originy = origins.y[args[originindex + 2]] || Jimp.VERTICAL_ALIGN_MIDDLE
         }
 
         var saidMessage = args.slice(1).join(' ').replace(/’/g, '\'')
@@ -129,17 +129,17 @@ module.exports = {
         var currentcount = vars.filecount
         vars.filecount++
         var filepath = `temp/${config.mongodatabase}/file${currentcount}`
-        modules.fs.mkdirSync(`${filepath}`)
+        fs.mkdirSync(`${filepath}`)
 
-        var transparent = await modules.Jimp.read('assets/transparent.png')
-        var loadedfont = await modules.Jimp.loadFont(`assets/fonts/${font}/${font}.fnt`)
+        var transparent = await Jimp.read('assets/transparent.png')
+        var loadedfont = await Jimp.loadFont(`assets/fonts/${font}/${font}.fnt`)
         var defaultheight = loadedfont.common.lineHeight
-        var textwidth = maxwidth || modules.Jimp.measureText(loadedfont, text)
-        var textheight = modules.Jimp.measureTextHeight(loadedfont, text, maxwidth || textwidth)
+        var textwidth = maxwidth || Jimp.measureText(loadedfont, text)
+        var textheight = Jimp.measureTextHeight(loadedfont, text, maxwidth || textwidth)
         var width = textwidth + padding.left + padding.right
         var height = textheight + padding.top + padding.bottom
         transparent.resize(width, height)
-        await transparent.print(loadedfont, padding.left, padding.top, { text: modules.Discord.Util.cleanContent(text, msg), alignmentX: originx, alignmentY: originy }, textwidth, textheight)
+        await transparent.print(loadedfont, padding.left, padding.top, { text: Discord.Util.cleanContent(text, msg), alignmentX: originx, alignmentY: originy }, textwidth, textheight)
         if (args.find(arg => arg === '-resetcolor')) {
             transparent.color([
                 {

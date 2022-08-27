@@ -17,7 +17,7 @@ module.exports = {
                     await msg.reply({
                         content: 'Invalid user ID: **' + user + '**',
                         allowedMentions: {
-                            parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                            parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                         }
                     }).catch(() => { })
                 })
@@ -37,7 +37,7 @@ module.exports = {
                         await msg.reply({
                             content: user.user.username + ' is now the Impostor.',
                             allowedMentions: {
-                                parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                                parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                             }
                         }).catch(() => { })
                     } else {
@@ -45,7 +45,7 @@ module.exports = {
                         await msg.reply({
                             content: user.user.username + ' is not the Impostor.',
                             allowedMentions: {
-                                parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                                parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                             }
                         }).catch(() => { })
                     }
@@ -64,12 +64,12 @@ module.exports = {
                 data['guild-data'][msg.guild.id]['members'][msg.mentimembers.first().id]['impostor'] = false
             }
             if (data['guild-data'][msg.guild.id]['members'][msg.mentimembers.first().id]['impostor'] === false) {
-                if (msg.member.permissihas('MANAGE_GUILD') || msg.member.permissihas('MANAGE_WEBHOOKS') || msg.member.permissihas('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
+                if (msg.member.permissions.has('MANAGE_GUILD') || msg.member.permissions.has('MANAGE_WEBHOOKS') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
                     data['guild-data'][msg.guild.id]['members'][msg.mentimembers.first().id]['impostor'] = true
                     await msg.reply({
                         content: msg.mentimembers.first().user.username + ' is now the Impostor.',
                         allowedMentions: {
-                            parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                            parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                         }
                     }).catch(() => { })
                 } else {
@@ -81,7 +81,7 @@ module.exports = {
                 await msg.reply({
                     content: msg.mentimembers.first().user.username + ' is not the Impostor.',
                     allowedMentions: {
-                        parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                        parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                     }
                 }).catch(() => { })
             }

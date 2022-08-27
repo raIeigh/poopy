@@ -5,7 +5,7 @@ module.exports = {
         let poopy = this
         let { lastUrl, validateFile, downloadFile, execPromise, findpreset, sendFile } = poopy.functions
         let vars = poopy.vars
-        let modules = poopy.modules
+        let { Jimp, Discord } = poopy.modules
 
         await msg.channel.sendTyping().catch(() => { })
         if (lastUrl(msg, 0) === undefined && vars.validUrl.test(args[args.length - 1]) === false) {
@@ -46,14 +46,14 @@ module.exports = {
             var filename = `input.png`
             var width = fileinfo.info.width
             var height = fileinfo.info.height
-            var snapchat = await modules.Jimp.read('assets/snapchat.png')
-            var helvetica = await modules.Jimp.loadFont('assets/fonts/Helvetica/Helvetica.fnt')
+            var snapchat = await Jimp.read('assets/snapchat.png')
+            var helvetica = await Jimp.loadFont('assets/fonts/Helvetica/Helvetica.fnt')
             snapchat.resize(width, height)
-            snapchat.resize(modules.Jimp.AUTO, Math.round(2000 / size))
-            var textheight = modules.Jimp.measureTextHeight(helvetica, text, snapchat.bitmap.width - Math.round(100 / size))
+            snapchat.resize(Jimp.AUTO, Math.round(2000 / size))
+            var textheight = Jimp.measureTextHeight(helvetica, text, snapchat.bitmap.width - Math.round(100 / size))
             snapchat.resize(snapchat.bitmap.width, textheight + Math.round(100 / size))
-            await snapchat.print(helvetica, Math.round(50 / size), Math.round(50 / size), { text: modules.Discord.Util.cleanContent(text, msg), alignmentX: modules.Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: modules.Jimp.VERTICAL_ALIGN_MIDDLE }, snapchat.bitmap.width - Math.round(100 / size), snapchat.bitmap.height - Math.round(100 / size))
-            snapchat.resize(width, modules.Jimp.AUTO)
+            await snapchat.print(helvetica, Math.round(50 / size), Math.round(50 / size), { text: Discord.Util.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, snapchat.bitmap.width - Math.round(100 / size), snapchat.bitmap.height - Math.round(100 / size))
+            snapchat.resize(width, Jimp.AUTO)
             await snapchat.writeAsync(`${filepath}/caption.png`)
 
             await execPromise(`ffmpeg -i ${filepath}/${filename} -i ${filepath}/caption.png -filter_complex "[0:v][1:v]overlay=x=(W-w)/2:y=H/5*4-h/2:format=auto[out]" -map "[out]" -preset ${findpreset(args)} ${filepath}/output.png`)
@@ -65,14 +65,14 @@ module.exports = {
             var filename = `input.mp4`
             var width = fileinfo.info.width
             var height = fileinfo.info.height
-            var snapchat = await modules.Jimp.read('assets/snapchat.png')
-            var helvetica = await modules.Jimp.loadFont('assets/fonts/Helvetica/Helvetica.fnt')
+            var snapchat = await Jimp.read('assets/snapchat.png')
+            var helvetica = await Jimp.loadFont('assets/fonts/Helvetica/Helvetica.fnt')
             snapchat.resize(width, height)
-            snapchat.resize(modules.Jimp.AUTO, Math.round(2000 / size))
-            var textheight = modules.Jimp.measureTextHeight(helvetica, text, snapchat.bitmap.width - Math.round(100 / size))
+            snapchat.resize(Jimp.AUTO, Math.round(2000 / size))
+            var textheight = Jimp.measureTextHeight(helvetica, text, snapchat.bitmap.width - Math.round(100 / size))
             snapchat.resize(snapchat.bitmap.width, textheight + Math.round(100 / size))
-            await snapchat.print(helvetica, Math.round(50 / size), Math.round(50 / size), { text: modules.Discord.Util.cleanContent(text, msg), alignmentX: modules.Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: modules.Jimp.VERTICAL_ALIGN_MIDDLE }, snapchat.bitmap.width - Math.round(100 / size), snapchat.bitmap.height - Math.round(100 / size))
-            snapchat.resize(width, modules.Jimp.AUTO)
+            await snapchat.print(helvetica, Math.round(50 / size), Math.round(50 / size), { text: Discord.Util.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, snapchat.bitmap.width - Math.round(100 / size), snapchat.bitmap.height - Math.round(100 / size))
+            snapchat.resize(width, Jimp.AUTO)
             await snapchat.writeAsync(`${filepath}/caption.png`)
 
             await execPromise(`ffmpeg -i ${filepath}/${filename} -i ${filepath}/caption.png -map 0:a? -filter_complex "[0:v][1:v]overlay=x=(W-w)/2:y=H/5*4-h/2[oout];[oout]scale=ceil(iw/2)*2:ceil(ih/2)*2[out]" -map "[out]" -preset ${findpreset(args)} -c:v libx264 -pix_fmt yuv420p ${filepath}/output.mp4`)
@@ -84,14 +84,14 @@ module.exports = {
             var filename = `input.gif`
             var width = fileinfo.info.width
             var height = fileinfo.info.height
-            var snapchat = await modules.Jimp.read('assets/snapchat.png')
-            var helvetica = await modules.Jimp.loadFont('assets/fonts/Helvetica/Helvetica.fnt')
+            var snapchat = await Jimp.read('assets/snapchat.png')
+            var helvetica = await Jimp.loadFont('assets/fonts/Helvetica/Helvetica.fnt')
             snapchat.resize(width, height)
-            snapchat.resize(modules.Jimp.AUTO, Math.round(2000 / size))
-            var textheight = modules.Jimp.measureTextHeight(helvetica, text, snapchat.bitmap.width - Math.round(100 / size))
+            snapchat.resize(Jimp.AUTO, Math.round(2000 / size))
+            var textheight = Jimp.measureTextHeight(helvetica, text, snapchat.bitmap.width - Math.round(100 / size))
             snapchat.resize(snapchat.bitmap.width, textheight + Math.round(100 / size))
-            await snapchat.print(helvetica, Math.round(50 / size), Math.round(50 / size), { text: modules.Discord.Util.cleanContent(text, msg), alignmentX: modules.Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: modules.Jimp.VERTICAL_ALIGN_MIDDLE }, snapchat.bitmap.width - Math.round(100 / size), snapchat.bitmap.height - Math.round(100 / size))
-            snapchat.resize(width, modules.Jimp.AUTO)
+            await snapchat.print(helvetica, Math.round(50 / size), Math.round(50 / size), { text: Discord.Util.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, snapchat.bitmap.width - Math.round(100 / size), snapchat.bitmap.height - Math.round(100 / size))
+            snapchat.resize(width, Jimp.AUTO)
             await snapchat.writeAsync(`${filepath}/caption.png`)
 
             await execPromise(`ffmpeg -i ${filepath}/${filename} -i ${filepath}/caption.png -filter_complex "[0:v][1:v]overlay=x=(W-w)/2:y=H/5*4-h/2[oout];[oout]split[pout][ppout];[ppout]palettegen=reserve_transparent=1[palette];[pout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -preset ${findpreset(args)} -gifflags -offsetting ${filepath}/output.gif`)
@@ -100,7 +100,7 @@ module.exports = {
             await msg.reply({
                 content: `Unsupported file: \`${currenturl}\``,
                 allowedMentions: {
-                    parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })

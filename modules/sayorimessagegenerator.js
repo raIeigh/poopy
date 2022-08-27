@@ -1,6 +1,9 @@
 module.exports = function (msg, fixedchoice) {
     let poopy = this
-    let { _location, _arab, _funnygif, _ps, _activemember, _persontype, _insult, _compliment, _restaurant, _message, _restaurantfood, _platform, _noun, _animal, _segsy, _food, _country, _pspasta, _city, _sentence, _verb, _adj } = poopy.special.keys
+    let { _location, _arab, _funnygif, _ps, _activemember, _persontype,
+        _insult, _compliment, _restaurant, _message, _restaurantfood,
+        _platform, _noun, _animal, _segsy, _food, _country, _pspasta,
+        _city, _sentence, _verb, _adj } = poopy.special.keys
 
     function phraseword(phrase) {
         const words = phrase.split(' ')

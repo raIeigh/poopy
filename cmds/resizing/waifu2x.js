@@ -5,7 +5,7 @@ module.exports = {
         let poopy = this
         let { lastUrl, validateFile, downloadFile, execPromise, findpreset, sendFile } = poopy.functions
         let vars = poopy.vars
-        let modules = poopy.modules
+        let { deepai, fs } = poopy.modules
 
         await msg.channel.sendTyping().catch(() => { })
         if (lastUrl(msg, 0) === undefined && args[1] === undefined) {
@@ -31,11 +31,11 @@ module.exports = {
             var filename = `input.png`
             await execPromise(`ffmpeg -i ${filepath}/${filename} -vf alphaextract -preset ${findpreset(args)} ${filepath}/mask.png`)
 
-            var resp = await modules.deepai.callStandardApi("waifu2x", {
-                image: modules.fs.createReadStream(`${filepath}/${filename}`),
+            var resp = await deepai.callStandardApi("waifu2x", {
+                image: fs.createReadStream(`${filepath}/${filename}`),
             }).catch(() => { })
-            var maskresp = await modules.deepai.callStandardApi("waifu2x", {
-                image: modules.fs.createReadStream(`${filepath}/mask.png`),
+            var maskresp = await deepai.callStandardApi("waifu2x", {
+                image: fs.createReadStream(`${filepath}/mask.png`),
             }).catch(() => { })
 
             if (!resp || !maskresp) {
@@ -58,7 +58,7 @@ module.exports = {
             await msg.reply({
                 content: `Unsupported file: \`${currenturl}\``,
                 allowedMentions: {
-                    parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })

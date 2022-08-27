@@ -4,7 +4,7 @@ module.exports = {
     execute: async function (msg, args) {
         let poopy = this
         let { lastUrl, validateFile, downloadFile, sendFile } = poopy.functions
-        let modules = poopy.modules
+        let { fs } = poopy.modules
 
         await msg.channel.sendTyping().catch(() => { })
         if (lastUrl(msg, 0) === undefined && args[1] === undefined) {
@@ -28,20 +28,20 @@ module.exports = {
                 fileinfo: fileinfo
             })
             var filename = `input.mp4`
-            var videohex = modules.fs.readFileSync(`${filepath}/${filename}`)
+            var videohex = fs.readFileSync(`${filepath}/${filename}`)
             var mvhdindex = videohex.indexOf('mvhd')
             var subarray1 = videohex.subarray(0, mvhdindex + 20)
             var doublehex = (Number('0x' + videohex.toString('hex').substring((mvhdindex + 20) / speed, (mvhdindex + 24) / speed)) / speed).toString(16).padStart(8, '0')
             var doublelength = Buffer.from(doublehex.substring(doublehex.length - 8, doublehex.length), 'hex')
             var subarray2 = videohex.subarray(subarray1.length + doublelength.length, videohex.length)
             var newvideohex = Buffer.concat([subarray1, doublelength, subarray2])
-            modules.fs.writeFileSync(`${filepath}/output.mp4`, newvideohex)
+            fs.writeFileSync(`${filepath}/output.mp4`, newvideohex)
             return await sendFile(msg, filepath, `output.mp4`)
         } else {
             await msg.reply({
                 content: `Unsupported file: \`${currenturl}\``,
                 allowedMentions: {
-                    parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })

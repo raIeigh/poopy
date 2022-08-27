@@ -6,7 +6,7 @@ module.exports = {
         let { lastUrls, getOption, validateFile, getUrls, execPromise, downloadFile, sendFile } = poopy.functions
         let vars = poopy.vars
         let config = poopy.config
-        let modules = poopy.modules
+        let { fs, Jimp } = poopy.modules
 
         await msg.channel.sendTyping().catch(() => { })
         if (args[1] === undefined && msg.attachments.size <= 0 && !(lastUrls(msg).length)) {
@@ -107,7 +107,7 @@ module.exports = {
             await msg.reply({
                 content: lasturlserror,
                 allowedMentions: {
-                    parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
@@ -130,7 +130,7 @@ module.exports = {
                     await msg.reply({
                         content: error,
                         allowedMentions: {
-                            parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                            parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                         }
                     }).catch(() => { })
                     await msg.channel.sendTyping().catch(() => { })
@@ -142,7 +142,7 @@ module.exports = {
                     await msg.reply({
                         content: error,
                         allowedMentions: {
-                            parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                            parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                         }
                     }).catch(() => { })
                     await msg.channel.sendTyping().catch(() => { })
@@ -157,16 +157,16 @@ module.exports = {
         vars.filecount++
         var filepath = `temp/${config.mongodatabase}/file${currentcount}`
 
-        modules.fs.mkdirSync(`${filepath}`)
-        modules.fs.mkdirSync(`${filepath}/frames`)
-        modules.fs.mkdirSync(`${filepath}/webmframes`)
+        fs.mkdirSync(`${filepath}`)
+        fs.mkdirSync(`${filepath}/frames`)
+        fs.mkdirSync(`${filepath}/webmframes`)
 
         var concatList = []
 
         for (var i in frameurls) {
             var frameurl = frameurls[i]
 
-            var image = await modules.Jimp.read(frameurl)
+            var image = await Jimp.read(frameurl)
             await image.writeAsync(`${filepath}/frames/${i.padStart(3, '0')}.png`)
             await execPromise(`ffmpeg -y -i ${filepath}/frames/${i.padStart(3, '0')}.png -c:v vp8 -b:v 1M -crf 10 -auto-alt-ref 0 -vf scale=${infos[i].info.width}x${infos[i].info.height} -aspect ${infos[i].info.width}:${infos[i].info.height} -r ${fps} -f webm ${filepath}/webmframes/${i.padStart(3, '0')}.webm`)
             concatList.push(`file 'webmframes/${i.padStart(3, '0')}.webm'`)
@@ -180,7 +180,7 @@ module.exports = {
             await execPromise(`ffmpeg -i ${filepath}/audio.mp3 -c:a libvorbis ${filepath}/audio.webm`)
         }
 
-        modules.fs.writeFileSync(`${filepath}/concat.txt`, concatList.join('\n'))
+        fs.writeFileSync(`${filepath}/concat.txt`, concatList.join('\n'))
 
         await execPromise(`ffmpeg -y -f concat -safe 0 -i ${filepath}/concat.txt${audioinfo ? ` -i ${filepath}/audio.webm ` : ' '}-c copy ${filepath}/output.webm`)
         return await sendFile(msg, filepath, `output.webm`)

@@ -4,7 +4,7 @@ module.exports = {
     execute: async function (msg, args) {
         let poopy = this
         let { lastUrl, validateFile, execPromise } = poopy.functions
-        let modules = poopy.modules
+        let { prettyBytes } = poopy.modules
         let vars = poopy.vars
         let bot = poopy.bot
         let config = poopy.config
@@ -26,7 +26,7 @@ module.exports = {
         var type = fileinfo.type
 
         var jsoninfo = {}
-        var formattedSize = modules.prettyBytes(fileinfo.info.realsize)
+        var formattedSize = prettyBytes(fileinfo.info.realsize)
         var size = `${formattedSize}${formattedSize.endsWith(' B') ? '' : ` (${fileinfo.info.realsize} B)`}`
         var params = [
             `**File Size**: ${size}`,
@@ -308,8 +308,8 @@ module.exports = {
         if (config.textEmbeds) msg.reply({
             content: `\`${fileinfo.name}\`\n\n${params.join('\n')}`,
             allowedMentions: {
-                parse: (!msg.member.permissihas('ADMINISTRATOR') &&
-                    !msg.member.permissihas('MENTION_EVERYONE') &&
+                parse: (!msg.member.permissions.has('ADMINISTRATOR') &&
+                    !msg.member.permissions.has('MENTION_EVERYONE') &&
                     msg.author.id !== msg.guild.ownerID) ?
                     ['users'] : ['users', 'everyone', 'roles']
             }

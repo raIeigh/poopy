@@ -15,7 +15,7 @@ module.exports = {
         let vars = poopy.vars
         let { getUrls, validateFile, downloadFile, sendFile } = poopy.functions
         let config = poopy.config
-        let modules = poopy.modules
+        let { fs, FormData, axios } = poopy.modules
 
         await msg.channel.sendTyping().catch(() => { })
 
@@ -76,7 +76,7 @@ module.exports = {
                 await msg.reply({
                     content: `Unsupported file: \`${url}\``,
                     allowedMentions: {
-                        parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                        parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                     }
                 }).catch(() => { })
                 return
@@ -87,7 +87,7 @@ module.exports = {
         vars.filecount++
         var filepath = `temp/${config.mongodatabase}/file${currentcount}`
 
-        modules.fs.mkdirSync(`${filepath}`)
+        fs.mkdirSync(`${filepath}`)
 
         for (var i in fetched) {
             var url = fetched[i]
@@ -100,11 +100,11 @@ module.exports = {
             files.push(filename)
         }
 
-        var form = new modules.FormData()
+        var form = new FormData()
 
-        files.forEach(filename => form.append('images', modules.fs.readFileSync(`${filepath}/${filename}`), filename))
+        files.forEach(filename => form.append('images', fs.readFileSync(`${filepath}/${filename}`), filename))
 
-        var response = await modules.axios.request({
+        var response = await axios.request({
             url: `http://api.makesweet.com/make/${template}${textes.length > 0 ? `?${textes.map(text => `text=${encodeURIComponent(text)}`).join('&')}${textfirst && templates[template] > 1 ? `&textfirst=1` : ''}` : ''}`,
             method: 'POST',
             data: form,
@@ -115,7 +115,7 @@ module.exports = {
             responseType: 'arraybuffer'
         }).catch(async (e) => {
             await msg.reply(e.response.statusText).catch(() => { })
-            modules.fs.rmSync(`${filepath}`, { force: true, recursive: true })
+            fs.rmSync(`${filepath}`, { force: true, recursive: true })
         })
 
         if (!response) return

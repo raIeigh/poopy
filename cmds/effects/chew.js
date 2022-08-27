@@ -4,7 +4,7 @@ module.exports = {
     execute: async function (msg, args) {
         let poopy = this
         let { lastUrl, validateFile, sendFile } = poopy.functions
-        let modules = poopy.modules
+        let { Jimp, fs } = poopy.modules
         let vars = poopy.vars
         let config = poopy.config
 
@@ -25,8 +25,8 @@ module.exports = {
                 chewoffset: { x: Math.floor(Math.random() * 61) - 30, y: Math.floor(Math.random() * 61) - 30 },
                 repetitions: Math.floor(Math.random() * 9) + 1,
                 chew: async (frame, maskpos, masksize, maskangle, chewoffset) => {
-                    var patchmask = await modules.Jimp.read(`assets/chewmask.png`)
-                    var black = await modules.Jimp.read(`assets/black.png`)
+                    var patchmask = await Jimp.read(`assets/chewmask.png`)
+                    var black = await Jimp.read(`assets/black.png`)
                     frame2 = frame.clone()
                     patchmask.resize(frame2.bitmap.width / masksize.x, frame2.bitmap.height / masksize.y)
                     patchmask.rotate(maskangle)
@@ -50,8 +50,8 @@ module.exports = {
             var currentcount = vars.filecount
             vars.filecount++
             var filepath = `temp/${config.mongodatabase}/file${currentcount}`
-            modules.fs.mkdirSync(`${filepath}`)
-            var frame = await modules.Jimp.read(currenturl)
+            fs.mkdirSync(`${filepath}`)
+            var frame = await Jimp.read(currenturl)
             for (var i = 0; i < chewings.length; i++) {
                 var origoffset = chewings[i].chewoffset
                 var offset = chewings[i].chewoffset
@@ -67,7 +67,7 @@ module.exports = {
             await msg.reply({
                 content: `Unsupported file: \`${currenturl}\``,
                 allowedMentions: {
-                    parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })

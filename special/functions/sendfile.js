@@ -5,7 +5,7 @@ module.exports = {
         let poopy = this
         let { splitKeyFunc, validateFile, downloadFile, sendFile } = poopy.functions
         let globaldata = poopy.globaldata
-        let modules = poopy.modules
+        let { axios } = poopy.modules
         let tempdata = poopy.tempdata
         let data = poopy.data
         let config = poopy.config
@@ -15,7 +15,7 @@ module.exports = {
         var url = split[0]
         var name = split[1]
         
-        if (!url || !(await modules.axios.get(url).catch(() => { }))) return word
+        if (!url || !(await axios.get(url).catch(() => { }))) return word
 
         if (tempdata[msg.guild.id][msg.channel.id]['shut']) return ''
 

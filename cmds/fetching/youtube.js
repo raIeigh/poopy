@@ -5,7 +5,7 @@ module.exports = {
         let poopy = this
         let vars = poopy.vars
         let { unescapeHTML, navigateEmbed, addLastUrl } = poopy.functions
-        let modules = poopy.modules
+        let { youtubedl, axios } = poopy.modules
         let config = poopy.config
 
         await msg.channel.sendTyping().catch(() => { })
@@ -60,12 +60,12 @@ module.exports = {
         if (number < 1) number = 1
 
         await navigateEmbed(msg.channel, async (page) => {
-            modules.youtubedl(urls[page - 1].url, {
+            youtubedl(urls[page - 1].url, {
                 format: '18',
                 'get-url': ''
             }).then(youtubeurl => addLastUrl(msg, youtubeurl)).catch(() => { })
 
-            var thumbresponse = await modules.axios.request(urls[page - 1].thumb.replace('hqdefault', 'hq720')).catch(() => { })
+            var thumbresponse = await axios.request(urls[page - 1].thumb.replace('hqdefault', 'hq720')).catch(() => { })
 
             if (config.textEmbeds) return `${urls[page - 1].url}\n\nVideo ${page}/${urls.length}`
             else return {

@@ -3,7 +3,7 @@ module.exports = {
     args: [{"name":"prompt","required":true,"specifarg":false,"orig":"<prompt>"}],
     execute: async function (msg, args) {
         let poopy = this
-        let modules = poopy.modules
+        let { axios, fs, archiver } = poopy.modules
         let { sleep, navigateEmbed, sendFile } = poopy.functions
         let vars = poopy.vars
         let config = poopy.config
@@ -27,7 +27,7 @@ module.exports = {
         var retries = 0
 
         async function dalleRequest() {
-            var imageRes = await modules.axios.request({
+            var imageRes = await axios.request({
                 url: 'https://backend.craiyon.com/generate',
                 method: 'POST',
                 data: { prompt: text }
@@ -60,22 +60,22 @@ module.exports = {
         var currentcount = vars.filecount
         vars.filecount++
         var filepath = `temp/${config.mongodatabase}/file${currentcount}`
-        modules.fs.mkdirSync(`${filepath}`)
-        modules.fs.mkdirSync(`${filepath}/images`)
+        fs.mkdirSync(`${filepath}`)
+        fs.mkdirSync(`${filepath}/images`)
 
         var i = 0
 
         images.forEach(data => {
             i++
-            modules.fs.writeFileSync(`${filepath}/images/image${i}.png`, Buffer.from(data, 'base64'))
+            fs.writeFileSync(`${filepath}/images/image${i}.png`, Buffer.from(data, 'base64'))
         })
 
-        var output = modules.fs.createWriteStream(`${filepath}/output.zip`)
-        var archive = modules.archiver('zip')
+        var output = fs.createWriteStream(`${filepath}/output.zip`)
+        var archive = archiver('zip')
 
         await new Promise(async resolve => {
             output.on('finish', async () => {
-                var frames = modules.fs.readdirSync(`${filepath}/images`)
+                var frames = fs.readdirSync(`${filepath}/images`)
                 var catboxframes = {}
     
                 await navigateEmbed(msg.channel, async (page, ended) => {
@@ -124,7 +124,7 @@ module.exports = {
                         page: false
                     }
                 ], undefined, undefined, undefined, (reason) => {
-                    if (reason == 'time') modules.fs.rmSync(filepath, { force: true, recursive: true })
+                    if (reason == 'time') fs.rmSync(filepath, { force: true, recursive: true })
                 }, msg)
                 resolve()
             })

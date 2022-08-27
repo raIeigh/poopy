@@ -5,7 +5,7 @@ module.exports = {
         let poopy = this
         let { lastUrl, validateFile, downloadFile, randomKey, sendFile } = poopy.functions
         let vars = poopy.vars
-        let modules = poopy.modules
+        let { FormData, fs, axios } = poopy.modules
 
         await msg.channel.sendTyping().catch(() => { })
         if (lastUrl(msg, 0) === undefined && args[1] === undefined) {
@@ -29,12 +29,12 @@ module.exports = {
             })
             var filename = `input.png`
 
-            var form = new modules.FormData()
+            var form = new FormData()
             form.append('size', 'auto')
-            form.append('image_file', modules.fs.readFileSync(`${filepath}/${filename}`), filename)
+            form.append('image_file', fs.readFileSync(`${filepath}/${filename}`), filename)
 
             var rejected = false
-            var response = await modules.axios.request({
+            var response = await axios.request({
                 url: 'https://api.remove.bg/v1.0/removebg',
                 method: 'POST',
                 data: form,
@@ -59,7 +59,7 @@ module.exports = {
                 var code = response.status
 
                 await msg.reply(m + (code == 402 ? '. You can go to https://www.remove.bg/ and upload an image manually though.' : '')).catch(() => { })
-                modules.fs.rmSync(`${filepath}`, { force: true, recursive: true })
+                fs.rmSync(`${filepath}`, { force: true, recursive: true })
                 return
             }
 
@@ -72,7 +72,7 @@ module.exports = {
             await msg.reply({
                 content: `Unsupported file: \`${currenturl}\``,
                 allowedMentions: {
-                    parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })

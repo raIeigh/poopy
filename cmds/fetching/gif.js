@@ -3,7 +3,7 @@ module.exports = {
     args: [{"name":"query","required":true,"specifarg":false,"orig":"<query>"},{"name":"page","required":false,"specifarg":true,"orig":"[-page <number>]"}],
     execute: async function (msg, args) {
         let poopy = this
-        let modules = poopy.modules
+        let { axios } = poopy.modules
         let { navigateEmbed, addLastUrl } = poopy.functions
         let config = poopy.config
 
@@ -21,7 +21,7 @@ module.exports = {
         }
         var search = args.slice(1).join(" ");
 
-        var res = await modules.axios.request(`https://g.tenor.com/v1/search?q=${encodeURIComponent(search)}&key=${process.env.TENORKEY}&limit=100&contentfilter=${msg.channel.nsfw ? 'off' : 'medium'}`).catch(() => { })
+        var res = await axios.request(`https://g.tenor.com/v1/search?q=${encodeURIComponent(search)}&key=${process.env.TENORKEY}&limit=100&contentfilter=${msg.channel.nsfw ? 'off' : 'medium'}`).catch(() => { })
 
         if (!res) {
             await msg.reply('Error.').catch(() => { })

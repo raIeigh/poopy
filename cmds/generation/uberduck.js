@@ -12,7 +12,7 @@ module.exports = {
     execute: async function (msg, args) {
         let poopy = this
         let vars = poopy.vars
-        let modules = poopy.modules
+        let { axios } = poopy.modules
         let { downloadFile, sendFile } = poopy.functions
 
         await msg.channel.sendTyping().catch(() => { })
@@ -39,7 +39,7 @@ module.exports = {
         var saidMessage = args.slice(2).join(' ').replace(/'/g, '’').replace(/"/g, '\\"')
 
         var rejected = false
-        var response = await modules.axios.request({
+        var response = await axios.request({
             method: 'POST',
             url: 'https://api.uberduck.ai/speak-synchronous',
             headers: {
@@ -66,8 +66,8 @@ module.exports = {
             await msg.reply({
                 content: response.data,
                 allowedMentions: {
-                    parse: (!msg.member.permissihas('ADMINISTRATOR') &&
-                        !msg.member.permissihas('MENTION_EVERYONE') &&
+                    parse: (!msg.member.permissions.has('ADMINISTRATOR') &&
+                        !msg.member.permissions.has('MENTION_EVERYONE') &&
                         msg.member.id !== msg.guild.ownerID) ?
                         ['users'] : ['users', 'everyone', 'roles']
                 }

@@ -5,7 +5,7 @@ module.exports = {
         let poopy = this
         let config = poopy.config
         let { lastUrl, validateFile, downloadFile, execPromise, sleep, navigateEmbed } = poopy.functions
-        let modules = poopy.modules
+        let { fs, axios } = poopy.modules
         let bot = poopy.bot
 
         var ownerid = config.ownerids.find(id => id == msg.author.id);
@@ -37,9 +37,9 @@ module.exports = {
             
             await execPromise(`ffmpeg -i ${filepath}/${filename} -vf "crop=w='min(min(iw,ih),500)':h='min(min(iw,ih),500)',scale=1024:1024,setsar=1" -vframes 1 ${filepath}/output.png`)
 
-            if (!modules.fs.existsSync(`${filepath}/output.png`)) return
+            if (!fs.existsSync(`${filepath}/output.png`)) return
 
-            var imageData = modules.fs.readFileSync(`${filepath}/output.png`)
+            var imageData = fs.readFileSync(`${filepath}/output.png`)
 
             var waitMsg = await msg.reply(`Haha... This might take a century`).catch(() => { })
 
@@ -54,7 +54,7 @@ module.exports = {
             }
 
             async function dalle2Request() {
-                var taskRes = await modules.axios.request({
+                var taskRes = await axios.request({
                     url: 'https://labs.openai.com/api/labs/tasks',
                     method: 'POST',
                     data: {
@@ -80,7 +80,7 @@ module.exports = {
                 while (!imageRes) {
                     await sleep(20000)
 
-                    var taskCompleteRes = await modules.axios.request({
+                    var taskCompleteRes = await axios.request({
                         url: `https://labs.openai.com/api/labs/tasks/${taskId}`,
                         method: 'GET',
                         headers: {
@@ -142,7 +142,7 @@ module.exports = {
             await msg.reply({
                 content: `Unsupported file: \`${currenturl}\``,
                 allowedMentions: {
-                    parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })

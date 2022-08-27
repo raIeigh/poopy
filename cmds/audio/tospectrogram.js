@@ -6,7 +6,7 @@ module.exports = {
         let { lastUrl, validateFile, spectrogram, sendFile } = poopy.functions
         let vars = poopy.vars
         let config = poopy.config
-        let modules = poopy.modules
+        let { fs } = poopy.modules
 
         await msg.channel.sendTyping().catch(() => { })
         if (lastUrl(msg, 0, true) === undefined && args[2] === undefined) {
@@ -43,7 +43,7 @@ module.exports = {
             var currentcount = vars.filecount
             vars.filecount++
             var filepath = `temp/${config.mongodatabase}/file${currentcount}`
-            modules.fs.mkdirSync(`${filepath}`)
+            fs.mkdirSync(`${filepath}`)
 
             var spectrogramData = await spectrogram(currenturl, {
                 o_length: duration,
@@ -51,14 +51,14 @@ module.exports = {
                 o_factor: density
             }).catch(() => { })
 
-            modules.fs.writeFileSync(`${filepath}/output.wav`, spectrogramData)
+            fs.writeFileSync(`${filepath}/output.wav`, spectrogramData)
 
             return await sendFile(msg, filepath, `output.wav`)
         } else {
             await msg.reply({
                 content: `Unsupported file: \`${currenturl}\``,
                 allowedMentions: {
-                    parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })

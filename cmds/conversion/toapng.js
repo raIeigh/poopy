@@ -4,7 +4,7 @@ module.exports = {
     execute: async function (msg, args) {
         let poopy = this
         let { lastUrl, validateFile, downloadFile, execPromise, findpreset, sendFile } = poopy.functions
-        let modules = poopy.modules
+        let { fs } = poopy.modules
 
         await msg.channel.sendTyping().catch(() => { })
         if (lastUrl(msg, 0) === undefined && args[1] === undefined) {
@@ -41,11 +41,11 @@ module.exports = {
 
             await execPromise(`ffmpeg -i ${filepath}/${filename} -filter_complex "[0:v]scale='min(400,iw)':min'(400,ih)':force_original_aspect_ratio=decrease[out]" -map "[out]" -preset ${findpreset(args)} -plays 0 -t ${duration >= iduration ? iduration : duration} -r ${fps} ${filepath}/output.apng`)
             try {
-                modules.fs.renameSync(`${filepath}/output.apng`, `${filepath}/output.png`)
+                fs.renameSync(`${filepath}/output.apng`, `${filepath}/output.png`)
             } catch (_) {
                 await msg.reply('Couldn\'t send file.').catch(() => { })
                 await msg.channel.sendTyping().catch(() => { })
-                modules.fs.rmSync(`${filepath}`, { force: true, recursive: true })
+                fs.rmSync(`${filepath}`, { force: true, recursive: true })
                 return
             }
             return await sendFile(msg, filepath, `output.png`)
@@ -58,11 +58,11 @@ module.exports = {
 
             await execPromise(`ffmpeg -i ${filepath}/${filename} -plays 0 -t ${duration >= iduration ? iduration : duration} -r ${fps} -preset ${findpreset(args)} ${filepath}/output.apng`)
             try {
-                modules.fs.renameSync(`${filepath}/output.apng`, `${filepath}/output.png`)
+                fs.renameSync(`${filepath}/output.apng`, `${filepath}/output.png`)
             } catch (_) {
                 await msg.reply('Couldn\'t send file.').catch(() => { })
                 await msg.channel.sendTyping().catch(() => { })
-                modules.fs.rmSync(`${filepath}`, { force: true, recursive: true })
+                fs.rmSync(`${filepath}`, { force: true, recursive: true })
                 return
             }
             return await sendFile(msg, filepath, `output.png`)
@@ -70,7 +70,7 @@ module.exports = {
             await msg.reply({
                 content: `Unsupported file: \`${currenturl}\``,
                 allowedMentions: {
-                    parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })

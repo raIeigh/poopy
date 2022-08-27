@@ -7,7 +7,7 @@ module.exports = {
         let { lastUrl, validateFile, lastUrls, downloadFile, sendFile } = poopy.functions
         let vars = poopy.vars
         let config = poopy.config
-        let modules = poopy.modules
+        let { fs, Jimp, Discord } = poopy.modules
 
         await msg.channel.sendTyping().catch(() => { })
         if (lastUrl(msg, 0) === undefined && args[1] === undefined) {
@@ -119,7 +119,7 @@ module.exports = {
             await msg.reply({
                 content: lasturlserror,
                 allowedMentions: {
-                    parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
@@ -142,7 +142,7 @@ module.exports = {
                     await msg.reply({
                         content: error,
                         allowedMentions: {
-                            parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                            parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                         }
                     }).catch(() => { })
                     await msg.channel.sendTyping().catch(() => { })
@@ -154,7 +154,7 @@ module.exports = {
                     await msg.reply({
                         content: error,
                         allowedMentions: {
-                            parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                            parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                         }
                     }).catch(() => { })
                     await msg.channel.sendTyping().catch(() => { })
@@ -168,10 +168,10 @@ module.exports = {
         var currentcount = vars.filecount
         vars.filecount++
         var filepath = `temp/${config.mongodatabase}/file${currentcount}`
-        modules.fs.mkdirSync(`${filepath}`)
+        fs.mkdirSync(`${filepath}`)
 
-        var iceberg = await modules.Jimp.read(`assets/iceberg.png`)
-        var arialr = await modules.Jimp.loadFont(`assets/fonts/ArialRed/ArialRed.fnt`)
+        var iceberg = await Jimp.read(`assets/iceberg.png`)
+        var arialr = await Jimp.loadFont(`assets/fonts/ArialRed/ArialRed.fnt`)
 
         for (var i in stageimages) {
             var imageurl = stageimages[i]
@@ -183,7 +183,7 @@ module.exports = {
                 fileinfo: info,
                 filepath: filepath
             })
-            var image = await modules.Jimp.read(`${filepath}/${i}.png`)
+            var image = await Jimp.read(`${filepath}/${i}.png`)
             image.resize(dimensions[2], dimensions[3])
             iceberg.composite(image, dimensions[0], dimensions[1])
         }
@@ -200,7 +200,7 @@ module.exports = {
             var text = wordsS.join('')
             var dimensions = stagewrdsdimensions[i]
 
-            await iceberg.print(arialr, dimensions[0], dimensions[1], { text: modules.Discord.Util.cleanContent(text, msg), alignmentX: modules.Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: modules.Jimp.VERTICAL_ALIGN_MIDDLE }, dimensions[2], dimensions[3])
+            await iceberg.print(arialr, dimensions[0], dimensions[1], { text: Discord.Util.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, dimensions[2], dimensions[3])
         }
 
         iceberg.crop(0, 0, iceberg.bitmap.width, stagewrdsdimensions['stage' + stages][1] + stagewrdsdimensions['stage' + stages][3])

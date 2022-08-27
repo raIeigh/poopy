@@ -4,7 +4,7 @@ module.exports = {
     execute: async function (msg, args) {
         let poopy = this
         let { lastUrl, validateFile, downloadFile, lerp, execPromise, findpreset, validateFileFromPath, sendFile } = poopy.functions
-        let modules = poopy.modules
+        let { fs } = poopy.modules
         let vars = poopy.vars
 
         await msg.channel.sendTyping().catch(() => { })
@@ -66,7 +66,7 @@ module.exports = {
                 if (!gradualinfo) {
                     await msg.reply('Error while processing initial effect.').catch(() => { })
                     await msg.channel.sendTyping().catch(() => { })
-                    modules.fs.rmSync(`${filepath}`, { force: true, recursive: true })
+                    fs.rmSync(`${filepath}`, { force: true, recursive: true })
                     return
                 }
                 var gduration = gradualinfo.info.duration
@@ -77,7 +77,7 @@ module.exports = {
                 await msg.reply({
                     content: `File has no audio stream, maybe you should just use \`gradualslowdown\` for that.`,
                     allowedMentions: {
-                        parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                        parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                     }
                 }).catch(() => { })
                 await msg.channel.sendTyping().catch(() => { })
@@ -108,7 +108,7 @@ module.exports = {
             await msg.reply({
                 content: `Maybe you should just use \`gradualslowdown\` for that.`,
                 allowedMentions: {
-                    parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
@@ -117,7 +117,7 @@ module.exports = {
             await msg.reply({
                 content: `Unsupported file: \`${currenturl}\``,
                 allowedMentions: {
-                    parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })

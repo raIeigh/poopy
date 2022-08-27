@@ -5,7 +5,7 @@ module.exports = {
         let poopy = this
         let { lastUrl, validateFile, downloadFile, execPromise, findpreset, sendFile } = poopy.functions
         let vars = poopy.vars
-        let modules = poopy.modules
+        let { Jimp, Discord } = poopy.modules
 
         await msg.channel.sendTyping().catch(() => { })
         if (lastUrl(msg, 0) === undefined && vars.validUrl.test(args[args.length - 1]) === false) {
@@ -43,11 +43,11 @@ module.exports = {
             })
             var filename = `input.png`
 
-            var pvz = await modules.Jimp.read(`assets/pvz.png`)
-            var dwarven = await modules.Jimp.loadFont('assets/fonts/Dwarven/Dwarven.fnt')
-            var brianne = await modules.Jimp.loadFont('assets/fonts/Brianne/Brianne.fnt')
-            await pvz.print(dwarven, 155, 186, { text: modules.Discord.Util.cleanContent(plantname, msg), alignmentX: modules.Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: modules.Jimp.VERTICAL_ALIGN_MIDDLE }, 189, 27)
-            await pvz.print(brianne, 166, 223, { text: modules.Discord.Util.cleanContent(plantdescription, msg), alignmentX: modules.Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: modules.Jimp.VERTICAL_ALIGN_MIDDLE }, 166, 66)
+            var pvz = await Jimp.read(`assets/pvz.png`)
+            var dwarven = await Jimp.loadFont('assets/fonts/Dwarven/Dwarven.fnt')
+            var brianne = await Jimp.loadFont('assets/fonts/Brianne/Brianne.fnt')
+            await pvz.print(dwarven, 155, 186, { text: Discord.Util.cleanContent(plantname, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 189, 27)
+            await pvz.print(brianne, 166, 223, { text: Discord.Util.cleanContent(plantdescription, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 166, 66)
             await pvz.writeAsync(`${filepath}/pvz.png`)
 
             var width = fileinfo.info.width
@@ -63,11 +63,11 @@ module.exports = {
             })
             var filename = `input.mp4`
 
-            var pvz = await modules.Jimp.read(`assets/pvz.png`)
-            var dwarven = await modules.Jimp.loadFont('assets/fonts/Dwarven/Dwarven.fnt')
-            var brianne = await modules.Jimp.loadFont('assets/fonts/Brianne/Brianne.fnt')
-            await pvz.print(dwarven, 155, 186, { text: modules.Discord.Util.cleanContent(plantname, msg), alignmentX: modules.Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: modules.Jimp.VERTICAL_ALIGN_MIDDLE }, 189, 27)
-            await pvz.print(brianne, 166, 223, { text: modules.Discord.Util.cleanContent(plantdescription, msg), alignmentX: modules.Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: modules.Jimp.VERTICAL_ALIGN_MIDDLE }, 166, 66)
+            var pvz = await Jimp.read(`assets/pvz.png`)
+            var dwarven = await Jimp.loadFont('assets/fonts/Dwarven/Dwarven.fnt')
+            var brianne = await Jimp.loadFont('assets/fonts/Brianne/Brianne.fnt')
+            await pvz.print(dwarven, 155, 186, { text: Discord.Util.cleanContent(plantname, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 189, 27)
+            await pvz.print(brianne, 166, 223, { text: Discord.Util.cleanContent(plantdescription, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 166, 66)
             await pvz.writeAsync(`${filepath}/pvz.png`)
 
             var width = fileinfo.info.width
@@ -81,11 +81,11 @@ module.exports = {
             var filepath = await downloadFile(currenturl, `input.gif`)
             var filename = `input.gif`
 
-            var pvz = await modules.Jimp.read(`assets/pvz.png`)
-            var dwarven = await modules.Jimp.loadFont('assets/fonts/Dwarven/Dwarven.fnt')
-            var brianne = await modules.Jimp.loadFont('assets/fonts/Brianne/Brianne.fnt')
-            await pvz.print(dwarven, 155, 186, { text: modules.Discord.Util.cleanContent(plantname, msg), alignmentX: modules.Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: modules.Jimp.VERTICAL_ALIGN_MIDDLE }, 189, 27)
-            await pvz.print(brianne, 166, 223, { text: modules.Discord.Util.cleanContent(plantdescription, msg), alignmentX: modules.Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: modules.Jimp.VERTICAL_ALIGN_MIDDLE }, 166, 66)
+            var pvz = await Jimp.read(`assets/pvz.png`)
+            var dwarven = await Jimp.loadFont('assets/fonts/Dwarven/Dwarven.fnt')
+            var brianne = await Jimp.loadFont('assets/fonts/Brianne/Brianne.fnt')
+            await pvz.print(dwarven, 155, 186, { text: Discord.Util.cleanContent(plantname, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 189, 27)
+            await pvz.print(brianne, 166, 223, { text: Discord.Util.cleanContent(plantdescription, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 166, 66)
             await pvz.writeAsync(`${filepath}/pvz.png`)
 
             var width = fileinfo.info.width
@@ -99,7 +99,7 @@ module.exports = {
             await msg.reply({
                 content: `Unsupported file: \`${currenturl}\``,
                 allowedMentions: {
-                    parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })

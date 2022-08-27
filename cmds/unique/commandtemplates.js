@@ -192,7 +192,7 @@ module.exports = {
                 await msg.reply({
                     content: `✅ \`${name}\` was successfully registered to the command template database! (ID: \`${id}\`)`,
                     allowedMentions: {
-                        parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                        parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                     }
                 }).catch(() => { })
             }
@@ -291,7 +291,7 @@ module.exports = {
                         customid: 'import',
                         style: 'PRIMARY',
                         function: async (page, button) => {
-                            if (msg.member.permissihas('MANAGE_GUILD') || msg.member.permissihas('MANAGE_MESSAGES') || msg.member.permissihas('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
+                            if (msg.member.permissions.has('MANAGE_GUILD') || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
                                 var findCommandTemplate = dcmdTemplates[page - 1]
 
                                 if (findCommandTemplate) {
@@ -318,7 +318,7 @@ module.exports = {
                                     await msg.reply({
                                         content: `✅ Imported \`${name}\` command from the database.`,
                                         allowedMentions: {
-                                            parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                                            parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                                         }
                                     }).catch(() => { })
                                 } else {
@@ -452,7 +452,7 @@ module.exports = {
                         customid: 'import',
                         style: 'PRIMARY',
                         function: async (page, button) => {
-                            if (msg.member.permissihas('MANAGE_GUILD') || msg.member.permissihas('MANAGE_MESSAGES') || msg.member.permissihas('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
+                            if (msg.member.permissions.has('MANAGE_GUILD') || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
                                 var findCommandTemplate = dcmdTemplates[page - 1]
 
                                 if (findCommandTemplate) {
@@ -479,7 +479,7 @@ module.exports = {
                                     await msg.reply({
                                         content: `✅ Imported \`${name}\` command from the database.`,
                                         allowedMentions: {
-                                            parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                                            parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                                         }
                                     }).catch(() => { })
                                 } else {

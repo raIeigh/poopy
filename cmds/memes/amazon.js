@@ -5,7 +5,7 @@ module.exports = {
         let poopy = this
         let { lastUrl, validateFile, downloadFile, execPromise, findpreset, sendFile } = poopy.functions
         let vars = poopy.vars
-        let modules = poopy.modules
+        let { Jimp, Discord } = poopy.modules
 
         await msg.channel.sendTyping().catch(() => { })
         if (lastUrl(msg, 0) === undefined && vars.validUrl.test(args[args.length - 1]) === false) {
@@ -54,18 +54,18 @@ module.exports = {
             })
             var filename = `input.png`
 
-            var amazon = await modules.Jimp.read(`assets/amazon.png`)
-            var ystars = await modules.Jimp.read(`assets/ystars.png`)
-            var wstars = await modules.Jimp.read(`assets/wstars.png`)
-            var amazonemlink = await modules.Jimp.loadFont('assets/fonts/AmazonEmberLink/AmazonEmberLink.fnt')
-            var amazonemsmall = await modules.Jimp.loadFont('assets/fonts/AmazonEmberSmall/AmazonEmberSmall.fnt')
-            var amazonembig = await modules.Jimp.loadFont('assets/fonts/AmazonEmberBig/AmazonEmberBig.fnt')
+            var amazon = await Jimp.read(`assets/amazon.png`)
+            var ystars = await Jimp.read(`assets/ystars.png`)
+            var wstars = await Jimp.read(`assets/wstars.png`)
+            var amazonemlink = await Jimp.loadFont('assets/fonts/AmazonEmberLink/AmazonEmberLink.fnt')
+            var amazonemsmall = await Jimp.loadFont('assets/fonts/AmazonEmberSmall/AmazonEmberSmall.fnt')
+            var amazonembig = await Jimp.loadFont('assets/fonts/AmazonEmberBig/AmazonEmberBig.fnt')
             ystars.crop(0, 0, ystars.bitmap.width * (numberrating / 5), ystars.bitmap.height)
             wstars.composite(ystars, 0, 0)
             amazon.composite(wstars, 16, 299)
-            await amazon.print(amazonemlink, 14, 219, { text: modules.Discord.Util.cleanContent(name, msg), alignmentX: modules.Jimp.HORIZONTAL_ALIGN_LEFT, alignmentY: modules.Jimp.VERTICAL_ALIGN_MIDDLE }, 209, 49)
-            await amazon.print(amazonembig, 22, 275, { text: modules.Discord.Util.cleanContent(price1, msg), alignmentX: modules.Jimp.HORIZONTAL_ALIGN_RIGHT, alignmentY: modules.Jimp.VERTICAL_ALIGN_MIDDLE }, 36, 18)
-            await amazon.print(amazonemsmall, 60, 275, { text: modules.Discord.Util.cleanContent(price2, msg), alignmentX: modules.Jimp.HORIZONTAL_ALIGN_LEFT, alignmentY: modules.Jimp.VERTICAL_ALIGN_MIDDLE }, 20, 12)
+            await amazon.print(amazonemlink, 14, 219, { text: Discord.Util.cleanContent(name, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_LEFT, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 209, 49)
+            await amazon.print(amazonembig, 22, 275, { text: Discord.Util.cleanContent(price1, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_RIGHT, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 36, 18)
+            await amazon.print(amazonemsmall, 60, 275, { text: Discord.Util.cleanContent(price2, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_LEFT, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 20, 12)
             await amazon.writeAsync(`${filepath}/amazon.png`)
 
             var width = fileinfo.info.width
@@ -81,18 +81,18 @@ module.exports = {
             })
             var filename = `input.mp4`
 
-            var amazon = await modules.Jimp.read(`assets/amazon.png`)
-            var ystars = await modules.Jimp.read(`assets/ystars.png`)
-            var wstars = await modules.Jimp.read(`assets/wstars.png`)
-            var amazonemlink = await modules.Jimp.loadFont('assets/fonts/AmazonEmberLink/AmazonEmberLink.fnt')
-            var amazonemsmall = await modules.Jimp.loadFont('assets/fonts/AmazonEmberSmall/AmazonEmberSmall.fnt')
-            var amazonembig = await modules.Jimp.loadFont('assets/fonts/AmazonEmberBig/AmazonEmberBig.fnt')
+            var amazon = await Jimp.read(`assets/amazon.png`)
+            var ystars = await Jimp.read(`assets/ystars.png`)
+            var wstars = await Jimp.read(`assets/wstars.png`)
+            var amazonemlink = await Jimp.loadFont('assets/fonts/AmazonEmberLink/AmazonEmberLink.fnt')
+            var amazonemsmall = await Jimp.loadFont('assets/fonts/AmazonEmberSmall/AmazonEmberSmall.fnt')
+            var amazonembig = await Jimp.loadFont('assets/fonts/AmazonEmberBig/AmazonEmberBig.fnt')
             ystars.crop(0, 0, ystars.bitmap.width * (numberrating / 5), ystars.bitmap.height)
             wstars.composite(ystars, 0, 0)
             amazon.composite(wstars, 16, 299)
-            await amazon.print(amazonemlink, 14, 219, { text: modules.Discord.Util.cleanContent(name, msg), alignmentX: modules.Jimp.HORIZONTAL_ALIGN_LEFT, alignmentY: modules.Jimp.VERTICAL_ALIGN_MIDDLE }, 209, 49)
-            await amazon.print(amazonembig, 22, 275, { text: modules.Discord.Util.cleanContent(price1, msg), alignmentX: modules.Jimp.HORIZONTAL_ALIGN_RIGHT, alignmentY: modules.Jimp.VERTICAL_ALIGN_MIDDLE }, 36, 18)
-            await amazon.print(amazonemsmall, 60, 275, { text: modules.Discord.Util.cleanContent(price2, msg), alignmentX: modules.Jimp.HORIZONTAL_ALIGN_LEFT, alignmentY: modules.Jimp.VERTICAL_ALIGN_MIDDLE }, 20, 12)
+            await amazon.print(amazonemlink, 14, 219, { text: Discord.Util.cleanContent(name, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_LEFT, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 209, 49)
+            await amazon.print(amazonembig, 22, 275, { text: Discord.Util.cleanContent(price1, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_RIGHT, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 36, 18)
+            await amazon.print(amazonemsmall, 60, 275, { text: Discord.Util.cleanContent(price2, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_LEFT, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 20, 12)
             await amazon.writeAsync(`${filepath}/amazon.png`)
 
             var width = fileinfo.info.width
@@ -106,18 +106,18 @@ module.exports = {
             var filepath = await downloadFile(currenturl, `input.gif`)
             var filename = `input.gif`
 
-            var amazon = await modules.Jimp.read(`assets/amazon.png`)
-            var ystars = await modules.Jimp.read(`assets/ystars.png`)
-            var wstars = await modules.Jimp.read(`assets/wstars.png`)
-            var amazonemlink = await modules.Jimp.loadFont('assets/fonts/AmazonEmberLink/AmazonEmberLink.fnt')
-            var amazonemsmall = await modules.Jimp.loadFont('assets/fonts/AmazonEmberSmall/AmazonEmberSmall.fnt')
-            var amazonembig = await modules.Jimp.loadFont('assets/fonts/AmazonEmberBig/AmazonEmberBig.fnt')
+            var amazon = await Jimp.read(`assets/amazon.png`)
+            var ystars = await Jimp.read(`assets/ystars.png`)
+            var wstars = await Jimp.read(`assets/wstars.png`)
+            var amazonemlink = await Jimp.loadFont('assets/fonts/AmazonEmberLink/AmazonEmberLink.fnt')
+            var amazonemsmall = await Jimp.loadFont('assets/fonts/AmazonEmberSmall/AmazonEmberSmall.fnt')
+            var amazonembig = await Jimp.loadFont('assets/fonts/AmazonEmberBig/AmazonEmberBig.fnt')
             ystars.crop(0, 0, ystars.bitmap.width * (numberrating / 5), ystars.bitmap.height)
             wstars.composite(ystars, 0, 0)
             amazon.composite(wstars, 16, 299)
-            await amazon.print(amazonemlink, 14, 219, { text: modules.Discord.Util.cleanContent(name, msg), alignmentX: modules.Jimp.HORIZONTAL_ALIGN_LEFT, alignmentY: modules.Jimp.VERTICAL_ALIGN_MIDDLE }, 209, 49)
-            await amazon.print(amazonembig, 22, 275, { text: modules.Discord.Util.cleanContent(price1, msg), alignmentX: modules.Jimp.HORIZONTAL_ALIGN_RIGHT, alignmentY: modules.Jimp.VERTICAL_ALIGN_MIDDLE }, 36, 18)
-            await amazon.print(amazonemsmall, 60, 275, { text: modules.Discord.Util.cleanContent(price2, msg), alignmentX: modules.Jimp.HORIZONTAL_ALIGN_LEFT, alignmentY: modules.Jimp.VERTICAL_ALIGN_MIDDLE }, 20, 12)
+            await amazon.print(amazonemlink, 14, 219, { text: Discord.Util.cleanContent(name, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_LEFT, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 209, 49)
+            await amazon.print(amazonembig, 22, 275, { text: Discord.Util.cleanContent(price1, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_RIGHT, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 36, 18)
+            await amazon.print(amazonemsmall, 60, 275, { text: Discord.Util.cleanContent(price2, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_LEFT, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 20, 12)
             await amazon.writeAsync(`${filepath}/amazon.png`)
 
             var width = fileinfo.info.width
@@ -131,7 +131,7 @@ module.exports = {
             await msg.reply({
                 content: `Unsupported file: \`${currenturl}\``,
                 allowedMentions: {
-                    parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })

@@ -6,7 +6,7 @@ module.exports = {
         let { lastUrl, validateFile, execPromise, sendFile } = poopy.functions
         let vars = poopy.vars
         let config = poopy.config
-        let modules = poopy.modules
+        let { fs, Jimp } = poopy.modules
 
         const rapping = [
             {
@@ -70,17 +70,17 @@ module.exports = {
             var currentcount = vars.filecount
             vars.filecount++
             var filepath = `temp/${config.mongodatabase}/file${currentcount}`
-            modules.fs.mkdirSync(`${filepath}`)
-            modules.fs.mkdirSync(`${filepath}/frames`)
+            fs.mkdirSync(`${filepath}`)
+            fs.mkdirSync(`${filepath}/frames`)
             for (var i = 0; i < rapping.length; i++) {
                 var rapFrame = rapping[i]
-                var frame = await modules.Jimp.read(currenturl)
-                var rap = await modules.Jimp.read(`assets/rapping/${rapFrame.name}.png`)
-                var rapm = await modules.Jimp.read(`assets/rappingmask/${rapFrame.name}.png`)
-                var stage = await modules.Jimp.read(`assets/stage.png`)
-                var transparent = await modules.Jimp.read(`assets/transparent.png`)
+                var frame = await Jimp.read(currenturl)
+                var rap = await Jimp.read(`assets/rapping/${rapFrame.name}.png`)
+                var rapm = await Jimp.read(`assets/rappingmask/${rapFrame.name}.png`)
+                var stage = await Jimp.read(`assets/stage.png`)
+                var transparent = await Jimp.read(`assets/transparent.png`)
                 var squareS = { value: ((frame.bitmap.height === frame.bitmap.width) && frame.bitmap.width) || ((frame.bitmap.height > frame.bitmap.width) && frame.bitmap.height) || frame.bitmap.width, constraint: ((frame.bitmap.height === frame.bitmap.width) && 'both') || ((frame.bitmap.height > frame.bitmap.width) && 'height') || 'width' }
-                frame.resize(squareS.constraint === 'width' || squareS.constraint === 'both' ? 70 : modules.Jimp.AUTO, squareS.constraint === 'height' || squareS.constraint === 'both' ? 70 : modules.Jimp.AUTO)
+                frame.resize(squareS.constraint === 'width' || squareS.constraint === 'both' ? 70 : Jimp.AUTO, squareS.constraint === 'height' || squareS.constraint === 'both' ? 70 : Jimp.AUTO)
                 frame.rotate(rapFrame.angle)
                 transparent.resize(stage.bitmap.width, stage.bitmap.height)
                 transparent.composite(frame, rapFrame.position[0] - frame.bitmap.width / 2, rapFrame.position[1] - frame.bitmap.height + 10)
@@ -96,18 +96,18 @@ module.exports = {
             var currentcount = vars.filecount
             vars.filecount++
             var filepath = `temp/${config.mongodatabase}/file${currentcount}`
-            modules.fs.mkdirSync(`${filepath}`)
-            modules.fs.mkdirSync(`${filepath}/frames`)
+            fs.mkdirSync(`${filepath}`)
+            fs.mkdirSync(`${filepath}/frames`)
             await execPromise(`ffmpeg -i "${currenturl}" -vframes 1 ${filepath}/output.png`)
             for (var i = 0; i < rapping.length; i++) {
                 var rapFrame = rapping[i]
-                var frame = await modules.Jimp.read(`${filepath}/output.png`)
-                var rap = await modules.Jimp.read(`assets/rapping/${rapFrame.name}.png`)
-                var rapm = await modules.Jimp.read(`assets/rappingmask/${rapFrame.name}.png`)
-                var stage = await modules.Jimp.read(`assets/stage.png`)
-                var transparent = await modules.Jimp.read(`assets/transparent.png`)
+                var frame = await Jimp.read(`${filepath}/output.png`)
+                var rap = await Jimp.read(`assets/rapping/${rapFrame.name}.png`)
+                var rapm = await Jimp.read(`assets/rappingmask/${rapFrame.name}.png`)
+                var stage = await Jimp.read(`assets/stage.png`)
+                var transparent = await Jimp.read(`assets/transparent.png`)
                 var squareS = { value: ((frame.bitmap.height === frame.bitmap.width) && frame.bitmap.width) || ((frame.bitmap.height > frame.bitmap.width) && frame.bitmap.height) || frame.bitmap.width, constraint: ((frame.bitmap.height === frame.bitmap.width) && 'both') || ((frame.bitmap.height > frame.bitmap.width) && 'height') || 'width' }
-                frame.resize(squareS.constraint === 'width' || squareS.constraint === 'both' ? 70 : modules.Jimp.AUTO, squareS.constraint === 'height' || squareS.constraint === 'both' ? 70 : modules.Jimp.AUTO)
+                frame.resize(squareS.constraint === 'width' || squareS.constraint === 'both' ? 70 : Jimp.AUTO, squareS.constraint === 'height' || squareS.constraint === 'both' ? 70 : Jimp.AUTO)
                 frame.rotate(rapFrame.angle)
                 transparent.resize(stage.bitmap.width, stage.bitmap.height)
                 transparent.composite(frame, rapFrame.position[0] - frame.bitmap.width / 2, rapFrame.position[1] - frame.bitmap.height + 10)
@@ -123,7 +123,7 @@ module.exports = {
             await msg.reply({
                 content: `Unsupported file: \`${currenturl}\``,
                 allowedMentions: {
-                    parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })

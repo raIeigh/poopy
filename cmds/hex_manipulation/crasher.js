@@ -5,9 +5,9 @@ module.exports = {
         let poopy = this
         let config = poopy.config
         let { lastUrl, validateFile, downloadFile, execPromise, findpreset, sendFile } = poopy.functions
-        let modules = poopy.modules
+        let { fs } = poopy.modules
 
-        if (msg.member.permissihas('MANAGE_GUILD') || msg.member.permissihas('MANAGE_MESSAGES') || msg.member.permissihas('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
+        if (msg.member.permissions.has('MANAGE_GUILD') || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
             await msg.channel.sendTyping().catch(() => { })
             if (lastUrl(msg, 0) === undefined && args[1] === undefined) {
                 await msg.reply('What is the file?!').catch(() => { })
@@ -29,17 +29,17 @@ module.exports = {
                     fileinfo: fileinfo
                 })
                 var filename = `input.${fileinfo.shortext}`
-                modules.fs.copyFileSync(`assets/crash.webm`, `${filepath}/crash.webm`)
+                fs.copyFileSync(`assets/crash.webm`, `${filepath}/crash.webm`)
 
                 await execPromise(`ffmpeg -i ${filepath}/${filename} -pix_fmt yuv444p -preset ${findpreset(args)} ${filepath}/webm.webm`)
-                modules.fs.writeFileSync(`${filepath}/concat.txt`, `file 'webm.webm'\nfile 'crash.webm'`)
+                fs.writeFileSync(`${filepath}/concat.txt`, `file 'webm.webm'\nfile 'crash.webm'`)
                 await execPromise(`ffmpeg -f concat -i ${filepath}/concat.txt -codec copy -preset ${findpreset(args)} ${filepath}/output.webm`)
                 return await sendFile(msg, filepath, `output.webm`)
             } else {
                 await msg.reply({
                     content: `Unsupported file: \`${currenturl}\``,
                     allowedMentions: {
-                        parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                        parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                     }
                 }).catch(() => { })
                 await msg.channel.sendTyping().catch(() => { })

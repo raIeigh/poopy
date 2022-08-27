@@ -5,7 +5,7 @@ module.exports = {
         let poopy = this
         let { lastUrl, validateFile, downloadFile, execPromise, findpreset, sendFile } = poopy.functions
         let vars = poopy.vars
-        let modules = poopy.modules
+        let { Jimp, Discord } = poopy.modules
 
         await msg.channel.sendTyping().catch(() => { })
         if (lastUrl(msg, 0) === undefined && vars.validUrl.test(args[args.length - 1]) === false) {
@@ -48,14 +48,14 @@ module.exports = {
             var width = fileinfo.info.width
             var height = fileinfo.info.height
 
-            var white = await modules.Jimp.read('assets/white.png')
-            var futura = await modules.Jimp.loadFont('assets/fonts/FuturaCondensed/FuturaCondensed.fnt')
+            var white = await Jimp.read('assets/white.png')
+            var futura = await Jimp.loadFont('assets/fonts/FuturaCondensed/FuturaCondensed.fnt')
             white.resize(width, height)
-            white.resize(Math.round(2000 / size), modules.Jimp.AUTO)
-            var textheight = modules.Jimp.measureTextHeight(futura, text, white.bitmap.width - Math.round(160 / size))
+            white.resize(Math.round(2000 / size), Jimp.AUTO)
+            var textheight = Jimp.measureTextHeight(futura, text, white.bitmap.width - Math.round(160 / size))
             white.resize(Math.round(2000 / size), textheight + Math.round(160 / size))
-            await white.print(futura, Math.round(80 / size), Math.round(80 / size), { text: modules.Discord.Util.cleanContent(text, msg), alignmentX: modules.Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: modules.Jimp.VERTICAL_ALIGN_MIDDLE }, white.bitmap.width - Math.round(160 / size), white.bitmap.height - Math.round(160 / size))
-            white.resize(width, modules.Jimp.AUTO)
+            await white.print(futura, Math.round(80 / size), Math.round(80 / size), { text: Discord.Util.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, white.bitmap.width - Math.round(160 / size), white.bitmap.height - Math.round(160 / size))
+            white.resize(width, Jimp.AUTO)
             await white.writeAsync(`${filepath}/caption.png`)
 
             await execPromise(`ffmpeg -i ${filepath}/caption.png -i ${filepath}/${filename} -filter_complex "vstack=inputs=2[out]" -map "[out]" -preset ${findpreset(args)} ${filepath}/output.png`)
@@ -71,14 +71,14 @@ module.exports = {
             var height = fileinfo.info.height
             var fps = fileinfo.info.fps
 
-            var white = await modules.Jimp.read('assets/white.png')
-            var futura = await modules.Jimp.loadFont('assets/fonts/FuturaCondensed/FuturaCondensed.fnt')
+            var white = await Jimp.read('assets/white.png')
+            var futura = await Jimp.loadFont('assets/fonts/FuturaCondensed/FuturaCondensed.fnt')
             white.resize(width, height)
-            white.resize(Math.round(2000 / size), modules.Jimp.AUTO)
-            var textheight = modules.Jimp.measureTextHeight(futura, text, white.bitmap.width - Math.round(160 / size))
+            white.resize(Math.round(2000 / size), Jimp.AUTO)
+            var textheight = Jimp.measureTextHeight(futura, text, white.bitmap.width - Math.round(160 / size))
             white.resize(Math.round(2000 / size), textheight + Math.round(160 / size))
-            await white.print(futura, Math.round(80 / size), Math.round(80 / size), { text: modules.Discord.Util.cleanContent(text, msg), alignmentX: modules.Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: modules.Jimp.VERTICAL_ALIGN_MIDDLE }, white.bitmap.width - Math.round(160 / size), white.bitmap.height - Math.round(160 / size))
-            white.resize(width, modules.Jimp.AUTO)
+            await white.print(futura, Math.round(80 / size), Math.round(80 / size), { text: Discord.Util.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, white.bitmap.width - Math.round(160 / size), white.bitmap.height - Math.round(160 / size))
+            white.resize(width, Jimp.AUTO)
             await white.writeAsync(`${filepath}/caption.png`)
 
             await execPromise(`ffmpeg ${fps.includes('0/0') ? '' : `-r ${fps.includes('0/0') ? '50' : fps} `}-i ${filepath}/caption.png ${fps.includes('0/0') ? '' : `-r ${fps.includes('0/0') ? '50' : fps} `}-i ${filepath}/${filename} -map 1:a? -filter_complex "vstack=inputs=2[oout];[oout]scale=ceil(iw/2)*2:ceil(ih/2)*2[out]" -map "[out]" -preset ${findpreset(args)} -c:v libx264 -pix_fmt yuv420p ${filepath}/output.mp4`)
@@ -94,14 +94,14 @@ module.exports = {
             var height = fileinfo.info.height
             var fps = fileinfo.info.fps
 
-            var white = await modules.Jimp.read('assets/white.png')
-            var futura = await modules.Jimp.loadFont('assets/fonts/FuturaCondensed/FuturaCondensed.fnt')
+            var white = await Jimp.read('assets/white.png')
+            var futura = await Jimp.loadFont('assets/fonts/FuturaCondensed/FuturaCondensed.fnt')
             white.resize(width, height)
-            white.resize(Math.round(2000 / size), modules.Jimp.AUTO)
-            var textheight = modules.Jimp.measureTextHeight(futura, text, white.bitmap.width - Math.round(160 / size))
+            white.resize(Math.round(2000 / size), Jimp.AUTO)
+            var textheight = Jimp.measureTextHeight(futura, text, white.bitmap.width - Math.round(160 / size))
             white.resize(Math.round(2000 / size), textheight + Math.round(160 / size))
-            await white.print(futura, Math.round(80 / size), Math.round(80 / size), { text: modules.Discord.Util.cleanContent(text, msg), alignmentX: modules.Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: modules.Jimp.VERTICAL_ALIGN_MIDDLE }, white.bitmap.width - Math.round(160 / size), white.bitmap.height - Math.round(160 / size))
-            white.resize(width, modules.Jimp.AUTO)
+            await white.print(futura, Math.round(80 / size), Math.round(80 / size), { text: Discord.Util.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, white.bitmap.width - Math.round(160 / size), white.bitmap.height - Math.round(160 / size))
+            white.resize(width, Jimp.AUTO)
             await white.writeAsync(`${filepath}/caption.png`)
 
             await execPromise(`ffmpeg ${fps.includes('0/0') ? '' : `-r ${fps.includes('0/0') ? '50' : fps} `}-i ${filepath}/caption.png ${fps.includes('0/0') ? '' : `-r ${fps.includes('0/0') ? '50' : fps} `}-i ${filepath}/${filename} -filter_complex "vstack=inputs=2[oout];[oout]split[pout][ppout];[ppout]palettegen=reserve_transparent=1[palette];[pout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -preset ${findpreset(args)} -gifflags -offsetting ${filepath}/output.gif`)
@@ -111,7 +111,7 @@ module.exports = {
             await msg.reply({
                 content: `Unsupported file: \`${currenturl}\``,
                 allowedMentions: {
-                    parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })

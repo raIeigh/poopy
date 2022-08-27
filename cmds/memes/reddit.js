@@ -5,7 +5,7 @@ module.exports = {
         let poopy = this
         let { lastUrl, validateFile, downloadFile, execPromise, findpreset, sendFile } = poopy.functions
         let vars = poopy.vars
-        let modules = poopy.modules
+        let { Jimp, Discord } = poopy.modules
 
         await msg.channel.sendTyping().catch(() => { })
         if (lastUrl(msg, 0) === undefined && args[1] === undefined) {
@@ -40,9 +40,9 @@ module.exports = {
             })
             var filename = `input.png`
 
-            var reddittop = await modules.Jimp.read(`assets/reddittop.png`)
-            var ibm = await modules.Jimp.loadFont(`assets/fonts/IBMPlexSans/IBMPlexSans.fnt`)
-            await reddittop.print(ibm, 18, 315, { text: modules.Discord.Util.cleanContent(text, msg), alignmentX: modules.Jimp.HORIZONTAL_ALIGN_LEFT, alignmentY: modules.Jimp.VERTICAL_ALIGN_MIDDLE }, 364, 66)
+            var reddittop = await Jimp.read(`assets/reddittop.png`)
+            var ibm = await Jimp.loadFont(`assets/fonts/IBMPlexSans/IBMPlexSans.fnt`)
+            await reddittop.print(ibm, 18, 315, { text: Discord.Util.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_LEFT, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 364, 66)
             await reddittop.writeAsync(`${filepath}/top.png`)
 
             await execPromise(`ffmpeg -i ${filepath}/${filename} -filter_complex "[0:v]scale=${reddittop.bitmap.width}:-1[out]" -map "[out]" -preset ${findpreset(args)} ${filepath}/scaled.png`)
@@ -54,10 +54,10 @@ module.exports = {
             })
             var filename = `input.mp4`
 
-            var reddittop = await modules.Jimp.read(`assets/reddittop.png`)
-            var redditbottom = await modules.Jimp.read(`assets/redditbottom.png`)
-            var ibm = await modules.Jimp.loadFont(`assets/fonts/IBMPlexSans/IBMPlexSans.fnt`)
-            await reddittop.print(ibm, 18, 315, { text: modules.Discord.Util.cleanContent(text, msg), alignmentX: modules.Jimp.HORIZONTAL_ALIGN_LEFT, alignmentY: modules.Jimp.VERTICAL_ALIGN_MIDDLE }, 364, 66)
+            var reddittop = await Jimp.read(`assets/reddittop.png`)
+            var redditbottom = await Jimp.read(`assets/redditbottom.png`)
+            var ibm = await Jimp.loadFont(`assets/fonts/IBMPlexSans/IBMPlexSans.fnt`)
+            await reddittop.print(ibm, 18, 315, { text: Discord.Util.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_LEFT, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 364, 66)
             await reddittop.writeAsync(`${filepath}/top.png`)
 
             var fps = fileinfo.info.fps
@@ -74,9 +74,9 @@ module.exports = {
             var filepath = await downloadFile(currenturl, `input.gif`)
             var filename = `input.gif`
 
-            var reddittop = await modules.Jimp.read(`assets/reddittop.png`)
-            var ibm = await modules.Jimp.loadFont(`assets/fonts/IBMPlexSans/IBMPlexSans.fnt`)
-            await reddittop.print(ibm, 18, 315, { text: modules.Discord.Util.cleanContent(text, msg), alignmentX: modules.Jimp.HORIZONTAL_ALIGN_LEFT, alignmentY: modules.Jimp.VERTICAL_ALIGN_MIDDLE }, 364, 66)
+            var reddittop = await Jimp.read(`assets/reddittop.png`)
+            var ibm = await Jimp.loadFont(`assets/fonts/IBMPlexSans/IBMPlexSans.fnt`)
+            await reddittop.print(ibm, 18, 315, { text: Discord.Util.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_LEFT, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 364, 66)
             await reddittop.writeAsync(`${filepath}/top.png`)
 
             var fps = fileinfo.info.fps
@@ -93,7 +93,7 @@ module.exports = {
             await msg.reply({
                 content: `Unsupported file: \`${currenturl}\``,
                 allowedMentions: {
-                    parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })

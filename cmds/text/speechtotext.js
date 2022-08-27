@@ -4,7 +4,7 @@ module.exports = {
     execute: async function (msg, args) {
         let poopy = this
         let { lastUrl, validateFile, downloadFile, execPromise, findpreset, randomKey, request } = poopy.functions
-        let modules = poopy.modules
+        let { fs, Discord } = poopy.modules
         let vars = poopy.vars
         let config = poopy.config
 
@@ -51,7 +51,7 @@ module.exports = {
                     },
                     formData: {
                         sound: {
-                            value: modules.fs.readFileSync(`${filepath}/input.mp3`),
+                            value: fs.readFileSync(`${filepath}/input.mp3`),
                             options: { filename: 'input.mp3', contentType: 'application/octet-stream' }
                         }
                     }
@@ -80,23 +80,23 @@ module.exports = {
                 await msg.reply({
                     content: response.data.data.text.toLowerCase(),
                     allowedMentions: {
-                        parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                        parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                     }
                 }).catch(async () => {
                     var currentcount = vars.filecount
                     vars.filecount++
                     var filepath = `temp/${config.mongodatabase}/file${currentcount}`
-                    modules.fs.mkdirSync(`${filepath}`)
-                    modules.fs.writeFileSync(`${filepath}/speechtotext.txt`, response.data.data.text)
+                    fs.mkdirSync(`${filepath}`)
+                    fs.writeFileSync(`${filepath}/speechtotext.txt`, response.data.data.text)
                     await msg.reply({
-                        files: [new modules.Discord.MessageAttachment(`${filepath}/speechtotext.txt`)]
+                        files: [new Discord.MessageAttachment(`${filepath}/speechtotext.txt`)]
                     }).catch(() => { })
-                    modules.fs.rmSync(`${filepath}`, { force: true, recursive: true })
+                    fs.rmSync(`${filepath}`, { force: true, recursive: true })
                 })
             } else {
                 await msg.reply('No audio stream detected.').catch(() => { })
                 await msg.channel.sendTyping().catch(() => { })
-                modules.fs.rmSync(`${filepath}`, { force: true, recursive: true })
+                fs.rmSync(`${filepath}`, { force: true, recursive: true })
             }
         } else if (type.mime.startsWith('audio')) {
             var filepath = await downloadFile(currenturl, `input.mp3`, {
@@ -121,7 +121,7 @@ module.exports = {
                 },
                 formData: {
                     sound: {
-                        value: modules.fs.readFileSync(`${filepath}/input.mp3`),
+                        value: fs.readFileSync(`${filepath}/input.mp3`),
                         options: { filename: 'input.mp3', contentType: 'application/octet-stream' }
                     }
                 }
@@ -150,24 +150,24 @@ module.exports = {
             await msg.reply({
                 content: response.data.data.text.toLowerCase(),
                 allowedMentions: {
-                    parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(async () => {
                 var currentcount = vars.filecount
                 vars.filecount++
                 var filepath = `temp/${config.mongodatabase}/file${currentcount}`
-                modules.fs.mkdirSync(`${filepath}`)
-                modules.fs.writeFileSync(`${filepath}/speechtotext.txt`, response.data.data.text)
+                fs.mkdirSync(`${filepath}`)
+                fs.writeFileSync(`${filepath}/speechtotext.txt`, response.data.data.text)
                 await msg.reply({
-                    files: [new modules.Discord.MessageAttachment(`${filepath}/speechtotext.txt`)]
+                    files: [new Discord.MessageAttachment(`${filepath}/speechtotext.txt`)]
                 }).catch(() => { })
-                modules.fs.rmSync(`${filepath}`, { force: true, recursive: true })
+                fs.rmSync(`${filepath}`, { force: true, recursive: true })
             })
         } else {
             await msg.reply({
                 content: `Unsupported file: \`${currenturl}\``,
                 allowedMentions: {
-                    parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })

@@ -4,13 +4,13 @@ module.exports = {
     func: async function (matches, msg) {
         let poopy = this
         let { splitKeyFunc, getIndexOption, parseNumber } = poopy.functions
-        let modules = poopy.modules
+        let { axios } = poopy.modules
 
         var word = matches[1]
         var split = splitKeyFunc(word, { args: 2 })
         var query = getIndexOption(split, 0)[0]
         var page = getIndexOption(split, 1, { n: Infinity }).join(' | ')
-        var res = await modules.axios.request(`https://g.tenor.com/v1/search?q=${encodeURIComponent(query)}&key=${process.env.TENORKEY}&limit=100&contentfilter=${msg.channel.nsfw ? 'off' : 'medium'}`).catch(() => { })
+        var res = await axios.request(`https://g.tenor.com/v1/search?q=${encodeURIComponent(query)}&key=${process.env.TENORKEY}&limit=100&contentfilter=${msg.channel.nsfw ? 'off' : 'medium'}`).catch(() => { })
         
         if (!res) return word
 

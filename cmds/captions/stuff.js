@@ -5,7 +5,7 @@ module.exports = {
         let poopy = this
         let { lastUrl, validateFile, downloadFile, execPromise, findpreset, sendFile } = poopy.functions
         let vars = poopy.vars
-        let modules = poopy.modules
+        let { Jimp, Discord } = poopy.modules
 
         await msg.channel.sendTyping().catch(() => { })
         if (lastUrl(msg, 0) === undefined && vars.validUrl.test(args[args.length - 1]) === false) {
@@ -40,18 +40,18 @@ module.exports = {
             })
             var filename = `input.png`
             var width = fileinfo.info.width
-            var stuff = await modules.Jimp.read('assets/stuff.png')
+            var stuff = await Jimp.read('assets/stuff.png')
             var caption = stuff
-            var white = await modules.Jimp.read('assets/white.png')
-            var tnr = await modules.Jimp.loadFont('assets/fonts/TimesNewRomanBlack/TimesNewRomanBlack.fnt')
-            var textheight = modules.Jimp.measureTextHeight(tnr, text, 643)
+            var white = await Jimp.read('assets/white.png')
+            var tnr = await Jimp.loadFont('assets/fonts/TimesNewRomanBlack/TimesNewRomanBlack.fnt')
+            var textheight = Jimp.measureTextHeight(tnr, text, 643)
             if (textheight > stuff.bitmap.height - 120) {
                 caption = white
                 white.resize(stuff.bitmap.width, textheight + 120)
                 white.composite(stuff, 0, white.bitmap.height - stuff.bitmap.height)
             }
-            await caption.print(tnr, 60, 60, { text: modules.Discord.Util.cleanContent(text, msg), alignmentX: modules.Jimp.HORIZONTAL_ALIGN_LEFT, alignmentY: modules.Jimp.VERTICAL_ALIGN_TOP }, 643, caption.bitmap.height - 120)
-            caption.resize(width, modules.Jimp.AUTO)
+            await caption.print(tnr, 60, 60, { text: Discord.Util.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_LEFT, alignmentY: Jimp.VERTICAL_ALIGN_TOP }, 643, caption.bitmap.height - 120)
+            caption.resize(width, Jimp.AUTO)
             await caption.writeAsync(`${filepath}/stuff.png`)
 
             await execPromise(`ffmpeg -i ${filepath}/${filename} -i ${filepath}/stuff.png -filter_complex "vstack=inputs=2[out]" -map "[out]" -preset ${findpreset(args)} ${filepath}/output.png`)
@@ -65,18 +65,18 @@ module.exports = {
 
             var width = fileinfo.info.width
 
-            var stuff = await modules.Jimp.read('assets/stuff.png')
+            var stuff = await Jimp.read('assets/stuff.png')
             var caption = stuff
-            var white = await modules.Jimp.read('assets/white.png')
-            var tnr = await modules.Jimp.loadFont('assets/fonts/TimesNewRomanBlack/TimesNewRomanBlack.fnt')
-            var textheight = modules.Jimp.measureTextHeight(tnr, text, 643)
+            var white = await Jimp.read('assets/white.png')
+            var tnr = await Jimp.loadFont('assets/fonts/TimesNewRomanBlack/TimesNewRomanBlack.fnt')
+            var textheight = Jimp.measureTextHeight(tnr, text, 643)
             if (textheight > stuff.bitmap.height - 120) {
                 caption = white
                 white.resize(stuff.bitmap.width, textheight + 120)
                 white.composite(stuff, 0, white.bitmap.height - stuff.bitmap.height)
             }
-            await caption.print(tnr, 60, 60, { text: modules.Discord.Util.cleanContent(text, msg), alignmentX: modules.Jimp.HORIZONTAL_ALIGN_LEFT, alignmentY: modules.Jimp.VERTICAL_ALIGN_TOP }, 643, caption.bitmap.height - 120)
-            caption.resize(width, modules.Jimp.AUTO)
+            await caption.print(tnr, 60, 60, { text: Discord.Util.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_LEFT, alignmentY: Jimp.VERTICAL_ALIGN_TOP }, 643, caption.bitmap.height - 120)
+            caption.resize(width, Jimp.AUTO)
             await caption.writeAsync(`${filepath}/stuff.png`)
 
             await execPromise(`ffmpeg ${fps.includes('0/0') ? '' : `-r ${fps.includes('0/0') ? '50' : fps} `}-i ${filepath}/${filename} ${fps.includes('0/0') ? '' : `-r ${fps.includes('0/0') ? '50' : fps} `}-i ${filepath}/stuff.png -map 0:a? -filter_complex "vstack=inputs=2[oout];[oout]scale=ceil(iw/2)*2:ceil(ih/2)*2[out]" -map "[out]" -preset ${findpreset(args)} -c:v libx264 -pix_fmt yuv420p ${filepath}/output.mp4`)
@@ -90,18 +90,18 @@ module.exports = {
 
             var width = fileinfo.info.width
 
-            var stuff = await modules.Jimp.read('assets/stuff.png')
+            var stuff = await Jimp.read('assets/stuff.png')
             var caption = stuff
-            var white = await modules.Jimp.read('assets/white.png')
-            var tnr = await modules.Jimp.loadFont('assets/fonts/TimesNewRomanBlack/TimesNewRomanBlack.fnt')
-            var textheight = modules.Jimp.measureTextHeight(tnr, text, 643)
+            var white = await Jimp.read('assets/white.png')
+            var tnr = await Jimp.loadFont('assets/fonts/TimesNewRomanBlack/TimesNewRomanBlack.fnt')
+            var textheight = Jimp.measureTextHeight(tnr, text, 643)
             if (textheight > stuff.bitmap.height - 120) {
                 caption = white
                 white.resize(stuff.bitmap.width, textheight + 120)
                 white.composite(stuff, 0, white.bitmap.height - stuff.bitmap.height)
             }
-            await caption.print(tnr, 60, 60, { text: modules.Discord.Util.cleanContent(text, msg), alignmentX: modules.Jimp.HORIZONTAL_ALIGN_LEFT, alignmentY: modules.Jimp.VERTICAL_ALIGN_TOP }, 643, caption.bitmap.height - 120)
-            caption.resize(width, modules.Jimp.AUTO)
+            await caption.print(tnr, 60, 60, { text: Discord.Util.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_LEFT, alignmentY: Jimp.VERTICAL_ALIGN_TOP }, 643, caption.bitmap.height - 120)
+            caption.resize(width, Jimp.AUTO)
             await caption.writeAsync(`${filepath}/stuff.png`)
 
             await execPromise(`ffmpeg ${fps.includes('0/0') ? '' : `-r ${fps.includes('0/0') ? '50' : fps} `}-i ${filepath}/${filename} ${fps.includes('0/0') ? '' : `-r ${fps.includes('0/0') ? '50' : fps} `}-i ${filepath}/stuff.png -filter_complex "vstack=inputs=2[oout];[oout]split[pout][ppout];[ppout]palettegen=reserve_transparent=1[palette];[pout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -preset ${findpreset(args)} -gifflags -offsetting ${filepath}/output.gif`)
@@ -110,7 +110,7 @@ module.exports = {
             await msg.reply({
                 content: `Unsupported file: \`${currenturl}\``,
                 allowedMentions: {
-                    parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })

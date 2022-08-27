@@ -8,7 +8,7 @@ module.exports = {
         let tempdata = poopy.tempdata
         let data = poopy.data
         let config = poopy.config
-        let modules = poopy.modules
+        let { axios, fileType } = poopy.modules
         let bot = poopy.bot
 
         var word = matches[1]
@@ -56,7 +56,7 @@ module.exports = {
             return 'Invalid name.'
         }
 
-        var fetchAvatar = await modules.axios.request({
+        var fetchAvatar = await axios.request({
             url: avatar,
             responseType: 'stream'
         }).catch(() => { })
@@ -64,7 +64,7 @@ module.exports = {
             return 'Invalid avatar.'
         }
 
-        var avatarFiletype = await modules.fileType.fromStream(fetchAvatar.data).catch(() => { })
+        var avatarFiletype = await fileType.fromStream(fetchAvatar.data).catch(() => { })
         if (!avatarFiletype) {
             return 'Invalid avatar.'
         }

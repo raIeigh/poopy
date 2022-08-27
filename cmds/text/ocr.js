@@ -4,7 +4,7 @@ module.exports = {
     execute: async function (msg, args) {
         let poopy = this
         let { lastUrl, validateFile, randomKey } = poopy.functions
-        let modules = poopy.modules
+        let { axios, fs, Discord } = poopy.modules
         let vars = poopy.vars
         let config = poopy.config
 
@@ -39,7 +39,7 @@ module.exports = {
                 }
             }
 
-            var response = await modules.axios.request(options).catch(async () => {
+            var response = await axios.request(options).catch(async () => {
                 await msg.reply('Error.').catch(() => { })
             })
 
@@ -58,25 +58,25 @@ module.exports = {
             await msg.reply({
                 content: `Language: \`${body.language}\`\n\`\`\`\n${result}\n\`\`\``,
                 allowedMentions: {
-                    parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(async () => {
                 var currentcount = vars.filecount
                 vars.filecount++
                 var filepath = `temp/${config.mongodatabase}/file${currentcount}`
-                modules.fs.mkdirSync(`${filepath}`)
-                modules.fs.writeFileSync(`${filepath}/ocr.txt`, result)
+                fs.mkdirSync(`${filepath}`)
+                fs.writeFileSync(`${filepath}/ocr.txt`, result)
                 await msg.reply({
                     content: `Language: \`${body.language}\``,
-                    files: [new modules.Discord.MessageAttachment(`${filepath}/ocr.txt`)]
+                    files: [new Discord.MessageAttachment(`${filepath}/ocr.txt`)]
                 }).catch(() => { })
-                modules.fs.rmSync(`${filepath}`, { force: true, recursive: true })
+                fs.rmSync(`${filepath}`, { force: true, recursive: true })
             })
         } else {
             await msg.reply({
                 content: `Unsupported file: \`${currenturl}\``,
                 allowedMentions: {
-                    parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })

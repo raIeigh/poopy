@@ -274,17 +274,17 @@ async function start(id) {
 
     await ch.consume('tasks', async function (msg) {
         var content = msg.content.toString()
-        if (!chunkdata[msg.properties.replyTo]) chunkdata[msg.properties.replyTo] = []
+        if (!chunkdata[msg.properties.correlationId]) chunkdata[msg.properties.correlationId] = []
 
         var order = Number(content.substring(0, 3))
         var chunk = content.substring(3)
-        chunkdata[msg.properties.replyTo].push({ order, chunk })
-        chunkdata[msg.properties.replyTo].sort((a, b) => a.order - b.order)
+        chunkdata[msg.properties.correlationId].push({ order, chunk })
+        chunkdata[msg.properties.correlationId].sort((a, b) => a.order - b.order)
 
-        var chunkjoin = chunkdata[msg.properties.replyTo].map(c => c.chunk).join('')
+        var chunkjoin = chunkdata[msg.properties.correlationId].map(c => c.chunk).join('')
         var data = tryJSONparse(chunkjoin)
         if (data) {
-            delete chunkdata[msg.properties.replyTo]
+            delete chunkdata[msg.properties.correlationId]
 
             var res = data ? (await processJob(data).catch(() => { }) ?? {}) : {}
     

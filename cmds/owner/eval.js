@@ -19,7 +19,7 @@ module.exports = {
             try {
                 var evalMessage = await eval(saidMessage)
 
-                if (typeof (evalMessage) !== 'string') evalMessage = modules.util.inspect(evalMessage)
+                if (typeof (evalMessage) !== 'string') evalMessage = util.inspect(evalMessage)
 
                 evalMessage = evalMessage.match(/[\s\S]{1,2000}/g)
 
@@ -29,7 +29,7 @@ module.exports = {
                     await msg.channel.send({
                         content: ev,
                         allowedMentions: {
-                            parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                            parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                         }
                     }).catch(async () => {
                         await msg.channel.send('​').catch(() => { })
@@ -40,7 +40,7 @@ module.exports = {
                 await msg.channel.send({
                     content: error.message,
                     allowedMentions: {
-                        parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                        parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                     }
                 }).catch(() => { })
                 return

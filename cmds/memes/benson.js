@@ -5,7 +5,7 @@ module.exports = {
         let poopy = this
         let { lastUrl, validateFile, downloadFile, execPromise, findpreset, sendFile } = poopy.functions
         let vars = poopy.vars
-        let modules = poopy.modules
+        let { Jimp, Discord } = poopy.modules
 
         await msg.channel.sendTyping().catch(() => { })
         if (lastUrl(msg, 0) === undefined && vars.validUrl.test(args[args.length - 1]) === false) {
@@ -40,9 +40,9 @@ module.exports = {
             })
             var filename = `input.png`
 
-            var benson = await modules.Jimp.read(`assets/benson.png`)
-            var consolas = await modules.Jimp.loadFont('assets/fonts/Consolas/Consolas.fnt')
-            await benson.print(consolas, 3, 4, { text: modules.Discord.Util.cleanContent(text, msg), alignmentX: modules.Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: modules.Jimp.VERTICAL_ALIGN_MIDDLE }, 94, 33)
+            var benson = await Jimp.read(`assets/benson.png`)
+            var consolas = await Jimp.loadFont('assets/fonts/Consolas/Consolas.fnt')
+            await benson.print(consolas, 3, 4, { text: Discord.Util.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 94, 33)
             await benson.writeAsync(`${filepath}/benson.png`)
 
             var width = fileinfo.info.width
@@ -58,9 +58,9 @@ module.exports = {
             })
             var filename = `input.mp4`
 
-            var benson = await modules.Jimp.read(`assets/benson.png`)
-            var consolas = await modules.Jimp.loadFont('assets/fonts/Consolas/Consolas.fnt')
-            await benson.print(consolas, 3, 4, { text: modules.Discord.Util.cleanContent(text, msg), alignmentX: modules.Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: modules.Jimp.VERTICAL_ALIGN_MIDDLE }, 94, 33)
+            var benson = await Jimp.read(`assets/benson.png`)
+            var consolas = await Jimp.loadFont('assets/fonts/Consolas/Consolas.fnt')
+            await benson.print(consolas, 3, 4, { text: Discord.Util.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 94, 33)
             await benson.writeAsync(`${filepath}/benson.png`)
 
             var width = fileinfo.info.width
@@ -74,9 +74,9 @@ module.exports = {
             var filepath = await downloadFile(currenturl, `input.gif`)
             var filename = `input.gif`
 
-            var benson = await modules.Jimp.read(`assets/benson.png`)
-            var consolas = await modules.Jimp.loadFont('assets/fonts/Consolas/Consolas.fnt')
-            await benson.print(consolas, 3, 4, { text: modules.Discord.Util.cleanContent(text, msg), alignmentX: modules.Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: modules.Jimp.VERTICAL_ALIGN_MIDDLE }, 94, 33)
+            var benson = await Jimp.read(`assets/benson.png`)
+            var consolas = await Jimp.loadFont('assets/fonts/Consolas/Consolas.fnt')
+            await benson.print(consolas, 3, 4, { text: Discord.Util.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 94, 33)
             await benson.writeAsync(`${filepath}/benson.png`)
 
             var width = fileinfo.info.width
@@ -90,7 +90,7 @@ module.exports = {
             await msg.reply({
                 content: `Unsupported file: \`${currenturl}\``,
                 allowedMentions: {
-                    parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })

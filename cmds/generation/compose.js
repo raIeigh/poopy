@@ -20,7 +20,7 @@ module.exports = {
     execute: async function (msg, args) {
         let poopy = this
         let { parseNumber, sleep, downloadFile, sendFile } = poopy.functions
-        let modules = poopy.modules
+        let { axios } = poopy.modules
 
         await msg.channel.sendTyping().catch(() => { })
 
@@ -68,7 +68,7 @@ module.exports = {
             temperature = temperatures[parseNumber(args[temperatureindex + 1], { dft: Math.floor(Math.random() * temperatures.length), min: 0, max: temperatures.length - 1, round: true })]
         }
 
-        var createResponse = await modules.axios.request({
+        var createResponse = await axios.request({
             method: 'POST',
             url: 'https://hf.space/embed/ai-guru/composer/task/create',
             headers: {
@@ -86,7 +86,7 @@ module.exports = {
         if (!createResponse) return
 
         async function finishMusic() {
-            var res = await modules.axios.get(`https://hf.space/embed/ai-guru/composer/task/poll?task_id=${createResponse.data.task_id}`).catch(() => { })
+            var res = await axios.get(`https://hf.space/embed/ai-guru/composer/task/poll?task_id=${createResponse.data.task_id}`).catch(() => { })
 
             if (!res || res.data.status != 'completed') {
                 await sleep(2000)

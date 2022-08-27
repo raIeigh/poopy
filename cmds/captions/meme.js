@@ -5,7 +5,7 @@ module.exports = {
         let poopy = this
         let { lastUrl, validateFile, downloadFile, execPromise, findpreset, sendFile } = poopy.functions
         let vars = poopy.vars
-        let modules = poopy.modules
+        let { Jimp, Discord } = poopy.modules
 
         await msg.channel.sendTyping().catch(() => { })
         if (lastUrl(msg, 0) === undefined && vars.validUrl.test(args[args.length - 1]) === false) {
@@ -49,13 +49,13 @@ module.exports = {
             var filename = `input.png`
             var width = fileinfo.info.width
             var height = fileinfo.info.height
-            var transparent = await modules.Jimp.read('assets/transparent.png')
-            var impact = await modules.Jimp.loadFont('assets/fonts/Impact/Impact.fnt')
+            var transparent = await Jimp.read('assets/transparent.png')
+            var impact = await Jimp.loadFont('assets/fonts/Impact/Impact.fnt')
             transparent.resize(width, height)
-            transparent.resize(Math.round(2000 / size), modules.Jimp.AUTO)
+            transparent.resize(Math.round(2000 / size), Jimp.AUTO)
             var transparent2 = transparent.clone()
-            await transparent.print(impact, 20, 20, { text: modules.Discord.Util.cleanContent(text, msg), alignmentX: modules.Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: modules.Jimp.VERTICAL_ALIGN_TOP }, transparent.bitmap.width - 40, transparent.bitmap.height - 40)
-            await transparent2.print(impact, 20, 20, { text: modules.Discord.Util.cleanContent(text2, msg), alignmentX: modules.Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: modules.Jimp.VERTICAL_ALIGN_BOTTOM }, transparent.bitmap.width - 40, transparent.bitmap.height - 40)
+            await transparent.print(impact, 20, 20, { text: Discord.Util.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_TOP }, transparent.bitmap.width - 40, transparent.bitmap.height - 40)
+            await transparent2.print(impact, 20, 20, { text: Discord.Util.cleanContent(text2, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_BOTTOM }, transparent.bitmap.width - 40, transparent.bitmap.height - 40)
             transparent.resize(width, height)
             transparent2.resize(width, height)
             await transparent.writeAsync(`${filepath}/caption.png`)
@@ -70,13 +70,13 @@ module.exports = {
             var filename = `input.mp4`
             var width = fileinfo.info.width
             var height = fileinfo.info.height
-            var transparent = await modules.Jimp.read('assets/transparent.png')
-            var impact = await modules.Jimp.loadFont('assets/fonts/Impact/Impact.fnt')
+            var transparent = await Jimp.read('assets/transparent.png')
+            var impact = await Jimp.loadFont('assets/fonts/Impact/Impact.fnt')
             transparent.resize(width, height)
-            transparent.resize(Math.round(2000 / size), modules.Jimp.AUTO)
+            transparent.resize(Math.round(2000 / size), Jimp.AUTO)
             var transparent2 = transparent.clone()
-            await transparent.print(impact, 20, 20, { text: modules.Discord.Util.cleanContent(text, msg), alignmentX: modules.Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: modules.Jimp.VERTICAL_ALIGN_TOP }, transparent.bitmap.width - 40, transparent.bitmap.height - 40)
-            await transparent2.print(impact, 20, 20, { text: modules.Discord.Util.cleanContent(text2, msg), alignmentX: modules.Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: modules.Jimp.VERTICAL_ALIGN_BOTTOM }, transparent.bitmap.width - 40, transparent.bitmap.height - 40)
+            await transparent.print(impact, 20, 20, { text: Discord.Util.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_TOP }, transparent.bitmap.width - 40, transparent.bitmap.height - 40)
+            await transparent2.print(impact, 20, 20, { text: Discord.Util.cleanContent(text2, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_BOTTOM }, transparent.bitmap.width - 40, transparent.bitmap.height - 40)
             transparent.resize(width, height)
             transparent2.resize(width, height)
             await transparent.writeAsync(`${filepath}/caption.png`)
@@ -91,13 +91,13 @@ module.exports = {
             var filename = `input.gif`
             var width = fileinfo.info.width
             var height = fileinfo.info.height
-            var transparent = await modules.Jimp.read('assets/transparent.png')
-            var impact = await modules.Jimp.loadFont('assets/fonts/Impact/Impact.fnt')
+            var transparent = await Jimp.read('assets/transparent.png')
+            var impact = await Jimp.loadFont('assets/fonts/Impact/Impact.fnt')
             transparent.resize(width, height)
-            transparent.resize(Math.round(2000 / size), modules.Jimp.AUTO)
+            transparent.resize(Math.round(2000 / size), Jimp.AUTO)
             var transparent2 = transparent.clone()
-            await transparent.print(impact, 20, 20, { text: modules.Discord.Util.cleanContent(text, msg), alignmentX: modules.Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: modules.Jimp.VERTICAL_ALIGN_TOP }, transparent.bitmap.width - 40, transparent.bitmap.height - 40)
-            await transparent2.print(impact, 20, 20, { text: modules.Discord.Util.cleanContent(text2, msg), alignmentX: modules.Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: modules.Jimp.VERTICAL_ALIGN_BOTTOM }, transparent.bitmap.width - 40, transparent.bitmap.height - 40)
+            await transparent.print(impact, 20, 20, { text: Discord.Util.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_TOP }, transparent.bitmap.width - 40, transparent.bitmap.height - 40)
+            await transparent2.print(impact, 20, 20, { text: Discord.Util.cleanContent(text2, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_BOTTOM }, transparent.bitmap.width - 40, transparent.bitmap.height - 40)
             transparent.resize(width, height)
             transparent2.resize(width, height)
             await transparent.writeAsync(`${filepath}/caption.png`)
@@ -109,7 +109,7 @@ module.exports = {
             await msg.reply({
                 content: `Unsupported file: \`${currenturl}\``,
                 allowedMentions: {
-                    parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })

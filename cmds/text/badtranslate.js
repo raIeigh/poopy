@@ -21,7 +21,7 @@ module.exports = {
         let poopy = this
         let vars = poopy.vars
         let { randomKey } = poopy.functions
-        let modules = poopy.modules
+        let { axios } = poopy.modules
 
         await msg.channel.sendTyping().catch(() => { })
         if (args[1] === undefined) {
@@ -88,7 +88,7 @@ module.exports = {
                 data: [{ Text: output }]
             };
 
-            var response = await modules.axios.request(options).catch(async () => {
+            var response = await axios.request(options).catch(async () => {
                 await msg.reply('Error.').catch(() => { })
             })
 
@@ -111,7 +111,7 @@ module.exports = {
         await msg.reply({
             content: output,
             allowedMentions: {
-                parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
             }
         }).catch(() => { })
         await msg.channel.sendTyping().catch(() => { })

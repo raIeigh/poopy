@@ -5,7 +5,7 @@ module.exports = {
         let poopy = this
         let { lastUrl, validateFile, downloadFile, execPromise, findpreset, sendFile } = poopy.functions
         let vars = poopy.vars
-        let modules = poopy.modules
+        let { Jimp, Discord } = poopy.modules
 
         await msg.channel.sendTyping().catch(() => { })
         if (lastUrl(msg, 0) === undefined && vars.validUrl.test(args[args.length - 1]) === false) {
@@ -44,11 +44,11 @@ module.exports = {
             var filename = `input.png`
             var width = fileinfo.info.width
             var height = fileinfo.info.height
-            var black = await modules.Jimp.read('assets/black.png')
-            var tnr = await modules.Jimp.loadFont('assets/fonts/TimesNewRomanBig/TimesNewRomanBig.fnt')
-            var arial = await modules.Jimp.loadFont('assets/fonts/ArialSmallWhite/ArialSmallWhite.fnt')
+            var black = await Jimp.read('assets/black.png')
+            var tnr = await Jimp.loadFont('assets/fonts/TimesNewRomanBig/TimesNewRomanBig.fnt')
+            var arial = await Jimp.loadFont('assets/fonts/ArialSmallWhite/ArialSmallWhite.fnt')
             black.resize(width, height)
-            black.resize(400, modules.Jimp.AUTO)
+            black.resize(400, Jimp.AUTO)
             var whiteborder = black.clone()
             var blackborder = black.clone()
             var textblack = black.clone()
@@ -62,12 +62,12 @@ module.exports = {
             black.composite(whiteborder, black.bitmap.width / 2 - whiteborder.bitmap.width / 2, black.bitmap.height / 2 - whiteborder.bitmap.height / 2)
             black.composite(blackborder, black.bitmap.width / 2 - blackborder.bitmap.width / 2, black.bitmap.height / 2 - blackborder.bitmap.height / 2)
             await black.writeAsync(`${filepath}/border.png`)
-            var textheight = modules.Jimp.measureTextHeight(tnr, text, 500 - 40)
+            var textheight = Jimp.measureTextHeight(tnr, text, 500 - 40)
             textblack.resize(500, textheight)
-            await textblack.print(tnr, 20, 0, { text: modules.Discord.Util.cleanContent(text, msg), alignmentX: modules.Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: modules.Jimp.VERTICAL_ALIGN_MIDDLE }, textblack.bitmap.width - 40, textblack.bitmap.height)
-            var text2height = modules.Jimp.measureTextHeight(arial, text2, 500 - 40)
+            await textblack.print(tnr, 20, 0, { text: Discord.Util.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, textblack.bitmap.width - 40, textblack.bitmap.height)
+            var text2height = Jimp.measureTextHeight(arial, text2, 500 - 40)
             text2black.resize(500, text2height + 10)
-            await text2black.print(arial, 20, 5, { text: modules.Discord.Util.cleanContent(text2, msg), alignmentX: modules.Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: modules.Jimp.VERTICAL_ALIGN_MIDDLE }, text2black.bitmap.width - 40, text2black.bitmap.height - 10)
+            await text2black.print(arial, 20, 5, { text: Discord.Util.cleanContent(text2, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, text2black.bitmap.width - 40, text2black.bitmap.height - 10)
             bottomblack.resize(500, 20)
             bgblack.resize(500, textblack.bitmap.height + text2black.bitmap.height + bottomblack.bitmap.height)
             bgblack.composite(textblack, 0, 0)
@@ -85,11 +85,11 @@ module.exports = {
             var filename = `input.mp4`
             var width = fileinfo.info.width
             var height = fileinfo.info.height
-            var black = await modules.Jimp.read('assets/black.png')
-            var tnr = await modules.Jimp.loadFont('assets/fonts/TimesNewRomanBig/TimesNewRomanBig.fnt')
-            var arial = await modules.Jimp.loadFont('assets/fonts/ArialSmallWhite/ArialSmallWhite.fnt')
+            var black = await Jimp.read('assets/black.png')
+            var tnr = await Jimp.loadFont('assets/fonts/TimesNewRomanBig/TimesNewRomanBig.fnt')
+            var arial = await Jimp.loadFont('assets/fonts/ArialSmallWhite/ArialSmallWhite.fnt')
             black.resize(width, height)
-            black.resize(400, modules.Jimp.AUTO)
+            black.resize(400, Jimp.AUTO)
             var whiteborder = black.clone()
             var blackborder = black.clone()
             var textblack = black.clone()
@@ -103,12 +103,12 @@ module.exports = {
             black.composite(whiteborder, black.bitmap.width / 2 - whiteborder.bitmap.width / 2, black.bitmap.height / 2 - whiteborder.bitmap.height / 2)
             black.composite(blackborder, black.bitmap.width / 2 - blackborder.bitmap.width / 2, black.bitmap.height / 2 - blackborder.bitmap.height / 2)
             await black.writeAsync(`${filepath}/border.png`)
-            var textheight = modules.Jimp.measureTextHeight(tnr, text, 500 - 40)
+            var textheight = Jimp.measureTextHeight(tnr, text, 500 - 40)
             textblack.resize(500, textheight)
-            await textblack.print(tnr, 20, 0, { text: modules.Discord.Util.cleanContent(text, msg), alignmentX: modules.Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: modules.Jimp.VERTICAL_ALIGN_MIDDLE }, textblack.bitmap.width - 40, textblack.bitmap.height)
-            var text2height = modules.Jimp.measureTextHeight(arial, text2, 500 - 40)
+            await textblack.print(tnr, 20, 0, { text: Discord.Util.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, textblack.bitmap.width - 40, textblack.bitmap.height)
+            var text2height = Jimp.measureTextHeight(arial, text2, 500 - 40)
             text2black.resize(500, text2height + 10)
-            await text2black.print(arial, 20, 5, { text: modules.Discord.Util.cleanContent(text2, msg), alignmentX: modules.Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: modules.Jimp.VERTICAL_ALIGN_MIDDLE }, text2black.bitmap.width - 40, text2black.bitmap.height - 10)
+            await text2black.print(arial, 20, 5, { text: Discord.Util.cleanContent(text2, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, text2black.bitmap.width - 40, text2black.bitmap.height - 10)
             bottomblack.resize(500, 20)
             bgblack.resize(500, textblack.bitmap.height + text2black.bitmap.height + bottomblack.bitmap.height)
             bgblack.composite(textblack, 0, 0)
@@ -126,11 +126,11 @@ module.exports = {
             var filename = `input.gif`
             var width = fileinfo.info.width
             var height = fileinfo.info.height
-            var black = await modules.Jimp.read('assets/black.png')
-            var tnr = await modules.Jimp.loadFont('assets/fonts/TimesNewRomanBig/TimesNewRomanBig.fnt')
-            var arial = await modules.Jimp.loadFont('assets/fonts/ArialSmallWhite/ArialSmallWhite.fnt')
+            var black = await Jimp.read('assets/black.png')
+            var tnr = await Jimp.loadFont('assets/fonts/TimesNewRomanBig/TimesNewRomanBig.fnt')
+            var arial = await Jimp.loadFont('assets/fonts/ArialSmallWhite/ArialSmallWhite.fnt')
             black.resize(width, height)
-            black.resize(400, modules.Jimp.AUTO)
+            black.resize(400, Jimp.AUTO)
             var whiteborder = black.clone()
             var blackborder = black.clone()
             var textblack = black.clone()
@@ -144,12 +144,12 @@ module.exports = {
             black.composite(whiteborder, black.bitmap.width / 2 - whiteborder.bitmap.width / 2, black.bitmap.height / 2 - whiteborder.bitmap.height / 2)
             black.composite(blackborder, black.bitmap.width / 2 - blackborder.bitmap.width / 2, black.bitmap.height / 2 - blackborder.bitmap.height / 2)
             await black.writeAsync(`${filepath}/border.png`)
-            var textheight = modules.Jimp.measureTextHeight(tnr, text, 500 - 40)
+            var textheight = Jimp.measureTextHeight(tnr, text, 500 - 40)
             textblack.resize(500, textheight)
-            await textblack.print(tnr, 20, 0, { text: modules.Discord.Util.cleanContent(text, msg), alignmentX: modules.Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: modules.Jimp.VERTICAL_ALIGN_MIDDLE }, textblack.bitmap.width - 40, textblack.bitmap.height)
-            var text2height = modules.Jimp.measureTextHeight(arial, text2, 500 - 40)
+            await textblack.print(tnr, 20, 0, { text: Discord.Util.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, textblack.bitmap.width - 40, textblack.bitmap.height)
+            var text2height = Jimp.measureTextHeight(arial, text2, 500 - 40)
             text2black.resize(500, text2height + 10)
-            await text2black.print(arial, 20, 5, { text: modules.Discord.Util.cleanContent(text2, msg), alignmentX: modules.Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: modules.Jimp.VERTICAL_ALIGN_MIDDLE }, text2black.bitmap.width - 40, text2black.bitmap.height - 10)
+            await text2black.print(arial, 20, 5, { text: Discord.Util.cleanContent(text2, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, text2black.bitmap.width - 40, text2black.bitmap.height - 10)
             bottomblack.resize(500, 20)
             bgblack.resize(500, textblack.bitmap.height + text2black.bitmap.height + bottomblack.bitmap.height)
             bgblack.composite(textblack, 0, 0)
@@ -164,7 +164,7 @@ module.exports = {
             await msg.reply({
                 content: `Unsupported file: \`${currenturl}\``,
                 allowedMentions: {
-                    parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })

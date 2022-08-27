@@ -4,7 +4,7 @@ module.exports = {
     execute: async function (msg, args, opts) {
         let poopy = this
         let config = poopy.config
-        let modules = poopy.modules
+        let { axios } = poopy.modules
         let { sleep, navigateEmbed } = poopy.functions
         let bot = poopy.bot
 
@@ -35,7 +35,7 @@ module.exports = {
         }
 
         async function dalle2Request() {
-            var taskRes = await modules.axios.request({
+            var taskRes = await axios.request({
                 url: 'https://labs.openai.com/api/labs/tasks',
                 method: 'POST',
                 data: {
@@ -61,7 +61,7 @@ module.exports = {
             while (!imageRes) {
                 await sleep(20000)
 
-                var taskCompleteRes = await modules.axios.request({
+                var taskCompleteRes = await axios.request({
                     url: `https://labs.openai.com/api/labs/tasks/${taskId}`,
                     method: 'GET',
                     headers: {

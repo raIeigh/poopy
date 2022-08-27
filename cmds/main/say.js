@@ -3,7 +3,7 @@ module.exports = {
     args: [{ "name": "message", "required": true, "specifarg": false, "orig": "<message>" }, { "name": "nodelete", "required": false, "specifarg": true, "orig": "[-nodelete]" }, { "name": "tts", "required": false, "specifarg": true, "orig": "[-tts]" }],
     execute: async function (msg, args) {
         let poopy = this
-        let modules = poopy.modules
+        let { Discord } = poopy.modules
 
         await msg.channel.sendTyping().catch(() => { })
         var del = true
@@ -19,18 +19,18 @@ module.exports = {
             tts = true
         }
         var saidMessage = args.slice(1).join(' ')
-        var attachments = msg.attachments.map(attachment => new modules.Discord.MessageAttachment(attachment.url, attachment.name))
+        var attachments = msg.attachments.map(attachment => new Discord.MessageAttachment(attachment.url, attachment.name))
         if (args[1] === undefined && attachments.length <= 0) {
             await msg.reply('What is the message to say?!').catch(() => { })
             return;
         };
         var sendObject = {
             allowedMentions: {
-                parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
             },
             files: attachments,
             stickers: msg.stickers,
-            tts: (msg.member.permissihas('ADMINISTRATOR') || msg.member.permissihas('SEND_TTS_MESSAGES') || msg.author.id === msg.guild.ownerID) && tts
+            tts: (msg.member.permissions.has('ADMINISTRATOR') || msg.member.permissions.has('SEND_TTS_MESSAGES') || msg.author.id === msg.guild.ownerID) && tts
         }
         if (saidMessage) {
             sendObject.content = saidMessage

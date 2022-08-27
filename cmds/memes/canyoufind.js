@@ -6,7 +6,7 @@ module.exports = {
         let { lastUrl, getUrls, validateFile, sendFile } = poopy.functions
         let vars = poopy.vars
         let config = poopy.config
-        let modules = poopy.modules
+        let { fs, Jimp } = poopy.modules
 
         await msg.channel.sendTyping().catch(() => { })
         if (lastUrl(msg, 1) === undefined && args[2] === undefined) {
@@ -59,7 +59,7 @@ module.exports = {
                 await msg.reply({
                     content: error,
                     allowedMentions: {
-                        parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                        parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                     }
                 }).catch(() => { })
                 await msg.channel.sendTyping().catch(() => { })
@@ -72,7 +72,7 @@ module.exports = {
                 await msg.reply({
                     content: 'Unsupported file types.',
                     allowedMentions: {
-                        parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                        parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                     }
                 }).catch(() => { })
                 await msg.channel.sendTyping().catch(() => { })
@@ -82,17 +82,17 @@ module.exports = {
         var currentcount = vars.filecount
         vars.filecount++
         var filepath = `temp/${config.mongodatabase}/file${currentcount}`
-        modules.fs.mkdirSync(`${filepath}`)
-        var frame = await modules.Jimp.read(currenturl)
-        var frame2 = await modules.Jimp.read(currenturl2)
-        var canyoufind = await modules.Jimp.read(`assets/canyoufind.png`)
-        var transparent = await modules.Jimp.read(`assets/transparent.png`)
+        fs.mkdirSync(`${filepath}`)
+        var frame = await Jimp.read(currenturl)
+        var frame2 = await Jimp.read(currenturl2)
+        var canyoufind = await Jimp.read(`assets/canyoufind.png`)
+        var transparent = await Jimp.read(`assets/transparent.png`)
         var squareS = { value: ((frame.bitmap.height === frame.bitmap.width) && frame.bitmap.width) || ((frame.bitmap.height > frame.bitmap.width) && frame.bitmap.height) || frame.bitmap.width, constraint: ((frame.bitmap.height === frame.bitmap.width) && 'both') || ((frame.bitmap.height > frame.bitmap.width) && 'height') || 'width' }
-        frame2.resize(squareS.constraint === 'width' || squareS.constraint === 'both' ? size : modules.Jimp.AUTO, squareS.constraint === 'height' || squareS.constraint === 'both' ? size : modules.Jimp.AUTO)
+        frame2.resize(squareS.constraint === 'width' || squareS.constraint === 'both' ? size : Jimp.AUTO, squareS.constraint === 'height' || squareS.constraint === 'both' ? size : Jimp.AUTO)
         var frame2stretched = frame2.clone()
         frame2stretched.resize(227, 53)
         canyoufind.composite(frame2stretched, 347, 8)
-        frame.resize(canyoufind.bitmap.width, modules.Jimp.AUTO)
+        frame.resize(canyoufind.bitmap.width, Jimp.AUTO)
         frame.composite(frame2, (Math.floor(Math.random() * (frame.bitmap.width + 1)) - 1) - frame2.bitmap.width / 2, (Math.floor(Math.random() * (frame.bitmap.height + 1)) - 1) - frame2.bitmap.height / 2)
         transparent.resize(frame.bitmap.width, frame.bitmap.height + canyoufind.bitmap.height)
         transparent.composite(canyoufind, 0, 0)

@@ -3,6 +3,6 @@ module.exports = {
         let poopy = this
         let { generateSayori } = poopy.functions
 
-        return generateSayori.call(poopy, msg).text.replace(/\@/g, '@‌')
+        return generateSayori(msg).text.replace(/\@/g, '@‌')
     }
 }

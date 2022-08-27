@@ -31,12 +31,11 @@ module.exports = {
     execute: async function (msg, args) {
         let poopy = this
         let { splitKeyFunc, getKeywordsFor, shuffle, randomChoice, yesno, dmSupport } = poopy.functions
-        let modules = poopy.modules
+        let { Discord, DMGuild } = poopy.modules
         let json = poopy.json
         let data = poopy.data
         let bot = poopy.bot
         let tempdata = poopy.tempdata
-        let vars = poopy.vars
 
         await msg.channel.sendTyping().catch(() => {})
         args = splitKeyFunc(args.join(' '), { separator: ' ' })
@@ -54,14 +53,14 @@ module.exports = {
         var saidMessage = args.slice(2).join(' ')
         var attachments = []
         msg.attachments.forEach(attachment => {
-            attachments.push(new modules.Discord.MessageAttachment(attachment.url))
+            attachments.push(new Discord.MessageAttachment(attachment.url))
         });
         if (args[2] === undefined && attachments.length <= 0) {
             await msg.reply('What is the message to DM?!').catch(() => {})
             return;
         };
 
-        if (args[1].match(/^@(here|everyone)$/) && saidMessage === 'egg' && (msg.member.permissihas('ADMINISTRATOR') || msg.member.permissihas('MENTION_EVERYONE') || msg.author.id == msg.guild.ownerID)) {
+        if (args[1].match(/^@(here|everyone)$/) && saidMessage === 'egg' && (msg.member.permissions.has('ADMINISTRATOR') || msg.member.permissions.has('MENTION_EVERYONE') || msg.author.id == msg.guild.ownerID)) {
             var ha = shuffle([...msg.guild.emojis.cache.values()].map(e => `<${e.animated ? 'a': ''}:${e.name}:${e.id}>`)).slice(0, 25)
             var he = shuffle(json.emojiJSON.map(e => e.emoji)).slice(0, 25 - ha.length)
             var hi = shuffle(ha.concat(he))
@@ -98,7 +97,7 @@ module.exports = {
             await msg.reply({
                 content: `Invalid user id: **${args[1]}**`,
                 allowedMentions: {
-                    parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => {})
             return
@@ -122,7 +121,7 @@ module.exports = {
                 member.send({
                     content: `Unrelated DMs from \`dm\` will **${!send ? 'not ': ''}be sent** to you now.`,
                     allowedMentions: {
-                        parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                        parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                     }
                 }).catch(() => {})
                 if (pending) {
@@ -147,7 +146,7 @@ module.exports = {
             dmChannel.nsfw = !!data['guild-data'][dmChannel.id]?.['channels']?.[dmChannel.id]?.['nsfw']
 
             Object.defineProperty(msg, 'channel', { value: dmChannel, writable: true })
-            Object.defineProperty(msg, 'guild', { value: new vars.dmGuild(msg), writable: true })
+            Object.defineProperty(msg, 'guild', { value: new DMGuild(msg), writable: true })
 
             dmSupport(msg)
 

@@ -5,7 +5,7 @@ module.exports = {
         let poopy = this
         let { lastUrl, validateFile, downloadFile, execPromise, navigateEmbed, sendFile } = poopy.functions
         let vars = poopy.vars
-        let modules = poopy.modules
+        let { fs, archiver } = poopy.modules
         let config = poopy.config
         let bot = poopy.bot
 
@@ -30,15 +30,15 @@ module.exports = {
                 fileinfo: fileinfo
             })
             var filename = `input.${fileinfo.shortext}`
-            modules.fs.mkdirSync(`${filepath}/frames`)
+            fs.mkdirSync(`${filepath}/frames`)
 
             await execPromise(`ffmpeg -i ${filepath}/${filename} ${filepath}/frames/frame_%04d.png`)
-            var output = modules.fs.createWriteStream(`${filepath}/output.zip`)
-            var archive = modules.archiver('zip')
+            var output = fs.createWriteStream(`${filepath}/output.zip`)
+            var archive = archiver('zip')
 
             await new Promise(async resolve => {
                 output.on('finish', async () => {
-                    var frames = modules.fs.readdirSync(`${filepath}/frames`)
+                    var frames = fs.readdirSync(`${filepath}/frames`)
                     var catboxframes = {}
     
                     await navigateEmbed(msg.channel, async (page, ended) => {
@@ -76,7 +76,7 @@ module.exports = {
                             page: false
                         }
                     ], undefined, undefined, undefined, (reason) => {
-                        if (reason == 'time') modules.fs.rmSync(filepath, { force: true, recursive: true })
+                        if (reason == 'time') fs.rmSync(filepath, { force: true, recursive: true })
                     }, msg)
                     resolve()
                 });
@@ -89,7 +89,7 @@ module.exports = {
             await msg.reply({
                 content: `Unsupported file: \`${currenturl}\``,
                 allowedMentions: {
-                    parse: ((!msg.member.permissihas('ADMINISTRATOR') && !msg.member.permissihas('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })

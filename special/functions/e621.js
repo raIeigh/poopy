@@ -4,7 +4,7 @@ module.exports = {
     func: async function (matches, msg) {
         let poopy = this
         let { splitKeyFunc, getIndexOption, parseNumber } = poopy.functions
-        let modules = poopy.modules
+        let { axios } = poopy.modules
         let package = poopy.package
         
         if (!msg.channel.nsfw) return 'no'
@@ -13,7 +13,7 @@ module.exports = {
         var split = splitKeyFunc(word, { args: 2 })
         var query = getIndexOption(split, 0)[0]
         var page = getIndexOption(split, 1, { n: Infinity }).join(' | ')
-        var res = await modules.axios.request({
+        var res = await axios.request({
             url: 'https://e621.net/posts.json',
             method: 'GET',
             data: {
