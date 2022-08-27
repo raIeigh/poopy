@@ -274,6 +274,7 @@ async function start(id) {
 
     await ch.consume('tasks', async function (msg) {
         var content = msg.content.toString()
+        console.log(Object.keys(chunkdata))
         if (!chunkdata[msg.properties.correlationId]) chunkdata[msg.properties.correlationId] = []
 
         var order = Number(content.substring(0, 3))
