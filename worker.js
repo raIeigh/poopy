@@ -247,8 +247,6 @@ async function processJob(data) {
     }
 }
 
-let chunkdata = {}
-
 function tryJSONparse(obj) {
     try {
         return JSON.parse(obj)
@@ -272,6 +270,8 @@ async function start(id) {
     await ch.assertQueue('tasks', { durable: true })
     await ch.prefetch(1)
 
+    let chunkdata = {}
+
     await ch.consume('tasks', async function (msg) {
         var content = msg.content.toString()
         if (!chunkdata[msg.properties.correlationId]) chunkdata[msg.properties.correlationId] = []
@@ -280,6 +280,7 @@ async function start(id) {
         var chunk = content.substring(3)
         chunkdata[msg.properties.correlationId].push({ order, chunk })
         chunkdata[msg.properties.correlationId].sort((a, b) => a.order - b.order)
+        console.log(msg.properties.correlationId)
         console.log(chunkdata[msg.properties.correlationId].length)
 
         var chunkjoin = chunkdata[msg.properties.correlationId].map(c => c.chunk).join('')
