@@ -280,6 +280,7 @@ async function start(id) {
         var chunk = content.substring(3)
         chunkdata[msg.properties.correlationId].push({ order, chunk })
         chunkdata[msg.properties.correlationId].sort((a, b) => a.order - b.order)
+        console.log(chunkdata[msg.properties.correlationId].length)
 
         var chunkjoin = chunkdata[msg.properties.correlationId].map(c => c.chunk).join('')
         var data = tryJSONparse(chunkjoin)

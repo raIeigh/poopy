@@ -1396,6 +1396,8 @@ class Poopy {
         rest.setToken(poopy.__TOKEN)
         await bot.login(poopy.__TOKEN)
 
+        var wakeChannel = bot.guilds.cache.get('834431435704107018')?.channels.cache.get('947167169718923341')
+
         async function requestData() {
             if (config.testing || !process.env.MONGOOSEURL) {
                 var data = {}
@@ -1434,6 +1436,9 @@ class Poopy {
                 }
 
                 if (!result || !result.data || (Object.keys(globaldata).length <= 0 && !result.globaldata)) {
+                    if (process.env.CLOUDAMQP_URL) {
+                        if (wakeChannel) wakeChannel.send(!config.stfu ? 'this will take longer' : '').catch(() => { })
+                    }
                     console.log(`${bot.user.username}: ${process.env.CLOUDAMQP_URL ? 'nvm ' : ''}gathering from mongodb`)
                     result = await getAllData(config.mongodatabase, Object.keys(globaldata).length <= 0)
                 }
@@ -1444,7 +1449,7 @@ class Poopy {
 
         console.log(`${bot.user.username} is online, RUN`)
         await infoPost(`${bot.user.username} woke up to ash and dust`)
-        bot.guilds.cache.get('834431435704107018')?.channels.cache.get('947167169718923341')?.send(!config.stfu ? 'i wake up to ash and dust' : '').catch(() => { })
+        if (wakeChannel) wakeChannel.send(!config.stfu ? 'i wake up to ash and dust' : '').catch(() => { })
         config.ownerids.push(bot.user.id)
         bot.user.setPresence({
             status: 'idle',
@@ -1802,7 +1807,7 @@ class Poopy {
             wakecount += 'th'
         }
 
-        bot.guilds.cache.get('834431435704107018')?.channels.cache.get('947167169718923341')?.send(!config.stfu ? (config.testing ? 'raleigh is testing' : `this is the ${wakecount} time this happens`) : '').catch(() => { })
+        if (wakeChannel) wakeChannel.send(!config.stfu ? (config.testing ? 'raleigh is testing' : `this is the ${wakecount} time this happens`) : '').catch(() => { })
 
         if (!config.apiMode) {
             bot.on('messageCreate', (msg) => {

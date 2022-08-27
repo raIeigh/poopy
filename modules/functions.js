@@ -887,8 +887,6 @@ functions.processTask = async function (data) {
 
     return new Promise(async (resolve, reject) => {
         try {
-            var msgSizeLimit = 1024 * 1024 * 8 - 3
-
             var ch = await vars.amqpconn.createChannel().catch(reject)
             var q = await ch.assertQueue('', { exclusive: true }).catch(reject)
             var correlationId = generateId()
@@ -949,8 +947,11 @@ functions.processTask = async function (data) {
             }, 300000)
 
             var reqdata = Buffer.from(JSON.stringify(data))
+            var msgSizeLimit = 1024 * 1024 * 8 - 3
+            var msgNum = Math.ceil(reqdata.length / msgSizeLimit)
+            console.log(msgNum)
 
-            for (var i = 0; i < Math.ceil(reqdata.length / msgSizeLimit); i++) {
+            for (var i = 0; i < msgNum; i++) {
                 var chunk = reqdata.subarray(msgSizeLimit * i, msgSizeLimit * (i + 1))
                 var ordchunk = Buffer.concat([Buffer.from(String(i).padStart(3, '0')), chunk])
                 ch.sendToQueue('tasks', ordchunk, {
@@ -958,6 +959,8 @@ functions.processTask = async function (data) {
                     replyTo: q.queue
                 })
             }
+
+            delete reqdata
         } catch (err) {
             reject(err)
         }
@@ -975,14 +978,16 @@ functions.infoPost = async function (message) {
     var avatar = bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' })
     var color = config.testing ? { r: 255, g: 255, b: 255 } : await averageColor(avatar)
 
-    var infoMsg
-    if (config.textEmbeds) infoMsg = await bot.guilds.cache.get('834431435704107018')?.channels.cache.get('967083645619830834')?.send({
+    var infoChannel = bot.guilds.cache.get('834431435704107018')?.channels.cache.get('967083645619830834')
+    if (!infoChannel) return
+
+    if (config.textEmbeds) await infoChannel.send({
         content: message,
         allowedMentions: {
             parse: ['users']
         }
     }).catch(() => { })
-    else infoMsg = await bot.guilds.cache.get('834431435704107018')?.channels.cache.get('967083645619830834')?.send({
+    else await infoChannel.send({
         embeds: [{
             description: message,
             author: {
