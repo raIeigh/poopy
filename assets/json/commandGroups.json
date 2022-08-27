@@ -355,6 +355,17 @@
         "description": "Search for things on the web."
     },
     {
+        "name": "settings",
+        "cmds": [
+            "chaincommands",
+            "setprefix",
+            "togglecmds",
+            "toggledms",
+            "togglensfw"
+        ],
+        "description": "Manage a server's Poopy settings, or your own Poopy settings."
+    },
+    {
         "name": "size",
         "cmds": [
             "enlarge",

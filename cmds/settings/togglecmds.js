@@ -1,6 +1,8 @@
 module.exports = {
-    name: ['tcommands',
-        'toggledcommands',
+    name: [
+        'togglecmds',
+        'disablecmds',
+        'tcommands',
         'togglecommands'],
     args: [{
         "name": "option",
@@ -145,7 +147,7 @@ module.exports = {
         await options[args[1].toLowerCase()](msg, args)
     },
     help: {
-        name: 'tcommands/toggledcommands/togglecommands <option>',
+        name: 'togglecmds/disablecmds/tcommands/togglecommands <option>',
         value: 'Disable or enable commands in your servers. Use the command alone for more info.'
     },
     cooldown: 5000,

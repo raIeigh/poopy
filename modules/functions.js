@@ -2744,8 +2744,9 @@ functions.getKeywordsFor = async function (string, msg, isBot, { extrakeys = {},
                 var change
 
                 try {
-                    change = await key(msg, isBot, string, opts)
-                } catch (_) {
+                    change = await key.func.call(poopy, msg, isBot, string, opts)
+                } catch (e) {
+                    console.log(e)
                     change = ''
                 }
 
@@ -2774,8 +2775,9 @@ functions.getKeywordsFor = async function (string, msg, isBot, { extrakeys = {},
                 var change
 
                 try {
-                    change = await func([funcName, match], msg, isBot, string, opts)
-                } catch (_) {
+                    change = await func.func.call(poopy, [funcName, match], msg, isBot, string, opts)
+                } catch (e) {
+                    console.log(e)
                     change = ''
                 }
 
