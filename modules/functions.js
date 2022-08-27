@@ -3268,8 +3268,8 @@ functions.validateFile = async function (url, exception, rejectMessages) {
     let config = poopy.config
     let vars = poopy.vars
     let tempfiles = poopy.tempfiles
-    let { infoPost, execPromise } = poopy.functions
-    let { fileType, axios, whatwg, validateFileFromPath } = poopy.modules
+    let { infoPost, execPromise, validateFileFromPath } = poopy.functions
+    let { fileType, axios, whatwg } = poopy.modules
 
     return new Promise(async (resolve, reject) => {
         url = url || ' '
