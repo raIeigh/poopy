@@ -1241,6 +1241,7 @@ functions.splitKeyFunc = function (string, { extrafuncs = {}, args = Infinity, s
 
 functions.yesno = async function (channel, content, who, btdata, reply) {
     let poopy = this
+    let bot = poopy.bot
     let config = poopy.config
     let { chunkArray, dmSupport } = poopy.functions
     let { Discord } = poopy.modules
@@ -1387,6 +1388,7 @@ functions.yesno = async function (channel, content, who, btdata, reply) {
 
 functions.selectMenu = async function (channel, content, placeholder, options, exception, who) {
     let poopy = this
+    let bot = poopy.bot
     let config = poopy.config
     let { dmSupport } = poopy.functions
     let { Discord } = poopy.modules
