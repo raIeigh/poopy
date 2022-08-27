@@ -6,7 +6,7 @@ module.exports = {
         let data = poopy.data
         let config = poopy.config
 
-        if (!msg.mentimembers.size) {
+        if (!msg.mentions.members.size) {
             var user = args[1]
             if (args[1] === undefined) {
                 user = msg.author.id
@@ -57,17 +57,17 @@ module.exports = {
             if (!data['guild-data'][msg.guild.id]) {
                 data['guild-data'][msg.guild.id] = {}
             }
-            if (!data['guild-data'][msg.guild.id]['members'][msg.mentimembers.first().id]) {
-                data['guild-data'][msg.guild.id]['members'][msg.mentimembers.first().id] = {}
+            if (!data['guild-data'][msg.guild.id]['members'][msg.mentions.members.first().id]) {
+                data['guild-data'][msg.guild.id]['members'][msg.mentions.members.first().id] = {}
             }
-            if (!data['guild-data'][msg.guild.id]['members'][msg.mentimembers.first().id]['impostor']) {
-                data['guild-data'][msg.guild.id]['members'][msg.mentimembers.first().id]['impostor'] = false
+            if (!data['guild-data'][msg.guild.id]['members'][msg.mentions.members.first().id]['impostor']) {
+                data['guild-data'][msg.guild.id]['members'][msg.mentions.members.first().id]['impostor'] = false
             }
-            if (data['guild-data'][msg.guild.id]['members'][msg.mentimembers.first().id]['impostor'] === false) {
+            if (data['guild-data'][msg.guild.id]['members'][msg.mentions.members.first().id]['impostor'] === false) {
                 if (msg.member.permissions.has('MANAGE_GUILD') || msg.member.permissions.has('MANAGE_WEBHOOKS') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
-                    data['guild-data'][msg.guild.id]['members'][msg.mentimembers.first().id]['impostor'] = true
+                    data['guild-data'][msg.guild.id]['members'][msg.mentions.members.first().id]['impostor'] = true
                     await msg.reply({
-                        content: msg.mentimembers.first().user.username + ' is now the Impostor.',
+                        content: msg.mentions.members.first().user.username + ' is now the Impostor.',
                         allowedMentions: {
                             parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                         }
@@ -77,9 +77,9 @@ module.exports = {
                     return;
                 };
             } else {
-                data['guild-data'][msg.guild.id]['members'][msg.mentimembers.first().id]['impostor'] = false
+                data['guild-data'][msg.guild.id]['members'][msg.mentions.members.first().id]['impostor'] = false
                 await msg.reply({
-                    content: msg.mentimembers.first().user.username + ' is not the Impostor.',
+                    content: msg.mentions.members.first().user.username + ' is not the Impostor.',
                     allowedMentions: {
                         parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                     }

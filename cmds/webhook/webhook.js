@@ -13,7 +13,7 @@ module.exports = {
             if (args[1] === undefined || (args[1] ? (args[1].startsWith('"') || vars.validUrl.test(args[1])) : false)) {
                 user = msg.author.id
             }
-            var userMention = msg.mentimembers.first()
+            var userMention = msg.mentions.members.first()
 
             if (!userMention) {
                 async function getUser(id) {

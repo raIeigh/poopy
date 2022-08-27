@@ -1,5 +1,5 @@
 const fs = require('fs')
-const poopyRegex = /permissihas/g
+const poopyRegex = /mentimembers/g
 
 fs.readdirSync('cmds').forEach(cat => {
     fs.readdirSync(`cmds/${cat}`).forEach(cmn => {
@@ -12,7 +12,7 @@ fs.readdirSync('cmds').forEach(cat => {
 
         if (matches) {
             //matches = matches.map(m => m.substring(8, m.length - 1)).filter((lang, index, self) => self.findIndex(l => l === lang) === index)
-            let newexe = execute.replace(poopyRegex, 'permissions.has').split('\n')
+            let newexe = execute.replace(poopyRegex, 'mentions.members').split('\n')
             //let lepoopy = newexe.findIndex(g => g.includes('let modules = poopy.modules'))
             
             //newexe[lepoopy] = `${spacing}let { ${matches.join(', ')} } = poopy.modules`

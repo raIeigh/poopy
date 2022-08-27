@@ -39,14 +39,14 @@ module.exports = {
         if (reply) {
             await reply.reply(sendObject).catch(() => { })
         } else {
-            if (msg.isCommand && msg.isCommand() && !msg.replied && !del) {
-                await msg.reply(sendObject).catch(() => { })
-            } else {
+            if (del || msg.replied) {
                 await msg.channel.send(sendObject).catch(() => { })
+
+                if (msg.isCommand && msg.isCommand()) await msg.reply({ content: 'Successfully sent.', ephemeral: true }).catch(() => { })
+                else msg.delete().catch(() => { })
+            } else {
+                await msg.reply(sendObject).catch(() => { })
             }
-        }
-        if (!msg.isCommand && del) {
-            msg.delete().catch(() => { })
         }
     },
     help: {
@@ -54,5 +54,6 @@ module.exports = {
         value: 'Poopy says the message after the command.'
     },
     cooldown: 2500,
+    nodefer: true,
     type: 'Main'
 }

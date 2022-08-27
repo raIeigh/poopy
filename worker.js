@@ -8,7 +8,7 @@ var url = process.env.CLOUDAMQP_URL || "amqp://localhost";
 let memLimit = 0;
 let msgSizeLimit = 1024 * 1024 * 8 - 3;
 let procs = [];
-let workers = 1//process.env.WEB_CONCURRENCY || 2;
+let workers = 1;
 let datastores = {};
 let globaldata;
 
@@ -274,16 +274,12 @@ async function start(id) {
 
     await ch.consume('tasks', async function (msg) {
         var content = msg.content.toString()
-        console.log(Object.keys(chunkdata))
         if (!chunkdata[msg.properties.correlationId]) chunkdata[msg.properties.correlationId] = []
 
         var order = Number(content.substring(0, 3))
         var chunk = content.substring(3)
         chunkdata[msg.properties.correlationId].push({ order, chunk })
         chunkdata[msg.properties.correlationId].sort((a, b) => a.order - b.order)
-        console.log(id)
-        console.log(msg.properties.correlationId)
-        console.log(chunkdata[msg.properties.correlationId].length)
 
         var chunkjoin = chunkdata[msg.properties.correlationId].map(c => c.chunk).join('')
         var data = tryJSONparse(chunkjoin)

@@ -163,7 +163,7 @@ module.exports = {
 
                 args[1] = args[1] ?? ''
 
-                var member = (msg.mentimembers.first() && msg.mentimembers.first().user) ??
+                var member = (msg.mentions.members.first() && msg.mentions.members.first().user) ??
                 await bot.users.fetch((args[1].match(/\d+/) ?? [args[1]])[0]).catch(() => {})
 
                 var messages = data['guild-data'][msg.guild.id]['messages'].filter(m => m.author == member.id)

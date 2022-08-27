@@ -223,33 +223,6 @@ class Poopy {
             }
         }
 
-        var channelSend = Discord.BaseGuildTextChannel.prototype.send
-        Discord.BaseGuildTextChannel.prototype.send = async function (payload) {
-            var channel = this
-
-            await waitMessageCooldown()
-            if (tempdata[channel.guild?.id]?.[channel.id]?.['shut']) return
-
-            return await channelSend.call(channel, payload).then(setMessageCooldown)
-        }
-
-        var messageReply = Discord.Message.prototype.reply
-        Discord.Message.prototype.reply = async function (payload) {
-            var message = this
-
-            await waitMessageCooldown()
-            if (tempdata[message.guild?.id]?.[message.channel?.id]?.['shut']) return
-
-            if (config.allowbotusage) return await message.channel.send(payload).then(setMessageCooldown)
-            else return await messageReply.call(message, payload).then(setMessageCooldown).catch(() => { }) ??
-                await message.channel.send(payload).then(setMessageCooldown)
-        }
-
-        if (config.public) {
-            functions.guildLeave = Discord.Guild.prototype.leave
-            delete Discord.Guild.prototype.leave
-        }
-
         fs.readdirSync('special/keys').forEach(name => {
             var key = name.replace(/\.js$/, '')
             var keyData = require(`./special/keys/${key}`)
@@ -560,6 +533,48 @@ class Poopy {
 
         callbacks.messageCallback = async msg => {
             dmSupport(msg)
+
+            if (msg.guild.leave && config.public) {
+                if (!functions.guildLeave) functions.guildLeave = msg.guild.leave
+                delete msg.guild.leave
+            }
+
+            if (!msg.channel.send.toString().includes('waitMessageCooldown')) {
+                var channelSend = msg.channel.send
+                msg.channel.send = async function (payload) {
+                    var channel = this
+
+                    await waitMessageCooldown()
+                    if (tempdata[channel.guild?.id]?.[channel.id]?.['shut']) return
+
+                    return channelSend.call(channel, payload).then(setMessageCooldown)
+                }
+            }
+
+            if (!msg.reply.toString().includes('waitMessageCooldown')) {
+                if (msg.isCommand && msg.isCommand() && msg.deferred) {
+                    msg.reply = async function (payload) {
+                        var interaction = this
+
+                        await waitMessageCooldown()
+                        if (tempdata[interaction.guild?.id]?.[interaction.channel?.id]?.['shut']) return
+
+                        if (config.allowbotusage || interaction.replied) return interaction.channel.send(payload).then(setMessageCooldown)
+                        else return interaction.editReply(payload).then(setMessageCooldown)
+                    }
+                } else {
+                    var messageReply = msg.reply
+                    msg.reply = async function (payload) {
+                        var message = this
+
+                        await waitMessageCooldown()
+                        if (tempdata[message.guild?.id]?.[message.channel?.id]?.['shut']) return
+
+                        if (config.allowbotusage || message.replied) return message.channel.send(payload).then(setMessageCooldown)
+                        else return message.replied = messageReply.call(message, payload).then(setMessageCooldown)
+                    }
+                }
+            }
 
             data['bot-data']['messages']++
 
@@ -1222,12 +1237,12 @@ class Poopy {
         }
 
         callbacks.interactionCallback = async (interaction) => {
+            dmSupport(interaction)
+
             var interactionFunctions = [
                 {
                     type: interaction.isAutocomplete && interaction.isAutocomplete(),
                     execute: async () => {
-                        dmSupport(interaction)
-
                         var cmd = interaction.commandName
                         var subcommand = interaction.options.getSubcommand(false)
                         var commandGroup = findGroup(subcommand ?? cmd)
@@ -1325,14 +1340,7 @@ class Poopy {
 
                         content = content.join(' ')
 
-                        await interaction.deferReply().catch(() => { })
-
-                        interaction.reply = async function (payload) {
-                            var interaction = this
-
-                            if (interaction.replied) return await interaction.channel.send(payload)
-                            else return interaction.replied = await interaction.editReply(payload).catch(() => { }) ?? await interaction.channel.send(payload)
-                        }
+                        if (!findCmd.nodefer) await interaction.deferReply().catch(() => { })
 
                         interaction.content = `${prefix}${content}`
                         interaction.author = interaction.user
@@ -1381,7 +1389,8 @@ class Poopy {
         let globaldata = poopy.globaldata
         let { fs } = poopy.modules
         let { infoPost, processTask, getAllData, getPsFiles,
-            getPsPasta, getFunny, getEmojis, saveData, changeStatus } = poopy.functions
+            getPsPasta, getFunny, getEmojis, saveData, changeStatus,
+            waitMessageCooldown, setMessageCooldown } = poopy.functions
         let callbacks = poopy.callbacks
 
         if (!TOKEN && !poopy.__TOKEN) {
@@ -1770,7 +1779,7 @@ class Poopy {
         }
 
         await infoPost(`Finishing extra steps...`);
-        
+
         let dataGetters = require('./modules/dataGetters')
 
         var uberduck = await dataGetters.uberduck().catch(() => { })
@@ -1809,15 +1818,7 @@ class Poopy {
 
         if (!config.apiMode) {
             bot.on('messageCreate', (msg) => {
-                var reply = msg.reply
-                msg.reply = async function (payload) {
-                    var message = this
-
-                    if (message.replied) return await message.channel.send(payload)
-                    else return message.replied = await reply.call(message, payload).catch(() => { }) ?? await message.channel.send(payload)
-                }
-
-                callbacks.messageCallback(msg).catch((e) => console.log(e))
+                callbacks.messageCallback(msg).catch(() => { })
             })
             bot.on('guildCreate', (guild) => {
                 callbacks.guildCallback(guild).catch(() => { })

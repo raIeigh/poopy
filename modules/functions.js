@@ -15,9 +15,9 @@ functions.updateAllData = require('./dataGathering').updateAllData
 functions.brainfuck = require('./brainfuck')
 functions.tobrainfuck = require('./tobrainfuck')
 functions.generateSayori = require('./sayorimessagegenerator')
-functions.braille = require('./braille')
-functions.averageColor = require('./averageColor')
-functions.spectrogram = require('./spectrogram')
+//functions.braille = require('./braille')
+//functions.averageColor = require('./averageColor')
+//functions.spectrogram = require('./spectrogram')
 
 functions.lerp = function (start, end, amt) {
     return (1 - amt) * start + amt * end

@@ -1,50 +1,54 @@
 module.exports = {
     name: ['eval', 'execute'],
-    args: [{"name":"code","required":false,"specifarg":false,"orig":"{code}"}],
+    args: [{ "name": "code", "required": false, "specifarg": false, "orig": "{code}" }],
     execute: async function (msg, args, opts) {
         let poopy = this
+        let config = poopy.config
+        let tempdata = poopy.tempdata
+        let { util } = poopy.modules
 
-        with (poopy) {
-            var ownerid = (config.ownerids.find(id => id == msg.author.id));
-            if (ownerid === undefined && !opts.ownermode) {
-                await msg.reply('Owner only!').catch(() => { })
-                return
+        var ownerid = (config.ownerids.find(id => id == msg.author.id));
+        if (ownerid === undefined && !opts.ownermode) {
+            await msg.reply('Owner only!').catch(() => { })
+            return
+        }
+        var saidMessage = args.slice(1).join(' ')
+        var no = config.illKillYouIfYouUseEval.find(id => id === msg.guild.id || saidMessage.includes(id))
+        if (no) {
+            await msg.reply('<:YouIdiot:735259116737658890>').catch(() => { })
+            return
+        }
+        try {
+            var evalMessage
+            with (poopy) {
+                evalMessage = await eval(saidMessage)
             }
-            var saidMessage = args.slice(1).join(' ')
-            var no = config.illKillYouIfYouUseEval.find(id => id === msg.guild.id || saidMessage.includes(id))
-            if (no) {
-                await msg.reply('<:YouIdiot:735259116737658890>').catch(() => { })
-                return
-            }
-            try {
-                var evalMessage = await eval(saidMessage)
 
-                if (typeof (evalMessage) !== 'string') evalMessage = util.inspect(evalMessage)
+            if (typeof (evalMessage) !== 'string') evalMessage = util.inspect(evalMessage)
 
-                evalMessage = evalMessage.match(/[\s\S]{1,2000}/g)
+            evalMessage = evalMessage.match(/[\s\S]{1,2000}/g)
 
-                for (var i in evalMessage) {
-                    if (tempdata[msg.guild.id][msg.channel.id]['shut']) break
-                    var ev = evalMessage[i]
-                    await msg.channel.send({
-                        content: ev,
-                        allowedMentions: {
-                            parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
-                        }
-                    }).catch(async () => {
-                        await msg.channel.send('​').catch(() => { })
-                        return
-                    })
-                }
-            } catch (error) {
-                await msg.channel.send({
-                    content: error.message,
+            for (var i in evalMessage) {
+                if (tempdata[msg.guild.id][msg.channel.id]['shut']) break
+                var ev = evalMessage[i]
+                await msg.reply({
+                    content: ev,
                     allowedMentions: {
                         parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                     }
-                }).catch(() => { })
-                return
+                }).catch(async () => {
+                    await msg.reply('​').catch(() => { })
+                    return
+                })
             }
+        } catch (error) {
+            await msg.reply({
+                content: error.message,
+                allowedMentions: {
+                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                }
+            }).catch(() => { })
+            return
         }
     },
     help: {

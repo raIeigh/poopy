@@ -1,6 +1,6 @@
 module.exports = {
     name: ['spam', 'flood'],
-    args: [{"name":"times","required":true,"specifarg":false,"orig":"<times>"},{"name":"message","required":true,"specifarg":false,"orig":"<message>"},{"name":"nodelete","required":false,"specifarg":true,"orig":"[-nodelete]"},{"name":"tts","required":false,"specifarg":true,"orig":"[-tts]"}],
+    args: [{ "name": "times", "required": true, "specifarg": false, "orig": "<times>" }, { "name": "message", "required": true, "specifarg": false, "orig": "<message>" }, { "name": "nodelete", "required": false, "specifarg": true, "orig": "[-nodelete]" }, { "name": "tts", "required": false, "specifarg": true, "orig": "[-tts]" }],
     execute: async function (msg, args) {
         let poopy = this
         let config = poopy.config
@@ -8,7 +8,7 @@ module.exports = {
         let tempdata = poopy.tempdata
 
         await msg.channel.sendTyping().catch(() => { })
-        if (msg.member.permissions.has('MANAGE_GUILD')  || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
+        if (msg.member.permissions.has('MANAGE_GUILD') || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
             if (args[1] === undefined && args[2] === undefined) {
                 await msg.reply('How much do I spam?!').catch(() => { })
                 return;
@@ -60,18 +60,25 @@ module.exports = {
                 msg.delete().catch(() => { })
             }
             var reply = await msg.fetchReference().catch(() => { })
+
+            if (msg.isCommand && msg.isCommand() && del) await msg.deferReply({ ephemeral: true }).catch(() => { })
+
             for (var i = 0; i < numToRepeat; i++) {
                 if (tempdata[msg.guild.id][msg.channel.id]['shut']) break
+
                 if (reply) {
                     await reply.reply(sendObject).catch(() => { })
                 } else {
-                    if (msg.isCommand && msg.isCommand() && !msg.replied && !del) {
-                        await msg.reply(sendObject).catch(() => { })
-                    } else {
+                    if (del || msg.replied) {
                         await msg.channel.send(sendObject).catch(() => { })
+                        if (!msg.isCommand && del) msg.delete().catch(() => { })
+                    } else {
+                        await msg.reply(sendObject).catch(() => { })
                     }
                 }
-            };
+            }
+
+            if (msg.isCommand && msg.isCommand() && del) await msg.editReply({ content: 'Successfully sent.' }).catch(() => { });
         } else {
             await msg.reply('You need to have the manage messages permission to execute that!').catch(() => { })
             return;
@@ -82,6 +89,7 @@ module.exports = {
         value: 'Spam a message! Limit is 25.\nExample usage: p:spam 5 stupid'
     },
     cooldown: 10000,
+    nodefer: true,
     perms: ['MANAGE_MESSAGES', 'ADMINISTRATOR'],
     type: 'Annoying'
 }
