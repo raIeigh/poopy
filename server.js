@@ -582,7 +582,7 @@ async function start() {
     if (__dirname.includes('app')) {
         tokens = [
             {
-                TOKEN: process.env.POOPYTOKEN,
+                TOKEN: process.env.POOPY_TOKEN,
                 config: {
                     globalPrefix: 'p:',
                     public: true,
@@ -591,7 +591,7 @@ async function start() {
             },
 
             {
-                TOKEN: process.env.POOSONIATOKEN,
+                TOKEN: process.env.POOSONIA_TOKEN,
                 config: {
                     globalPrefix: 'ps:',
                     mongodatabase: 'poopypsdata',
@@ -600,7 +600,7 @@ async function start() {
             },
 
             {
-                TOKEN: process.env.INDIATOKEN,
+                TOKEN: process.env.INDIA_TOKEN,
                 config: {
                     self: true,
                     globalPrefix: 'i:',
