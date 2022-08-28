@@ -19,7 +19,7 @@ if (modules.fs.existsSync('node_modules/@jimp/plugin-print'))
         force: true, recursive: true
     })
 if (!modules.fs.existsSync('node_modules/@jimp/plugin-print'))
-    modules.fs.copySync('modules/plugin-print', 'node_modules/@jimp/plugin-print', {
+    modules.fs.copySync('src/plugin-print', 'node_modules/@jimp/plugin-print', {
         recursive: true
     })
 modules.Jimp = require('jimp')

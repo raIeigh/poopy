@@ -39,7 +39,7 @@ class Poopy {
             forcetrue: false,
             useReactions: false,
             textEmbeds: false,
-            notSave: false,
+            notSave: true,
             apiMode: false,
             self: false,
             noInfoPost: false,
@@ -130,10 +130,10 @@ class Poopy {
         }
 
         // setting values
-        let dataValues = require('./modules/dataValues')
-        let varsList = require('./modules/vars')
-        let modulesList = require('./modules/modules')
-        let functionsList = require('./modules/functions')
+        let dataValues = require('./src/dataValues')
+        let varsList = require('./src/vars')
+        let modulesList = require('./src/modules')
+        let functionsList = require('./src/functions')
 
         let modules = poopy.modules = {}
         let functions = poopy.functions = {}
@@ -213,7 +213,6 @@ class Poopy {
         })
         poopy.package = JSON.parse(modulesList.fs.readFileSync('package.json'))
 
-        // modifying discord.js stuff haha
         class FakeCollector {
             constructor() {
                 this.on = () => { }
@@ -1388,9 +1387,7 @@ class Poopy {
         let data = poopy.data
         let globaldata = poopy.globaldata
         let { fs } = poopy.modules
-        let { infoPost, processTask, getAllData, getPsFiles,
-            getPsPasta, getFunny, getEmojis, saveData, changeStatus,
-            waitMessageCooldown, setMessageCooldown } = poopy.functions
+        let { infoPost, processTask, getAllData, getEmojis, saveData, changeStatus } = poopy.functions
         let callbacks = poopy.callbacks
 
         if (!TOKEN && !poopy.__TOKEN) {
@@ -1538,228 +1535,23 @@ class Poopy {
         }
 
         if (!globaldata['bot-data']['psfiles']) {
-            globaldata['bot-data']['psfiles'] = await getPsFiles().catch(() => { }) || ['i broke the json']
+            globaldata['bot-data']['psfiles'] = arrays.psFiles
         }
 
         if (!globaldata['bot-data']['pspasta']) {
-            globaldata['bot-data']['pspasta'] = await getPsPasta().catch(() => { }) || ['i broke the json']
+            globaldata['bot-data']['pspasta'] = arrays.psPasta
         }
 
         if (!globaldata['bot-data']['funnygif']) {
-            globaldata['bot-data']['funnygif'] = await getFunny().catch(() => { }) || ['i broke the json']
+            globaldata['bot-data']['funnygif'] = arrays.funnygifs
         }
 
         if (!globaldata['bot-data']['poop']) {
-            globaldata['bot-data']['poop'] = [
-                "I farted loudly.",
-                "I pooped again.",
-                "Poopy",
-                "Funny farts",
-                "Poooooop",
-                "<:poopy:621064531908755467>",
-                "My poop is powerful.",
-                "I pooped on your carpet.",
-                "arabotto please come home",
-                "<:poopy:621064531908755467> <:poopy:621064531908755467> <:poopy:621064531908755467> <:poopy:621064531908755467> <:poopy:621064531908755467> <:poopy:621064531908755467>",
-                "Ungh *farts*",
-                "I have passed gas.",
-                "Poopy Poopy Stinky Ew",
-                "<@454732245425455105>",
-                "You live in a VAN!",
-                "gondal",
-                "😂",
-                "🎅🏿",
-                "L is real",
-                "Do you fart?",
-                "I have over {fart} confirmed farts.",
-                "{mention} shut up",
-                "Optimus prime",
-                "👁👄👁",
-                "🤮🤮🤮🤮🤮🤮🤮🤮🤮🤮",
-                "Lol XD funny large fart POOP big burger two watermelon fish",
-                "Quesley is a mysterious figure, yes.",
-                "Regal is quite stingy.",
-                "One bighead is much stronger than the others...",
-                "peed",
-                "What the hell do you want?",
-                "😀😃😄😁😆😅😂🤣☺️😊😇🙂🙃😉😌😍🥰😘😗😙😚😋😛😝😜🤪🤨🧐🤓😎🤩🥳😏😒😞😔😟😕🙁☹️😣😖😫😩🥺😢😭😤😠😡🤬🤯😳🥵🥶😱😨😰😥😓🤗🤔🤭🤫🤥😶😐😑😬🙄😯😦😧😮😲🥱😴🤤😪😵🤐🥴🤢🤮🤧😷🤒🤕🤑🤠😈👿👹👺🤡💩👻💀☠️👽👾🤖🎃😺😸😹😻😼😽🙀😿😾🤲👐🙌👏🤝👍👎👊✊🤛🤜🤞✌️🤟🤘👌🤏👈👉👆👇☝️✋🤚🖐🖖👋🤙",
-                "The ocean is hiding something.",
-                "I don't think it’s possible that anyone could poop more than me.",
-                "c",
-                "{mention} please go away",
-                "You will die of spicy diarrhea in {seconds} seconds.",
-                "The lad race is widespread on many planets.",
-                "Dude I’m buying groceries.",
-                "Dude I’m taking a bath.",
-                "Doge is watching us intently...",
-                "Lore? Hmm, keep using this command and I might give you some.",
-                "Soup Arena? Never heard of it.",
-                "I will poop on you if you don’t fucking stop.",
-                "I will crap in your mouth!",
-                "OMG NO WAY HE",
-                "Superbrohouse",
-                "I can’t",
-                "YOU CANT STOP THEM.",
-                "If the Essence wins...",
-                "It’s raining men!",
-                "I might actually not be made of poop.",
-                "I used to be yellow, just like my bretheren.",
-                "Are you expecting something?",
-                "My favorite food is sugar cookies.",
-                "Planet travel is much easier thanks to me...",
-                "Amateur Sailor will be a great sailor one day!",
-                "omgbroyoucrazywhyyouusethiscommandsomuchidiotstinkyperson",
-                "Quoth the raven, \"nevermore\".",
-                "Nah fam",
-                "Uniting the legendary items will finally complete the prophecy...",
-                "I’ll never forget the day...",
-                "Deinx if you’re reading this you’re fat hahahahaha",
-                "The prototype I am building has endless capabilities.",
-                "The others don’t appreciate me, but they should.",
-                "You’ll never find my secret base!",
-                "I’ve been keeping a close eye on you for a while now.",
-                "You are dumb.",
-                "We captured the spy!",
-                "Pood",
-                "Paad",
-                "Piid",
-                "Puud",
-                "You will never reach the truth.",
-                "Yo.",
-                "fack you",
-                "Me when",
-                "Ballfish is actually at-",
-                "No",
-                "Yes",
-                "Wired were the eyes of a horse on a jet pilot, one that smiled when they flew over the bay!",
-                "Chop Suey!",
-                "What is wrong with you?",
-                "I may not look it, but my intelligence is far beyond.",
-                "is soup remastered ever getting a thumbnail",
-                "Response",
-                "Plain Text",
-                "is krima?",
-                "theres 104 days of summer vacation",
-                "I farted quietly.",
-                "Ha! Sand in the eye! You’ll never get my lore!",
-                "Words can not describe how much I absolutely despise stew.",
-                "My home planet is so far...",
-                "Will my brethren ever accept me again?",
-                "Skibidi bop mm dada",
-                ":hole <@613501149282172970>",
-                "Entity 1 will not stop until he has gained all the power.",
-                "The entities have massacred 24 planets so far, and you're next.",
-                "Soup rains will come soon, but they will be a bit different.",
-                "Regal will have karma someday...",
-                "Stew aliens are building a weapon to melt planet Soup's surface. You must stop them.",
-                "**UPDATE 999** - Add shit - Add shat - Add shot - Add shut - Add shet",
-                "WTFNOOOO!",
-                "Leave right now.",
-                "THE LE-D-R",
-                "CO-R—TI-N",
-                "I want legs for Christmas.",
-                "The crystals grow ever more aggravated...",
-                "Nobody will miss 2020.",
-                "Gork rights!",
-                "My prototype is enormous, and it's equipped with all kinds of powerful weapons!"
-            ]
+            globaldata['bot-data']['poop'] = arrays.poopPhrases
         }
 
         if (!globaldata['bot-data']['dmphrases']) {
-            globaldata['bot-data']['dmphrases'] = [
-                "Yo.",
-                "ADMIN?",
-                "I don't care how long I have to keep this up, I'll make a post daily, or maybe even more frequently until one of two things happen. Deinbag's cheated level is removed from the leaderboard, or Calm gets its One Winged Angel theme back. I will not put up with two major things I cared about in the game be influenced by the developers when they had no good reason. And until it gets fixed, you'll be seeing this message over and over, no matter the platform.",
-                "Eat your chair",
-                "same feel",
-                "NO WAY HE",
-                "What.",
-                "That's spicy.",
-                "SAME!",
-                "<:poopy:621064531908755467> this is me",
-                "Wait, what the hell is the peedapocalypse?",
-                "Cool.",
-                "NaN",
-                "undefined",
-                "nil",
-                "Good work.",
-                "That deserves a reward!",
-                "but how can",
-                "YES",
-                "DAMN DANIEL!",
-                "Hello everybody my name is Markiplier and today we'll <@454732245425455105>",
-                "Why does it smell like fart",
-                "Mama Luigi? MAMA LUIGI?!?!",
-                "ballfishe",
-                "Don't expect to see lore here anytime soon.",
-                "** **",
-                "that's stupid",
-                "Epic School Prank",
-                "I feel like I've heard that before...",
-                ":deciduous_tree:",
-                "no......",
-                "So Phil, is it?",
-                "it was",
-                "it wasn't",
-                "FINE I DO IT",
-                "HI DEINX",
-                "INPOSSINBLE",
-                "Poop shit. Idiot Dream Hotel Mario. You are a man's friend for a moment.",
-                "how do i help you",
-                "AWESOME! i died",
-                "just like that, my life became a misery",
-                "ROAST",
-                "bmmptsmptshmptsptsptsptsptsmhmptsmmhmmptsptsptsptsmhptsmmhptsmmmptshmptsptsptsmmptsmptshhptsmmptsmmmhmmmhmm",
-                "POOPY. HEAD.",
-                "Descend to hell.",
-                "Ascend to heaven.",
-                "SHUT UP YOU RACIS TIDITO!!!!!",
-                "coel",
-                "erectile dysfunction",
-                "brb i'm gonna block you for fun",
-                "omg!!!! creator",
-                "I blew up Malaysia",
-                "Oh? On god?",
-                "funy",
-                "You May Insert",
-                "O_o",
-                "Genius.",
-                "let's get this thing viral",
-                "2b2t",
-                "NUMBER",
-                "epica moment",
-                "https://www.youtube.com/watch?v=RR856dzGhv8",
-                "ARE YOU GORK'S MOTHER!?!?!?!",
-                "```bat\ncd desktop\ncd poopy\nnode .\n```",
-                "```lua\ngame.Players.PlayerAdded:Connect(function(plr)\n    plr.Kick()\nend)```",
-                "Bro tip number 80:\nsuicide is the answer",
-                "now you understand what that ominous entity was",
-                "it was minecraft steve, he's turned your world into his, and now he wants to kill you",
-                "wholesome 100",
-                "cringe",
-                "TABLE.",
-                "Pufferfish Defense",
-                "my mom",
-                "I blew up",
-                "my skin is rotting slowly",
-                "{mention}",
-                "seen that already",
-                "I knew it.",
-                "bye bye troller",
-                "we don't need you",
-                "I can track your location",
-                "fuck",
-                "HAHAHAHAHAHAH",
-                "Congrats, your Reddit account has been successfully created",
-                "you putrid fuck",
-                "fortnite balls i'm gay",
-                "thats not funny",
-                "and i genuinely love this girl",
-                "Oh My Fucking God Shut The Fuck Up You're So Annoying If I Wasn't A Bot I Would Immediately Block You It'd Be Pretty Awesome If I Wasn't One Anyways I Could Just Join Any Server And Bomb Each One Of Them With My Great Awesome 10/10 Commands But Guess I Can't Because Of You Yes That's Right You Are One Of The Biggest Obstacles I've Ever Bumped With In My Entire History But Anyways The Whole Point Of This Speech Was To Shut You The Fuck Up Please Get Out Of My Dms I Can't Handle It Anymore I Will Do Anything To Stop You Even Delete Myself From The Existance Of Discord So Now I'm Just Gonna Smash My Keyboard Until I'm Done With You SJDASFUIDASHUDIHASUIDFAHSKUALDOWRQWPRS 65 ttfgiootifgiotf  re uir ue      re7 r   r7eriue rei reirrrr  r r r rick sa9df a8 9san 7 47897472 YRYEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEER78QR@ L2l2  0 4l v l£§30324-",
-                "Bosom...?",
-                "I NEED TO SUCK MAD TITTIES RN!",
-                "i could kill you"
-            ]
+            globaldata['bot-data']['dmphrases'] = arrays.dmPhrases
         }
 
         arrays.psFiles = globaldata['bot-data']['psfiles']
@@ -1780,7 +1572,7 @@ class Poopy {
 
         await infoPost(`Finishing extra steps...`);
 
-        let dataGetters = require('./modules/dataGetters')
+        let dataGetters = require('./src/dataGetters')
 
         var uberduck = await dataGetters.uberduck().catch(() => { })
         vars.ubervoices = uberduck[0]

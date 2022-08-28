@@ -64,7 +64,7 @@ function tryJSONparse(obj) {
     }
 }
 
-let processingTools = require('./modules/processingTools')
+let processingTools = require('./src/processingTools')
 
 function execPromise(code) {
     return new Promise((resolve) => {

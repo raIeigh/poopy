@@ -1,5 +1,4 @@
 const { fs, request, axios } = require('./modules')
-
 let vars = require('./vars')
 let functions = {}
 
@@ -25,42 +24,6 @@ functions.lerp = function (start, end, amt) {
 
 functions.sleep = function (ms) {
     return new Promise(resolve => setTimeout(resolve, ms ?? 0))
-}
-
-functions.getPsFiles = async function () {
-    return new Promise((resolve, reject) => {
-        axios.get('https://raw.githubusercontent.com/raIeigh/ps-media-json/main/psfiles.json').then((res) => {
-            try {
-                resolve(res.data.data)
-            } catch (err) {
-                reject(err)
-            }
-        })
-    })
-}
-
-functions.getPsPasta = async function () {
-    return new Promise((resolve, reject) => {
-        axios.get('https://raw.githubusercontent.com/raIeigh/ps-media-json/main/pspasta.json').then((res) => {
-            try {
-                resolve(res.data.data)
-            } catch (err) {
-                reject(err)
-            }
-        })
-    })
-}
-
-functions.getFunny = async function () {
-    return new Promise((resolve, reject) => {
-        axios.get('https://raw.githubusercontent.com/raIeigh/ps-media-json/main/funnygif.json').then((res) => {
-            try {
-                resolve(res.data.data)
-            } catch (err) {
-                reject(err)
-            }
-        })
-    })
 }
 
 functions.request = async function (options) {
