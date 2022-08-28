@@ -14,9 +14,9 @@ functions.updateAllData = require('./dataGathering').updateAllData
 functions.brainfuck = require('./brainfuck')
 functions.tobrainfuck = require('./tobrainfuck')
 functions.generateSayori = require('./sayorimessagegenerator')
-//functions.braille = require('./braille')
-//functions.averageColor = require('./averageColor')
-//functions.spectrogram = require('./spectrogram')
+functions.braille = require('./braille')
+functions.averageColor = require('./averageColor')
+functions.spectrogram = require('./spectrogram')
 
 functions.lerp = function (start, end, amt) {
     return (1 - amt) * start + amt * end
@@ -862,7 +862,6 @@ functions.processTask = async function (data) {
             ch.bindQueue(qrash.queue, 'crash', '')
 
             async function closeAll() {
-                clearTimeout(idleTimeout)
                 await ch.cancel(consumer.consumerTag).catch(() => { })
                 await ch.cancel(crashconsumer.consumerTag).catch(() => { })
                 await ch.deleteQueue(q.queue).catch(() => { })
@@ -903,11 +902,6 @@ functions.processTask = async function (data) {
                 closeAll()
                 reject(msg.content.toString())
             }, { noAck: true }).catch(reject)
-
-            var idleTimeout = setTimeout(function () {
-                closeAll()
-                reject(`Task idle duration exceeded`)
-            }, 300000)
 
             var reqdata = Buffer.from(JSON.stringify(data))
             var msgSizeLimit = 1024 * 1024 * 8 - 3
