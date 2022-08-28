@@ -61,7 +61,7 @@ modules.DMGuild = class DMGuild {
     }
 }
 
-modules.deepai.setApiKey(process.env.DEEPAIKEY)
-modules.noblox.setCookie(process.env.ROBLOXCOOKIE).catch(() => { })
+modules.deepai.setApiKey(process.env.DEEPAI_KEY)
+modules.noblox.setCookie(process.env.ROBLOX_COOKIE).catch(() => { })
 
 module.exports = modules

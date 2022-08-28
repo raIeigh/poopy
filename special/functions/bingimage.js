@@ -19,5 +19,5 @@ module.exports = {
     },
     attemptvalue: 10,
     limit: 5,
-    envRequired: ['RAPIDAPIKEY']
+    envRequired: ['RAPIDAPI_KEY']
 }

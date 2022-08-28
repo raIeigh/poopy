@@ -21,7 +21,7 @@ module.exports = {
         }
         var search = args.slice(1).join(" ");
 
-        var res = await axios.request(`https://g.tenor.com/v1/search?q=${encodeURIComponent(search)}&key=${process.env.TENORKEY}&limit=100&contentfilter=${msg.channel.nsfw ? 'off' : 'medium'}`).catch(() => { })
+        var res = await axios.request(`https://g.tenor.com/v1/search?q=${encodeURIComponent(search)}&key=${process.env.TENOR_KEY}&limit=100&contentfilter=${msg.channel.nsfw ? 'off' : 'medium'}`).catch(() => { })
 
         if (!res) {
             await msg.reply('Error.').catch(() => { })
@@ -86,5 +86,5 @@ module.exports = {
     },
     cooldown: 2500,
     type: 'Fetching',
-    envRequired: ['TENORKEY']
+    envRequired: ['TENOR_KEY']
 }

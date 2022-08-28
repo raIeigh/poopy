@@ -110,7 +110,7 @@ module.exports = {
             data: form,
             headers: {
                 ...form.getHeaders(),
-                Authorization: process.env.MAKESWEETKEY
+                Authorization: process.env.MAKESWEET_KEY
             },
             responseType: 'arraybuffer'
         }).catch(async (e) => {
@@ -132,5 +132,5 @@ module.exports = {
     },
     cooldown: 2500,
     type: 'Memes',
-    envRequired: ['MAKESWEETKEY']
+    envRequired: ['MAKESWEET_KEY']
 }

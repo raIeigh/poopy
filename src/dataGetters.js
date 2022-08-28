@@ -33,7 +33,7 @@ var dataGetters = {
             params: { 'api-version': '3.0' },
             headers: {
                 'x-rapidapi-host': 'microsoft-translator-text.p.rapidapi.com',
-                'x-rapidapi-key': randomKey('RAPIDAPIKEY')
+                'x-rapidapi-key': randomKey('RAPIDAPI_KEY')
             }
         }).catch(() => { })
 
@@ -48,7 +48,7 @@ var dataGetters = {
             url: 'https://api.uberduck.ai/voices?mode=tts-basic',
             headers: {
                 Accept: 'application/json',
-                Authorization: `Basic ${btoa(`${process.env.UBERDUCKKEY}:${process.env.UBERDUCKSECRET}`)}`
+                Authorization: `Basic ${btoa(`${process.env.UBERDUCK_KEY}:${process.env.UBERDUCK_SECRET}`)}`
             }
         }).catch(() => { })
 

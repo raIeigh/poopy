@@ -821,9 +821,9 @@ functions.cleverbot = async function (stim, id) {
                 id: id
             },
             headers: {
-                authorization: process.env.GAMERKEY,
+                authorization: process.env.RANDOMSTUFF_KEY,
                 'x-rapidapi-host': 'random-stuff-api.p.rapidapi.com',
-                'x-rapidapi-key': randomKey('RAPIDAPIKEY')
+                'x-rapidapi-key': randomKey('RAPIDAPI_KEY')
             }
         }
 
@@ -833,7 +833,7 @@ functions.cleverbot = async function (stim, id) {
     }
 
     var response = await clever().catch(() => { })
-    if (!response && process.env.GAMERKEY) response = await gamer().catch(() => { })
+    if (!response && process.env.RANDOMSTUFF_KEY) response = await gamer().catch(() => { })
     if (!response) response = randomChoice(arrays.eightball)
 
     if (id != undefined && response) {
@@ -870,8 +870,6 @@ functions.processTask = async function (data) {
                 await ch.deleteQueue(q.queue).catch(() => { })
                 await ch.deleteQueue(qrash.queue).catch(() => { })
                 await ch.close().catch(() => { })
-                if (fs.existsSync(`tasks/${config.mongodatabase}/${correlationId}.json`))
-                    fs.rm(`tasks/${config.mongodatabase}/${correlationId}.json`, { force: true, recursive: true })
             }
 
             var chunkdata = []
@@ -1758,9 +1756,9 @@ functions.correctUrl = async function (url) {
     let { infoPost } = poopy.functions
     let { axios, cheerio, youtubedl, noblox } = poopy.modules
 
-    if (url.match(/^https\:\/\/(www\.)?tenor\.com\/view/) && url.match(/\d+/g) && process.env.TENORKEY) {
+    if (url.match(/^https\:\/\/(www\.)?tenor\.com\/view/) && url.match(/\d+/g) && process.env.TENOR_KEY) {
         var ids = url.match(/\d+/g)
-        var body = await axios.request(`https://g.tenor.com/v1/gifs?ids=${ids[ids.length - 1]}&key=${process.env.TENORKEY}`).catch(() => { })
+        var body = await axios.request(`https://g.tenor.com/v1/gifs?ids=${ids[ids.length - 1]}&key=${process.env.TENOR_KEY}`).catch(() => { })
         if (body && body.data.results.length) {
             infoPost(`Tenor URL detected`)
             return body.data.results[0].media[0].gif.url
@@ -2846,7 +2844,7 @@ functions.fetchImages = async function (query, bing, safe) {
                 params: { q: query, count: '100', safeSearch: safe ? 'moderate' : 'off' },
                 headers: {
                     'x-rapidapi-host': 'bing-image-search1.p.rapidapi.com',
-                    'x-rapidapi-key': randomKey('RAPIDAPIKEY')
+                    'x-rapidapi-key': randomKey('RAPIDAPI_KEY')
                 }
             }
 

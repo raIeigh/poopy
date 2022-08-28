@@ -32,7 +32,7 @@ module.exports = {
                 headers: {
                     'content-type': 'application/json',
                     'x-rapidapi-host': 'microsoft-computer-vision3.p.rapidapi.com',
-                    'x-rapidapi-key': randomKey('RAPIDAPIKEY')
+                    'x-rapidapi-key': randomKey('RAPIDAPI_KEY')
                 },
                 data: {
                     url: currenturl
@@ -89,5 +89,5 @@ module.exports = {
     },
     cooldown: 2500,
     type: 'Text',
-    envRequired: ['RAPIDAPIKEY']
+    envRequired: ['RAPIDAPI_KEY']
 }

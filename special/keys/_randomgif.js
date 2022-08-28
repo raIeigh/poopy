@@ -5,7 +5,7 @@ module.exports = {
         let { axios } = poopy.modules
         let arrays = poopy.arrays
 
-        var res = await axios.get(`https://g.tenor.com/v1/search?q=${encodeURIComponent(arrays.tenorDictionary[Math.floor(Math.random() * arrays.tenorDictionary.length)].toLowerCase())}&key=${process.env.TENORKEY}&limit=100&contentfilter=${msg.channel.nsfw ? 'off' : 'medium'}`).catch(() => { })
+        var res = await axios.get(`https://g.tenor.com/v1/search?q=${encodeURIComponent(arrays.tenorDictionary[Math.floor(Math.random() * arrays.tenorDictionary.length)].toLowerCase())}&key=${process.env.TENOR_KEY}&limit=100&contentfilter=${msg.channel.nsfw ? 'off' : 'medium'}`).catch(() => { })
         if (!res) return ''
 
         var parsedBody = res.data
@@ -20,6 +20,6 @@ module.exports = {
         }
     },
     attemptvalue: 2,
-    envRequired: ['TENORKEY'],
+    envRequired: ['TENOR_KEY'],
     cmdconnected: 'randomgif'
 }

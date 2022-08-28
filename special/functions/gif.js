@@ -10,7 +10,7 @@ module.exports = {
         var split = splitKeyFunc(word, { args: 2 })
         var query = getIndexOption(split, 0)[0]
         var page = getIndexOption(split, 1, { n: Infinity }).join(' | ')
-        var res = await axios.request(`https://g.tenor.com/v1/search?q=${encodeURIComponent(query)}&key=${process.env.TENORKEY}&limit=100&contentfilter=${msg.channel.nsfw ? 'off' : 'medium'}`).catch(() => { })
+        var res = await axios.request(`https://g.tenor.com/v1/search?q=${encodeURIComponent(query)}&key=${process.env.TENOR_KEY}&limit=100&contentfilter=${msg.channel.nsfw ? 'off' : 'medium'}`).catch(() => { })
         
         if (!res) return word
 
@@ -24,6 +24,6 @@ module.exports = {
     },
     attemptvalue: 10,
     limit: 5,
-    envRequired: ['TENORKEY'],
+    envRequired: ['TENOR_KEY'],
     cmdconnected: 'gif'
 }

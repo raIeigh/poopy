@@ -46,7 +46,7 @@ module.exports = {
                     task_type: "text2im"
                 },
                 headers: {
-                    Authorization: `Bearer ${process.env.DALLE2KEY}`
+                    Authorization: `Bearer ${process.env.DALLE2_SESSION}`
                 }
             }).catch(() => { })
 
@@ -65,7 +65,7 @@ module.exports = {
                     url: `https://labs.openai.com/api/labs/tasks/${taskId}`,
                     method: 'GET',
                     headers: {
-                        Authorization: `Bearer ${process.env.DALLE2KEY}`
+                        Authorization: `Bearer ${process.env.DALLE2_SESSION}`
                     }
                 })
 
@@ -126,5 +126,5 @@ module.exports = {
     },
     cooldown: 2500,
     type: 'Owner',
-    envRequired: ['DALLE2KEY']
+    envRequired: ['DALLE2_SESSION']
 }

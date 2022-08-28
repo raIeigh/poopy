@@ -62,7 +62,7 @@ module.exports = {
                     stopSequences: []
                 },
                 headers: {
-                    Authorization: `Bearer ${process.env.AI21KEY}`
+                    Authorization: `Bearer ${process.env.AI21_KEY}`
                 }
             }).catch(() => { })
 
@@ -118,5 +118,5 @@ module.exports = {
         value: 'Tries to predict subsequent text from the specified message with AI21, DeepAI otherwise. Default max tokens are 65 and temperature is 0.6.'
     },
     type: 'Generation',
-    envRequired: ['AI21KEY', 'DEEPAIKEY']
+    envRequired: ['AI21_KEY', 'DEEPAI_KEY']
 }

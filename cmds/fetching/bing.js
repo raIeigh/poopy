@@ -76,5 +76,5 @@ module.exports = {
     },
     cooldown: 2500,
     type: 'Fetching',
-    envRequired: ['RAPIDAPIKEY']
+    envRequired: ['RAPIDAPI_KEY']
 }

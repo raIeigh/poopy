@@ -18,13 +18,13 @@ module.exports = {
         await msg.channel.sendTyping().catch(() => { })
 
         if (args[1] === undefined) {
-            await msg.reply(`What is the voice?! A list can be found at ${process.env.BOTWEBSITE ? `${process.env.BOTWEBSITE}/ubervoices` : `https://app.uberduck.ai/quack-help`}`).catch(() => { })
+            await msg.reply(`What is the voice?! A list can be found at ${process.env.BOT_WEBSITE ? `${process.env.BOT_WEBSITE}/ubervoices` : `https://app.uberduck.ai/quack-help`}`).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
         }
 
         if (!vars.ubervoices.find(vc => vc.name == args[1].toLowerCase())) {
-            await msg.reply(`Invalid voice. A list can be found at ${process.env.BOTWEBSITE ? `${process.env.BOTWEBSITE}/ubervoices` : `https://app.uberduck.ai/quack-help`}`).catch(() => { })
+            await msg.reply(`Invalid voice. A list can be found at ${process.env.BOT_WEBSITE ? `${process.env.BOT_WEBSITE}/ubervoices` : `https://app.uberduck.ai/quack-help`}`).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return
         }
@@ -44,7 +44,7 @@ module.exports = {
             url: 'https://api.uberduck.ai/speak-synchronous',
             headers: {
                 Accept: 'audio/wav',
-                Authorization: `Basic ${btoa(`${process.env.UBERDUCKKEY}:${process.env.UBERDUCKSECRET}`)}`,
+                Authorization: `Basic ${btoa(`${process.env.UBERDUCK_KEY}:${process.env.UBERDUCK_SECRET}`)}`,
                 'Content-Type': 'application/json'
             },
             data: {
@@ -82,8 +82,8 @@ module.exports = {
     },
     help: {
         name: 'uberduck/tts <voice> <text>',
-        value: `Generates a TTS synthesized speech with Uberduck AI. A list of voices can be found at ${process.env.BOTWEBSITE ? `${process.env.BOTWEBSITE}/ubervoices` : `https://app.uberduck.ai/quack-help`}. Try it yourself at https://app.uberduck.ai/speak#mode=tts-basic`
+        value: `Generates a TTS synthesized speech with Uberduck AI. A list of voices can be found at ${process.env.BOT_WEBSITE ? `${process.env.BOT_WEBSITE}/ubervoices` : `https://app.uberduck.ai/quack-help`}. Try it yourself at https://app.uberduck.ai/speak#mode=tts-basic`
     },
     type: 'Generation',
-    envRequired: ['UBERDUCKKEY', 'UBERDUCKSECRET']
+    envRequired: ['UBERDUCK_KEY', 'UBERDUCK_SECRET']
 }

@@ -41,5 +41,5 @@ module.exports = {
     },
     cooldown: 2500,
     type: 'Generation',
-    envRequired: ['DEEPAIKEY']
+    envRequired: ['DEEPAI_KEY']
 }

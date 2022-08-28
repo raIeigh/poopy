@@ -105,5 +105,5 @@ module.exports = {
     },
     cooldown: 2500,
     type: 'Fetching',
-    envRequired: ['GOOGLEKEY']
+    envRequired: ['GOOGLE_KEY']
 }

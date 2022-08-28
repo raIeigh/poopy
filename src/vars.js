@@ -8,7 +8,7 @@ vars.Catbox = new catbox.Catbox()
 vars.Litterbox = new catbox.Litterbox()
 vars.youtube = google.youtube({
     version: 'v3',
-    auth: process.env.GOOGLEKEY
+    auth: process.env.GOOGLE_KEY
 })
 /*vars.twitterClient = new Twitter({
     consumer_key: process.env.TWITTERCONSUMERKEY,

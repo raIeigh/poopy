@@ -63,7 +63,7 @@ module.exports = {
             headers: {
                 'content-type': 'application/json',
                 'x-rapidapi-host': 'microsoft-translator-text.p.rapidapi.com',
-                'x-rapidapi-key': randomKey('RAPIDAPIKEY')
+                'x-rapidapi-key': randomKey('RAPIDAPI_KEY')
             },
             data: [{ Text: saidMessage }]
         };
@@ -85,5 +85,5 @@ module.exports = {
         value: 'Translates the specified message. The default source language is auto and the default target language is English.'
     },
     type: 'Text',
-    envRequired: ['RAPIDAPIKEY']
+    envRequired: ['RAPIDAPI_KEY']
 }

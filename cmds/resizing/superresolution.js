@@ -71,5 +71,5 @@ module.exports = {
     },
     cooldown: 2500,
     type: 'Resizing',
-    envRequired: ['DEEPAIKEY']
+    envRequired: ['DEEPAI_KEY']
 }

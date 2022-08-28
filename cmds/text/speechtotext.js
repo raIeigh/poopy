@@ -46,7 +46,7 @@ module.exports = {
                     headers: {
                         'content-type': 'multipart/form-data; boundary=---011000010111000001101001',
                         'X-RapidAPI-Host': 'speech-recognition-english1.p.rapidapi.com',
-                        'X-RapidAPI-Key': randomKey('RAPIDAPIKEY'),
+                        'X-RapidAPI-Key': randomKey('RAPIDAPI_KEY'),
                         useQueryString: true
                     },
                     formData: {
@@ -116,7 +116,7 @@ module.exports = {
                 headers: {
                     'content-type': 'multipart/form-data; boundary=---011000010111000001101001',
                     'X-RapidAPI-Host': 'speech-recognition-english1.p.rapidapi.com',
-                    'X-RapidAPI-Key': randomKey('RAPIDAPIKEY'),
+                    'X-RapidAPI-Key': randomKey('RAPIDAPI_KEY'),
                     useQueryString: true
                 },
                 formData: {
@@ -180,5 +180,5 @@ module.exports = {
     },
     cooldown: 2500,
     type: 'Text',
-    envRequired: ['RAPIDAPIKEY']
+    envRequired: ['RAPIDAPI_KEY']
 }

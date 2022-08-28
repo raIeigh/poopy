@@ -5,12 +5,10 @@ async function start() {
     let mainPoopy
     let poopyList = {}
 
-    if (process.env.BOTWEBSITE) {
+    if (process.env.BOT_WEBSITE) {
         const express = require('express')
         const cors = require('cors')
         const bp = require('body-parser')
-        const fs = require('fs-extra')
-        const fileType = require('file-type')
         const axios = require('axios')
         const md5 = require('md5')
 
@@ -80,20 +78,6 @@ async function start() {
     
             while (!poopyStarted) await sleep(1000)
             res.type('json').send(mainPoopy.globaldata['bot-data']['pspasta'])
-        })
-    
-        app.get('/tasks/:data/:id', async function (req, res) {
-            const auth = req.query.auth
-            const data = req.params.data
-            const taskid = req.params.id
-
-            if (process.env.AUTHTOKEN != auth || !fs.existsSync(`tasks/${data}/${taskid}.json`)) {
-                res.end()
-                return
-            }
-    
-            const taskdata = fs.readFileSync(`tasks/${data}/${taskid}.json`).toString()
-            res.type('json').send(taskdata)
         })
     
         app.get('/ubervoices', async function (_, res) {
@@ -587,7 +571,7 @@ async function start() {
         app.listen(PORT, () => console.log('web is up'))
     
         setInterval(function () {
-            axios.get(process.env.BOTWEBSITE).catch(() => { })
+            axios.get(process.env.BOT_WEBSITE).catch(() => { })
         }, 300000)
     }
 

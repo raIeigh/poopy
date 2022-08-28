@@ -32,7 +32,7 @@ module.exports = {
       headers: {
         'content-type': 'application/json',
         'x-rapidapi-host': 'microsoft-translator-text.p.rapidapi.com',
-        'x-rapidapi-key': randomKey('RAPIDAPIKEY')
+        'x-rapidapi-key': randomKey('RAPIDAPI_KEY')
       },
       data: [{ Text: phrase }]
     };

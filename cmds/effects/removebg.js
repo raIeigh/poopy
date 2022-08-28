@@ -40,7 +40,7 @@ module.exports = {
                 data: form,
                 headers: {
                     ...form.getHeaders(),
-                    'X-Api-Key': randomKey('REMOVEBGKEY')
+                    'X-Api-Key': randomKey('REMOVEBG_KEY')
                 },
                 encoding: null,
                 responseType: 'arraybuffer'
@@ -85,5 +85,5 @@ module.exports = {
     },
     cooldown: 2500,
     type: 'Effects',
-    envRequired: ['REMOVEBGKEY']
+    envRequired: ['REMOVEBG_KEY']
 }

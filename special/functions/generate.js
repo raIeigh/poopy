@@ -46,7 +46,7 @@ module.exports = {
               stopSequences: []
           },
           headers: {
-              Authorization: `Bearer ${process.env.AI21KEY}`
+              Authorization: `Bearer ${process.env.AI21_KEY}`
           }
       }).catch(() => { })
 
@@ -67,5 +67,5 @@ module.exports = {
   },
   attemptvalue: 10,
   limit: 1,
-  envRequired: ['AI21KEY', 'DEEPAIKEY']
+  envRequired: ['AI21_KEY', 'DEEPAI_KEY']
 }
