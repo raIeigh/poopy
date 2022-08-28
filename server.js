@@ -591,7 +591,7 @@ async function start() {
         }, 300000)
     }
 
-    const Poopy = require('./poopy.ts')
+    const Poopy = require('./poopy')
 
     let tokens = []
 
