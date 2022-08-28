@@ -224,9 +224,9 @@ class Poopy {
             }
         }
 
-        fs.readdirSync('special/keys').forEach(name => {
+        fs.readdirSync('src/special/keys').forEach(name => {
             var key = name.replace(/\.js$/, '')
-            var keyData = require(`./special/keys/${key}`)
+            var keyData = require(`./src/special/keys/${key}`)
             if (!(config.poosonia && config.poosoniakeywordblacklist.find(keyname => keyname == key)) && envsExist(keyData.envRequired ?? [])) {
                 function keyFunc(...args) {
                     return keyData.func.call(poopy, ...args)
@@ -240,9 +240,9 @@ class Poopy {
             }
         })
 
-        fs.readdirSync('special/functions').forEach(name => {
+        fs.readdirSync('src/special/functions').forEach(name => {
             var func = name.replace(/\.js$/, '')
-            var funcData = require(`./special/functions/${name}`)
+            var funcData = require(`./src/special/functions/${name}`)
             if (!(config.poosonia && config.poosoniafunctionblacklist.find(funcname => funcname == func)) && envsExist(funcData.envRequired ?? [])) {
                 function funcFunc(...args) {
                     return funcData.func.call(poopy, ...args)
@@ -286,10 +286,10 @@ class Poopy {
             }
         }
 
-        fs.readdirSync('cmds').forEach(category => {
-            fs.readdirSync(`cmds/${category}`).forEach(name => {
+        fs.readdirSync('src/commands').forEach(category => {
+            fs.readdirSync(`src/commands/${category}`).forEach(name => {
                 var cmd = name.replace(/\.js$/, '')
-                var cmdData = require(`./cmds/${category}/${name}`)
+                var cmdData = require(`./src/commands/${category}/${name}`)
 
                 if ((config.poosonia && config.poosoniablacklist.find(cmdname => cmdname == cmd)) ||
                     !envsExist(cmdData.envRequired ?? [])) return
@@ -298,9 +298,9 @@ class Poopy {
             })
         })
 
-        if (config.testing) fs.readdirSync('soon').forEach(name => {
+        if (config.testing) fs.readdirSync('src/soon').forEach(name => {
             var cmd = name.replace(/\.js$/, '')
-            var cmdData = require(`./soon/${name}`)
+            var cmdData = require(`./src/soon/${name}`)
             if (!(config.poosonia && config.poosoniablacklist.find(cmdname => cmdname == cmd)) && envsExist(cmdData.envRequired ?? [])) {
                 commands.push(cmdData)
             }
@@ -317,7 +317,7 @@ class Poopy {
         })
 
         arrays.slashBuilders = {}
-        arrays.commandGroups = requireJSON(`assets/json/commandGroups.json`)
+        arrays.commandGroups = requireJSON(`src/json/commandGroups.json`)
 
         function findGroup(cmdData) {
             var cmdFind = cmd => typeof cmdData == 'object' ? cmdData.name.find(name => name == cmd) : cmdData == cmd

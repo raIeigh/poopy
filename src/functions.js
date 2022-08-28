@@ -14,9 +14,9 @@ functions.updateAllData = require('./dataGathering').updateAllData
 functions.brainfuck = require('./brainfuck')
 functions.tobrainfuck = require('./tobrainfuck')
 functions.generateSayori = require('./sayorimessagegenerator')
-functions.braille = require('./braille')
-functions.averageColor = require('./averageColor')
-functions.spectrogram = require('./spectrogram')
+//functions.braille = require('./braille')
+//functions.averageColor = require('./averageColor')
+//functions.spectrogram = require('./spectrogram')
 
 functions.lerp = function (start, end, amt) {
     return (1 - amt) * start + amt * end
@@ -846,9 +846,7 @@ functions.cleverbot = async function (stim, id) {
 
 functions.processTask = async function (data) {
     let poopy = this
-    let config = poopy.config
     let vars = poopy.vars
-    let { fs } = poopy.modules
     let { generateId } = poopy.functions
 
     return new Promise(async (resolve, reject) => {
@@ -870,6 +868,7 @@ functions.processTask = async function (data) {
                 await ch.deleteQueue(q.queue).catch(() => { })
                 await ch.deleteQueue(qrash.queue).catch(() => { })
                 await ch.close().catch(() => { })
+                delete ch
             }
 
             var chunkdata = []
@@ -913,7 +912,6 @@ functions.processTask = async function (data) {
             var reqdata = Buffer.from(JSON.stringify(data))
             var msgSizeLimit = 1024 * 1024 * 8 - 3
             var msgNum = Math.ceil(reqdata.length / msgSizeLimit)
-            console.log(msgNum)
 
             for (var i = 0; i < msgNum; i++) {
                 var chunk = reqdata.subarray(msgSizeLimit * i, msgSizeLimit * (i + 1))
@@ -3485,12 +3483,14 @@ functions.saveData = async function () {
         fs.writeFileSync(`data/${config.mongodatabase}.json`, JSON.stringify(data))
         fs.writeFileSync(`data/globaldata.json`, JSON.stringify(globaldata))
     } else {
+        const dataObject = { data: data, globaldata: globaldata }
+
         if (process.env.CLOUDAMQP_URL) await processTask({
             type: 'datasave',
             mongodatabase: config.mongodatabase,
-            data: { data: data, globaldata: globaldata }
+            data: dataObject
         }).catch(() => { })
-        await updateAllData(config.mongodatabase, { data: data, globaldata: globaldata }).catch(() => { })
+        await updateAllData(config.mongodatabase, dataObject).catch(() => { })
     }
 
     infoPost(`Data saved`)

@@ -128,6 +128,6 @@ module.exports = {
     },
 
     names: {
-        gmic: 'python assets/gmicRunner.py'
+        gmic: 'python lib/gmicRunner.py'
     }
 }

@@ -295,7 +295,7 @@ module.exports = function () {
     }
 
     var o = ''
-    var r = JSON.parse(fs.readFileSync('./assets/json/zip-codes.json'))
+    var r = JSON.parse(fs.readFileSync('./src/json/zip-codes.json'))
     var a = randomiseNumbers(0, r.data.length - 1, 1, false)
 
     for (var n = 0; n < a.length; n++) {

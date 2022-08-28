@@ -616,7 +616,7 @@ async function start() {
     } else {
         tokens = [
             {
-                TOKEN: process.env.SHUGGATOKEN,
+                TOKEN: process.env.SHUGGA_TOKEN,
                 config: {
                     testing: true,
                     globalPrefix: '2p:',

@@ -19,17 +19,13 @@ if (modules.fs.existsSync('node_modules/@jimp/plugin-print'))
         force: true, recursive: true
     })
 if (!modules.fs.existsSync('node_modules/@jimp/plugin-print'))
-    modules.fs.copySync('src/plugin-print', 'node_modules/@jimp/plugin-print', {
+    modules.fs.copySync('lib/plugin-print', 'node_modules/@jimp/plugin-print', {
         recursive: true
     })
 modules.Jimp = require('jimp')
 modules.whatwg = require('whatwg-url')
 modules.catbox = require('catbox.moe')
-modules.deepai = require('deepai')
-modules.noblox = require('noblox.js')
 modules.youtubedl = require('yt-dlp-exec')
-modules.google = require('googleapis').google
-//modules.Twitter = require('twitter')
 modules.gis = require('g-i-s')
 modules.mathjs = require('mathjs')
 modules.prettyBytes = require('pretty-bytes')
@@ -61,7 +57,15 @@ modules.DMGuild = class DMGuild {
     }
 }
 
-modules.deepai.setApiKey(process.env.DEEPAI_KEY)
-modules.noblox.setCookie(process.env.ROBLOX_COOKIE).catch(() => { })
+if (process.env.DEEPAI_KEY) {
+    modules.deepai = require('deepai')
+    modules.deepai.setApiKey(process.env.DEEPAI_KEY)
+}
+if (process.env.ROBLOX_COOKIE) {
+    modules.noblox = require('noblox.js')
+    modules.noblox.setCookie(process.env.ROBLOX_COOKIE).catch(() => { })
+}
+if (process.env.GOOGLE_KEY) modules.google = require('googleapis').google
+//if (process.env.TWITTER_CONSUMER_KEY && process.env.TWITTER_CONSUMER_SECRET && process.env.TWITTER_ACCESSTOKEN_KEY && process.env.TWITTER_ACCESSTOKEN_SECRET) modules.Twitter = require('twitter')
 
 module.exports = modules

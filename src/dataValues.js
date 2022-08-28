@@ -2,21 +2,21 @@ const { fs } = require('./modules')
 
 let dataValues = {}
 
-dataValues.statuses = JSON.parse(fs.readFileSync('./assets/json/statuses.json'))
+dataValues.statuses = JSON.parse(fs.readFileSync('./src/json/statuses.json'))
 dataValues.json = {
-    wordJSON: JSON.parse(fs.readFileSync('./assets/json/words.json')),
-    fakeWordJSON: JSON.parse(fs.readFileSync('./assets/json/fakeWords.json')),
-    continentJSON: JSON.parse(fs.readFileSync('./assets/json/continents.json')),
-    countryJSON: JSON.parse(fs.readFileSync('./assets/json/countries.json')),
-    languageJSON: JSON.parse(fs.readFileSync('./assets/json/languages.json')),
-    cityJSON: JSON.parse(fs.readFileSync('./assets/json/cities.json')),
-    restaurantJSON: JSON.parse(fs.readFileSync('./assets/json/foods.json')),
-    sentenceJSON: JSON.parse(fs.readFileSync('./assets/json/sentences.json')),
-    nounJSON: JSON.parse(fs.readFileSync('./assets/json/nouns.json')),
-    verbJSON: JSON.parse(fs.readFileSync('./assets/json/verbs.json')),
-    adjJSON: JSON.parse(fs.readFileSync('./assets/json/adjectives.json')),
-    imageJSON: JSON.parse(fs.readFileSync('./assets/json/images.json')),
-    nameJSON: JSON.parse(fs.readFileSync('./assets/json/names.json')),
+    wordJSON: JSON.parse(fs.readFileSync('./src/json/words.json')),
+    fakeWordJSON: JSON.parse(fs.readFileSync('./src/json/fakeWords.json')),
+    continentJSON: JSON.parse(fs.readFileSync('./src/json/continents.json')),
+    countryJSON: JSON.parse(fs.readFileSync('./src/json/countries.json')),
+    languageJSON: JSON.parse(fs.readFileSync('./src/json/languages.json')),
+    cityJSON: JSON.parse(fs.readFileSync('./src/json/cities.json')),
+    restaurantJSON: JSON.parse(fs.readFileSync('./src/json/foods.json')),
+    sentenceJSON: JSON.parse(fs.readFileSync('./src/json/sentences.json')),
+    nounJSON: JSON.parse(fs.readFileSync('./src/json/nouns.json')),
+    verbJSON: JSON.parse(fs.readFileSync('./src/json/verbs.json')),
+    adjJSON: JSON.parse(fs.readFileSync('./src/json/adjectives.json')),
+    imageJSON: JSON.parse(fs.readFileSync('./src/json/images.json')),
+    nameJSON: JSON.parse(fs.readFileSync('./src/json/names.json')),
     emojiJSON: []
 }
 dataValues.arrays = {
