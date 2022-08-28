@@ -2999,7 +2999,7 @@ functions.sendFile = async function (msg, filepath, filename, extraOptions) {
     let data = poopy.data
     let tempfiles = poopy.tempfiles
     let vars = poopy.vars
-    let { infoPost, rateLimit, addLastUrl, generateId } = poopy.functions
+    let { validateFileFromPath, execPromise, infoPost, rateLimit, addLastUrl, generateId } = poopy.functions
     let { fs, Discord } = poopy.modules
 
     extraOptions = extraOptions || {}
@@ -3009,8 +3009,28 @@ functions.sendFile = async function (msg, filepath, filename, extraOptions) {
     var prefix = data['guild-data'][msg.guild.id]['prefix']
     var args = msg.content.substring(prefix.toLowerCase().length).split(' ')
 
-    extraOptions.catbox = args.find(arg => arg === '-catbox') || extraOptions.catbox || false
-    extraOptions.nosend = args.find(arg => arg === '-nosend') || extraOptions.nosend || false
+    extraOptions.catbox = extraOptions.catbox ?? args.includes('-catbox')
+    extraOptions.nosend = extraOptions.nosend ?? args.includes('-nosend')
+    extraOptions.compress = extraOptions.compress ?? args.includes('-compress')
+
+    if (extraOptions.compress) {
+        var fileinfo = await validateFileFromPath(`${filepath}/${filename}`, 'very true').catch(() => { })
+
+        if (!fileinfo) {
+            await msg.reply('Couldn\'t send file.').catch(() => { })
+            infoPost(`Couldn\'t send file`)
+            await rateLimit(msg)
+
+            if (extraOptions.keep ||
+                filepath == undefined ||
+                filepath.startsWith('tempfiles')) return
+
+            fs.rm(filepath, { force: true, recursive: true })
+            return
+        }
+
+        await execPromise(`ffmpeg -y -i ${filepath}/${filename} -vf "scale=iw/2:ih/2" ${filepath}/${filename}`)
+    }
 
     var nameindex = args.indexOf('-filename')
     if (nameindex > -1 && args[nameindex + 1]) {
