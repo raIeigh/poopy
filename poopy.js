@@ -1405,7 +1405,7 @@ class Poopy {
         await bot.login(poopy.__TOKEN)
 
         async function requestData() {
-            if (config.testing || !process.env.MONGOOSEURL) {
+            if (config.testing || !process.env.MONGOOSE_URL) {
                 var data = {}
 
                 if (fs.existsSync(`data/${config.mongodatabase}.json`)) {
@@ -1564,7 +1564,7 @@ class Poopy {
 
         vars.filecount = data['bot-data']['filecount'] || 0
 
-        if (config.testing || !process.env.MONGOOSEURL) {
+        if (config.testing || !process.env.MONGOOSE_URL) {
             if (!fs.existsSync('data')) {
                 fs.mkdirSync('data')
             }

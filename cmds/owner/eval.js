@@ -18,11 +18,14 @@ module.exports = {
             await msg.reply('<:YouIdiot:735259116737658890>').catch(() => { })
             return
         }
+
         try {
             var evalMessage
-            with (poopy) {
-                evalMessage = await eval(saidMessage)
-            }
+
+            with (poopy)
+                with (functions)
+                    with (modules)
+                        evalMessage = await eval(saidMessage)
 
             if (typeof (evalMessage) !== 'string') evalMessage = util.inspect(evalMessage)
 

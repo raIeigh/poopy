@@ -3481,7 +3481,7 @@ functions.saveData = async function () {
 
     infoPost(`Saving data`)
 
-    if (config.testing || !process.env.MONGOOSEURL) {
+    if (config.testing || !process.env.MONGOOSE_URL) {
         fs.writeFileSync(`data/${config.mongodatabase}.json`, JSON.stringify(data))
         fs.writeFileSync(`data/globaldata.json`, JSON.stringify(globaldata))
     } else {

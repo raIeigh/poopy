@@ -8,7 +8,7 @@ module.exports = {
             data: {}
         }
 
-        var url = process.env.MONGOOSEURL
+        var url = process.env.MONGOOSE_URL
         if (requests <= 0) await mongoose.connect(url, {
             useNewUrlParser: true,
             useUnifiedTopology: true
@@ -52,7 +52,7 @@ module.exports = {
     },
 
     updateAllData: async (databaseName, d) => {
-        var url = process.env.MONGOOSEURL
+        var url = process.env.MONGOOSE_URL
         if (requests <= 0) await mongoose.connect(url, {
             useNewUrlParser: true,
             useUnifiedTopology: true
