@@ -2690,7 +2690,7 @@ functions.getKeywordsFor = async function (string, msg, isBot, { extrakeys = {},
                 var key = special.keys[keydata.match] || extradkeys[keydata.match]
 
                 if ((key.limit != undefined && equalValues(tempdata[msg.author.id][msg.id]['keywordsExecuted'], keyName) >= key.limit) ||
-                    (key.cmdconnected && data['guild-data'][msg.guild.id]['disabled'].find(cmd => cmd.find(n => n === key.cmdconnected)))) {
+                    (key.cmdconnected && data['guild-data'][msg.guild.id]?.['disabled'].find(cmd => cmd.find(n => n === key.cmdconnected)))) {
                     string = string.replace(keydata.match, '')
                     break
                 }
@@ -2716,7 +2716,7 @@ functions.getKeywordsFor = async function (string, msg, isBot, { extrakeys = {},
                 var m = match
 
                 if ((func.limit != undefined && equalValues(tempdata[msg.author.id][msg.id]['keywordsExecuted'], funcName) >= func.limit) ||
-                    (func.cmdconnected && data['guild-data'][msg.guild.id]['disabled'].find(cmd => cmd.find(n => n === func.cmdconnected)))) {
+                    (func.cmdconnected && data['guild-data'][msg.guild.id]?.['disabled'].find(cmd => cmd.find(n => n === func.cmdconnected)))) {
                     string = string.replace(`${funcName}(${match})`, '')
                     break
                 }
