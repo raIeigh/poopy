@@ -42,7 +42,7 @@ module.exports = {
             fileType
         } = poopy.modules
 
-        args[1] = args[1] ?? ''
+        args[1] = args[1] ?? ' '
 
         var member = msg.mentions.members.first() ??
             await msg.guild.members.fetch((args[1].match(/\d+/) ?? [args[1]])[0]).catch(() => {}) ??

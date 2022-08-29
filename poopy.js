@@ -555,9 +555,14 @@ class Poopy {
                 return
             }
 
-            await gatherData(msg).catch((e) => console.log(e))
-            msg.channel.onsfw = !!msg.channel.nsfw
-            msg.channel.nsfw = !!data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['nsfw']
+            var dataError = false
+            await gatherData(msg).catch(() => dataError = true)
+            if (dataError) return
+
+            if (msg.channel.onsfw == undefined) {
+                msg.channel.onsfw = !!msg.channel.nsfw
+                msg.channel.nsfw = !!data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['nsfw']
+            }
 
             var guildfilter = config.guildfilter
             var channelfilter = config.channelfilter
