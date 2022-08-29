@@ -2433,6 +2433,8 @@ functions.lastUrl = function (msg, i, tempdir, global) {
     var urls = urlsGlobal.slice()
     var url = urls[i]
 
+    if (url === undefined) return
+
     if (url === null) {
         urls.splice(i, 1)
         urlsGlobal.splice(i, 1)
@@ -2468,6 +2470,8 @@ functions.lastUrls = function (msg, tempdir, global) {
 
     for (var i = 0; i < urls.length; i++) {
         var url = urls[i]
+
+        if (url === undefined) continue
 
         if (url === null) {
             urls.splice(i, 1)
@@ -2584,6 +2588,7 @@ functions.dmSupport = function (msg) {
     if (msg.channel && !msg.channel.permissionsFor) msg.channel.permissionsFor = () => {
         return { has: () => true }
     }
+    if (msg.channel && !msg.channel.fetchWebhooks) msg.channel.fetchWebhooks = async () => new Collection()
 
     if (msg.mentions) {
         if (!msg.mentions.members) Object.defineProperty(msg.mentions, 'members', {
