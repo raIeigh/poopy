@@ -1,4 +1,4 @@
-const { fs } = require('./modules')
+const fs = require('fs')
 
 let dataValues = {}
 
@@ -1934,5 +1934,6 @@ dataValues.arrays = {
     ]
 }
 dataValues.globaldata = {}
+dataValues.activeBots = []
 
 module.exports = dataValues

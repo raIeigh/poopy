@@ -150,6 +150,7 @@ class Poopy {
             keys: {},
             functions: {}
         }
+        let activeBots = poopy.activeBots = dataValues.activeBots
 
         // undeclared values for other commands
         poopy.statuses = dataValues.statuses
@@ -157,14 +158,13 @@ class Poopy {
         poopy.tempfiles = {}
 
         // some vars
+        vars.started = false
         vars.msgcooldown = false
         vars.statusChanges = true
         vars.filecount = 0
         vars.cps = 0
 
         // setting data value trash
-        modules.Discord = require(`discord.js${config.self ? '-selfbot-v13' : ''}`)
-
         function createPoopyFunction(func) {
             var poopyFunction = func
             var wrappedFunction = function (...args) {
@@ -196,6 +196,8 @@ class Poopy {
             var array = dataValues.arrays[key]
             arrays[key] = array
         }
+
+        modules.Discord = modules.Discord[Number(config.self)]
 
         // we can create thge bot now
         let { Discord, DiscordBuilders, Collection, fs } = modules
@@ -534,48 +536,6 @@ class Poopy {
 
         callbacks.messageCallback = async msg => {
             dmSupport(msg)
-
-            if (msg.guild.leave && config.public) {
-                if (!functions.guildLeave) functions.guildLeave = msg.guild.leave
-                delete msg.guild.leave
-            }
-
-            if (!msg.channel.send.toString().includes('waitMessageCooldown')) {
-                var channelSend = msg.channel.send
-                msg.channel.send = async function (payload) {
-                    var channel = this
-
-                    await waitMessageCooldown()
-                    if (tempdata[channel.guild?.id]?.[channel.id]?.['shut']) return
-
-                    return channelSend.call(channel, payload).then(setMessageCooldown)
-                }
-            }
-
-            if (!msg.reply.toString().includes('waitMessageCooldown')) {
-                if (msg.isCommand && msg.isCommand() && msg.deferred) {
-                    msg.reply = async function (payload) {
-                        var interaction = this
-
-                        await waitMessageCooldown()
-                        if (tempdata[interaction.guild?.id]?.[interaction.channel?.id]?.['shut']) return
-
-                        if (config.allowbotusage || interaction.replied) return interaction.channel.send(payload).then(setMessageCooldown)
-                        else return interaction.editReply(payload).then(setMessageCooldown)
-                    }
-                } else {
-                    var messageReply = msg.reply
-                    msg.reply = async function (payload) {
-                        var message = this
-
-                        await waitMessageCooldown()
-                        if (tempdata[message.guild?.id]?.[message.channel?.id]?.['shut']) return
-
-                        if (config.allowbotusage || message.replied) return message.channel.send(payload).then(setMessageCooldown)
-                        else return message.replied = messageReply.call(message, payload).then(setMessageCooldown)
-                    }
-                }
-            }
 
             data['bot-data']['messages']++
 
@@ -1376,6 +1336,8 @@ class Poopy {
             var interactionFunction = interactionFunctions.find(interaction => interaction.type)
             if (interactionFunction) await interactionFunction.execute().catch((e) => console.log(e))
         }
+
+        activeBots.push(poopy)
     }
 
     async start(TOKEN) {
@@ -1624,6 +1586,8 @@ class Poopy {
                 callbacks.interactionCallback(interaction).catch(() => { })
             })
         }
+
+        vars.started = true
     }
 
     async destroy(deldata) {

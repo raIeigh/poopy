@@ -1,5 +1,7 @@
 let modules = {}
+let activeBots = require('./dataValues').activeBots
 
+modules.Discord = [require('discord.js'), require('discord.js-selfbot-v13')]
 modules.REST = require('@discordjs/rest').REST
 modules.Routes = require('discord-api-types/v10').Routes
 modules.DiscordBuilders = require('@discordjs/builders')
@@ -31,7 +33,6 @@ modules.mathjs = require('mathjs')
 modules.prettyBytes = require('pretty-bytes')
 modules.itob = require('istextorbinary')
 modules.os = require('os')
-
 modules.Collection = require('@discordjs/collection').Collection
 modules.DMGuild = class DMGuild {
     constructor(msg) {
@@ -57,14 +58,84 @@ modules.DMGuild = class DMGuild {
     }
 }
 
+for (var Discord of modules.Discord) {
+    const Guild = Discord.Guild
+    const guildLeave = Guild.prototype.leave
+
+    Guild.prototype.leave = async function leave() {
+        let guild = this
+        let client = guild.client
+        let poopy = activeBots.find(p => p.bot == client)
+        let config = poopy.config
+
+        if (config.public) return 'No.'
+
+        return guildLeave.call(guild)
+    }
+
+    const Channel = Discord.BaseGuildTextChannel
+    const channelSend = Channel.prototype.send
+
+    Channel.prototype.send = async function (payload) {
+        var channel = this
+        let client = channel.client
+        let poopy = activeBots.find(p => p.bot == client)
+        let tempdata = poopy.tempdata
+        let { waitMessageCooldown, setMessageCooldown } = poopy.functions
+
+        await waitMessageCooldown()
+        if (tempdata[channel.guild?.id]?.[channel.id]?.['shut']) return
+
+        return channelSend.call(channel, payload).then(setMessageCooldown)
+    }
+
+    const Message = Discord.Message
+    const messageReply = Message.prototype.reply
+
+    Message.prototype.reply = async function (payload) {
+        var message = this
+        let client = message.client
+        let poopy = activeBots.find(p => p.bot == client)
+        let tempdata = poopy.tempdata
+        let { waitMessageCooldown, setMessageCooldown } = poopy.functions
+
+        await waitMessageCooldown()
+        if (tempdata[message.guild?.id]?.[message.channel?.id]?.['shut']) return
+
+        if (config.allowbotusage || message.replied) return message.channel.send(payload).then(setMessageCooldown)
+        else return message.replied = messageReply.call(message, payload).then(setMessageCooldown)
+    }
+
+    const Interaction = Discord.CommandInteraction
+    const interactionReply = Interaction.prototype.reply
+
+    Interaction.prototype.reply = async function (payload) {
+        var interaction = this
+        let client = interaction.client
+        let poopy = activeBots.find(p => p.bot == client)
+        let tempdata = poopy.tempdata
+        let { waitMessageCooldown, setMessageCooldown } = poopy.functions
+
+        await waitMessageCooldown()
+        if (tempdata[interaction.guild?.id]?.[interaction.channel?.id]?.['shut']) return
+
+        if (config.allowbotusage || interaction.replied) return interaction.channel.send(payload).then(setMessageCooldown)
+        else return (!interaction.replied && interaction.deferred ?
+            interaction.editReply(payload) :
+            interactionReply.call(interaction, payload)).then(setMessageCooldown)
+    }
+}
+
 if (process.env.DEEPAI_KEY) {
     modules.deepai = require('deepai')
     modules.deepai.setApiKey(process.env.DEEPAI_KEY)
 }
+
 if (process.env.ROBLOX_COOKIE) {
     modules.noblox = require('noblox.js')
     modules.noblox.setCookie(process.env.ROBLOX_COOKIE).catch(() => { })
 }
+
 if (process.env.GOOGLE_KEY) modules.google = require('googleapis').google
 //if (process.env.TWITTER_CONSUMER_KEY && process.env.TWITTER_CONSUMER_SECRET && process.env.TWITTER_ACCESSTOKEN_KEY && process.env.TWITTER_ACCESSTOKEN_SECRET) modules.Twitter = require('twitter')
 
