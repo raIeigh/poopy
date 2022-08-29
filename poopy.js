@@ -1336,8 +1336,6 @@ class Poopy {
             var interactionFunction = interactionFunctions.find(interaction => interaction.type)
             if (interactionFunction) await interactionFunction.execute().catch((e) => console.log(e))
         }
-
-        activeBots[bot.user.id] = poopy
     }
 
     async start(TOKEN) {
@@ -1365,6 +1363,8 @@ class Poopy {
 
         rest.setToken(poopy.__TOKEN)
         await bot.login(poopy.__TOKEN)
+
+        activeBots[bot.user.id] = poopy
 
         async function requestData() {
             if (config.testing || !process.env.MONGOOSE_URL) {
