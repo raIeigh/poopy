@@ -53,7 +53,7 @@ module.exports = {
                 return
             }
 
-            var result = regimap(region => region.lines.map(line => line.words.map(word => word.text).join(' ')).join('\n')).join('\n\n')
+            var result = regions.map(region => region.lines.map(line => line.words.map(word => word.text).join(' ')).join('\n')).join('\n\n')
 
             await msg.reply({
                 content: `Language: \`${body.language}\`\n\`\`\`\n${result}\n\`\`\``,
