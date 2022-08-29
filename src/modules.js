@@ -96,6 +96,7 @@ for (var Discord of modules.Discord) {
         var message = this
         let client = message.client
         let poopy = activeBots.find(p => p.bot == client)
+        let config = poopy.config
         let tempdata = poopy.tempdata
         let { waitMessageCooldown, setMessageCooldown } = poopy.functions
 
@@ -113,6 +114,7 @@ for (var Discord of modules.Discord) {
         var interaction = this
         let client = interaction.client
         let poopy = activeBots.find(p => p.bot == client)
+        let config = poopy.config
         let tempdata = poopy.tempdata
         let { waitMessageCooldown, setMessageCooldown } = poopy.functions
 
