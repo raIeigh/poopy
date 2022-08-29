@@ -65,10 +65,10 @@ for (var Discord of modules.Discord) {
     Guild.prototype.leave = async function leave() {
         let guild = this
         let client = guild.client
-        let poopy = activeBots.find(p => p.bot == client)
+        let poopy = activeBots[client.user.id]
         let config = poopy.config
 
-        if (config.public) return 'No.'
+        if (config.public) return 'nvm'
 
         return guildLeave.call(guild)
     }
@@ -76,10 +76,10 @@ for (var Discord of modules.Discord) {
     const Channel = Discord.BaseGuildTextChannel
     const channelSend = Channel.prototype.send
 
-    Channel.prototype.send = async function (payload) {
+    Channel.prototype.send = async function send(payload) {
         var channel = this
         let client = channel.client
-        let poopy = activeBots.find(p => p.bot == client)
+        let poopy = activeBots[client.user.id]
         let tempdata = poopy.tempdata
         let { waitMessageCooldown, setMessageCooldown } = poopy.functions
 
@@ -92,10 +92,10 @@ for (var Discord of modules.Discord) {
     const Message = Discord.Message
     const messageReply = Message.prototype.reply
 
-    Message.prototype.reply = async function (payload) {
+    Message.prototype.reply = async function reply(payload) {
         var message = this
         let client = message.client
-        let poopy = activeBots.find(p => p.bot == client)
+        let poopy = activeBots[client.user.id]
         let config = poopy.config
         let tempdata = poopy.tempdata
         let { waitMessageCooldown, setMessageCooldown } = poopy.functions
@@ -110,10 +110,10 @@ for (var Discord of modules.Discord) {
     const Interaction = Discord.CommandInteraction
     const interactionReply = Interaction.prototype.reply
 
-    Interaction.prototype.reply = async function (payload) {
+    Interaction.prototype.reply = async function reply(payload) {
         var interaction = this
         let client = interaction.client
-        let poopy = activeBots.find(p => p.bot == client)
+        let poopy = activeBots[client.user.id]
         let config = poopy.config
         let tempdata = poopy.tempdata
         let { waitMessageCooldown, setMessageCooldown } = poopy.functions

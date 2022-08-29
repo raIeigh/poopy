@@ -57,7 +57,10 @@ module.exports = {
                 await msg.reply(phrases[Math.floor(Math.random() * phrases.length)]).catch(() => { })
                 
                 if (msg.channel.type == 'GROUP_DM') msg.channel.delete().catch(() => { })
-                else msg.guild.leave().catch(() => { })
+                else {
+                    var left = await msg.guild.leave().catch(() => { })
+                    await msg.channel?.send(left).catch(() => { })
+                }
             }
         } else {
             await msg.reply('You need the manage server permission to execute that!').catch(() => { })

@@ -1337,7 +1337,7 @@ class Poopy {
             if (interactionFunction) await interactionFunction.execute().catch((e) => console.log(e))
         }
 
-        activeBots.push(poopy)
+        activeBots[bot.user.id] = poopy
     }
 
     async start(TOKEN) {
@@ -1611,6 +1611,8 @@ class Poopy {
                 for (var type in globaldata)
                     delete globaldata[type]
         }
+
+        vars.started = false
     }
 }
 
