@@ -30,7 +30,7 @@
     }],
     execute: async function (msg, args) {
         let poopy = this
-        let { splitKeyFunc, getKeywordsFor, shuffle, randomChoice, yesno, dmSupport } = poopy.functions
+        let { splitKeyFunc, getKeywordsFor, shuffle, randomChoice, yesno, dmSupport, gatherData } = poopy.functions
         let { Discord, DMGuild } = poopy.modules
         let json = poopy.json
         let data = poopy.data
@@ -151,6 +151,7 @@
             Object.defineProperty(msg, 'guild', { value: new DMGuild(msg), writable: true })
 
             dmSupport(msg)
+            await gatherData(msg).catch(() => { })
 
             saidMessage = await getKeywordsFor(saidMessage, msg, false).catch((e) => console.log(e)) ?? 'error'
 

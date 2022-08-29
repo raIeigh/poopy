@@ -1578,16 +1578,16 @@ class Poopy {
 
         if (!config.apiMode) {
             bot.on('messageCreate', (msg) => {
-                callbacks.messageCallback(msg).catch(() => { })
+                callbacks.messageCallback(msg).catch((e) => console.log(e))
             })
             bot.on('guildCreate', (guild) => {
-                callbacks.guildCallback(guild).catch(() => { })
+                callbacks.guildCallback(guild).catch((e) => console.log(e))
             })
             bot.on('guildDelete', (guild) => {
-                callbacks.guildDeleteCallback(guild).catch(() => { })
+                callbacks.guildDeleteCallback(guild).catch((e) => console.log(e))
             })
             bot.on('interactionCreate', (interaction) => {
-                callbacks.interactionCallback(interaction).catch(() => { })
+                callbacks.interactionCallback(interaction).catch((e) => console.log(e))
             })
         }
 
