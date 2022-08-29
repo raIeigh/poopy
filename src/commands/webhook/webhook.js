@@ -45,8 +45,8 @@ module.exports = {
         args[1] = args[1] ?? ''
 
         var member = msg.mentions.members.first() ??
-        await msg.guild.members.fetch((args[1].match(/\d+/) ?? [args[1]])[0]).catch(() => {}) ??
-        msg.member
+            await msg.guild.members.fetch((args[1].match(/\d+/) ?? [args[1]])[0]).catch(() => {}) ??
+            msg.member
 
         if (!member) {
             await msg.reply({
@@ -58,12 +58,6 @@ module.exports = {
             return
         }
 
-        if (!data['guild-data'][msg.guild.id]) {
-            data['guild-data'][msg.guild.id] = {}
-        }
-        if (!data['guild-data'][msg.guild.id]['members'][member.id]) {
-            data['guild-data'][msg.guild.id]['members'][member.id] = {}
-        }
         if (!data['guild-data'][msg.guild.id]['members'][member.id]['custom']) {
             data['guild-data'][msg.guild.id]['members'][member.id]['custom'] = false
         }

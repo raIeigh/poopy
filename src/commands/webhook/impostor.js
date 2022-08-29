@@ -25,11 +25,17 @@ module.exports = {
         let data = poopy.data
         let config = poopy.config
 
+        console.log(1)
+
         args[1] = args[1] ?? ''
+
+        console.log(2)
 
         var member = msg.mentions.members.first() ??
             await msg.guild.members.fetch((args[1].match(/\d+/) ?? [args[1]])[0]).catch(() => {}) ??
             msg.member
+
+        console.log(3)
 
         if (!member) {
             await msg.reply({
@@ -41,17 +47,19 @@ module.exports = {
             return
         }
 
-        if (!data['guild-data'][msg.guild.id]) {
-            data['guild-data'][msg.guild.id] = {}
-        }
-        if (!data['guild-data'][msg.guild.id]['members'][member.id]) {
-            data['guild-data'][msg.guild.id]['members'][member.id] = {}
-        }
+        console.log(4)
+
         if (!data['guild-data'][msg.guild.id]['members'][member.id]['impostor']) {
             data['guild-data'][msg.guild.id]['members'][member.id]['impostor'] = false
         }
+
+        console.log(5)
         if (data['guild-data'][msg.guild.id]['members'][member.id]['impostor'] === false) {
+            console.log(6)
+
             if (msg.member.permissions.has('MANAGE_GUILD') || msg.member.permissions.has('MANAGE_WEBHOOKS') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
+                console.log(7)
+
                 data['guild-data'][msg.guild.id]['members'][member.id]['impostor'] = true
                 await msg.reply({
                     content: member.user.username + ' is now the Impostor.',
