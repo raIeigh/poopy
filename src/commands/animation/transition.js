@@ -152,7 +152,7 @@ module.exports = {
             if (arg.toLowerCase() === 'random') {
                 transition = transitions[Math.floor(Math.random() * transitions.length)]
                 break
-            } else if (transitifind(t => t === arg.toLowerCase())) {
+            } else if (transitions.find(t => t === arg.toLowerCase())) {
                 transition = arg.toLowerCase()
                 break
             }
