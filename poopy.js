@@ -150,11 +150,11 @@ class Poopy {
             keys: {},
             functions: {}
         }
-        let activeBots = poopy.activeBots = dataValues.activeBots
 
         // undeclared values for other commands
         poopy.statuses = dataValues.statuses
         poopy.json = dataValues.json
+        poopy.activeBots = dataValues.activeBots
         poopy.tempfiles = {}
 
         // some vars
@@ -1348,6 +1348,7 @@ class Poopy {
         let config = poopy.config
         let data = poopy.data
         let globaldata = poopy.globaldata
+        let activeBots = poopy.activeBots
         let { fs } = poopy.modules
         let { infoPost, processTask, getAllData, getEmojis, saveData, changeStatus } = poopy.functions
         let callbacks = poopy.callbacks
@@ -1596,11 +1597,15 @@ class Poopy {
         let bot = poopy.bot
         let config = poopy.config
         let globaldata = poopy.globaldata
+        let activeBots = poopy.activeBots
 
         clearInterval(vars.statusInterval)
         delete vars.statusInterval
         clearInterval(vars.saveInterval)
         delete vars.saveInterval
+
+        vars.started = false
+        delete activeBots[bot.user.id]
         bot.destroy()
 
         if (deldata) {
@@ -1611,8 +1616,6 @@ class Poopy {
                 for (var type in globaldata)
                     delete globaldata[type]
         }
-
-        vars.started = false
     }
 }
 
