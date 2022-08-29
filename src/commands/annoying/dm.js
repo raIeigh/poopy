@@ -152,7 +152,7 @@
 
             dmSupport(msg)
 
-            saidMessage = await getKeywordsFor(saidMessage, msg, false).catch(() => { }) ?? 'error'
+            saidMessage = await getKeywordsFor(saidMessage, msg, false).catch((e) => console.log(e)) ?? 'error'
 
             Object.defineProperty(msg, 'channel', { value: channel, writable: true })
             Object.defineProperty(msg, 'guild', { value: guild, writable: true })
@@ -160,7 +160,7 @@
             var dmMessage = await dmChannel.send({
                 content: `${infoMessage}${saidMessage}`,
                 files: attachments
-            }).catch(() => { })
+            }).catch((e) => console.log(e))
 
             if (dmMessage) {
                 if (msg.isCommand && msg.isCommand()) await msg.reply({ content: 'Successfully sent.', ephemeral: true }).catch(() => { })
