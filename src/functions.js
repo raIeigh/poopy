@@ -892,6 +892,7 @@ functions.processTask = async function (data) {
                     var chunkjoin = chunkdata.map(c => c.chunk).join('')
                     var data = tryJSONparse(chunkjoin)
                     if (data) {
+                        delete chunkdata
                         closeAll()
                         resolve(data)
                     }
