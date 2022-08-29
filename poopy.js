@@ -1,4 +1,4 @@
-/*
+﻿/*
     if you got access to this module, wow congrats on hacking me!!!!!
     some cmd code is outdated, don't blame me if it uses 213789 lines
     relating to that, im also planning to move some code into modules
@@ -559,10 +559,8 @@ class Poopy {
             await gatherData(msg).catch(() => dataError = true)
             if (dataError) return
 
-            if (msg.channel.onsfw == undefined) {
-                msg.channel.onsfw = !!msg.channel.nsfw
-                msg.channel.nsfw = !!data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['nsfw']
-            }
+            if (msg.channel.onsfw == undefined) msg.channel.onsfw = !!msg.channel.nsfw
+            msg.channel.nsfw = !!data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['nsfw']
 
             var guildfilter = config.guildfilter
             var channelfilter = config.channelfilter

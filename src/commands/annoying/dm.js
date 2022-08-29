@@ -1,4 +1,4 @@
-module.exports = {
+﻿module.exports = {
     name: ['dm'],
     args: [{
         "name": "user",
@@ -142,7 +142,9 @@ module.exports = {
             var guild = msg.guild
 
             var dmChannel = await member.createDM().catch(() => { })
-            dmChannel.onsfw = !!dmChannel.nsfw
+            if (!dmChannel) return
+
+            if (dmChannel.onsfw == undefined) dmChannel.onsfw = !!dmChannel.nsfw
             dmChannel.nsfw = !!data['guild-data'][dmChannel.id]?.['channels']?.[dmChannel.id]?.['nsfw']
 
             Object.defineProperty(msg, 'channel', { value: dmChannel, writable: true })
@@ -155,7 +157,7 @@ module.exports = {
             Object.defineProperty(msg, 'channel', { value: channel, writable: true })
             Object.defineProperty(msg, 'guild', { value: guild, writable: true })
 
-            var dmMessage = dmChannel.send({
+            var dmMessage = await dmChannel.send({
                 content: `${infoMessage}${saidMessage}`,
                 files: attachments
             }).catch(() => { })
