@@ -3482,12 +3482,19 @@ functions.changeStatus = function () {
 var saveQueued = []
 var saveQueueRunning = false
 
-async function runSaveQueue() {
+functions.saveQueue = async function () {
+    let poopy = this
+
+    saveQueued.push(poopy)
+
+    if (saveQueueRunning) return
     saveQueueRunning = true
-    while (saveQueue.length) {
-        for (var i = 0; i < saveQueue.length; i++) {
+
+    while (saveQueued.length) {
+        for (var i = 0; i < saveQueued.length; i++) {
             var poopy = saveQueued[i]
             if (!poopy || !poopy.data || !poopy.globaldata) continue
+            await poopy.saveData()
             await functions.sleep(120000)
         }
     }

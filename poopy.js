@@ -1342,7 +1342,7 @@ class Poopy {
         }
     }
 
-    async start(TOKEN, saveDelay) {
+    async start(TOKEN) {
         let poopy = this
         let vars = poopy.vars
         let arrays = poopy.arrays
@@ -1354,7 +1354,7 @@ class Poopy {
         let globaldata = poopy.globaldata
         let activeBots = poopy.activeBots
         let { fs } = poopy.modules
-        let { infoPost, processTask, getAllData, getEmojis, saveData, changeStatus } = poopy.functions
+        let { infoPost, processTask, getAllData, getEmojis, saveQueue, changeStatus } = poopy.functions
         let callbacks = poopy.callbacks
 
         if (!TOKEN && !poopy.__TOKEN) {
@@ -1449,12 +1449,7 @@ class Poopy {
             })
         })
 
-        setTimeout(function () {
-            saveData()
-            vars.saveInterval = setInterval(function () {
-                saveData()
-            }, 120000)
-        }, saveDelay ?? 0)
+
 
         await infoPost(`Gathering data in \`${config.database}\``)
         if (process.env.CLOUDAMQP_URL) vars.amqpconn = await require('amqplib').connect(process.env.CLOUDAMQP_URL)
@@ -1564,6 +1559,7 @@ class Poopy {
         //await updateSlashCommands()
         console.log(`${bot.user.username}: all done, he's actually online now`)
         await infoPost(`Reboot ${data['bot-data']['reboots']} succeeded, he's up now`)
+        saveQueue()
         changeStatus()
         vars.statusInterval = setInterval(function () {
             changeStatus()

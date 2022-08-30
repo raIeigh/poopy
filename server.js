@@ -601,19 +601,15 @@ async function start() {
         ]
     }
 
-    var saveDelay = 0
-
     for (var tokendata of tokens) {
         let poopy = new Poopy(tokendata.config)
 
-        poopy.start(tokendata.TOKEN, saveDelay).then(() => {
+        poopy.start(tokendata.TOKEN).then(() => {
             if (poopy.config.quitOnDestroy) {
                 mainPoopy = poopy
                 poopyStarted = true
             }
         })
-
-        saveDelay += 30000
 
         await sleep(2000)
     }
