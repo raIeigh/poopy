@@ -11,6 +11,7 @@ async function start() {
         const bp = require('body-parser')
         const axios = require('axios')
         const md5 = require('md5')
+        const { sleep, escapeHTML } = require('./src/functions')
 
         const PORT = process.env.PORT || 8080
         const app = express()
@@ -29,31 +30,6 @@ async function start() {
     
             next()
         })
-    
-        function sleep(ms) {
-            return new Promise(resolve => setTimeout(resolve, ms))
-        }
-    
-        function escapeHTML(value) {
-            return value
-                .replace(/&/g, '&amp;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;')
-                .replace(/"/g, '&quot;')
-                .replace(/'/g, '&apos;')
-        }
-    
-        function unescapeHTML(value) {
-            return value
-                .replace(/&amp;/g, '&')
-                .replace(/&lt;/g, '<')
-                .replace(/&gt;/g, '>')
-                .replace(/&quot;/g, '"')
-                .replace(/&apos;/g, '\'')
-                .replace(/&#\d+;/g, (match) => {
-                    return String.fromCharCode(match.substring(2, match.length - 1))
-                })
-        }
     
         app.get('/api/waitPoopyStart', async function (_, res) {
             while (!poopyStarted) await sleep(1000)
@@ -626,7 +602,7 @@ async function start() {
         ]
     }
 
-    tokens.forEach(async tokendata => {
+    for (var tokendata of tokens) {
         let poopy
         if (typeof tokendata == 'string') {
             poopy = new Poopy()
@@ -636,13 +612,15 @@ async function start() {
 
         poopyList[poopy.config.mongodatabase] = poopy
 
-        await poopy.start(tokendata.TOKEN)
+        poopy.start(tokendata.TOKEN).then(() => {
+            if (poopy.config.quitOnDestroy) {
+                mainPoopy = poopy
+                poopyStarted = true
+            }
+        })
 
-        if (poopy.config.quitOnDestroy) {
-            mainPoopy = poopy
-            poopyStarted = true
-        }
-    })
+        await sleep(10000)
+    }
 }
 
 throng({ workers: 1, start })

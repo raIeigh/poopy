@@ -58,6 +58,15 @@ functions.regexClean = function (str) {
     return str.replace(/[\\^$.|?*+()[{]/g, (match) => `\\${match}`)
 }
 
+functions.escapeHTML = function (value) {
+    return value
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&apos;')
+}
+
 functions.unescapeHTML = function (value) {
     return value
         .replace(/&amp;/g, '&')
@@ -2588,7 +2597,9 @@ functions.dmSupport = function (msg) {
     if (msg.channel && !msg.channel.permissionsFor) msg.channel.permissionsFor = () => {
         return { has: () => true }
     }
+
     if (msg.channel && !msg.channel.fetchWebhooks) msg.channel.fetchWebhooks = async () => new Collection()
+    if (msg.channel && !msg.channel.fetchWebhooks) msg.channel.createWebhook = async () => { }
 
     if (msg.mentions) {
         if (!msg.mentions.members) Object.defineProperty(msg.mentions, 'members', {

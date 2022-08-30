@@ -1,4 +1,4 @@
-﻿/*
+/*
     if you got access to this module, wow congrats on hacking me!!!!!
     some cmd code is outdated, don't blame me if it uses 213789 lines
     relating to that, im also planning to move some code into modules
