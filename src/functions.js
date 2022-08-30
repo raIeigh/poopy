@@ -3479,6 +3479,20 @@ functions.changeStatus = function () {
     }
 }
 
+var saveQueued = []
+var saveQueueRunning = false
+
+async function runSaveQueue() {
+    saveQueueRunning = true
+    while (saveQueue.length) {
+        for (var i = 0; i < saveQueue.length; i++) {
+            var poopy = saveQueued[i]
+            if (!poopy || !poopy.data || !poopy.globaldata) continue
+            await functions.sleep(120000)
+        }
+    }
+}
+
 functions.saveData = async function () {
     let poopy = this
     let config = poopy.config

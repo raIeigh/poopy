@@ -750,7 +750,8 @@ class Poopy {
 
                         if (!msg.channel.permissionsFor(msg.guild.me).has('SEND_MESSAGES', false)) {
                             notExecuted = false
-                            await msg.react(randomChoice([...msg.guild.emojis.cache.keys()])).catch(() => { })
+                            var emojis = msg.guild.emojis.cache.filter(emoji => !config.self ? emoji.available : emoji.available && !emoji.animated).map(emoji => emoji.toString())
+                            await msg.react(randomChoice()).catch(() => { })
                         }
 
                         if (tempdata[msg.author.id]['ratelimited']) {

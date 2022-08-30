@@ -35,6 +35,7 @@
         let json = poopy.json
         let data = poopy.data
         let bot = poopy.bot
+        let config = poopy.config
         let tempdata = poopy.tempdata
 
         await msg.channel.sendTyping().catch(() => { })
@@ -61,8 +62,9 @@
         };
 
         if (args[1].match(/^@(here|everyone)$/) && saidMessage === 'egg' && (msg.member.permissions.has('ADMINISTRATOR') || msg.member.permissions.has('MENTION_EVERYONE') || msg.author.id == msg.guild.ownerID)) {
-            var ha = shuffle([...msg.guild.emojis.cache.values()].map(e => `<${e.animated ? 'a' : ''}:${e.name}:${e.id}>`)).slice(0, 25)
-            var he = shuffle(json.emojiJSON.map(e => e.emoji)).slice(0, 25 - ha.length)
+            var len = config.useReactions ? 20 : 25
+            var ha = shuffle(msg.guild.emojis.cache.filter(emoji => !(config.self && config.useReactions) ? emoji.available : emoji.available && !emoji.animated).map(emoji => emoji.toString()).slice(0, len)
+            var he = shuffle(json.emojiJSON.map(e => e.emoji)).slice(0, len - ha.length)
             var hi = shuffle(ha.concat(he))
             var ho = hi.map(e => {
                 return {
