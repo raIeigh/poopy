@@ -4,6 +4,7 @@ async function start() {
     let poopyStarted = false
     let mainPoopy
     let poopyList = {}
+    let { sleep, escapeHTML } = require('./src/functions')
 
     if (process.env.BOT_WEBSITE) {
         const express = require('express')
@@ -11,7 +12,6 @@ async function start() {
         const bp = require('body-parser')
         const axios = require('axios')
         const md5 = require('md5')
-        const { sleep, escapeHTML } = require('./src/functions')
 
         const PORT = process.env.PORT || 8080
         const app = express()
