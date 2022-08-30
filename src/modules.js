@@ -36,7 +36,7 @@ modules.os = require('os')
 modules.Collection = require('@discordjs/collection').Collection
 modules.DMGuild = class DMGuild {
     constructor(msg) {
-        let members = new Collection([[bot.user.id, bot.user]].concat(
+        let members = new modules.Collection([[bot.user.id, bot.user]].concat(
             msg.channel.recipients ?
             [...msg.channel.recipients] :
             [[msg.channel.recipient.id, msg.channel.recipient]]
