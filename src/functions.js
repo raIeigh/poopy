@@ -3492,9 +3492,9 @@ functions.saveQueue = async function () {
 
     while (saveQueued.length) {
         for (var i = 0; i < saveQueued.length; i++) {
-            var poopy = saveQueued[i]
-            if (!poopy || !poopy.data || !poopy.globaldata) continue
-            await poopy.saveData()
+            let pooper = saveQueued[i]
+            if (!pooper || !pooper.data || !pooper.globaldata) continue
+            await pooper.saveData()
             await functions.sleep(120000)
         }
     }
