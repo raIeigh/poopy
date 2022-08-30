@@ -3494,7 +3494,7 @@ functions.saveQueue = async function () {
         for (var i = 0; i < saveQueued.length; i++) {
             let pooper = saveQueued[i]
             if (!pooper || !pooper.data || !pooper.globaldata) continue
-            await pooper.saveData()
+            await pooper.functions.saveData()
             await functions.sleep(120000)
         }
     }
