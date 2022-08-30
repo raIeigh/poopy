@@ -140,15 +140,15 @@ function execPromise(code) {
 
 async function processJob(data) {
     let getDataJob = async () => {
-        var mongodatabase = data.mongodatabase
+        var database = data.database
         var global = data.global
 
-        console.log(`${mongodatabase} get`)
+        console.log(`${database} get`)
 
         var returndata = {}
 
-        if (datastores[mongodatabase]) {
-            returndata.data = datastores[mongodatabase]
+        if (datastores[database]) {
+            returndata.data = datastores[database]
 
             if (global && globaldata) returndata.globaldata = globaldata
 
@@ -157,12 +157,12 @@ async function processJob(data) {
     }
 
     let saveDataJob = async () => {
-        var mongodatabase = data.mongodatabase
+        var database = data.database
         var datastore = data.data
 
-        console.log(`${mongodatabase} save`)
+        console.log(`${database} save`)
 
-        if (datastore.data) datastores[mongodatabase] = datastore.data
+        if (datastore.data) datastores[database] = datastore.data
         if (datastore.globaldata) globaldata = datastore.globaldata
     }
 

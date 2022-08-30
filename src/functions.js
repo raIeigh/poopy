@@ -2312,7 +2312,7 @@ functions.getUrls = async function (msg, options = {}) {
 
                 if (tempfile) {
                     infoPost(`Tempfile detected`)
-                    return options.tempdir ? `tempfiles/${config.mongodatabase}/${tempfile.name}` : url
+                    return options.tempdir ? `tempfiles/${config.database}/${tempfile.name}` : url
                 }
             }
         },
@@ -2458,7 +2458,7 @@ functions.lastUrl = function (msg, i, tempdir, global) {
             urlsGlobal.splice(i, 1)
             return lastUrl(msg, i, tempdir)
         } else if (tempdir) {
-            url = `tempfiles/${config.mongodatabase}/${tempfile.name}`
+            url = `tempfiles/${config.database}/${tempfile.name}`
         }
     }
 
@@ -2498,7 +2498,7 @@ functions.lastUrls = function (msg, tempdir, global) {
                 i--
                 continue
             } else if (tempdir) {
-                urls[i] = `tempfiles/${config.mongodatabase}/${tempfile.name}`
+                urls[i] = `tempfiles/${config.database}/${tempfile.name}`
             }
         }
     }
@@ -2917,8 +2917,8 @@ functions.downloadFile = async function (url, filename, options) {
     } else {
         var currentcount = vars.filecount
         vars.filecount++
-        fs.mkdirSync(`temp/${config.mongodatabase}/file${currentcount}`)
-        filepath = `temp/${config.mongodatabase}/file${currentcount}`
+        fs.mkdirSync(`temp/${config.database}/file${currentcount}`)
+        filepath = `temp/${config.database}/file${currentcount}`
     }
 
     async function ffmpeg() {
@@ -2933,7 +2933,7 @@ functions.downloadFile = async function (url, filename, options) {
 
     if (!options.buffer && url.startsWith('temp:')) {
         options.buffer = true
-        url = fs.readFileSync(`tempfiles/${config.mongodatabase}/${tempfiles[url.substring(5)].name}`)
+        url = fs.readFileSync(`tempfiles/${config.database}/${tempfiles[url.substring(5)].name}`)
     }
 
     if (options.buffer) {
@@ -3056,7 +3056,7 @@ functions.sendFile = async function (msg, filepath, filename, extraOptions) {
     } else if (extraOptions.nosend) {
         infoPost(`Saving file temporarily`)
 
-        var id = generateId(fs.readdirSync(`tempfiles/${config.mongodatabase}`).map(file => {
+        var id = generateId(fs.readdirSync(`tempfiles/${config.database}`).map(file => {
             var name = file.split('.')
             if (name.length > 1) name = name.slice(0, name.length - 1)
             else name = name[0]
@@ -3067,7 +3067,7 @@ functions.sendFile = async function (msg, filepath, filename, extraOptions) {
         if (ext.length > 1) ext = `.${ext[ext.length - 1]}`
         else ext = ''
 
-        fs.copyFileSync(`${filepath}/${filename}`, `tempfiles/${config.mongodatabase}/${id}${ext}`)
+        fs.copyFileSync(`${filepath}/${filename}`, `tempfiles/${config.database}/${id}${ext}`)
 
         tempfiles[id] = {
             name: `${id}${ext}`,
@@ -3080,7 +3080,7 @@ functions.sendFile = async function (msg, filepath, filename, extraOptions) {
         returnUrl = `temp:${id}`
 
         setTimeout(() => {
-            fs.rmSync(`tempfiles/${config.mongodatabase}/${id}${ext}`, { force: true, recursive: true })
+            fs.rmSync(`tempfiles/${config.database}/${id}${ext}`, { force: true, recursive: true })
             delete tempfiles[id]
         }, 600000)
     } else {
@@ -3283,7 +3283,7 @@ functions.validateFile = async function (url, exception, rejectMessages) {
         }
 
         if (url.startsWith('temp:')) {
-            if (tempfiles[url.substring(5)]) await validateFileFromPath(`tempfiles/${config.mongodatabase}/${tempfiles[url.substring(5)].name}`, exception, rejectMessages)
+            if (tempfiles[url.substring(5)]) await validateFileFromPath(`tempfiles/${config.database}/${tempfiles[url.substring(5)].name}`, exception, rejectMessages)
                 .then(res => resolve(res))
                 .catch(res => reject(res))
             else reject('Tempfile unavailable.')
@@ -3486,22 +3486,22 @@ functions.saveData = async function () {
     let { infoPost, processTask, updateAllData } = poopy.functions
     let { fs } = poopy.modules
 
-    if (config.notSave) return
+    if (config.notSave || Object.keys(data).length <= 0 || Object.keys(globaldata).length <= 0) return
 
     infoPost(`Saving data`)
 
     if (config.testing || !process.env.MONGOOSE_URL) {
-        fs.writeFileSync(`data/${config.mongodatabase}.json`, JSON.stringify(data))
+        fs.writeFileSync(`data/${config.database}.json`, JSON.stringify(data))
         fs.writeFileSync(`data/globaldata.json`, JSON.stringify(globaldata))
     } else {
         const dataObject = { data: data, globaldata: globaldata }
 
         if (process.env.CLOUDAMQP_URL) await processTask({
             type: 'datasave',
-            mongodatabase: config.mongodatabase,
+            database: config.database,
             data: dataObject
         }).catch(() => { })
-        await updateAllData(config.mongodatabase, dataObject).catch(() => { })
+        await updateAllData(config.database, dataObject).catch(() => { })
     }
 
     infoPost(`Data saved`)

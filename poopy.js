@@ -50,7 +50,7 @@ class Poopy {
             poosoniafunctionblacklist: ['messagecollector', 'stopcollector', 'stopallcollectors'],
             allowtesting: true,
             allowbotusage: false,
-            mongodatabase: 'poopydata',
+            database: 'poopydata',
             globalPrefix: 'p:',
             stfu: false,
             intents: 65209,
@@ -1341,7 +1341,7 @@ class Poopy {
         }
     }
 
-    async start(TOKEN) {
+    async start(TOKEN, saveDelay) {
         let poopy = this
         let vars = poopy.vars
         let arrays = poopy.arrays
@@ -1374,8 +1374,8 @@ class Poopy {
             if (config.testing || !process.env.MONGOOSE_URL) {
                 var data = {}
 
-                if (fs.existsSync(`data/${config.mongodatabase}.json`)) {
-                    data.data = JSON.parse(fs.readFileSync(`data/${config.mongodatabase}.json`).toString())
+                if (fs.existsSync(`data/${config.database}.json`)) {
+                    data.data = JSON.parse(fs.readFileSync(`data/${config.database}.json`).toString())
                 } else {
                     data.data = {
                         'bot-data': {},
@@ -1402,7 +1402,7 @@ class Poopy {
                     console.log(`${bot.user.username}: gathering from worker`)
                     result = await processTask({
                         type: 'dataget',
-                        mongodatabase: config.mongodatabase,
+                        database: config.database,
                         global: Object.keys(globaldata).length <= 0
                     }).catch(() => { })
                 }
@@ -1412,7 +1412,7 @@ class Poopy {
                         bot.guilds.cache.get('834431435704107018')?.channels.cache.get('947167169718923341')?.send(!config.stfu ? 'this will take longer' : '').catch(() => { })
                     }
                     console.log(`${bot.user.username}: ${process.env.CLOUDAMQP_URL ? 'nvm ' : ''}gathering from mongodb`)
-                    result = await getAllData(config.mongodatabase, Object.keys(globaldata).length <= 0)
+                    result = await getAllData(config.database, Object.keys(globaldata).length <= 0)
                 }
 
                 return result
@@ -1434,21 +1434,28 @@ class Poopy {
             ]
         })
 
-        var poopyDirectories = ['temp', 'tempfiles', 'tasks']
+        var poopyDirectories = ['temp', 'tempfiles']
 
         poopyDirectories.forEach(poopyDirectory => {
             if (!fs.existsSync(poopyDirectory)) {
                 fs.mkdirSync(poopyDirectory)
             }
-            if (!fs.existsSync(`${poopyDirectory}/${config.mongodatabase}`)) {
-                fs.mkdirSync(`${poopyDirectory}/${config.mongodatabase}`)
+            if (!fs.existsSync(`${poopyDirectory}/${config.database}`)) {
+                fs.mkdirSync(`${poopyDirectory}/${config.database}`)
             }
-            fs.readdirSync(`${poopyDirectory}/${config.mongodatabase}`).forEach(folder => {
-                fs.rm(`${poopyDirectory}/${config.mongodatabase}/${folder}`, { force: true, recursive: true })
+            fs.readdirSync(`${poopyDirectory}/${config.database}`).forEach(folder => {
+                fs.rm(`${poopyDirectory}/${config.database}/${folder}`, { force: true, recursive: true })
             })
         })
 
-        await infoPost(`Gathering data in \`${config.mongodatabase}\``)
+        setTimeout(function () {
+            saveData()
+            vars.saveInterval = setInterval(function () {
+                saveData()
+            }, 120000)
+        }, saveDelay ?? 0)
+
+        await infoPost(`Gathering data in \`${config.database}\``)
         if (process.env.CLOUDAMQP_URL) vars.amqpconn = await require('amqplib').connect(process.env.CLOUDAMQP_URL)
         var gdata = await requestData()
 
@@ -1534,7 +1541,7 @@ class Poopy {
             if (!fs.existsSync('data')) {
                 fs.mkdirSync('data')
             }
-            fs.writeFileSync(`data/${config.mongodatabase}.json`, JSON.stringify(data))
+            fs.writeFileSync(`data/${config.database}.json`, JSON.stringify(data))
             fs.writeFileSync(`data/globaldata.json`, JSON.stringify(globaldata))
         }
 
@@ -1554,10 +1561,6 @@ class Poopy {
 
         console.log(`${bot.user.username}: some jsons`)
         //await updateSlashCommands()
-        saveData()
-        vars.saveInterval = setInterval(function () {
-            saveData()
-        }, 120000)
         console.log(`${bot.user.username}: all done, he's actually online now`)
         await infoPost(`Reboot ${data['bot-data']['reboots']} succeeded, he's up now`)
         changeStatus()
@@ -1608,7 +1611,7 @@ class Poopy {
         delete vars.saveInterval
 
         vars.started = false
-        delete activeBots[bot.user.id]
+        delete activeBots[config.database]
         bot.destroy()
 
         if (deldata) {

@@ -3,7 +3,6 @@ const throng = require('throng')
 async function start() {
     let poopyStarted = false
     let mainPoopy
-    let poopyList = {}
     let { sleep, escapeHTML } = require('./src/functions')
 
     if (process.env.BOT_WEBSITE) {
@@ -570,7 +569,7 @@ async function start() {
                 TOKEN: process.env.POOSONIA_TOKEN,
                 config: {
                     globalPrefix: 'ps:',
-                    mongodatabase: 'poopypsdata',
+                    database: 'poopypsdata',
                     //poosonia: true
                 }
             },
@@ -580,7 +579,7 @@ async function start() {
                 config: {
                     self: true,
                     globalPrefix: 'i:',
-                    mongodatabase: 'racist',
+                    database: 'racist',
                     msgcooldown: 3000,
                     useReactions: true,
                     textEmbeds: true,
@@ -602,24 +601,21 @@ async function start() {
         ]
     }
 
+    var saveDelay = 0
+
     for (var tokendata of tokens) {
-        let poopy
-        if (typeof tokendata == 'string') {
-            poopy = new Poopy()
-        } else {
-            poopy = new Poopy(tokendata.config)
-        }
+        let poopy = new Poopy(tokendata.config)
 
-        poopyList[poopy.config.mongodatabase] = poopy
-
-        poopy.start(tokendata.TOKEN).then(() => {
+        poopy.start(tokendata.TOKEN, saveDelay).then(() => {
             if (poopy.config.quitOnDestroy) {
                 mainPoopy = poopy
                 poopyStarted = true
             }
         })
 
-        await sleep(10000)
+        saveDelay += 30000
+
+        await sleep(2000)
     }
 }
 
