@@ -10,7 +10,7 @@ module.exports = {
       data['guild-data'][msg.guild.id]['chaincommands'] = !data['guild-data'][msg.guild.id]['chaincommands']
       await msg.reply('Set to **' + data['guild-data'][msg.guild.id]['chaincommands'] + '**.').catch(() => { })
     } else {
-      await msg.reply('You need the manage server permission to execute that!').catch(() => { })
+      await msg.reply('You need to be a moderator to execute that!').catch(() => { })
       return;
     };
   },

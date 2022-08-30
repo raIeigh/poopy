@@ -2599,7 +2599,7 @@ functions.dmSupport = function (msg) {
     }
 
     if (msg.channel && !msg.channel.fetchWebhooks) msg.channel.fetchWebhooks = async () => new Collection()
-    if (msg.channel && !msg.channel.fetchWebhooks) msg.channel.createWebhook = async () => { }
+    if (msg.channel && !msg.channel.createWebhook) msg.channel.createWebhook = async () => { }
 
     if (msg.mentions) {
         if (!msg.mentions.members) Object.defineProperty(msg.mentions, 'members', {
@@ -2609,6 +2609,7 @@ functions.dmSupport = function (msg) {
             }) : []),
             writable: true
         })
+
         if (!msg.mentions.users) Object.defineProperty(msg.mentions, 'users', {
             value: new Collection(msg.mentions.members ? msg.mentions.members.map(member => [member.user.id, member.user]) : []),
             writable: true

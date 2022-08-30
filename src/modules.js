@@ -36,7 +36,13 @@ modules.os = require('os')
 modules.Collection = require('@discordjs/collection').Collection
 modules.DMGuild = class DMGuild {
     constructor(msg) {
-        this.ownerId = msg.channel.ownerId || (msg.user || msg.author).id
+        let members = new Collection([[bot.user.id, bot.user]].concat(
+            msg.channel.recipients ?
+            [...msg.channel.recipients] :
+            [[msg.channel.recipient.id, msg.channel.recipient]]
+        ))
+
+        this.ownerId = msg.channel.ownerId || msg.channel.recipient.id
         this.id = msg.channel.id
         this.name = msg.channel.name || `${(msg.user || msg.author).username}'s DMs`
         this.fetchAuditLogs = async () => {
@@ -51,9 +57,9 @@ modules.DMGuild = class DMGuild {
             cache: new modules.Collection([[msg.channel.id, msg.channel]])
         }
         this.members = {
-            fetch: async () => msg.channel.recipient ? (msg.channel.recipient.id == id && msg.channel.recipient) : msg.channel.recipients && msg.channel.recipients.get(id),
-            resolve: (id) => msg.channel.recipient ? (msg.channel.recipient.id == id && msg.channel.recipient) : msg.channel.recipients && msg.channel.recipients.get(id),
-            cache: new modules.Collection(msg.channel.recipients ? msg.channel.recipients.map(user => [user.id, user]) : [[msg.channel.recipient.id, msg.channel.recipient]])
+            fetch: async (id) => members.get(id),
+            resolve: (id) => members.get(id),
+            cache: members
         }
     }
 }
