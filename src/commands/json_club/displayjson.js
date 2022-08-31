@@ -39,7 +39,7 @@ module.exports = {
 
             var currentcount = vars.filecount
             vars.filecount++
-            var filepath = `temp/${config.mongodatabase}/file${currentcount}`
+            var filepath = `temp/${config.database}/file${currentcount}`
             fs.mkdirSync(filepath)
             fs.writeFileSync(`${filepath}/jsonlist.txt`, globaldata['bot-data'][type].join('\n\n-----------------------------------------------\n\n') || 'lmao theres nothing')
             await msg.reply({

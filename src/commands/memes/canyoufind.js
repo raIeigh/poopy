@@ -81,7 +81,7 @@ module.exports = {
         }
         var currentcount = vars.filecount
         vars.filecount++
-        var filepath = `temp/${config.mongodatabase}/file${currentcount}`
+        var filepath = `temp/${config.database}/file${currentcount}`
         fs.mkdirSync(`${filepath}`)
         var frame = await Jimp.read(currenturl)
         var frame2 = await Jimp.read(currenturl2)

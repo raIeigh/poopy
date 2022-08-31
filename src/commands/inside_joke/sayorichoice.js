@@ -25,7 +25,7 @@ module.exports = {
     var rchoice = matchedTextes[1].substring(1, matchedTextes[1].length - 1)
     var currentcount = vars.filecount
     vars.filecount++
-    var filepath = `temp/${config.mongodatabase}/file${currentcount}`
+    var filepath = `temp/${config.database}/file${currentcount}`
     fs.mkdirSync(`${filepath}`)
     var sayori = await Jimp.read(`assets/image/sayori.png`)
     var bangers = await Jimp.loadFont('assets/fonts/Bangers/Bangers.fnt')

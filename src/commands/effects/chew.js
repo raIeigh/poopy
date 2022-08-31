@@ -49,7 +49,7 @@ module.exports = {
         if (type.mime.startsWith('image') && !(vars.gifFormats.find(f => f === type.ext)) && vars.jimpFormats.find(f => f === type.ext)) {
             var currentcount = vars.filecount
             vars.filecount++
-            var filepath = `temp/${config.mongodatabase}/file${currentcount}`
+            var filepath = `temp/${config.database}/file${currentcount}`
             fs.mkdirSync(`${filepath}`)
             var frame = await Jimp.read(currenturl)
             for (var i = 0; i < chewings.length; i++) {

@@ -42,7 +42,7 @@ module.exports = {
         if (type.mime.startsWith('image')) {
             var currentcount = vars.filecount
             vars.filecount++
-            var filepath = `temp/${config.mongodatabase}/file${currentcount}`
+            var filepath = `temp/${config.database}/file${currentcount}`
             fs.mkdirSync(`${filepath}`)
 
             var spectrogramData = await spectrogram(currenturl, {

@@ -69,7 +69,7 @@ module.exports = {
         if (type.mime.startsWith('image') && !(vars.gifFormats.find(f => f === type.ext))) {
             var currentcount = vars.filecount
             vars.filecount++
-            var filepath = `temp/${config.mongodatabase}/file${currentcount}`
+            var filepath = `temp/${config.database}/file${currentcount}`
             fs.mkdirSync(`${filepath}`)
             fs.mkdirSync(`${filepath}/frames`)
             for (var i = 0; i < rapping.length; i++) {
@@ -95,7 +95,7 @@ module.exports = {
         } else if (type.mime.startsWith('video') || (type.mime.startsWith('image') && vars.gifFormats.find(f => f === type.ext))) {
             var currentcount = vars.filecount
             vars.filecount++
-            var filepath = `temp/${config.mongodatabase}/file${currentcount}`
+            var filepath = `temp/${config.database}/file${currentcount}`
             fs.mkdirSync(`${filepath}`)
             fs.mkdirSync(`${filepath}/frames`)
             await execPromise(`ffmpeg -i "${currenturl}" -vframes 1 ${filepath}/output.png`)

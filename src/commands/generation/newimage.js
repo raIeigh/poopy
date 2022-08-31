@@ -24,7 +24,7 @@ module.exports = {
 
     var currentcount = vars.filecount
     vars.filecount++
-    var filepath = `temp/${config.mongodatabase}/file${currentcount}`
+    var filepath = `temp/${config.database}/file${currentcount}`
     fs.mkdirSync(`${filepath}`)
 
     await execPromise(`ffmpeg -f lavfi -i "color=0x${r}${g}${b}${a}:s=${width}x${height},format=rgba" ${filepath}/output.png`)

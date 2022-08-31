@@ -100,7 +100,7 @@ module.exports = {
             list: async (msg) => {
                 var currentcount = vars.filecount
                 vars.filecount++
-                var filepath = `temp/${config.mongodatabase}/file${currentcount}`
+                var filepath = `temp/${config.database}/file${currentcount}`
                 fs.mkdirSync(`${filepath}`)
                 fs.writeFileSync(`${filepath}/messagelist.txt`, data['guild-data'][msg.guild.id]['messages'].map(m => `Author: ${m.author}\n${m.content}`).join('\n\n-----------------------------------------------\n\n') || 'lmao theres nothing')
                 await msg.reply({
@@ -133,7 +133,7 @@ module.exports = {
 
                 var currentcount = vars.filecount
                 vars.filecount++
-                var filepath = `temp/${config.mongodatabase}/file${currentcount}`
+                var filepath = `temp/${config.database}/file${currentcount}`
                 fs.mkdirSync(`${filepath}`)
                 fs.writeFileSync(`${filepath}/messagelist.txt`, results.map(m => `Author: ${m.author}\n${m.content}`).join('\n\n-----------------------------------------------\n\n') || 'lmao theres nothing')
                 await msg.reply({

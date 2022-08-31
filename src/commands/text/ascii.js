@@ -37,7 +37,7 @@ module.exports = {
             }).catch(async () => {
                 var currentcount = vars.filecount
                 vars.filecount++
-                var filepath = `temp/${config.mongodatabase}/file${currentcount}`
+                var filepath = `temp/${config.database}/file${currentcount}`
                 fs.mkdirSync(`${filepath}`)
                 fs.writeFileSync(`${filepath}/ascii.txt`, brailleText)
                 await msg.reply({

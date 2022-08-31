@@ -416,7 +416,7 @@ module.exports = {
         } else if (type.mime.startsWith('video') || (type.mime.startsWith('image') && vars.gifFormats.find(f => f === type.ext))) {
             var currentcount = vars.filecount
             vars.filecount++
-            var filepath = `temp/${config.mongodatabase}/file${currentcount}`
+            var filepath = `temp/${config.database}/file${currentcount}`
             fs.mkdirSync(`${filepath}`)
             fs.mkdirSync(`${filepath}/frames`)
 

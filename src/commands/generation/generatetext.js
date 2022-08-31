@@ -75,7 +75,7 @@ module.exports = {
                 }).catch(async () => {
                     var currentcount = vars.filecount
                     vars.filecount++
-                    var filepath = `temp/${config.mongodatabase}/file${currentcount}`
+                    var filepath = `temp/${config.database}/file${currentcount}`
                     fs.mkdirSync(`${filepath}`)
                     fs.writeFileSync(`${filepath}/generated.txt`, `${saidMessage}${resp.data.completions[0].data.text}`)
                     await msg.reply({

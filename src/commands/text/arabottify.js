@@ -63,7 +63,7 @@ module.exports = {
             }).catch(async () => {
                 var currentcount = vars.filecount
                 vars.filecount++
-                var filepath = `temp/${config.mongodatabase}/file${currentcount}`
+                var filepath = `temp/${config.database}/file${currentcount}`
                 fs.mkdirSync(`${filepath}`)
                 fs.writeFileSync(`${filepath}/arabottify.txt`, arabArray.join(' '))
                 await msg.reply({
@@ -109,7 +109,7 @@ module.exports = {
         }).catch(async () => {
             var currentcount = vars.filecount
             vars.filecount++
-            var filepath = `temp/${config.mongodatabase}/file${currentcount}`
+            var filepath = `temp/${config.database}/file${currentcount}`
             fs.mkdirSync(`${filepath}`)
             fs.writeFileSync(`${filepath}/arabottify.txt`, arabArray.join(' '))
             await msg.reply({
