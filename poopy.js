@@ -881,7 +881,7 @@ class Poopy {
                             infoPost(`Command \`${args[0].toLowerCase()}\` used`)
                             var phrase = await getKeywordsFor(findLocalCmd.phrase, msg, true, { resetattempts: true, ownermode: findLocalCmd.ownermode }).catch((e) => console.log(e)) ?? 'error'
 
-                            var increaseCount = !!phrase
+                            var increaseCount = !!phrase.trim()
 
                             if (increaseCount) {
                                 if (tempdata[msg.author.id][msg.id]['execCount'] >= 1 && data['guild-data'][msg.guild.id]['chaincommands'] == false) {
@@ -967,7 +967,7 @@ class Poopy {
                                     infoPost(`Command \`${similarCmds[0].name}\` used`)
                                     var phrase = findLocalCmd ? (await getKeywordsFor(findLocalCmd.phrase, msg, true, { resetattempts: true, ownermode: findLocalCmd.ownermode }).catch((e) => console.log(e)) ?? 'error') : 'error'
 
-                                    var increaseCount = !!phrase
+                                    var increaseCount = !!phrase.trim()
 
                                     if (increaseCount) {
                                         if (tempdata[msg.author.id][msg.id]['execCount'] >= 1 && data['guild-data'][msg.guild.id]['chaincommands'] == false) {

@@ -34,70 +34,70 @@ module.exports = {
 
         tempdata[msg.author.id]['cooler'] = msg.id
 
-            if (command || localCommand) {
-                if (data['guild-data'][msg.guild.id]['disabled'].find(cmd => cmd.find(n => n === commandname))) {
-                    return 'This command is disabled in this server.'
-                } else {
-                    var content = msg.content
-
-                    msg.content = `${data['guild-data'][msg.guild.id]['prefix']}${commandname} ${args}`
-
-                    await getUrls(msg, {
-                        string: msg.content,
-                        update: true
-                    }).catch(() => { })
-
-                    if (command) {
-                        var increaseCount = !(command.execute.toString().includes('sendFile') && args.includes('-nosend'))
-
-                        if (increaseCount) {
-                            if (tempdata[msg.author.id][msg.id]['execCount'] >= 1 && data['guild-data'][msg.guild.id]['chaincommands'] == false && !(msg.member.permissions.has('MANAGE_GUILD') || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || isBot)) {
-                                msg.content = content
-                                return 'You can\'t chain commands in this server.'
-                            }
-                            if (tempdata[msg.author.id][msg.id]['execCount'] >= config.commandLimit * ((msg.member.permissions.has('MANAGE_GUILD') || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || isBot) ? 5 : 1)) {
-                                msg.content = content
-                                return `Number of commands to run at the same time must be smaller or equal to **${config.commandLimit * ((msg.member.permissions.has('MANAGE_GUILD') || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || isBot) ? 5 : 1)}**!`
-                            }
-                            tempdata[msg.author.id][msg.id]['execCount']++
-                        }
-
-                        if (command.cooldown) {
-                            data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] = (data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] || Date.now()) + command.cooldown / ((msg.member.permissions.has('MANAGE_GUILD') || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID) && (command.type === 'Text' || command.type === 'Main') ? 5 : 1)
-                        }
-
-                        vars.cps++
-                        data['bot-data']['commands']++
-                        var t = setTimeout(() => {
-                            vars.cps--;
-                            clearTimeout(t)
-                        }, 1000)
-
-                        infoPost(`Command \`${commandname}\` used`)
-                        await command.execute.call(poopy, msg, [commandname].concat(args.split(' ')), { ownermode: opts.ownermode }).catch(err => {
-                            error = err.stack
-                        })
-                        data['bot-data']['filecount'] = vars.filecount
-                        msg.content = content
-                    } else if (localCommand) {
-                        vars.cps++
-                        data['bot-data']['commands']++
-                        var t = setTimeout(() => {
-                            vars.cps--;
-                            clearTimeout(t)
-                        }, 60000)
-                        infoPost(`Command \`${commandname}\` used`)
-                        var oopts = { ...opts }
-                        oopts.ownermode = localCommand.ownermode || oopts.ownermode
-                        var phrase = await getKeywordsFor(localCommand.phrase, msg, true, oopts).catch(() => { }) ?? 'error'
-                        data['bot-data']['filecount'] = vars.filecount
-                        msg.content = content
-                        return phrase
-                    }
-                }
+        if (command || localCommand) {
+            if (data['guild-data'][msg.guild.id]['disabled'].find(cmd => cmd.find(n => n === commandname))) {
+                return 'This command is disabled in this server.'
             } else {
-                return 'Invalid command.'
+                var content = msg.content
+
+                msg.content = `${data['guild-data'][msg.guild.id]['prefix']}${commandname} ${args}`
+
+                await getUrls(msg, {
+                    string: msg.content,
+                    update: true
+                }).catch(() => { })
+
+                if (command) {
+                    var increaseCount = !(command.execute.toString().includes('sendFile') && args.includes('-nosend'))
+
+                    if (increaseCount) {
+                        if (tempdata[msg.author.id][msg.id]['execCount'] >= 1 && data['guild-data'][msg.guild.id]['chaincommands'] == false && !(msg.member.permissions.has('MANAGE_GUILD') || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || isBot)) {
+                            msg.content = content
+                            return 'You can\'t chain commands in this server.'
+                        }
+                        if (tempdata[msg.author.id][msg.id]['execCount'] >= config.commandLimit * ((msg.member.permissions.has('MANAGE_GUILD') || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || isBot) ? 5 : 1)) {
+                            msg.content = content
+                            return `Number of commands to run at the same time must be smaller or equal to **${config.commandLimit * ((msg.member.permissions.has('MANAGE_GUILD') || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || isBot) ? 5 : 1)}**!`
+                        }
+                        tempdata[msg.author.id][msg.id]['execCount']++
+                    }
+
+                    if (command.cooldown) {
+                        data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] = (data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] || Date.now()) + command.cooldown / ((msg.member.permissions.has('MANAGE_GUILD') || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID) && (command.type === 'Text' || command.type === 'Main') ? 5 : 1)
+                    }
+
+                    vars.cps++
+                    data['bot-data']['commands']++
+                    var t = setTimeout(() => {
+                        vars.cps--;
+                        clearTimeout(t)
+                    }, 1000)
+
+                    infoPost(`Command \`${commandname}\` used`)
+                    await command.execute.call(poopy, msg, [commandname].concat(args.split(' ')), { ownermode: opts.ownermode }).catch(err => {
+                        error = err.stack
+                    })
+                    data['bot-data']['filecount'] = vars.filecount
+                    msg.content = content
+                } else if (localCommand) {
+                    vars.cps++
+                    data['bot-data']['commands']++
+                    var t = setTimeout(() => {
+                        vars.cps--;
+                        clearTimeout(t)
+                    }, 60000)
+                    infoPost(`Command \`${commandname}\` used`)
+                    var oopts = { ...opts }
+                    oopts.ownermode = localCommand.ownermode || oopts.ownermode
+                    var phrase = await getKeywordsFor(localCommand.phrase, msg, true, oopts).catch(() => { }) ?? 'error'
+                    data['bot-data']['filecount'] = vars.filecount
+                    msg.content = content
+                    return phrase
+                }
             }
+        } else {
+            return 'Invalid command.'
+        }
 
         return error
     },
