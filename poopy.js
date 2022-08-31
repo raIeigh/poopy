@@ -1494,10 +1494,6 @@ class Poopy {
             data['bot-data']['reboots']++
         }
 
-        if (!globaldata) {
-            globaldata = {}
-        }
-
         if (!globaldata['commandTemplates']) {
             globaldata['commandTemplates'] = []
         }
