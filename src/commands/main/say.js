@@ -20,7 +20,7 @@ module.exports = {
         }
         var saidMessage = args.slice(1).join(' ')
         var attachments = msg.attachments.map(attachment => new Discord.MessageAttachment(attachment.url, attachment.name))
-        if (args[1] === undefined && attachments.length <= 0) {
+        if (args[1] === undefined && attachments.length <= 0 && msg.stickers.size <= 0) {
             await msg.reply('What is the message to say?!').catch(() => { })
             return;
         };

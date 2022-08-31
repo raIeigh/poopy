@@ -41,7 +41,7 @@ module.exports = {
                 await msg.reply('Number must be smaller or equal to **25**.').catch(() => { })
                 return;
             }
-            if (args[2] === undefined && attachments.length <= 0) {
+            if (args[2] === undefined && attachments.length <= 0 && msg.stickers.size <= 0) {
                 await msg.reply('What is the message to spam?!').catch(() => { })
                 return;
             };

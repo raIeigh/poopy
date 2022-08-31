@@ -2793,12 +2793,9 @@ functions.battle = async function (msg, subject, action, damage, chance) {
     let { Discord } = poopy.modules
 
     await msg.channel.sendTyping().catch(() => { })
-    var attachments = []
-    msg.attachments.forEach(attachment => {
-        attachments.push(new Discord.MessageAttachment(attachment.url))
-    });
+    var attachments = msg.attachments.map(attachment => new Discord.MessageAttachment(attachment.url));
 
-    if (!subject && attachments.length <= 0) {
+    if (!subject && attachments.length <= 0 && msg.stickers.size <= 0) {
         await msg.reply('What/who is the subject?!').catch(() => { })
         return;
     };
@@ -2819,7 +2816,8 @@ functions.battle = async function (msg, subject, action, damage, chance) {
         allowedMentions: {
             parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
         },
-        files: attachments
+        files: attachments,
+        stickers: msg.stickers
     }).catch(() => { })
 
     if (!member) return
