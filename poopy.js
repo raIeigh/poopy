@@ -29,6 +29,7 @@
     - UBERDUCK_KEY, UBERDUCK_SECRET (credentials from uberduck ai, generated at https://app.uberduck.ai/account/manage)
 */
 
+/** A pooper. */
 class Poopy {
     constructor(cfg = {}) {
         // setting up options
@@ -201,7 +202,7 @@ class Poopy {
 
         // we can create thge bot now
         let { Discord, DiscordBuilders, Collection, fs } = modules
-        let { waitMessageCooldown, setMessageCooldown, envsExist,
+        let { envsExist,
             chunkArray, chunkObject, requireJSON, findCommand,
             dmSupport, sleep, gatherData, deleteMsgData, infoPost,
             getKeywordsFor, getUrls, randomChoice, similarity, yesno,
@@ -216,6 +217,8 @@ class Poopy {
             version: '10'
         })
         poopy.package = JSON.parse(modulesList.fs.readFileSync('package.json'))
+
+        bot.database = config.database
 
         class FakeCollector {
             constructor() {
@@ -1369,7 +1372,7 @@ class Poopy {
         rest.setToken(poopy.__TOKEN)
         await bot.login(poopy.__TOKEN)
 
-        activeBots[bot.user.id] = poopy
+        activeBots[config.database] = poopy
 
         async function requestData() {
             if (config.testing || !process.env.MONGOOSE_URL) {

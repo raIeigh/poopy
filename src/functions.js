@@ -1,4 +1,4 @@
-const { fs, request, axios } = require('./modules')
+const { fs, request } = require('./modules')
 let vars = require('./vars')
 let functions = {}
 

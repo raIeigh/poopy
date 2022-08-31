@@ -36,7 +36,7 @@ modules.os = require('os')
 modules.Collection = require('@discordjs/collection').Collection
 modules.DMGuild = class DMGuild {
     constructor(msg) {
-        let members = new modules.Collection([[bot.user.id, bot.user]].concat(
+        let members = new modules.Collection([[msg.client.database, msg.client.user]].concat(
             msg.channel.recipients ?
             [...msg.channel.recipients] :
             [[msg.channel.recipient.id, msg.channel.recipient]]
@@ -71,7 +71,7 @@ for (var Discord of modules.Discord) {
     Guild.prototype.leave = async function leave() {
         let guild = this
         let client = guild.client
-        let poopy = activeBots[client.user.id]
+        let poopy = activeBots[client.database]
         let config = poopy.config
 
         if (config.public) return 'nvm'
@@ -85,7 +85,7 @@ for (var Discord of modules.Discord) {
     Channel.prototype.send = async function send(payload) {
         var channel = this
         let client = channel.client
-        let poopy = activeBots[client.user.id]
+        let poopy = activeBots[client.database]
         let tempdata = poopy.tempdata
         let { waitMessageCooldown, setMessageCooldown } = poopy.functions
 
@@ -101,7 +101,7 @@ for (var Discord of modules.Discord) {
     Message.prototype.reply = async function reply(payload) {
         var message = this
         let client = message.client
-        let poopy = activeBots[client.user.id]
+        let poopy = activeBots[client.database]
         let config = poopy.config
         let tempdata = poopy.tempdata
         let { waitMessageCooldown, setMessageCooldown } = poopy.functions
@@ -119,7 +119,7 @@ for (var Discord of modules.Discord) {
     Interaction.prototype.reply = async function reply(payload) {
         var interaction = this
         let client = interaction.client
-        let poopy = activeBots[client.user.id]
+        let poopy = activeBots[client.database]
         let config = poopy.config
         let tempdata = poopy.tempdata
         let { waitMessageCooldown, setMessageCooldown } = poopy.functions
