@@ -40,12 +40,12 @@ module.exports = {
             }
             var saidMessage = args.slice(2).join(' ')
 
-            if (!globaldata['bot-data'][type].find(v => v === saidMessage)) {
+            if (!globaldata[type].find(v => v === saidMessage)) {
                 await msg.reply('Does not exist.').catch(() => { })
                 return
             }
 
-            var removed = globaldata['bot-data'][type].splice(globaldata['bot-data'][type].findIndex(v => v === saidMessage), 1)
+            var removed = globaldata[type].splice(globaldata[type].findIndex(v => v === saidMessage), 1)
 
             await msg.reply({
                 content: '✅ Removed ' + removed[0],
@@ -54,11 +54,11 @@ module.exports = {
                 }
             }).catch(() => { })
 
-            arrays.psFiles = globaldata['bot-data']['psfiles']
-            arrays.psPasta = globaldata['bot-data']['pspasta']
-            arrays.funnygifs = globaldata['bot-data']['funnygif']
-            arrays.poopPhrases = globaldata['bot-data']['poop']
-            arrays.dmPhrases = globaldata['bot-data']['dmphrases']
+            arrays.psFiles = globaldata['psfiles']
+            arrays.psPasta = globaldata['pspasta']
+            arrays.funnygifs = globaldata['funnygif']
+            arrays.poopPhrases = globaldata['poop']
+            arrays.dmPhrases = globaldata['dmphrases']
         };
     },
     help: {

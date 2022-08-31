@@ -2639,7 +2639,7 @@ functions.getKeywordsFor = async function (string, msg, isBot, { extrakeys = {},
     var extradfuncs = declaredonly ? { ...tempdata[msg.author.id]['funcdeclared'] } : { ...extrafuncs, ...tempdata[msg.author.id]['funcdeclared'] }
     var started = false
 
-    if (tempdata[msg.author.id]['ratelimited'] || globaldata['bot-data']['shit'].find(id => id === msg.author.id)) {
+    if (tempdata[msg.author.id]['ratelimited'] || globaldata['shit'].find(id => id === msg.author.id)) {
         return string
     }
 
@@ -2681,7 +2681,7 @@ functions.getKeywordsFor = async function (string, msg, isBot, { extrakeys = {},
             started = true
         }
 
-        if (tempdata[msg.author.id]['ratelimited'] || globaldata['bot-data']['shit'].find(id => id === msg.author.id)) {
+        if (tempdata[msg.author.id]['ratelimited'] || globaldata['shit'].find(id => id === msg.author.id)) {
             return string
         }
 
@@ -3514,7 +3514,7 @@ functions.saveData = async function () {
         fs.writeFileSync(`data/${config.database}.json`, JSON.stringify(data))
         fs.writeFileSync(`data/globaldata.json`, JSON.stringify(globaldata))
     } else {
-        const dataObject = { data: data, globaldata: globaldata }
+        const dataObject = { data, globaldata }
 
         if (process.env.CLOUDAMQP_URL) await processTask({
             type: 'datasave',

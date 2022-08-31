@@ -778,7 +778,7 @@ class Poopy {
                             return
                         }
 
-                        if (globaldata['bot-data']['shit'].find(id => id === msg.author.id)) {
+                        if (globaldata['shit'].find(id => id === msg.author.id)) {
                             notExecuted = false
                             await msg.reply('shit').catch(() => { })
                             return
@@ -1392,9 +1392,7 @@ class Poopy {
                     if (fs.existsSync(`data/globaldata.json`)) {
                         data.globaldata = JSON.parse(fs.readFileSync(`data/globaldata.json`).toString())
                     } else {
-                        data.globaldata = {
-                            'bot-data': {}
-                        }
+                        data.globaldata = {}
                     }
                 }
 
@@ -1496,43 +1494,43 @@ class Poopy {
             data['bot-data']['reboots']++
         }
 
-        if (!globaldata['bot-data']) {
-            globaldata['bot-data'] = {}
+        if (!globaldata) {
+            globaldata = {}
         }
 
-        if (!globaldata['bot-data']['commandTemplates']) {
-            globaldata['bot-data']['commandTemplates'] = []
+        if (!globaldata['commandTemplates']) {
+            globaldata['commandTemplates'] = []
         }
 
-        if (!globaldata['bot-data']['shit']) {
-            globaldata['bot-data']['shit'] = []
+        if (!globaldata['shit']) {
+            globaldata['shit'] = []
         }
 
-        if (!globaldata['bot-data']['psfiles']) {
-            globaldata['bot-data']['psfiles'] = arrays.psFiles
+        if (!globaldata['psfiles']) {
+            globaldata['psfiles'] = arrays.psFiles
         }
 
-        if (!globaldata['bot-data']['pspasta']) {
-            globaldata['bot-data']['pspasta'] = arrays.psPasta
+        if (!globaldata['pspasta']) {
+            globaldata['pspasta'] = arrays.psPasta
         }
 
-        if (!globaldata['bot-data']['funnygif']) {
-            globaldata['bot-data']['funnygif'] = arrays.funnygifs
+        if (!globaldata['funnygif']) {
+            globaldata['funnygif'] = arrays.funnygifs
         }
 
-        if (!globaldata['bot-data']['poop']) {
-            globaldata['bot-data']['poop'] = arrays.poopPhrases
+        if (!globaldata['poop']) {
+            globaldata['poop'] = arrays.poopPhrases
         }
 
-        if (!globaldata['bot-data']['dmphrases']) {
-            globaldata['bot-data']['dmphrases'] = arrays.dmPhrases
+        if (!globaldata['dmphrases']) {
+            globaldata['dmphrases'] = arrays.dmPhrases
         }
 
-        arrays.psFiles = globaldata['bot-data']['psfiles']
-        arrays.psPasta = globaldata['bot-data']['pspasta']
-        arrays.funnygifs = globaldata['bot-data']['funnygif']
-        arrays.poopPhrases = globaldata['bot-data']['poop']
-        arrays.dmPhrases = globaldata['bot-data']['dmphrases']
+        arrays.psFiles = globaldata['psfiles']
+        arrays.psPasta = globaldata['pspasta']
+        arrays.funnygifs = globaldata['funnygif']
+        arrays.poopPhrases = globaldata['poop']
+        arrays.dmPhrases = globaldata['dmphrases']
 
         vars.filecount = data['bot-data']['filecount'] || 0
 

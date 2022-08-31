@@ -42,7 +42,7 @@ async function start() {
             }
     
             while (!poopyStarted) await sleep(1000)
-            res.type('json').send(mainPoopy.globaldata['bot-data']['psfiles'])
+            res.type('json').send(mainPoopy.globaldata['psfiles'])
         })
     
         app.get('/api/pspasta', async function (req, res) {
@@ -52,7 +52,7 @@ async function start() {
             }
     
             while (!poopyStarted) await sleep(1000)
-            res.type('json').send(mainPoopy.globaldata['bot-data']['pspasta'])
+            res.type('json').send(mainPoopy.globaldata['pspasta'])
         })
     
         app.get('/ubervoices', async function (_, res) {
@@ -415,7 +415,7 @@ async function start() {
             msg.guild = guild
             // done
     
-            if (mainPoopy.globaldata['bot-data']['shit'].find(id => id === msg.author.id)) {
+            if (mainPoopy.globaldata['shit'].find(id => id === msg.author.id)) {
                 return res.type('text').status(400).send('shit')
             }
     
@@ -522,7 +522,7 @@ async function start() {
     
         app.get('/psfile', function (_, res) {
             if (poopyStarted) {
-                const psfiles = mainPoopy.globaldata['bot-data']['psfiles']
+                const psfiles = mainPoopy.globaldata['psfiles']
                 res.redirect(psfiles[Math.floor(Math.random() * psfiles.length)])
             } else {
                 res.sendFile(`${__dirname}/html/startPage.html`)

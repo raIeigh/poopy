@@ -40,12 +40,12 @@ module.exports = {
             }
             var saidMessage = args.slice(2).join(' ')
 
-            if (globaldata['bot-data'][type].find(v => v === saidMessage)) {
+            if (globaldata[type].find(v => v === saidMessage)) {
                 await msg.reply('Already exists.').catch(() => { })
                 return
             }
 
-            globaldata['bot-data'][type].push(saidMessage)
+            globaldata[type].push(saidMessage)
 
             await msg.reply({
                 content: '✅ Added ' + saidMessage,
@@ -54,11 +54,11 @@ module.exports = {
                 }
             }).catch(() => { })
 
-            arrays.psFiles = globaldata['bot-data']['psfiles']
-            arrays.psPasta = globaldata['bot-data']['pspasta']
-            arrays.funnygifs = globaldata['bot-data']['funnygif']
-            arrays.poopPhrases = globaldata['bot-data']['poop']
-            arrays.dmPhrases = globaldata['bot-data']['dmphrases']
+            arrays.psFiles = globaldata['psfiles']
+            arrays.psPasta = globaldata['pspasta']
+            arrays.funnygifs = globaldata['funnygif']
+            arrays.poopPhrases = globaldata['poop']
+            arrays.dmPhrases = globaldata['dmphrases']
         };
     },
     help: {

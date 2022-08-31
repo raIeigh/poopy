@@ -85,7 +85,7 @@ module.exports = {
             "orig": "<id>",
             "autocomplete": function () {
                 let poopy = this
-                return poopy.globaldata['bot-data']['commandTemplates'].map(cmd => {
+                return poopy.globaldata['commandTemplates'].map(cmd => {
                     return { name: `${cmd.name} (${cmd.id})`, value: cmd.id }
                 })
             }
@@ -321,7 +321,7 @@ module.exports = {
 
                     var id = args[1].replace(/#/g, '')
 
-                    var findCommandTemplate = globaldata['bot-data']['commandTemplates'].find(cmd => cmd.id == id)
+                    var findCommandTemplate = globaldata['commandTemplates'].find(cmd => cmd.id == id)
 
                     if (findCommandTemplate) {
                         var name = args[2] ? args[2].toLowerCase() : findCommandTemplate.name

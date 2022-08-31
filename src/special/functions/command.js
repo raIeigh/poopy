@@ -21,7 +21,7 @@ module.exports = {
 
         if (tempdata[msg.guild.id][msg.channel.id]['shut']) return ''
 
-        if (globaldata['bot-data']['shit'].find(id => id === msg.author.id)) return 'shit'
+        if (globaldata['shit'].find(id => id === msg.author.id)) return 'shit'
 
         if (data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown']) {
             if ((data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] - Date.now()) > 0 &&

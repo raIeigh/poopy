@@ -41,7 +41,7 @@ module.exports = {
             vars.filecount++
             var filepath = `temp/${config.database}/file${currentcount}`
             fs.mkdirSync(filepath)
-            fs.writeFileSync(`${filepath}/jsonlist.txt`, globaldata['bot-data'][type].join('\n\n-----------------------------------------------\n\n') || 'lmao theres nothing')
+            fs.writeFileSync(`${filepath}/jsonlist.txt`, globaldata[type].join('\n\n-----------------------------------------------\n\n') || 'lmao theres nothing')
             await msg.reply({
                 files: [new Discord.MessageAttachment(`${filepath}/jsonlist.txt`)]
             }).catch(() => { })

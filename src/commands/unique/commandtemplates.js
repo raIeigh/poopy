@@ -97,7 +97,7 @@ module.exports = {
         "description": "Allows you to edit the command with the respective ID in the database, if it exists and you made it.",
         "autocomplete": function (interaction) {
             let poopy = this
-            return poopy.globaldata['bot-data']['commandTemplates'].filter(cmd => cmd.creator == interaction.user.id).map(cmd => {
+            return poopy.globaldata['commandTemplates'].filter(cmd => cmd.creator == interaction.user.id).map(cmd => {
                 return { name: `${cmd.name} (${cmd.id})`, value: cmd.id }
             })
         }
@@ -113,7 +113,7 @@ module.exports = {
         "description": "Permanently deletes the command from the database with the respective ID, if it exists and YOU made it.",
         "autocomplete": function (interaction) {
             let poopy = this
-            return poopy.globaldata['bot-data']['commandTemplates'].filter(cmd => cmd.creator == interaction.user.id).map(cmd => {
+            return poopy.globaldata['commandTemplates'].filter(cmd => cmd.creator == interaction.user.id).map(cmd => {
                 return { name: `${cmd.name} (${cmd.id})`, value: cmd.id }
             })
         }
@@ -140,7 +140,7 @@ module.exports = {
             }
 
             var name = args[1].toLowerCase()
-            var id = generateId(globaldata['bot-data']['commandTemplates'].map(c => c.id))
+            var id = generateId(globaldata['commandTemplates'].map(c => c.id))
             var creator = msg.author.id
             var date = Math.floor(Date.now() / 1000)
 
@@ -180,14 +180,14 @@ module.exports = {
 
             params.phrase = saidMessage
 
-            var findCommand = globaldata['bot-data']['commandTemplates'].find(cmd => cmd.name === name && cmd.creator === msg.author.id)
+            var findCommand = globaldata['commandTemplates'].find(cmd => cmd.name === name && cmd.creator === msg.author.id)
 
             if (findCommand) {
                 await msg.reply(`You've already created a command with that name! (ID: \`${findCommand.id}\`)`).catch(() => { })
                 return
             } else {
-                var commands = [params].concat(globaldata['bot-data']['commandTemplates'])
-                globaldata['bot-data']['commandTemplates'] = commands
+                var commands = [params].concat(globaldata['commandTemplates'])
+                globaldata['commandTemplates'] = commands
 
                 await msg.reply({
                     content: `✅ \`${name}\` was successfully registered to the command template database! (ID: \`${id}\`)`,
@@ -200,7 +200,7 @@ module.exports = {
 
         var options = {
             list: async (msg) => {
-                var dcmdTemplates = globaldata['bot-data']['commandTemplates']
+                var dcmdTemplates = globaldata['commandTemplates']
 
                 if (dcmdTemplates.length <= 0) {
                     if (config.textEmbeds) msg.reply('there is nothing').catch(() => { })
@@ -354,7 +354,7 @@ module.exports = {
 
                 var saidMessage = args.join('').substring(args[0].length + 1).toLowerCase()
 
-                var ddcmdTemplates = globaldata['bot-data']['commandTemplates']
+                var ddcmdTemplates = globaldata['commandTemplates']
                 var none = {
                     "title": `there is nothing`,
                     "description": 'wow',
@@ -526,8 +526,8 @@ module.exports = {
                 }
 
                 var id = args[1].replace(/#/g, '')
-                var command = globaldata['bot-data']['commandTemplates'].find(cmd => cmd.id === id)
-                var commandIndex = globaldata['bot-data']['commandTemplates'].findIndex(cmd => cmd.id === id)
+                var command = globaldata['commandTemplates'].find(cmd => cmd.id === id)
+                var commandIndex = globaldata['commandTemplates'].findIndex(cmd => cmd.id === id)
 
                 if (command && commandIndex > -1) {
                     if (command.creator !== msg.author.id) {
@@ -571,7 +571,7 @@ module.exports = {
                     args = args.reverse()
 
                     if (params.name) {
-                        var findCommand = globaldata['bot-data']['commandTemplates'].find(cmd => cmd.name === params.name && cmd.creator === msg.author.id)
+                        var findCommand = globaldata['commandTemplates'].find(cmd => cmd.name === params.name && cmd.creator === msg.author.id)
 
                         if (findCommand) {
                             await msg.reply(`You've already created a command with that name! (ID: \`${findCommand.id}\`)`).catch(() => { })
@@ -580,7 +580,7 @@ module.exports = {
                     }
 
                     for (var param in params) {
-                        globaldata['bot-data']['commandTemplates'][commandIndex][param] = params[param]
+                        globaldata['commandTemplates'][commandIndex][param] = params[param]
                     }
 
                     await msg.reply(`✅ Command successfully updated.`).catch(() => { })
@@ -596,8 +596,8 @@ module.exports = {
                 }
 
                 var id = args[1].replace(/#/g, '')
-                var command = globaldata['bot-data']['commandTemplates'].find(cmd => cmd.id === id)
-                var commandIndex = globaldata['bot-data']['commandTemplates'].findIndex(cmd => cmd.id === id)
+                var command = globaldata['commandTemplates'].find(cmd => cmd.id === id)
+                var commandIndex = globaldata['commandTemplates'].findIndex(cmd => cmd.id === id)
 
                 if (command && commandIndex > -1) {
                     if (command.creator !== msg.author.id) {
@@ -605,7 +605,7 @@ module.exports = {
                         return
                     }
 
-                    globaldata['bot-data']['commandTemplates'].splice(commandIndex, 1)
+                    globaldata['commandTemplates'].splice(commandIndex, 1)
 
                     await msg.reply(`✅ Command successfully deleted.`).catch(() => { })
                 } else {
