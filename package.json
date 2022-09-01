@@ -22,6 +22,7 @@
     "catbox.moe": "^1.0.2",
     "cheerio": "^1.0.0-rc.10",
     "cors": "^2.8.5",
+    "crypto-js": "^4.1.1",
     "deepai": "^1.0.17",
     "discord-api-types": "^0.29.0",
     "discord.js": "^13.2.0",

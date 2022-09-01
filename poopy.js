@@ -7,6 +7,7 @@
     but if you're brave enough, you can hunt for every one of these:
 
     - BOT_WEBSITE (url if you want a website for your bot)
+    - AUTH_TOKEN (SET THIS TO SOMETHING RANDOM! mainly used for encrypting/decrypting private tokens from people (used in the managetokens command), but can also be used to access private apis from the website)
     - CLOUDAMQP_URL (url used to send file processing and data queues, accessed at https://api.cloudamqp.com/console/<app-id>/details)
     - MONGOOSE_URL (url used to access the database, generated at https://cloud.mongodb.com/v2/<project-id>#clusters/connect)
 
