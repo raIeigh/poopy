@@ -29,7 +29,7 @@ module.exports = {
         }
 
         if (language === undefined) {
-            await msg.reply(`What is the programming language?! Available ones are:\n${languages.map(lang => `\`${lang.templates[0]}\``).join(', ')}`).catch(() => { })
+            await msg.reply(`What is the programming language?! Available ones are:\n${vars.codelanguages.map(lang => `\`${lang.templates[0]}\``).join(', ')}`).catch(() => { })
             return
         }
 
@@ -73,8 +73,8 @@ module.exports = {
 
         var jsons = response.data.trim().split('\n').map(json => JSON.parse(json))
 
-        var stdOut = jsfind(json => json.type === 'StdOut')
-        var stdErr = jsfind(json => json.type === 'StdErr')
+        var stdOut = jsons.find(json => json.type === 'StdOut')
+        var stdErr = jsons.find(json => json.type === 'StdErr')
         var output
 
         if (stdOut && stdErr) output = `StdOut: ${stdOut.data}\n\nStdErr: ${stdErr.data}`
