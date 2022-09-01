@@ -1,5 +1,5 @@
 module.exports = {
-    name: ['managetokens', 'managekeys'],
+    name: ['apitokens', 'managetokens'],
     args: [{
         "name": "option",
         "required": true,
@@ -35,6 +35,21 @@ module.exports = {
         let commands = poopy.commands
         let { CryptoJS } = poopy.modules
 
+        let tokenList = {
+            AI21_KEY: {
+                desc: "Used for AI21's text generation.",
+                method: 'Create an AI21 Studio account, then go to https://studio.ai21.com/account/account and copy the API key'
+            },
+            DALLE2_SESSION: {
+                desc: "Session token used for DALLE•2's image generation AI.",
+                method: "If you have access, go to https://labs.openai.com/ and inspect element (F12). Click the Network tab, do a random generation, click the list item with the name \"tasks\", then scroll down on the headers and copy the request's bearer authorization"
+            },
+            DEEPAI_KEY: {
+                desc: 'Used for the Waifu2x, super-resolution, weirdcore, and text generation APIs.',
+                method: 'Create a DeepAI account, then go to https://deepai.org/dashboard/profile and copy the api-key'
+            }
+        }
+
         var options = {
             help: async (msg) => {
                 if (config.textEmbeds) await dmChannel.send(`> **WHAT are keywords and functions?**\nKeywords and functions are special words that can be used in any command which are replaced with something new (keywords), or generate something new with the arguments inside their parentheses (functions), depending on their purpose. This sort of works like a programming language for the bot.\n\n> **Example Usages**\n\`\`\`\np:say _member really likes _member\n\`\`\`\n\`\`\`\np:img _word\n\`\`\`\n\`\`\`\np:meme4 "lower(_sentence)"\n\`\`\`\n\`\`\`\np:meme4 "lower(_member), the upper(_arab)!"\n\`\`\`\n\`\`\`\np:spam 25 _sayori\n\`\`\`\n\`\`\`\np:say choice(da minion | da bob)\n\`\`\`\n\n> **Command Templates**\n` + "Speech Bubble\n```\ncommand(vmerge | https://cdn.discordapp.com/attachments/760223418968047629/938887195471786034/unknown.png lasturl())\n```\nSquare Crop\n```\ncommand(crop | declare(url | lasturl()) declare(width | width({url})) declare(height | height({url})) declare(biggest | if(equal({width} | {height}) | both | if(bigger({width} | {height}) | width | height))) {url} if(notequal({biggest} | both) | -x if(equal({biggest} | width) | math({width} / 2 - {height} / 2) | 0) -y if(equal({biggest} | height) | math({height} / 2 - {width} / 2) | 0) -w if(equal({biggest} | width) | {height} | {width}) -h if(equal({biggest} |height) | {width} | {height})))\n```\nHerobrine\n```\ncommand(overlay | https://cdn.discordapp.com/attachments/879658786376265768/930909703595253810/herobrines.png lasturl() -origin center bottom -offsetpos -135 -221 -width 30 -height 30 -keepaspectratio increase)\n```").catch(async () => {
@@ -43,13 +58,13 @@ module.exports = {
                 })
                 else await dmChannel.send({
                     embeds: [{
-                        "title": 'Manageable Tokens',
+                        "title": 'API Tokens',
                         "color": 0x472604,
                         "footer": {
                             icon_url: bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
                             text: bot.user.username
                         },
-                        "decription": "Here, you can manage your own tokens to freely access APIs without having to deal with the bot's limits! All tokens are encrypted when saved, preventing them from being easily stolen.",
+                        "decription": "Here, you can manage your own tokens to freely access APIs without having to deal with the bot's quotas and limits! Multiple tokens can be used for each API, they're encrypted when saved.",
                         "fields": [
                             {
                                 "name": "WHAT are keywords and functions?",
@@ -124,7 +139,7 @@ module.exports = {
             else msg.reply({
                 embeds: [{
                     "title": "Available Options",
-                    "description": "**help** - Get a list of manageable tokens, and how to get them.\n**toggle** <command> (moderator only) - Disables/enables a command, if it exists.",
+                    "description": "**help** - Get a list of API tokens you can modify, and how to get them.\n**toggle** <command> (moderator only) - Disables/enables a command, if it exists.",
                     "color": 0x472604,
                     "footer": {
                         "icon_url": bot.user.displayAvatarURL({
@@ -145,8 +160,8 @@ module.exports = {
         await options[args[1].toLowerCase()](msg, args)
     },
     help: {
-        name: 'managetokens/managekeys <option>',
-        value: "**ONLY USE THIS COMMAND IN PRIVATE SERVERS!** Manage tokens for APIs, like remove.bg, Google, and many others. Use the command alone for more info."
+        name: 'apitokens/managetokens <option>',
+        value: "**ONLY USE THIS COMMAND IN PRIVATE SERVERS!** Manage tokens for different APIs, like Remove.bg, YouTube, and many others. Use the command alone for more info."
     },
     cooldown: 5000,
     type: 'Settings'
