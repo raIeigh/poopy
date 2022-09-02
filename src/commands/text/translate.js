@@ -20,7 +20,7 @@ module.exports = {
     execute: async function (msg, args) {
         let poopy = this
         let vars = poopy.vars
-        let { randomKey } = poopy.functions
+        let { userToken } = poopy.functions
         let { axios } = poopy.modules
 
         await msg.channel.sendTyping().catch(() => { })
@@ -63,7 +63,7 @@ module.exports = {
             headers: {
                 'content-type': 'application/json',
                 'x-rapidapi-host': 'microsoft-translator-text.p.rapidapi.com',
-                'x-rapidapi-key': randomKey('RAPIDAPI_KEY')
+                'x-rapidapi-key': userToken(msg.author.id, 'RAPIDAPI_KEY')
             },
             data: [{ Text: saidMessage }]
         };

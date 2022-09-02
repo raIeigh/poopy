@@ -4,15 +4,19 @@ module.exports = {
     execute: async function (msg, args, opts) {
         let poopy = this
         let config = poopy.config
-        let { lastUrl, validateFile, downloadFile, execPromise, sleep, navigateEmbed } = poopy.functions
+        let { lastUrl, validateFile, userToken, downloadFile, execPromise, sleep, navigateEmbed } = poopy.functions
         let { fs, axios } = poopy.modules
         let bot = poopy.bot
 
+        var tokens = data['user-data'][msg.author.id]['tokens']['DALLE2_SESSION'] ?? []
+
         var ownerid = config.ownerids.find(id => id == msg.author.id);
-        if (ownerid === undefined && !opts.ownermode) {
-            await msg.reply('Owner only!').catch(() => { })
+        if (ownerid === undefined && !opts.ownermode && !tokens.length) {
+            await msg.reply('You need the `DALLE2_SESSION` token for this!').catch(() => { })
             return
         }
+
+        var choosenToken = userToken(msg.author.id, 'DALLE2_SESSION')
 
         if (lastUrl(msg, 0) === undefined && args[1] === undefined) {
             await msg.reply('What is the file?!').catch(() => { })
@@ -65,7 +69,7 @@ module.exports = {
                         task_type: "variations"
                     },
                     headers: {
-                        Authorization: `Bearer ${process.env.DALLE2_SESSION}`
+                        Authorization: `Bearer ${choosenToken}`
                     }
                 }).catch(() => { })
 
@@ -84,7 +88,7 @@ module.exports = {
                         url: `https://labs.openai.com/api/labs/tasks/${taskId}`,
                         method: 'GET',
                         headers: {
-                            Authorization: `Bearer ${process.env.DALLE2_SESSION}`
+                            Authorization: `Bearer ${choosenToken}`
                         }
                     })
 
@@ -150,10 +154,10 @@ module.exports = {
         }
     },
     help: {
-        name: 'dalle2variations {file}',
-        value: "Generates 4 variations from the specified image with DALL·E 2. Owner only because credits are very limited. Use the command alone for more info."
+        name: 'dalle2variations {file} (requires DALLE2_SESSION token)',
+        value: "Generates 4 variations from the specified image with DALL·E 2."
     },
     cooldown: 2500,
-    type: 'Owner',
+    type: 'Generation',
     envRequired: ['DALLE2_SESSION']
 }

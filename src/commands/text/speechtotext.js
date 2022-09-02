@@ -3,7 +3,7 @@ module.exports = {
     args: [{"name":"file","required":false,"specifarg":false,"orig":"{file}"}],
     execute: async function (msg, args) {
         let poopy = this
-        let { lastUrl, validateFile, downloadFile, execPromise, findpreset, randomKey, request } = poopy.functions
+        let { lastUrl, validateFile, downloadFile, execPromise, findpreset, userToken, request } = poopy.functions
         let { fs, Discord } = poopy.modules
         let vars = poopy.vars
         let config = poopy.config
@@ -46,7 +46,7 @@ module.exports = {
                     headers: {
                         'content-type': 'multipart/form-data; boundary=---011000010111000001101001',
                         'X-RapidAPI-Host': 'speech-recognition-english1.p.rapidapi.com',
-                        'X-RapidAPI-Key': randomKey('RAPIDAPI_KEY'),
+                        'X-RapidAPI-Key': userToken(msg.author.id, 'RAPIDAPI_KEY'),
                         useQueryString: true
                     },
                     formData: {
@@ -116,7 +116,7 @@ module.exports = {
                 headers: {
                     'content-type': 'multipart/form-data; boundary=---011000010111000001101001',
                     'X-RapidAPI-Host': 'speech-recognition-english1.p.rapidapi.com',
-                    'X-RapidAPI-Key': randomKey('RAPIDAPI_KEY'),
+                    'X-RapidAPI-Key': userToken(msg.author.id, 'RAPIDAPI_KEY'),
                     useQueryString: true
                 },
                 formData: {

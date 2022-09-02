@@ -21,7 +21,7 @@ module.exports = {
 
         var search = args.slice(1).join(" ");
 
-        var urls = await fetchImages(search, true, !msg.channel.nsfw).catch(() => { })
+        var urls = await fetchImages(search, true, !msg.channel.nsfw, msg.author.id).catch(() => { })
 
         if (!urls) {
             await msg.reply('Error.').catch(() => { })

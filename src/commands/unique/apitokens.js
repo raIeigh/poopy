@@ -7,25 +7,63 @@ module.exports = {
         "orig": "<option>"
     }],
     subcommands: [{
-        "name": "list",
+        "name": "help",
         "args": [],
-        "description": "Gets a list of disabled commands."
+        "description": "Get a list of tokens you can manage, and how to get them."
     },
     {
-        "name": "toggle",
+        "name": "list",
         "args": [{
-            "name": "command",
+            "name": "show",
+            "required": false,
+            "specifarg": true,
+            "orig": "[-show]"
+        }],],
+        "description": "Show a list of all your tokens."
+    },
+    {
+        "name": "add",
+        "args": [{
+            "name": "token",
             "required": true,
             "specifarg": false,
-            "orig": "<command>",
-            "autocomplete": function () {
-                let poopy = this
-                return poopy.commands.map(cmd => {
-                    return { name: cmd.name.join('/'), value: cmd.name[0] }
-                })
-            }
+            "orig": "<token>",
+            "autocomplete": [
+                'AI21_KEY',
+                'DALLE2_SESSION',
+                //'DEEPAI_KEY',
+                //'GOOGLE_KEY',
+                'RANDOMSTUFF_KEY',
+                'RAPIDAPI_KEY',
+                'REMOVEBG_KEY'
+            ]
+        },
+        {
+            "name": "value",
+            "required": true,
+            "specifarg": false,
+            "orig": "<value>"
         }],
-        "description": "Disables/enables a command, if it exists."
+        "description": "Add a new token value to your tokens, multiple can be used."
+    },
+    {
+        "name": "reset",
+        "args": [{
+            "name": "token",
+            "required": true,
+            "specifarg": false,
+            "orig": "<token>",
+            "autocomplete": [
+                'AI21_KEY',
+                'DALLE2_SESSION',
+                //'DEEPAI_KEY',
+                //'GOOGLE_KEY',
+                'RANDOMSTUFF_KEY',
+                'RAPIDAPI_KEY',
+                'REMOVEBG_KEY'
+            ]
+        }],
+        "description": "Removes all of the token's values and resets to the bot's defaults."
     }],
     execute: async function (msg, args) {
         let poopy = this
@@ -34,6 +72,7 @@ module.exports = {
         let config = poopy.config
         let commands = poopy.commands
         let { CryptoJS } = poopy.modules
+        let { decrypt } = poopy.functions
 
         let tokenList = {
             AI21_KEY: {
@@ -46,7 +85,7 @@ module.exports = {
                 method: "If you have access, go to the website (https://labs.openai.com/) and inspect element (F12). Click the Network tab, do a random generation, click the list item with the name \"tasks\", then click the Headers tab at the right menu and scroll down, you'll find the Bearer authorization and copy it (don't include \"Bearer\"). This session token is temporary so it",
                 example: 'sess-770lhwAbGJP0VQcmbJ3f7p8XlVII6zXkeciNrwfK'
             },
-            DEEPAI_KEY: {
+            /*DEEPAI_KEY: {
                 uses: "`waifu2x`, `superresolution`, `weirdcore`, `generatetext`?",
                 method: 'Create a DeepAI account (https://deepai.org), then go to your profile (https://deepai.org/dashboard/profile) and copy the api-key',
                 example: '758271bd-f608-4c9e-9e39-8b69852ae78c'
@@ -55,7 +94,7 @@ module.exports = {
                 uses: "`youtube`",
                 method: "Go to Google Cloud console (https://console.cloud.google.com/welcome), then click the top left button and click \"NEW PROJECT\" (if you haven't created one yet). Activate the YouTube Data API (https://console.cloud.google.com/apis/library/youtube.googleapis.com) and create an API key for it (https://console.cloud.google.com/apis/credentials)",
                 example: 'AIzaSyKxWTcB1l0rAHL62eP96pfnQJ5bBCtkW_r'
-            },
+            },*/
             RANDOMSTUFF_KEY: {
                 uses: '`cleverbot`?',
                 method: 'Make an account at https://api-info.pgamerx.com/, manage your keys (https://api-info.pgamerx.com/manage-key), generate a new one and copy it',
@@ -115,7 +154,7 @@ module.exports = {
                 if (config.textEmbeds) await msg.reply(Object.keys(tokenList).map(token => {
                     var tokens = data['user-data'][msg.author.id]['tokens'][token] ?? []
 
-                    return `\`${token}\` -> ${tokens.length > 0 ? tokens.map(t => t.replace(/./g, '•')).join(', ') : 'None.'}`
+                    return `\`${token}\` -> ${tokens.length > 0 ? tokens.map(t => decrypt(t, !args.indexOf('-show'))).join(', ') : 'None.'}`
                 }).join('\n').substring(0, 2000)).catch(() => { })
                 else await msg.reply({
                     embeds: [{
@@ -123,7 +162,7 @@ module.exports = {
                         "description": Object.keys(tokenList).map(token => {
                             var tokens = data['user-data'][msg.author.id]['tokens'][token] ?? []
         
-                            return `\`${token}\` -> ${tokens.length > 0 ? tokens.map(t => t.replace(/./g, '•')).join(', ') : 'None.'}`
+                            return `\`${token}\` -> ${tokens.length > 0 ? tokens.map(t => decrypt(t, !args.indexOf('-show'))).join(', ') : 'None.'}`
                         }).join('\n'),
                         "color": 0x472604,
                         "footer": {
@@ -133,11 +172,69 @@ module.exports = {
                     }]
                 }).catch(() => { })
             },
+            
+            add: async (msg, args) {
+                var token = args[1]
+                var value = args[2]
+
+                if (!token) {
+                    await msg.reply("What's the token name?!")
+                    return
+                }
+
+                if (!value) {
+                    await msg.reply("What's the token value?!").catch(() => { })
+                    return
+                }
+
+                var tokenData = tokenList[token]
+                
+                if (!tokenData) {
+                    await msg.reply("Invalid token name.").catch(() => { })
+                    return
+                }
+
+                var tokenRegex = new RegExp(`^[a-zA-Z0-9_-]{${tokenData.example.length}}$`)
+
+                if (!value.match(tokenRegex)) {
+                    await msg.reply("Invalid token value.").catch(() => { })
+                    return
+                }
+
+                var encrypted = CryptoJS.AES.encrypt(value, process.env.AUTH_TOKEN)
+
+                var tokens = data['user-data'][msg.author.id]['tokens']
+
+                tokens[token] = tokens[token] ?? []
+                tokens[token].push(encrypted)
+
+                await msg.reply(`✅ \`${token}\` added.`).catch(() => { })
+            },
+
+            reset: async (msg, args) {
+                var token = args[1]
+
+                if (!token) {
+                    await msg.reply("What's the token name?!")
+                    return
+                }
+
+                var tokenData = tokenList[token]
+                
+                if (!tokenData) {
+                    await msg.reply("Invalid token name.").catch(() => { })
+                    return
+                }
+
+                delete data['user-data'][msg.author.id]['tokens'][token]
+
+                await msg.reply(`✅ \`${token}\` has been reset.`).catch(() => { })
+            }
         }
 
         if (!args[1]) {
             if (config.textEmbeds) msg.reply({
-                content: "**help** - Get a list of manageable tokens, and how to get them.\n**toggle** <command> (moderator only) - Disables/enables a command, if it exists.",
+                content: "**help** - Get a list of tokens you can manage, and how to get them.\n**list** [-show] - Show a list of all your tokens.\n**add** <token> <value> - **DON'T USE THIS IN A PUBLIC SERVER!** Add a new token value to your tokens, multiple can be used.\n**reset** <token> - Removes all of the token's values and resets to the bot's defaults.",
                 allowedMentions: {
                     parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
@@ -145,7 +242,7 @@ module.exports = {
             else msg.reply({
                 embeds: [{
                     "title": "Available Options",
-                    "description": "**help** - Get a list of API tokens you can modify, and how to get them.\n**toggle** <command> (moderator only) - Disables/enables a command, if it exists.",
+                    "description": "**help** - Get a list of tokens you can manage, and how to get them.\n**list** [-show] - Show a list of all your tokens.\n**add** <token> <value> - **DON'T USE THIS IN A PUBLIC SERVER!** Add a new token value to your tokens, multiple can be used.\n**reset** <token> - Removes all of the token's values and resets to the bot's defaults.",
                     "color": 0x472604,
                     "footer": {
                         "icon_url": bot.user.displayAvatarURL({
@@ -170,5 +267,5 @@ module.exports = {
         value: "**ONLY USE THIS COMMAND IN PRIVATE SERVERS!** Manage tokens for different APIs, like remove.bg, YouTube, OCR, and many others. Use the command alone for more info."
     },
     cooldown: 5000,
-    type: 'Settings'
+    type: 'Unique'
 }

@@ -3,7 +3,7 @@ module.exports = {
     args: [{"name":"file","required":false,"specifarg":false,"orig":"{file}"}],
     execute: async function (msg, args) {
         let poopy = this
-        let { lastUrl, validateFile, downloadFile, randomKey, sendFile } = poopy.functions
+        let { lastUrl, validateFile, downloadFile, userToken, sendFile } = poopy.functions
         let vars = poopy.vars
         let { FormData, fs, axios } = poopy.modules
 
@@ -40,7 +40,7 @@ module.exports = {
                 data: form,
                 headers: {
                     ...form.getHeaders(),
-                    'X-Api-Key': randomKey('REMOVEBG_KEY')
+                    'X-Api-Key': userToken(msg.author.id, 'REMOVEBG_KEY')
                 },
                 encoding: null,
                 responseType: 'arraybuffer'

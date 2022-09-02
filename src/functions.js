@@ -1,4 +1,4 @@
-const { fs, request } = require('./modules')
+const { fs, request, CryptoJS } = require('./modules')
 let vars = require('./vars')
 let functions = {}
 
@@ -79,6 +79,14 @@ functions.unescapeHTML = function (value) {
         .replace(/&#\d+;/g, (match) => {
             return String.fromCharCode(match.substring(2, match.length - 1))
         })
+}
+
+functions.decrypt = function (str, hide) {
+    var decrypted =  CryptoJS.AES.decrypt(str, process.env.AUTH_TOKEN).toString(CryptoJS.enc.Utf8)
+
+    if (hide) decrypted = decrypted.replace(/./g, '•')
+
+    return decrypted
 }
 
 functions.parMatch = function (string) {
@@ -750,7 +758,7 @@ functions.cleverbot = async function (stim, id) {
     let vars = poopy.vars
     let arrays = poopy.arrays
     let { axios, md5 } = poopy.modules
-    let { randomKey, randomChoice } = poopy.functions
+    let { userToken, randomChoice } = poopy.functions
 
     var context = vars.clevercontexts[bot.id + id] || (vars.clevercontexts[bot.id + id] = [])
     if (context.length > 10) context.splice(0, context.length - 10)
@@ -836,9 +844,9 @@ functions.cleverbot = async function (stim, id) {
                 id: id
             },
             headers: {
-                authorization: process.env.RANDOMSTUFF_KEY,
+                authorization: userToken(id, 'RANDOMSTUFF_KEY'),
                 'x-rapidapi-host': 'random-stuff-api.p.rapidapi.com',
-                'x-rapidapi-key': randomKey('RAPIDAPI_KEY')
+                'x-rapidapi-key': userToken(id, 'RAPIDAPI_KEY')
             }
         }
 
@@ -2845,9 +2853,20 @@ functions.battle = async function (msg, subject, action, damage, chance) {
     }
 }
 
-functions.fetchImages = async function (query, bing, safe) {
+functions.userToken = function (id, token) {
     let poopy = this
-    let { randomKey } = poopy.functions
+    let data = poopy.data
+    let { randomChoice, decrypt, randomKey } = poopy.functions
+
+    var tokens = data['user-data'][id]['tokens'][token] ?? []
+    var userTkn = randomChoice(tokens)
+
+    return userTkn ? decrypt(userTkn) : randomKey(token)
+}
+
+functions.fetchImages = async function (query, bing, safe, id) {
+    let poopy = this
+    let { userToken } = poopy.functions
     let { axios, gis } = poopy.modules
 
     return new Promise(async (resolve) => {
@@ -2858,7 +2877,7 @@ functions.fetchImages = async function (query, bing, safe) {
                 params: { q: query, count: '100', safeSearch: safe ? 'moderate' : 'off' },
                 headers: {
                     'x-rapidapi-host': 'bing-image-search1.p.rapidapi.com',
-                    'x-rapidapi-key': randomKey('RAPIDAPI_KEY')
+                    'x-rapidapi-key': userToken(id, 'RAPIDAPI_KEY')
                 }
             }
 

@@ -5,14 +5,18 @@ module.exports = {
         let poopy = this
         let config = poopy.config
         let { axios } = poopy.modules
-        let { sleep, navigateEmbed } = poopy.functions
+        let { sleep, navigateEmbed, userToken } = poopy.functions
         let bot = poopy.bot
 
+        var tokens = data['user-data'][msg.author.id]['tokens']['DALLE2_SESSION'] ?? []
+
         var ownerid = config.ownerids.find(id => id == msg.author.id);
-        if (ownerid === undefined && !opts.ownermode) {
-            await msg.reply('Owner only!').catch(() => { })
+        if (ownerid === undefined && !opts.ownermode && !tokens.length) {
+            await msg.reply('You need the `DALLE2_SESSION` token for this!').catch(() => { })
             return
         }
+
+        var choosenToken = userToken(msg.author.id, 'DALLE2_SESSION')
 
         if (!args[1]) {
             await msg.reply('What is the text?!').catch(() => { })
@@ -46,7 +50,7 @@ module.exports = {
                     task_type: "text2im"
                 },
                 headers: {
-                    Authorization: `Bearer ${process.env.DALLE2_SESSION}`
+                    Authorization: `Bearer ${choosenToken}`
                 }
             }).catch(() => { })
 
@@ -65,7 +69,7 @@ module.exports = {
                     url: `https://labs.openai.com/api/labs/tasks/${taskId}`,
                     method: 'GET',
                     headers: {
-                        Authorization: `Bearer ${process.env.DALLE2_SESSION}`
+                        Authorization: `Bearer ${choosenToken}`
                     }
                 })
 
@@ -121,10 +125,10 @@ module.exports = {
         ], undefined, undefined, undefined, undefined, msg)
     },
     help: {
-        name: 'dalle2text <option>',
-        value: "Generates 4 images from the text prompt with DALL·E 2. Owner only because credits are very limited."
+        name: 'dalle2text <option> (requires DALLE2_SESSION token)',
+        value: "Generates 4 images from the text prompt with DALL·E 2."
     },
     cooldown: 2500,
-    type: 'Owner',
+    type: 'Generation',
     envRequired: ['DALLE2_SESSION']
 }

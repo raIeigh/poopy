@@ -46,7 +46,7 @@ module.exports = {
               stopSequences: []
           },
           headers: {
-              Authorization: `Bearer ${process.env.AI21_KEY}`
+              Authorization: `Bearer ${userToken(msg.author.id, 'AI21_KEY')}`
           }
       }).catch(() => { })
 

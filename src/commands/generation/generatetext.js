@@ -3,7 +3,7 @@ module.exports = {
     args: [{"name":"message","required":true,"specifarg":false,"orig":"<message>"},{"name":"temperature","required":false,"specifarg":true,"orig":"[-temperature <number (from 0 to 1)]"},{"name":"maxtokens","required":false,"specifarg":true,"orig":"[-maxtokens <number (max 512)>]"},{"name":"prespenalty","required":false,"specifarg":true,"orig":"[-(pres/count/freq)penalty <number (from 0 to 5/1/500)>]"},{"name":"countpenalty","required":false,"specifarg":true,"orig":"[-(pres/count/freq)penalty <number (from 0 to 5/1/500)>]"},{"name":"freqpenalty","required":false,"specifarg":true,"orig":"[-(pres/count/freq)penalty <number (from 0 to 5/1/500)>]"}],
     execute: async function (msg, args) {
         let poopy = this
-        let { getOption, parseNumber } = poopy.functions
+        let { getOption, parseNumber, userToken } = poopy.functions
         let { axios, fs, Discord, deepai } = poopy.modules
         let vars = poopy.vars
         let config = poopy.config
@@ -62,7 +62,7 @@ module.exports = {
                     stopSequences: []
                 },
                 headers: {
-                    Authorization: `Bearer ${process.env.AI21_KEY}`
+                    Authorization: `Bearer ${userToken(msg.author.id, 'AI21_KEY')}`
                 }
             }).catch(() => { })
 

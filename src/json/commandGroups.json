@@ -186,6 +186,8 @@
             "cleverbot",
             "compose",
             "dalle",
+            "dalle2text",
+            "dalle2variations",
             "describeimage",
             "generatetext",
             "inferkit",
@@ -307,8 +309,6 @@
     {
         "name": "owner",
         "cmds": [
-            "dalle2text",
-            "dalle2variations",
             "destroy",
             "eval",
             "reset",

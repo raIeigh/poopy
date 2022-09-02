@@ -3,7 +3,7 @@ module.exports = {
   desc: 'Translates the phrase inside the function from source to target, otherwise auto.',
   func: async function (matches) {
     let poopy = this
-    let { splitKeyFunc, randomKey } = poopy.functions
+    let { splitKeyFunc, userToken } = poopy.functions
     let vars = poopy.vars
     let { axios } = poopy.modules
 
@@ -32,7 +32,7 @@ module.exports = {
       headers: {
         'content-type': 'application/json',
         'x-rapidapi-host': 'microsoft-translator-text.p.rapidapi.com',
-        'x-rapidapi-key': randomKey('RAPIDAPI_KEY')
+        'x-rapidapi-key': userToken(msg.author.id, 'RAPIDAPI_KEY')
       },
       data: [{ Text: phrase }]
     };

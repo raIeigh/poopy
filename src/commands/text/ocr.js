@@ -3,7 +3,7 @@ module.exports = {
     args: [{"name":"file","required":false,"specifarg":false,"orig":"{file}"}],
     execute: async function (msg, args) {
         let poopy = this
-        let { lastUrl, validateFile, randomKey } = poopy.functions
+        let { lastUrl, validateFile, userToken } = poopy.functions
         let { axios, fs, Discord } = poopy.modules
         let vars = poopy.vars
         let config = poopy.config
@@ -32,7 +32,7 @@ module.exports = {
                 headers: {
                     'content-type': 'application/json',
                     'x-rapidapi-host': 'microsoft-computer-vision3.p.rapidapi.com',
-                    'x-rapidapi-key': randomKey('RAPIDAPI_KEY')
+                    'x-rapidapi-key': userToken(msg.author.id, 'RAPIDAPI_KEY')
                 },
                 data: {
                     url: currenturl
