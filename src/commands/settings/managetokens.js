@@ -37,37 +37,37 @@ module.exports = {
 
         let tokenList = {
             AI21_KEY: {
-                desc: "Used for AI21's text generation.",
+                uses: "`generatetext`",
                 method: 'Create an AI21 Studio account (https://studio.ai21.com/sign-up), then go to your account (https://studio.ai21.com/account/account) and copy the API key',
                 example: '4QRVuB48Djt1ckJa8TQcAMRPEY8hL7V3'
             },
             DALLE2_SESSION: {
-                desc: "Used for DALL·E 2's image generation AI.",
+                uses: "`dalle2text`, `dalle2variations`",
                 method: "If you have access, go to the website (https://labs.openai.com/) and inspect element (F12). Click the Network tab, do a random generation, click the list item with the name \"tasks\", then click the Headers tab at the right menu and scroll down, you'll find the Bearer authorization and copy it (don't include \"Bearer\"). This session token is temporary so it",
                 example: 'sess-770lhwAbGJP0VQcmbJ3f7p8XlVII6zXkeciNrwfK'
             },
             DEEPAI_KEY: {
-                desc: "Used for DeepAI's various APIs, like super-resolution or text generation.",
+                uses: "`waifu2x`, `superresolution`, `weirdcore`, `generatetext`?",
                 method: 'Create a DeepAI account (https://deepai.org), then go to your profile (https://deepai.org/dashboard/profile) and copy the api-key',
                 example: '758271bd-f608-4c9e-9e39-8b69852ae78c'
             },
             GOOGLE_KEY: {
-                desc: "Used only for accessing YouTube's API.",
+                uses: "`youtube`",
                 method: "Go to Google Cloud console (https://console.cloud.google.com/welcome), then click the top left button and click \"NEW PROJECT\" (if you haven't created one yet). Activate the YouTube Data API (https://console.cloud.google.com/apis/library/youtube.googleapis.com) and create an API key for it (https://console.cloud.google.com/apis/credentials)",
                 example: 'AIzaSyKxWTcB1l0rAHL62eP96pfnQJ5bBCtkW_r'
             },
             RANDOMSTUFF_KEY: {
-                desc: 'Used only as an AI response API when Cleverbot breaks.',
+                uses: '`cleverbot`?',
                 method: 'Make an account at https://api-info.pgamerx.com/, manage your keys (https://api-info.pgamerx.com/manage-key), generate a new one and copy it',
                 example: '98ZrLnaah7i9'
             },
             RAPIDAPI_KEY: {
-                desc: "Used for RapidAPI's various APIs, like Microsoft's OCR and translation.",
+                uses: '`ocr`, `translate`, `badtranslate`, `bing`, `speechtotext`, `cleverbot`?',
                 method: "Create a RapidAPI account (https://rapidapi.com/auth/register) and go to your apps (https://rapidapi.com/developer/dashboard). Click the default-application then click Settings, show the Application Key and copy it. For this to fully work, you'll also need to subscribe to the APIs: Microsoft Computer Vision, Microsoft Translator Text, Bing Web Search, Speech Recognition English and random-stuff-api",
                 example: '1b4rhcq2gblihxyjxdskzpnvh0ttgv1uyli3lihvxjslts2jta'
             },
             REMOVEBG_KEY: {
-                desc: 'Used for removing backgrounds of images with remove.bg.',
+                uses: '`removebg`',
                 method: 'Make a Kaleido account (https://accounts.kaleido.ai/users/sign_in), go to your dashboard and click the API keys tab (https://www.remove.bg/dashboard#api-key). Click to create a new API key and then copy it',
                 example: 'SjcTC3wvNapVN571Eu8hpA14'
             }
@@ -81,7 +81,7 @@ module.exports = {
                     if (config.textEmbeds) await dmChannel.send(`Here, you can manage your own keys and tokens to freely access APIs without having to deal with the bot's quotas and limits! Multiple tokens can be used for each API, they're encrypted when saved.\n\n${Object.keys(tokenList).map(token => {
                         var tokenInfo = tokenList[token]
 
-                        return `\`${token}\`\n> ${tokenInfo.desc}\n> **Method:** ${tokenInfo.method}\n> **Example Token:** ${tokenInfo.example}`
+                        return `\`${token}\`\n> **Used in:** ${tokenInfo.uses}\n> **Method:** ${tokenInfo.method}\n> **Example Token:** ${tokenInfo.example}`
                     }).join('\n\n')}`.substring(0, 2000)).catch(async () => {
                         await msg.reply('Couldn\'t send info to you. Do you have me blocked?').catch(() => { })
                         return
@@ -100,7 +100,7 @@ module.exports = {
 
                                 return {
                                     name: `\`${token}\``,
-                                    value: `${tokenInfo.desc}\n**Method:** ${tokenInfo.method}\n**Example Token:** ${tokenInfo.example}`
+                                    value: `**Used in:** ${tokenInfo.uses}\n**Method:** ${tokenInfo.method}\n**Example Token:** ${tokenInfo.example}`
                                 }
                             })
                         }]
@@ -116,10 +116,7 @@ module.exports = {
                     var tokens = data['user-data'][msg.author.id]['tokens'][token] ?? []
 
                     return `\`${token}\` -> ${tokens.length > 0 ? tokens.map(t => t.replace(/./g, '•')).join(', ') : 'None.'}`
-                }).join('\n').substring(0, 2000)).catch(async () => {
-                    await msg.reply('Couldn\'t send info to you. Do you have me blocked?').catch(() => { })
-                    return
-                })
+                }).join('\n').substring(0, 2000)).catch(() => { })
                 else await msg.reply({
                     embeds: [{
                         "title": 'Token Manager',
