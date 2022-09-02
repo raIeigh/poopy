@@ -151,7 +151,7 @@ module.exports = {
     },
     help: {
         name: 'dalle2variations {file}',
-        value: "Generates 3 variations from the specified image with DALL·E 2. Owner only because credits are very limited. Use the command alone for more info."
+        value: "Generates 4 variations from the specified image with DALL·E 2. Owner only because credits are very limited. Use the command alone for more info."
     },
     cooldown: 2500,
     type: 'Owner',

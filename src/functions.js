@@ -14,9 +14,11 @@ functions.updateAllData = require('./dataGathering').updateAllData
 functions.brainfuck = require('./brainfuck')
 functions.tobrainfuck = require('./tobrainfuck')
 functions.generateSayori = require('./sayorimessagegenerator')
-functions.braille = require('./braille')
-functions.averageColor = require('./averageColor')
-functions.spectrogram = require('./spectrogram')
+if (__dirname.includes('app')) {
+    functions.braille = require('./braille')
+    functions.averageColor = require('./averageColor')
+    functions.spectrogram = require('./spectrogram')
+}
 
 functions.lerp = function (start, end, amt) {
     return (1 - amt) * start + amt * end
@@ -161,7 +163,7 @@ functions.getOption = function (args, name, {
         }
         if (splice) args.splice(optionindex, splicecount + 1)
         if (join) option = option.join(' ')
-        return n == 0 ? true : option
+        return n == 0 ? true : isNaN(Number(option)) ? option : Number(option)
     }
     return dft
 }
@@ -563,6 +565,10 @@ functions.gatherData = async function (msg) {
 
         if (data['user-data'][msg.author.id]['health'] === undefined) {
             data['user-data'][msg.author.id]['health'] = 100
+        }
+
+        if (!data['user-data'][msg.author.id]['tokens']) {
+            data['user-data'][msg.author.id]['tokens'] = {}
         }
     }
 

@@ -14,7 +14,7 @@
     - AI21_KEY (key generated when you sign up in ai21 for generating text, accessed at https://studio.ai21.com/account/account)
     - DALLE2_SESSION (if you have dalle 2 access, go to https://labs.openai.com/, inspect element, go to Network, do a random generation, click the item with the name "tasks", then scroll down on the headers and copy the request's bearer authorization)
     - DEEPAI_KEY (key generated when you sign up in deepai, accessed at https://deepai.org/dashboard/profile)
-    - GOOGLE_KEY (key from google cloud for accessing the youtube api, generated at https://console.cloud.google.com/apis/credentials?project=<project-name>)
+    - GOOGLE_KEY (key from google cloud for accessing the youtube api, generated at https://console.cloud.google.com/apis/credentials?project=<project-id>)
     - MAKESWEET_KEY (key from makesweet for generating heartlocket gifs, dm @mkswt on twitter asking for one)
     - RANDOMSTUFF_KEY (key used for a cleverbot alternative when it breaks, generated at https://api-info.pgamerx.com/manage-key)
     - RAPIDAPI_KEY (key from rapid api when you sign up, accessed at https://rapidapi.com/developer/security/<app-name>)

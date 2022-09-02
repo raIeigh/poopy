@@ -215,7 +215,7 @@ module.exports = {
             await msg.reply('Couldn\'t send help to you. Do you have me blocked?').catch(() => { })
             return
         })
-        else msg.reply('Couldn\'t send help to you. Do you have me blocked?').catch(() => { })
+        else await msg.reply('Couldn\'t send help to you. Do you have me blocked?').catch(() => { })
     },
     help: {
         name: 'help/commands/cmds [command]',
