@@ -18,7 +18,7 @@ module.exports = {
             "required": false,
             "specifarg": true,
             "orig": "[-show]"
-        }],],
+        }],
         "description": "Show a list of all your tokens."
     },
     {
