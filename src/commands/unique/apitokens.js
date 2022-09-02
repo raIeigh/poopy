@@ -172,8 +172,8 @@ module.exports = {
                     }]
                 }).catch(() => { })
             },
-            
-            add: async (msg, args) {
+
+            add: async (msg, args) => {
                 var token = args[1]
                 var value = args[2]
 
@@ -211,7 +211,7 @@ module.exports = {
                 await msg.reply(`✅ \`${token}\` added.`).catch(() => { })
             },
 
-            reset: async (msg, args) {
+            reset: async (msg, args) => {
                 var token = args[1]
 
                 if (!token) {
