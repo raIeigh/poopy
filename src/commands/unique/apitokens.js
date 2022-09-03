@@ -260,7 +260,7 @@ module.exports = {
             return
         }
 
-        await options[args[1].toLowerCase()](msg, args)
+        await options[args[1].toLowerCase()](msg, args.slice(1))
     },
     help: {
         name: 'apitokens/managetokens <option>',
