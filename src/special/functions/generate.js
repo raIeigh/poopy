@@ -3,6 +3,7 @@ module.exports = {
   desc: 'Generates subsequent text from the phrase inside the function.',
   func: async function (matches) {
     let poopy = this
+    let { userToken } = poopy.functions
     let { axios, deepai } = poopy.modules
 
     var word = matches[1]
