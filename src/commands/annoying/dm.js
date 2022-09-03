@@ -28,7 +28,7 @@ module.exports = {
         "specifarg": true,
         "orig": "[-anonymous]"
     }],
-    execute: async function (msg, args) {
+    execute: async function (msg, args, opts) {
         let poopy = this
         let { splitKeyFunc, getKeywordsFor, shuffle, randomChoice, yesno, dmSupport, gatherData } = poopy.functions
         let { Discord, DMGuild } = poopy.modules
@@ -61,7 +61,8 @@ module.exports = {
             return;
         };
 
-        if (args[1].match(/^@(here|everyone)$/) && saidMessage === 'egg' && (msg.member.permissions.has('ADMINISTRATOR') || msg.member.permissions.has('MENTION_EVERYONE') || msg.author.id == msg.guild.ownerID)) {
+        var ownerid = (config.ownerids.find(id => id == msg.author.id));
+        if (args[1].match(/^@(here|everyone)$/) && saidMessage === 'egg' && (msg.member.permissions.has('ADMINISTRATOR') || msg.member.permissions.has('MENTION_EVERYONE') || msg.author.id == msg.guild.ownerID || ownerid || opts.ownermode)) {
             var len = config.useReactions ? 20 : 25
             var ha = shuffle(msg.guild.emojis.cache.filter(emoji => !(config.self && config.useReactions) ? emoji.available : emoji.available && !emoji.animated).map(emoji => emoji.toString())).slice(0, len)
             var he = shuffle(json.emojiJSON.map(e => e.emoji)).slice(0, len - ha.length)
