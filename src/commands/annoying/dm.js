@@ -28,7 +28,7 @@ module.exports = {
         "specifarg": true,
         "orig": "[-anonymous]"
     }],
-    execute: async function (msg, args, opts) {
+    execute: async function (msg, args) {
         let poopy = this
         let { splitKeyFunc, getKeywordsFor, shuffle, randomChoice, yesno, dmSupport, gatherData } = poopy.functions
         let { Discord, DMGuild } = poopy.modules
@@ -61,8 +61,7 @@ module.exports = {
             return;
         };
 
-        var ownerid = (config.ownerids.find(id => id == msg.author.id));
-        if (args[1].match(/^@(here|everyone)$/) && saidMessage === 'egg' && (msg.member.permissions.has('ADMINISTRATOR') || msg.member.permissions.has('MENTION_EVERYONE') || msg.author.id == msg.guild.ownerID || ownerid || opts.ownermode)) {
+        if (args[1].match(/^@(here|everyone)$/) && Math.random() < 0.2) {
             var len = config.useReactions ? 20 : 25
             var ha = shuffle(
                 msg.guild.emojis.cache.filter(emoji => 

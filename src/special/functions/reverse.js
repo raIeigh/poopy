@@ -10,7 +10,7 @@ module.exports = {
     var array = tempdata[msg.author.id]['arrays'][word]
     if (!array) return ''
 
-    array = array.reverse()
+    tempdata[msg.author.id]['arrays'][word] = array.reverse()
 
     return ''
   }
