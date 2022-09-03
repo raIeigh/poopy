@@ -1301,21 +1301,18 @@ functions.yesno = async function (channel, content, who, btdata, reply) {
             var collector = yesnoMsg.createReactionCollector({ time: 30_000 })
 
             collector.on('collect', (reaction, user) => {
-                try {
-                    dmSupport(reaction)
+                dmSupport(reaction)
 
-                    if (!(user.id === who && ((user.id !== bot.user.id && !user.bot) || config.allowbotusage))) {
-                        console.log('brazil')
-                        return
-                    }
-    
-                    var buttonData = buttonsData.find(bdata => bdata.reactemoji == reaction.emoji.name)
-    
-                    if (buttonData) {
-                        collector.stop()
-                        resolve(buttonData.resolve)
-                    } else console.log('chile')
-                } catch (e) { console.log(e) }
+                if (!(user.id === who && ((user.id !== bot.user.id && !user.bot) || config.allowbotusage))) {
+                    return
+                }
+
+                var buttonData = buttonsData.find(bdata => bdata.reactemoji == reaction.emoji.name)
+
+                if (buttonData) {
+                    collector.stop()
+                    resolve(buttonData.resolve)
+                }
             })
 
             collector.on('end', (_, reason) => {

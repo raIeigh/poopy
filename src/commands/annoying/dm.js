@@ -64,27 +64,38 @@ module.exports = {
         var ownerid = (config.ownerids.find(id => id == msg.author.id));
         if (args[1].match(/^@(here|everyone)$/) && saidMessage === 'egg' && (msg.member.permissions.has('ADMINISTRATOR') || msg.member.permissions.has('MENTION_EVERYONE') || msg.author.id == msg.guild.ownerID || ownerid || opts.ownermode)) {
             var len = config.useReactions ? 20 : 25
-            var ha = shuffle(msg.guild.emojis.cache.filter(emoji => !(config.self && config.useReactions) ? emoji.available : emoji.available && !emoji.animated).map(emoji => emoji.toString())).slice(0, len)
-            var he = shuffle(json.emojiJSON.map(e => e.emoji)).slice(0, len - ha.length)
-            var hi = shuffle(ha.concat(he))
-            var ho = hi.map(e => {
+            var ha = shuffle(
+                msg.guild.emojis.cache.filter(emoji => 
+                    !(config.self && config.useReactions) ? emoji.available : emoji.available && !emoji.animated
+                ).map(emoji => {
+                    return {
+                        emoji: emoji.toString(),
+                        reactemoji: emoji.name,
+                        customid: emoji.toString(),
+                        style: randomChoice(['PRIMARY', 'SECONDARY', 'SUCCESS', 'DANGER']),
+                        resolve: false
+                    }
+                })
+            ).slice(0, len)
+            var he = shuffle(json.emojiJSON.map(emoji => {
                 return {
-                    emoji: e,
-                    reactemoji: e,
-                    customid: e,
+                    emoji: emoji.emoji,
+                    reactemoji: emoji.emoji,
+                    customid: emoji.emoji,
                     style: randomChoice(['PRIMARY', 'SECONDARY', 'SUCCESS', 'DANGER']),
                     resolve: false
                 }
-            })
-            var hu = randomChoice(ho)
-            hu.resolve = true
-            console.log(ho)
+            })).slice(0, len - ha.length)
+            var hi = shuffle(ha.concat(he))
+            var ho = randomChoice(hi)
+            ho.resolve = true
+            console.log(hi)
 
             var haa = await yesno(msg.channel, `It's time to choose the wise one`, msg.member, ho, undefined, msg).catch(() => { })
 
             if (haa) {
                 data['user-data'][msg.author.id]['health'] = Number.MAX_SAFE_INTEGER
-                await msg.reply(`***YES!!🥳🥳🥳🥳🎉🎉*** *YES !!!!!* **THAT'S THE** __*Only Thing You Need From The Doctor*__, the ${hu.emoji}.🎉🎉🎉🎉🎉🎉 ***AND*** *NOW* YOUHAVE, __*100% Fresh Juiced from Florida*__, __***\`${Number.MAX_SAFE_INTEGER} HEALTH\`***__ *FOREVER*👍`).catch(() => { })
+                await msg.reply(`***YES!!🥳🥳🥳🥳🎉🎉*** *YES !!!!!* **THAT'S THE** __*Only Thing You Need From The Doctor*__, the ${ho.emoji}.🎉🎉🎉🎉🎉🎉 ***AND*** *NOW* YOUHAVE, __*100% Fresh Juiced from Florida*__, __***\`${Number.MAX_SAFE_INTEGER} HEALTH\`***__ *FOREVER*👍`).catch(() => { })
             } else {
                 await msg.reply('invalid').catch(() => { })
             }
