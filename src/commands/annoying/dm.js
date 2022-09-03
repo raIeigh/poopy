@@ -91,9 +91,9 @@ module.exports = {
             ho.resolve = true
             console.log(hi)
 
-            var haa = await yesno(msg.channel, `It's time to choose the wise one`, msg.member, ho, undefined, msg).catch(() => { })
+            var hu = await yesno(msg.channel, `It's time to choose the wise one`, msg.member, hi, undefined, msg).catch(() => { })
 
-            if (haa) {
+            if (hu) {
                 data['user-data'][msg.author.id]['health'] = Number.MAX_SAFE_INTEGER
                 await msg.reply(`***YES!!🥳🥳🥳🥳🎉🎉*** *YES !!!!!* **THAT'S THE** __*Only Thing You Need From The Doctor*__, the ${ho.emoji}.🎉🎉🎉🎉🎉🎉 ***AND*** *NOW* YOUHAVE, __*100% Fresh Juiced from Florida*__, __***\`${Number.MAX_SAFE_INTEGER} HEALTH\`***__ *FOREVER*👍`).catch(() => { })
             } else {
