@@ -70,8 +70,8 @@ module.exports = {
                 ).map(emoji => {
                     return {
                         emoji: emoji.toString(),
-                        reactemoji: emoji.name,
-                        customid: emoji.toString(),
+                        reactemoji: emoji.toString(),
+                        customid: emoji.name,
                         style: randomChoice(['PRIMARY', 'SECONDARY', 'SUCCESS', 'DANGER']),
                         resolve: false
                     }

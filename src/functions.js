@@ -1307,7 +1307,7 @@ functions.yesno = async function (channel, content, who, btdata, reply) {
                     return
                 }
 
-                var buttonData = buttonsData.find(bdata => bdata.reactemoji == reaction.emoji.name)
+                var buttonData = buttonsData.find(bdata => bdata.customid == reaction.emoji.name)
 
                 if (buttonData) {
                     collector.stop()
