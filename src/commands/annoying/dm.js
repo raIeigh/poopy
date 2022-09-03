@@ -67,26 +67,18 @@ module.exports = {
             var ha = shuffle(
                 msg.guild.emojis.cache.filter(emoji => 
                     !(config.self && config.useReactions) ? emoji.available : emoji.available && !emoji.animated
-                ).map(emoji => {
-                    return {
-                        emoji: emoji.toString(),
-                        reactemoji: emoji.toString(),
-                        customid: emoji.name,
-                        style: randomChoice(['PRIMARY', 'SECONDARY', 'SUCCESS', 'DANGER']),
-                        resolve: false
-                    }
-                })
+                ).map(e => e.toString())
             ).slice(0, len)
-            var he = shuffle(json.emojiJSON.map(emoji => {
+            var he = shuffle(json.emojiJSON.map(e => e.emoji)).slice(0, len - ha.length)
+            var hi = shuffle(ha.concat(he)).map(emoji => {
                 return {
-                    emoji: emoji.emoji,
-                    reactemoji: emoji.emoji,
-                    customid: emoji.emoji,
+                    emoji: emoji,
+                    reactemoji: emoji,
+                    customid: emoji,
                     style: randomChoice(['PRIMARY', 'SECONDARY', 'SUCCESS', 'DANGER']),
                     resolve: false
                 }
-            })).slice(0, len - ha.length)
-            var hi = shuffle(ha.concat(he))
+            })
             var ho = randomChoice(hi)
             ho.resolve = true
             console.log(hi)
