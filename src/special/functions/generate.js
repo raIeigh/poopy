@@ -1,7 +1,7 @@
 module.exports = {
   helpf: '(phrase)',
   desc: 'Generates subsequent text from the phrase inside the function.',
-  func: async function (matches) {
+  func: async function (matches, msg) {
     let poopy = this
     let { userToken } = poopy.functions
     let { axios, deepai } = poopy.modules
