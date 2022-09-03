@@ -15,7 +15,7 @@ module.exports = {
     var array = tempdata[msg.author.id]['arrays'][name]
     if (!array) return ''
 
-    array = array.slice(start, end)
+    tempdata[msg.author.id]['arrays'][name] = array.slice(start, end)
 
     return ''
   }
