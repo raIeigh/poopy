@@ -1301,18 +1301,21 @@ functions.yesno = async function (channel, content, who, btdata, reply) {
             var collector = yesnoMsg.createReactionCollector({ time: 30_000 })
 
             collector.on('collect', (reaction, user) => {
-                dmSupport(reaction)
+                try {
+                    dmSupport(reaction)
 
-                if (!(user.id === who && ((user.id !== bot.user.id && !user.bot) || config.allowbotusage))) {
-                    return
-                }
-
-                var buttonData = buttonsData.find(bdata => bdata.reactemoji == reaction.emoji.name)
-
-                if (buttonData) {
-                    collector.stop()
-                    resolve(buttonData.resolve)
-                }
+                    if (!(user.id === who && ((user.id !== bot.user.id && !user.bot) || config.allowbotusage))) {
+                        console.log('brazil')
+                        return
+                    }
+    
+                    var buttonData = buttonsData.find(bdata => bdata.reactemoji == reaction.emoji.name)
+    
+                    if (buttonData) {
+                        collector.stop()
+                        resolve(buttonData.resolve)
+                    } else console.log('chile')
+                } catch (e) { console.log(e) }
             })
 
             collector.on('end', (_, reason) => {
@@ -1330,6 +1333,7 @@ functions.yesno = async function (channel, content, who, btdata, reply) {
             for (var i in buttonsData) {
                 var bdata = buttonsData[i]
                 await yesnoMsg.react(bdata.reactemoji).catch(() => { })
+                collector.resetTimer()
             }
         } else {
             var collector = yesnoMsg.createMessageComponentCollector({ time: 30_000 })
