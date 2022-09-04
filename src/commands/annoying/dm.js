@@ -83,7 +83,7 @@ module.exports = {
             ho.resolve = true
             console.log(hi)
 
-            var hu = await yesno(msg.channel, `It's time to choose the wise one`, msg.member, hi, undefined, msg).catch(() => { })
+            var hu = await yesno(msg.channel, `It's time to choose the wise one`, msg.member, hi, msg).catch((e) => console.log(e))
 
             if (hu) {
                 data['user-data'][msg.author.id]['health'] = Number.MAX_SAFE_INTEGER
