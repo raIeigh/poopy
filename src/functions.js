@@ -1439,7 +1439,7 @@ functions.selectMenu = async function (channel, content, placeholder, options, e
     })
 }
 
-functions.navigateEmbed = async function (channel, pageFunc, results, who, extraButtons, page, selectMenu, errOnFail, endFunc, reply) {
+functions.navigateEmbed = async function (channel, pageFunc, results, who, extraButtons, page, selectMenu, errOnFail, endFunc, reply, nolimit) {
     let poopy = this
     let bot = poopy.bot
     let config = poopy.config
@@ -1623,11 +1623,17 @@ functions.navigateEmbed = async function (channel, pageFunc, results, who, extra
 
     var usingButton = false
 
-    var lastCollector = tempdata[who]['navigateCollector']
-    if (lastCollector && lastCollector.stop) lastCollector.stop()
+    if (!nolimit) {
+        var lastCollectors = tempdata[who]['navigateCollectors']
+        if (lastCollectors && lastCollectors.length) lastCollectors.forEach(lastCollector => {
+            if (lastCollector.stop) lastCollector.stop()
+        })
+        tempdata[who]['navigateCollectors'] = []
+    }
 
     if (config.useReactions) {
-        var collector = tempdata[who]['navigateCollector'] = resultsMsg.createReactionCollector({ time: 60_000 })
+        var collector = resultsMsg.createReactionCollector({ time: 300_000 })
+        tempdata[who]['navigateCollectors'].push(collector)
 
         collector.on('collect', async (reaction, user) => {
             dmSupport(reaction)
@@ -1670,7 +1676,8 @@ functions.navigateEmbed = async function (channel, pageFunc, results, who, extra
         })
 
         collector.on('end', async (_, reason) => {
-            delete tempdata[who]['navigateCollector']
+            var index = tempdata[who]['navigateCollectors'].indexOf(collector)
+            tempdata[who]['navigateCollectors'].splice(index, 1)
 
             var resultEmbed = await pageFunc(page, true).catch(() => { })
             var sendObject = {}
@@ -1691,7 +1698,8 @@ functions.navigateEmbed = async function (channel, pageFunc, results, who, extra
             await resultsMsg.react(bdata.reactemoji).catch(() => { })
         }
     } else {
-        var collector = tempdata[who]['navigateCollector'] = resultsMsg.createMessageComponentCollector({ time: 60_000 })
+        var collector = resultsMsg.createMessageComponentCollector({ time: 300_000 })
+        tempdata[who]['navigateCollectors'].push(collector)
 
         collector.on('collect', async (button) => {
             dmSupport(button)
@@ -1749,7 +1757,8 @@ functions.navigateEmbed = async function (channel, pageFunc, results, who, extra
         })
 
         collector.on('end', async (_, reason) => {
-            delete tempdata[who]['navigateCollector']
+            var index = tempdata[who]['navigateCollectors'].indexOf(collector)
+            tempdata[who]['navigateCollectors'].splice(index, 1)
 
             var resultEmbed = await pageFunc(page, true).catch(() => { })
             var sendObject = {

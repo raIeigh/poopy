@@ -55,7 +55,7 @@ module.exports = {
                     },
                     "fields": vars.keyfields[page - 1]
                 }
-            }, vars.keyfields.length, msg.author.id, undefined, undefined, undefined, true).catch(async () => {
+            }, vars.keyfields.length, msg.author.id, undefined, undefined, undefined, true, undefined, undefined, true).catch(async () => {
                 await msg.reply('Couldn\'t send keywords to you. Do you have me blocked?').catch(() => { })
                 return
             })
@@ -72,7 +72,7 @@ module.exports = {
                     },
                     "fields": vars.funcfields[page - 1]
                 }
-            }, vars.funcfields.length, msg.author.id, undefined, undefined, undefined, true).catch(async () => {
+            }, vars.funcfields.length, msg.author.id, undefined, undefined, undefined, true, undefined, undefined, true).catch(async () => {
                 await msg.reply('Couldn\'t send functions to you. Do you have me blocked?').catch(() => { })
                 return
             })
