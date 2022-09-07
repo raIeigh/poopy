@@ -14,7 +14,7 @@ module.exports = {
 
     var sum = 0
     for (var id in usermembers) {
-      sum += usermembers[id].messages ?? 0
+      sum += Math.min(usermembers[id].messages) ?? 0
     }
 
     var rnd = Math.random() * sum
