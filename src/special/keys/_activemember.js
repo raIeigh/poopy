@@ -14,14 +14,14 @@ module.exports = {
 
     var sum = 0
     for (var id in usermembers) {
-      sum += Math.min(usermembers[id].messages) || 0
+      sum += Math.min(usermembers[id].messages, 1000) || 0
     }
 
     var rnd = Math.random() * sum
     var counter = 0
 
     for (var id in usermembers) {
-      counter += Math.min(usermembers[id].messages, 100) || 0
+      counter += Math.min(usermembers[id].messages, 1000) || 0
       if (counter > rnd) {
         return usermembers[id].username.replace(/\@/g, '@‌')
       }

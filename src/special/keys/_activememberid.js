@@ -9,14 +9,14 @@ module.exports = {
 
     var sum = 0
     for (var id in datamembers) {
-      sum += Math.min(datamembers[id].messages, 100) || 0
+      sum += Math.min(datamembers[id].messages, 1000) || 0
     }
 
     var rnd = Math.random() * sum
     var counter = 0
 
     for (var id in datamembers) {
-      counter += Math.min(datamembers[id].messages, 100) || 0
+      counter += Math.min(datamembers[id].messages, 1000) || 0
       if (counter > rnd) {
         return id
       }
