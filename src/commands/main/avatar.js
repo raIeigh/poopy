@@ -19,19 +19,26 @@ module.exports = {
                 }
             })
         }
+    },
+    {
+        "name": "global",
+        "required": false,
+        "specifarg": true,
+        "orig": "[-global]"
     }],
     execute: async function (msg, args) {
         let poopy = this
         let bot = poopy.bot
+        let config = poopy.config
         let { Discord } = poopy.modules
 
         await msg.channel.sendTyping().catch(() => {})
 
-        args[1] = args[1] ?? ''
+        args[1] = args[1] ?? ' '
 
-        var member = (msg.mentions.members.first() && msg.mentions.members.first().user) ??
-        await bot.users.fetch((args[1].match(/\d+/) ?? [args[1]])[0]).catch(() => {}) ??
-        msg.author
+        var member = msg.mentions.members.first() ??
+            await msg.guild.members.fetch((args[1].match(/\d+/) ?? [args[1]])[0]).catch(() => {}) ??
+            msg.member
 
         if (!member) {
             await msg.reply({
@@ -43,20 +50,37 @@ module.exports = {
             return
         }
 
+        var username = member.user.username
+        if (args.includes('-global')) member = member.user
         var avatar = new Discord.MessageAttachment(member.displayAvatarURL({
             dynamic: true, size: 1024, format: 'png'
-        }));
-        await msg.reply({
-            content: member.username + '\'s avatar is:',
+        }), 'avatar.png');
+
+        var avObject = {
             allowedMentions: {
                 parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
             },
             files: [avatar]
-        }).catch(() => {})
+        }
+
+        if (config.textEmbeds) avObject.content = username + '\'s avatar is:'
+        else avObject.embed = {
+            title: username + '\'s Avatar',
+            color: 0x472604,
+            footer: {
+                icon_url: bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
+                text: bot.user.username
+            },
+            image: {
+                url: "attachment://avatar.png"
+            }
+        }
+
+        await msg.reply(avObject).catch(() => {})
     },
     help: {
-        name: 'avatar/av/pfp [user]',
-        value: "Replies with the user's avatar."
+        name: 'avatar/av/pfp [user] [-global]',
+        value: "Replies with the user's server/global avatar."
     },
     cooldown: 2500,
     type: 'Main'
