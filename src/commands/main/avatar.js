@@ -64,7 +64,7 @@ module.exports = {
         }
 
         if (config.textEmbeds) avObject.content = username + '\'s avatar is:'
-        else avObject.embed = {
+        else avObject.embeds = [{
             title: username + '\'s Avatar',
             color: 0x472604,
             footer: {
@@ -74,7 +74,7 @@ module.exports = {
             image: {
                 url: "attachment://avatar.png"
             }
-        }
+        }]
 
         await msg.reply(avObject).catch(() => {})
     },
