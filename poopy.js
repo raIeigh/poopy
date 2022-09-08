@@ -590,6 +590,11 @@ class Poopy {
                 return
             }
 
+            if (data['guild-data'][msg.guild.id]['chaos'] && globaldata['shit'].find(id => id === msg.author.id)) {
+                await msg.reply('shit').catch(() => { })
+                return
+            }
+
             var cmds = data['guild-data'][msg.guild.id]['chaincommands'] == true ? msg.content.split(/ ?-\|- ?/) : [msg.content]
             var allcontents = []
             var webhooked = false
@@ -845,7 +850,7 @@ class Poopy {
                                         return
                                     }
 
-                                    tempdata[msg.author.id][msg.id]['execCount']++
+                                    if (!data['guild-data'][msg.guild.id]['chaos']) tempdata[msg.author.id][msg.id]['execCount']++
                                 }
 
                                 if (findCmd.cooldown) {
@@ -895,7 +900,7 @@ class Poopy {
                                     return
                                 }
 
-                                tempdata[msg.author.id][msg.id]['execCount']++
+                                if (!data['guild-data'][msg.guild.id]['chaos']) tempdata[msg.author.id][msg.id]['execCount']++
                             }
 
                             if (tempdata[msg.guild.id][msg.channel.id]['shut']) break
@@ -930,7 +935,7 @@ class Poopy {
                                                 return
                                             }
 
-                                            tempdata[msg.author.id][msg.id]['execCount']++
+                                            if (!data['guild-data'][msg.guild.id]['chaos']) tempdata[msg.author.id][msg.id]['execCount']++
                                         }
 
                                         if (findCmd.cooldown) {
@@ -981,7 +986,7 @@ class Poopy {
                                             return
                                         }
 
-                                        tempdata[msg.author.id][msg.id]['execCount']++
+                                        if (!data['guild-data'][msg.guild.id]['chaos']) tempdata[msg.author.id][msg.id]['execCount']++
                                     }
 
                                     if (tempdata[msg.guild.id][msg.channel.id]['shut']) return

@@ -2754,7 +2754,7 @@ functions.getKeywordsFor = async function (string, msg, isBot, { extrakeys = {},
                     }
     
                     string = typeof (change) === 'object' && change[1] === true ? String(change[0]) : string.replace(keydata.match, String(change).replace(/\$&/g, '$\\&'))
-                    tempdata[msg.author.id][msg.id]['keyattempts'] += key.attemptvalue ?? 1
+                    tempdata[msg.author.id][msg.id]['keyattempts'] += !data['guild-data'][msg.guild.id]['chaos'] ? (key.attemptvalue ?? 1) : 0
                     break
     
                 case 'func':
@@ -2785,7 +2785,7 @@ functions.getKeywordsFor = async function (string, msg, isBot, { extrakeys = {},
                     }
     
                     string = typeof (change) === 'object' && change[1] === true ? String(change[0]) : string.replace(`${funcName}(${match})`, String(change).replace(/\$&/g, '$\\&'))
-                    tempdata[msg.author.id][msg.id]['keyattempts'] += func.attemptvalue ?? 1
+                    tempdata[msg.author.id][msg.id]['keyattempts'] += !data['guild-data'][msg.guild.id]['chaos'] ? (func.attemptvalue ?? 1) : 0
                     break
             }
     

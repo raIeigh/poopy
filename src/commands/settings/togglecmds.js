@@ -96,7 +96,7 @@ module.exports = {
 
                             await msg.reply(`Enabled \`${findCommand.name.join('/')}\`.`)
                         } else {
-                            if (findCommand.name.find(n => n === args[0].toLowerCase())) {
+                            if (findCommand.name.find(n => n === args[0].toLowerCase()) && !data['guild-data'][msg.guild.id]['chaos']) {
                                 await msg.reply(`You can't disable the disabling command!`)
                                 return
                             }

@@ -40,6 +40,8 @@ module.exports = {
             } else {
                 var content = msg.content
 
+                if (command && !command.raw) args = await getKeywordsFor(args, msg, isBot, opts).catch(() => { }) ?? args
+
                 msg.content = `${data['guild-data'][msg.guild.id]['prefix']}${commandname} ${args}`
 
                 await getUrls(msg, {
@@ -101,5 +103,6 @@ module.exports = {
 
         return error
     },
-    attemptvalue: 10
+    attemptvalue: 10,
+    raw: true
 }

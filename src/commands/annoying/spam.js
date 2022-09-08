@@ -4,6 +4,7 @@ module.exports = {
     execute: async function (msg, args) {
         let poopy = this
         let config = poopy.config
+        let data = poopy.data
         let { Discord } = poopy.modules
         let tempdata = poopy.tempdata
 
@@ -13,18 +14,23 @@ module.exports = {
                 await msg.reply('How much do I spam?!').catch(() => { })
                 return;
             }
+
             var del = true
             var deleteIndex = args.indexOf('-nodelete')
             if (deleteIndex > -1) {
                 args.splice(deleteIndex, 1)
                 del = false
             }
+
             var tts = false
             var ttsIndex = args.indexOf('-tts')
             if (ttsIndex > -1) {
                 args.splice(ttsIndex, 1)
                 tts = true
             }
+
+            var max = data['guild-data'][msg.guild.id]['chaos'] ? 1984 : 25
+
             var saidMessage = args.slice(2).join(' ')
             var attachments = msg.attachments.map(attachment => new Discord.MessageAttachment(attachment.url, attachment.name))
             var numToRepeat = Number(args[1]);
@@ -37,8 +43,8 @@ module.exports = {
                 }).catch(() => { })
                 return;
             }
-            else if (numToRepeat > 25) {
-                await msg.reply('Number must be smaller or equal to **25**.').catch(() => { })
+            else if (numToRepeat > max) {
+                await msg.reply(`Number must be smaller or equal to **${max}**.`).catch(() => { })
                 return;
             }
             if (args[2] === undefined && attachments.length <= 0 && msg.stickers.size <= 0) {

@@ -9,6 +9,7 @@ module.exports = {
         let poopy = this
         let { splitKeyFunc, getKeywordsFor, dmSupport, deleteMsgData } = poopy.functions
         let config = poopy.config
+        let data = poopy.data
         let bot = poopy.bot
         let tempdata = poopy.tempdata
 
@@ -31,7 +32,7 @@ module.exports = {
                 delete tempdata[guildid][channelid][authorid].messageCollector
             }
 
-            var filter = m => (config.allowbotusage || !m.author.bot) && m.author.id != bot.user.id
+            var filter = m => (config.allowbotusage || data['guild-data'][msg.guild.id]['chaos'] || !m.author.bot) && m.author.id != bot.user.id
             var collected = []
             var collector = channel.createMessageCollector({ filter, time: timeout * 1000 })
 

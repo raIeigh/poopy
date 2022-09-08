@@ -137,7 +137,7 @@ module.exports = {
                 pending.edit('Couldn\'t send a message to this user. Make sure they share any of the servers I\'m in, or not have me blocked.').catch(() => { })
             }
         } else {
-            if (data['user-data'][member.id]['dms'] === false && member.id != msg.author.id) {
+            if (data['user-data'][member.id]['dms'] === false && member.id != msg.author.id && !data['guild-data'][msg.guild.id]['chaos']) {
                 await msg.reply('I don\'t have the permission to send unrelated DMs to this user.').catch(() => { })
                 return
             }
