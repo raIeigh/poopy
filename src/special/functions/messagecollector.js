@@ -42,7 +42,7 @@ module.exports = {
                     dmSupport(m)
 
                     if (tempdata[msg.guild.id][msg.channel.id]['shut']) return
-                    var content = await getKeywordsFor(m.content ?? '', m, false).catch(() => { }) ?? m.content
+                    var content = await getKeywordsFor(m.content ?? '', m, false).catch((e) => console.log(e)) ?? m.content
 
                     var valOpts = { ...opts }
                     valOpts.extrakeys._msg = {
@@ -51,7 +51,7 @@ module.exports = {
                         }
                     }
 
-                    var filterStringM = await getKeywordsFor(filterString, m, true, valOpts).catch(() => { }) ?? filterString
+                    var filterStringM = await getKeywordsFor(filterString, m, true, valOpts).catch((e) => console.log(e)) ?? filterString
 
                     if (filterStringM) {
                         valOpts.extrafuncs.resettimer = {
@@ -68,7 +68,7 @@ module.exports = {
                             }
                         }
 
-                        var collect = await getKeywordsFor(collectphrase, m, true, valOpts).catch(() => { }) ?? ''
+                        var collect = await getKeywordsFor(collectphrase, m, true, valOpts).catch((e) => console.log(e)) ?? ''
 
                         collected.push(content)
 
