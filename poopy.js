@@ -1502,6 +1502,13 @@ class Poopy {
         if (!globaldata['shit']) {
             globaldata['shit'] = []
         }
+        globaldata['shit'].forEach(id => {
+            if (config.ownerids.includes(id)) {
+                globaldata['shit'].splice(
+                    globaldata['shit'].indexOf(id), 1
+                )
+            }
+        })
 
         if (!globaldata['psfiles']) {
             globaldata['psfiles'] = arrays.psFiles
