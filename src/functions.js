@@ -2658,156 +2658,163 @@ functions.getKeywordsFor = async function (string, msg, isBot, { extrakeys = {},
         tempdata[msg.author.id][msg.id] = {}
     }
 
-    var startTime = Date.now()
-    var extradkeys = declaredonly ? { ...tempdata[msg.author.id]['keydeclared'] } : { ...extrakeys, ...tempdata[msg.author.id]['keydeclared'] }
-    var extradfuncs = declaredonly ? { ...tempdata[msg.author.id]['funcdeclared'] } : { ...extrafuncs, ...tempdata[msg.author.id]['funcdeclared'] }
-    var started = false
-
-    if (tempdata[msg.author.id]['ratelimited'] || globaldata['shit'].find(id => id === msg.author.id)) {
-        return string
+    if (!tempdata[msg.author.id][msg.id]['keyexecuting']) {
+        tempdata[msg.author.id][msg.id]['keyexecuting'] = 0
     }
+    tempdata[msg.author.id][msg.id]['keyexecuting']++
 
-    while (getKeyFunc(string, { extrakeys: extradkeys, extrafuncs: extradfuncs, declaredonly: declaredonly }) !== false && tempdata[msg.author.id][msg.id]?.['return'] == undefined) {
-        if (!started || !tempdata[msg.author.id][msg.id]) {
-            if (!tempdata[msg.author.id][msg.id]) {
-                tempdata[msg.author.id][msg.id] = {}
-            }
-
-            if (!tempdata[msg.author.id][msg.id]['keyattempts']) {
-                tempdata[msg.author.id][msg.id]['keyattempts'] = 0
-            }
-
-            if (!tempdata[msg.author.id][msg.id]['keyexecuting']) {
-                tempdata[msg.author.id][msg.id]['keyexecuting'] = 0
-            }
-
-            if (!tempdata[msg.author.id][msg.id]['keywordsExecuted']) {
-                tempdata[msg.author.id][msg.id]['keywordsExecuted'] = []
-            }
-
-            if (!tempdata[msg.author.id]['arrays']) {
-                tempdata[msg.author.id]['arrays'] = {}
-            }
-
-            if (!tempdata[msg.author.id]['declared']) {
-                tempdata[msg.author.id]['declared'] = {}
-            }
-
-            if (!tempdata[msg.author.id]['keydeclared']) {
-                tempdata[msg.author.id]['keydeclared'] = {}
-            }
-
-            if (!tempdata[msg.author.id]['funcdeclared']) {
-                tempdata[msg.author.id]['funcdeclared'] = {}
-            }
-
-            if (resetattempts) tempdata[msg.author.id][msg.id]['keyexecuting']++
-            started = true
-        }
-
+    try {
+        var startTime = Date.now()
+        var extradkeys = declaredonly ? { ...tempdata[msg.author.id]['keydeclared'] } : { ...extrakeys, ...tempdata[msg.author.id]['keydeclared'] }
+        var extradfuncs = declaredonly ? { ...tempdata[msg.author.id]['funcdeclared'] } : { ...extrafuncs, ...tempdata[msg.author.id]['funcdeclared'] }
+        var started = false
+    
         if (tempdata[msg.author.id]['ratelimited'] || globaldata['shit'].find(id => id === msg.author.id)) {
             return string
         }
-
-        if (tempdata[msg.author.id][msg.id]['keyattempts'] >= config.keyLimit) {
-            infoPost(`Keyword attempts value exceeded`)
-            return 'Keyword attempts value exceeded.'
-        }
-
-        var keydata = getKeyFunc(string, {
-            extrakeys: extradkeys,
-            extrafuncs: extradfuncs,
-            declaredonly: declaredonly
-        })
-
-        var opts = {
-            extrakeys: extradkeys,
-            extrafuncs: extradfuncs,
-            ownermode: ownermode
-        }
-
-        switch (keydata.type) {
-            case 'key':
-                var keyName = keydata.match
-                var key = special.keys[keydata.match] || extradkeys[keydata.match]
-
-                if ((key.limit != undefined && equalValues(tempdata[msg.author.id][msg.id]['keywordsExecuted'], keyName) >= key.limit) ||
-                    (key.cmdconnected && data['guild-data'][msg.guild.id]?.['disabled'].find(cmd => cmd.find(n => n === key.cmdconnected)))) {
-                    string = string.replace(keydata.match, '')
-                    break
+    
+        while (getKeyFunc(string, { extrakeys: extradkeys, extrafuncs: extradfuncs, declaredonly: declaredonly }) !== false && tempdata[msg.author.id][msg.id]?.['return'] == undefined) {
+            if (!started || !tempdata[msg.author.id][msg.id]) {
+                if (!tempdata[msg.author.id][msg.id]) {
+                    tempdata[msg.author.id][msg.id] = {}
                 }
-
-                tempdata[msg.author.id][msg.id]['keywordsExecuted'].push(keyName)
-
-                var change
-
-                try {
-                    change = await key.func.call(poopy, msg, isBot, string, opts)
-                } catch (e) {
-                    console.log(e)
-                    change = ''
+    
+                if (!tempdata[msg.author.id][msg.id]['keyattempts']) {
+                    tempdata[msg.author.id][msg.id]['keyattempts'] = 0
                 }
-
-                string = typeof (change) === 'object' && change[1] === true ? String(change[0]) : string.replace(keydata.match, String(change).replace(/\$&/g, '$\\&'))
-                tempdata[msg.author.id][msg.id]['keyattempts'] += key.attemptvalue ?? 1
-                break
-
-            case 'func':
-                var [funcName, match] = keydata.match
-                var func = special.functions[funcName] || extradfuncs[funcName]
-                var m = match
-
-                if ((func.limit != undefined && equalValues(tempdata[msg.author.id][msg.id]['keywordsExecuted'], funcName) >= func.limit) ||
-                    (func.cmdconnected && data['guild-data'][msg.guild.id]?.['disabled'].find(cmd => cmd.find(n => n === func.cmdconnected)))) {
-                    string = string.replace(`${funcName}(${match})`, '')
-                    break
+    
+                if (!tempdata[msg.author.id][msg.id]['keyexecuting']) {
+                    tempdata[msg.author.id][msg.id]['keyexecuting'] = 0
                 }
-
-                tempdata[msg.author.id][msg.id]['keywordsExecuted'].push(funcName)
-
-                match = match.replace(/\\\)/g, ')')
-                if (!func.raw) {
-                    string = string.replace(m, match)
+    
+                if (!tempdata[msg.author.id][msg.id]['keywordsExecuted']) {
+                    tempdata[msg.author.id][msg.id]['keywordsExecuted'] = []
                 }
-
-                var change
-
-                try {
-                    change = await func.func.call(poopy, [funcName, match], msg, isBot, string, opts)
-                } catch (e) {
-                    console.log(e)
-                    change = ''
+    
+                if (!tempdata[msg.author.id]['arrays']) {
+                    tempdata[msg.author.id]['arrays'] = {}
                 }
-
-                string = typeof (change) === 'object' && change[1] === true ? String(change[0]) : string.replace(`${funcName}(${match})`, String(change).replace(/\$&/g, '$\\&'))
-                tempdata[msg.author.id][msg.id]['keyattempts'] += func.attemptvalue ?? 1
-                break
-        }
-
-        extradkeys = declaredonly ? { ...tempdata[msg.author.id]['keydeclared'] } : { ...extrakeys, ...tempdata[msg.author.id]['keydeclared'] }
-        extradfuncs = declaredonly ? { ...tempdata[msg.author.id]['funcdeclared'] } : { ...extrafuncs, ...tempdata[msg.author.id]['funcdeclared'] }
-
-        await sleep()
-    }
-
-    if (resetattempts) {
-        if (tempdata[msg.author.id][msg.id]['keywordsExecuted']) {
-            if (tempdata[msg.author.id][msg.id]['keywordsExecuted'].length) {
-                infoPost(`Took ${(Date.now() - startTime) / 1000} seconds to execute keywords/functions: ${tempdata[msg.author.id][msg.id]['keywordsExecuted'].map(k => `\`${k}\``).join(', ')}`)
+    
+                if (!tempdata[msg.author.id]['declared']) {
+                    tempdata[msg.author.id]['declared'] = {}
+                }
+    
+                if (!tempdata[msg.author.id]['keydeclared']) {
+                    tempdata[msg.author.id]['keydeclared'] = {}
+                }
+    
+                if (!tempdata[msg.author.id]['funcdeclared']) {
+                    tempdata[msg.author.id]['funcdeclared'] = {}
+                }
+    
+                started = true
             }
-            tempdata[msg.author.id][msg.id]['keywordsExecuted'] = []
+    
+            if (tempdata[msg.author.id]['ratelimited'] || globaldata['shit'].find(id => id === msg.author.id)) {
+                return string
+            }
+    
+            if (tempdata[msg.author.id][msg.id]['keyattempts'] >= config.keyLimit) {
+                infoPost(`Keyword attempts value exceeded`)
+                return 'Keyword attempts value exceeded.'
+            }
+    
+            var keydata = getKeyFunc(string, {
+                extrakeys: extradkeys,
+                extrafuncs: extradfuncs,
+                declaredonly: declaredonly
+            })
+    
+            var opts = {
+                extrakeys: extradkeys,
+                extrafuncs: extradfuncs,
+                ownermode: ownermode
+            }
+    
+            switch (keydata.type) {
+                case 'key':
+                    var keyName = keydata.match
+                    var key = special.keys[keydata.match] || extradkeys[keydata.match]
+    
+                    if ((key.limit != undefined && equalValues(tempdata[msg.author.id][msg.id]['keywordsExecuted'], keyName) >= key.limit) ||
+                        (key.cmdconnected && data['guild-data'][msg.guild.id]?.['disabled'].find(cmd => cmd.find(n => n === key.cmdconnected)))) {
+                        string = string.replace(keydata.match, '')
+                        break
+                    }
+    
+                    tempdata[msg.author.id][msg.id]['keywordsExecuted'].push(keyName)
+    
+                    var change
+    
+                    try {
+                        change = await key.func.call(poopy, msg, isBot, string, opts)
+                    } catch (e) {
+                        console.log(e)
+                        change = ''
+                    }
+    
+                    string = typeof (change) === 'object' && change[1] === true ? String(change[0]) : string.replace(keydata.match, String(change).replace(/\$&/g, '$\\&'))
+                    tempdata[msg.author.id][msg.id]['keyattempts'] += key.attemptvalue ?? 1
+                    break
+    
+                case 'func':
+                    var [funcName, match] = keydata.match
+                    var func = special.functions[funcName] || extradfuncs[funcName]
+                    var m = match
+    
+                    if ((func.limit != undefined && equalValues(tempdata[msg.author.id][msg.id]['keywordsExecuted'], funcName) >= func.limit) ||
+                        (func.cmdconnected && data['guild-data'][msg.guild.id]?.['disabled'].find(cmd => cmd.find(n => n === func.cmdconnected)))) {
+                        string = string.replace(`${funcName}(${match})`, '')
+                        break
+                    }
+    
+                    tempdata[msg.author.id][msg.id]['keywordsExecuted'].push(funcName)
+    
+                    match = match.replace(/\\\)/g, ')')
+                    if (!func.raw) {
+                        string = string.replace(m, match)
+                    }
+    
+                    var change
+    
+                    try {
+                        change = await func.func.call(poopy, [funcName, match], msg, isBot, string, opts)
+                    } catch (e) {
+                        console.log(e)
+                        change = ''
+                    }
+    
+                    string = typeof (change) === 'object' && change[1] === true ? String(change[0]) : string.replace(`${funcName}(${match})`, String(change).replace(/\$&/g, '$\\&'))
+                    tempdata[msg.author.id][msg.id]['keyattempts'] += func.attemptvalue ?? 1
+                    break
+            }
+    
+            extradkeys = declaredonly ? { ...tempdata[msg.author.id]['keydeclared'] } : { ...extrakeys, ...tempdata[msg.author.id]['keydeclared'] }
+            extradfuncs = declaredonly ? { ...tempdata[msg.author.id]['funcdeclared'] } : { ...extrafuncs, ...tempdata[msg.author.id]['funcdeclared'] }
+    
+            await sleep()
         }
-
-        if (tempdata[msg.author.id][msg.id]['keyexecuting'])
-            tempdata[msg.author.id][msg.id]['keyexecuting']--
+    
+        if (resetattempts) {
+            if (tempdata[msg.author.id][msg.id]['keywordsExecuted']) {
+                if (tempdata[msg.author.id][msg.id]['keywordsExecuted'].length) {
+                    infoPost(`Took ${(Date.now() - startTime) / 1000} seconds to execute keywords/functions: ${tempdata[msg.author.id][msg.id]['keywordsExecuted'].map(k => `\`${k}\``).join(', ')}`)
+                }
+                tempdata[msg.author.id][msg.id]['keywordsExecuted'] = []
+            }
+        }
+    
+        if (tempdata[msg.author.id][msg.id]['return'] != undefined) {
+            string = tempdata[msg.author.id][msg.id]['return']
+            delete tempdata[msg.author.id][msg.id]['return']
+        }
+    
+        return string
+    } catch (e) { console.log(e) }
+    
+    if (tempdata[msg.author.id][msg.id]['keyexecuting']) {
+        tempdata[msg.author.id][msg.id]['keyexecuting']--
     }
-
-    if (tempdata[msg.author.id][msg.id]['return'] != undefined) {
-        string = tempdata[msg.author.id][msg.id]['return']
-        delete tempdata[msg.author.id][msg.id]['return']
-    }
-
-    return string
 }
 
 functions.battle = async function (msg, subject, action, damage, chance) {
