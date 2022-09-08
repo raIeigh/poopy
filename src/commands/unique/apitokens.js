@@ -143,7 +143,7 @@ module.exports = {
                                 }
                             })
                         }]
-                    }).catch(async () => {
+                    }).then(async () => await msg.reply(`✅ Check your DMs.`).catch(() => { })).catch(async () => {
                         await msg.reply('Couldn\'t send info to you. Do you have me blocked?').catch(() => { })
                         return
                     })
@@ -154,7 +154,7 @@ module.exports = {
                 if (config.textEmbeds) await msg.reply(Object.keys(tokenList).map(token => {
                     var tokens = data['user-data'][msg.author.id]['tokens'][token] ?? []
 
-                    return `\`${token}\` -> ${tokens.length > 0 ? tokens.map(t => decrypt(t, !args.indexOf('-show'))).join(', ') : 'None.'}`
+                    return `\`${token}\` -> ${tokens.length > 0 ? tokens.map(t => decrypt(t, !args.includes('-show'))).join(', ') : 'None.'}`
                 }).join('\n').substring(0, 2000)).catch(() => { })
                 else await msg.reply({
                     embeds: [{
@@ -162,7 +162,7 @@ module.exports = {
                         "description": Object.keys(tokenList).map(token => {
                             var tokens = data['user-data'][msg.author.id]['tokens'][token] ?? []
         
-                            return `\`${token}\` -> ${tokens.length > 0 ? tokens.map(t => decrypt(t, !args.indexOf('-show'))).join(', ') : 'None.'}`
+                            return `\`${token}\` -> ${tokens.length > 0 ? tokens.map(t => decrypt(t, !args.includes('-show'))).join(', ') : 'None.'}`
                         }).join('\n'),
                         "color": 0x472604,
                         "footer": {
