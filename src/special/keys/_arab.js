@@ -2,8 +2,8 @@ module.exports = {
   desc: "Returns a random word from the arabottify command's dictionary.",
   func: function () {
     let poopy = this
-    let arrays = poopy.arrays
+    let json = poopy.json
 
-    return arrays.arabDictionary[Math.floor(Math.random() * arrays.arabDictionary.length)]
+    return json.arabJSON.words[Math.floor(Math.random() * json.arabJSON.words.length)]
   }
 }

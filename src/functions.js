@@ -4,6 +4,7 @@ let functions = {}
 
 functions.spawn = require('child_process').spawn
 functions.exec = require('child_process').exec
+functions.getEmojis = require('@jimp/plugin-print/emojis')
 functions.lingo = require('./lingo')
 functions.gibberish = require('./gibberish')
 functions.markov = require('./markov')
@@ -3506,11 +3507,11 @@ functions.changeStatus = function () {
     let bot = poopy.bot
     let vars = poopy.vars
     let config = poopy.config
-    let statuses = poopy.statuses
+    let json = poopy.json
     let { infoPost } = poopy.functions
 
     if (bot && vars.statusChanges) {
-        var choosenStatus = statuses[Math.floor(Math.random() * statuses.length)]
+        var choosenStatus = json.statusJSON[Math.floor(Math.random() * json.statusJSON.length)]
         infoPost(`Status changed to ${choosenStatus.type.toLowerCase()} ${((choosenStatus.type === "COMPETING" && 'in ') || (choosenStatus.type === "LISTENING" && 'to ') || '')}${choosenStatus.name}`)
         bot.user.setPresence({
             status: 'online',

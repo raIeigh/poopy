@@ -1,4 +1,5 @@
 const axios = require('axios')
+const fs = require('fs')
 
 var dataGotten = {}
 var dataGetting = {}
@@ -94,19 +95,43 @@ var dataGetters = {
             verbJSON: 'verbs',
             adjJSON: 'adjectives',
             imageJSON: 'images',
-            nameJSON: 'names'
+            nameJSON: 'names',
+            arabJSON: 'arab',
+            statusJSON: 'statuses',
+            emojiJSON: require('@jimp/plugin-print/emojis')
         }
 
-        for (var jsonKey in jsonList) {
-            jsonList[jsonKey] = await axios.get(`https://raw.githubusercontent.com/raIeigh/poopy-json/main/${jsonList[jsonKey]}.json`).then(res => res.data).catch(() => { }) ?? {}
+        for (var k in jsonList) {
+            jsonList[k] = typeof jsonList[k] == 'function' ?
+                await jsonList[k]().catch(() => { }) ?? {} :
+                fs.existsSync(`src/json/${jsonList[k]}.json`) ?
+                    JSON.parse(fs.readFileSync(`src/json/${jsonList[k]}.json`)) :
+                    await axios.get(`https://raw.githubusercontent.com/raIeigh/poopy-json/main/${jsonList[k]}.json`).then(res => res.data).catch(() => { }) ?? {}
         }
-
-        var getEmojis = require('@jimp/plugin-print/emojis')
-
-        jsonList.emojiJSON = await getEmojis().catch(() => { }) ?? {}
 
         return jsonList
-    }
+    },
+
+    arrays: async function () {
+        var arrayList = {
+            psFiles: 'psfiles',
+            psPasta: 'pspasta',
+            funnygifs: 'funnygif',
+            poopPhrases: 'poop',
+            dmPhrases: 'dmphrases',
+            eightball: 'eightball'
+        }
+
+        for (var k in arrayList) {
+            arrayList[k] = typeof arrayList[k] == 'function' ?
+                await arrayList[k]().catch(() => { }) ?? {} :
+                fs.existsSync(`src/json/${arrayList[k]}.json`) ?
+                    JSON.parse(fs.readFileSync(`src/json/${arrayList[k]}.json`)) :
+                    await axios.get(`https://raw.githubusercontent.com/raIeigh/poopy-json/main/${arrayList[k]}.json`).then(res => res.data).catch(() => { }) ?? {}
+        }
+
+        return arrayList
+    },
 }
 
 function sleep(ms) {

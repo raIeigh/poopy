@@ -3,11 +3,11 @@ module.exports = {
   args: [],
   execute: async function (msg) {
     let poopy = this
-    let arrays = poopy.arrays
+    let json = poopy.json
     let { randomChoice } = poopy.functions
     let { axios } = poopy.modules
 
-    var word = randomChoice(arrays.arabDictionary.filter(arab => !arrays.arabDanger.includes(arab))).toLowerCase()
+    var word = randomChoice(json.arabJSON.words.filter(arab => !json.arabJSON.danger.includes(arab))).toLowerCase()
     var res = await axios.request(`https://g.tenor.com/v1/search?q=${encodeURIComponent(word)}&key=${process.env.TENOR_KEY}&limit=100&contentfilter=${msg.channel.nsfw ? 'off' : 'medium'}`).catch(() => { })
     if (res) {
       var parsedBody = res.data

@@ -154,7 +154,6 @@ class Poopy {
         }
 
         // undeclared values for other commands
-        poopy.statuses = dataValues.statuses
         poopy.activeBots = dataValues.activeBots
         poopy.json = {}
         poopy.tempfiles = {}
@@ -192,11 +191,6 @@ class Poopy {
         for (var key in varsList) {
             var varb = varsList[key]
             vars[key] = varb
-        }
-
-        for (var key in dataValues.arrays) {
-            var array = dataValues.arrays[key]
-            arrays[key] = array
         }
 
         modules.Discord = modules.Discord[Number(config.self)]
@@ -1355,7 +1349,6 @@ class Poopy {
         let poopy = this
         let vars = poopy.vars
         let arrays = poopy.arrays
-        let json = poopy.json
         let bot = poopy.bot
         let rest = poopy.rest
         let config = poopy.config
@@ -1363,7 +1356,7 @@ class Poopy {
         let globaldata = poopy.globaldata
         let activeBots = poopy.activeBots
         let { fs } = poopy.modules
-        let { infoPost, processTask, getAllData, saveQueue, changeStatus } = poopy.functions
+        let { infoPost, processTask, getAllData, getEmojis, saveQueue, changeStatus } = poopy.functions
         let callbacks = poopy.callbacks
 
         if (!TOKEN && !poopy.__TOKEN) {
@@ -1535,12 +1528,6 @@ class Poopy {
             globaldata['dmphrases'] = arrays.dmPhrases
         }
 
-        arrays.psFiles = globaldata['psfiles']
-        arrays.psPasta = globaldata['pspasta']
-        arrays.funnygifs = globaldata['funnygif']
-        arrays.poopPhrases = globaldata['poop']
-        arrays.dmPhrases = globaldata['dmphrases']
-
         vars.filecount = data['bot-data']['filecount'] || 0
 
         if (config.testing || !process.env.MONGOOSE_URL) {
@@ -1563,7 +1550,19 @@ class Poopy {
 
         vars.codelanguages = await dataGetters.codeLanguages().catch((e) => console.log(e))
 
-        poopy.json = await dataGetters.jsons().catch(() => { })
+        poopy.json = await dataGetters.jsons().catch(() => { }) ?? {}
+
+        var arrayList = await dataGetters.arrays().catch(() => { }) ?? {}
+        for (var key in arrayList) {
+            var array = arrayList[key]
+            arrays[key] = array
+        }
+
+        arrays.psFiles = globaldata['psfiles']
+        arrays.psPasta = globaldata['pspasta']
+        arrays.funnygifs = globaldata['funnygif']
+        arrays.poopPhrases = globaldata['poop']
+        arrays.dmPhrases = globaldata['dmphrases']
 
         console.log(`${bot.user.username}: some jsons`)
         //await updateSlashCommands()

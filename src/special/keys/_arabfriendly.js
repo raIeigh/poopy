@@ -2,9 +2,9 @@ module.exports = {
   desc: `Returns a random word from the arabottify command's dictionary, except it doesn't include words like "sex" or "penis".`,
   func: function () {
     let poopy = this
-    let arrays = poopy.arrays
+    let json = poopy.json
     let { randomChoice } = poopy.functions
 
-    return randomChoice(arrays.arabDictionary.filter(arab => !arrays.arabDanger.includes(arab)))
+    return randomChoice(json.arabJSON.words.filter(arab => !json.arabJSON.danger.includes(arab)))
   }
 }

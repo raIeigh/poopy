@@ -4,7 +4,7 @@ module.exports = {
     execute: async function (msg, args) {
         let poopy = this
         let vars = poopy.vars
-        let arrays = poopy.arrays
+        let json = poopy.json
         let config = poopy.config
         let { fs, Discord } = poopy.modules
 
@@ -42,11 +42,11 @@ module.exports = {
                         if (Math.floor(Math.random() * dict) + 1 === (dict === 3 ? 0 : 1)) {
                             conn = 1
                             dict++
-                            arabArray.push(arrays.arabDictionary[Math.floor(Math.random() * arrays.arabDictionary.length)] + (((Math.floor(Math.random() * 5) === 4 && !nopunctuation) && vars.punctuation[Math.floor(Math.random() * vars.punctuation.length)]) || ''))
+                            arabArray.push(json.arabJSON.words[Math.floor(Math.random() * json.arabJSON.words.length)] + (((Math.floor(Math.random() * 5) === 4 && !nopunctuation) && vars.punctuation[Math.floor(Math.random() * vars.punctuation.length)]) || ''))
                         } else if (Math.floor(Math.random() * conn) + 1 === (conn === 3 ? 0 : 1)) {
                             dict = 1
                             conn++
-                            arabArray.push(arrays.arabConnectors[Math.floor(Math.random() * arrays.arabConnectors.length)] + (((Math.floor(Math.random() * 5) === 4 && !nopunctuation) && vars.punctuation[Math.floor(Math.random() * vars.punctuation.length)]) || ''))
+                            arabArray.push(json.arabJSON.conn[Math.floor(Math.random() * json.arabJSON.conn.length)] + (((Math.floor(Math.random() * 5) === 4 && !nopunctuation) && vars.punctuation[Math.floor(Math.random() * vars.punctuation.length)]) || ''))
                         } else {
                             chooseWord()
                         }
@@ -85,9 +85,9 @@ module.exports = {
                 if (randomFactor === 7) {
                     arabArray2.push({ word: msg.member.nickname || msg.author.username + (((Math.floor(Math.random() * 7) === 4 && !nopunctuation) && vars.punctuation[Math.floor(Math.random() * vars.punctuation.length)]) || ''), randomness: Math.random() })
                 } else if (randomFactor >= 0 && randomFactor <= 3) {
-                    arabArray2.push({ word: arrays.arabDictionary[Math.floor(Math.random() * arrays.arabDictionary.length)] + (((Math.floor(Math.random() * 7) === 4 && !nopunctuation) && vars.punctuation[Math.floor(Math.random() * vars.punctuation.length)]) || ''), randomness: Math.random() })
+                    arabArray2.push({ word: json.arabJSON.words[Math.floor(Math.random() * json.arabJSON.words.length)] + (((Math.floor(Math.random() * 7) === 4 && !nopunctuation) && vars.punctuation[Math.floor(Math.random() * vars.punctuation.length)]) || ''), randomness: Math.random() })
                 } else {
-                    arabArray2.push({ word: arrays.arabConnectors[Math.floor(Math.random() * arrays.arabConnectors.length)] + (((Math.floor(Math.random() * 7) === 4 && !nopunctuation) && vars.punctuation[Math.floor(Math.random() * vars.punctuation.length)]) || ''), randomness: Math.random() })
+                    arabArray2.push({ word: json.arabJSON.conn[Math.floor(Math.random() * json.arabJSON.conn.length)] + (((Math.floor(Math.random() * 7) === 4 && !nopunctuation) && vars.punctuation[Math.floor(Math.random() * vars.punctuation.length)]) || ''), randomness: Math.random() })
                 }
             }
         })

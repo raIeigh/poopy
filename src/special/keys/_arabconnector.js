@@ -2,8 +2,8 @@ module.exports = {
   desc: "Returns a random connector from the arabottify command's connector dictionary.",
   func: function () {
     let poopy = this
-    let arrays = poopy.arrays
+    let json = poopy.json
 
-    return arrays.arabConnectors[Math.floor(Math.random() * arrays.arabConnectors.length)]
+    return json.arabJSON.conn[Math.floor(Math.random() * json.arabJSON.conn.length)]
   }
 }
