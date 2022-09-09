@@ -62,9 +62,6 @@ module.exports = {
             if (saidMessage) {
                 sendObject.content = saidMessage
             }
-            if (del) {
-                msg.delete().catch(() => { })
-            }
             var reply = await msg.fetchReference().catch(() => { })
 
             if (msg.isCommand && msg.isCommand() && del) await msg.deferReply({ ephemeral: true }).catch(() => { })

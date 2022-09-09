@@ -40,7 +40,10 @@ module.exports = {
             } else {
                 var content = msg.content
 
-                if (command && !command.raw) args = await getKeywordsFor(args, msg, isBot, opts).catch(() => { }) ?? args
+                var ropts = { ...opts }
+                ropts.declaredonly = (command || localCommand).raw
+                args = await getKeywordsFor(args, msg, isBot, ropts).catch(() => { }) ?? args
+
 
                 msg.content = `${data['guild-data'][msg.guild.id]['prefix']}${commandname} ${args}`
 
