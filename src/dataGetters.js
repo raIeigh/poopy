@@ -6,8 +6,8 @@ var dataGetting = {}
 function randomKey(name) {
     var i = 1
     var keys = []
-    while (process.env[name + (i != 1 ? i: '')]) {
-        keys.push(process.env[name + (i != 1 ? i: '')])
+    while (process.env[name + (i != 1 ? i : '')]) {
+        keys.push(process.env[name + (i != 1 ? i : '')])
         i++
     }
     return keys[Math.floor(Math.random() * keys.length)]
@@ -25,7 +25,7 @@ var dataGetters = {
             })
         }
     },
-    
+
     languages: async function () {
         var lresponse = await axios.request({
             method: 'GET',
@@ -41,7 +41,7 @@ var dataGetters = {
             return { ...lresponse.data.translation[lang], language: lang }
         })
     },
-    
+
     uberduck: async function () {
         var voiceResponse = await axios.request({
             method: 'GET',
@@ -78,6 +78,34 @@ var dataGetters = {
 
             return [voices, categories]
         }
+    },
+
+    jsons: async function () {
+        var jsonList = {
+            wordJSON: 'words',
+            fakeWordJSON: 'fakeWords',
+            continentJSON: 'continents',
+            countryJSON: 'countries',
+            languageJSON: 'languages',
+            cityJSON: 'cities',
+            restaurantJSON: 'foods',
+            sentenceJSON: 'sentences',
+            nounJSON: 'nouns',
+            verbJSON: 'verbs',
+            adjJSON: 'adjectives',
+            imageJSON: 'images',
+            nameJSON: 'names'
+        }
+
+        for (var jsonKey in jsonList) {
+            jsonList[jsonKey] = await axios.get(`https://raw.githubusercontent.com/raIeigh/poopy-json/main/${jsonList[jsonKey]}.json`).then(res => res.data).catch(() => { }) ?? {}
+        }
+
+        var getEmojis = require('@jimp/plugin-print/emojis')
+
+        jsonList.emojiJSON = await getEmojis().catch(() => { }) ?? {}
+
+        return jsonList
     }
 }
 

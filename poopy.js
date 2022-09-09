@@ -155,8 +155,8 @@ class Poopy {
 
         // undeclared values for other commands
         poopy.statuses = dataValues.statuses
-        poopy.json = dataValues.json
         poopy.activeBots = dataValues.activeBots
+        poopy.json = {}
         poopy.tempfiles = {}
 
         // some vars
@@ -1363,7 +1363,7 @@ class Poopy {
         let globaldata = poopy.globaldata
         let activeBots = poopy.activeBots
         let { fs } = poopy.modules
-        let { infoPost, processTask, getAllData, getEmojis, saveQueue, changeStatus } = poopy.functions
+        let { infoPost, processTask, getAllData, saveQueue, changeStatus } = poopy.functions
         let callbacks = poopy.callbacks
 
         if (!TOKEN && !poopy.__TOKEN) {
@@ -1563,7 +1563,7 @@ class Poopy {
 
         vars.codelanguages = await dataGetters.codeLanguages().catch((e) => console.log(e))
 
-        json.emojiJSON = await getEmojis().catch(() => { }) ?? []
+        poopy.json = await dataGetters.jsons().catch(() => { })
 
         console.log(`${bot.user.username}: some jsons`)
         //await updateSlashCommands()

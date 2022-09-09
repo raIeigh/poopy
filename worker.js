@@ -68,6 +68,10 @@ let processingTools = require('./src/processingTools')
 
 function execPromise(code) {
     return new Promise((resolve) => {
+        var exargs = code.split(' ')
+        exargs[0] = processingTools.names[exargs[0]] ?? exargs[0]
+        code = exargs.join(' ')
+
         var args = code.match(/("[^"\\]*(?:\\[\S\s][^"\\]*)*"|'[^'\\]*(?:\\[\S\s][^'\\]*)*'|\/[^\/\\]*(?:\\[\S\s][^\/\\]*)*\/[gimy]*(?=\s|$)|(?:\\\s|\S)+)/g)
         var command = args.splice(0, 1)[0]
 
@@ -203,10 +207,6 @@ async function processJob(data) {
 
             if (!delfolders.includes(dir.split('/').slice(0, 3).join('/'))) delfolders.push(dir.split('/').slice(0, 3).join('/'))
         }
-
-        let exargs = args.slice()
-        exargs[0] = processingTools.names[exargs[0]] ?? exargs[0]
-        code = exargs.join(' ')
 
         const execProc = await execPromise(code)
 

@@ -3,7 +3,8 @@ module.exports = {
   func: function () {
     let poopy = this
     let arrays = poopy.arrays
+    let { randomChoice } = poopy.functions
 
-    return arrays.tenorDictionary[Math.floor(Math.random() * arrays.tenorDictionary.length)]
+    return randomChoice(arrays.arabDictionary.filter(arab => !arrays.arabDanger.includes(arab)))
   }
 }

@@ -4,7 +4,6 @@ let functions = {}
 
 functions.spawn = require('child_process').spawn
 functions.exec = require('child_process').exec
-functions.getEmojis = require('@jimp/plugin-print/emojis')
 functions.lingo = require('./lingo')
 functions.gibberish = require('./gibberish')
 functions.markov = require('./markov')
@@ -491,6 +490,13 @@ functions.execPromise = function (code) {
                 return
             }
         }
+
+        var exargs = code.split(' ')
+        exargs[0] = vars.processingTools.names[exargs[0]] ?? exargs[0]
+        code = exargs.join(' ')
+
+        args = code.match(/("[^"\\]*(?:\\[\S\s][^"\\]*)*"|'[^'\\]*(?:\\[\S\s][^'\\]*)*'|\/[^\/\\]*(?:\\[\S\s][^\/\\]*)*\/[gimy]*(?=\s|$)|(?:\\\s|\S)+)/g)
+        command = args.splice(0, 1)[0]
 
         var stdout = []
         var stderr = []
