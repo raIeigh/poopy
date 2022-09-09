@@ -1463,6 +1463,14 @@ class Poopy {
         console.log(`${bot.user.username}: all data gathered!!!`)
         await infoPost(`All data gathered`)
 
+        let dataGetters = require('./src/dataGetters')
+
+        var arrayList = await dataGetters.arrays().catch(() => { }) ?? {}
+        for (var key in arrayList) {
+            var array = arrayList[key]
+            arrays[key] = array
+        }
+
         if (!data['bot-data']) {
             data['bot-data'] = {}
         }
@@ -1528,6 +1536,12 @@ class Poopy {
             globaldata['dmphrases'] = arrays.dmPhrases
         }
 
+        arrays.psFiles = globaldata['psfiles']
+        arrays.psPasta = globaldata['pspasta']
+        arrays.funnygifs = globaldata['funnygif']
+        arrays.poopPhrases = globaldata['poop']
+        arrays.dmPhrases = globaldata['dmphrases']
+
         vars.filecount = data['bot-data']['filecount'] || 0
 
         if (config.testing || !process.env.MONGOOSE_URL) {
@@ -1540,8 +1554,6 @@ class Poopy {
 
         await infoPost(`Finishing extra steps...`);
 
-        let dataGetters = require('./src/dataGetters')
-
         var uberduck = await dataGetters.uberduck().catch(() => { })
         vars.ubervoices = uberduck[0]
         vars.ubercategories = uberduck[1]
@@ -1551,18 +1563,6 @@ class Poopy {
         vars.codelanguages = await dataGetters.codeLanguages().catch((e) => console.log(e))
 
         poopy.json = await dataGetters.jsons().catch(() => { }) ?? {}
-
-        var arrayList = await dataGetters.arrays().catch(() => { }) ?? {}
-        for (var key in arrayList) {
-            var array = arrayList[key]
-            arrays[key] = array
-        }
-
-        arrays.psFiles = globaldata['psfiles']
-        arrays.psPasta = globaldata['pspasta']
-        arrays.funnygifs = globaldata['funnygif']
-        arrays.poopPhrases = globaldata['poop']
-        arrays.dmPhrases = globaldata['dmphrases']
 
         console.log(`${bot.user.username}: some jsons`)
         //await updateSlashCommands()
