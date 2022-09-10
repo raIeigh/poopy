@@ -1130,7 +1130,7 @@ class Poopy {
                 } else {
                     var lastMention = Date.now() - tempdata[msg.author.id]['eggphrases']['lastmention']
                     if (lastMention > 60000) tempdata[msg.author.id]['eggphrases']['phrase'] = 0
-                    await msg.reply(eggPhrases[tempdata[msg.author.id]['eggphrases']['phrase']]).catch(() => { })
+                    await msg.reply(eggPhrases[tempdata[msg.author.id]['eggphrases']['phrase']]).catch((e) => console.log(e))
                     if (tempdata[msg.author.id]['eggphrases']['phrase'] < eggPhrases.length) tempdata[msg.author.id]['eggphrases']['phrase']++
                     tempdata[msg.author.id]['eggphrases']['lastmention'] = Date.now()
                 }
@@ -1356,7 +1356,7 @@ class Poopy {
         let globaldata = poopy.globaldata
         let activeBots = poopy.activeBots
         let { fs } = poopy.modules
-        let { infoPost, processTask, getAllData, getEmojis, saveQueue, changeStatus } = poopy.functions
+        let { infoPost, processTask, getAllData, saveQueue, changeStatus } = poopy.functions
         let callbacks = poopy.callbacks
 
         if (!TOKEN && !poopy.__TOKEN) {
@@ -1369,7 +1369,7 @@ class Poopy {
         })
 
         rest.setToken(poopy.__TOKEN)
-        await bot.login(poopy.__TOKEN)
+        await bot.login(poopy.__TOKEN).catch((e) => console.log(e))
 
         activeBots[config.database] = poopy
 

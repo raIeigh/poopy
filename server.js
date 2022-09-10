@@ -609,7 +609,7 @@ async function start() {
                 mainPoopy = poopy
                 poopyStarted = true
             }
-        })
+        }).catch((e) => console.log(e))
 
         await sleep(2000)
     }
