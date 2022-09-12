@@ -2799,7 +2799,11 @@ functions.getKeywordsFor = async function (string, msg, isBot, { extrakeys = {},
                     if (!func.raw) {
                         string = string.replace(m, match)
                     } else {
-                        string = string.replace(m, await getKeywordsFor().catch(() => { }))
+                        var ropts = { ...opts }
+                        var dec = ropts.declaredonly
+                        ropts.declaredonly = true
+                        string = string.replace(m, await getKeywordsFor(m, msg, isBot, ropts).catch((e) => console.log(e)) ?? 'error')
+                        ropts.declaredonly = dec
                     }
     
                     var change
@@ -2837,7 +2841,14 @@ functions.getKeywordsFor = async function (string, msg, isBot, { extrakeys = {},
         }
     
         return string
-    } catch (e) { console.log(e) }
+    } catch (e) {
+        if (tempdata[msg.author.id][msg.id]['keyexecuting']) {
+            tempdata[msg.author.id][msg.id]['keyexecuting']--
+        }
+
+        console.log(e)
+        throw e
+    }
 
     if (tempdata[msg.author.id][msg.id]['keyexecuting']) {
         tempdata[msg.author.id][msg.id]['keyexecuting']--
