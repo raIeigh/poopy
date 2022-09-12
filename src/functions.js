@@ -2798,12 +2798,6 @@ functions.getKeywordsFor = async function (string, msg, isBot, { extrakeys = {},
                     match = match.replace(/\\\)/g, ')')
                     if (!func.raw) {
                         string = string.replace(m, match)
-                    } else {
-                        var ropts = { ...opts }
-                        var dec = ropts.declaredonly
-                        ropts.declaredonly = true
-                        string = string.replace(m, await getKeywordsFor(m, msg, isBot, ropts).catch((e) => console.log(e)) ?? 'error')
-                        ropts.declaredonly = dec
                     }
     
                     var change
