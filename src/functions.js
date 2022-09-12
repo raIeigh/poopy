@@ -202,6 +202,20 @@ functions.randomChoice = function (arr) {
     return arr[Math.floor(Math.random() * arr.length)]
 }
 
+functions.roundTo = function (n, r) {
+    return Math.round(n / r) * r
+}
+
+functions.randomNumber = function (min, max) {
+    if (min == undefined && max == undefined) return Math.random()
+    if (max == undefined) {
+        max = min
+        min = 1
+    }
+
+    return Math.floor(Math.random() * (max + 1 - min)) + min
+}
+
 functions.shuffle = function (array) {
     var currentIndex = array.length,
         randomIndex
@@ -642,6 +656,10 @@ functions.gatherData = async function (msg) {
 
         if (!data['guild-data'][msg.guild.id]['members'][msg.author.id]['messages']) {
             data['guild-data'][msg.guild.id]['members'][msg.author.id]['messages'] = 0
+        }
+
+        if (!data['guild-data'][msg.guild.id]['members'][msg.author.id]['lastmessage']) {
+            data['guild-data'][msg.guild.id]['members'][msg.author.id]['lastmessage'] = Date.now()
         }
 
         if (!data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown']) {
@@ -2655,7 +2673,7 @@ functions.getKeywordsFor = async function (string, msg, isBot, { extrakeys = {},
     let data = poopy.data
     let tempdata = poopy.tempdata
     let globaldata = poopy.globaldata
-    let { getKeyFunc, infoPost, equalValues, sleep } = poopy.functions
+    let { getKeyFunc, getKeywordsFor, infoPost, equalValues, sleep } = poopy.functions
 
     if (!tempdata[msg.author.id]) {
         tempdata[msg.author.id] = {}
@@ -2754,7 +2772,7 @@ functions.getKeywordsFor = async function (string, msg, isBot, { extrakeys = {},
                     var change
     
                     try {
-                        change = await key.func.call(poopy, msg, isBot, string, opts)
+                        change = await key(msg, isBot, string, opts)
                     } catch (e) {
                         console.log(e)
                         change = ''
@@ -2780,12 +2798,14 @@ functions.getKeywordsFor = async function (string, msg, isBot, { extrakeys = {},
                     match = match.replace(/\\\)/g, ')')
                     if (!func.raw) {
                         string = string.replace(m, match)
+                    } else {
+                        string = string.replace(m, await getKeywordsFor().catch(() => { }))
                     }
     
                     var change
     
                     try {
-                        change = await func.func.call(poopy, [funcName, match], msg, isBot, string, opts)
+                        change = await func([funcName, match], msg, isBot, string, opts)
                     } catch (e) {
                         console.log(e)
                         change = ''
@@ -2818,7 +2838,7 @@ functions.getKeywordsFor = async function (string, msg, isBot, { extrakeys = {},
     
         return string
     } catch (e) { console.log(e) }
-    
+
     if (tempdata[msg.author.id][msg.id]['keyexecuting']) {
         tempdata[msg.author.id][msg.id]['keyexecuting']--
     }

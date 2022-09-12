@@ -38,6 +38,7 @@ module.exports = {
 
         var member = msg.mentions.members.first() ??
             await msg.guild.members.fetch((args[1].match(/\d+/) ?? [args[1]])[0]).catch(() => {}) ??
+            await bot.users.fetch((args[1].match(/\d+/) ?? [args[1]])[0]).catch(() => {}) ??
             msg.member
 
         if (!member) {
@@ -50,8 +51,8 @@ module.exports = {
             return
         }
 
-        var username = member.user.username
-        if (args.includes('-global')) member = member.user
+        var username = member.username ?? member.user.username
+        if (args.includes('-global') || member.user) member = member.user
         var avatar = new Discord.MessageAttachment(member.displayAvatarURL({
             dynamic: true, size: 1024, format: 'png'
         }), 'avatar.png');

@@ -9,14 +9,16 @@ module.exports = {
 
     var sum = 0
     for (var id in datamembers) {
-      sum += Math.min(datamembers[id].messages, 1000) || 0
+        var value + Math.max(Math.min(datamembers[id].messages || 0, 1000), 0) - Math.floor((Date.now() - datamembers[id].lastmessage || 0) / 604800000) * 100 || 0
+      sum += value
     }
 
     var rnd = Math.random() * sum
     var counter = 0
 
     for (var id in datamembers) {
-      counter += Math.min(datamembers[id].messages, 1000) || 0
+        var value = Math.max(Math.min(datamembers[id].messages || 0, 1000), 0) - Math.floor((Date.now() - datamembers[id].lastmessage || 0) / 604800000) * 100 || 0
+      counter += value
       if (counter > rnd) {
         return id
       }

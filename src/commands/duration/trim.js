@@ -3,7 +3,7 @@ module.exports = {
     args: [{"name":"start","required":false,"specifarg":true,"orig":"[-start <timestamp (you can use hh:mm:ss)>]"},{"name":"end","required":false,"specifarg":true,"orig":"[-end <timestamp (you can use hh:mm:ss)>]"},{"name":"file","required":false,"specifarg":false,"orig":"{file}"}],
     execute: async function (msg, args) {
         let poopy = this
-        let { lastUrl, validateFile, downloadFile, execPromise, findpreset, sendFile } = poopy.functions
+        let { lastUrl, validateFile, downloadFile, execPromise, findpreset, sendFile, randomNumber } = poopy.functions
         let vars = poopy.vars
 
         await msg.channel.sendTyping().catch(() => { })
@@ -12,6 +12,10 @@ module.exports = {
             await msg.channel.sendTyping().catch(() => { })
             return;
         };
+        if (!args.includes('-start') && !args.includes('-end')) {
+            await msg.reply(`Specify \`-start\` or \`-end\`! (Example: p:trim -start ${randomNumber(1, 10)/10} -end ${randomNumber(11, 20)/10})`).catch(() => { })
+            return
+        }
         var currenturl = lastUrl(msg, 0)
         var fileinfo = await validateFile(currenturl, true).catch(async error => {
             await msg.reply(error).catch(() => { })
