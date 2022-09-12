@@ -3102,7 +3102,7 @@ functions.sendFile = async function (msg, filepath, filename, extraOptions) {
 
     if (extraOptions.catbox) {
         infoPost(`Uploading file to catbox.moe`)
-        var fileLink = await vars[extraOptions.nosend ? 'Litterbox' : 'Catbox'].upload(`${filepath}/${filename}`).catch(() => { })
+        var fileLink = await vars.Catbox.upload(`${filepath}/${filename}`).catch(() => { })
         if (fileLink) {
             var isUrl = vars.validUrl.test(fileLink)
 
