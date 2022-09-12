@@ -49,7 +49,7 @@ module.exports = {
 
             var seed = Math.random() * 1000
 
-            await execPromise(`ffmpeg -i ${filepath}/${filename} -i assets/image/redcircle.png -map 0:a? -filter_complex "[1:v]scale=${random ? `${(width + height) / 5}:-1` : `${squareS.constraint === 'width' ? -1 : width}:${squareS.constraint === 'height' ? -1 : height}`}[circle];[0:v][circle]overlay=x=${random ? `W*random(t*(random(0)*${seed}))+w/2` : '(W-w)/2'}:y=${random ? `H*random(t*(random(0)*${seed}))+h/2` : '(H-h)/2'}:format=auto[oout];[oout]scale=ceil(iw/2)*2:ceil(ih/2)*2[out]" -map "[out]" -preset ${findpreset(args)} -c:v libx264 -pix_fmt yuv420p ${filepath}/output.mp4`)
+            await execPromise(`ffmpeg -i ${filepath}/${filename} -i assets/image/redcircle.png -map 0:a? -filter_complex "[1:v]scale=${random ? `${(width + height) / 5}:-1` : `${squareS.constraint === 'width' ? -1 : width}:${squareS.constraint === 'height' ? -1 : height}`}[circle];[0:v][circle]overlay=x=${random ? `W*random(t*(random(0)*${seed}))-w/2` : '(W-w)/2'}:y=${random ? `H*random(t*(random(0)*${seed}))-h/2` : '(H-h)/2'}:format=auto[oout];[oout]scale=ceil(iw/2)*2:ceil(ih/2)*2[out]" -map "[out]" -preset ${findpreset(args)} -c:v libx264 -pix_fmt yuv420p ${filepath}/output.mp4`)
             return await sendFile(msg, filepath, `output.mp4`)
         } else if (type.mime.startsWith('image') && vars.gifFormats.find(f => f === type.ext)) {
             var filepath = await downloadFile(currenturl, `input.gif`, {
@@ -63,7 +63,7 @@ module.exports = {
 
             var seed = Math.random() * 1000
 
-            await execPromise(`ffmpeg -i ${filepath}/${filename} -i assets/image/redcircle.png -filter_complex "[1:v]scale=${random ? `${(width + height) / 5}:-1` : `${squareS.constraint === 'width' ? -1 : width}:${squareS.constraint === 'height' ? -1 : height}`}[circle];[0:v][circle]overlay=x=${random ? `W*random(t*(random(0)*${seed}))+w/2` : '(W-w)/2'}:y=${random ? `H*random(t*(random(0)*${seed}))+h/2` : '(H-h)/2'}:format=auto[oout];[oout]split[pout][ppout];[ppout]palettegen=reserve_transparent=1[palette];[pout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -preset ${findpreset(args)} -gifflags -offsetting ${filepath}/output.gif`)
+            await execPromise(`ffmpeg -i ${filepath}/${filename} -i assets/image/redcircle.png -filter_complex "[1:v]scale=${random ? `${(width + height) / 5}:-1` : `${squareS.constraint === 'width' ? -1 : width}:${squareS.constraint === 'height' ? -1 : height}`}[circle];[0:v][circle]overlay=x=${random ? `W*random(t*(random(0)*${seed}))-w/2` : '(W-w)/2'}:y=${random ? `H*random(t*(random(0)*${seed}))-h/2` : '(H-h)/2'}:format=auto[oout];[oout]split[pout][ppout];[ppout]palettegen=reserve_transparent=1[palette];[pout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -preset ${findpreset(args)} -gifflags -offsetting ${filepath}/output.gif`)
             return await sendFile(msg, filepath, `output.gif`)
         } else {
             await msg.reply({
