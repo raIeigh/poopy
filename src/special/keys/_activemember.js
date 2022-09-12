@@ -14,7 +14,7 @@ module.exports = {
 
     var sum = 0
     for (var id in usermembers) {
-        var value = Math.max(Math.min(usermembers[id].messages || 0, 1000), 0) - Math.floor((Date.now() - usermembers[id].lastmessage || 0) / 604800000) * 100 || 0
+      var value = Math.max(Math.min(usermembers[id].messages || 0, 1000), 0) - Math.floor((Date.now() - usermembers[id].lastmessage || 0) / 604800000) * 100 || 0
       sum += value
     }
 
@@ -22,7 +22,7 @@ module.exports = {
     var counter = 0
 
     for (var id in usermembers) {
-        var value = Math.max(Math.min(usermembers[id].messages || 0, 1000), 0) - Math.floor((Date.now() - usermembers[id].lastmessage || 0) / 604800000) * 100 || 0
+      var value = Math.max(Math.min(usermembers[id].messages || 0, 1000), 0) - Math.floor((Date.now() - usermembers[id].lastmessage || 0) / 604800000) * 100 || 0
       counter += value
       if (counter > rnd) {
         return usermembers[id].username.replace(/\@/g, '@‌')
