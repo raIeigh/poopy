@@ -30,7 +30,7 @@ module.exports = {
         let poopy = this
         let bot = poopy.bot
         let config = poopy.config
-        let { Discord } = poopy.modules
+        let { Discord, whatwg } = poopy.modules
 
         await msg.channel.sendTyping().catch(() => {})
 
@@ -55,7 +55,8 @@ module.exports = {
         if (args.includes('-global') || member.user) member = member.user
         var avatar = new Discord.MessageAttachment(member.displayAvatarURL({
             dynamic: true, size: 1024, format: 'png'
-        }), 'avatar.png');
+        }));
+        var parsedAvatar = whatwg.parseURL(avatar.attachment)
 
         var avObject = {
             allowedMentions: {
@@ -73,7 +74,7 @@ module.exports = {
                 text: bot.user.username
             },
             image: {
-                url: "attachment://avatar.png"
+                url: `attachment://${parsedAvatar.path[parsedAvatar.path.length - 1]}`
             }
         }]
 

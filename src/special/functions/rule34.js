@@ -20,7 +20,8 @@ module.exports = {
         
         if (!urls || !urls.length) return word
 
-        var page = parseNumber(page, { dft: Math.floor(Math.random() * urls.length), min: 0, max: urls.length - 1, round: true })
+        var page = parseNumber(page, { dft: Math.floor(Math.random() * urls.length), min: -urls.length, max: urls.length - 1, round: true })
+        if (page < 0) page += urls.length
 
         return urls[page]
     },

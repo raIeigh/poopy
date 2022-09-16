@@ -21,7 +21,8 @@ module.exports = {
         if (!countres) return word
 
         var count = Math.min(countres.data.pageInfo.totalResults, 250)
-        var page = parseNumber(page, { dft: Math.floor(Math.random() * count), min: 0, max: count - 1, round: true })
+        var page = parseNumber(page, { dft: Math.floor(Math.random() * count), min: -count, max: count - 1, round: true })
+        if (page < 0) page += count
 
         var pagecount = 1
 
