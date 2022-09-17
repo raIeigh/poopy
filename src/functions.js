@@ -2699,6 +2699,7 @@ functions.getKeywordsFor = async function (string, msg, isBot, { extrakeys = {},
         }
     
         while (getKeyFunc(string, { extrakeys: extradkeys, extrafuncs: extradfuncs, declaredonly: declaredonly }) !== false && tempdata[msg.author.id][msg.id]?.['return'] == undefined) {
+            console.log(string)
             if (!started || !tempdata[msg.author.id][msg.id]) {
                 if (!tempdata[msg.author.id][msg.id]) {
                     tempdata[msg.author.id][msg.id] = {}
