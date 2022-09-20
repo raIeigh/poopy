@@ -841,9 +841,6 @@ functions.cleverbot = async function (stim, id) {
     }
 
     async function gamer() {
-        var context = vars.clevercontexts[bot.id + id] || (vars.clevercontexts[bot.id + id] = [])
-        if (context.length > 10) context.splice(0, context.length - 10)
-
         var options = {
             method: 'GET',
             url: 'https://random-stuff-api.p.rapidapi.com/ai',

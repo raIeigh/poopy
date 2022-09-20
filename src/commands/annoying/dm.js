@@ -39,8 +39,6 @@ module.exports = {
         let tempdata = poopy.tempdata
 
         await msg.channel.sendTyping().catch(() => { })
-        args = splitKeyFunc(args.join(' '), { separator: ' ' })
-        args[1] = await getKeywordsFor(args[1], msg, false).catch(() => { }) ?? 'error'
         if (args[1] === undefined) {
             await msg.reply('Who do I DM?!').catch(() => { })
             return;
@@ -153,16 +151,7 @@ module.exports = {
             if (dmChannel.onsfw == undefined) dmChannel.onsfw = !!dmChannel.nsfw
             dmChannel.nsfw = !!data['guild-data'][dmChannel.id]?.['channels']?.[dmChannel.id]?.['nsfw']
 
-            Object.defineProperty(msg, 'channel', { value: dmChannel, writable: true })
-            Object.defineProperty(msg, 'guild', { value: new DMGuild(msg), writable: true })
-
-            dmSupport(msg)
-            await gatherData(msg).catch(() => { })
-
-            saidMessage = await getKeywordsFor(saidMessage, msg, false).catch((e) => console.log(e)) ?? 'error'
-
-            Object.defineProperty(msg, 'channel', { value: channel, writable: true })
-            Object.defineProperty(msg, 'guild', { value: guild, writable: true })
+            if (!dmChannel.nsfw) saidMessage = saidMessage.replace(/https?:\/\/(rule34|e621)([!#$&-;=?-[\]_a-z~]|%[0-9a-fA-F])*/g, 'no')
 
             var dmMessage = await dmChannel.send({
                 content: `${infoMessage}${saidMessage}`,
@@ -181,7 +170,6 @@ module.exports = {
         name: 'dm <user> <message> [-anonymous]',
         value: 'Allows Poopy to DM an user the message inside the command.'
     },
-    raw: true,
     nodefer: true,
     type: 'Annoying'
 }

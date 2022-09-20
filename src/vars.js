@@ -2,7 +2,7 @@ const { catbox, google } = require('./modules')
 
 let vars = {}
 
-vars.validUrl = /(http|https):\/\/([!#$&-;=?-[\]_a-z~]|%[0-9a-fA-F]{2})+/
+vars.validUrl = /https?:\/\/([!#$&-;=?-[\]_a-z~]|%[0-9a-fA-F]{2})+/
 vars.emojiRegex = require('emoji-regex')()
 vars.Catbox = new catbox.Catbox()
 vars.Litterbox = new catbox.Litterbox()

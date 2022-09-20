@@ -94,6 +94,7 @@ var dataGetters = {
             nounJSON: 'nouns',
             verbJSON: 'verbs',
             adjJSON: 'adjectives',
+            advJSON: 'adverbs',
             imageJSON: 'images',
             nameJSON: 'names',
             arabJSON: 'arab',
