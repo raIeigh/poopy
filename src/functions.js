@@ -782,7 +782,7 @@ functions.cleverbot = async function (stim, id) {
     let bot = poopy.bot
     let vars = poopy.vars
     let arrays = poopy.arrays
-    let { axios, md5 } = poopy.modules
+    let { axios, CryptoJS } = poopy.modules
     let { userToken, randomChoice } = poopy.functions
 
     var context = vars.clevercontexts[bot.id + id] || (vars.clevercontexts[bot.id + id] = [])
@@ -824,7 +824,7 @@ functions.cleverbot = async function (stim, id) {
             payload += `&vText${i + 2}=${encodeForSending(context[l - i])}`
         }
         payload += `&cb_settings_language=en&cb_settings_scripting=no&islearning=1&icognoid=wsf&icognocheck=`
-        payload += md5(payload.substring(7, 33))
+        payload += CryptoJS.MD5(payload.substring(7, 33)).toString()
         var res = await axios.request({
             method: "POST",
             url: "https://www.cleverbot.com/webservicemin?uc=UseOfficialCleverbotAPI&ncf=V2&",

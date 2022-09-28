@@ -73,7 +73,7 @@ module.exports = {
 
                         collected.push(content)
 
-                        var collectMsg = await channel.send({
+                        await channel.send({
                             content: collect,
                             allowedMentions: {
                                 parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && authorid !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']

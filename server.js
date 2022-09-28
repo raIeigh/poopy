@@ -10,7 +10,7 @@ async function start() {
         const cors = require('cors')
         const bp = require('body-parser')
         const axios = require('axios')
-        const md5 = require('md5')
+        const CryptoJS = require('crypto-js')
 
         const PORT = process.env.PORT || 8080
         const app = express()
@@ -148,8 +148,8 @@ async function start() {
                 emojis: {
                     cache: new Map()
                 },
-                ownerID: md5(req.ip),
-                id: md5(req.ip).split('').reverse().join('')
+                ownerID: CryptoJS.MD5(req.ip).toString(),
+                id: CryptoJS.MD5(req.ip).toString().split('').reverse().join('')
             }
     
             let channel = {
@@ -188,7 +188,7 @@ async function start() {
                 username: 'User',
                 tag: 'User',
                 dmChannel: channel,
-                id: md5(req.ip)
+                id: CryptoJS.MD5(req.ip).toString()
             }
     
             let member = {
@@ -201,7 +201,7 @@ async function start() {
                 permissions: {
                     has: () => true
                 },
-                id: md5(req.ip)
+                id: CryptoJS.MD5(req.ip).toString()
             }
     
             function newMessage(payload) {
@@ -397,7 +397,7 @@ async function start() {
     
             guild.members = {
                 fetch: async () => member,
-                cache: new Map([[md5(req.ip), member]])
+                cache: new Map([[CryptoJS.MD5(req.ip).toString(), member]])
             }
     
             guild.channels = {

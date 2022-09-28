@@ -15,7 +15,6 @@ modules.FormData = require('form-data')
 modules.cheerio = require('cheerio')
 modules.xml2json = require('xml2js').parseStringPromise
 modules.util = require('util')
-modules.md5 = require('md5')
 if (__dirname.includes('app')) modules.CryptoJS = require('crypto-js')
 if (modules.fs.existsSync('node_modules/@jimp/plugin-print'))
     modules.fs.rmSync('node_modules/@jimp/plugin-print', {
