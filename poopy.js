@@ -204,7 +204,7 @@ class Poopy {
             cleverbot, regexClean } = functions
 
         let bot = poopy.bot = new Discord.Client({
-            intents: new Discord.IntentsBitField(config.intents),
+            intents: new Discord.Intents(config.intents),
             partials: ['CHANNEL'],
             failIfNotExists: false
         })
