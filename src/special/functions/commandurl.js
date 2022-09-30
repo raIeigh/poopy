@@ -13,7 +13,7 @@ module.exports = {
 
         var word = matches[1]
         var split = splitKeyFunc(word, { args: 2 })
-        var commandname = (split[0] ?? '').toLowerCase()
+        var commandname = (await getKeywordsFor(split[0] ?? '', msg, isBot, opts).catch(() => { }) ?? split[0]).toLowerCase()
         var args = split[1] ?? ''
         var command = commands.find(fcmd => fcmd.name.find(fcmdname => fcmdname === commandname))
         var localCommand = data['guild-data'][msg.guild.id]['localcmds'].find(cmd => cmd.name === commandname)
