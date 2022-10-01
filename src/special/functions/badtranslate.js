@@ -3,14 +3,14 @@ module.exports = {
     desc: 'Badly translates the phrase inside the function from source to target. You can specify how many languages it goes through.',
     func: async function (matches, msg) {
       let poopy = this
-      let { splitKeyFunc, userToken } = poopy.functions
+      let { splitKeyFunc, parseNumber, randomChoice, userToken } = poopy.functions
       let vars = poopy.vars
       let { axios } = poopy.modules
   
       var word = matches[1]
       var split = splitKeyFunc(word, { args: 4 })
       var phrase = split[0] ?? ''
-      var languagesindex = split[1] ?? 5
+      var repeat = parseNumber(split[1] ?? 5, { min: 2, max: 25, dft: 5, round: true })
       var target = split[2] ?? 'en'
       var source = split[3] ?? ''
   
@@ -26,15 +26,12 @@ module.exports = {
         source = ''
       }
 
-      var repeat = 5
-        if (languagesindex > -1) {
-            repeat = isNaN(Number(args[languagesindex + 1])) ? 5 : Number(args[languagesindex + 1]) <= 2 ? 2 : Number(args[languagesindex + 1]) >= 25 ? 25 : Math.round(Number(args[languagesindex + 1])) || 5
-            args.splice(languagesindex, 2)
-        }
-  
+        var maxlength = Math.round(2000 / repeat)
+        if (phrase.length > maxlength) return `The input length must be smaller or equal to 2000 divided by the number of repetitions. (in this case ${maxlength} characters)`
+
         var output = phrase
         var lastlanguage = source
-        var currentlanguage = vars.languages[Math.floor(Math.random() * vars.languages.length)].language
+        var currentlanguage = randomChoice(vars.languages).language
 
         for (var i = 0; i < repeat; i++) {
             var options = {
@@ -49,24 +46,18 @@ module.exports = {
                 data: [{ Text: output }]
             };
 
-            var response = await axios.request(options).catch(async () => {
-                return "Error."
-            })
+            var response = await axios.request(options).catch(() => { })
 
-            if (!response) {
-                return "Error."
-            }
+            if (!response) return word
 
             output = response.data[0].translations[0].text
             lastlanguage = currentlanguage
-            currentlanguage = i == repeat - 2 ? target : vars.languages[Math.floor(Math.random() * vars.languages.length)].language
+            currentlanguage = i == repeat - 2 ? target : randomChoice(vars.languages).language
         }
 
-        if (output) {
-            return output
-        }
+        if (output) return output
   
-      return phrase
+      return word
     },
     attemptvalue: 10,
     limit: 5
