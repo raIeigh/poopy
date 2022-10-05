@@ -46,8 +46,8 @@ module.exports = {
             var pvz = await Jimp.read(`assets/image/pvz.png`)
             var dwarven = await Jimp.loadFont('assets/fonts/Dwarven/Dwarven.fnt')
             var brianne = await Jimp.loadFont('assets/fonts/Brianne/Brianne.fnt')
-            await pvz.print(dwarven, 155, 186, { text: Discord.Util.cleanContent(plantname, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 189, 27)
-            await pvz.print(brianne, 166, 223, { text: Discord.Util.cleanContent(plantdescription, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 166, 66)
+            await pvz.print(dwarven, 155, 186, { text: Discord.cleanContent(plantname, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 189, 27)
+            await pvz.print(brianne, 166, 223, { text: Discord.cleanContent(plantdescription, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 166, 66)
             await pvz.writeAsync(`${filepath}/pvz.png`)
 
             var width = fileinfo.info.width
@@ -66,8 +66,8 @@ module.exports = {
             var pvz = await Jimp.read(`assets/image/pvz.png`)
             var dwarven = await Jimp.loadFont('assets/fonts/Dwarven/Dwarven.fnt')
             var brianne = await Jimp.loadFont('assets/fonts/Brianne/Brianne.fnt')
-            await pvz.print(dwarven, 155, 186, { text: Discord.Util.cleanContent(plantname, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 189, 27)
-            await pvz.print(brianne, 166, 223, { text: Discord.Util.cleanContent(plantdescription, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 166, 66)
+            await pvz.print(dwarven, 155, 186, { text: Discord.cleanContent(plantname, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 189, 27)
+            await pvz.print(brianne, 166, 223, { text: Discord.cleanContent(plantdescription, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 166, 66)
             await pvz.writeAsync(`${filepath}/pvz.png`)
 
             var width = fileinfo.info.width
@@ -84,8 +84,8 @@ module.exports = {
             var pvz = await Jimp.read(`assets/image/pvz.png`)
             var dwarven = await Jimp.loadFont('assets/fonts/Dwarven/Dwarven.fnt')
             var brianne = await Jimp.loadFont('assets/fonts/Brianne/Brianne.fnt')
-            await pvz.print(dwarven, 155, 186, { text: Discord.Util.cleanContent(plantname, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 189, 27)
-            await pvz.print(brianne, 166, 223, { text: Discord.Util.cleanContent(plantdescription, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 166, 66)
+            await pvz.print(dwarven, 155, 186, { text: Discord.cleanContent(plantname, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 189, 27)
+            await pvz.print(brianne, 166, 223, { text: Discord.cleanContent(plantdescription, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 166, 66)
             await pvz.writeAsync(`${filepath}/pvz.png`)
 
             var width = fileinfo.info.width
@@ -99,7 +99,7 @@ module.exports = {
             await msg.reply({
                 content: `Unsupported file: \`${currenturl}\``,
                 allowedMentions: {
-                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })

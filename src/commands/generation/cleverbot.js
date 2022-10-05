@@ -25,7 +25,7 @@ module.exports = {
                 channel.send({
                     content: err.stack,
                     allowedMentions: {
-                        parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                        parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                     }
                 }).catch(() => { })
             })
@@ -34,7 +34,7 @@ module.exports = {
                 channel.send({
                     content: resp,
                     allowedMentions: {
-                        parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                        parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                     }
                 }).catch(() => { })
             }
@@ -73,7 +73,7 @@ module.exports = {
                         channel.send({
                             content: err.stack,
                             allowedMentions: {
-                                parse: ((!m.member.permissions.has('ADMINISTRATOR') && !m.member.permissions.has('MENTION_EVERYONE') && m.author.id !== m.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                                parse: ((!m.member.permissions.has('Administrator') && !m.member.permissions.has('MentionEveryone') && m.author.id !== m.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                             }
                         }).catch(() => { })
                     })
@@ -81,7 +81,7 @@ module.exports = {
                         channel.send({
                             content: resp,
                             allowedMentions: {
-                                parse: ((!m.member.permissions.has('ADMINISTRATOR') && !m.member.permissions.has('MENTION_EVERYONE') && m.author.id !== m.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                                parse: ((!m.member.permissions.has('Administrator') && !m.member.permissions.has('MentionEveryone') && m.author.id !== m.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                             }
                         }).catch(() => { })
                     }
@@ -98,7 +98,7 @@ module.exports = {
                         channel.send({
                             content: 'I\'m running out of time...',
                             allowedMentions: {
-                                parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && authorid !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                                parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && authorid !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                             }
                         }).catch(() => { })
                     }

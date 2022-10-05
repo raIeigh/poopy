@@ -32,7 +32,7 @@ module.exports = {
             await msg.reply({
                 content: brailleText,
                 allowedMentions: {
-                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(async () => {
                 var currentcount = vars.filecount
@@ -41,7 +41,7 @@ module.exports = {
                 fs.mkdirSync(`${filepath}`)
                 fs.writeFileSync(`${filepath}/ascii.txt`, brailleText)
                 await msg.reply({
-                    files: [new Discord.MessageAttachment(`${filepath}/ascii.txt`)]
+                    files: [new Discord.AttachmentBuilder(`${filepath}/ascii.txt`)]
                 }).catch(() => { })
                 fs.rmSync(`${filepath}`, { force: true, recursive: true })
             })
@@ -50,7 +50,7 @@ module.exports = {
             await msg.reply({
                 content: `Unsupported file: \`${currenturl}\``,
                 allowedMentions: {
-                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })

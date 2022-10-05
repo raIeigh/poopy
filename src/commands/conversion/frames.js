@@ -5,7 +5,7 @@ module.exports = {
         let poopy = this
         let { lastUrl, validateFile, downloadFile, execPromise, navigateEmbed, sendFile } = poopy.functions
         let vars = poopy.vars
-        let { fs, archiver } = poopy.modules
+        let { fs, archiver, Discord } = poopy.modules
         let config = poopy.config
         let bot = poopy.bot
 
@@ -67,7 +67,7 @@ module.exports = {
                             emoji: '939523064658526278',
                             reactemoji: '⏬',
                             customid: 'zip',
-                            style: 'PRIMARY',
+                            style: Discord.ButtonStyle.Primary,
                             function: async (_, __, resultsMsg, collector) => {
                                 collector.stop()
                                 resultsMsg.delete().catch(() => { })
@@ -89,7 +89,7 @@ module.exports = {
             await msg.reply({
                 content: `Unsupported file: \`${currenturl}\``,
                 allowedMentions: {
-                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })

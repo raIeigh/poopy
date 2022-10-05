@@ -6,7 +6,7 @@ module.exports = {
         let config = poopy.config
         let data = poopy.data
 
-        if (msg.member.permissions.has('MANAGE_GUILD') || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
+        if (msg.member.permissions.has('ManageGuild') || msg.member.permissions.has('ManageMessages') || msg.member.permissions.has('Administrator') || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
             if (args[1] === undefined) {
                 await msg.reply('You must specify a prefix!').catch(() => { })
                 return
@@ -35,6 +35,6 @@ module.exports = {
             'Pro Tip: mentioning Poopy with "reset prefix" will reset it to his default prefix.'
     },
     cooldown: 5000,
-    perms: ['ADMINISTRATOR', 'MANAGE_MESSAGES'],
+    perms: ['Administrator', 'ManageMessages'],
     type: 'Settings'
 }

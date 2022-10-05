@@ -19,18 +19,18 @@ module.exports = {
             tts = true
         }
         var saidMessage = args.slice(1).join(' ')
-        var attachments = msg.attachments.map(attachment => new Discord.MessageAttachment(attachment.url, attachment.name))
+        var attachments = msg.attachments.map(attachment => new Discord.AttachmentBuilder(attachment.url, attachment.name))
         if (args[1] === undefined && attachments.length <= 0 && msg.stickers.size <= 0) {
             await msg.reply('What is the message to say?!').catch(() => { })
             return;
         };
         var sendObject = {
             allowedMentions: {
-                parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
             },
             files: attachments,
             stickers: msg.stickers,
-            tts: (msg.member.permissions.has('ADMINISTRATOR') || msg.member.permissions.has('SEND_TTS_MESSAGES') || msg.author.id === msg.guild.ownerID) && tts
+            tts: (msg.member.permissions.has('Administrator') || msg.member.permissions.has('SendTTSMessages') || msg.author.id === msg.guild.ownerID) && tts
         }
         if (saidMessage) {
             sendObject.content = saidMessage
@@ -42,7 +42,7 @@ module.exports = {
             if (del || msg.replied) {
                 await msg.channel.send(sendObject).catch(() => { })
 
-                if (msg.isCommand && msg.isCommand()) await msg.reply({ content: 'Successfully sent.', ephemeral: true }).catch(() => { })
+                if (msg.type === Discord.InteractionType.ApplicationCommand && !msg.replied) await msg.reply({ content: 'Successfully sent.', ephemeral: true }).catch(() => { })
                 else msg.delete().catch(() => { })
             } else {
                 await msg.reply(sendObject).catch(() => { })

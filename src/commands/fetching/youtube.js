@@ -5,7 +5,7 @@ module.exports = {
         let poopy = this
         let vars = poopy.vars
         let { unescapeHTML, navigateEmbed, addLastUrl } = poopy.functions
-        let { youtubedl, axios } = poopy.modules
+        let { youtubedl, axios, Discord } = poopy.modules
         let config = poopy.config
 
         await msg.channel.sendTyping().catch(() => { })
@@ -90,7 +90,7 @@ module.exports = {
                 emoji: '874406183933444156',
                 reactemoji: '❌',
                 customid: 'delete',
-                style: 'DANGER',
+                style: Discord.ButtonStyle.Danger,
                 function: async (_, __, resultsMsg, collector) => {
                     collector.stop()
                     resultsMsg.delete().catch(() => { })

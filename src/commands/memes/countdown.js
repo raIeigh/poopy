@@ -42,7 +42,7 @@ module.exports = {
             var transparent = await Jimp.read(`assets/image/transparent.png`)
             var novecento = await Jimp.loadFont(`assets/fonts/Novecento/Novecento.fnt`)
             transparent.resize(101, 28)
-            await transparent.print(novecento, 0, 0, { text: Discord.Util.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 101, 28)
+            await transparent.print(novecento, 0, 0, { text: Discord.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 101, 28)
             await transparent.writeAsync(`${filepath}/caption.png`)
 
             await execPromise(`ffmpeg -i ${filepath}/${filename} -vf "scale=66:66" -preset ${findpreset(args)} -c:v libx264 -pix_fmt yuv420p ${filepath}/scaled.mp4`)
@@ -56,7 +56,7 @@ module.exports = {
             var transparent = await Jimp.read(`assets/image/transparent.png`)
             var novecento = await Jimp.loadFont(`assets/fonts/Novecento/Novecento.fnt`)
             transparent.resize(101, 28)
-            await transparent.print(novecento, 0, 0, { text: Discord.Util.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 101, 28)
+            await transparent.print(novecento, 0, 0, { text: Discord.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 101, 28)
             await transparent.writeAsync(`${filepath}/caption.png`)
 
             await execPromise(`ffmpeg -i ${filepath}/${filename} -vf "scale=66:66" -preset ${findpreset(args)} ${filepath}/scaled.png`)
@@ -70,7 +70,7 @@ module.exports = {
             var transparent = await Jimp.read(`assets/image/transparent.png`)
             var novecento = await Jimp.loadFont(`assets/fonts/Novecento/Novecento.fnt`)
             transparent.resize(101, 28)
-            await transparent.print(novecento, 0, 0, { text: Discord.Util.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 101, 28)
+            await transparent.print(novecento, 0, 0, { text: Discord.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 101, 28)
             await transparent.writeAsync(`${filepath}/caption.png`)
 
             await execPromise(`ffmpeg -i ${filepath}/${filename} -filter_complex "[0:v]scale=66:66,split[gnout][gpout];[gpout]palettegen=reserve_transparent=1[palette];[gnout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -preset ${findpreset(args)} -gifflags -offsetting ${filepath}/scaled.gif`)
@@ -80,7 +80,7 @@ module.exports = {
             await msg.reply({
                 content: `Unsupported file: \`${currenturl}\``,
                 allowedMentions: {
-                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })

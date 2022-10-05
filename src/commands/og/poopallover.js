@@ -9,7 +9,7 @@ module.exports = {
         var saidMessage = args.slice(1).join(' ')
         var attachments = []
         msg.attachments.forEach(attachment => {
-            attachments.push(new Discord.MessageAttachment(attachment.url))
+            attachments.push(new Discord.AttachmentBuilder(attachment.url))
         });
         if (args[1] === undefined && attachments.length <= 0) {
             await msg.reply('What/who is the subject?!').catch(() => { })
@@ -19,7 +19,7 @@ module.exports = {
         await msg.reply({
             content: '**' + (saidMessage || 'this') + '** has been successfully pooped on.',
             allowedMentions: {
-                parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
             },
             files: attachments
         }).catch(() => { })

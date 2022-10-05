@@ -7,7 +7,7 @@ module.exports = {
     let tempdata = poopy.tempdata
     let { sleep } = poopy.functions
 
-    if (msg.member.permissions.has('MANAGE_GUILD') || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
+    if (msg.member.permissions.has('ManageGuild') || msg.member.permissions.has('ManageMessages') || msg.member.permissions.has('Administrator') || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
       if (tempdata[msg.guild.id][msg.channel.id]['shut']) return
 
       var duration = isNaN(Number(args[1])) ? 10 : Number(args[1]) >= 60 ? 60 : Number(args[1]) ?? 10
@@ -26,6 +26,6 @@ module.exports = {
     name: 'shutup [duration (max 60)] (moderator only)',
     value: 'he shuts up'
   },
-  perms: ['ADMINISTRATOR', 'MANAGE_MESSAGES'],
+  perms: ['Administrator', 'ManageMessages'],
   type: 'Annoying'
 }

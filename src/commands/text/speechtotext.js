@@ -80,7 +80,7 @@ module.exports = {
                 await msg.reply({
                     content: response.data.data.text.toLowerCase(),
                     allowedMentions: {
-                        parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                        parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                     }
                 }).catch(async () => {
                     var currentcount = vars.filecount
@@ -89,7 +89,7 @@ module.exports = {
                     fs.mkdirSync(`${filepath}`)
                     fs.writeFileSync(`${filepath}/speechtotext.txt`, response.data.data.text)
                     await msg.reply({
-                        files: [new Discord.MessageAttachment(`${filepath}/speechtotext.txt`)]
+                        files: [new Discord.AttachmentBuilder(`${filepath}/speechtotext.txt`)]
                     }).catch(() => { })
                     fs.rmSync(`${filepath}`, { force: true, recursive: true })
                 })
@@ -150,7 +150,7 @@ module.exports = {
             await msg.reply({
                 content: response.data.data.text.toLowerCase(),
                 allowedMentions: {
-                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(async () => {
                 var currentcount = vars.filecount
@@ -159,7 +159,7 @@ module.exports = {
                 fs.mkdirSync(`${filepath}`)
                 fs.writeFileSync(`${filepath}/speechtotext.txt`, response.data.data.text)
                 await msg.reply({
-                    files: [new Discord.MessageAttachment(`${filepath}/speechtotext.txt`)]
+                    files: [new Discord.AttachmentBuilder(`${filepath}/speechtotext.txt`)]
                 }).catch(() => { })
                 fs.rmSync(`${filepath}`, { force: true, recursive: true })
             })
@@ -167,7 +167,7 @@ module.exports = {
             await msg.reply({
                 content: `Unsupported file: \`${currenturl}\``,
                 allowedMentions: {
-                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })

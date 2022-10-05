@@ -123,7 +123,7 @@ module.exports = {
 
     await msg.reply({
       content: `This treasure was made by ${sayori.tag}.`,
-      files: [new Discord.MessageAttachment(sayoriart[Math.floor(Math.random() * sayoriart.length)])]
+      files: [new Discord.AttachmentBuilder(sayoriart[Math.floor(Math.random() * sayoriart.length)])]
     }).catch(() => { })
   },
   help: {

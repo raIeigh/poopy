@@ -30,8 +30,8 @@ module.exports = {
     }],
     execute: async function (msg, args, opts) {
         let poopy = this
-        let { splitKeyFunc, getKeywordsFor, shuffle, randomChoice, yesno, dmSupport, gatherData } = poopy.functions
-        let { Discord, DMGuild } = poopy.modules
+        let { shuffle, randomChoice, yesno } = poopy.functions
+        let { Discord } = poopy.modules
         let json = poopy.json
         let data = poopy.data
         let bot = poopy.bot
@@ -52,7 +52,7 @@ module.exports = {
         var saidMessage = args.slice(2).join(' ')
         var attachments = []
         msg.attachments.forEach(attachment => {
-            attachments.push(new Discord.MessageAttachment(attachment.url))
+            attachments.push(new Discord.AttachmentBuilder(attachment.url))
         });
         if (args[2] === undefined && attachments.length <= 0) {
             await msg.reply('What is the message to DM?!').catch(() => { })
@@ -60,7 +60,7 @@ module.exports = {
         };
 
         var ownerid = (config.ownerids.find(id => id == msg.author.id));
-        if (args[1].match(/^@(here|everyone)$/) && (Math.random() < 0.2 || msg.member.permissions.has('ADMINISTRATOR') || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('MENTION_EVERYONE') || msg.author.id == msg.guild.ownerID || ownerid || opts.ownermode)) {
+        if (args[1].match(/^@(here|everyone)$/) && (Math.random() < 0.2 || msg.member.permissions.has('Administrator') || msg.member.permissions.has('ManageMessages') || msg.member.permissions.has('MentionEveryone') || msg.author.id == msg.guild.ownerID || ownerid || opts.ownermode)) {
             var len = config.useReactions ? 20 : 25
             var ha = shuffle(
                 msg.guild.emojis.cache.filter(emoji => 
@@ -73,7 +73,12 @@ module.exports = {
                     emoji: emoji,
                     reactemoji: emoji,
                     customid: emoji,
-                    style: randomChoice(['PRIMARY', 'SECONDARY', 'SUCCESS', 'DANGER']),
+                    style: randomChoice([
+                        Discord.ButtonStyle.Primary,
+                        Discord.ButtonStyle.Secondary,
+                        Discord.ButtonStyle.Success,
+                        Discord.ButtonStyle.Danger
+                    ]),
                     resolve: false
                 }
             })
@@ -101,7 +106,7 @@ module.exports = {
             await msg.reply({
                 content: `Invalid user id: **${args[1]}**`,
                 allowedMentions: {
-                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
             return
@@ -125,7 +130,7 @@ module.exports = {
                 member.send({
                     content: `Unrelated DMs from \`dm\` will **${!send ? 'not ' : ''}be sent** to you now.`,
                     allowedMentions: {
-                        parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                        parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                     }
                 }).catch(() => { })
                 if (pending) {
@@ -142,9 +147,6 @@ module.exports = {
 
             var infoMessage = !anon ? `${msg.author.tag} from ${msg.guild.name}:\n\n` : ''
 
-            var channel = msg.channel
-            var guild = msg.guild
-
             var dmChannel = await member.createDM().catch(() => { })
             if (!dmChannel) return
 
@@ -159,7 +161,7 @@ module.exports = {
             }).catch((e) => console.log(e))
 
             if (dmMessage) {
-                if (msg.isCommand && msg.isCommand()) await msg.reply({ content: 'Successfully sent.', ephemeral: true }).catch(() => { })
+                if (msg.type === Discord.InteractionType.ApplicationCommand && !msg.replied) await msg.reply({ content: 'Successfully sent.', ephemeral: true }).catch(() => { })
                 else msg.react('✅').catch(() => { })
             } else {
                 await msg.reply(member.id == msg.author.id ? 'unblock me' : 'Couldn\'t send a message to this user. Make sure they share any of the servers I\'m in, or not have me blocked.').catch(() => { })

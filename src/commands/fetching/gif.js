@@ -3,7 +3,7 @@ module.exports = {
     args: [{"name":"query","required":true,"specifarg":false,"orig":"<query>"},{"name":"page","required":false,"specifarg":true,"orig":"[-page <number>]"}],
     execute: async function (msg, args) {
         let poopy = this
-        let { axios } = poopy.modules
+        let { axios, Discord } = poopy.modules
         let { navigateEmbed, addLastUrl } = poopy.functions
         let config = poopy.config
 
@@ -70,7 +70,7 @@ module.exports = {
                 emoji: '874406183933444156',
                 reactemoji: '❌',
                 customid: 'delete',
-                style: 'DANGER',
+                style: Discord.ButtonStyle.Danger,
                 function: async (_, __, resultsMsg, collector) => {
                     collector.stop()
                     resultsMsg.delete().catch(() => { })

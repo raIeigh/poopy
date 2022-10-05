@@ -45,7 +45,7 @@ module.exports = {
             await msg.reply({
                 content: `Invalid user id: **${args[1]}**`,
                 allowedMentions: {
-                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => {})
             return
@@ -53,14 +53,14 @@ module.exports = {
 
         var username = member.username ?? member.user.username
         if (args.includes('-global') || member.user) member = member.user
-        var avatar = new Discord.MessageAttachment(member.displayAvatarURL({
+        var avatar = new Discord.AttachmentBuilder(member.displayAvatarURL({
             dynamic: true, size: 1024, format: 'png'
         }));
         var parsedAvatar = whatwg.parseURL(avatar.attachment)
 
         var avObject = {
             allowedMentions: {
-                parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
             },
             files: [avatar]
         }

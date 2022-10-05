@@ -5,13 +5,14 @@ module.exports = {
         let poopy = this
         let config = poopy.config
         let { yesno } = poopy.functions
+        let { Discord } = poopy.modules
 
-        if (msg.channel.type == 'DM') {
+        if (msg.channel.type == Discord.ChannelType.DM) {
             await msg.reply(`You can't get rid of me.`).catch(() => { })
             return
         }
 
-        if (msg.member.permissions.has('MANAGE_GUILD') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
+        if (msg.member.permissions.has('ManageGuild') || msg.member.permissions.has('Administrator') || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
             var phrases = [
                 'idiot',
                 'the salt',
@@ -49,14 +50,14 @@ module.exports = {
                 'pig',
                 'youve missed the chance to try crab rice',
                 'mug',
-                ''
+                '_ _'
             ]
             var confirm = await yesno(msg.channel, 'are you sure about this', msg.member, undefined, msg).catch(() => { })
 
             if (confirm) {
                 await msg.reply(phrases[Math.floor(Math.random() * phrases.length)]).catch(() => { })
                 
-                if (msg.channel.type == 'GROUP_DM') msg.channel.delete().catch(() => { })
+                if (msg.channel.type == Discord.ChannelType.GroupDM) msg.channel.delete().catch(() => { })
                 else {
                     var left = await msg.guild.leave().catch(() => { })
                     await msg.channel?.send(left).catch(() => { })
@@ -68,6 +69,6 @@ module.exports = {
         }
     },
     help: { name: 'leave (manage server only)', value: 'good' },
-    perms: ['ADMINISTRATOR', 'MANAGE_GUILD'],
+    perms: ['Administrator', 'ManageGuild'],
     type: 'Annoying'
 }

@@ -4,7 +4,7 @@ module.exports = {
     execute: async function (msg, args, opts) {
         let poopy = this
         let config = poopy.config
-        let { axios } = poopy.modules
+        let { axios, Discord } = poopy.modules
         let { sleep, navigateEmbed, userToken } = poopy.functions
         let bot = poopy.bot
 
@@ -115,7 +115,7 @@ module.exports = {
                 emoji: '874406183933444156',
                 reactemoji: '❌',
                 customid: 'delete',
-                style: 'DANGER',
+                style: Discord.ButtonStyle.Danger,
                 function: async (_, __, resultsMsg, collector) => {
                     collector.stop()
                     resultsMsg.delete().catch(() => { })

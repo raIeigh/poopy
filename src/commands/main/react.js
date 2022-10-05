@@ -3,6 +3,7 @@ module.exports = {
     args: [{ "name": "emojis", "required": true, "specifarg": false, "orig": "<emojis>" }, { "name": "messageid", "required": false, "specifarg": false, "orig": "{messageid}" }],
     execute: async function (msg, args) {
         let poopy = this
+        let { Discord } = poopy.modules
 
         if (args[1] === undefined) {
             await msg.reply('Where are the arguments?!').catch(() => { })
@@ -22,7 +23,7 @@ module.exports = {
                     await msg.reply({
                         content: 'Invalid message id: **' + saidMessage + '**',
                         allowedMentions: {
-                            parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                            parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                         }
                     }).catch(() => { })
                     return
@@ -37,14 +38,14 @@ module.exports = {
                     await msg.reply({
                         content: 'Invalid emoji: **' + emoji + '**',
                         allowedMentions: {
-                            parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                            parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                         }
                     }).catch(() => { })
                     return
                 }
             }
 
-            if (msg.isCommand && msg.isCommand()) {
+            if (msg.type === Discord.InteractionType.ApplicationCommand && !msg.replied) {
                 await msg.reply({ content: 'Successfully reacted.', ephemeral: true }).catch(() => { })
             }
         };

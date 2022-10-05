@@ -104,7 +104,7 @@ module.exports = {
                 fs.mkdirSync(`${filepath}`)
                 fs.writeFileSync(`${filepath}/messagelist.txt`, data['guild-data'][msg.guild.id]['messages'].map(m => `Author: ${m.author}\n${m.content}`).join('\n\n-----------------------------------------------\n\n') || 'lmao theres nothing')
                 await msg.reply({
-                    files: [new Discord.MessageAttachment(`${filepath}/messagelist.txt`)]
+                    files: [new Discord.AttachmentBuilder(`${filepath}/messagelist.txt`)]
                 }).catch(() => {})
                 fs.rmSync(`${filepath}`, {
                     force: true, recursive: true
@@ -118,7 +118,7 @@ module.exports = {
                 }
 
                 var saidMessage = args.slice(1).join(' ')
-                var cleanMessage = Discord.Util.cleanContent(saidMessage, msg).replace(/\@/g, '@‌')
+                var cleanMessage = Discord.cleanContent(saidMessage, msg).replace(/\@/g, '@‌')
                 var results = []
 
                 data['guild-data'][msg.guild.id]['messages'].forEach(message => {
@@ -137,7 +137,7 @@ module.exports = {
                 fs.mkdirSync(`${filepath}`)
                 fs.writeFileSync(`${filepath}/messagelist.txt`, results.map(m => `Author: ${m.author}\n${m.content}`).join('\n\n-----------------------------------------------\n\n') || 'lmao theres nothing')
                 await msg.reply({
-                    files: [new Discord.MessageAttachment(`${filepath}/messagelist.txt`)]
+                    files: [new Discord.AttachmentBuilder(`${filepath}/messagelist.txt`)]
                 }).catch(() => {})
                 fs.rmSync(`${filepath}`, {
                     force: true, recursive: true
@@ -183,7 +183,7 @@ module.exports = {
                 }
 
                 var saidMessage = args.slice(1).join(' ')
-                var cleanMessage = Discord.Util.cleanContent(saidMessage, msg).replace(/\@/g, '@‌')
+                var cleanMessage = Discord.cleanContent(saidMessage, msg).replace(/\@/g, '@‌')
                 var findMessage = data['guild-data'][msg.guild.id]['messages'].find(message => message.content.toLowerCase() === cleanMessage.toLowerCase())
 
                 if (findMessage) {
@@ -206,7 +206,7 @@ module.exports = {
                     await msg.reply({
                         content: `✅ Added ${cleanMessage}`,
                         allowedMentions: {
-                            parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                            parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                         }
                     }).catch(() => {})
                 }
@@ -219,7 +219,7 @@ module.exports = {
                 }
 
                 var saidMessage = args.slice(1).join(' ')
-                var cleanMessage = Discord.Util.cleanContent(saidMessage, msg).replace(/\@/g, '@‌')
+                var cleanMessage = Discord.cleanContent(saidMessage, msg).replace(/\@/g, '@‌')
                 var findMessage = data['guild-data'][msg.guild.id]['messages'].findIndex(message => message.content.toLowerCase() === cleanMessage.toLowerCase())
 
                 if (findMessage > -1) {
@@ -232,7 +232,7 @@ module.exports = {
             },
 
             clear: async (msg) => {
-                if (msg.member.permissions.has('MANAGE_GUILD') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
+                if (msg.member.permissions.has('ManageGuild') || msg.member.permissions.has('Administrator') || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
                     var confirm = await yesno(msg.channel, 'are you sure about this', msg.member, undefined, msg).catch(() => {})
 
                     if (confirm) {
@@ -246,7 +246,7 @@ module.exports = {
             },
 
             read: async (msg) => {
-                if (msg.member.permissions.has('MANAGE_GUILD') || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
+                if (msg.member.permissions.has('ManageGuild') || msg.member.permissions.has('ManageMessages') || msg.member.permissions.has('Administrator') || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
                     data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['read'] = !(data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['read'])
 
                     var read = data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['read']
@@ -258,12 +258,12 @@ module.exports = {
             },
 
             readall: async (msg) => {
-                if (msg.member.permissions.has('MANAGE_GUILD') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
+                if (msg.member.permissions.has('ManageGuild') || msg.member.permissions.has('Administrator') || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
                     data['guild-data'][msg.guild.id]['read'] = !(data['guild-data'][msg.guild.id]['read'])
                     var channels = msg.guild.channels.cache
 
                     channels.forEach(channel => {
-                        if (channel.isText()) {
+                        if (channel.type === Discord.ChannelType.GuildText || channel.type === Discord.ChannelType.GuildNews) {
                             if (!data['guild-data'][msg.guild.id]['channels'][channel.id]) {
                                 data['guild-data'][msg.guild.id]['channels'][channel.id] = {}
                             }

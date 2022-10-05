@@ -66,8 +66,8 @@ module.exports = {
             await msg.reply({
                 content: response.data,
                 allowedMentions: {
-                    parse: (!msg.member.permissions.has('ADMINISTRATOR') &&
-                        !msg.member.permissions.has('MENTION_EVERYONE') &&
+                    parse: (!msg.member.permissions.has('Administrator') &&
+                        !msg.member.permissions.has('MentionEveryone') &&
                         msg.member.id !== msg.guild.ownerID) ?
                         ['users'] : ['users', 'everyone', 'roles']
                 }

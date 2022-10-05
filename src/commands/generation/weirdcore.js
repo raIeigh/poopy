@@ -24,13 +24,13 @@ module.exports = {
             await msg.reply({
                 content: err.stack,
                 allowedMentions: {
-                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
         })
         if (resp) {
             await msg.reply({
-                files: [new Discord.MessageAttachment(resp.output_url)]
+                files: [new Discord.AttachmentBuilder(resp.output_url)]
             }).catch(() => { })
         }
         await msg.channel.sendTyping().catch(() => { })

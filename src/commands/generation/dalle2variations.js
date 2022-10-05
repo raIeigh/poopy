@@ -5,7 +5,7 @@ module.exports = {
         let poopy = this
         let config = poopy.config
         let { lastUrl, validateFile, userToken, downloadFile, execPromise, sleep, navigateEmbed } = poopy.functions
-        let { fs, axios } = poopy.modules
+        let { fs, axios, Discord } = poopy.modules
         let bot = poopy.bot
 
         var tokens = data['user-data'][msg.author.id]['tokens']['DALLE2_SESSION'] ?? []
@@ -134,7 +134,7 @@ module.exports = {
                     emoji: '874406183933444156',
                     reactemoji: '❌',
                     customid: 'delete',
-                    style: 'DANGER',
+                    style: Discord.ButtonStyle.Danger,
                     function: async (_, __, resultsMsg, collector) => {
                         collector.stop()
                         resultsMsg.delete().catch(() => { })
@@ -146,7 +146,7 @@ module.exports = {
             await msg.reply({
                 content: `Unsupported file: \`${currenturl}\``,
                 allowedMentions: {
-                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })

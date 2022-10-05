@@ -63,9 +63,9 @@ module.exports = {
             ystars.crop(0, 0, ystars.bitmap.width * (numberrating / 5), ystars.bitmap.height)
             wstars.composite(ystars, 0, 0)
             amazon.composite(wstars, 16, 299)
-            await amazon.print(amazonemlink, 14, 219, { text: Discord.Util.cleanContent(name, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_LEFT, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 209, 49)
-            await amazon.print(amazonembig, 22, 275, { text: Discord.Util.cleanContent(price1, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_RIGHT, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 36, 18)
-            await amazon.print(amazonemsmall, 60, 275, { text: Discord.Util.cleanContent(price2, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_LEFT, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 20, 12)
+            await amazon.print(amazonemlink, 14, 219, { text: Discord.cleanContent(name, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_LEFT, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 209, 49)
+            await amazon.print(amazonembig, 22, 275, { text: Discord.cleanContent(price1, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_RIGHT, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 36, 18)
+            await amazon.print(amazonemsmall, 60, 275, { text: Discord.cleanContent(price2, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_LEFT, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 20, 12)
             await amazon.writeAsync(`${filepath}/amazon.png`)
 
             var width = fileinfo.info.width
@@ -90,9 +90,9 @@ module.exports = {
             ystars.crop(0, 0, ystars.bitmap.width * (numberrating / 5), ystars.bitmap.height)
             wstars.composite(ystars, 0, 0)
             amazon.composite(wstars, 16, 299)
-            await amazon.print(amazonemlink, 14, 219, { text: Discord.Util.cleanContent(name, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_LEFT, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 209, 49)
-            await amazon.print(amazonembig, 22, 275, { text: Discord.Util.cleanContent(price1, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_RIGHT, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 36, 18)
-            await amazon.print(amazonemsmall, 60, 275, { text: Discord.Util.cleanContent(price2, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_LEFT, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 20, 12)
+            await amazon.print(amazonemlink, 14, 219, { text: Discord.cleanContent(name, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_LEFT, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 209, 49)
+            await amazon.print(amazonembig, 22, 275, { text: Discord.cleanContent(price1, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_RIGHT, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 36, 18)
+            await amazon.print(amazonemsmall, 60, 275, { text: Discord.cleanContent(price2, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_LEFT, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 20, 12)
             await amazon.writeAsync(`${filepath}/amazon.png`)
 
             var width = fileinfo.info.width
@@ -115,9 +115,9 @@ module.exports = {
             ystars.crop(0, 0, ystars.bitmap.width * (numberrating / 5), ystars.bitmap.height)
             wstars.composite(ystars, 0, 0)
             amazon.composite(wstars, 16, 299)
-            await amazon.print(amazonemlink, 14, 219, { text: Discord.Util.cleanContent(name, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_LEFT, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 209, 49)
-            await amazon.print(amazonembig, 22, 275, { text: Discord.Util.cleanContent(price1, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_RIGHT, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 36, 18)
-            await amazon.print(amazonemsmall, 60, 275, { text: Discord.Util.cleanContent(price2, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_LEFT, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 20, 12)
+            await amazon.print(amazonemlink, 14, 219, { text: Discord.cleanContent(name, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_LEFT, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 209, 49)
+            await amazon.print(amazonembig, 22, 275, { text: Discord.cleanContent(price1, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_RIGHT, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 36, 18)
+            await amazon.print(amazonemsmall, 60, 275, { text: Discord.cleanContent(price2, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_LEFT, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 20, 12)
             await amazon.writeAsync(`${filepath}/amazon.png`)
 
             var width = fileinfo.info.width
@@ -131,7 +131,7 @@ module.exports = {
             await msg.reply({
                 content: `Unsupported file: \`${currenturl}\``,
                 allowedMentions: {
-                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })

@@ -25,7 +25,7 @@ module.exports = {
         await msg.reply({
             content: markovString,
             allowedMentions: {
-                parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
             }
         }).catch(async () => {
             var currentcount = vars.filecount
@@ -34,7 +34,7 @@ module.exports = {
             fs.mkdirSync(`${filepath}`)
             fs.writeFileSync(`${filepath}/markov.txt`, markovString)
             await msg.reply({
-                files: [new Discord.MessageAttachment(`${filepath}/markov.txt`)]
+                files: [new Discord.AttachmentBuilder(`${filepath}/markov.txt`)]
             }).catch(() => { })
             fs.rmSync(`${filepath}`, { force: true, recursive: true })
         })

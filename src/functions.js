@@ -82,7 +82,7 @@ functions.unescapeHTML = function (value) {
 }
 
 functions.decrypt = function (str, hide) {
-    var decrypted =  CryptoJS.AES.decrypt(str, process.env.AUTH_TOKEN).toString(CryptoJS.enc.Utf8)
+    var decrypted = CryptoJS.AES.decrypt(str, process.env.AUTH_TOKEN).toString(CryptoJS.enc.Utf8)
 
     if (hide) decrypted = decrypted.replace(/./g, '•')
 
@@ -316,6 +316,14 @@ functions.generateId = function (existing, length = 10) {
     if (existing && existing.includes(id)) return functions.generateId(existing, length)
 
     return id
+}
+
+functions.tryJSONparse = function (obj) {
+    try {
+        return JSON.parse(obj)
+    } catch (_) {
+        return null
+    }
 }
 
 functions.replaceAsync = async function (str, regex, asyncFn) {
@@ -591,6 +599,14 @@ functions.gatherData = async function (msg) {
         }
 
         data['user-data'][msg.author.id]['username'] = msg.author.username
+
+        var battleVars = {
+            health: 100,
+            defense: 0,
+            attack: 0,
+            level: 0,
+            bucks: 100
+        }
 
         if (data['user-data'][msg.author.id]['health'] === undefined) {
             data['user-data'][msg.author.id]['health'] = 100
@@ -892,7 +908,7 @@ functions.cleverbot = async function (stim, id) {
 functions.processTask = async function (data) {
     let poopy = this
     let vars = poopy.vars
-    let { generateId } = poopy.functions
+    let { generateId, tryJSONparse } = poopy.functions
 
     return new Promise(async (resolve, reject) => {
         try {
@@ -916,14 +932,6 @@ functions.processTask = async function (data) {
             }
 
             var chunkdata = []
-
-            function tryJSONparse(obj) {
-                try {
-                    return JSON.parse(obj)
-                } catch (_) {
-                    return null
-                }
-            }
 
             var consumer = await ch.consume(q.queue, function (msg) {
                 if (msg.properties.correlationId == correlationId) {
@@ -1260,8 +1268,8 @@ functions.yesno = async function (channel, content, who, btdata, reply) {
 
         if (typeof (who) != 'string') {
             sendObject.allowedMentions = {
-                parse: (!who.permissions.has('ADMINISTRATOR') &&
-                    !who.permissions.has('MENTION_EVERYONE') &&
+                parse: (!who.permissions.has('Administrator') &&
+                    !who.permissions.has('MentionEveryone') &&
                     who.id !== channel.guild.ownerID) ?
                     ['users'] : ['users', 'everyone', 'roles']
             }
@@ -1273,7 +1281,7 @@ functions.yesno = async function (channel, content, who, btdata, reply) {
                 emoji: '874406154619469864',
                 reactemoji: '✅',
                 customid: 'yes',
-                style: 'SUCCESS',
+                style: Discord.ButtonStyle.Success,
                 resolve: true
             },
 
@@ -1281,7 +1289,7 @@ functions.yesno = async function (channel, content, who, btdata, reply) {
                 emoji: '874406183933444156',
                 reactemoji: '❌',
                 customid: 'no',
-                style: 'DANGER',
+                style: Discord.ButtonStyle.Danger,
                 resolve: false
             }
         ]
@@ -1292,11 +1300,11 @@ functions.yesno = async function (channel, content, who, btdata, reply) {
             var chunkButtonData = chunkArray(buttonsData, 5)
 
             chunkButtonData.forEach(buttonsData => {
-                var buttonRow = new Discord.MessageActionRow()
+                var buttonRow = new Discord.ActionRowBuilder()
                 var buttons = []
 
                 buttonsData.forEach(bdata => {
-                    var button = new Discord.MessageButton()
+                    var button = new Discord.ButtonBuilder()
                         .setStyle(bdata.style)
                         .setEmoji(bdata.emoji)
                         .setCustomId(bdata.customid)
@@ -1408,16 +1416,16 @@ functions.selectMenu = async function (channel, content, placeholder, options, e
 
         if (typeof (who) != 'string') {
             sendObject.allowedMentions = {
-                parse: (!who.permissions.has('ADMINISTRATOR') &&
-                    !who.permissions.has('MENTION_EVERYONE') &&
+                parse: (!who.permissions.has('Administrator') &&
+                    !who.permissions.has('MentionEveryone') &&
                     who.id !== channel.guild.ownerID) ?
                     ['users'] : ['users', 'everyone', 'roles']
             }
             who = who.id
         }
 
-        var menuRow = new Discord.MessageActionRow()
-        var menu = new Discord.MessageSelectMenu()
+        var menuRow = new Discord.ActionRowBuilder()
+        var menu = new Discord.SelectMenuBuilder()
             .setCustomId('selectmenu')
             .setPlaceholder(placeholder)
             .addOptions(options)
@@ -1476,7 +1484,7 @@ functions.navigateEmbed = async function (channel, pageFunc, results, who, extra
             emoji: '861253229726793728',
             reactemoji: '⬅️',
             customid: 'previous',
-            style: 'PRIMARY',
+            style: Discord.ButtonStyle.Primary,
             function: async () => page - 1,
             page: true
         },
@@ -1485,7 +1493,7 @@ functions.navigateEmbed = async function (channel, pageFunc, results, who, extra
             emoji: '861253230070988860',
             reactemoji: '🔀',
             customid: 'random',
-            style: 'PRIMARY',
+            style: Discord.ButtonStyle.Primary,
             function: async () => Math.floor(Math.random() * results) + 1,
             page: true
         },
@@ -1494,7 +1502,7 @@ functions.navigateEmbed = async function (channel, pageFunc, results, who, extra
             emoji: '861253229798621205',
             reactemoji: '➡️',
             customid: 'next',
-            style: 'PRIMARY',
+            style: Discord.ButtonStyle.Primary,
             function: async () => page + 1,
             page: true
         },
@@ -1503,7 +1511,7 @@ functions.navigateEmbed = async function (channel, pageFunc, results, who, extra
             emoji: '970292877785727036',
             reactemoji: '🔢',
             customid: 'page',
-            style: 'PRIMARY',
+            style: Discord.ButtonStyle.Primary,
             function: async (_, interaction) => new Promise(async resolve => {
                 var newpage = page
 
@@ -1529,12 +1537,12 @@ functions.navigateEmbed = async function (channel, pageFunc, results, who, extra
                         resolve(newpage)
                     })
                 } else {
-                    var pageModal = new Discord.Modal()
+                    var pageModal = new Discord.ModalBuilder()
                         .setCustomId('page-modal')
                         .setTitle('Select your page...')
                         .addComponents(
-                            new Discord.MessageActionRow().addComponents(
-                                new Discord.TextInputComponent()
+                            new Discord.ActionRowBuilder().addComponents(
+                                new Discord.TextInputBuilder()
                                     .setCustomId('page-num')
                                     .setLabel('Page')
                                     .setStyle('SHORT')
@@ -1549,7 +1557,7 @@ functions.navigateEmbed = async function (channel, pageFunc, results, who, extra
                         var done = false
 
                         var modalCallback = (modal) => {
-                            if (!modal.isModalSubmit()) return
+                            if (modal.type !== Discord.InteractionType.ModalSubmit) return
 
                             if (modal.deferUpdate) modal.deferUpdate().catch(() => { })
 
@@ -1585,11 +1593,11 @@ functions.navigateEmbed = async function (channel, pageFunc, results, who, extra
         var chunkButtonData = chunkArray(buttonsData, 5)
 
         chunkButtonData.forEach(buttonsData => {
-            var buttonRow = new Discord.MessageActionRow()
+            var buttonRow = new Discord.ActionRowBuilder()
             var buttons = []
 
             buttonsData.forEach(bdata => {
-                var button = new Discord.MessageButton()
+                var button = new Discord.ButtonBuilder()
                     .setStyle(bdata.style)
                     .setEmoji(bdata.emoji)
                     .setCustomId(bdata.customid)
@@ -1610,8 +1618,8 @@ functions.navigateEmbed = async function (channel, pageFunc, results, who, extra
     var allowedMentions
 
     if (selectMenu) {
-        var menuRow = new Discord.MessageActionRow()
-        var menu = new Discord.MessageSelectMenu()
+        var menuRow = new Discord.ActionRowBuilder()
+        var menu = new Discord.SelectMenuBuilder()
             .setCustomId(selectMenu.customid)
             .setPlaceholder(selectMenu.text)
             .addOptions(selectMenu.options)
@@ -1624,8 +1632,8 @@ functions.navigateEmbed = async function (channel, pageFunc, results, who, extra
 
     if (typeof (who) != 'string') {
         allowedMentions = {
-            parse: (!who.permissions.has('ADMINISTRATOR') &&
-                !who.permissions.has('MENTION_EVERYONE') &&
+            parse: (!who.permissions.has('Administrator') &&
+                !who.permissions.has('MentionEveryone') &&
                 who.id !== channel.guild.ownerID) ?
                 ['users'] : ['users', 'everyone', 'roles']
         }
@@ -1754,8 +1762,8 @@ functions.navigateEmbed = async function (channel, pageFunc, results, who, extra
                     }
 
                     if (selectMenu) {
-                        var menuRow = new Discord.MessageActionRow()
-                        var menu = new Discord.MessageSelectMenu()
+                        var menuRow = new Discord.ActionRowBuilder()
+                        var menu = new Discord.SelectMenuBuilder()
                             .setCustomId(selectMenu.customid)
                             .setPlaceholder(resultEmbed.menuText || selectMenu.text)
                             .addOptions(selectMenu.options)
@@ -2254,7 +2262,6 @@ functions.correctUrl = async function (url) {
 
         async function getVidUrl(url) {
             var twittervidurl = await youtubedl(url, {
-                format: 'http-832',
                 'get-url': ''
             }).catch(() => { })
 
@@ -2670,7 +2677,7 @@ functions.getKeywordsFor = async function (string, msg, isBot, { extrakeys = {},
     let data = poopy.data
     let tempdata = poopy.tempdata
     let globaldata = poopy.globaldata
-    let { getKeyFunc, getKeywordsFor, infoPost, equalValues, sleep } = poopy.functions
+    let { getKeyFunc, infoPost, equalValues, sleep } = poopy.functions
 
     if (!tempdata[msg.author.id]) {
         tempdata[msg.author.id] = {}
@@ -2690,134 +2697,133 @@ functions.getKeywordsFor = async function (string, msg, isBot, { extrakeys = {},
         var extradkeys = declaredonly ? { ...tempdata[msg.author.id]['keydeclared'] } : { ...extrakeys, ...tempdata[msg.author.id]['keydeclared'] }
         var extradfuncs = declaredonly ? { ...tempdata[msg.author.id]['funcdeclared'] } : { ...extrafuncs, ...tempdata[msg.author.id]['funcdeclared'] }
         var started = false
-    
+
         if (tempdata[msg.author.id]['ratelimited'] || globaldata['shit'].find(id => id === msg.author.id)) {
             return string
         }
-    
+
         while (getKeyFunc(string, { extrakeys: extradkeys, extrafuncs: extradfuncs, declaredonly: declaredonly }) !== false && tempdata[msg.author.id][msg.id]?.['return'] == undefined) {
-            console.log(string)
             if (!started || !tempdata[msg.author.id][msg.id]) {
                 if (!tempdata[msg.author.id][msg.id]) {
                     tempdata[msg.author.id][msg.id] = {}
                 }
-    
+
                 if (!tempdata[msg.author.id][msg.id]['keyattempts']) {
                     tempdata[msg.author.id][msg.id]['keyattempts'] = 0
                 }
-    
+
                 if (!tempdata[msg.author.id][msg.id]['keyexecuting']) {
                     tempdata[msg.author.id][msg.id]['keyexecuting'] = 0
                 }
-    
+
                 if (!tempdata[msg.author.id][msg.id]['keywordsExecuted']) {
                     tempdata[msg.author.id][msg.id]['keywordsExecuted'] = []
                 }
-    
+
                 if (!tempdata[msg.author.id]['arrays']) {
                     tempdata[msg.author.id]['arrays'] = {}
                 }
-    
+
                 if (!tempdata[msg.author.id]['declared']) {
                     tempdata[msg.author.id]['declared'] = {}
                 }
-    
+
                 if (!tempdata[msg.author.id]['keydeclared']) {
                     tempdata[msg.author.id]['keydeclared'] = {}
                 }
-    
+
                 if (!tempdata[msg.author.id]['funcdeclared']) {
                     tempdata[msg.author.id]['funcdeclared'] = {}
                 }
-    
+
                 started = true
             }
-    
+
             if (tempdata[msg.author.id]['ratelimited'] || globaldata['shit'].find(id => id === msg.author.id)) {
                 return string
             }
-    
+
             if (tempdata[msg.author.id][msg.id]['keyattempts'] >= config.keyLimit) {
                 infoPost(`Keyword attempts value exceeded`)
                 return 'Keyword attempts value exceeded.'
             }
-    
+
             var keydata = getKeyFunc(string, {
                 extrakeys: extradkeys,
                 extrafuncs: extradfuncs,
                 declaredonly: declaredonly
             })
-    
+
             var opts = {
                 extrakeys: extradkeys,
                 extrafuncs: extradfuncs,
                 ownermode: ownermode
             }
-    
+
             switch (keydata.type) {
                 case 'key':
                     var keyName = keydata.match
                     var key = special.keys[keydata.match] || extradkeys[keydata.match]
-    
+
                     if ((key.limit != undefined && equalValues(tempdata[msg.author.id][msg.id]['keywordsExecuted'], keyName) >= key.limit) ||
                         (key.cmdconnected && data['guild-data'][msg.guild.id]?.['disabled'].find(cmd => cmd.find(n => n === key.cmdconnected)))) {
                         string = string.replace(keydata.match, '')
                         break
                     }
-    
+
                     tempdata[msg.author.id][msg.id]['keywordsExecuted'].push(keyName)
-    
+
                     var change
-    
+
                     try {
                         change = await key.func.call(poopy, msg, isBot, string, opts)
                     } catch (e) {
                         console.log(e)
                         change = ''
                     }
-    
+
                     string = typeof (change) === 'object' && change[1] === true ? String(change[0]) : string.replace(keydata.match, String(change).replace(/\$&/g, '$\\&'))
                     tempdata[msg.author.id][msg.id]['keyattempts'] += !data['guild-data'][msg.guild.id]['chaos'] ? (key.attemptvalue ?? 1) : 0
                     break
-    
+
                 case 'func':
                     var [funcName, match] = keydata.match
                     var func = special.functions[funcName] || extradfuncs[funcName]
                     var m = match
-    
+
                     if ((func.limit != undefined && equalValues(tempdata[msg.author.id][msg.id]['keywordsExecuted'], funcName) >= func.limit) ||
                         (func.cmdconnected && data['guild-data'][msg.guild.id]?.['disabled'].find(cmd => cmd.find(n => n === func.cmdconnected)))) {
                         string = string.replace(`${funcName}(${match})`, '')
                         break
                     }
-    
+
                     tempdata[msg.author.id][msg.id]['keywordsExecuted'].push(funcName)
-    
+
                     match = match.replace(/\\\)/g, ')')
                     if (!func.raw) {
                         string = string.replace(m, match)
                     }
-    
+
                     var change
-    
+
                     try {
                         change = await func.func.call(poopy, [funcName, match], msg, isBot, string, opts)
                     } catch (e) {
                         console.log(e)
                         change = ''
                     }
-    
+
                     string = typeof (change) === 'object' && change[1] === true ? String(change[0]) : string.replace(`${funcName}(${match})`, String(change).replace(/\$&/g, '$\\&'))
                     tempdata[msg.author.id][msg.id]['keyattempts'] += !data['guild-data'][msg.guild.id]['chaos'] ? (func.attemptvalue ?? 1) : 0
                     break
             }
-    
+
             extradkeys = declaredonly ? { ...tempdata[msg.author.id]['keydeclared'] } : { ...extrakeys, ...tempdata[msg.author.id]['keydeclared'] }
             extradfuncs = declaredonly ? { ...tempdata[msg.author.id]['funcdeclared'] } : { ...extrafuncs, ...tempdata[msg.author.id]['funcdeclared'] }
-    
+
             await sleep()
         }
-    
+
         if (resetattempts) {
             if (tempdata[msg.author.id][msg.id]['keywordsExecuted']) {
                 if (tempdata[msg.author.id][msg.id]['keywordsExecuted'].length) {
@@ -2826,12 +2832,12 @@ functions.getKeywordsFor = async function (string, msg, isBot, { extrakeys = {},
                 tempdata[msg.author.id][msg.id]['keywordsExecuted'] = []
             }
         }
-    
+
         if (tempdata[msg.author.id][msg.id]['return'] != undefined) {
             string = tempdata[msg.author.id][msg.id]['return']
             delete tempdata[msg.author.id][msg.id]['return']
         }
-    
+
         return string
     } catch (e) {
         if (tempdata[msg.author.id][msg.id]['keyexecuting']) {
@@ -2854,7 +2860,7 @@ functions.battle = async function (msg, subject, action, damage, chance) {
     let { Discord } = poopy.modules
 
     await msg.channel.sendTyping().catch(() => { })
-    var attachments = msg.attachments.map(attachment => new Discord.MessageAttachment(attachment.url));
+    var attachments = msg.attachments.map(attachment => new Discord.AttachmentBuilder(attachment.url));
 
     if (!subject && attachments.length <= 0 && msg.stickers.size <= 0) {
         await msg.reply('What/who is the subject?!').catch(() => { })
@@ -2875,7 +2881,7 @@ functions.battle = async function (msg, subject, action, damage, chance) {
             .replace('{trgt}', (member && member.username) ?? subject ?? 'this')
             .replace('{dmg}', damage),
         allowedMentions: {
-            parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+            parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
         },
         files: attachments,
         stickers: msg.stickers
@@ -2894,7 +2900,7 @@ functions.battle = async function (msg, subject, action, damage, chance) {
         await msg.reply({
             content: `**${member.username}** died!`,
             allowedMentions: {
-                parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
             }
         }).catch(() => { })
     }
@@ -3157,7 +3163,7 @@ functions.sendFile = async function (msg, filepath, filename, extraOptions) {
     } else {
         infoPost(`Sending file to channel`)
         var sendObject = {
-            files: [new Discord.MessageAttachment(`${filepath}/${filename}`)]
+            files: [new Discord.AttachmentBuilder(`${filepath}/${filename}`)]
         }
 
         if (extraOptions.content) sendObject.content = extraOptions.content
@@ -3532,16 +3538,17 @@ functions.changeStatus = function () {
     let config = poopy.config
     let json = poopy.json
     let { infoPost } = poopy.functions
+    let { Discord } = poopy.modules
 
     if (bot && vars.statusChanges) {
         var choosenStatus = json.statusJSON[Math.floor(Math.random() * json.statusJSON.length)]
-        infoPost(`Status changed to ${choosenStatus.type.toLowerCase()} ${((choosenStatus.type === "COMPETING" && 'in ') || (choosenStatus.type === "LISTENING" && 'to ') || '')}${choosenStatus.name}`)
+        infoPost(`Status changed to ${choosenStatus.type.toLowerCase()} ${((choosenStatus.type === "Competing" && 'in ') || (choosenStatus.type === "Listening" && 'to ') || '')}${choosenStatus.name}`)
         bot.user.setPresence({
             status: 'online',
             activities: [
                 {
                     name: choosenStatus['name'] + ` | ${config.globalPrefix}help`,
-                    type: choosenStatus['type'],
+                    type: Discord.ActivityType[choosenStatus['type']],
                     url: 'https://www.youtube.com/watch?v=LDQO0ALm0gE',
                 }
             ],
@@ -3604,10 +3611,10 @@ functions.updateSlashCommands = async function () {
     let bot = poopy.bot
     let rest = poopy.rest
     let arrays = poopy.arrays
-    let { Routes } = poopy.modules
+    let { Discord } = poopy.modules
 
     var slashBuilders = Object.values(arrays.slashBuilders)
-    await rest.put(Routes.applicationCommands(bot.user.id), { body: slashBuilders }).catch((e) => console.log(e))
+    await rest.put(Discord.Routes.applicationCommands(bot.user.id), { body: slashBuilders }).catch((e) => console.log(e))
 }
 
 functions.findCommand = function (name) {

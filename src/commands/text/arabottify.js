@@ -58,7 +58,7 @@ module.exports = {
             await msg.reply({
                 content: arabArray.join(' '),
                 allowedMentions: {
-                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(async () => {
                 var currentcount = vars.filecount
@@ -67,7 +67,7 @@ module.exports = {
                 fs.mkdirSync(`${filepath}`)
                 fs.writeFileSync(`${filepath}/arabottify.txt`, arabArray.join(' '))
                 await msg.reply({
-                    files: [new Discord.MessageAttachment(`${filepath}/arabottify.txt`)]
+                    files: [new Discord.AttachmentBuilder(`${filepath}/arabottify.txt`)]
                 }).catch(() => { })
                 fs.rmSync(`${filepath}`, { force: true, recursive: true })
             })
@@ -104,7 +104,7 @@ module.exports = {
         await msg.reply({
             content: arabArray.join(' '),
             allowedMentions: {
-                parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
             }
         }).catch(async () => {
             var currentcount = vars.filecount
@@ -113,7 +113,7 @@ module.exports = {
             fs.mkdirSync(`${filepath}`)
             fs.writeFileSync(`${filepath}/arabottify.txt`, arabArray.join(' '))
             await msg.reply({
-                files: [new Discord.MessageAttachment(`${filepath}/arabottify.txt`)]
+                files: [new Discord.AttachmentBuilder(`${filepath}/arabottify.txt`)]
             }).catch(() => { })
             fs.rmSync(`${filepath}`, { force: true, recursive: true })
         })

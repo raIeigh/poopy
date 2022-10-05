@@ -52,7 +52,7 @@ module.exports = {
             await msg.reply({
                 content: `Invalid user id: **${args[1]}**`,
                 allowedMentions: {
-                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => {})
             return
@@ -62,7 +62,7 @@ module.exports = {
             data['guild-data'][msg.guild.id]['members'][member.id]['custom'] = false
         }
         if (data['guild-data'][msg.guild.id]['members'][member.id]['custom'] === false) {
-            if (msg.member.permissions.has('MANAGE_WEBHOOKS') || msg.member.permissions.has('ADMINISTRATOR') || msg.member.permissions.has('MANAGE_GUILD') || msg.member.permissions.has('MANAGE_MESSAGES') || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
+            if (msg.member.permissions.has('ManageWebhooks') || msg.member.permissions.has('Administrator') || msg.member.permissions.has('ManageGuild') || msg.member.permissions.has('ManageMessages') || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
                 var saidMessage = args.slice(1).join(' ')
                 var symbolReplacedMessage
                 vars.symbolreplacements.forEach(symbolReplacement => {
@@ -119,7 +119,7 @@ module.exports = {
                 await msg.reply({
                     content: member.user.username + ` is now ${name}.`,
                     allowedMentions: {
-                        parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                        parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                     }
                 }).catch(() => {})
             } else {
@@ -130,7 +130,7 @@ module.exports = {
             await msg.reply({
                 content: member.user.username + ` is not ${data['guild-data'][msg.guild.id]['members'][member.id]['custom']['name']}.`,
                 allowedMentions: {
-                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => {})
             data['guild-data'][msg.guild.id]['members'][member.id]['custom'] = false
@@ -141,8 +141,8 @@ module.exports = {
         value: 'Turns someone into the webhook you specified.'
     },
     cooldown: 2500,
-    perms: ['ADMINISTRATOR',
-        'MANAGE_WEBHOOKS',
-        'MANAGE_MESSAGES'],
+    perms: ['Administrator',
+        'ManageWebhooks',
+        'ManageMessages'],
     type: 'Webhook'
 }

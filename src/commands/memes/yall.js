@@ -42,7 +42,7 @@ module.exports = {
 
             var yall = await Jimp.read(`assets/image/yall.png`)
             var morton = await Jimp.loadFont('assets/fonts/Morton/Morton.fnt')
-            await yall.print(morton, 274, 8, { text: Discord.Util.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_LEFT, alignmentY: Jimp.VERTICAL_ALIGN_TOP }, 202, 77)
+            await yall.print(morton, 274, 8, { text: Discord.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_LEFT, alignmentY: Jimp.VERTICAL_ALIGN_TOP }, 202, 77)
             await yall.writeAsync(`${filepath}/yall.png`)
 
             var width = fileinfo.info.width
@@ -60,7 +60,7 @@ module.exports = {
 
             var yall = await Jimp.read(`assets/image/yall.png`)
             var morton = await Jimp.loadFont('assets/fonts/Morton/Morton.fnt')
-            await yall.print(morton, 274, 8, { text: Discord.Util.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_LEFT, alignmentY: Jimp.VERTICAL_ALIGN_TOP }, 202, 77)
+            await yall.print(morton, 274, 8, { text: Discord.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_LEFT, alignmentY: Jimp.VERTICAL_ALIGN_TOP }, 202, 77)
             await yall.writeAsync(`${filepath}/yall.png`)
 
             var width = fileinfo.info.width
@@ -76,7 +76,7 @@ module.exports = {
 
             var yall = await Jimp.read(`assets/image/yall.png`)
             var morton = await Jimp.loadFont('assets/fonts/Morton/Morton.fnt')
-            await yall.print(morton, 274, 8, { text: Discord.Util.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_LEFT, alignmentY: Jimp.VERTICAL_ALIGN_TOP }, 202, 77)
+            await yall.print(morton, 274, 8, { text: Discord.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_LEFT, alignmentY: Jimp.VERTICAL_ALIGN_TOP }, 202, 77)
             await yall.writeAsync(`${filepath}/yall.png`)
 
             var width = fileinfo.info.width
@@ -90,7 +90,7 @@ module.exports = {
             await msg.reply({
                 content: `Unsupported file: \`${currenturl}\``,
                 allowedMentions: {
-                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })

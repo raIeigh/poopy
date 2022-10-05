@@ -42,7 +42,7 @@ module.exports = {
 
             var benson = await Jimp.read(`assets/image/benson.png`)
             var consolas = await Jimp.loadFont('assets/fonts/Consolas/Consolas.fnt')
-            await benson.print(consolas, 3, 4, { text: Discord.Util.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 94, 33)
+            await benson.print(consolas, 3, 4, { text: Discord.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 94, 33)
             await benson.writeAsync(`${filepath}/benson.png`)
 
             var width = fileinfo.info.width
@@ -60,7 +60,7 @@ module.exports = {
 
             var benson = await Jimp.read(`assets/image/benson.png`)
             var consolas = await Jimp.loadFont('assets/fonts/Consolas/Consolas.fnt')
-            await benson.print(consolas, 3, 4, { text: Discord.Util.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 94, 33)
+            await benson.print(consolas, 3, 4, { text: Discord.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 94, 33)
             await benson.writeAsync(`${filepath}/benson.png`)
 
             var width = fileinfo.info.width
@@ -76,7 +76,7 @@ module.exports = {
 
             var benson = await Jimp.read(`assets/image/benson.png`)
             var consolas = await Jimp.loadFont('assets/fonts/Consolas/Consolas.fnt')
-            await benson.print(consolas, 3, 4, { text: Discord.Util.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 94, 33)
+            await benson.print(consolas, 3, 4, { text: Discord.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 94, 33)
             await benson.writeAsync(`${filepath}/benson.png`)
 
             var width = fileinfo.info.width
@@ -90,7 +90,7 @@ module.exports = {
             await msg.reply({
                 content: `Unsupported file: \`${currenturl}\``,
                 allowedMentions: {
-                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })

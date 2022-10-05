@@ -9,7 +9,7 @@ module.exports = {
         let tempdata = poopy.tempdata
 
         await msg.channel.sendTyping().catch(() => { })
-        if (msg.member.permissions.has('MANAGE_GUILD') || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
+        if (msg.member.permissions.has('ManageGuild') || msg.member.permissions.has('ManageMessages') || msg.member.permissions.has('Administrator') || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
             if (args[1] === undefined && args[2] === undefined) {
                 await msg.reply('How much do I spam?!').catch(() => { })
                 return;
@@ -32,13 +32,13 @@ module.exports = {
             var max = data['guild-data'][msg.guild.id]['chaos'] ? 1984 : 25
 
             var saidMessage = args.slice(2).join(' ')
-            var attachments = msg.attachments.map(attachment => new Discord.MessageAttachment(attachment.url, attachment.name))
+            var attachments = msg.attachments.map(attachment => new Discord.AttachmentBuilder(attachment.url, attachment.name))
             var numToRepeat = Number(args[1]);
             if (isNaN(numToRepeat)) {
                 await msg.reply({
                     content: 'Invalid number: **' + args[1] + '**',
                     allowedMentions: {
-                        parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                        parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                     }
                 }).catch(() => { })
                 return;
@@ -53,18 +53,18 @@ module.exports = {
             };
             var sendObject = {
                 allowedMentions: {
-                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 },
                 files: attachments,
                 stickers: msg.stickers,
-                tts: (msg.member.permissions.has('ADMINISTRATOR') || msg.member.permissions.has('SEND_TTS_MESSAGES') || msg.author.id === msg.guild.ownerID) && tts
+                tts: (msg.member.permissions.has('Administrator') || msg.member.permissions.has('SendTTSMessages') || msg.author.id === msg.guild.ownerID) && tts
             }
             if (saidMessage) {
                 sendObject.content = saidMessage
             }
             var reply = await msg.fetchReference().catch(() => { })
 
-            if (msg.isCommand && msg.isCommand() && del) await msg.deferReply({ ephemeral: true }).catch(() => { })
+            if (msg.type === Discord.InteractionType.ApplicationCommand && del) await msg.deferReply({ ephemeral: true }).catch(() => { })
 
             for (var i = 0; i < numToRepeat; i++) {
                 if (tempdata[msg.guild.id][msg.channel.id]['shut']) break
@@ -74,14 +74,14 @@ module.exports = {
                 } else {
                     if (del || msg.replied) {
                         await msg.channel.send(sendObject).catch(() => { })
-                        if (!msg.isCommand && del) msg.delete().catch(() => { })
+                        if (msg.type !== Discord.InteractionType.ApplicationCommand && del) msg.delete().catch(() => { })
                     } else {
                         await msg.reply(sendObject).catch(() => { })
                     }
                 }
             }
 
-            if (msg.isCommand && msg.isCommand() && del) await msg.editReply({ content: 'Successfully sent.' }).catch(() => { });
+            if (msg.type === Discord.InteractionType.ApplicationCommand && del) await msg.editReply({ content: 'Successfully sent.' }).catch(() => { });
         } else {
             await msg.reply('You need to have the manage messages permission to execute that!').catch(() => { })
             return;
@@ -93,6 +93,6 @@ module.exports = {
     },
     cooldown: 10000,
     nodefer: true,
-    perms: ['MANAGE_MESSAGES', 'ADMINISTRATOR'],
+    perms: ['ManageMessages', 'Administrator'],
     type: 'Annoying'
 }

@@ -308,8 +308,8 @@ module.exports = {
         if (config.textEmbeds) msg.reply({
             content: `\`${fileinfo.name}\`\n\n${params.join('\n')}`,
             allowedMentions: {
-                parse: (!msg.member.permissions.has('ADMINISTRATOR') &&
-                    !msg.member.permissions.has('MENTION_EVERYONE') &&
+                parse: (!msg.member.permissions.has('Administrator') &&
+                    !msg.member.permissions.has('MentionEveryone') &&
                     msg.author.id !== msg.guild.ownerID) ?
                     ['users'] : ['users', 'everyone', 'roles']
             }

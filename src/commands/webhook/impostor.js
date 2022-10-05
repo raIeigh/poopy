@@ -35,7 +35,7 @@ module.exports = {
             await msg.reply({
                 content: `Invalid user id: **${args[1]}**`,
                 allowedMentions: {
-                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => {})
             return
@@ -46,12 +46,12 @@ module.exports = {
         }
 
         if (data['guild-data'][msg.guild.id]['members'][member.id]['impostor'] === false) {
-            if (msg.member.permissions.has('MANAGE_GUILD') || msg.member.permissions.has('MANAGE_WEBHOOKS') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
+            if (msg.member.permissions.has('ManageGuild') || msg.member.permissions.has('ManageWebhooks') || msg.member.permissions.has('Administrator') || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
                 data['guild-data'][msg.guild.id]['members'][member.id]['impostor'] = true
                 await msg.reply({
                     content: member.user.username + ' is now the Impostor.',
                     allowedMentions: {
-                        parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                        parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                     }
                 }).catch(() => {})
             } else {
@@ -63,7 +63,7 @@ module.exports = {
             await msg.reply({
                 content: member.user.username + ' is not the Impostor.',
                 allowedMentions: {
-                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => {})
         }
@@ -73,7 +73,7 @@ module.exports = {
         value: 'Trap someone in the impostor forcefully'
     },
     cooldown: 2500,
-    perms: ['ADMINISTRATOR',
-        'MANAGE_MESSAGES'],
+    perms: ['Administrator',
+        'ManageMessages'],
     type: 'Webhook'
 }

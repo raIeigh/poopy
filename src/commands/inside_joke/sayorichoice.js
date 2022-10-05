@@ -29,8 +29,8 @@ module.exports = {
     fs.mkdirSync(`${filepath}`)
     var sayori = await Jimp.read(`assets/image/sayori.png`)
     var bangers = await Jimp.loadFont('assets/fonts/Bangers/Bangers.fnt')
-    await sayori.print(bangers, 52, 35, { text: Discord.Util.cleanContent(bchoice, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 176, 62)
-    await sayori.print(bangers, 487, 38, { text: Discord.Util.cleanContent(rchoice, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 228, 72)
+    await sayori.print(bangers, 52, 35, { text: Discord.cleanContent(bchoice, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 176, 62)
+    await sayori.print(bangers, 487, 38, { text: Discord.cleanContent(rchoice, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 228, 72)
     await sayori.writeAsync(`${filepath}/output.png`)
     return await sendFile(msg, filepath, `output.png`)
   },

@@ -43,7 +43,7 @@ module.exports = {
             fs.mkdirSync(filepath)
             fs.writeFileSync(`${filepath}/jsonlist.txt`, globaldata[type].join('\n\n-----------------------------------------------\n\n') || 'lmao theres nothing')
             await msg.reply({
-                files: [new Discord.MessageAttachment(`${filepath}/jsonlist.txt`)]
+                files: [new Discord.AttachmentBuilder(`${filepath}/jsonlist.txt`)]
             }).catch(() => { })
             fs.rmSync(`${filepath}`, { force: true, recursive: true })
         };

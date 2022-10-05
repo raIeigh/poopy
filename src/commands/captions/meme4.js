@@ -68,8 +68,8 @@ module.exports = {
             transparent.resize(width, height)
             transparent.resize(Math.round(2000 / size), Jimp.AUTO)
             var transparent2 = transparent.clone()
-            await transparent.print(ubuntu, 80, 80, { text: Discord.Util.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_TOP }, transparent.bitmap.width - 160, transparent.bitmap.height - 160)
-            await transparent2.print(ubuntu, 80, 80, { text: Discord.Util.cleanContent(text2, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_BOTTOM }, transparent.bitmap.width - 160, transparent.bitmap.height - 160)
+            await transparent.print(ubuntu, 80, 80, { text: Discord.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_TOP }, transparent.bitmap.width - 160, transparent.bitmap.height - 160)
+            await transparent2.print(ubuntu, 80, 80, { text: Discord.cleanContent(text2, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_BOTTOM }, transparent.bitmap.width - 160, transparent.bitmap.height - 160)
             transparent.resize(width, height)
             transparent2.resize(width, height)
             await transparent.writeAsync(`${filepath}/caption.png`)
@@ -89,8 +89,8 @@ module.exports = {
             transparent.resize(width, height)
             transparent.resize(Math.round(2000 / size), Jimp.AUTO)
             var transparent2 = transparent.clone()
-            await transparent.print(ubuntu, 80, 80, { text: Discord.Util.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_TOP }, transparent.bitmap.width - 160, transparent.bitmap.height - 160)
-            await transparent2.print(ubuntu, 80, 80, { text: Discord.Util.cleanContent(text2, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_BOTTOM }, transparent.bitmap.width - 160, transparent.bitmap.height - 160)
+            await transparent.print(ubuntu, 80, 80, { text: Discord.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_TOP }, transparent.bitmap.width - 160, transparent.bitmap.height - 160)
+            await transparent2.print(ubuntu, 80, 80, { text: Discord.cleanContent(text2, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_BOTTOM }, transparent.bitmap.width - 160, transparent.bitmap.height - 160)
             transparent.resize(width, height)
             transparent2.resize(width, height)
             await transparent.writeAsync(`${filepath}/caption.png`)
@@ -110,8 +110,8 @@ module.exports = {
             transparent.resize(width, height)
             transparent.resize(Math.round(2000 / size), Jimp.AUTO)
             var transparent2 = transparent.clone()
-            await transparent.print(ubuntu, 80, 80, { text: Discord.Util.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_TOP }, transparent.bitmap.width - 160, transparent.bitmap.height - 160)
-            await transparent2.print(ubuntu, 80, 80, { text: Discord.Util.cleanContent(text2, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_BOTTOM }, transparent.bitmap.width - 160, transparent.bitmap.height - 160)
+            await transparent.print(ubuntu, 80, 80, { text: Discord.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_TOP }, transparent.bitmap.width - 160, transparent.bitmap.height - 160)
+            await transparent2.print(ubuntu, 80, 80, { text: Discord.cleanContent(text2, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_BOTTOM }, transparent.bitmap.width - 160, transparent.bitmap.height - 160)
             transparent.resize(width, height)
             transparent2.resize(width, height)
             await transparent.writeAsync(`${filepath}/caption.png`)
@@ -123,7 +123,7 @@ module.exports = {
             await msg.reply({
                 content: `Unsupported file: \`${currenturl}\``,
                 allowedMentions: {
-                    parse: ((!msg.member.permissions.has('ADMINISTRATOR') && !msg.member.permissions.has('MENTION_EVERYONE') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })

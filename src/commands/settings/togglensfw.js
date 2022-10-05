@@ -6,7 +6,7 @@ module.exports = {
     let config = poopy.config
     let data = poopy.data
 
-    if (msg.member.permissions.has('MANAGE_GUILD') || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
+    if (msg.member.permissions.has('ManageGuild') || msg.member.permissions.has('ManageMessages') || msg.member.permissions.has('Administrator') || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
       if (
           (!msg.channel.onsfw && !msg.channel.nsfw && !msg.channel.type.includes('DM') && !data['guild-data'][msg.guild.id]['chaos']) ||
           (msg.channel.type === 'DM' && msg.channel.recipient.id != msg.author.id)
@@ -28,6 +28,6 @@ module.exports = {
     value: "Enable or disable the ability to use NSFW commands in the specified NSFW channel."
   },
   cooldown: 5000,
-  perms: ['ADMINISTRATOR'],
+  perms: ['Administrator'],
   type: 'Settings'
 }

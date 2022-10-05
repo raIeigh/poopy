@@ -6,7 +6,7 @@ module.exports = {
     let config = poopy.config
     let data = poopy.data
 
-    if (msg.member.permissions.has('MANAGE_GUILD') || msg.member.permissions.has('MANAGE_MESSAGES') || msg.member.permissions.has('ADMINISTRATOR') || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
+    if (msg.member.permissions.has('ManageGuild') || msg.member.permissions.has('ManageMessages') || msg.member.permissions.has('Administrator') || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
       data['guild-data'][msg.guild.id]['chaincommands'] = !data['guild-data'][msg.guild.id]['chaincommands']
       await msg.reply('Set to **' + data['guild-data'][msg.guild.id]['chaincommands'] + '**.').catch(() => { })
     } else {
@@ -19,6 +19,6 @@ module.exports = {
     value: "Enable or disable the ability to chain commands, if you don't want the chat to get spammy of course."
   },
   cooldown: 5000,
-  perms: ['ADMINISTRATOR'],
+  perms: ['Administrator'],
   type: 'Settings'
 }
