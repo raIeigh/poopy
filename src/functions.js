@@ -1426,7 +1426,7 @@ functions.selectMenu = async function (channel, content, placeholder, options, e
 
         var menuRow = new Discord.ActionRowBuilder()
         var menu = new Discord.SelectMenuBuilder()
-            .setCustomId('selectmenu')
+            .setCustomId('selectMenu')
             .setPlaceholder(placeholder)
             .addOptions(options)
 
