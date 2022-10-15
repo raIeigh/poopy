@@ -595,6 +595,7 @@ async function start() {
                 config: {
                     testing: true,
                     globalPrefix: '2p:',
+                    intents: 3276799,
                     quitOnDestroy: true
                 }
             }

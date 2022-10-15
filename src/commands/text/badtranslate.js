@@ -16,7 +16,8 @@ module.exports = {
                 return { name: lang.name, value: lang.language }
             })
         }
-    }, { "name": "languages", "required": false, "specifarg": true, "orig": "[-languages <number (max 25)>]" }],
+    }, { "name": "languages", "required": false, "specifarg": true, "orig": "[-languages <number (max 25)>]" },
+    { "name": "details", "required": false, "specifarg": true, "orig": "[-details]" }],
     execute: async function (msg, args) {
         let poopy = this
         let vars = poopy.vars
@@ -24,6 +25,7 @@ module.exports = {
         let { axios } = poopy.modules
 
         await msg.channel.sendTyping().catch(() => { })
+        var details = getOption(args, 'details', { n: 0, splice: true, dft: false })
         if (args[1] === undefined) {
             await msg.reply('What is the text to translate?!').catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
@@ -73,7 +75,7 @@ module.exports = {
         var lastlanguage = source
         var currentlanguage = vars.languages[Math.floor(Math.random() * vars.languages.length)].language
 
-        var lmessage = await msg.reply(`Translating from ${vars.languages.find(language => language.language === lastlanguage) ? vars.languages.find(language => language.language === lastlanguage).name : 'Auto'} to ${vars.languages.find(language => language.language === currentlanguage).name}. (${output})`).catch(() => { })
+        var lmessage = details && await msg.reply(`Translating from ${vars.languages.find(language => language.language === lastlanguage) ? vars.languages.find(language => language.language === lastlanguage).name : 'Auto'} to ${vars.languages.find(language => language.language === currentlanguage).name}. (${output})`).catch(() => { })
 
         for (var i = 0; i < repeat; i++) {
             var options = {
@@ -117,7 +119,7 @@ module.exports = {
         await msg.channel.sendTyping().catch(() => { })
     },
     help: {
-        name: 'badtranslate/badtr <message> [-source <language>] [-target <language>] [-languages <number (max 25)>]',
+        name: 'badtranslate/badtr <message> [-source <language>] [-target <language>] [-languages <number (max 25)>] [-details]',
         value: 'Badly translates the specified message. The default source language is auto and the default target language is English.'
     },
     type: 'Text',

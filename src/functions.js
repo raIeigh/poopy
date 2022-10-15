@@ -154,7 +154,8 @@ functions.matchLongestFunc = function (str, funcs) {
 functions.getIndexOption = function (args, i, {
     dft = undefined, n = 1
 } = {}) {
-    return args.slice(i, i + n) || dft
+    var slice = args.slice(i, i + n)
+    return slice.length ? slice : dft
 }
 
 functions.getOption = function (args, name, {
@@ -1805,6 +1806,229 @@ functions.navigateEmbed = async function (channel, pageFunc, results, who, extra
             if (endFunc) endFunc(reason, page, resultsMsg)
         })
     }
+}
+
+functions.rainmaze = async function (channel, who, reply, w = 8, h = 6) {
+    let poopy = this
+    let bot = poopy.bot
+    let config = poopy.config
+    let tempdata = poopy.tempdata
+    let { chunkArray, dmSupport, randomNumber } = poopy.functions
+    let { Discord, Rainmaze } = poopy.modules
+
+    var buttonsData = config.useReactions ? [
+        {
+            emoji: '861253229726793728',
+            reactemoji: '⬅️',
+            customid: 'left',
+            control: true
+        },
+
+        {
+            emoji: '1030784553738063882',
+            reactemoji: '⬆️',
+            customid: 'up',
+            control: true
+        },
+
+        {
+            emoji: '1030784552081293383',
+            reactemoji: '⬇️',
+            customid: 'down',
+            control: true
+        },
+
+        {
+            emoji: '861253229798621205',
+            reactemoji: '➡️',
+            customid: 'right',
+            control: true
+        }
+    ] : [
+        {
+            emoji: '1030786210555248640',
+            customid: 'null1',
+            style: Discord.ButtonStyle.Secondary,
+            control: false
+        },
+
+        {
+            emoji: '1030784553738063882',
+            reactemoji: '⬆️',
+            customid: 'up',
+            style: Discord.ButtonStyle.Primary,
+            control: true
+        },
+
+        {
+            emoji: '1030786210555248640',
+            customid: 'null2',
+            style: Discord.ButtonStyle.Secondary,
+            control: false
+        },
+
+        {
+            emoji: '861253229726793728',
+            reactemoji: '⬅️',
+            customid: 'left',
+            style: Discord.ButtonStyle.Primary,
+            control: true
+        },
+
+        {
+            emoji: '1030784552081293383',
+            reactemoji: '⬇️',
+            customid: 'down',
+            style: Discord.ButtonStyle.Primary,
+            control: true
+        },
+
+        {
+            emoji: '861253229798621205',
+            reactemoji: '➡️',
+            customid: 'right',
+            style: Discord.ButtonStyle.Primary,
+            control: true
+        }
+    ]
+
+    var components = []
+    var chunkButtonData = chunkArray(buttonsData, 3)
+
+    chunkButtonData.forEach(buttonsData => {
+        var buttonRow = new Discord.ActionRowBuilder()
+        var buttons = []
+
+        buttonsData.forEach(bdata => {
+            var button = new Discord.ButtonBuilder()
+                .setStyle(bdata.style)
+                .setEmoji(bdata.emoji)
+                .setCustomId(bdata.customid)
+
+            buttons.push(button)
+        })
+
+        buttonRow.addComponents(buttons)
+
+        components.push(buttonRow)
+    })
+
+    var rainmaze = new Rainmaze(w, h)
+    var raindraw = rainmaze.draw()
+    var rainObject = {}
+    var allowedMentions
+
+    if (config.textEmbeds) rainObject.content = `${raindraw.description}\n\n${raindraw.fields.map(f => `**${f.name}** - ${f.value}`).join('\n')}`
+    else rainObject.embeds = [raindraw]
+
+    if (!config.useReactions) rainObject.components = components
+
+    if (typeof (who) != 'string') {
+        allowedMentions = {
+            parse: (!who.permissions.has('Administrator') &&
+                !who.permissions.has('MentionEveryone') &&
+                who.id !== channel.guild.ownerID) ?
+                ['users'] : ['users', 'everyone', 'roles']
+        }
+        rainObject.allowedMentions = allowedMentions
+        who = who.id
+    }
+
+    var rainMsg = await (reply ?? channel)[reply ? 'reply' : 'send'](rainObject).catch(() => { })
+    var ended = false
+
+    if (!rainMsg) throw new Error(`Couldn't send Rainmaze to channel`)
+
+    async function updateMaze() {
+        raindraw = rainmaze.draw()
+
+        if (ended) {
+            clearInterval(editInterval)
+            if (rainObject.components) rainObject.components = []
+            if (ended == 'win') {
+                raindraw.fields.push({
+                    name: "Reward",
+                    value: `${randomNumber(w * h, w * h * 2)} P$`
+                })
+            }
+        }
+
+        if (config.textEmbeds) rainObject.content = `${raindraw.description}\n\n${raindraw.fields.map(f => `**${f.name}** - ${f.value}`).join('\n')}`
+        else rainObject.embeds = [raindraw]
+
+        rainMsg.edit(rainObject).catch(() => { })
+    }
+
+    var editInterval = setInterval(updateMaze, 5000)
+
+    if (config.useReactions) {
+        var collector = rainMsg.createReactionCollector({ time: 300_000 })
+
+        collector.on('collect', async (reaction, user) => {
+            dmSupport(reaction)
+
+            if (!(user.id === who && ((user.id !== bot.user.id && !user.bot) || config.allowbotusage))) {
+                return
+            }
+
+            var buttonData = buttonsData.find(bdata => bdata.reactemoji == reaction.emoji.name)
+
+            if (buttonData) {
+                collector.resetTimer()
+
+                reaction.users.remove(user).catch(() => { })
+
+                if (buttonData.control) {
+                    rainmaze.move(buttonData.customid)
+                    if (rainmaze.won) collector.stop('win')
+
+                    await updateMaze().catch(() => { })
+                }
+            }
+        })
+
+        collector.on('end', async (_, reason) => {
+            ended = reason
+            await updateMaze().catch(() => { })
+        })
+
+        for (var i in buttonsData) {
+            var bdata = buttonsData[i]
+            await rainMsg.react(bdata.reactemoji).catch(() => { })
+        }
+    } else {
+        var collector = rainMsg.createMessageComponentCollector({ time: 300_000 })
+
+        collector.on('collect', async (button) => {
+            dmSupport(button)
+
+            if (!(button.user.id === who && ((button.user.id !== bot.user.id && !button.user.bot) || config.allowbotusage))) {
+                button.deferUpdate().catch(() => { })
+                return
+            }
+
+            var buttonData = buttonsData.find(bdata => bdata.customid == button.customId)
+
+            if (buttonData) {
+                collector.resetTimer()
+                button.deferUpdate().catch(() => { })
+
+                if (buttonData.control) {
+                    rainmaze.move(buttonData.customid)
+                    if (rainmaze.won) collector.stop('win')
+
+                    await updateMaze().catch(() => { })
+                }
+            }
+        })
+
+        collector.on('end', async (_, reason) => {
+            ended = reason
+            await updateMaze().catch(() => { })
+        })
+    }
+
+    return raindraw.description
 }
 
 functions.correctUrl = async function (url) {

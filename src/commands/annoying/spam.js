@@ -82,6 +82,7 @@ module.exports = {
             }
 
             if (msg.type === Discord.InteractionType.ApplicationCommand && del) await msg.editReply({ content: 'Successfully sent.' }).catch(() => { });
+            return saidMessage.repeat(numToRepeat)
         } else {
             await msg.reply('You need to have the manage messages permission to execute that!').catch(() => { })
             return;

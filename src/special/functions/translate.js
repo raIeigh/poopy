@@ -46,5 +46,7 @@ module.exports = {
     return phrase
   },
   attemptvalue: 10,
-  limit: 5
+  limit: 5,
+  envRequired: ['RAPIDAPI_KEY'],
+  cmdconnected: ['translate']
 }

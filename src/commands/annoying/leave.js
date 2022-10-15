@@ -1,10 +1,10 @@
 module.exports = {
     name: ['leave'],
     args: [],
-    execute: async function (msg) {
+    execute: async function (msg, args) {
         let poopy = this
         let config = poopy.config
-        let { yesno } = poopy.functions
+        let { yesno, getOption } = poopy.functions
         let { Discord } = poopy.modules
 
         if (msg.channel.type == Discord.ChannelType.DM) {
@@ -52,16 +52,19 @@ module.exports = {
                 'mug',
                 '_ _'
             ]
-            var confirm = await yesno(msg.channel, 'are you sure about this', msg.member, undefined, msg).catch(() => { })
+            var nosend = getOption(args, 'nosend', { n: 0, splice: true, dft: false })
+            var confirm = nosend || await yesno(msg.channel, 'are you sure about this', msg.member, undefined, msg).catch(() => { })
 
             if (confirm) {
-                await msg.reply(phrases[Math.floor(Math.random() * phrases.length)]).catch(() => { })
+                var phrase = phrases[Math.floor(Math.random() * phrases.length)]
+                if (!nosend) await msg.reply(phrase).catch(() => { })
                 
                 if (msg.channel.type == Discord.ChannelType.GroupDM) msg.channel.delete().catch(() => { })
                 else {
                     var left = await msg.guild.leave().catch(() => { })
-                    await msg.channel?.send(left).catch(() => { })
+                    if (!nosend) await msg.channel?.send(left).catch(() => { })
                 }
+                return phrase
             }
         } else {
             await msg.reply('You need the manage server permission to execute that!').catch(() => { })

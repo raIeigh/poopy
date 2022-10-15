@@ -67,6 +67,8 @@ module.exports = {
         else delete sendObject.content
         await msg.reply(sendObject).catch(() => { })
         await msg.channel.sendTyping().catch(() => { })
+
+        return `**${member.username}'s Stats**\n\nHealth: \`${data['user-data'][member.id]['health']} HP\``
     },
     help: {
         name: 'battlestats/userstats {user}',
