@@ -13,5 +13,5 @@ module.exports = {
 
     return res.data.toString()
   },
-  limit: 1
+  limit: 5
 }

@@ -601,7 +601,7 @@ functions.gatherData = async function (msg) {
 
         data['user-data'][msg.author.id]['username'] = msg.author.username
 
-        var battleVars = {
+        var stats = {
             health: 100,
             defense: 0,
             attack: 0,
@@ -609,8 +609,10 @@ functions.gatherData = async function (msg) {
             bucks: 20
         }
 
-        if (data['user-data'][msg.author.id]['health'] === undefined) {
-            data['user-data'][msg.author.id]['health'] = 100
+        for (var stat in stats) {
+            if (data['user-data'][msg.author.id][stat] === undefined) {
+                data['user-data'][msg.author.id][stat] = stats[stat]
+            }
         }
 
         if (!data['user-data'][msg.author.id]['tokens']) {
@@ -632,6 +634,10 @@ functions.gatherData = async function (msg) {
 
     if (data['guild-data'][msg.guild.id]['chaincommands'] == undefined) {
         data['guild-data'][msg.guild.id]['chaincommands'] = true
+    }
+
+    if (data['guild-data'][msg.guild.id]['keyexec'] == undefined) {
+        data['guild-data'][msg.guild.id]['keyexec'] = 1
     }
 
     if (!data['guild-data'][msg.guild.id]['lastuse']) {

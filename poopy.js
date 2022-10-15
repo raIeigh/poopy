@@ -716,7 +716,7 @@ class Poopy {
 
                     msg.oldcontent = cmd
 
-                    if (!(commands.find(c => c.raw && c.name.find(n => cmd.toLowerCase().startsWith(`${prefix.toLowerCase()}${n.toLowerCase()}`)))) && ((!msg.author.bot && msg.author.id != bot.user.id) || config.allowbotusage)) {
+                    if (!config.poosonia && !(commands.find(c => c.raw && c.name.find(n => cmd.toLowerCase().startsWith(`${prefix.toLowerCase()}${n.toLowerCase()}`)))) && ((!msg.author.bot && msg.author.id != bot.user.id) || config.allowbotusage)) {
                         var change = await getKeywordsFor(cmd, msg, false, { resetattempts: true }).catch(async err => {
                             await msg.reply({
                                 content: err.stack,
@@ -1368,7 +1368,7 @@ class Poopy {
         let globaldata = poopy.globaldata
         let activeBots = poopy.activeBots
         let { fs } = poopy.modules
-        let { infoPost, processTask, getAllData, saveQueue, changeStatus } = poopy.functions
+        let { infoPost, processTask, getAllData, saveData, saveQueue, changeStatus } = poopy.functions
         let callbacks = poopy.callbacks
 
         if (!TOKEN && !poopy.__TOKEN) {
@@ -1570,6 +1570,7 @@ class Poopy {
         //await updateSlashCommands()
         console.log(`${bot.user.username}: all done, he's actually online now`)
         await infoPost(`Reboot ${data['bot-data']['reboots']} succeeded, he's up now`)
+        saveData()
         saveQueue()
         changeStatus()
         vars.statusInterval = setInterval(function () {
