@@ -359,6 +359,7 @@
         "name": "settings",
         "cmds": [
             "chaincommands",
+            "keyexecution",
             "setprefix",
             "togglecmds",
             "toggledms",

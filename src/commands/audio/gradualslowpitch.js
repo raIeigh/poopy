@@ -3,7 +3,7 @@ module.exports = {
     args: [{"name":"multiplier","required":false,"specifarg":false,"orig":"[multiplier <number (from 1 to 6)>]"},{"name":"file","required":false,"specifarg":false,"orig":"{file}"}],
     execute: async function (msg, args) {
         let poopy = this
-        let { lastUrl, validateFile, downloadFile, lerp, execPromise, findpreset, validateFileFromPath, sendFile } = poopy.functions
+        let { lastUrl, validateFile, downloadFile, execPromise, findpreset, validateFileFromPath, sendFile } = poopy.functions
         let { fs } = poopy.modules
         let vars = poopy.vars
 
@@ -48,11 +48,11 @@ module.exports = {
                     var a3 = (i + 1) / n
                     var start = duration * a2
                     var end = start + f
-                    total += f * lerp(1, speed, a)
+                    total += f * Math.lerp(1, speed, a)
                     gradual.push({
                         audio: `[ga${i + 1}]`,
-                        filter: `[0:a]atrim=${start}:${end}${i != 0 ? `,aresample=44100,asetrate='44100/${lerp(1, speed, a)}',aresample=44100` : ''}[ga${i + 1}]`,
-                        pts: i == (n - 1) ? speed : `if(lt(T/${duration},${a3}),${lerp(1, speed, a)},{next})`
+                        filter: `[0:a]atrim=${start}:${end}${i != 0 ? `,aresample=44100,asetrate='44100/${Math.lerp(1, speed, a)}',aresample=44100` : ''}[ga${i + 1}]`,
+                        pts: i == (n - 1) ? speed : `if(lt(T/${duration},${a3}),${Math.lerp(1, speed, a)},{next})`
                     })
                 }
 
@@ -98,7 +98,7 @@ module.exports = {
                 var end = start + f
                 gradual.push({
                     audio: `[ga${i + 1}]`,
-                    filter: `[0:a]atrim=${start}:${end}${i != 0 ? `,aresample=44100,asetrate='44100/${lerp(1, speed, a)}',aresample=44100` : ''}[ga${i + 1}]`
+                    filter: `[0:a]atrim=${start}:${end}${i != 0 ? `,aresample=44100,asetrate='44100/${Math.lerp(1, speed, a)}',aresample=44100` : ''}[ga${i + 1}]`
                 })
             }
 

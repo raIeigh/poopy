@@ -716,7 +716,17 @@ class Poopy {
 
                     msg.oldcontent = cmd
 
-                    if (!config.poosonia && !(commands.find(c => c.raw && c.name.find(n => cmd.toLowerCase().startsWith(`${prefix.toLowerCase()}${n.toLowerCase()}`)))) && ((!msg.author.bot && msg.author.id != bot.user.id) || config.allowbotusage)) {
+                    if (
+                        !config.poosonia &&
+                        (
+                            data['guild-data'][msg.guild.id]['keyexec'] == 2 ||
+                            data['guild-data'][msg.guild.id]['keyexec'] == 1 && cmd.toLowerCase().startsWith(prefix.toLowerCase())
+                        ) && !commands.find(
+                            c => c.raw &&
+                                c.name.find(n => cmd.toLowerCase().startsWith(`${prefix.toLowerCase()}${n.toLowerCase()}`))
+                        ) &&
+                        ((!msg.author.bot && msg.author.id != bot.user.id) || config.allowbotusage)
+                    ) {
                         var change = await getKeywordsFor(cmd, msg, false, { resetattempts: true }).catch(async err => {
                             await msg.reply({
                                 content: err.stack,
