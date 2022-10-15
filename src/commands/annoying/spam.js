@@ -66,7 +66,7 @@ module.exports = {
             }
             var reply = await msg.fetchReference().catch(() => { })
 
-            if (nosend) return saidMessage.repeat(numToRepeat)
+            if (nosend) return new Array(numToRepeat).map(() => saidMessage).join('\n')
 
             if (msg.type === Discord.InteractionType.ApplicationCommand && del) await msg.deferReply({ ephemeral: true }).catch(() => { })
 
@@ -86,6 +86,8 @@ module.exports = {
             }
 
             if (msg.type === Discord.InteractionType.ApplicationCommand && del) await msg.editReply({ content: 'Successfully sent.' }).catch(() => { });
+
+            return new Array(numToRepeat).map(() => saidMessage).join('\n')
         } else {
             await msg.reply('You need to have the manage messages permission to execute that!').catch(() => { })
             return;

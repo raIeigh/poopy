@@ -1,6 +1,6 @@
 module.exports = {
-  helpf: '(url)',
-  desc: "Fetches the raw content of the file URL, but only if it isn't binary, useful if your command hits the 2000 character limit.",
+  helpf: '(url | data)',
+  desc: "POSTs the data to the URL and returns the response data. Useful if you wanna use an API.",
   func: async function (matches) {
     let poopy = this
     let { axios, itob } = poopy.modules

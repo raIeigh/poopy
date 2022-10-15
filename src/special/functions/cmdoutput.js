@@ -1,6 +1,6 @@
 module.exports = {
     helpf: '(name | arguments)',
-    desc: 'Allows you to execute any command! This one returns its output (if it exists, also only works for file processing commands at the time)',
+    desc: 'Allows you to execute any command! This one returns its output. (if it exists)',
     func: async function (matches, msg, isBot, _, opts) {
         let poopy = this
         let { splitKeyFunc, getUrls, infoPost, getKeywordsFor } = poopy.functions
@@ -44,7 +44,6 @@ module.exports = {
                 ropts.declaredonly = (command || localCommand).raw
                 args = await getKeywordsFor(args, msg, isBot, ropts).catch(() => { }) ?? args
 
-
                 msg.content = `${data['guild-data'][msg.guild.id]['prefix']}${commandname} ${args}`
 
                 await getUrls(msg, {
@@ -79,12 +78,12 @@ module.exports = {
                     }, 1000)
 
                     infoPost(`Command \`${commandname}\` used`)
-                    var url = await command.execute.call(poopy, msg, [commandname].concat(args.split(' ')), { ownermode: opts.ownermode }).catch(err => {
+                    var output = await command.execute.call(poopy, msg, [commandname].concat(args.split(' ')), { ownermode: opts.ownermode }).catch(err => {
                         error = err.stack
                     })
                     data['bot-data']['filecount'] = vars.filecount
                     msg.content = content
-                    return url ?? error
+                    return output ?? error
                 } else if (localCommand) {
                     vars.cps++
                     data['bot-data']['commands']++
