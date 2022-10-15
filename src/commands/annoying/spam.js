@@ -6,9 +6,11 @@ module.exports = {
         let config = poopy.config
         let data = poopy.data
         let { Discord } = poopy.modules
+        let { getOption } = poopy.functions
         let tempdata = poopy.tempdata
 
         await msg.channel.sendTyping().catch(() => { })
+        var nosend = getOption(args, 'nosend', { n: 0, splice: true, dft: false })
         if (msg.member.permissions.has('ManageGuild') || msg.member.permissions.has('ManageMessages') || msg.member.permissions.has('Administrator') || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
             if (args[1] === undefined && args[2] === undefined) {
                 await msg.reply('How much do I spam?!').catch(() => { })
@@ -64,6 +66,8 @@ module.exports = {
             }
             var reply = await msg.fetchReference().catch(() => { })
 
+            if (nosend) return saidMessage.repeat(numToRepeat)
+
             if (msg.type === Discord.InteractionType.ApplicationCommand && del) await msg.deferReply({ ephemeral: true }).catch(() => { })
 
             for (var i = 0; i < numToRepeat; i++) {
@@ -82,7 +86,6 @@ module.exports = {
             }
 
             if (msg.type === Discord.InteractionType.ApplicationCommand && del) await msg.editReply({ content: 'Successfully sent.' }).catch(() => { });
-            return saidMessage.repeat(numToRepeat)
         } else {
             await msg.reply('You need to have the manage messages permission to execute that!').catch(() => { })
             return;
