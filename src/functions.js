@@ -606,7 +606,7 @@ functions.gatherData = async function (msg) {
             defense: 0,
             attack: 0,
             level: 0,
-            bucks: 100
+            bucks: 20
         }
 
         if (data['user-data'][msg.author.id]['health'] === undefined) {
@@ -1812,7 +1812,7 @@ functions.rainmaze = async function (channel, who, reply, w = 8, h = 6) {
     let poopy = this
     let bot = poopy.bot
     let config = poopy.config
-    let tempdata = poopy.tempdata
+    let data = poopy.data
     let { chunkArray, dmSupport, randomNumber } = poopy.functions
     let { Discord, Rainmaze } = poopy.modules
 
@@ -1821,6 +1821,7 @@ functions.rainmaze = async function (channel, who, reply, w = 8, h = 6) {
             emoji: '861253229726793728',
             reactemoji: '⬅️',
             customid: 'left',
+            style: Discord.ButtonStyle.Primary,
             control: true
         },
 
@@ -1828,6 +1829,7 @@ functions.rainmaze = async function (channel, who, reply, w = 8, h = 6) {
             emoji: '1030784553738063882',
             reactemoji: '⬆️',
             customid: 'up',
+            style: Discord.ButtonStyle.Primary,
             control: true
         },
 
@@ -1835,6 +1837,7 @@ functions.rainmaze = async function (channel, who, reply, w = 8, h = 6) {
             emoji: '1030784552081293383',
             reactemoji: '⬇️',
             customid: 'down',
+            style: Discord.ButtonStyle.Primary,
             control: true
         },
 
@@ -1842,6 +1845,7 @@ functions.rainmaze = async function (channel, who, reply, w = 8, h = 6) {
             emoji: '861253229798621205',
             reactemoji: '➡️',
             customid: 'right',
+            style: Discord.ButtonStyle.Primary,
             control: true
         }
     ] : [
@@ -1943,13 +1947,16 @@ functions.rainmaze = async function (channel, who, reply, w = 8, h = 6) {
         raindraw = rainmaze.draw()
 
         if (ended) {
-            clearInterval(editInterval)
-            if (rainObject.components) rainObject.components = []
+            if (config.useReactions) rainMsg.reactions.removeAll().catch(() => { })
+            else rainObject.components = []
+
             if (ended == 'win') {
+                var reward = randomNumber(w * h, w * h * 2)
                 raindraw.fields.push({
                     name: "Reward",
-                    value: `${randomNumber(w * h, w * h * 2)} P$`
+                    value: `${reward} P$`
                 })
+                data['user-data'][msg.author.id]['bucks'] += reward
             }
         }
 
@@ -1959,10 +1966,8 @@ functions.rainmaze = async function (channel, who, reply, w = 8, h = 6) {
         rainMsg.edit(rainObject).catch(() => { })
     }
 
-    var editInterval = setInterval(updateMaze, 5000)
-
     if (config.useReactions) {
-        var collector = rainMsg.createReactionCollector({ time: 300_000 })
+        var collector = rainMsg.createReactionCollector({ time: 60_000 })
 
         collector.on('collect', async (reaction, user) => {
             dmSupport(reaction)
@@ -1980,7 +1985,10 @@ functions.rainmaze = async function (channel, who, reply, w = 8, h = 6) {
 
                 if (buttonData.control) {
                     rainmaze.move(buttonData.customid)
-                    if (rainmaze.won) collector.stop('win')
+                    if (rainmaze.won) {
+                        collector.stop('win')
+                        return
+                    }
 
                     await updateMaze().catch(() => { })
                 }
@@ -1997,7 +2005,7 @@ functions.rainmaze = async function (channel, who, reply, w = 8, h = 6) {
             await rainMsg.react(bdata.reactemoji).catch(() => { })
         }
     } else {
-        var collector = rainMsg.createMessageComponentCollector({ time: 300_000 })
+        var collector = rainMsg.createMessageComponentCollector({ time: 60_000 })
 
         collector.on('collect', async (button) => {
             dmSupport(button)
@@ -2015,7 +2023,10 @@ functions.rainmaze = async function (channel, who, reply, w = 8, h = 6) {
 
                 if (buttonData.control) {
                     rainmaze.move(buttonData.customid)
-                    if (rainmaze.won) collector.stop('win')
+                    if (rainmaze.won) {
+                        collector.stop('win')
+                        return
+                    }
 
                     await updateMaze().catch(() => { })
                 }
@@ -2033,8 +2044,8 @@ functions.rainmaze = async function (channel, who, reply, w = 8, h = 6) {
 
 functions.correctUrl = async function (url) {
     let poopy = this
-    let { infoPost } = poopy.functions
-    let { axios, cheerio, youtubedl, noblox } = poopy.modules
+    let { infoPost, execPromise } = poopy.functions
+    let { axios, cheerio, noblox } = poopy.modules
 
     if (url.match(/^https\:\/\/(www\.)?tenor\.com\/view/) && url.match(/\d+/g) && process.env.TENOR_KEY) {
         var ids = url.match(/\d+/g)
@@ -2442,54 +2453,35 @@ functions.correctUrl = async function (url) {
             }
         }
     } else if (url.match(/^https\:\/\/((www|m)\.)?youtube\.com|^https\:\/\/(www\.)?youtu\.be/)) {
-        var youtubeurl = await youtubedl(url, {
-            format: '18',
-            'get-url': ''
-        }).catch(() => { })
+        var youtubeurl = await execPromise(`yt-dlp ${url} --format 18 --get-url`).catch(() => { })
 
         if (youtubeurl) {
             infoPost(`YouTube video URL detected`)
-            return youtubeurl
+            return youtubeurl.trim()
         }
     } /*else if (url.match(/^https\:\/\/((www)\.)?reddit\.com\/r\/[a-zA-Z0-9][a-zA-Z0-9_]{2,20}/)) {
-        var redditurl = await youtubedl(url, {
-            format: '18',
-            'get-url': ''
-        }).catch(() => { })
+        var redditurl = await execPromise(`yt-dlp ${url} --format 18 --get-url`).catch(() => { })
 
-        if (redditurl) return redditurl
+        if (redditurl) return redditurl.trim()
     }*/ else if (url.match(/^https\:\/\/((www)\.)?(fx)?twitter\.com\/\w{4,15}\/status\/\d+/)) {
         async function getImageUrl(url) {
-            return new Promise((resolve) => {
-                axios.request(url).then(async (res) => {
-                    var $ = cheerio.load(res.data)
-                    var urls = $('div .AdaptiveMedia-photoContainer.js-adaptive-photo')
+            var res = await axios.get(url)
+            var $ = cheerio.load(res.data)
+            var urls = $('div .AdaptiveMedia-photoContainer.js-adaptive-photo')
 
-                    if (urls.length > 0) {
-                        resolve(urls[0].attribs['data-image-url'])
-                        return
-                    }
-
-                    resolve()
-                }).catch(() => resolve())
-            })
+            if (urls.length > 0) return urls[0].attribs['data-image-url']
         }
 
         async function getGifUrl(url) {
-            var twittergifurl = await youtubedl(url, {
-                format: 'http',
-                'get-url': ''
-            }).catch(() => { })
+            var twittergifurl = await execPromise(`yt-dlp ${url} --format http --get-url`).catch(() => { })
 
-            return twittergifurl
+            return twittergifurl.trim()
         }
 
         async function getVidUrl(url) {
-            var twittervidurl = await youtubedl(url, {
-                'get-url': ''
-            }).catch(() => { })
+            var twittervidurl = await execPromise(`yt-dlp ${url} --get-url`).catch(() => { })
 
-            return twittervidurl
+            return twittervidurl.trim()
         }
 
         var twittervidurl = await getVidUrl(url).catch(() => { })

@@ -17,6 +17,7 @@
     "archiver": "^5.3.0",
     "axios": "^0.25.0",
     "body-parser": "^1.20.0",
+    "canvas": "^2.9.3",
     "catbox.moe": "^1.0.2",
     "cheerio": "^1.0.0-rc.10",
     "cors": "^2.8.5",
@@ -43,7 +44,6 @@
     "twemoji": "^14.0.2",
     "twitter": "^1.7.1",
     "whatwg-url": "^11.0.0",
-    "xml2js": "^0.4.23",
-    "yt-dlp-exec": "^1.0.2"
+    "xml2js": "^0.4.23"
   }
 }

@@ -11,3 +11,6 @@ let poopy = new Poopy({
 
 poopy.start(process.env.TOKEN)
 ```
+
+you also need to manually install node.js, python, java, ffmpeg and imagemagick
+the rest in in `bin`, which needs to be added to your PATH env

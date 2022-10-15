@@ -4,8 +4,8 @@ module.exports = {
     execute: async function (msg, args) {
         let poopy = this
         let vars = poopy.vars
-        let { unescapeHTML, navigateEmbed, addLastUrl } = poopy.functions
-        let { youtubedl, axios, Discord } = poopy.modules
+        let { unescapeHTML, navigateEmbed, addLastUrl, execPromise } = poopy.functions
+        let { axios, Discord } = poopy.modules
         let config = poopy.config
 
         await msg.channel.sendTyping().catch(() => { })
@@ -60,10 +60,7 @@ module.exports = {
         if (number < 1) number = 1
 
         await navigateEmbed(msg.channel, async (page) => {
-            youtubedl(urls[page - 1].url, {
-                format: '18',
-                'get-url': ''
-            }).then(youtubeurl => addLastUrl(msg, youtubeurl)).catch(() => { })
+            execPromise(`yt-dlp ${urls[page - 1].url} --format 18 --get-url`).then(youtubeurl => addLastUrl(msg, youtubeurl.trim())).catch(() => { })
 
             var thumbresponse = await axios.request(urls[page - 1].thumb.replace('hqdefault', 'hq720')).catch(() => { })
 

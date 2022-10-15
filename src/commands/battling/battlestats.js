@@ -37,12 +37,6 @@ module.exports = {
             return
         }
 
-        if (!data['user-data'][member.id]) {
-            data['user-data'][member.id] = {}
-        }
-        if (!data['user-data'][member.id]['health']) {
-            data['user-data'][member.id]['health'] = 100
-        }
         var sendObject = {
             embeds: [{
                 title: `${member.username}\'s Stats`,
@@ -55,10 +49,14 @@ module.exports = {
                     {
                         name: "Health",
                         value: `${data['user-data'][member.id]['health']} HP`
-                    }
+                    },
+                    {
+                        name: "Pobucks",
+                        value: `${data['user-data'][member.id]['bucks']} P$`
+                    },
                 ]
             }],
-            content: `**${member.username}'s Stats**\n\nHealth: \`${data['user-data'][member.id]['health']} HP\``,
+            content: `**${member.username}'s Stats**\n\nHealth: \`${data['user-data'][member.id]['health']} HP\`\nPobucks: \`${data['user-data'][member.id]['bucks']} P$\``,
             allowedMentions: {
                 parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
             }
@@ -68,7 +66,7 @@ module.exports = {
         await msg.reply(sendObject).catch(() => { })
         await msg.channel.sendTyping().catch(() => { })
 
-        return `**${member.username}'s Stats**\n\nHealth: \`${data['user-data'][member.id]['health']} HP\``
+        return `**${member.username}'s Stats**\n\nHealth: \`${data['user-data'][member.id]['health']} HP\`\nPobucks: \`${data['user-data'][member.id]['bucks']} P$\``
     },
     help: {
         name: 'battlestats/userstats {user}',
