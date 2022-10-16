@@ -72,10 +72,10 @@ module.exports = {
     if (stdOut && stdErr) output = `StdOut: ${stdOut.data}\n\nStdErr: ${stdErr.data}`
     else output = (stdOut ?? stdErr) ? (stdOut ?? stdErr).data : ''
 
-    return output
+    return output.trim()
   },
-  attemptvalue: 100,
-  limit: 1,
+  attemptvalue: 30,
+  limit: 5,
   raw: true,
   parentheses: true
 }

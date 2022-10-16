@@ -102,7 +102,7 @@ module.exports = {
             },
             RAPIDAPI_KEY: {
                 uses: '`ocr`, `translate`, `badtranslate`, `bing`, `speechtotext`, `cleverbot`?',
-                method: "Create a RapidAPI account (https://rapidapi.com/auth/register) and go to your apps (https://rapidapi.com/developer/dashboard). Click the default-application then click Settings, show the Application Key and copy it. For this to fully work, you'll also need to subscribe to the APIs: Microsoft Computer Vision, Microsoft Translator Text, Bing Web Search, Speech Recognition English and random-stuff-api",
+                method: "Create a RapidAPI account (https://rapidapi.com/auth/register) and go to your apps (https://rapidapi.com/developer/dashboard). Click the default-application then click Settings, show the Application Key and copy it. For this to fully work, you'll also need to subscribe to the APIs: `Microsoft Computer Vision`, `Microsoft Translator Text`, `Bing Web Search`, `Speech Recognition English`, `Shazam - song recognizer` and `random-stuff-api`",
                 example: '1b4rhcq2gblihxyjxdskzpnvh0ttgv1uyli3lihvxjslts2jta'
             },
             REMOVEBG_KEY: {

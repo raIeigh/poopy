@@ -40,6 +40,7 @@ module.exports = {
                 var silencestd = await execPromise(`ffmpeg -i ${filepath}/${filename} -af silencedetect=${threshold}:${silenceduration} -f null -`)
                 var silencedetect = (silencestd.match(/silence_end: [0-9.]+ \| silence_duration: [0-9.]+/g) ?? [])
                     .map(track => track.split(' | ').map(t => Number(t.match(/[0-9.]+/)[0])))
+                    console.log(silencedetect)
 
                 if (silencedetect.length > 100 && trimmiddle) {
                     await msg.reply(`my brother in christ i'm not going to trim that video ${silencedetect.length} times`).catch(() => { })
@@ -48,9 +49,16 @@ module.exports = {
                     return
                 }
 
+                if (silencedetect.length == 1 && silencedetect[0][0] >= duration && silencedetect[0][1] >= duration) {
+                    await msg.reply(`Everything is silent.`).catch(() => { })
+                    await msg.channel.sendTyping().catch(() => { })
+                    fs.rmSync(`${filepath}`, { force: true, recursive: true })
+                    return
+                }
+
                 var trimtracks = []
                 var st = silencedetect.find(track => track[0] - track[1] == 0)
-                var en = silencedetect.find(track => track[0] == duration)
+                var en = silencedetect.find(track => track[0] >= duration)
 
                 trimtracks.push(st ? st[0] : 0)
                 if (trimmiddle) for (var i in silencedetect) {
@@ -75,6 +83,8 @@ module.exports = {
                     trimconcat.push(`[v${i}]`)
                     atrimconcat.push(`[a${i}]`)
                 }
+
+                console.log(trimtemplates)
 
                 await execPromise(`ffmpeg -i ${filepath}/${filename} -filter_complex "${trimtemplates.join(';')};${trimconcat.join('')}concat=v=1:a=0:n=${trimconcat.length},scale=ceil(iw/2)*2:ceil(ih/2)*2[v];${atrimtemplates.join(';')};${atrimconcat.join('')}concat=v=0:a=1:n=${atrimconcat.length}[a]" -map "[v]" -map "[a]" -preset ${findpreset(args)} -c:v libx264 -pix_fmt yuv420p ${filepath}/output.mp4`)
                 return await sendFile(msg, filepath, `output.mp4`)
@@ -102,9 +112,16 @@ module.exports = {
                 return
             }
 
+            if (silencedetect.length == 1 && silencedetect[0][0] >= duration && silencedetect[0][1] >= duration) {
+                await msg.reply(`Everything is silent.`).catch(() => { })
+                await msg.channel.sendTyping().catch(() => { })
+                fs.rmSync(`${filepath}`, { force: true, recursive: true })
+                return
+            }
+
             var trimtracks = []
             var st = silencedetect.find(track => track[0] - track[1] == 0)
-            var en = silencedetect.find(track => track[0] == duration)
+            var en = silencedetect.find(track => track[0] >= duration)
 
             trimtracks.push(st ? st[0] : 0)
             if (trimmiddle) for (var i in silencedetect) {

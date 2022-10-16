@@ -27,6 +27,7 @@ modules.catbox = require('catbox.moe')
 modules.gis = require('g-i-s')
 modules.mathjs = require('mathjs')
 modules.prettyBytes = require('pretty-bytes')
+modules.pluralize = require('pluralize')
 modules.itob = require('istextorbinary')
 modules.os = require('os')
 modules.Collection = require('@discordjs/collection').Collection

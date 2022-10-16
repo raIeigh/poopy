@@ -34,7 +34,7 @@ module.exports = {
             })
             var filename = `input.mp4`
 
-            var cropstd = await execPromise(`ffmpeg -stream_loop 2 -t 1 -i ${filepath}/${filename} -vframes 3 -vf ${invert ? 'invert,' : ''}cropdetect=${limit}:${round}:0 -f null -`)
+            var cropstd = await execPromise(`ffmpeg -stream_loop 2 -t 1 -i ${filepath}/${filename} -vframes 3 -vf "${invert ? 'negate,' : ''}cropdetect=${limit}:${round}:0" -f null -`)
             var cropdetect = (cropstd.match(/crop=-?[0-9]+:-?[0-9]+:-?[0-9]+:-?[0-9]+/) ?? [])[0]
 
             if (!cropdetect) {
@@ -53,7 +53,7 @@ module.exports = {
             })
             var filename = `input.png`
 
-            var cropstd = await execPromise(`ffmpeg -stream_loop 2 -t 1 -i ${filepath}/${filename} -vframes 3 -vf ${invert ? 'invert,' : ''}cropdetect=${limit}:${round}:0 -f null -`)
+            var cropstd = await execPromise(`ffmpeg -stream_loop 2 -t 1 -i ${filepath}/${filename} -vframes 3 -vf "${invert ? 'negate,' : ''}cropdetect=${limit}:${round}:0" -f null -`)
             var cropdetect = (cropstd.match(/crop=-?[0-9]+:-?[0-9]+:-?[0-9]+:-?[0-9]+/) ?? [])[0]
 
             if (!cropdetect) {
@@ -72,7 +72,7 @@ module.exports = {
             })
             var filename = `input.gif`
 
-            var cropstd = await execPromise(`ffmpeg -stream_loop 2 -t 1 -i ${filepath}/${filename} -vframes 3 -vf ${invert ? 'invert,' : ''}cropdetect=${limit}:${round}:0 -f null -`)
+            var cropstd = await execPromise(`ffmpeg -stream_loop 2 -t 1 -i ${filepath}/${filename} -vframes 3 -vf ${invert ? 'negate,' : ''}cropdetect=${limit}:${round}:0 -f null -`)
             var cropdetect = (cropstd.match(/crop=-?[0-9]+:-?[0-9]+:-?[0-9]+:-?[0-9]+/) ?? [])[0]
 
             if (!cropdetect) {

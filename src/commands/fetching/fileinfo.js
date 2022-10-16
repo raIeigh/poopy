@@ -320,5 +320,5 @@ module.exports = {
     },
     help: { name: 'fileinfo {file}', value: 'Get info on a file.' },
     cooldown: 2500,
-    type: 'Main'
+    type: 'Fetching'
 }

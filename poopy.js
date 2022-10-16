@@ -23,6 +23,7 @@
       - https://rapidapi.com/microsoft-azure-org-microsoft-cognitive-services/api/microsoft-translator-text/ (translation api)
       - https://rapidapi.com/microsoft-azure-org-microsoft-cognitive-services/api/bing-web-search1/ (bing search api)
       - https://rapidapi.com/hivoicy-vxmKOG2vl/api/speech-recognition-english1/ (speech to text api)
+      - https://rapidapi.com/mirzahadjaevaguzal/api/shazam-song-recognizer/ (shazam api to identify songs)
       - https://rapidapi.com/pgamerxdev/api/random-stuff-api/ (the random stuff api i talked about)
     - REMOVEBG_KEY (key from remove.bg, generated at https://www.remove.bg/dashboard#api-key)
     - ROBLOX_COOKIE (cookie from roblox for using the roblox api, inspect element, go to Application -> Cookies then copy .ROBLOSECURITY)
@@ -121,8 +122,8 @@ class Poopy {
                     message: `the height of that file exceeds the exception limit of {param} hahahaha there's nothing you can do`
                 }
             },
-            commandLimit: 5 / 2,
-            keyLimit: 500 / 2,
+            commandLimit: 5,
+            keyLimit: 500,
             rateLimit: 3,
             rateLimitTime: 60000 * 2,
             memLimit: 0,

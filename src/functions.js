@@ -607,9 +607,10 @@ functions.gatherData = async function (msg) {
 
         var stats = {
             health: 100,
-            defense: 0,
-            attack: 0,
-            level: 0,
+            defense: 5,
+            attack: 5,
+            accuracy: 5,
+            level: 1,
             bucks: 20
         }
 
@@ -1966,7 +1967,7 @@ functions.rainmaze = async function (channel, who, reply, w = 8, h = 6) {
                     name: "Reward",
                     value: `${reward} P$`
                 })
-                data['user-data'][msg.author.id]['bucks'] += reward
+                data['user-data'][who]['bucks'] += reward
             }
         }
 
@@ -3302,7 +3303,35 @@ functions.sendFile = async function (msg, filepath, filename, extraOptions) {
             return
         }
 
-        await execPromise(`ffmpeg -y -i ${filepath}/${filename} -vf "scale=iw/2:ih/2" ${filepath}/${filename}`)
+        if (fileinfo.size > 8) {
+            fs.renameSync(`${filepath}/${filename}`, `${filepath}/compress_${filename}`)
+
+            switch (fileinfo.shorttype) {
+                case 'image':
+                    await execPromise(`ffmpeg -i ${filepath}/compress_${filename} -vf "scale=iw*${7 / fileinfo.size}:ih*${7 / fileinfo.size}" ${filepath}/${filename}`)
+                    break;
+
+                case 'gif':
+                    await execPromise(`ffmpeg -i ${filepath}/compress_${filename} -filter_complex "[0:v]scale=iw*${7 / fileinfo.size}:ih*${7 / fileinfo.size},split[pout][ppout];[ppout]palettegen=reserve_transparent=1[palette];[pout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -gifflags -offsetting ${filepath}/compress2_${filename}`)
+                    await execPromise(`gifsicle -O3 --lossy=${Math.min(Math.max(Math.round(fileinfo.size * 10), 30), 200)} -o ${filepath}/${filename} ${filepath}/compress2_${filename}`)
+                    fs.rm(`${filepath}/compress2_${filename}`)
+                    break;
+
+                case 'video':
+                    await execPromise(`ffmpeg -i ${filepath}/compress_${filename} -vf "scale='ceil(iw*${7 / fileinfo.size}/2)*2':'ceil(ih*${7 / fileinfo.size}/2)*2'" -preset veryslow ${filepath}/${filename}`)
+                    break;
+
+                case 'audio':
+                    await execPromise(`ffmpeg -i ${filepath}/compress_${filename} -b:a 128k ${filepath}/${filename}`)
+                    break;
+
+                default:
+                    fs.copyFileSync(`${filepath}/compress_${filename}`, `${filepath}/${filename}`)
+                    break;
+            }
+
+            fs.rm(`${filepath}/compress_${filename}`)
+        }
     }
 
     var nameindex = args.indexOf('-filename')

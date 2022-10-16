@@ -48,11 +48,13 @@ module.exports = {
                 fields: [
                     {
                         name: "Health",
-                        value: `${data['user-data'][member.id]['health']} HP`
+                        value: `${data['user-data'][member.id]['health']} HP`,
+                        inline: true
                     },
                     {
                         name: "Pobucks",
-                        value: `${data['user-data'][member.id]['bucks']} P$`
+                        value: `${data['user-data'][member.id]['bucks']} P$`,
+                        inline: true
                     },
                 ]
             }],
