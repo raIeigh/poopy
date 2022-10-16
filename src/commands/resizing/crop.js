@@ -55,7 +55,7 @@ module.exports = {
                 h = isNaN(Number(args[hindex + 1])) ? height - y : Number(args[hindex + 1]) <= 1 ? 1 : Number(args[hindex + 1]) >= height - y ? height - y : Math.round(Number(args[hindex + 1])) || height - y
             }
 
-            await execPromise(`ffmpeg -y -i ${filepath}/${filename} -map 0:a? -filter_complex "[0:v]crop=x=${x}:y=${y}:w=${w}:h=${h},scale=ceil(iw/2)*2:ceil(ih/2)*2[out]" -map "[out]" -preset ${findpreset(args)} -c:v libx264 -pix_fmt yuv420p ${filepath}/output.mp4`)
+            await execPromise(`ffmpeg -i ${filepath}/${filename} -map 0:a? -filter_complex "[0:v]crop=x=${x}:y=${y}:w=${w}:h=${h},scale=ceil(iw/2)*2:ceil(ih/2)*2[out]" -map "[out]" -preset ${findpreset(args)} -c:v libx264 -pix_fmt yuv420p ${filepath}/output.mp4`)
 
             return await sendFile(msg, filepath, `output.mp4`)
         } else if (type.mime.startsWith('image') && !(vars.gifFormats.find(f => f === type.ext))) {
@@ -91,7 +91,7 @@ module.exports = {
                 h = isNaN(Number(args[hindex + 1])) ? height - y : Number(args[hindex + 1]) <= 1 ? 1 : Number(args[hindex + 1]) >= height - y ? height - y : Math.round(Number(args[hindex + 1])) || height - y
             }
 
-            await execPromise(`ffmpeg -y -i ${filepath}/${filename} -filter_complex "[0:v]crop=x=${x}:y=${y}:w=${w}:h=${h}[out]" -map "[out]" -preset ${findpreset(args)} ${filepath}/output.png`)
+            await execPromise(`ffmpeg -i ${filepath}/${filename} -filter_complex "[0:v]crop=x=${x}:y=${y}:w=${w}:h=${h}[out]" -map "[out]" -preset ${findpreset(args)} ${filepath}/output.png`)
 
             return await sendFile(msg, filepath, `output.png`)
         } else if (type.mime.startsWith('image') && vars.gifFormats.find(f => f === type.ext)) {
@@ -127,7 +127,7 @@ module.exports = {
                 h = isNaN(Number(args[hindex + 1])) ? height - y : Number(args[hindex + 1]) <= 1 ? 1 : Number(args[hindex + 1]) >= height - y ? height - y : Math.round(Number(args[hindex + 1])) || height - y
             }
 
-            await execPromise(`ffmpeg -y -i ${filepath}/${filename} -filter_complex "[0:v]crop=x=${x}:y=${y}:w=${w}:h=${h},split[pout][ppout];[ppout]palettegen=reserve_transparent=1[palette];[pout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -preset ${findpreset(args)} -gifflags -offsetting ${filepath}/output.gif`)
+            await execPromise(`ffmpeg -i ${filepath}/${filename} -filter_complex "[0:v]crop=x=${x}:y=${y}:w=${w}:h=${h},split[pout][ppout];[ppout]palettegen=reserve_transparent=1[palette];[pout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -preset ${findpreset(args)} -gifflags -offsetting ${filepath}/output.gif`)
 
             return await sendFile(msg, filepath, `output.gif`)
         } else {

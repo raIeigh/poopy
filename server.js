@@ -554,7 +554,23 @@ async function start() {
 
     let tokens = []
 
-    if (__dirname.includes('app')) {
+    function testCondition() {
+        return !__dirname.includes('app')
+    }
+
+    if (testCondition()) {
+        tokens = [
+            {
+                TOKEN: process.env.POOPYTEST_TOKEN,
+                config: {
+                    testing: true,
+                    globalPrefix: '2p:',
+                    intents: 3276799,
+                    quitOnDestroy: true
+                }
+            }
+        ]
+    } else {
         tokens = [
             {
                 TOKEN: process.env.POOPY_TOKEN,
@@ -570,7 +586,7 @@ async function start() {
                 config: {
                     globalPrefix: 'ps:',
                     database: 'poopypsdata',
-                    //poosonia: true
+                    poosonia: true
                 }
             },
 
@@ -585,18 +601,6 @@ async function start() {
                     textEmbeds: true,
                     noInfoPost: true,
                     illKillYouIfYouUseEval: []
-                }
-            }
-        ]
-    } else {
-        tokens = [
-            {
-                TOKEN: process.env.POOPYTEST_TOKEN,
-                config: {
-                    testing: true,
-                    globalPrefix: '2p:',
-                    intents: 3276799,
-                    quitOnDestroy: true
                 }
             }
         ]

@@ -22,6 +22,7 @@
     {
         "name": "area",
         "cmds": [
+            "autorop",
             "contract",
             "crop",
             "expand",
@@ -139,6 +140,7 @@
     {
         "name": "duration",
         "cmds": [
+            "autotrim",
             "duration",
             "gradualslowdown",
             "gradualspeedup",

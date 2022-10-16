@@ -1,4 +1,4 @@
-const { fs, request, CryptoJS } = require('./modules')
+const { os, fs, request, CryptoJS } = require('./modules')
 let vars = require('./vars')
 let functions = {}
 
@@ -14,7 +14,7 @@ functions.updateAllData = require('./dataGathering').updateAllData
 functions.brainfuck = require('./brainfuck')
 functions.tobrainfuck = require('./tobrainfuck')
 functions.generateSayori = require('./sayorimessagegenerator')
-if (__dirname.includes('app')) {
+if (os.platform() != 'win32') { // i cant install canvas in windows LMAO!!!
     functions.braille = require('./braille')
     functions.averageColor = require('./averageColor')
     functions.spectrogram = require('./spectrogram')
