@@ -298,7 +298,7 @@ module.exports = {
                                 if (findCommandTemplate) {
                                     var name = findCommandTemplate.name
 
-                                    var findCommand = commands.find(cmd => cmd.name.find(n => n === name)) || data['guild-data'][msg.guild.id]['localcmds'].find(cmd => cmd.name === name)
+                                    var findCommand = commands.find(cmd => cmd.name.find(n => n === name)) || data['guildData'][msg.guild.id]['localcmds'].find(cmd => cmd.name === name)
 
                                     if (findCommand) {
                                         if (config.useReactions) msg.reply(`The name of that command was already taken!`).catch(() => { })
@@ -309,7 +309,7 @@ module.exports = {
                                         return
                                     }
 
-                                    data['guild-data'][msg.guild.id]['localcmds'].push({
+                                    data['guildData'][msg.guild.id]['localcmds'].push({
                                         name: name,
                                         phrase: findCommandTemplate.phrase,
                                         description: findCommandTemplate.description,
@@ -459,7 +459,7 @@ module.exports = {
                                 if (findCommandTemplate) {
                                     var name = findCommandTemplate.name
 
-                                    var findCommand = commands.find(cmd => cmd.name.find(n => n === name)) || data['guild-data'][msg.guild.id]['localcmds'].find(cmd => cmd.name === name)
+                                    var findCommand = commands.find(cmd => cmd.name.find(n => n === name)) || data['guildData'][msg.guild.id]['localcmds'].find(cmd => cmd.name === name)
 
                                     if (findCommand) {
                                         if (config.useReactions) msg.reply(`The name of that command was already taken!`).catch(() => { })
@@ -470,7 +470,7 @@ module.exports = {
                                         return
                                     }
 
-                                    data['guild-data'][msg.guild.id]['localcmds'].push({
+                                    data['guildData'][msg.guild.id]['localcmds'].push({
                                         name: name,
                                         phrase: findCommandTemplate.phrase,
                                         description: findCommandTemplate.description,

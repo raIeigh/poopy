@@ -31,7 +31,7 @@ module.exports = {
                 tts = true
             }
 
-            var max = data['guild-data'][msg.guild.id]['chaos'] ? 1984 : 25
+            var max = data['guildData'][msg.guild.id]['chaos'] ? 1984 : 25
 
             var saidMessage = args.slice(2).join(' ')
             var attachments = msg.attachments.map(attachment => new Discord.AttachmentBuilder(attachment.url, attachment.name))
@@ -76,7 +76,7 @@ module.exports = {
                 if (reply) {
                     await reply.reply(sendObject).catch(() => { })
                 } else {
-                    if (del || msg.replied) {
+                    if (del || (msg.replied && msg.deferred)) {
                         await msg.channel.send(sendObject).catch(() => { })
                         if (msg.type !== Discord.InteractionType.ApplicationCommand && del) msg.delete().catch(() => { })
                     } else {

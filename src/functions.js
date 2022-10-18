@@ -9,8 +9,7 @@ functions.lingo = require('./lingo')
 functions.gibberish = require('./gibberish')
 functions.markov = require('./markov')
 functions.wackywebm = require('./wackywebm')
-functions.getAllData = require('./dataGathering').getAllData
-functions.updateAllData = require('./dataGathering').updateAllData
+functions.dataGather = require('./dataGathering')
 functions.brainfuck = require('./brainfuck')
 functions.tobrainfuck = require('./tobrainfuck')
 functions.generateSayori = require('./sayorimessagegenerator')
@@ -599,11 +598,11 @@ functions.gatherData = async function (msg) {
     var webhook = await msg.fetchWebhook().catch(() => { })
 
     if (!webhook) {
-        if (!data['user-data'][msg.author.id]) {
-            data['user-data'][msg.author.id] = {}
+        if (!data['userData'][msg.author.id]) {
+            data['userData'][msg.author.id] = {}
         }
 
-        data['user-data'][msg.author.id]['username'] = msg.author.username
+        data['userData'][msg.author.id]['username'] = msg.author.username
 
         var stats = {
             health: 100,
@@ -615,104 +614,100 @@ functions.gatherData = async function (msg) {
         }
 
         for (var stat in stats) {
-            if (data['user-data'][msg.author.id][stat] === undefined) {
-                data['user-data'][msg.author.id][stat] = stats[stat]
+            if (data['userData'][msg.author.id][stat] === undefined) {
+                data['userData'][msg.author.id][stat] = stats[stat]
             }
         }
 
-        if (!data['user-data'][msg.author.id]['tokens']) {
-            data['user-data'][msg.author.id]['tokens'] = {}
+        if (!data['userData'][msg.author.id]['tokens']) {
+            data['userData'][msg.author.id]['tokens'] = {}
         }
     }
 
-    if (!data['guild-data'][msg.guild.id]) {
-        data['guild-data'][msg.guild.id] = {}
+    if (!data['guildData'][msg.guild.id]) {
+        data['guildData'][msg.guild.id] = {}
     }
 
-    if (data['guild-data'][msg.guild.id]['read'] === undefined) {
-        data['guild-data'][msg.guild.id]['read'] = false
+    if (data['guildData'][msg.guild.id]['read'] === undefined) {
+        data['guildData'][msg.guild.id]['read'] = false
     }
 
-    if (!data['guild-data'][msg.guild.id]['gettingData']) {
-        data['guild-data'][msg.guild.id]['gettingData'] = 0
+    if (data['guildData'][msg.guild.id]['chaincommands'] == undefined) {
+        data['guildData'][msg.guild.id]['chaincommands'] = true
     }
 
-    if (data['guild-data'][msg.guild.id]['chaincommands'] == undefined) {
-        data['guild-data'][msg.guild.id]['chaincommands'] = true
+    if (data['guildData'][msg.guild.id]['keyexec'] == undefined) {
+        data['guildData'][msg.guild.id]['keyexec'] = 1
     }
 
-    if (data['guild-data'][msg.guild.id]['keyexec'] == undefined) {
-        data['guild-data'][msg.guild.id]['keyexec'] = 1
+    if (!data['guildData'][msg.guild.id]['lastuse']) {
+        data['guildData'][msg.guild.id]['lastuse'] = Date.now()
     }
 
-    if (!data['guild-data'][msg.guild.id]['lastuse']) {
-        data['guild-data'][msg.guild.id]['lastuse'] = Date.now()
+    if (data['guildData'][msg.guild.id]['prefix'] === undefined) {
+        data['guildData'][msg.guild.id]['prefix'] = config.globalPrefix
     }
 
-    if (data['guild-data'][msg.guild.id]['prefix'] === undefined) {
-        data['guild-data'][msg.guild.id]['prefix'] = config.globalPrefix
+    if (!data['guildData'][msg.guild.id]['channels']) {
+        data['guildData'][msg.guild.id]['channels'] = {}
     }
 
-    if (!data['guild-data'][msg.guild.id]['channels']) {
-        data['guild-data'][msg.guild.id]['channels'] = {}
+    if (!data['guildData'][msg.guild.id]['channels'][msg.channel.id]) {
+        data['guildData'][msg.guild.id]['channels'][msg.channel.id] = {}
     }
 
-    if (!data['guild-data'][msg.guild.id]['channels'][msg.channel.id]) {
-        data['guild-data'][msg.guild.id]['channels'][msg.channel.id] = {}
+    if (!data['guildData'][msg.guild.id]['channels'][msg.channel.id]['lastUrls']) {
+        data['guildData'][msg.guild.id]['channels'][msg.channel.id]['lastUrls'] = []
     }
 
-    if (!data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrls']) {
-        data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrls'] = []
+    if (data['guildData'][msg.guild.id]['channels'][msg.channel.id]['read'] === undefined) {
+        data['guildData'][msg.guild.id]['channels'][msg.channel.id]['read'] = false
     }
 
-    if (data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['read'] === undefined) {
-        data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['read'] = false
-    }
-
-    if (data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['nsfw'] === undefined) {
-        data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['nsfw'] = msg.channel.nsfw
+    if (data['guildData'][msg.guild.id]['channels'][msg.channel.id]['nsfw'] === undefined) {
+        data['guildData'][msg.guild.id]['channels'][msg.channel.id]['nsfw'] = msg.channel.nsfw
     }
 
     if (!webhook) {
-        if (!data['guild-data'][msg.guild.id]['members']) {
-            data['guild-data'][msg.guild.id]['members'] = {}
+        if (!data['guildData'][msg.guild.id]['members']) {
+            data['guildData'][msg.guild.id]['members'] = {}
         }
 
-        if (!data['guild-data'][msg.guild.id]['members'][msg.author.id]) {
-            data['guild-data'][msg.guild.id]['members'][msg.author.id] = {}
+        if (!data['guildData'][msg.guild.id]['members'][msg.author.id]) {
+            data['guildData'][msg.guild.id]['members'][msg.author.id] = {}
         }
 
-        if (!data['guild-data'][msg.guild.id]['members'][msg.author.id]['messages']) {
-            data['guild-data'][msg.guild.id]['members'][msg.author.id]['messages'] = 0
+        if (!data['guildData'][msg.guild.id]['members'][msg.author.id]['messages']) {
+            data['guildData'][msg.guild.id]['members'][msg.author.id]['messages'] = 0
         }
 
-        if (!data['guild-data'][msg.guild.id]['members'][msg.author.id]['lastmessage']) {
-            data['guild-data'][msg.guild.id]['members'][msg.author.id]['lastmessage'] = Date.now()
+        if (!data['guildData'][msg.guild.id]['members'][msg.author.id]['lastmessage']) {
+            data['guildData'][msg.guild.id]['members'][msg.author.id]['lastmessage'] = Date.now()
         }
 
-        if (!data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown']) {
-            data['guild-data'][msg.guild.id]['members'][msg.author.id]['coolDown'] = false
+        if (!data['guildData'][msg.guild.id]['members'][msg.author.id]['coolDown']) {
+            data['guildData'][msg.guild.id]['members'][msg.author.id]['coolDown'] = false
         }
 
-        data['guild-data'][msg.guild.id]['members'][msg.author.id]['messages']++
+        data['guildData'][msg.guild.id]['members'][msg.author.id]['messages']++
 
-        data['guild-data'][msg.guild.id]['members'][msg.author.id]['username'] = msg.author.username
+        data['guildData'][msg.guild.id]['members'][msg.author.id]['username'] = msg.author.username
     }
 
-    if (!data['guild-data'][msg.guild.id]['disabled']) {
-        data['guild-data'][msg.guild.id]['disabled'] = []
+    if (!data['guildData'][msg.guild.id]['disabled']) {
+        data['guildData'][msg.guild.id]['disabled'] = []
     }
 
-    if (!data['guild-data'][msg.guild.id]['localcmds']) {
-        data['guild-data'][msg.guild.id]['localcmds'] = []
+    if (!data['guildData'][msg.guild.id]['localcmds']) {
+        data['guildData'][msg.guild.id]['localcmds'] = []
     }
 
-    if (!data['guild-data'][msg.guild.id]['messages']) {
-        data['guild-data'][msg.guild.id]['messages'] = []
+    if (!data['guildData'][msg.guild.id]['messages']) {
+        data['guildData'][msg.guild.id]['messages'] = []
     }
 
-    if (typeof data['guild-data'][msg.guild.id]['messages'][0] == 'string') {
-        data['guild-data'][msg.guild.id]['messages'] = data['guild-data'][msg.guild.id]['messages'].map(m => {
+    if (typeof data['guildData'][msg.guild.id]['messages'][0] == 'string') {
+        data['guildData'][msg.guild.id]['messages'] = data['guildData'][msg.guild.id]['messages'].map(m => {
             return {
                 author: bot.user.id,
                 content: m
@@ -780,28 +775,6 @@ functions.gatherData = async function (msg) {
         if (!tempdata[msg.author.id]['eggphrases']['phrase']) {
             tempdata[msg.author.id]['eggphrases']['phrase'] = 0
         }
-    }
-
-    var lastDataGather = Date.now() - data['guild-data'][msg.guild.id]['gettingData']
-    if (lastDataGather >= 600000) {
-        async function gather() {
-            var cantFetch = false
-
-            for (var id in data['guild-data'][msg.guild.id]['members']) {
-                var member = data['guild-data'][msg.guild.id]['members'][id]
-                if (member.username === undefined) {
-                    var user = await bot.users.fetch(id).catch(() => { })
-                    if (!cantFetch) data['guild-data'][msg.guild.id]['gettingData'] = Date.now()
-                    if (user) {
-                        data['guild-data'][msg.guild.id]['members'][id]['username'] = user.username
-                    } else {
-                        delete data['guild-data'][msg.guild.id]['members'][id]
-                    }
-                }
-            }
-        }
-
-        gather()
     }
 }
 
@@ -1967,7 +1940,7 @@ functions.rainmaze = async function (channel, who, reply, w = 8, h = 6) {
                     name: "Reward",
                     value: `${reward} P$`
                 })
-                data['user-data'][who]['bucks'] += reward
+                data['userData'][who]['bucks'] += reward
             }
         }
 
@@ -2530,7 +2503,7 @@ functions.getUrls = async function (msg, options = {}) {
 
     if (!msg) return []
     var string = (options.string ?? msg.content ?? '').replace(/"([\s\S]*?)"/g, '')
-    var prefixFound = options.prefix ?? string.toLowerCase().includes(data['guild-data'][msg.guild.id]['prefix'].toLowerCase())
+    var prefixFound = options.prefix ?? string.toLowerCase().includes(data['guildData'][msg.guild.id]['prefix'].toLowerCase())
     var max = options.max ?? Infinity
     var urls = []
     var regexes = [
@@ -2718,7 +2691,7 @@ functions.lastUrl = function (msg, i, tempdir, global) {
 
     var urlsGlobal = !global &&
         tempdata[msg.author.id][msg.id]?.['lastUrls'] ||
-        data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrls']
+        data['guildData'][msg.guild.id]['channels'][msg.channel.id]['lastUrls']
     var urls = urlsGlobal.slice()
     var url = urls[i]
 
@@ -2754,7 +2727,7 @@ functions.lastUrls = function (msg, tempdir, global) {
 
     var urlsGlobal = !global &&
         tempdata[msg.author.id][msg.id]?.['lastUrls'] ||
-        data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrls']
+        data['guildData'][msg.guild.id]['channels'][msg.channel.id]['lastUrls']
     var urls = urlsGlobal.slice()
 
     for (var i = 0; i < urls.length; i++) {
@@ -2802,7 +2775,7 @@ functions.addLastUrl = function (msg, url) {
 
     var lasturls = [url].concat(lastUrls(msg, false, true))
     lasturls.splice(100)
-    data['guild-data'][msg.guild.id]['channels'][msg.channel.id]['lastUrls'] = lasturls
+    data['guildData'][msg.guild.id]['channels'][msg.channel.id]['lastUrls'] = lasturls
 }
 
 functions.rateLimit = async function (msg) {
@@ -2993,7 +2966,7 @@ functions.getKeywordsFor = async function (string, msg, isBot, { extrakeys = {},
                     var key = special.keys[keydata.match] || extradkeys[keydata.match]
 
                     if ((key.limit != undefined && equalValues(tempdata[msg.author.id][msg.id]['keywordsExecuted'], keyName) >= key.limit) ||
-                        (key.cmdconnected && data['guild-data'][msg.guild.id]?.['disabled'].find(cmd => cmd.find(n => n === key.cmdconnected)))) {
+                        (key.cmdconnected && data['guildData'][msg.guild.id]?.['disabled'].find(cmd => cmd.find(n => n === key.cmdconnected)))) {
                         string = string.replace(keydata.match, '')
                         break
                     }
@@ -3010,7 +2983,7 @@ functions.getKeywordsFor = async function (string, msg, isBot, { extrakeys = {},
                     }
 
                     string = typeof (change) === 'object' && change[1] === true ? String(change[0]) : string.replace(keydata.match, String(change).replace(/\$&/g, '$\\&'))
-                    tempdata[msg.author.id][msg.id]['keyattempts'] += !data['guild-data'][msg.guild.id]['chaos'] ? (key.attemptvalue ?? 1) : 0
+                    tempdata[msg.author.id][msg.id]['keyattempts'] += !data['guildData'][msg.guild.id]['chaos'] ? (key.attemptvalue ?? 1) : 0
                     break
 
                 case 'func':
@@ -3019,7 +2992,7 @@ functions.getKeywordsFor = async function (string, msg, isBot, { extrakeys = {},
                     var m = match
 
                     if ((func.limit != undefined && equalValues(tempdata[msg.author.id][msg.id]['keywordsExecuted'], funcName) >= func.limit) ||
-                        (func.cmdconnected && data['guild-data'][msg.guild.id]?.['disabled'].find(cmd => cmd.find(n => n === func.cmdconnected)))) {
+                        (func.cmdconnected && data['guildData'][msg.guild.id]?.['disabled'].find(cmd => cmd.find(n => n === func.cmdconnected)))) {
                         string = string.replace(`${funcName}(${match})`, '')
                         break
                     }
@@ -3041,7 +3014,7 @@ functions.getKeywordsFor = async function (string, msg, isBot, { extrakeys = {},
                     }
 
                     string = typeof (change) === 'object' && change[1] === true ? String(change[0]) : string.replace(`${funcName}(${match})`, String(change).replace(/\$&/g, '$\\&'))
-                    tempdata[msg.author.id][msg.id]['keyattempts'] += !data['guild-data'][msg.guild.id]['chaos'] ? (func.attemptvalue ?? 1) : 0
+                    tempdata[msg.author.id][msg.id]['keyattempts'] += !data['guildData'][msg.guild.id]['chaos'] ? (func.attemptvalue ?? 1) : 0
                     break
             }
 
@@ -3116,14 +3089,14 @@ functions.battle = async function (msg, subject, action, damage, chance) {
 
     if (!member) return
 
-    if (!data['user-data'][member.id]) {
-        data['user-data'][member.id] = {}
-        data['user-data'][member.id]['health'] = 100
+    if (!data['userData'][member.id]) {
+        data['userData'][member.id] = {}
+        data['userData'][member.id]['health'] = 100
     }
 
-    data['user-data'][member.id]['health'] = data['user-data'][member.id]['health'] - damage
-    if (data['user-data'][member.id]['health'] <= 0) {
-        data['user-data'][member.id]['health'] = 100
+    data['userData'][member.id]['health'] = data['userData'][member.id]['health'] - damage
+    if (data['userData'][member.id]['health'] <= 0) {
+        data['userData'][member.id]['health'] = 100
         await msg.reply({
             content: `**${member.username}** died!`,
             allowedMentions: {
@@ -3138,7 +3111,7 @@ functions.userToken = function (id, token) {
     let data = poopy.data
     let { randomChoice, decrypt, randomKey } = poopy.functions
 
-    var tokens = data['user-data'][id]['tokens'][token] ?? []
+    var tokens = data['userData'][id]['tokens'][token] ?? []
     var userTkn = randomChoice(tokens)
 
     return userTkn ? decrypt(userTkn) : randomKey(token)
@@ -3280,7 +3253,7 @@ functions.sendFile = async function (msg, filepath, filename, extraOptions) {
 
     var returnUrl
 
-    var prefix = data['guild-data'][msg.guild.id]['prefix']
+    var prefix = data['guildData'][msg.guild.id]['prefix']
     var args = msg.content.substring(prefix.toLowerCase().length).split(' ')
 
     extraOptions.catbox = extraOptions.catbox ?? args.includes('-catbox')
@@ -3837,7 +3810,7 @@ functions.saveData = async function () {
     let config = poopy.config
     let data = poopy.data
     let globaldata = poopy.globaldata
-    let { infoPost, processTask, updateAllData } = poopy.functions
+    let { infoPost, processTask, dataGather } = poopy.functions
     let { fs } = poopy.modules
 
     if (config.notSave || Object.keys(data).length <= 0 || Object.keys(globaldata).length <= 0) return
@@ -3855,7 +3828,7 @@ functions.saveData = async function () {
             database: config.database,
             data: dataObject
         }).catch(() => { })
-        await updateAllData(config.database, dataObject).catch(() => { })
+        await dataGather.update(config.database, dataObject).catch(() => { })
     }
 
     infoPost(`Data saved`)

@@ -8,7 +8,7 @@ module.exports = {
         let { sleep, navigateEmbed, userToken } = poopy.functions
         let bot = poopy.bot
 
-        var tokens = data['user-data'][msg.author.id]['tokens']['DALLE2_SESSION'] ?? []
+        var tokens = data['userData'][msg.author.id]['tokens']['DALLE2_SESSION'] ?? []
 
         var ownerid = config.ownerids.find(id => id == msg.author.id);
         if (ownerid === undefined && !opts.ownermode && !tokens.length) {

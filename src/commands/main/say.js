@@ -39,7 +39,7 @@ module.exports = {
         if (reply) {
             await reply.reply(sendObject).catch(() => { })
         } else {
-            if (del || msg.replied) {
+            if (del || (msg.replied && msg.deferred)) {
                 await msg.channel.send(sendObject).catch(() => { })
 
                 if (msg.type === Discord.InteractionType.ApplicationCommand && !msg.replied) await msg.reply({ content: 'Successfully sent.', ephemeral: true }).catch(() => { })

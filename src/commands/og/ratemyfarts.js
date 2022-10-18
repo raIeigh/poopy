@@ -3,30 +3,27 @@ module.exports = {
     args: [],
     execute: async function (msg) {
         let poopy = this
-        let data = poopy.data
+        let tempdata = poopy.tempdata
 
         await msg.channel.sendTyping().catch(() => { })
         await msg.reply('Let\'s see...').catch(() => { })
-        var fartRating = Math.floor(Math.random() * 100) + 1
-        if (!data['user-data'][msg.author.id]) {
-            data['user-data'][msg.author.id] = {}
+        var fartRating = Math.floor(Math.random() * 101)
+        if (!tempdata[msg.author.id]['fartRate']) {
+            tempdata[msg.author.id]['fartRate'] = fartRating;
         }
-        if (!data['user-data'][msg.author.id]['fartRate']) {
-            data['user-data'][msg.author.id]['fartRate'] = fartRating;
+        if (!tempdata[msg.author.id]['lastFartRate']) {
+            tempdata[msg.author.id]['lastFartRate'] = Date.now();
         }
-        if (!data['user-data'][msg.author.id]['lastFartRate']) {
-            data['user-data'][msg.author.id]['lastFartRate'] = Date.now();
-        }
-        var lastFartRating = Date.now() - data['user-data'][msg.author.id]['lastFartRate']
+        var lastFartRating = Date.now() - tempdata[msg.author.id]['lastFartRate']
         if (lastFartRating >= 600000) {
-            data['user-data'][msg.author.id]['fartRate'] = fartRating;
-            data['user-data'][msg.author.id]['lastFartRate'] = Date.now();
+            tempdata[msg.author.id]['fartRate'] = fartRating;
+            tempdata[msg.author.id]['lastFartRate'] = Date.now();
         }
-        if (data['user-data'][msg.author.id]['fartRate'] >= 70) {
-            await msg.reply('**' + data['user-data'][msg.author.id]['fartRate'] + '**/100, great farts!').catch(() => { })
+        if (tempdata[msg.author.id]['fartRate'] >= 70) {
+            await msg.reply('**' + tempdata[msg.author.id]['fartRate'] + '**/100, great farts!').catch(() => { })
         }
         else {
-            await msg.reply('**' + data['user-data'][msg.author.id]['fartRate'] + '**/100').catch(() => { })
+            await msg.reply('**' + tempdata[msg.author.id]['fartRate'] + '**/100').catch(() => { })
         }
         await msg.channel.sendTyping().catch(() => { })
     },

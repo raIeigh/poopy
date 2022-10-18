@@ -10,7 +10,7 @@ module.exports = {
         "autocomplete": function (interaction) {
             let poopy = this
 
-            var memberData = poopy.data['guild-data'][interaction.guild.id]['members']
+            var memberData = poopy.data['guildData'][interaction.guild.id]['members']
             var memberKeys = Object.keys(memberData).sort((a, b) => memberData[b].messages - memberData[a].messages)
 
             return memberKeys.map(id => {
@@ -58,10 +58,10 @@ module.exports = {
             return
         }
 
-        if (!data['guild-data'][msg.guild.id]['members'][member.id]['custom']) {
-            data['guild-data'][msg.guild.id]['members'][member.id]['custom'] = false
+        if (!data['guildData'][msg.guild.id]['members'][member.id]['custom']) {
+            data['guildData'][msg.guild.id]['members'][member.id]['custom'] = false
         }
-        if (data['guild-data'][msg.guild.id]['members'][member.id]['custom'] === false) {
+        if (data['guildData'][msg.guild.id]['members'][member.id]['custom'] === false) {
             if (msg.member.permissions.has('ManageWebhooks') || msg.member.permissions.has('Administrator') || msg.member.permissions.has('ManageGuild') || msg.member.permissions.has('ManageMessages') || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
                 var saidMessage = args.slice(1).join(' ')
                 var symbolReplacedMessage
@@ -112,7 +112,7 @@ module.exports = {
                 }
                 var avatar = args[args.length - 1]
 
-                data['guild-data'][msg.guild.id]['members'][member.id]['custom'] = {
+                data['guildData'][msg.guild.id]['members'][member.id]['custom'] = {
                     name: allBlank ? '⠀': name,
                     avatar: avatar
                 }
@@ -128,12 +128,12 @@ module.exports = {
             }
         } else {
             await msg.reply({
-                content: member.user.username + ` is not ${data['guild-data'][msg.guild.id]['members'][member.id]['custom']['name']}.`,
+                content: member.user.username + ` is not ${data['guildData'][msg.guild.id]['members'][member.id]['custom']['name']}.`,
                 allowedMentions: {
                     parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => {})
-            data['guild-data'][msg.guild.id]['members'][member.id]['custom'] = false
+            data['guildData'][msg.guild.id]['members'][member.id]['custom'] = false
         }
     },
     help: {

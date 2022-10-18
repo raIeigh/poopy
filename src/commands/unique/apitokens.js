@@ -152,7 +152,7 @@ module.exports = {
 
             list: async (msg) => {
                 if (config.textEmbeds) await msg.reply(Object.keys(tokenList).map(token => {
-                    var tokens = data['user-data'][msg.author.id]['tokens'][token] ?? []
+                    var tokens = data['userData'][msg.author.id]['tokens'][token] ?? []
 
                     return `\`${token}\` -> ${tokens.length > 0 ? tokens.map(t => decrypt(t, !args.includes('-show'))).join(', ') : 'None.'}`
                 }).join('\n').substring(0, 2000)).catch(() => { })
@@ -160,7 +160,7 @@ module.exports = {
                     embeds: [{
                         "title": 'Token Manager',
                         "description": Object.keys(tokenList).map(token => {
-                            var tokens = data['user-data'][msg.author.id]['tokens'][token] ?? []
+                            var tokens = data['userData'][msg.author.id]['tokens'][token] ?? []
         
                             return `\`${token}\` -> ${tokens.length > 0 ? tokens.map(t => decrypt(t, !args.includes('-show'))).join(', ') : 'None.'}`
                         }).join('\n'),
@@ -203,7 +203,7 @@ module.exports = {
 
                 var encrypted = CryptoJS.AES.encrypt(value, process.env.AUTH_TOKEN)
 
-                var tokens = data['user-data'][msg.author.id]['tokens']
+                var tokens = data['userData'][msg.author.id]['tokens']
 
                 tokens[token] = tokens[token] ?? []
                 tokens[token].push(encrypted)
@@ -226,7 +226,7 @@ module.exports = {
                     return
                 }
 
-                delete data['user-data'][msg.author.id]['tokens'][token]
+                delete data['userData'][msg.author.id]['tokens'][token]
 
                 await msg.reply(`✅ \`${token}\` has been reset.`).catch(() => { })
             }

@@ -23,7 +23,7 @@ module.exports = {
             "orig": "<command>",
             "autocomplete": function (interaction) {
                 let poopy = this
-                return poopy.data['guild-data'][interaction.guild.id]['localcmds'].map(cmd => cmd.name)
+                return poopy.data['guildData'][interaction.guild.id]['localcmds'].map(cmd => cmd.name)
             }
         }],
         "description": "Displays the phrase of a specific command."
@@ -37,7 +37,7 @@ module.exports = {
             "orig": "<command>",
             "autocomplete": function (interaction) {
                 let poopy = this
-                return poopy.data['guild-data'][interaction.guild.id]['localcmds'].map(cmd => cmd.name)
+                return poopy.data['guildData'][interaction.guild.id]['localcmds'].map(cmd => cmd.name)
             }
         },
         {
@@ -107,7 +107,7 @@ module.exports = {
             "orig": "<command>",
             "autocomplete": function (interaction) {
                 let poopy = this
-                return poopy.data['guild-data'][interaction.guild.id]['localcmds'].map(cmd => cmd.name)
+                return poopy.data['guildData'][interaction.guild.id]['localcmds'].map(cmd => cmd.name)
             }
         },
         {
@@ -139,7 +139,7 @@ module.exports = {
             "orig": "<command>",
             "autocomplete": function (interaction) {
                 let poopy = this
-                return poopy.data['guild-data'][interaction.guild.id]['localcmds'].map(cmd => cmd.name)
+                return poopy.data['guildData'][interaction.guild.id]['localcmds'].map(cmd => cmd.name)
             }
         }],
         "description": "Deletes the local command, if it exists."
@@ -156,8 +156,8 @@ module.exports = {
         var options = {
             list: async (msg) => {
                 var localCmdsArray = []
-                for (var i in data['guild-data'][msg.guild.id]['localcmds']) {
-                    var cmd = data['guild-data'][msg.guild.id]['localcmds'][i]
+                for (var i in data['guildData'][msg.guild.id]['localcmds']) {
+                    var cmd = data['guildData'][msg.guild.id]['localcmds'][i]
                     localCmdsArray.push(`- ${cmd.name}`)
                 }
 
@@ -210,10 +210,10 @@ module.exports = {
                     return
                 }
 
-                var findCommand = data['guild-data'][msg.guild.id]['localcmds'].findIndex(cmd => cmd.name === args[1].toLowerCase())
+                var findCommand = data['guildData'][msg.guild.id]['localcmds'].findIndex(cmd => cmd.name === args[1].toLowerCase())
 
                 if (findCommand > -1) {
-                    await msg.reply(`\`${data['guild-data'][msg.guild.id]['localcmds'][findCommand].phrase}\``).catch(() => { })
+                    await msg.reply(`\`${data['guildData'][msg.guild.id]['localcmds'][findCommand].phrase}\``).catch(() => { })
                 } else {
                     await msg.reply(`Not a valid command.`).catch(() => { })
                     return
@@ -226,14 +226,14 @@ module.exports = {
                     return
                 }
 
-                var findCommand = data['guild-data'][msg.guild.id]['localcmds'].findIndex(cmd => cmd.name === args[1].toLowerCase())
+                var findCommand = data['guildData'][msg.guild.id]['localcmds'].findIndex(cmd => cmd.name === args[1].toLowerCase())
 
                 if (findCommand > -1) {
                     var content = msg.content
 
-                    msg.content = `${data['guild-data'][msg.guild.id]['prefix']}${args.slice(1).join(' ')}`
+                    msg.content = `${data['guildData'][msg.guild.id]['prefix']}${args.slice(1).join(' ')}`
 
-                    var localCommand = data['guild-data'][msg.guild.id]['localcmds'][findCommand]
+                    var localCommand = data['guildData'][msg.guild.id]['localcmds'][findCommand]
                     var oopts = {
                         ...opts
                     }
@@ -291,13 +291,13 @@ module.exports = {
 
                     params.phrase = saidMessage
 
-                    var findCommand = commands.find(cmd => cmd.name.find(n => n === name.toLowerCase())) || data['guild-data'][msg.guild.id]['localcmds'].find(cmd => cmd.name === name.toLowerCase())
+                    var findCommand = commands.find(cmd => cmd.name.find(n => n === name.toLowerCase())) || data['guildData'][msg.guild.id]['localcmds'].find(cmd => cmd.name === name.toLowerCase())
 
                     if (findCommand) {
                         await msg.reply(`That name was already taken!`).catch(() => { })
                         return
                     } else {
-                        data['guild-data'][msg.guild.id]['localcmds'].push(params)
+                        data['guildData'][msg.guild.id]['localcmds'].push(params)
 
                         await msg.reply({
                             content: `✅ Added \`${name.toLowerCase()}\` command with phrase \`${saidMessage}\``,
@@ -326,14 +326,14 @@ module.exports = {
                     if (findCommandTemplate) {
                         var name = args[2] ? args[2].toLowerCase() : findCommandTemplate.name
 
-                        var findCommand = commands.find(cmd => cmd.name.find(n => n === name)) || data['guild-data'][msg.guild.id]['localcmds'].find(cmd => cmd.name === name)
+                        var findCommand = commands.find(cmd => cmd.name.find(n => n === name)) || data['guildData'][msg.guild.id]['localcmds'].find(cmd => cmd.name === name)
 
                         if (findCommand) {
                             await msg.reply(`The name of that command was already taken!`).catch(() => { })
                             return
                         }
 
-                        data['guild-data'][msg.guild.id]['localcmds'].push({
+                        data['guildData'][msg.guild.id]['localcmds'].push({
                             name: name,
                             phrase: findCommandTemplate.phrase,
                             description: findCommandTemplate.description,
@@ -393,11 +393,11 @@ module.exports = {
 
                     params.phrase = saidMessage
 
-                    var findCommand = data['guild-data'][msg.guild.id]['localcmds'].findIndex(cmd => cmd.name === name.toLowerCase())
+                    var findCommand = data['guildData'][msg.guild.id]['localcmds'].findIndex(cmd => cmd.name === name.toLowerCase())
 
                     if (findCommand > -1) {
                         for (var param in params) {
-                            data['guild-data'][msg.guild.id]['localcmds'][findCommand][param] = params[param]
+                            data['guildData'][msg.guild.id]['localcmds'][findCommand][param] = params[param]
                         }
 
                         await msg.reply({
@@ -423,10 +423,10 @@ module.exports = {
                         return
                     }
 
-                    var findCommand = data['guild-data'][msg.guild.id]['localcmds'].findIndex(cmd => cmd.name === args[1].toLowerCase())
+                    var findCommand = data['guildData'][msg.guild.id]['localcmds'].findIndex(cmd => cmd.name === args[1].toLowerCase())
 
                     if (findCommand > -1) {
-                        var removed = data['guild-data'][msg.guild.id]['localcmds'].splice(findCommand, 1)
+                        var removed = data['guildData'][msg.guild.id]['localcmds'].splice(findCommand, 1)
 
                         await msg.reply({
                             content: `✅ Removed \`${removed[0].name}\` command with phrase \`${removed[0].phrase}\``,
