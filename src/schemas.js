@@ -149,12 +149,12 @@ module.exports = {
             required: true
         },
 
-        cid: {
+        gid: {
             type: String,
             required: true
         },
 
-        gid: {
+        cid: {
             type: String,
             required: true
         },
@@ -181,12 +181,12 @@ module.exports = {
             required: true
         },
 
-        uid: {
+        gid: {
             type: String,
             required: true
         },
 
-        gid: {
+        uid: {
             type: String,
             required: true
         },
@@ -255,17 +255,17 @@ module.exports = {
             required: true
         },
 
-        botData: {
+        'bot-data': {
             type: Object,
             required: false
         },
 
-        userData: {
+        'user-data': {
             type: Object,
             required: false
         },
 
-        guildData: {
+        'guild-data': {
             type: Object,
             required: false
         }

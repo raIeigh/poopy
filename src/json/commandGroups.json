@@ -58,6 +58,7 @@
             "trebly",
             "tremolo",
             "vibrato",
+            "vocode",
             "volume"
         ],
         "description": "Add an effect to an input's audio."

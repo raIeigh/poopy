@@ -42,7 +42,7 @@ module.exports = {
             list: async (msg) => {
                 var list = []
 
-                data['guildData'][msg.guild.id]['disabled'].forEach(cmd => {
+                data.guildData[msg.guild.id]['disabled'].forEach(cmd => {
                     list.push(`- \`${cmd.join('/')}\``)
                 })
 
@@ -83,25 +83,25 @@ module.exports = {
                     var findCommand = commands.find(cmd => cmd.name.find(n => n === args[2].toLowerCase()))
 
                     if (findCommand) {
-                        var findDCommand = data['guildData'][msg.guild.id]['disabled'].find(cmd => cmd.find(n => n === args[2].toLowerCase()))
+                        var findDCommand = data.guildData[msg.guild.id]['disabled'].find(cmd => cmd.find(n => n === args[2].toLowerCase()))
 
                         if (findDCommand) {
-                            var index = data['guildData'][msg.guild.id]['disabled'].findIndex(cmd => {
+                            var index = data.guildData[msg.guild.id]['disabled'].findIndex(cmd => {
                                 return cmd.find(n => {
                                     return n === args[2].toLowerCase()
                                 })
                             })
 
-                            data['guildData'][msg.guild.id]['disabled'].splice(index, 1)
+                            data.guildData[msg.guild.id]['disabled'].splice(index, 1)
 
                             await msg.reply(`Enabled \`${findCommand.name.join('/')}\`.`)
                         } else {
-                            if (findCommand.name.find(n => n === args[0].toLowerCase()) && !data['guildData'][msg.guild.id]['chaos']) {
+                            if (findCommand.name.find(n => n === args[0].toLowerCase()) && !data.guildData[msg.guild.id]['chaos']) {
                                 await msg.reply(`You can't disable the disabling command!`)
                                 return
                             }
 
-                            data['guildData'][msg.guild.id]['disabled'].push(findCommand.name)
+                            data.guildData[msg.guild.id]['disabled'].push(findCommand.name)
 
                             await msg.reply(`Disabled \`${findCommand.name.join('/')}\`.`)
                         }

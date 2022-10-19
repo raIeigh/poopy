@@ -7,7 +7,7 @@ module.exports = {
 
         var word = matches[1]
 
-        var messages = data['guildData'][msg.guild.id]['messages'].filter(message => message.author == word)
+        var messages = data.guildData[msg.guild.id]['messages'].filter(message => message.author == word)
         return messages.length ? messages[Math.floor(Math.random() * messages.length)].content.replace(/\@/g, '@‌') : ''
     }
 }

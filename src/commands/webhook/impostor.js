@@ -10,7 +10,7 @@ module.exports = {
         "autocomplete": function (interaction) {
             let poopy = this
 
-            var memberData = poopy.data['guildData'][interaction.guild.id]['members']
+            var memberData = poopy.data.guildData[interaction.guild.id]['members']
             var memberKeys = Object.keys(memberData).sort((a, b) => memberData[b].messages - memberData[a].messages)
 
             return memberKeys.map(id => {
@@ -41,13 +41,13 @@ module.exports = {
             return
         }
 
-        if (!data['guildData'][msg.guild.id]['members'][member.id]['impostor']) {
-            data['guildData'][msg.guild.id]['members'][member.id]['impostor'] = false
+        if (!data.guildData[msg.guild.id]['members'][member.id]['impostor']) {
+            data.guildData[msg.guild.id]['members'][member.id]['impostor'] = false
         }
 
-        if (data['guildData'][msg.guild.id]['members'][member.id]['impostor'] === false) {
+        if (data.guildData[msg.guild.id]['members'][member.id]['impostor'] === false) {
             if (msg.member.permissions.has('ManageGuild') || msg.member.permissions.has('ManageWebhooks') || msg.member.permissions.has('Administrator') || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
-                data['guildData'][msg.guild.id]['members'][member.id]['impostor'] = true
+                data.guildData[msg.guild.id]['members'][member.id]['impostor'] = true
                 await msg.reply({
                     content: member.user.username + ' is now the Impostor.',
                     allowedMentions: {
@@ -59,7 +59,7 @@ module.exports = {
                 return;
             };
         } else {
-            data['guildData'][msg.guild.id]['members'][member.id]['impostor'] = false
+            data.guildData[msg.guild.id]['members'][member.id]['impostor'] = false
             await msg.reply({
                 content: member.user.username + ' is not the Impostor.',
                 allowedMentions: {

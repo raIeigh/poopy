@@ -8,7 +8,7 @@ module.exports = {
         let { fs, axios, Discord } = poopy.modules
         let bot = poopy.bot
 
-        var tokens = data['userData'][msg.author.id]['tokens']['DALLE2_SESSION'] ?? []
+        var tokens = data.userData[msg.author.id]['tokens']['DALLE2_SESSION'] ?? []
 
         var ownerid = config.ownerids.find(id => id == msg.author.id);
         if (ownerid === undefined && !opts.ownermode && !tokens.length) {

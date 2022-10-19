@@ -5,7 +5,7 @@ module.exports = {
         "autocomplete": function (interaction) {
             let poopy = this
 
-            var memberData = poopy.data['guildData'][interaction.guild.id]['members']
+            var memberData = poopy.data.guildData[interaction.guild.id]['members']
             var memberKeys = Object.keys(memberData).sort((a, b) => memberData[b].messages - memberData[a].messages)
 
             return memberKeys.map(id => {
@@ -48,17 +48,17 @@ module.exports = {
                 fields: [
                     {
                         name: "Health",
-                        value: `${data['userData'][member.id]['health']} HP`,
+                        value: `${data.userData[member.id]['health']} HP`,
                         inline: true
                     },
                     {
                         name: "Pobucks",
-                        value: `${data['userData'][member.id]['bucks']} P$`,
+                        value: `${data.userData[member.id]['bucks']} P$`,
                         inline: true
                     },
                 ]
             }],
-            content: `**${member.username}'s Stats**\n\nHealth: \`${data['userData'][member.id]['health']} HP\`\nPobucks: \`${data['userData'][member.id]['bucks']} P$\``,
+            content: `**${member.username}'s Stats**\n\nHealth: \`${data.userData[member.id]['health']} HP\`\nPobucks: \`${data.userData[member.id]['bucks']} P$\``,
             allowedMentions: {
                 parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
             }
@@ -68,7 +68,7 @@ module.exports = {
         await msg.reply(sendObject).catch(() => { })
         await msg.channel.sendTyping().catch(() => { })
 
-        return `**${member.username}'s Stats**\n\nHealth: \`${data['userData'][member.id]['health']} HP\`\nPobucks: \`${data['userData'][member.id]['bucks']} P$\``
+        return `**${member.username}'s Stats**\n\nHealth: \`${data.userData[member.id]['health']} HP\`\nPobucks: \`${data.userData[member.id]['bucks']} P$\``
     },
     help: {
         name: 'battlestats/userstats {user}',

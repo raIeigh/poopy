@@ -14,7 +14,7 @@ module.exports = {
         var minlength = getOption(args, 'minlength', { dft: 5, splice: true, n: 1, join: true, func: (opt) => parseNumber(opt, { dft: 5, min: 1, max: 10000, round: true }) })
         var randomsentences = getOption(args, 'randomsentences', { dft: false, splice: true, n: 0, join: true })
 
-        var messages = data['guildData'][msg.guild.id]['messages'].slice().map(m => m.content)
+        var messages = data.guildData[msg.guild.id]['messages'].slice().map(m => m.content)
         if (messages.length <= 0 || randomsentences) {
             messages = json.sentenceJSON.data.map(s => s.sentence).concat(arrays.psPasta)
         }

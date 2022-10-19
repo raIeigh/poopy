@@ -28,10 +28,10 @@ module.exports = {
         var channels = bot.channels.cache.size
         var emojis = bot.emojis.cache.size
         var files = fs.readdirSync(`temp/${config.database}`).length
-        var messages = data['botData']['messages']
-        var users = Object.keys(data['userData']).length
-        var pcommands = data['botData']['commands']
-        var reboots = data['botData']['reboots']
+        var messages = data.botData['messages']
+        var users = Object.keys(data.userData).length
+        var pcommands = data.botData['commands']
+        var reboots = data.botData['reboots']
         var members = 0
 
         bot.guilds.cache.forEach(guild => members += guild.memberCount)

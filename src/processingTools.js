@@ -117,6 +117,15 @@ module.exports = {
             }
 
             return inputs
+        },
+
+        vocoder: (args) => {
+            var inputs = {}
+
+            if (args[args.length - 3].match(/^temp(files)?\//) && fs.existsSync(args[args.length - 3])) inputs[args[args.length - 3]] = fs.readFileSync(args[args.length - 3]).toString('base64')
+            if (args[args.length - 2].match(/^temp(files)?\//) && fs.existsSync(args[args.length - 2])) inputs[args[args.length - 2]] = fs.readFileSync(args[args.length - 2]).toString('base64')
+
+            return inputs
         }
     },
 
@@ -124,11 +133,11 @@ module.exports = {
         ffmpeg: (args) => args[args.length - 1],
         magick: (args) => args[args.length - 1],
         gifsicle: (args) => args[args.indexOf('-o') + 1],
-        gmic: (args) => args[args.indexOf('output') + 1]
+        gmic: (args) => args[args.indexOf('output') + 1],
+        vocoder: (args) => args[args.length - 1]
     },
 
     names: {
-        gmic: 'python lib/gmicRunner.py',
-        autotune: 'wine lib/autotune.exe'
+        gmic: 'python lib/gmicRunner.py'
     }
 }

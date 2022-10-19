@@ -22,7 +22,7 @@ module.exports = {
                 await msg.reply('The prefix can\'t be bigger than 20 characters.').catch(() => { })
                 return
             }
-            data['guildData'][msg.guild.id]['prefix'] = saidMessage
+            data.guildData[msg.guild.id]['prefix'] = saidMessage
             await msg.reply(`The prefix was set to \`${saidMessage}\` (if this is wrong, mention me with "reset prefix")`).catch(() => { })
         } else {
             await msg.reply('You need to be a moderator to execute that!').catch(() => { })

@@ -4,7 +4,7 @@ module.exports = {
     let poopy = this
     let data = poopy.data
 
-    var messages = data['guildData'][msg.guild.id]['messages']
+    var messages = data.guildData[msg.guild.id]['messages']
     return messages.length ? messages[Math.floor(Math.random() * messages.length)].content.replace(/\@/g, '@‌') : ''
   }
 }

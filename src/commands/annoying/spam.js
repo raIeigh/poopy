@@ -31,7 +31,7 @@ module.exports = {
                 tts = true
             }
 
-            var max = data['guildData'][msg.guild.id]['chaos'] ? 1984 : 25
+            var max = data.guildData[msg.guild.id]['chaos'] ? 1984 : 25
 
             var saidMessage = args.slice(2).join(' ')
             var attachments = msg.attachments.map(attachment => new Discord.AttachmentBuilder(attachment.url, attachment.name))

@@ -18,7 +18,7 @@ module.exports = {
         var randomsentences = getOption(args, 'randomsentences', { dft: false, splice: true, n: 0, join: true })
 
         var saidMessage = args.join(' ').substring((args[0] || '').length + 1)
-        var messages = data['guildData'][msg.guild.id]['messages'].slice().map(m => m.content)
+        var messages = data.guildData[msg.guild.id]['messages'].slice().map(m => m.content)
         if (messages.length <= 0 || randomsentences) {
             messages = json.sentenceJSON.data.map(s => s.sentence).concat(arrays.psPasta)
         }

@@ -36,7 +36,7 @@ module.exports = {
                 "autocomplete": function (interaction) {
                     let poopy = this
 
-                    var memberData = poopy.data['guildData'][interaction.guild.id]['members']
+                    var memberData = poopy.data.guildData[interaction.guild.id]['members']
                     var memberKeys = Object.keys(memberData).sort((a, b) => memberData[b].messages - memberData[a].messages)
 
                     return memberKeys.map(id => {
@@ -67,7 +67,7 @@ module.exports = {
                 "orig": "<message>",
                 "autocomplete": function (interaction) {
                     let poopy = this
-                    return poopy.data['guildData'][interaction.guild.id]['messages'].map(msg => msg.content)
+                    return poopy.data.guildData[interaction.guild.id]['messages'].map(msg => msg.content)
                 }
             }],
             "description": "Deletes the message, if it exists."
@@ -102,7 +102,7 @@ module.exports = {
                 vars.filecount++
                 var filepath = `temp/${config.database}/file${currentcount}`
                 fs.mkdirSync(`${filepath}`)
-                fs.writeFileSync(`${filepath}/messagelist.txt`, data['guildData'][msg.guild.id]['messages'].map(m => `Author: ${m.author}\n${m.content}`).join('\n\n-----------------------------------------------\n\n') || 'lmao theres nothing')
+                fs.writeFileSync(`${filepath}/messagelist.txt`, data.guildData[msg.guild.id]['messages'].map(m => `Author: ${m.author}\n${m.content}`).join('\n\n-----------------------------------------------\n\n') || 'lmao theres nothing')
                 await msg.reply({
                     files: [new Discord.AttachmentBuilder(`${filepath}/messagelist.txt`)]
                 }).catch(() => {})
@@ -121,7 +121,7 @@ module.exports = {
                 var cleanMessage = Discord.cleanContent(saidMessage, msg).replace(/\@/g, '@‌')
                 var results = []
 
-                data['guildData'][msg.guild.id]['messages'].forEach(message => {
+                data.guildData[msg.guild.id]['messages'].forEach(message => {
                     if (message.content.toLowerCase().includes(cleanMessage.toLowerCase())) {
                         results.push(message)
                     }
@@ -145,7 +145,7 @@ module.exports = {
             },
 
             random: async (msg) => {
-                var messages = data['guildData'][msg.guild.id]['messages']
+                var messages = data.guildData[msg.guild.id]['messages']
 
                 if (!messages.length) {
                     await msg.reply('No messages!').catch(() => { })
@@ -166,7 +166,7 @@ module.exports = {
                 var member = (msg.mentions.members.first() && msg.mentions.members.first().user) ??
                 await bot.users.fetch((args[1].match(/\d+/) ?? [args[1]])[0]).catch(() => {})
 
-                var messages = data['guildData'][msg.guild.id]['messages'].filter(m => m.author == member.id)
+                var messages = data.guildData[msg.guild.id]['messages'].filter(m => m.author == member.id)
 
                 if (!messages.length) {
                     await msg.reply('No messages!').catch(() => { })
@@ -184,7 +184,7 @@ module.exports = {
 
                 var saidMessage = args.slice(1).join(' ')
                 var cleanMessage = Discord.cleanContent(saidMessage, msg).replace(/\@/g, '@‌')
-                var findMessage = data['guildData'][msg.guild.id]['messages'].find(message => message.content.toLowerCase() === cleanMessage.toLowerCase())
+                var findMessage = data.guildData[msg.guild.id]['messages'].find(message => message.content.toLowerCase() === cleanMessage.toLowerCase())
 
                 if (findMessage) {
                     await msg.reply(`That message already exists.`).catch(() => {})
@@ -199,9 +199,9 @@ module.exports = {
                     var messages = [{
                         author: msg.author.id,
                         content: cleanMessage
-                    }].concat(data['guildData'][msg.guild.id]['messages'])
+                    }].concat(data.guildData[msg.guild.id]['messages'])
                     messages.splice(10000)
-                    data['guildData'][msg.guild.id]['messages'] = messages
+                    data.guildData[msg.guild.id]['messages'] = messages
 
                     await msg.reply({
                         content: `✅ Added ${cleanMessage}`,
@@ -220,10 +220,10 @@ module.exports = {
 
                 var saidMessage = args.slice(1).join(' ')
                 var cleanMessage = Discord.cleanContent(saidMessage, msg).replace(/\@/g, '@‌')
-                var findMessage = data['guildData'][msg.guild.id]['messages'].findIndex(message => message.content.toLowerCase() === cleanMessage.toLowerCase())
+                var findMessage = data.guildData[msg.guild.id]['messages'].findIndex(message => message.content.toLowerCase() === cleanMessage.toLowerCase())
 
                 if (findMessage > -1) {
-                    data['guildData'][msg.guild.id]['messages'].splice(findMessage, 1)
+                    data.guildData[msg.guild.id]['messages'].splice(findMessage, 1)
 
                     await msg.reply(`✅ Removed.`).catch(() => {})
                 } else {
@@ -236,7 +236,7 @@ module.exports = {
                     var confirm = await yesno(msg.channel, 'are you sure about this', msg.member, undefined, msg).catch(() => {})
 
                     if (confirm) {
-                        data['guildData'][msg.guild.id]['messages'] = []
+                        data.guildData[msg.guild.id]['messages'] = []
 
                         await msg.reply(`✅ All the messages from the database have been cleared.`).catch(() => {})
                     }
@@ -247,9 +247,9 @@ module.exports = {
 
             read: async (msg) => {
                 if (msg.member.permissions.has('ManageGuild') || msg.member.permissions.has('ManageMessages') || msg.member.permissions.has('Administrator') || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
-                    data['guildData'][msg.guild.id]['channels'][msg.channel.id]['read'] = !(data['guildData'][msg.guild.id]['channels'][msg.channel.id]['read'])
+                    data.guildData[msg.guild.id]['channels'][msg.channel.id]['read'] = !(data.guildData[msg.guild.id]['channels'][msg.channel.id]['read'])
 
-                    var read = data['guildData'][msg.guild.id]['channels'][msg.channel.id]['read']
+                    var read = data.guildData[msg.guild.id]['channels'][msg.channel.id]['read']
                     await msg.reply(`I **can${!read ? '\'t': ''} read** messages from the channel now.`).catch(() => {})
                 } else {
                     await msg.reply('You need to be a moderator to execute that!').catch(() => {})
@@ -259,20 +259,20 @@ module.exports = {
 
             readall: async (msg) => {
                 if (msg.member.permissions.has('ManageGuild') || msg.member.permissions.has('Administrator') || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
-                    data['guildData'][msg.guild.id]['read'] = !(data['guildData'][msg.guild.id]['read'])
+                    data.guildData[msg.guild.id]['read'] = !(data.guildData[msg.guild.id]['read'])
                     var channels = msg.guild.channels.cache
 
                     channels.forEach(channel => {
                         if (channel.type === Discord.ChannelType.GuildText || channel.type === Discord.ChannelType.GuildNews) {
-                            if (!data['guildData'][msg.guild.id]['channels'][channel.id]) {
-                                data['guildData'][msg.guild.id]['channels'][channel.id] = {}
+                            if (!data.guildData[msg.guild.id]['channels'][channel.id]) {
+                                data.guildData[msg.guild.id]['channels'][channel.id] = {}
                             }
 
-                            data['guildData'][msg.guild.id]['channels'][channel.id]['read'] = data['guildData'][msg.guild.id]['read']
+                            data.guildData[msg.guild.id]['channels'][channel.id]['read'] = data.guildData[msg.guild.id]['read']
                         }
                     })
 
-                    var read = data['guildData'][msg.guild.id]['read']
+                    var read = data.guildData[msg.guild.id]['read']
                     await msg.reply(`I **can${!read ? '\'t': ''} read** messages from all channels now.`).catch(() => {})
                 } else {
                     await msg.reply('You need the manage server permission to execute that!').catch(() => {})

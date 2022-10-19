@@ -5,14 +5,14 @@ module.exports = {
         let poopy = this
         let data = poopy.data
 
-        if (!data['userData'][msg.author.id]) {
-            data['userData'][msg.author.id] = {}
+        if (!data.userData[msg.author.id]) {
+            data.userData[msg.author.id] = {}
         }
-        if (data['userData'][msg.author.id]['dms'] === undefined) {
-            data['userData'][msg.author.id]['dms'] = false
+        if (data.userData[msg.author.id]['dms'] === undefined) {
+            data.userData[msg.author.id]['dms'] = false
         }
-        if (data['userData'][msg.author.id]['dms'] === false) {
-            data['userData'][msg.author.id]['dms'] = true
+        if (data.userData[msg.author.id]['dms'] === false) {
+            data.userData[msg.author.id]['dms'] = true
             await msg.reply({
                 content: 'Unrelated DMs from `dm` will **be sent** to you now.',
                 allowedMentions: {
@@ -20,7 +20,7 @@ module.exports = {
                 }
             }).catch(() => { })
         } else {
-            data['userData'][msg.author.id]['dms'] = false
+            data.userData[msg.author.id]['dms'] = false
             await msg.reply({
                 content: 'Unrelated DMs from `dm` will **not be sent** to you now.',
                 allowedMentions: {

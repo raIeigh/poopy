@@ -594,15 +594,16 @@ functions.gatherData = async function (msg) {
     let config = poopy.config
     let data = poopy.data
     let tempdata = poopy.tempdata
+    let { dataGather } = poopy.functions
 
     var webhook = await msg.fetchWebhook().catch(() => { })
 
     if (!webhook) {
-        if (!data['userData'][msg.author.id]) {
-            data['userData'][msg.author.id] = {}
+        if (!data.userData[msg.author.id]) {
+            data.userData[msg.author.id] = !config.testing && process.env.MONGOOSE_URL && await dataGather.userData(config.database, msg.author.id).catch(() => { }) || {}
         }
 
-        data['userData'][msg.author.id]['username'] = msg.author.username
+        data.userData[msg.author.id]['username'] = msg.author.username
 
         var stats = {
             health: 100,
@@ -614,100 +615,100 @@ functions.gatherData = async function (msg) {
         }
 
         for (var stat in stats) {
-            if (data['userData'][msg.author.id][stat] === undefined) {
-                data['userData'][msg.author.id][stat] = stats[stat]
+            if (data.userData[msg.author.id][stat] === undefined) {
+                data.userData[msg.author.id][stat] = stats[stat]
             }
         }
 
-        if (!data['userData'][msg.author.id]['tokens']) {
-            data['userData'][msg.author.id]['tokens'] = {}
+        if (!data.userData[msg.author.id]['tokens']) {
+            data.userData[msg.author.id]['tokens'] = {}
         }
     }
 
-    if (!data['guildData'][msg.guild.id]) {
-        data['guildData'][msg.guild.id] = {}
+    if (!data.guildData[msg.guild.id]) {
+        data.guildData[msg.guild.id] = !config.testing && process.env.MONGOOSE_URL && await dataGather.guildData(config.database, msg.guild.id).catch(() => { }) || {}
     }
 
-    if (data['guildData'][msg.guild.id]['read'] === undefined) {
-        data['guildData'][msg.guild.id]['read'] = false
+    if (data.guildData[msg.guild.id]['read'] === undefined) {
+        data.guildData[msg.guild.id]['read'] = false
     }
 
-    if (data['guildData'][msg.guild.id]['chaincommands'] == undefined) {
-        data['guildData'][msg.guild.id]['chaincommands'] = true
+    if (data.guildData[msg.guild.id]['chaincommands'] == undefined) {
+        data.guildData[msg.guild.id]['chaincommands'] = true
     }
 
-    if (data['guildData'][msg.guild.id]['keyexec'] == undefined) {
-        data['guildData'][msg.guild.id]['keyexec'] = 1
+    if (data.guildData[msg.guild.id]['keyexec'] == undefined) {
+        data.guildData[msg.guild.id]['keyexec'] = 1
     }
 
-    if (!data['guildData'][msg.guild.id]['lastuse']) {
-        data['guildData'][msg.guild.id]['lastuse'] = Date.now()
+    if (!data.guildData[msg.guild.id]['lastuse']) {
+        data.guildData[msg.guild.id]['lastuse'] = Date.now()
     }
 
-    if (data['guildData'][msg.guild.id]['prefix'] === undefined) {
-        data['guildData'][msg.guild.id]['prefix'] = config.globalPrefix
+    if (data.guildData[msg.guild.id]['prefix'] === undefined) {
+        data.guildData[msg.guild.id]['prefix'] = config.globalPrefix
     }
 
-    if (!data['guildData'][msg.guild.id]['channels']) {
-        data['guildData'][msg.guild.id]['channels'] = {}
+    if (!data.guildData[msg.guild.id]['channels']) {
+        data.guildData[msg.guild.id]['channels'] = {}
     }
 
-    if (!data['guildData'][msg.guild.id]['channels'][msg.channel.id]) {
-        data['guildData'][msg.guild.id]['channels'][msg.channel.id] = {}
+    if (!data.guildData[msg.guild.id]['channels'][msg.channel.id]) {
+        data.guildData[msg.guild.id]['channels'][msg.channel.id] = !config.testing && process.env.MONGOOSE_URL && await dataGather.channelData(config.database, msg.guild.id, msg.channel.id).catch(() => { }) || {}
     }
 
-    if (!data['guildData'][msg.guild.id]['channels'][msg.channel.id]['lastUrls']) {
-        data['guildData'][msg.guild.id]['channels'][msg.channel.id]['lastUrls'] = []
+    if (!data.guildData[msg.guild.id]['channels'][msg.channel.id]['lastUrls']) {
+        data.guildData[msg.guild.id]['channels'][msg.channel.id]['lastUrls'] = []
     }
 
-    if (data['guildData'][msg.guild.id]['channels'][msg.channel.id]['read'] === undefined) {
-        data['guildData'][msg.guild.id]['channels'][msg.channel.id]['read'] = false
+    if (data.guildData[msg.guild.id]['channels'][msg.channel.id]['read'] === undefined) {
+        data.guildData[msg.guild.id]['channels'][msg.channel.id]['read'] = false
     }
 
-    if (data['guildData'][msg.guild.id]['channels'][msg.channel.id]['nsfw'] === undefined) {
-        data['guildData'][msg.guild.id]['channels'][msg.channel.id]['nsfw'] = msg.channel.nsfw
+    if (data.guildData[msg.guild.id]['channels'][msg.channel.id]['nsfw'] === undefined) {
+        data.guildData[msg.guild.id]['channels'][msg.channel.id]['nsfw'] = msg.channel.nsfw
     }
 
     if (!webhook) {
-        if (!data['guildData'][msg.guild.id]['members']) {
-            data['guildData'][msg.guild.id]['members'] = {}
+        if (!data.guildData[msg.guild.id]['members']) {
+            data.guildData[msg.guild.id]['members'] = {}
         }
 
-        if (!data['guildData'][msg.guild.id]['members'][msg.author.id]) {
-            data['guildData'][msg.guild.id]['members'][msg.author.id] = {}
+        if (!data.guildData[msg.guild.id]['members'][msg.author.id]) {
+            data.guildData[msg.guild.id]['members'][msg.author.id] = !config.testing && process.env.MONGOOSE_URL && await dataGather.memberData(config.database, msg.guild.id, msg.author.id).catch(() => { }) || {}
         }
 
-        if (!data['guildData'][msg.guild.id]['members'][msg.author.id]['messages']) {
-            data['guildData'][msg.guild.id]['members'][msg.author.id]['messages'] = 0
+        if (!data.guildData[msg.guild.id]['members'][msg.author.id]['messages']) {
+            data.guildData[msg.guild.id]['members'][msg.author.id]['messages'] = 0
         }
 
-        if (!data['guildData'][msg.guild.id]['members'][msg.author.id]['lastmessage']) {
-            data['guildData'][msg.guild.id]['members'][msg.author.id]['lastmessage'] = Date.now()
+        if (!data.guildData[msg.guild.id]['members'][msg.author.id]['lastmessage']) {
+            data.guildData[msg.guild.id]['members'][msg.author.id]['lastmessage'] = Date.now()
         }
 
-        if (!data['guildData'][msg.guild.id]['members'][msg.author.id]['coolDown']) {
-            data['guildData'][msg.guild.id]['members'][msg.author.id]['coolDown'] = false
+        if (!data.guildData[msg.guild.id]['members'][msg.author.id]['coolDown']) {
+            data.guildData[msg.guild.id]['members'][msg.author.id]['coolDown'] = false
         }
 
-        data['guildData'][msg.guild.id]['members'][msg.author.id]['messages']++
+        data.guildData[msg.guild.id]['members'][msg.author.id]['messages']++
 
-        data['guildData'][msg.guild.id]['members'][msg.author.id]['username'] = msg.author.username
+        data.guildData[msg.guild.id]['members'][msg.author.id]['username'] = msg.author.username
     }
 
-    if (!data['guildData'][msg.guild.id]['disabled']) {
-        data['guildData'][msg.guild.id]['disabled'] = []
+    if (!data.guildData[msg.guild.id]['disabled']) {
+        data.guildData[msg.guild.id]['disabled'] = []
     }
 
-    if (!data['guildData'][msg.guild.id]['localcmds']) {
-        data['guildData'][msg.guild.id]['localcmds'] = []
+    if (!data.guildData[msg.guild.id]['localcmds']) {
+        data.guildData[msg.guild.id]['localcmds'] = []
     }
 
-    if (!data['guildData'][msg.guild.id]['messages']) {
-        data['guildData'][msg.guild.id]['messages'] = []
+    if (!data.guildData[msg.guild.id]['messages']) {
+        data.guildData[msg.guild.id]['messages'] = []
     }
 
-    if (typeof data['guildData'][msg.guild.id]['messages'][0] == 'string') {
-        data['guildData'][msg.guild.id]['messages'] = data['guildData'][msg.guild.id]['messages'].map(m => {
+    if (typeof data.guildData[msg.guild.id]['messages'][0] == 'string') {
+        data.guildData[msg.guild.id]['messages'] = data.guildData[msg.guild.id]['messages'].map(m => {
             return {
                 author: bot.user.id,
                 content: m
@@ -971,7 +972,7 @@ functions.infoPost = async function (message) {
     if (config.stfu || config.noInfoPost) return
 
     var avatar = bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' })
-    var color = config.testing ? { r: 255, g: 255, b: 255 } : await averageColor(avatar)
+    var color = os.platform() == 'win32' ? { r: 255, g: 255, b: 255 } : await averageColor(avatar)
 
     var infoChannel = bot.guilds.cache.get('834431435704107018')?.channels.cache.get('967083645619830834')
     if (!infoChannel) return
@@ -1940,7 +1941,7 @@ functions.rainmaze = async function (channel, who, reply, w = 8, h = 6) {
                     name: "Reward",
                     value: `${reward} P$`
                 })
-                data['userData'][who]['bucks'] += reward
+                data.userData[who]['bucks'] += reward
             }
         }
 
@@ -2503,7 +2504,7 @@ functions.getUrls = async function (msg, options = {}) {
 
     if (!msg) return []
     var string = (options.string ?? msg.content ?? '').replace(/"([\s\S]*?)"/g, '')
-    var prefixFound = options.prefix ?? string.toLowerCase().includes(data['guildData'][msg.guild.id]['prefix'].toLowerCase())
+    var prefixFound = options.prefix ?? string.toLowerCase().includes(data.guildData[msg.guild.id]['prefix'].toLowerCase())
     var max = options.max ?? Infinity
     var urls = []
     var regexes = [
@@ -2691,7 +2692,7 @@ functions.lastUrl = function (msg, i, tempdir, global) {
 
     var urlsGlobal = !global &&
         tempdata[msg.author.id][msg.id]?.['lastUrls'] ||
-        data['guildData'][msg.guild.id]['channels'][msg.channel.id]['lastUrls']
+        data.guildData[msg.guild.id]['channels'][msg.channel.id]['lastUrls']
     var urls = urlsGlobal.slice()
     var url = urls[i]
 
@@ -2727,7 +2728,7 @@ functions.lastUrls = function (msg, tempdir, global) {
 
     var urlsGlobal = !global &&
         tempdata[msg.author.id][msg.id]?.['lastUrls'] ||
-        data['guildData'][msg.guild.id]['channels'][msg.channel.id]['lastUrls']
+        data.guildData[msg.guild.id]['channels'][msg.channel.id]['lastUrls']
     var urls = urlsGlobal.slice()
 
     for (var i = 0; i < urls.length; i++) {
@@ -2775,7 +2776,7 @@ functions.addLastUrl = function (msg, url) {
 
     var lasturls = [url].concat(lastUrls(msg, false, true))
     lasturls.splice(100)
-    data['guildData'][msg.guild.id]['channels'][msg.channel.id]['lastUrls'] = lasturls
+    data.guildData[msg.guild.id]['channels'][msg.channel.id]['lastUrls'] = lasturls
 }
 
 functions.rateLimit = async function (msg) {
@@ -2966,7 +2967,7 @@ functions.getKeywordsFor = async function (string, msg, isBot, { extrakeys = {},
                     var key = special.keys[keydata.match] || extradkeys[keydata.match]
 
                     if ((key.limit != undefined && equalValues(tempdata[msg.author.id][msg.id]['keywordsExecuted'], keyName) >= key.limit) ||
-                        (key.cmdconnected && data['guildData'][msg.guild.id]?.['disabled'].find(cmd => cmd.find(n => n === key.cmdconnected)))) {
+                        (key.cmdconnected && data.guildData[msg.guild.id]?.['disabled'].find(cmd => cmd.find(n => n === key.cmdconnected)))) {
                         string = string.replace(keydata.match, '')
                         break
                     }
@@ -2983,7 +2984,7 @@ functions.getKeywordsFor = async function (string, msg, isBot, { extrakeys = {},
                     }
 
                     string = typeof (change) === 'object' && change[1] === true ? String(change[0]) : string.replace(keydata.match, String(change).replace(/\$&/g, '$\\&'))
-                    tempdata[msg.author.id][msg.id]['keyattempts'] += !data['guildData'][msg.guild.id]['chaos'] ? (key.attemptvalue ?? 1) : 0
+                    tempdata[msg.author.id][msg.id]['keyattempts'] += !data.guildData[msg.guild.id]['chaos'] ? (key.attemptvalue ?? 1) : 0
                     break
 
                 case 'func':
@@ -2992,7 +2993,7 @@ functions.getKeywordsFor = async function (string, msg, isBot, { extrakeys = {},
                     var m = match
 
                     if ((func.limit != undefined && equalValues(tempdata[msg.author.id][msg.id]['keywordsExecuted'], funcName) >= func.limit) ||
-                        (func.cmdconnected && data['guildData'][msg.guild.id]?.['disabled'].find(cmd => cmd.find(n => n === func.cmdconnected)))) {
+                        (func.cmdconnected && data.guildData[msg.guild.id]?.['disabled'].find(cmd => cmd.find(n => n === func.cmdconnected)))) {
                         string = string.replace(`${funcName}(${match})`, '')
                         break
                     }
@@ -3014,7 +3015,7 @@ functions.getKeywordsFor = async function (string, msg, isBot, { extrakeys = {},
                     }
 
                     string = typeof (change) === 'object' && change[1] === true ? String(change[0]) : string.replace(`${funcName}(${match})`, String(change).replace(/\$&/g, '$\\&'))
-                    tempdata[msg.author.id][msg.id]['keyattempts'] += !data['guildData'][msg.guild.id]['chaos'] ? (func.attemptvalue ?? 1) : 0
+                    tempdata[msg.author.id][msg.id]['keyattempts'] += !data.guildData[msg.guild.id]['chaos'] ? (func.attemptvalue ?? 1) : 0
                     break
             }
 
@@ -3089,14 +3090,14 @@ functions.battle = async function (msg, subject, action, damage, chance) {
 
     if (!member) return
 
-    if (!data['userData'][member.id]) {
-        data['userData'][member.id] = {}
-        data['userData'][member.id]['health'] = 100
+    if (!data.userData[member.id]) {
+        data.userData[member.id] = {}
+        data.userData[member.id]['health'] = 100
     }
 
-    data['userData'][member.id]['health'] = data['userData'][member.id]['health'] - damage
-    if (data['userData'][member.id]['health'] <= 0) {
-        data['userData'][member.id]['health'] = 100
+    data.userData[member.id]['health'] = data.userData[member.id]['health'] - damage
+    if (data.userData[member.id]['health'] <= 0) {
+        data.userData[member.id]['health'] = 100
         await msg.reply({
             content: `**${member.username}** died!`,
             allowedMentions: {
@@ -3111,7 +3112,7 @@ functions.userToken = function (id, token) {
     let data = poopy.data
     let { randomChoice, decrypt, randomKey } = poopy.functions
 
-    var tokens = data['userData'][id]['tokens'][token] ?? []
+    var tokens = data.userData[id]['tokens'][token] ?? []
     var userTkn = randomChoice(tokens)
 
     return userTkn ? decrypt(userTkn) : randomKey(token)
@@ -3253,7 +3254,7 @@ functions.sendFile = async function (msg, filepath, filename, extraOptions) {
 
     var returnUrl
 
-    var prefix = data['guildData'][msg.guild.id]['prefix']
+    var prefix = data.guildData[msg.guild.id]['prefix']
     var args = msg.content.substring(prefix.toLowerCase().length).split(' ')
 
     extraOptions.catbox = extraOptions.catbox ?? args.includes('-catbox')

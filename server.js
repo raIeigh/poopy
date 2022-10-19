@@ -467,7 +467,7 @@ async function start() {
     let tokens = []
 
     function testCondition() {
-        return !__dirname.includes('app')
+        return process.argv.includes('--test') || !__dirname.includes('app')
     }
 
     if (testCondition()) {

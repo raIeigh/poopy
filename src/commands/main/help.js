@@ -7,7 +7,7 @@ module.exports = {
             var cmds = poopy.commands.map(cmd => {
                 return { name: cmd.name.join('/'), value: cmd.name[0] }
             })
-            var lcmds = poopy.data['guildData'][interaction.guild.id]['localcmds'].map(lcmd => {
+            var lcmds = poopy.data.guildData[interaction.guild.id]['localcmds'].map(lcmd => {
                 return { name: lcmd.name, value: lcmd.name }
             })
 
@@ -28,7 +28,7 @@ module.exports = {
             var fCmds = commands.filter(cmd => 
                 cmd.name.find(name => name.toLowerCase().includes(saidMessage.toLowerCase()))
             ).concat(
-                data['guildData'][msg.guild.id]['localcmds'].filter(cmd =>
+                data.guildData[msg.guild.id]['localcmds'].filter(cmd =>
                     cmd.name.toLowerCase().includes(saidMessage.toLowerCase())
                 ).map(lcmd => {
                     return {
