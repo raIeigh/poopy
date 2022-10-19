@@ -3,7 +3,7 @@ module.exports = {
     args: [{"name":"carrier","required":false,"specifarg":false,"orig":"{carrier}"},{"name":"modulator","required":false,"specifarg":false,"orig":"{modulator}"},{"name":"strength","required":false,"specifarg":true,"orig":"[-strength <value (max 512)>]"}],
     execute: async function (msg, args) {
         let poopy = this
-        let { lastUrl, getUrls, validateFile, downloadFile, execPromise, findpreset, sendFile } = poopy.functions
+        let { getOption, lastUrl, getUrls, validateFile, downloadFile, execPromise, findpreset, sendFile } = poopy.functions
         let { fs } = poopy.modules
 
         await msg.channel.sendTyping().catch(() => { })
@@ -110,7 +110,7 @@ module.exports = {
     },
     help: {
         name: '<:newpoopy:839191885310066729> vocode/autotune {carrier} {modulator} [-strength <value (max 512)>]',
-        value: "Mixes the first file's audio with the second file's audio."
+        value: "Synthesizes the carrier's sound accordingly from the modulator. Default strength is 75."
     },
     cooldown: 2500,
     type: 'Audio'
