@@ -476,6 +476,7 @@ async function start() {
                 TOKEN: process.env.POOPYTEST_TOKEN,
                 config: {
                     testing: true,
+                    noInfoPost: true,
                     globalPrefix: '2p:',
                     database: 'testdata',
                     intents: 3276799,

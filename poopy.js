@@ -1451,8 +1451,6 @@ class Poopy {
             })
         })
 
-
-
         await infoPost(`Gathering data in \`${config.database}\``)
         if (process.env.CLOUDAMQP_URL) vars.amqpconn = await require('amqplib').connect(process.env.CLOUDAMQP_URL)
         var gdata = await requestData()
