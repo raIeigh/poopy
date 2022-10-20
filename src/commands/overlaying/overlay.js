@@ -18,7 +18,7 @@ module.exports = {
         }, { "name": "offsetpos", "required": false, "specifarg": true, "orig": "[-offsetpos <x> <y>]" },
         { "name": "width", "required": false, "specifarg": true, "orig": "[-width <pixels or percentage>]" },
         { "name": "height", "required": false, "specifarg": true, "orig": "[-height <pixels or percentage>]" },
-        { "name": "keepaspectratio", "required": false, "specifarg": true, "orig": "[-keepaspectratio <mode (increase or decrease)>]", "autocomplete": ['increase', 'decrease'] }
+        { "name": "keepaspectratio", "required": false, "specifarg": true, "orig": "[-keepaspectratio <mode (increase or decrease)>]", "autocomplete": ['increase', 'decrease'] }, {"name":"start","required":false,"specifarg":true,"orig":"[-start <timestamp (you can use hh:mm:ss)>]"},{"name":"end","required":false,"specifarg":true,"orig":"[-end <timestamp (you can use hh:mm:ss)>]"}
     ],
     execute: async function (msg, args) {
         let poopy = this
@@ -213,7 +213,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'overlay {file} {file2} [-origin <x (left/center/right)> <y (top/middle/bottom)>] [-offsetpos <x> <y>] [-width <pixels or percentage>] [-height <pixels or percentage>] [-keepaspectratio <mode (increase or decrease)>]',
+        name: 'overlay {file} {file2} [-origin <x (left/center/right)> <y (top/middle/bottom)>] [-offsetpos <x> <y>] [-width <pixels or percentage>] [-height <pixels or percentage>] [-keepaspectratio <mode (increase or decrease)>] [-start <timestamp (you can use hh:mm:ss)>] [-end <timestamp (you can use hh:mm:ss)>]',
         value: 'Overlays the 2nd file to the 1st one.'
     },
     cooldown: 2500,

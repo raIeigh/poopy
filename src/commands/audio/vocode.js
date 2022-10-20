@@ -1,6 +1,6 @@
 module.exports = {
     name: ['vocode', 'autotune'],
-    args: [{"name":"carrier","required":false,"specifarg":false,"orig":"{carrier}"},{"name":"modulator","required":false,"specifarg":false,"orig":"{modulator}"},{"name":"strength","required":false,"specifarg":true,"orig":"[-strength <value (max 512)>]"}],
+    args: [{"name":"carrier","required":false,"specifarg":false,"orig":"{carrier}"},{"name":"modulator","required":false,"specifarg":false,"orig":"{modulator}"},{"name":"bandcount","required":false,"specifarg":true,"orig":"[-bandcount <value (max 512)>]"}],
     execute: async function (msg, args) {
         let poopy = this
         let { getOption, lastUrl, getUrls, validateFile, downloadFile, execPromise, findpreset, sendFile } = poopy.functions
@@ -13,7 +13,7 @@ module.exports = {
             return;
         };
 
-        var strength = getOption(args, 'strength', { dft: 75, func: (opt) => parseNumber(opt, { min: 1, max: 512, round: true, dft: 75 }) })
+        var bandcount = getOption(args, 'bandcount', { dft: 75, func: (opt) => parseNumber(opt, { min: 1, max: 512, round: true, dft: 75 }) })
 
         var currenturl = lastUrl(msg, 0) || args[1]
         var currenturl2 = lastUrl(msg, 1) || args[2]
@@ -94,13 +94,13 @@ module.exports = {
             duration = Number(duration)
             duration2 = Number(duration2)
 
-            await execPromise(`ffmpeg -i ${filepath}/${filename} -ac 1 -ar 44100 ${filepath}/carrier.wav`)
-            await execPromise(`ffmpeg -i ${filepath}/${filename2} -ac 1 -ar 44100 ${filepath}/modulator.wav`)
-            await execPromise(`vocoder -b ${strength} ${filepath}/carrier.wav ${filepath}/modulator.wav ${filepath}/output.wav`)
+            console.log(await execPromise(`ffmpeg -i ${filepath}/${filename} -ac 1 -ar 44100 ${filepath}/carrier.wav`))
+            console.log(await execPromise(`ffmpeg -i ${filepath}/${filename2} -ac 1 -ar 44100 ${filepath}/modulator.wav`))
+            console.log(await execPromise(`vocoder -b ${bandcount} ${filepath}/carrier.wav ${filepath}/modulator.wav ${filepath}/output.wav`))
 
             if (filetype.mime.startsWith('audio')) return await sendFile(msg, filepath, `output.wav`)
 
-            await execPromise(`ffmpeg -i ${filepath}/${filename} -i ${filepath}/output.wav -map 0:v -map 1:a -preset ${findpreset(args)} -c:v libx264 -pix_fmt yuv420p -shortest -t ${duration} ${filepath}/output.mp4`)
+            console.log(await execPromise(`ffmpeg -i ${filepath}/${filename} -i ${filepath}/output.wav -map 0:v -map 1:a -preset ${findpreset(args)} -c:v libx264 -pix_fmt yuv420p -shortest -t ${duration} ${filepath}/output.mp4`))
             return await sendFile(msg, filepath, `output.mp4`)
         } else {
             await msg.reply('No audio stream detected.').catch(() => { })
@@ -109,8 +109,8 @@ module.exports = {
         }
     },
     help: {
-        name: '<:newpoopy:839191885310066729> vocode/autotune {carrier} {modulator} [-strength <value (max 512)>]',
-        value: "Synthesizes the carrier's sound accordingly from the modulator. Default strength is 75."
+        name: '<:newpoopy:839191885310066729> vocode/autotune {carrier} {modulator} [-bandcount <value (max 512)>]',
+        value: "Synthesizes the carrier's sound accordingly from the modulator. Default bandcount is 75."
     },
     cooldown: 2500,
     type: 'Audio'
