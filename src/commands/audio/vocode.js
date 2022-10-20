@@ -94,8 +94,10 @@ module.exports = {
             duration = Number(duration)
             duration2 = Number(duration2)
 
-            await execPromise(`ffmpeg -i ${filepath}/${filename} -map 0:a -ac 1 -ar 44100 -preset ${findpreset(args)} ${filepath}/carrier.wav`)
-            await execPromise(`ffmpeg -i ${filepath}/${filename2} -map 0:a -ac 1 -ar 44100 -preset ${findpreset(args)} ${filepath}/modulator.wav`)
+            await execPromise(`ffmpeg -i ${filepath}/${filename} -map 0:a -preset ${findpreset(args)} ${filepath}/carrier.mp3`)
+            await execPromise(`ffmpeg -i ${filepath}/${filename2} -map 0:a -preset ${findpreset(args)} ${filepath}/modulator.mp3`)
+            await execPromise(`ffmpeg -i ${filepath}/carrier.mp3 -ac 1 -ar 44100 -preset ${findpreset(args)} ${filepath}/carrier.wav`)
+            await execPromise(`ffmpeg -i ${filepath}/modulator.mp3 -ac 1 -ar 44100 -preset ${findpreset(args)} ${filepath}/modulator.wav`)
             await execPromise(`vocoder -b ${bandcount} ${filepath}/carrier.wav ${filepath}/modulator.wav ${filepath}/output.wav`)
 
             if (filetype.mime.startsWith('audio')) return await sendFile(msg, filepath, `output.wav`)
