@@ -594,6 +594,7 @@ functions.gatherData = async function (msg) {
     let config = poopy.config
     let data = poopy.data
     let tempdata = poopy.tempdata
+    let vars = poopy.vars
     let { dataGather } = poopy.functions
 
     var webhook = await msg.fetchWebhook().catch(() => { })
@@ -605,18 +606,9 @@ functions.gatherData = async function (msg) {
 
         data.userData[msg.author.id]['username'] = msg.author.username
 
-        var stats = {
-            health: 100,
-            defense: 5,
-            attack: 5,
-            accuracy: 5,
-            level: 1,
-            bucks: 20
-        }
-
-        for (var stat in stats) {
+        for (var stat in vars.battleStats) {
             if (data.userData[msg.author.id][stat] === undefined) {
-                data.userData[msg.author.id][stat] = stats[stat]
+                data.userData[msg.author.id][stat] = vars.battleStats[stat]
             }
         }
 
@@ -1939,7 +1931,7 @@ functions.rainmaze = async function (channel, who, reply, w = 8, h = 6) {
                 var reward = randomNumber(w * h, w * h * 2)
                 raindraw.fields.push({
                     name: "Reward",
-                    value: `${reward} P$`
+                    value: `+${reward} P$`
                 })
                 data.userData[who]['bucks'] += reward
             }
@@ -3039,6 +3031,10 @@ functions.getKeywordsFor = async function (string, msg, isBot, { extrakeys = {},
             delete tempdata[msg.author.id][msg.id]['return']
         }
 
+        if (tempdata[msg.author.id][msg.id]['keyexecuting']) {
+            tempdata[msg.author.id][msg.id]['keyexecuting']--
+        }
+
         return string
     } catch (e) {
         if (tempdata[msg.author.id][msg.id]['keyexecuting']) {
@@ -3048,17 +3044,31 @@ functions.getKeywordsFor = async function (string, msg, isBot, { extrakeys = {},
         console.log(e)
         throw e
     }
+}
 
-    if (tempdata[msg.author.id][msg.id]['keyexecuting']) {
-        tempdata[msg.author.id][msg.id]['keyexecuting']--
+functions.getLevel = function (exp) {
+    let poopy = this
+    let vars = poopy.vars
+
+    let lastLevel = 0
+    let level = 0
+    while (exp >= vars.battleStats.exp * (lastLevel + 1)) {
+        exp -= vars.battleStats.exp * (lastLevel + 1)
+        lastLevel = level
+        level++
     }
+
+    return { level, exp, required: vars.battleStats.exp * (lastLevel + 1) }
 }
 
 functions.battle = async function (msg, subject, action, damage, chance) {
     let poopy = this
     let bot = poopy.bot
+    let config = poopy.config
     let data = poopy.data
+    let vars = poopy.vars
     let { Discord } = poopy.modules
+    let { getLevel } = poopy.functions
 
     await msg.channel.sendTyping().catch(() => { })
     var attachments = msg.attachments.map(attachment => new Discord.AttachmentBuilder(attachment.url));
@@ -3068,43 +3078,129 @@ functions.battle = async function (msg, subject, action, damage, chance) {
         return;
     };
 
-    if (Math.random() >= chance) {
-        await msg.reply('You missed!').catch(() => { })
-        return
+    var member = await bot.users.fetch((subject.match(/\d+/) ?? [subject])[0]).catch(() => { })
+    var yourData = data.userData[msg.author.id]
+    var subjData = member && data.userData[member.id]
+
+    let attacked = Math.random() < chance + (yourData.accuracy * 0.1)
+    let critical = Math.random() < 0.1 + (yourData.accuracy * 0.05)
+    let critmult = critical ? Math.floor(Math.random() * 3) + 2 : 1
+    let died = false
+
+    damage += Math.floor(Math.random() * (yourData.attack + 1)) * 2
+    if (critical) damage *= critmult
+
+    var exp = 0
+    var reward = 0
+    var lastLevel = getLevel(yourData.exp).level
+
+    if (member && attacked) {
+        if (!subjData) {
+            data.userData[member.id] = {}
+            subjData = data.userData[member.id]
+        }
+
+        for (var stat in vars.battleStats) {
+            if (subjData[stat] === undefined) {
+                subjData[stat] = vars.battleStats[stat]
+            }
+        }
+
+        damage -= Math.floor(Math.random() * subjData.defense * 11) * 0.1
+        subjData.health = subjData.health - damage
+        if (member.id != msg.author.id && msg.guild.members.cache.get(member.id)) exp = Math.floor(Math.random() * subjData.maxHealth / 5) + subjData.maxHealth / 20 + (yourData.loot * 10) * critmult
+
+        if (subjData.health <= 0) {
+            subjData.health = 0
+            if (member.id != msg.author.id && msg.guild.members.cache.get(member.id)) exp += Math.floor((subjData.maxHealth + subjData.attack + subjData.defense + subjData.accuracy + subjData.loot + yourData.loot) / 10) * 50
+            if (member.id != msg.author.id && msg.guild.members.cache.get(member.id)) reward = Math.floor(Math.random() * (subjData.maxHealth + subjData.attack + subjData.defense + subjData.accuracy + subjData.loot + yourData.loot)) + subjData.maxHealth / 2
+            died = true
+        }
+
+        yourData.exp += exp
+        yourData.bucks += reward
     }
 
-    var member = (msg.mentions.members.first() && msg.mentions.members.first().user) ??
-        await bot.users.fetch((subject.match(/\d+/) ?? [subject])[0]).catch(() => { })
+    var level = getLevel(yourData.exp).level
+    var actions = []
 
-    await msg.reply({
-        content: action
+    if (critical) actions.push('***CRITICAL HIT!***')
+    actions.push(
+        action
             .replace('{src}', msg.author.username)
             .replace('{trgt}', (member && member.username) ?? subject ?? 'this')
-            .replace('{dmg}', damage),
+            .replace('{dmg}', damage)
+    )
+    if (died) actions.push('They have died.')
+    if (level > lastLevel) actions.push(`You leveled UP!`)
+
+    var stats = []
+
+    if (member) {
+        stats.push({
+            name: 'Your Health',
+            value: `${yourData.health} HP`,
+            inline: true
+        })
+        if (member.id != msg.author.id) stats.push({
+            name: "Subject's Health",
+            value: `${subjData.health} HP`,
+            inline: true
+        })
+    }
+
+    if (exp) {
+        stats.push({
+            name: "Experience",
+            value: `+${exp} XP`,
+            inline: true
+        })
+    }
+
+    if (died && reward) {
+        stats.push({
+            name: "Reward",
+            value: `+${reward} P$`,
+            inline: true
+        })
+    }
+
+    if (level > lastLevel) {
+        stats.push({
+            name: "Level",
+            value: level,
+            inline: true
+        })
+    }
+
+    var payload = {
+        embeds: [{
+            description: attacked ? actions.join(' ') : 'You missed!',
+            color: 0x472604,
+            fields: stats,
+            footer: {
+                icon_url: bot.user.displayAvatarURL({
+                    dynamic: true, size: 1024, format: 'png'
+                }),
+                text: bot.user.username
+            },
+        }],
+        content: `${attacked ? actions.join(' ') : 'You missed!'}${stats.length ? `\n\n${stats.map(s => `**${s.name}**: ${s.value}`).join('\n')}` : ''}`,
         allowedMentions: {
             parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
         },
         files: attachments,
         stickers: msg.stickers
-    }).catch(() => { })
-
-    if (!member) return
-
-    if (!data.userData[member.id]) {
-        data.userData[member.id] = {}
-        data.userData[member.id]['health'] = 100
     }
 
-    data.userData[member.id]['health'] = data.userData[member.id]['health'] - damage
-    if (data.userData[member.id]['health'] <= 0) {
-        data.userData[member.id]['health'] = 100
-        await msg.reply({
-            content: `**${member.username}** died!`,
-            allowedMentions: {
-                parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
-            }
-        }).catch(() => { })
-    }
+    if (config.textEmbeds) delete payload.embeds
+    else delete payload.content
+
+    await msg.reply(payload).catch(() => { })
+
+    if (died) subjData.health = subjData.maxHealth
+
+    return attacked ? actions.join(' ') : 'You missed!'
 }
 
 functions.userToken = function (id, token) {

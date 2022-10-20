@@ -94,13 +94,13 @@ module.exports = {
             duration = Number(duration)
             duration2 = Number(duration2)
 
-            console.log(await execPromise(`ffmpeg -i ${filepath}/${filename} -map 0:a -ac 1 -ar 44100 -preset ${findpreset(args)} ${filepath}/carrier.wav`))
-            console.log(await execPromise(`ffmpeg -i ${filepath}/${filename2} -map 0:a -ac 1 -ar 44100 -preset ${findpreset(args)} ${filepath}/modulator.wav`))
-            console.log(await execPromise(`vocoder -b ${bandcount} ${filepath}/carrier.wav ${filepath}/modulator.wav ${filepath}/output.wav`))
+            await execPromise(`ffmpeg -i ${filepath}/${filename} -vcodec copy -acodec copy -map 0:a -ac 1 -ar 44100 -preset ${findpreset(args)} ${filepath}/carrier.wav`)
+            await execPromise(`ffmpeg -i ${filepath}/${filename2} -vcodec copy -acodec copy -map 0:a -ac 1 -ar 44100 -preset ${findpreset(args)} ${filepath}/modulator.wav`)
+            await execPromise(`vocoder -b ${bandcount} ${filepath}/carrier.wav ${filepath}/modulator.wav ${filepath}/output.wav`)
 
             if (filetype.mime.startsWith('audio')) return await sendFile(msg, filepath, `output.wav`)
 
-            console.log(await execPromise(`ffmpeg -i ${filepath}/${filename} -i ${filepath}/output.wav -map 0:v -map 1:a -preset ${findpreset(args)} -c:v libx264 -pix_fmt yuv420p -shortest -t ${duration} ${filepath}/output.mp4`))
+            await execPromise(`ffmpeg -i ${filepath}/${filename} -i ${filepath}/output.wav -map 0:v -map 1:a -preset ${findpreset(args)} -c:v libx264 -pix_fmt yuv420p -shortest -t ${duration} ${filepath}/output.mp4`)
             return await sendFile(msg, filepath, `output.mp4`)
         } else {
             await msg.reply('No audio stream detected.').catch(() => { })

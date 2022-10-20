@@ -100,8 +100,7 @@ module.exports = {
 
         args[1] = args[1] ?? ''
 
-        var member = (msg.mentions.members.first() && msg.mentions.members.first().user) ??
-            await bot.users.fetch((args[1].match(/\d+/) ?? [args[1]])[0]).catch(() => { })
+        var member = await bot.users.fetch((args[1].match(/\d+/) ?? [args[1]])[0]).catch(() => { })
 
         if (!member) {
             await msg.reply({

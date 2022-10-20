@@ -49,6 +49,11 @@ module.exports = {
             required: false
         },
 
+        maxHealth: {
+            type: Number,
+            required: false
+        },
+
         defense: {
             type: Number,
             required: false
@@ -64,7 +69,12 @@ module.exports = {
             required: false
         },
 
-        level: {
+        loot: {
+            type: Number,
+            required: false
+        },
+
+        exp: {
             type: Number,
             required: false
         },

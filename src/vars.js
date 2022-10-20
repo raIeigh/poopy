@@ -45,6 +45,16 @@ vars.caseModifiers = [
         return text.toUpperCase().substring(0, 1) + text.toLowerCase().substring(1)
     }
 ]
+vars.battleStats = {
+    health: 100,
+    maxHealth: 100,
+    defense: 0,
+    attack: 0,
+    accuracy: 0,
+    loot: 0,
+    exp: 150,
+    bucks: 20
+}
 vars.clevercontexts = {}
 
 module.exports = vars
