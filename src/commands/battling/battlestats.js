@@ -95,6 +95,11 @@ module.exports = {
             embeds: [{
                 title: `${member.username}\'s Stats`,
                 color: 0x472604,
+                thumbnail: {
+                    url: msg.author.displayAvatarURL({
+                        dynamic: true, size: 1024, format: 'png'
+                    })
+                },
                 footer: {
                     icon_url: bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
                     text: bot.user.username

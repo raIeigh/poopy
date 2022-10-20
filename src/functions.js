@@ -3106,7 +3106,7 @@ functions.battle = async function (msg, subject, action, damage, chance) {
             }
         }
 
-        damage -= Math.floor(Math.random() * subjData.defense * 11) * 0.1
+        damage = Math.max(damage - (subjData.defense / 2 + Math.floor(Math.random() * subjData.defense * 11) * 0.1), 0)
         subjData.health = subjData.health - damage
         if (member.id != msg.author.id && msg.guild.members.cache.get(member.id)) exp = Math.floor(Math.random() * subjData.maxHealth / 5) + subjData.maxHealth / 20 + (yourData.loot * 10) * critmult
 
