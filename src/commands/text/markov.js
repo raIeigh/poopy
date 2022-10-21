@@ -3,7 +3,7 @@ module.exports = {
     args: [{"name":"message","required":false,"specifarg":false,"orig":"[message]"},{"name":"words","required":false,"specifarg":true,"orig":"[-words <wordNumber>]"},{"name":"nopunctuation","required":false,"specifarg":true,"orig":"[-nopunctuation]"},{"name":"keepcase","required":false,"specifarg":true,"orig":"[-keepcase]"},{"name":"randlerp","required":false,"specifarg":true,"orig":"[-randlerp <number (from 0 to 1)>]"},{"name":"randomsentences","required":false,"specifarg":true,"orig":"[-randomsentences]"}],
     execute: async function (msg, args) {
         let poopy = this
-        let { getOption, parseNumber, markovChainGenerator, markovMe } = poopy.functions
+        let { getOption, parseNumber, markovChainGenerator, markovMe, decrypt } = poopy.functions
         let data = poopy.data
         let json = poopy.json
         let arrays = poopy.arrays
@@ -18,7 +18,7 @@ module.exports = {
         var randomsentences = getOption(args, 'randomsentences', { dft: false, splice: true, n: 0, join: true })
 
         var saidMessage = args.join(' ').substring((args[0] || '').length + 1)
-        var messages = data.guildData[msg.guild.id]['messages'].slice().map(m => m.content)
+        var messages = data.guildData[msg.guild.id]['messages'].slice().map(m => decrypt(m.content))
         if (messages.length <= 0 || randomsentences) {
             messages = json.sentenceJSON.data.map(s => s.sentence).concat(arrays.psPasta)
         }

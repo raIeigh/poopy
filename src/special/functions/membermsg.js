@@ -4,10 +4,11 @@ module.exports = {
     func: function (matches, msg) {
         let poopy = this
         let data = poopy.data
+        let { decrypt } = poopy.functions
 
         var word = matches[1]
 
         var messages = data.guildData[msg.guild.id]['messages'].filter(message => message.author == word)
-        return messages.length ? messages[Math.floor(Math.random() * messages.length)].content.replace(/\@/g, '@‌') : ''
+        return messages.length ? decrypt(messages[Math.floor(Math.random() * messages.length)].content).replace(/\@/g, '@‌') : ''
     }
 }

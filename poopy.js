@@ -197,12 +197,12 @@ class Poopy {
         modules.Discord = modules.Discord[Number(config.self)]
 
         // we can create thge bot now
-        let { Discord, Collection, fs } = modules
+        let { Discord, Collection, fs, CryptoJS } = modules
         let { envsExist,
             chunkArray, chunkObject, requireJSON, findCommand,
             dmSupport, sleep, gatherData, deleteMsgData, infoPost,
             getKeywordsFor, getUrls, randomChoice, similarity, yesno,
-            cleverbot, regexClean } = functions
+            cleverbot, regexClean, decrypt } = functions
 
         let bot = poopy.bot = new Discord.Client({
             intents: config.intents,
@@ -1032,10 +1032,10 @@ class Poopy {
             if (msg.content && ((!(msg.author.bot) && msg.author.id != bot.user.id) || config.allowbotusage) && data.guildData[msg.guild.id]['channels'][msg.channel.id]['read']) {
                 var cleanMessage = Discord.cleanContent(msg.content, msg).replace(/\@/g, '@‌')
 
-                if (!(cleanMessage.match(/nigg|https?\:\/\/.*(rule34|e621|pornhub|hentaihaven|xxx|iplogger)|discord\.(gift|gg)\/[\d\w]+\/?$/ig) || cleanMessage.includes(prefix.toLowerCase())) && !(data.guildData[msg.guild.id]['messages'].find(message => message.content.toLowerCase() === cleanMessage.toLowerCase()))) {
+                if (!(cleanMessage.match(/nigg|https?\:\/\/.*(rule34|e621|pornhub|hentaihaven|xxx|iplogger)|discord\.(gift|gg)\/[\d\w]+\/?$/ig) || cleanMessage.includes(prefix.toLowerCase())) && !(data.guildData[msg.guild.id]['messages'].find(message => decrypt(message.content).toLowerCase() === cleanMessage.toLowerCase()))) {
                     var messages = [{
                         author: msg.author.id,
-                        content: cleanMessage
+                        content: CryptoJS.AES.encrypt(cleanMessage, process.env.AUTH_TOKEN)
                     }].concat(data.guildData[msg.guild.id]['messages'])
                     messages.splice(10000)
                     data.guildData[msg.guild.id]['messages'] = messages

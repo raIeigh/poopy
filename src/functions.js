@@ -699,15 +699,6 @@ functions.gatherData = async function (msg) {
         data.guildData[msg.guild.id]['messages'] = []
     }
 
-    if (typeof data.guildData[msg.guild.id]['messages'][0] == 'string') {
-        data.guildData[msg.guild.id]['messages'] = data.guildData[msg.guild.id]['messages'].map(m => {
-            return {
-                author: bot.user.id,
-                content: m
-            }
-        })
-    }
-
     if (!tempdata[msg.guild.id]) {
         tempdata[msg.guild.id] = {}
     }
