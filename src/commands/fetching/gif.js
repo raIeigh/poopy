@@ -46,7 +46,7 @@ module.exports = {
         if (number > urls.length) number = urls.length;
         if (number < 1) number = 1
 
-        await navigateEmbed(msg.channel, async (page) => {
+        if (!msg.nosend) await navigateEmbed(msg.channel, async (page) => {
             addLastUrl(msg, urls[page - 1])
 
             if (config.textEmbeds) return `${urls[page - 1]}\n\nGIF ${page}/${urls.length}`
@@ -78,6 +78,7 @@ module.exports = {
                 page: false
             }
         ], number, undefined, undefined, undefined, msg)
+        return urls[page - 1]
     },
     help: {
         name: 'gif/tenor <query> [-page <number>]',

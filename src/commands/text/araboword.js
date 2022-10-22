@@ -16,7 +16,8 @@ module.exports = {
     for (i = 0; i < Math.floor(Math.random() * 3) + 2; i++) {
       word += consonants[Math.floor(Math.random() * consonants.length)] + vowels[Math.floor(Math.random() * vowels.length)]
     }
-    await msg.reply(word).catch(() => { })
+    if (!msg.nosend) await msg.reply(word).catch(() => { })
+    return word
   },
   help: {
     name: 'araboword/raleighword',

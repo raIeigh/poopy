@@ -3,7 +3,7 @@ module.exports = {
     desc: 'Allows you to execute any command!',
     func: async function (matches, msg, isBot, _, opts) {
         let poopy = this
-        let { splitKeyFunc, getUrls, infoPost, getKeywordsFor } = poopy.functions
+        let { splitKeyFunc, getUrls, infoPost, getKeywordsFor, getOption } = poopy.functions
         let globaldata = poopy.globaldata
         let commands = poopy.commands
         let data = poopy.data
@@ -14,7 +14,7 @@ module.exports = {
         var word = matches[1]
         var split = splitKeyFunc(word, { args: 2 })
         var commandname = (await getKeywordsFor(split[0] ?? '', msg, isBot, opts).catch(() => { }) ?? split[0]).toLowerCase()
-        var args = split[1] ?? ''
+        var args = (split[1] ?? '').split(' ')
         var command = commands.find(fcmd => fcmd.name.find(fcmdname => fcmdname === commandname))
         var localCommand = data.guildData[msg.guild.id]['localcmds'].find(cmd => cmd.name === commandname)
         var error = ''
@@ -39,6 +39,10 @@ module.exports = {
                 return 'This command is disabled in this server.'
             } else {
                 var content = msg.content
+                
+                delete msg.nosend
+                msg.nosend = getOption(args, 'nosend', { n: 0, splice: true, dft: false })
+                args = args.join(' ')
 
                 var ropts = { ...opts }
                 ropts.declaredonly = (command || localCommand).raw
@@ -52,7 +56,7 @@ module.exports = {
                 }).catch(() => { })
 
                 if (command) {
-                    var increaseCount = !(command.execute.toString().includes('sendFile') && args.includes('-nosend'))
+                    var increaseCount = !(command.execute.toString().includes('sendFile') && msg.nosend)
 
                     if (increaseCount) {
                         if (tempdata[msg.author.id][msg.id]['execCount'] >= 1 && data.guildData[msg.guild.id]['chaincommands'] == false && !(msg.member.permissions.has('ManageGuild') || msg.member.permissions.has('ManageMessages') || msg.member.permissions.has('Administrator') || msg.author.id === msg.guild.ownerID || isBot)) {

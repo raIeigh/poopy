@@ -5,7 +5,9 @@ module.exports = {
     let poopy = this
     let special = poopy.special
 
-    await msg.reply(special.keys._ronald()).catch(() => { })
+    var ronald = special.keys._ronald()
+    if (!msg.nosend) await msg.reply(ronald).catch(() => { })
+    return ronald
   },
   help: {
     name: 'ronald/ronaldgif',

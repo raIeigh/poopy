@@ -31,14 +31,15 @@ module.exports = {
             })
 
             if (resp) {
-                channel.send({
+                if (!msg.nosend) channel.send({
                     content: resp,
                     allowedMentions: {
                         parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                     }
                 }).catch(() => { })
+                return resp
             }
-        } else {
+        } else if (!msg.nosend) {
             if (!continuous && !args[1]) {
                 channel.send('What is the message to respond to?!').catch(() => { })
                 return
@@ -48,7 +49,7 @@ module.exports = {
 
         channel.sendTyping().catch(() => { })
 
-        if (continuous) {
+        if (!msg.nosend && continuous) {
             if (tempdata[guildid][channelid][authorid].messageCollector) {
                 tempdata[guildid][channelid][authorid].messageCollector.stop()
                 delete tempdata[guildid][channelid][authorid].messageCollector

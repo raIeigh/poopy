@@ -78,8 +78,7 @@ module.exports = {
 
         if (type.mime.startsWith('video')) {
             var filepath = await downloadFile(currenturl, `input.mp4`, {
-                fileinfo: fileinfo
-            })
+                fileinfo            })
             var filename = `input.mp4`
             fs.mkdirSync(`${filepath}/clips`)
             var audio = fileinfo.info.audio
@@ -311,8 +310,7 @@ module.exports = {
             return await sendFile(msg, filepath, `output.gif`)
         } else if (type.mime.startsWith('audio')) {
             var filepath = await downloadFile(currenturl, `input.mp3`, {
-                fileinfo: fileinfo
-            })
+                fileinfo            })
             var filename = `input.mp3`
             fs.mkdirSync(`${filepath}/clips`)
             var duration = Number(fileinfo.info.duration)

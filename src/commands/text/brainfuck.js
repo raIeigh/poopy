@@ -13,13 +13,13 @@ module.exports = {
       return;
     };
     var compiled = await brainfuck(saidMessage)
-    await msg.reply({
+    if (!msg.nosend) await msg.reply({
       content: compiled || '​',
       allowedMentions: {
         parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
       }
     }).catch(() => { })
-    await msg.channel.sendTyping().catch(() => { })
+    return compiled || '​'
   },
   help: {
     name: 'brainfuck/bf <code>',

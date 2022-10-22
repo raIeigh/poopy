@@ -46,24 +46,26 @@ module.exports = {
         if (data.guildData[msg.guild.id]['members'][member.id]['impostor'] === false) {
             if (msg.member.permissions.has('ManageGuild') || msg.member.permissions.has('ManageWebhooks') || msg.member.permissions.has('Administrator') || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
                 data.guildData[msg.guild.id]['members'][member.id]['impostor'] = true
-                await msg.reply({
+                if (!msg.nosend) await msg.reply({
                     content: member.user.username + ' is now the Impostor.',
                     allowedMentions: {
                         parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                     }
                 }).catch(() => {})
+                return member.user.username + ' is now the Impostor.'
             } else {
                 await msg.reply('You need to have the manage webhooks/messages permission to execute that!').catch(() => {})
                 return;
             };
         } else {
             data.guildData[msg.guild.id]['members'][member.id]['impostor'] = false
-            await msg.reply({
+            if (!msg.nosend) await msg.reply({
                 content: member.user.username + ' is not the Impostor.',
                 allowedMentions: {
                     parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => {})
+            return member.user.username + ' is not the Impostor.'
         }
     },
     help: {

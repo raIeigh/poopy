@@ -6,15 +6,14 @@ module.exports = {
   ],
   execute: async function (msg, args) {
     let poopy = this
-    let { rainmaze, getIndexOption, parseNumber, getOption } = poopy.functions
+    let { rainmaze, getIndexOption, parseNumber } = poopy.functions
     let { Rainmaze } = poopy.modules
 
-    var nosend = getOption(args, 'nosend', { n: 0, splice: true, dft: false })
     var w = parseNumber(getIndexOption(args, 1, { dft: [8] })[0], { min: 2, max: 27, dft: 8, round: true })
     var h = parseNumber(getIndexOption(args, 2, { dft: [6] })[0], { min: 1, max: 7, dft: 6, round: true })
 
     await msg.channel.sendTyping().catch(() => { })
-    if (nosend) return new Rainmaze(w, h).draw().description
+    if (msg.nosend) return new Rainmaze(w, h).draw().description
 
     var rainstring = await rainmaze(msg.channel, msg.member, msg, w, h).catch(() => { })
     return rainstring

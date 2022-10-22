@@ -4,6 +4,7 @@ module.exports = {
     execute: async function (msg, args) {
         let poopy = this
         let vars = poopy.vars
+        let { addLastUrl } = poopy.functions
         let { deepai, Discord } = poopy.modules
 
         await msg.channel.sendTyping().catch(() => { })
@@ -29,9 +30,12 @@ module.exports = {
             }).catch(() => { })
         })
         if (resp) {
-            await msg.reply({
+            if (msg.nosend) addLastUrl(msg, resp.output_url)
+            else await msg.reply({
                 files: [new Discord.AttachmentBuilder(resp.output_url)]
             }).catch(() => { })
+
+            return resp.output_url
         }
         await msg.channel.sendTyping().catch(() => { })
     },

@@ -22,7 +22,7 @@ module.exports = {
 
         var markovString = markov(messages, minlength)
 
-        await msg.reply({
+        if (!msg.nosend) await msg.reply({
             content: markovString,
             allowedMentions: {
                 parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
@@ -38,6 +38,7 @@ module.exports = {
             }).catch(() => { })
             fs.rmSync(`${filepath}`, { force: true, recursive: true })
         })
+        return markovString
     },
     help: {
         name: 'markov2 [-minlength <charNumber>] [-randomsentences]',

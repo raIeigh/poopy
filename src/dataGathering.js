@@ -228,7 +228,7 @@ module.exports = {
 
         var guildData = data.guildData
         for (var gid in guildData) {
-            var guild = { ...guildData[gid] }
+            var guild = /*{ ...*/guildData[gid] /*}
 
             var channelData = guild.channels
             delete guild.channels
@@ -248,7 +248,7 @@ module.exports = {
                     upsert: true,
                     useFindAndModify: false
                 }).catch(() => { })
-            }
+            }*/
 
             await schemas.guildData.findOneAndUpdate({ dataid, gid }, guild, {
                 upsert: true,

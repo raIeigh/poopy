@@ -30,16 +30,14 @@ module.exports = {
 
         if (type.mime.startsWith('video')) {
             var filepath = await downloadFile(currenturl, `input.mp4`, {
-                fileinfo: fileinfo
-            })
+                fileinfo            })
             var filename = `input.mp4`
 
             await execPromise(`ffmpeg ${args.find(arg => arg === '-changespeed') ? `-r ${fps} ` : ''}-i ${filepath}/${filename} -map 0:a? -filter_complex "[0:v]scale=ceil(iw/2)*2:ceil(ih/2)*2[out]" -map "[out]" -preset ${findpreset(args)} -c:v libx264 -pix_fmt yuv420p ${!args.find(arg => arg === '-changespeed') ? `-r ${fps} ` : ''}${filepath}/output.mp4`)
             return await sendFile(msg, filepath, `output.mp4`)
         } else if (type.mime.startsWith('image') && vars.gifFormats.find(f => f === type.ext)) {
             var filepath = await downloadFile(currenturl, `input.gif`, {
-                fileinfo: fileinfo
-            })
+                fileinfo            })
             var filename = `input.gif`
             if (fps > 50) {
                 fps = 50

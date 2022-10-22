@@ -25,8 +25,7 @@ module.exports = {
 
         if (type.mime.startsWith('image') && !(vars.gifFormats.find(f => f === type.ext))) {
             var filepath = await downloadFile(currenturl, `input.png`, {
-                fileinfo: fileinfo
-            })
+                fileinfo            })
             var filename = `input.png`
             await execPromise(`ffmpeg -i ${filepath}/${filename} -filter_complex "[0:v]geq=r='r(X,Y)':a='${opacity / 255}*alpha(X,Y)'[out]" -map "[out]" -preset ${findpreset(args)} ${filepath}/output.png`)
             return await sendFile(msg, filepath, `output.png`)

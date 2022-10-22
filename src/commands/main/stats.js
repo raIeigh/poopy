@@ -132,15 +132,18 @@ module.exports = {
             ]
         }
 
-        if (config.textEmbeds) msg.reply({
-            content: `${statsEmbed.fields.map(p => `**${p.name}**: ${p.value}`).join('\n')}\n\nv${pkg.version}`,
-            allowedMentions: {
-                parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
-            }
-        }).catch(() => { })
-        else msg.reply({
-            embeds: [statsEmbed]
-        }).catch(() => { })
+        if (!msg.nosend) {
+            if (config.textEmbeds) msg.reply({
+                content: `${statsEmbed.fields.map(p => `**${p.name}**: ${p.value}`).join('\n')}\n\nv${pkg.version}`,
+                allowedMentions: {
+                    parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                }
+            }).catch(() => { })
+            else msg.reply({
+                embeds: [statsEmbed]
+            }).catch(() => { })
+        }
+        return `${statsEmbed.fields.map(p => `**${p.name}**: ${p.value}`).join('\n')}\n\nv${pkg.version}`
     },
     help: { name: 'stats/botstats', value: "Shows Poopy's stats." },
     cooldown: 2500,

@@ -23,8 +23,7 @@ module.exports = {
 
         if (type.mime.startsWith('image')) {
             var filepath = await downloadFile(currenturl, `input.${fileinfo.shortext}`, {
-                fileinfo: fileinfo
-            })
+                fileinfo            })
             var filename = `input.${fileinfo.shortext}`
             await execPromise(`ffmpeg -i ${filepath}/${filename} -vf "scale='min(1000,iw)':min'(1000,ih)':force_original_aspect_ratio=decrease,scale=ceil(iw/2)*2:ceil(ih/2)*2" -preset ${findpreset(args)} -c:v libx264 -pix_fmt yuv420p ${filepath}/output.mp4`)
             return await sendFile(msg, filepath, `output.mp4`)

@@ -8,12 +8,13 @@ module.exports = {
     for (var i = 0; i < 600; i++) {
       garbage = garbage + String.fromCharCode(Math.floor(Math.random() * 15000))
     }
-    await msg.reply({
+    if (!msg.nosend) await msg.reply({
       content: garbage,
       allowedMentions: {
         parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
       }
     }).catch(() => { })
+    return garbage
   },
   help: {
     name: 'garbage',

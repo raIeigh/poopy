@@ -24,12 +24,13 @@ module.exports = {
                 "text": `Author: ${msg.author.id} | Message ID: ${msg.id}`
             },
         };
-        await msg.reply({
+        if (!msg.nosend) await msg.reply({
             allowedMentions: {
                 parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
             },
             embeds: [tangoEmbed]
         }).catch(() => { })
+        return 'but how'
     },
     help: { name: 'tango/deleteembed/dembed {message}', value: 'tango' },
     cooldown: 2500,

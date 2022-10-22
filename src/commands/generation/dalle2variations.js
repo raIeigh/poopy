@@ -35,8 +35,7 @@ module.exports = {
 
         if (type.mime.startsWith('image')) {
             var filepath = await downloadFile(currenturl, `input.png`, {
-                fileinfo: fileinfo
-            })
+                fileinfo            })
             var filename = 'input.png'
             
             await execPromise(`ffmpeg -i ${filepath}/${filename} -vf "crop=w='min(min(iw,ih),500)':h='min(min(iw,ih),500)',scale=1024:1024,setsar=1" -vframes 1 ${filepath}/output.png`)
@@ -116,7 +115,7 @@ module.exports = {
 
             var images = imageRes.data.generatidata.map(gdata => gdata.generation.image_path)
 
-            await navigateEmbed(msg.channel, async (page) => {
+            if (!msg.nosend) await navigateEmbed(msg.channel, async (page) => {
                 if (config.textEmbeds) return `${images[page - 1]}\n\nImage ${page}/${images.length}`
                 else return {
                     "title": `DALL·E 2 generations for ${fileinfo.name}`,
@@ -142,6 +141,8 @@ module.exports = {
                     page: false
                 }
             ], undefined, undefined, undefined, undefined, msg)
+
+            return images.join(' ')
         } else {
             await msg.reply({
                 content: `Unsupported file: \`${currenturl}\``,

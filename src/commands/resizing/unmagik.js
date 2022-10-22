@@ -36,8 +36,7 @@ module.exports = {
             }
 
             var filepath = await downloadFile(currenturl, `input.mp4`, {
-                fileinfo: fileinfo
-            })
+                fileinfo            })
             var filename = `input.mp4`
             var frames = fileinfo.info.frames
             var fps = fileinfo.info.fps.includes('0/0') ? '50' : fileinfo.info.fps
@@ -55,15 +54,13 @@ module.exports = {
             return await sendFile(msg, filepath, `output.mp4`)
         } else if (type.mime.startsWith('image') && !(vars.gifFormats.find(f => f === type.ext))) {
             var filepath = await downloadFile(currenturl, `input.png`, {
-                fileinfo: fileinfo
-            })
+                fileinfo            })
             var filename = `input.png`
             await execPromise(`magick ${filepath}/${filename} -liquid-rescale ${scale}% ${filepath}/output.png`)
             return await sendFile(msg, filepath, `output.png`)
         } else if (type.mime.startsWith('image') && vars.gifFormats.find(f => f === type.ext)) {
             var filepath = await downloadFile(currenturl, `input.gif`, {
-                fileinfo: fileinfo
-            })
+                fileinfo            })
             var filename = `input.gif`
             var frames = fileinfo.info.frames
             var fps = fileinfo.info.fps.includes('0/0') ? '50' : fileinfo.info.fps

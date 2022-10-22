@@ -3,7 +3,7 @@ module.exports = {
     desc: 'Allows you to execute any command! This one returns its output. (if it exists)',
     func: async function (matches, msg, isBot, _, opts) {
         let poopy = this
-        let { splitKeyFunc, getUrls, infoPost, getKeywordsFor } = poopy.functions
+        let { splitKeyFunc, getUrls, infoPost, getKeywordsFor, getOption } = poopy.functions
         let globaldata = poopy.globaldata
         let commands = poopy.commands
         let data = poopy.data
@@ -52,7 +52,7 @@ module.exports = {
                 }).catch(() => { })
 
                 if (command) {
-                    var increaseCount = !(command.execute.toString().includes('sendFile') && args.includes('-nosend'))
+                    var increaseCount = !(command.execute.toString().includes('sendFile') && msg.nosend)
 
                     if (increaseCount) {
                         if (tempdata[msg.author.id][msg.id]['execCount'] >= 1 && data.guildData[msg.guild.id]['chaincommands'] == false && !(msg.member.permissions.has('ManageGuild') || msg.member.permissions.has('ManageMessages') || msg.member.permissions.has('Administrator') || msg.author.id === msg.guild.ownerID || isBot)) {

@@ -12,10 +12,10 @@ module.exports = {
             await msg.reply('Owner only!').catch(() => { })
             return
         } else {
-            var confirm = await yesno(msg.channel, 'are you sure about retarding me', msg.member, undefined, msg).catch(() => { })
+            var confirm = msg.nosend || await yesno(msg.channel, 'are you sure about retarding me', msg.member, undefined, msg).catch(() => { })
             if (!confirm) return
 
-            await msg.reply('The chorizo slice').catch(() => { })
+            if (!msg.nosend) await msg.reply('The chorizo slice').catch(() => { })
             await poopy.destroy()
 
             var Poopy = require('../poopy')

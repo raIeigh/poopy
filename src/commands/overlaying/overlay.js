@@ -16,9 +16,9 @@ module.exports = {
                 'right bottom',
             ]
         }, { "name": "offsetpos", "required": false, "specifarg": true, "orig": "[-offsetpos <x> <y>]" },
-        { "name": "width", "required": false, "specifarg": true, "orig": "[-width <pixels or percentage>]" },
-        { "name": "height", "required": false, "specifarg": true, "orig": "[-height <pixels or percentage>]" },
-        { "name": "keepaspectratio", "required": false, "specifarg": true, "orig": "[-keepaspectratio <mode (increase or decrease)>]", "autocomplete": ['increase', 'decrease'] }, {"name":"start","required":false,"specifarg":true,"orig":"[-start <timestamp (you can use hh:mm:ss)>]"},{"name":"end","required":false,"specifarg":true,"orig":"[-end <timestamp (you can use hh:mm:ss)>]"}
+        { "name": "width", "required": false, "specifarg": true, "orig": "[-width/height <pixels or percentage>]" },
+        { "name": "height", "required": false, "specifarg": true, "orig": "[-width/height <pixels or percentage>]" },
+        { "name": "keepaspectratio", "required": false, "specifarg": true, "orig": "[-keepaspectratio <mode (increase or decrease)>]", "autocomplete": ['increase', 'decrease'] }, {"name":"start","required":false,"specifarg":true,"orig":"[-start/end <timestamp (you can use hh:mm:ss)>]"},{"name":"end","required":false,"specifarg":true,"orig":"[-start/end <timestamp (you can use hh:mm:ss)>]"}
     ],
     execute: async function (msg, args) {
         let poopy = this
@@ -126,7 +126,7 @@ module.exports = {
             }
         }
         var filepath = await downloadFile(currenturl, `input.${fileinfo.shortext}`, {
-            fileinfo: fileinfo,
+            fileinfo,
         })
         var filename = `input.${fileinfo.shortext}`
         await downloadFile(currenturl2, `input2.${fileinfo2.shortext}`, {
@@ -159,7 +159,7 @@ module.exports = {
             size[1] = (percentage ? height : 1) * ((isNaN(Number(args[heightindex + 1])) ? size[1] : Number(args[heightindex + 1]) <= 1 ? 1 : Number(args[heightindex + 1]) >= 3000 ? 3000 : Number(args[heightindex + 1]) || size[1]) / (percentage ? 100 : 1))
         }
 
-        var duration = Number(fileinfo.info.duration)
+        var duration = Number(fileinfo.info.duration) || Number(fileinfo2.info.duration)
 
         var start = 0
         var startindex = args.indexOf('-start')
@@ -213,7 +213,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'overlay {file} {file2} [-origin <x (left/center/right)> <y (top/middle/bottom)>] [-offsetpos <x> <y>] [-width <pixels or percentage>] [-height <pixels or percentage>] [-keepaspectratio <mode (increase or decrease)>] [-start <timestamp (you can use hh:mm:ss)>] [-end <timestamp (you can use hh:mm:ss)>]',
+        name: 'overlay {file} {file2} [-origin <x (left/center/right)> <y (top/middle/bottom)>] [-offsetpos <x> <y>] [-width/height <pixels or percentage>] [-keepaspectratio <mode (increase or decrease)>] [-start/end <timestamp (you can use hh:mm:ss)>]',
         value: 'Overlays the 2nd file to the 1st one.'
     },
     cooldown: 2500,

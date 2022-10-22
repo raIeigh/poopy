@@ -18,7 +18,8 @@ module.exports = {
     var $2 = cheerio.load(res2.data)
     var posts = $2('.post')
     var post = posts[Math.floor(Math.random() * posts.length)]
-    await msg.reply(post.children[1].children[1].children[0].attribs.href).catch(() => { })
+    if (!msg.nosend) await msg.reply(post.children[1].children[1].children[0].attribs.href).catch(() => { })
+    return post.children[1].children[1].children[0].attribs.href
   },
   help: {
     name: 'clickhole',

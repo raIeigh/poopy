@@ -20,7 +20,7 @@ module.exports = {
         var damage = 10
         var chance = 1 / 2
 
-        await battle(msg, args.slice(1).join(' '), action, damage, chance)
+        return await battle(msg, args.slice(1).join(' '), action, damage, chance)
     },
     help: { name: 'punch <subject>', value: 'Punch something!' },
     type: 'Battling'

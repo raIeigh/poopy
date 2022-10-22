@@ -113,8 +113,7 @@ module.exports = {
         }
         if (config.textEmbeds) delete sendObject.embeds
         else delete sendObject.content
-        await msg.reply(sendObject).catch(() => { })
-        await msg.channel.sendTyping().catch(() => { })
+        if (!msg.nosend) await msg.reply(sendObject).catch(() => { })
 
         return `**${member.username}'s Stats**\n\n${battleStats.map(s => `**${s.name}**: ${s.value}`).join('\n')}`
     },

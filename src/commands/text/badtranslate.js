@@ -75,7 +75,7 @@ module.exports = {
         var lastlanguage = source
         var currentlanguage = vars.languages[Math.floor(Math.random() * vars.languages.length)].language
 
-        var lmessage = details && await msg.reply(`Translating from ${vars.languages.find(language => language.language === lastlanguage) ? vars.languages.find(language => language.language === lastlanguage).name : 'Auto'} to ${vars.languages.find(language => language.language === currentlanguage).name}. (${output})`).catch(() => { })
+        var lmessage = !msg.nosend && details && await msg.reply(`Translating from ${vars.languages.find(language => language.language === lastlanguage) ? vars.languages.find(language => language.language === lastlanguage).name : 'Auto'} to ${vars.languages.find(language => language.language === currentlanguage).name}. (${output})`).catch(() => { })
 
         for (var i = 0; i < repeat; i++) {
             var options = {
@@ -101,7 +101,7 @@ module.exports = {
             output = response.data[0].translations[0].text
             lastlanguage = currentlanguage
             currentlanguage = i == repeat - 2 ? target : vars.languages[Math.floor(Math.random() * vars.languages.length)].language
-            if (lmessage && i != repeat - 1) {
+            if (lmessage && i != repeat - 1 && !msg.nosend) {
                 await lmessage.edit(`Translating from ${vars.languages.find(language => language.language === lastlanguage) ? vars.languages.find(language => language.language === lastlanguage).name : 'Auto'} to ${vars.languages.find(language => language.language === currentlanguage).name}. (${output})`).catch(() => { })
             }
         }
@@ -110,13 +110,13 @@ module.exports = {
             await lmessage.delete().catch(() => { })
         }
 
-        await msg.reply({
+        if (!msg.nosend) await msg.reply({
             content: output,
             allowedMentions: {
                 parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
             }
         }).catch(() => { })
-        await msg.channel.sendTyping().catch(() => { })
+        return output
     },
     help: {
         name: 'badtranslate/badtr <message> [-source <language>] [-target <language>] [-languages <number (max 25)>] [-details]',

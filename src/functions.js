@@ -590,7 +590,6 @@ functions.execPromise = function (code) {
 
 functions.gatherData = async function (msg) {
     let poopy = this
-    let bot = poopy.bot
     let config = poopy.config
     let data = poopy.data
     let tempdata = poopy.tempdata
@@ -614,6 +613,9 @@ functions.gatherData = async function (msg) {
 
         if (!data.userData[msg.author.id]['tokens']) {
             data.userData[msg.author.id]['tokens'] = {}
+        }
+        if (!data.userData[msg.author.id]['battleSprites']) {
+            data.userData[msg.author.id]['battleSprites'] = {}
         }
     }
 
@@ -646,7 +648,7 @@ functions.gatherData = async function (msg) {
     }
 
     if (!data.guildData[msg.guild.id]['channels'][msg.channel.id]) {
-        data.guildData[msg.guild.id]['channels'][msg.channel.id] = !config.testing && process.env.MONGOOSE_URL && await dataGather.channelData(config.database, msg.guild.id, msg.channel.id).catch(() => { }) || {}
+        data.guildData[msg.guild.id]['channels'][msg.channel.id] = /*!config.testing && process.env.MONGOOSE_URL && await dataGather.channelData(config.database, msg.guild.id, msg.channel.id).catch(() => { }) ||*/ {}
     }
 
     if (!data.guildData[msg.guild.id]['channels'][msg.channel.id]['lastUrls']) {
@@ -667,7 +669,7 @@ functions.gatherData = async function (msg) {
         }
 
         if (!data.guildData[msg.guild.id]['members'][msg.author.id]) {
-            data.guildData[msg.guild.id]['members'][msg.author.id] = !config.testing && process.env.MONGOOSE_URL && await dataGather.memberData(config.database, msg.guild.id, msg.author.id).catch(() => { }) || {}
+            data.guildData[msg.guild.id]['members'][msg.author.id] = /*!config.testing && process.env.MONGOOSE_URL && await dataGather.memberData(config.database, msg.guild.id, msg.author.id).catch(() => { }) ||*/ {}
         }
 
         if (!data.guildData[msg.guild.id]['members'][msg.author.id]['messages']) {
@@ -3058,8 +3060,8 @@ functions.battle = async function (msg, subject, action, damage, chance) {
     let config = poopy.config
     let data = poopy.data
     let vars = poopy.vars
-    let { Discord } = poopy.modules
-    let { getLevel } = poopy.functions
+    let { Discord, fs } = poopy.modules
+    let { getLevel, execPromise, randomNumber, validateFile, downloadFile } = poopy.functions
 
     await msg.channel.sendTyping().catch(() => { })
     var attachments = msg.attachments.map(attachment => new Discord.AttachmentBuilder(attachment.url));
@@ -3096,6 +3098,7 @@ functions.battle = async function (msg, subject, action, damage, chance) {
                 subjData[stat] = vars.battleStats[stat]
             }
         }
+        if (!subjData.battleSprites) subjData.battleSprites = {}
 
         damage = Math.max(damage - (subjData.defense / 2 + Math.floor(Math.random() * subjData.defense * 11) * 0.1), 0)
         subjData.health = subjData.health - damage
@@ -3129,12 +3132,12 @@ functions.battle = async function (msg, subject, action, damage, chance) {
 
     if (member) {
         stats.push({
-            name: 'Your Health',
+            name: `${msg.author.username}'s Health`,
             value: `${yourData.health} HP`,
             inline: true
         })
         if (member.id != msg.author.id) stats.push({
-            name: "Subject's Health",
+            name: `${member.username}'s Health`,
             value: `${subjData.health} HP`,
             inline: true
         })
@@ -3184,12 +3187,44 @@ functions.battle = async function (msg, subject, action, damage, chance) {
         stickers: msg.stickers
     }
 
+    var filepath
+    if (attacked && (member || vars.validUrl.test(subject))) {
+        var avatar = member ? (subjData.battleSprites.hurt ?? member.displayAvatarURL({
+            dynamic: false, size: 256, format: 'png'
+        })) : subject
+        var fileinfo = await validateFile(avatar).catch(() => { })
+
+        if (fileinfo) {
+            filepath = await downloadFile(avatar, 'avatar.png', { fileinfo })
+            var randomizer = () => `(random(t+${Math.floor(Math.random() * 1000)})*2-1)*(0.44-mod(t,0.44))*15`
+            var attackPos = new Array(4).fill().map(() => [randomNumber(50, 150), randomNumber(25, 125)])
+            var attackOverlay = []
+            var attackConcat = []
+            var enemyConcat = []
+            for (var i in attackPos) {
+                var pos = attackPos[i]
+                var x = pos[0]
+                var y = pos[1]
+
+                attackOverlay.push(`[2:v][en${i}]overlay=x='(W-w)/2+${randomizer()}':y='(H-h)/2+${randomizer()}':format=auto[at${i}];[at${i}][1:v]overlay=shortest=1:x=${x}-w/2:y=${y}-h/2:format=auto[attack${i}]`)
+                attackConcat.push(`[attack${i}]`)
+                enemyConcat.push(`[en${i}]`)
+            }
+
+            await execPromise(`ffmpeg -stream_loop -1 -i ${filepath}/avatar.png -i assets/image/${critical ? 'crit' : ''}attack.gif -stream_loop -1 -f lavfi -i "color=0x00000000:s=200x150,format=rgba" -filter_complex "[0:v]scale=100:100:force_original_aspect_ratio=decrease,split=${enemyConcat.length}${enemyConcat.join('')};${attackOverlay.join(';')};${attackConcat.join('')}concat=n=${attackConcat.length},split[pout][ppout];[ppout]palettegen=reserve_transparent=1[palette];[pout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -preset ultrafast -gifflags -offsetting ${filepath}/attack.gif`)
+
+            payload.files = [new Discord.AttachmentBuilder(`${filepath}/attack.gif`)]
+            payload.embeds[0].image = { url: 'attachment://attack.gif' }
+        }
+    }
+
     if (config.textEmbeds) delete payload.embeds
     else delete payload.content
 
-    await msg.reply(payload).catch(() => { })
+    if (!msg.nosend) await msg.reply(payload).catch(() => { })
 
     if (died) subjData.health = subjData.maxHealth
+    if (filepath) fs.rm(filepath, { force: true, recursive: true })
 
     return attacked ? actions.join(' ') : 'You missed!'
 }
@@ -3345,7 +3380,7 @@ functions.sendFile = async function (msg, filepath, filename, extraOptions) {
     var args = msg.content.substring(prefix.toLowerCase().length).split(' ')
 
     extraOptions.catbox = extraOptions.catbox ?? args.includes('-catbox')
-    extraOptions.nosend = extraOptions.nosend ?? args.includes('-nosend')
+    extraOptions.nosend = extraOptions.nosend ?? args.includes('-nosend') ?? msg.nosend
     extraOptions.compress = extraOptions.compress ?? args.includes('-compress')
 
     if (extraOptions.compress) {

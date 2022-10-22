@@ -11,83 +11,83 @@ module.exports = {
         "args": [],
         "description": "Sends a text file with a list of all messages that exist within the guild's message database."
     },
-        {
-            "name": "search",
-            "args": [{
-                "name": "query",
-                "required": true,
-                "specifarg": false,
-                "orig": "<query>"
-            }],
-            "description": "Searches for every message in the server that matches the query."
-        },
-        {
-            "name": "random",
-            "args": [],
-            "description": "Sends a random message from the database to the channel."
-        },
-        {
-            "name": "member",
-            "args": [{
-                "name": "id",
-                "required": true,
-                "specifarg": false,
-                "orig": "<id>",
-                "autocomplete": function (interaction) {
-                    let poopy = this
-
-                    var memberData = poopy.data.guildData[interaction.guild.id]['members']
-                    var memberKeys = Object.keys(memberData).sort((a, b) => memberData[b].messages - memberData[a].messages)
-
-                    return memberKeys.map(id => {
-                        return {
-                            name: memberData[id].username, value: id
-                        }
-                    })
-                }
-            }],
-            "description": "Sends a random message from that member to the channel."
-        },
-        {
-            "name": "add",
-            "args": [{
-                "name": "message",
-                "required": true,
-                "specifarg": false,
-                "orig": "<message>"
-            }],
-            "description": "Adds a new message to the guild's database, if it is available for use."
-        },
-        {
-            "name": "delete",
-            "args": [{
-                "name": "message",
-                "required": true,
-                "specifarg": false,
-                "orig": "<message>",
-                "autocomplete": function (interaction) {
-                    let poopy = this
-                    let { decrypt } = poopy.functions
-                    return poopy.data.guildData[interaction.guild.id]['messages'].map(msg => decrypt(msg.content))
-                }
-            }],
-            "description": "Deletes the message, if it exists."
-        },
-        {
-            "name": "clear",
-            "args": [],
-            "description": "Clears ALL the messages from the database."
-        },
-        {
-            "name": "read",
-            "args": [],
-            "description": "Toggles whether the bot can read the messages from the channel or not."
-        },
-        {
-            "name": "readall",
-            "args": [],
-            "description": "Toggles whether the bot can read the messages from all channels or not."
+    {
+        "name": "search",
+        "args": [{
+            "name": "query",
+            "required": true,
+            "specifarg": false,
+            "orig": "<query>"
         }],
+        "description": "Searches for every message in the server that matches the query."
+    },
+    {
+        "name": "random",
+        "args": [],
+        "description": "Sends a random message from the database to the channel."
+    },
+    {
+        "name": "member",
+        "args": [{
+            "name": "id",
+            "required": true,
+            "specifarg": false,
+            "orig": "<id>",
+            "autocomplete": function (interaction) {
+                let poopy = this
+
+                var memberData = poopy.data.guildData[interaction.guild.id]['members']
+                var memberKeys = Object.keys(memberData).sort((a, b) => memberData[b].messages - memberData[a].messages)
+
+                return memberKeys.map(id => {
+                    return {
+                        name: memberData[id].username, value: id
+                    }
+                })
+            }
+        }],
+        "description": "Sends a random message from that member to the channel."
+    },
+    {
+        "name": "add",
+        "args": [{
+            "name": "message",
+            "required": true,
+            "specifarg": false,
+            "orig": "<message>"
+        }],
+        "description": "Adds a new message to the guild's database, if it is available for use."
+    },
+    {
+        "name": "delete",
+        "args": [{
+            "name": "message",
+            "required": true,
+            "specifarg": false,
+            "orig": "<message>",
+            "autocomplete": function (interaction) {
+                let poopy = this
+                let { decrypt } = poopy.functions
+                return poopy.data.guildData[interaction.guild.id]['messages'].map(msg => decrypt(msg.content))
+            }
+        }],
+        "description": "Deletes the message, if it exists."
+    },
+    {
+        "name": "clear",
+        "args": [],
+        "description": "Clears ALL the messages from the database."
+    },
+    {
+        "name": "read",
+        "args": [],
+        "description": "Toggles whether the bot can read the messages from the channel or not."
+    },
+    {
+        "name": "readall",
+        "args": [],
+        "description": "Toggles whether the bot can read the messages from all channels or not."
+    }],
     execute: async function (msg, args) {
         let poopy = this
         let vars = poopy.vars
@@ -104,17 +104,18 @@ module.exports = {
                 var filepath = `temp/${config.database}/file${currentcount}`
                 fs.mkdirSync(`${filepath}`)
                 fs.writeFileSync(`${filepath}/messagelist.txt`, data.guildData[msg.guild.id]['messages'].map(m => `Author: ${m.author}\n${decrypt(m.content)}`).join('\n\n-----------------------------------------------\n\n') || 'lmao theres nothing')
-                await msg.reply({
+                if (!msg.nosend) await msg.reply({
                     files: [new Discord.AttachmentBuilder(`${filepath}/messagelist.txt`)]
-                }).catch(() => {})
-                fs.rmSync(`${filepath}`, {
+                }).catch(() => { })
+                fs.rm(`${filepath}`, {
                     force: true, recursive: true
                 })
+                return data.guildData[msg.guild.id]['messages'].map(m => `Author: ${m.author}\n${decrypt(m.content)}`).join('\n\n-----------------------------------------------\n\n') || 'lmao theres nothing'
             },
 
             search: async (msg, args) => {
                 if (!args[1]) {
-                    await msg.reply('You gotta specify the query!').catch(() => {})
+                    await msg.reply('You gotta specify the query!').catch(() => { })
                     return
                 }
 
@@ -137,12 +138,13 @@ module.exports = {
                 var filepath = `temp/${config.database}/file${currentcount}`
                 fs.mkdirSync(`${filepath}`)
                 fs.writeFileSync(`${filepath}/messagelist.txt`, results.map(m => `Author: ${m.author}\n${decrypt(m.content)}`).join('\n\n-----------------------------------------------\n\n') || 'lmao theres nothing')
-                await msg.reply({
+                if (!msg.nosend) await msg.reply({
                     files: [new Discord.AttachmentBuilder(`${filepath}/messagelist.txt`)]
-                }).catch(() => {})
-                fs.rmSync(`${filepath}`, {
+                }).catch(() => { })
+                fs.rm(`${filepath}`, {
                     force: true, recursive: true
                 })
+                return results.map(m => `Author: ${m.author}\n${decrypt(m.content)}`).join('\n\n-----------------------------------------------\n\n') || 'lmao theres nothing'
             },
 
             random: async (msg) => {
@@ -153,7 +155,9 @@ module.exports = {
                     return
                 }
 
-                await msg.reply(decrypt(messages[Math.floor(Math.random() * messages.length)].content)).catch(() => {})
+                var rand = decrypt(messages[Math.floor(Math.random() * messages.length)].content)
+                if (!msg.nosend) await msg.reply(rand).catch(() => { })
+                return rand
             },
 
             member: async (msg, args) => {
@@ -164,7 +168,7 @@ module.exports = {
 
                 args[1] = args[1] ?? ''
 
-                var member = await bot.users.fetch((args[1].match(/\d+/) ?? [args[1]])[0]).catch(() => {})
+                var member = await bot.users.fetch((args[1].match(/\d+/) ?? [args[1]])[0]).catch(() => { })
 
                 var messages = data.guildData[msg.guild.id]['messages'].filter(m => m.author == member.id)
 
@@ -173,12 +177,14 @@ module.exports = {
                     return
                 }
 
-                await msg.reply(decrypt(messages[Math.floor(Math.random() * messages.length)].content)).catch(() => {})
+                var rand = decrypt(messages[Math.floor(Math.random() * messages.length)].content)
+                if (!msg.nosend) await msg.reply(rand).catch(() => { })
+                return rand
             },
 
             add: async (msg, args) => {
                 if (!args[1]) {
-                    await msg.reply('You gotta specify the message!').catch(() => {})
+                    await msg.reply('You gotta specify the message!').catch(() => { })
                     return
                 }
 
@@ -187,34 +193,37 @@ module.exports = {
                 var findMessage = data.guildData[msg.guild.id]['messages'].find(message => decrypt(message.content).toLowerCase() === cleanMessage.toLowerCase())
 
                 if (findMessage) {
-                    await msg.reply(`That message already exists.`).catch(() => {})
+                    await msg.reply(`That message already exists.`).catch(() => { })
                     return
                 } else {
                     var send = true
 
-                    if (cleanMessage.match(/nigg|https?\:\/\/.*(rule34|e621|pornhub|hentaihaven|xxx|iplogger|discord\.gg\/[\d\w]+\/?$|discord\.gift)/ig)) {
-                        send = await yesno(msg.channel, 'That message looks nasty, are you sure about this?', msg.member.id, undefined, msg).catch(() => {}) ?? false
+                    if (cleanMessage.match(/nigg|fagg|https?\:\/\/.*(rule34|e621|pornhub|hentaihaven|xxx|iplogger|discord\.gg\/[\d\w]+\/?$|discord\.gift)/ig)) {
+                        send = msg.nosend || await yesno(msg.channel, 'That message looks nasty, are you sure about this?', msg.member.id, undefined, msg).catch(() => { })
                     }
+
+                    if (!send) return
 
                     var messages = [{
                         author: msg.author.id,
-                        content: CryptoJS.AES.encrypt(cleanMessage)
+                        content: CryptoJS.AES.encrypt(cleanMessage).toString()
                     }].concat(data.guildData[msg.guild.id]['messages'])
                     messages.splice(10000)
                     data.guildData[msg.guild.id]['messages'] = messages
 
-                    await msg.reply({
+                    if (!msg.nosend) await msg.reply({
                         content: `✅ Added ${cleanMessage}`,
                         allowedMentions: {
                             parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                         }
-                    }).catch(() => {})
+                    }).catch(() => { })
+                    return `✅ Added ${cleanMessage}`
                 }
             },
 
             delete: async (msg, args) => {
                 if (!args[1]) {
-                    await msg.reply('You gotta specify the message!').catch(() => {})
+                    await msg.reply('You gotta specify the message!').catch(() => { })
                     return
                 }
 
@@ -225,23 +234,25 @@ module.exports = {
                 if (findMessage > -1) {
                     data.guildData[msg.guild.id]['messages'].splice(findMessage, 1)
 
-                    await msg.reply(`✅ Removed.`).catch(() => {})
+                    if (!msg.nosend) await msg.reply(`✅ Removed.`).catch(() => { })
+                    return `✅ Removed.`
                 } else {
-                    await msg.reply(`Not found.`).catch(() => {})
+                    await msg.reply(`Not found.`).catch(() => { })
                 }
             },
 
             clear: async (msg) => {
                 if (msg.member.permissions.has('ManageGuild') || msg.member.permissions.has('Administrator') || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
-                    var confirm = await yesno(msg.channel, 'are you sure about this', msg.member, undefined, msg).catch(() => {})
+                    var confirm = msg.nosend || await yesno(msg.channel, 'are you sure about this', msg.member, undefined, msg).catch(() => { })
 
                     if (confirm) {
                         data.guildData[msg.guild.id]['messages'] = []
 
-                        await msg.reply(`✅ All the messages from the database have been cleared.`).catch(() => {})
+                        if (!msg.nosend) await msg.reply(`✅ All the messages from the database have been cleared.`).catch(() => { })
+                        return `✅ All the messages from the database have been cleared.`
                     }
                 } else {
-                    await msg.reply('You need the manage server permission to execute that!').catch(() => {})
+                    await msg.reply('You need the manage server permission to execute that!').catch(() => { })
                 };
             },
 
@@ -250,9 +261,10 @@ module.exports = {
                     data.guildData[msg.guild.id]['channels'][msg.channel.id]['read'] = !(data.guildData[msg.guild.id]['channels'][msg.channel.id]['read'])
 
                     var read = data.guildData[msg.guild.id]['channels'][msg.channel.id]['read']
-                    await msg.reply(`I **can${!read ? '\'t': ''} read** messages from the channel now.`).catch(() => {})
+                    if (!msg.nosend) await msg.reply(`I **can${!read ? '\'t' : ''} read** messages from the channel now.`).catch(() => { })
+                    return `I **can${!read ? '\'t' : ''} read** messages from the channel now.`
                 } else {
-                    await msg.reply('You need to be a moderator to execute that!').catch(() => {})
+                    await msg.reply('You need to be a moderator to execute that!').catch(() => { })
                     return;
                 };
             },
@@ -273,38 +285,42 @@ module.exports = {
                     })
 
                     var read = data.guildData[msg.guild.id]['read']
-                    await msg.reply(`I **can${!read ? '\'t': ''} read** messages from all channels now.`).catch(() => {})
+                    if (!msg.nosend) await msg.reply(`I **can${!read ? '\'t' : ''} read** messages from all channels now.`).catch(() => { })
+                    return `I **can${!read ? '\'t' : ''} read** messages from all channels now.`
                 } else {
-                    await msg.reply('You need the manage server permission to execute that!').catch(() => {})
+                    await msg.reply('You need the manage server permission to execute that!').catch(() => { })
                     return;
                 };
             },
         }
 
         if (!args[1]) {
-            if (config.textEmbeds) msg.reply("**list** - Sends a text file with a list of all messages that exist within the guild's message database.\n\n**search** <query> - Searches for every message in the server that matches the query.\n\n**random** - Sends a random message from the database to the channel.\n\n**member** <id> - Sends a random message from that member to the channel.\n\n**add** <message> - Adds a new message to the guild's database, if it is available for use.\n\n**delete** <message> - Deletes the message, if it exists.\n\n**clear** (manage server only) - Clears ALL the messages from the database.\n\n**read** (moderator only) - Toggles whether the bot can read the messages from the channel or not.\n\n**readall** (manage server only) - Toggles whether the bot can read the messages from all channels or not.").catch(() => {})
-            else msg.reply({
-                embeds: [{
-                    "title": "Available Options",
-                    "description": "**list** - Sends a text file with a list of all messages that exist within the guild's message database.\n\n**search** <query> - Searches for every message in the server that matches the query.\n\n**random** - Sends a random message from the database to the channel.\n\n**member** <id> - Sends a random message from that member to the channel.\n\n**add** <message> - Adds a new message to the guild's database, if it is available for use.\n\n**delete** <message> - Deletes the message, if it exists.\n\n**clear** (manage server only) - Clears ALL the messages from the database.\n\n**read** (moderator only) - Toggles whether the bot can read the messages from the channel or not.\n\n**readall** (manage server only) - Toggles whether the bot can read the messages from all channels or not.",
-                    "color": 0x472604,
-                    "footer": {
-                        "icon_url": bot.user.displayAvatarURL({
-                            dynamic: true, size: 1024, format: 'png'
-                        }),
-                        "text": bot.user.username
-                    },
-                }]
-            }).catch(() => {})
-            return
+            var instruction = "**list** - Sends a text file with a list of all messages that exist within the guild's message database.\n\n**search** <query> - Searches for every message in the server that matches the query.\n\n**random** - Sends a random message from the database to the channel.\n\n**member** <id> - Sends a random message from that member to the channel.\n\n**add** <message> - Adds a new message to the guild's database, if it is available for use.\n\n**delete** <message> - Deletes the message, if it exists.\n\n**clear** (manage server only) - Clears ALL the messages from the database.\n\n**read** (moderator only) - Toggles whether the bot can read the messages from the channel or not.\n\n**readall** (manage server only) - Toggles whether the bot can read the messages from all channels or not."
+            if (!msg.nosend) {
+                if (config.textEmbeds) msg.reply(instruction).catch(() => { })
+                else msg.reply({
+                    embeds: [{
+                        "title": "Available Options",
+                        "description": instruction,
+                        "color": 0x472604,
+                        "footer": {
+                            "icon_url": bot.user.displayAvatarURL({
+                                dynamic: true, size: 1024, format: 'png'
+                            }),
+                            "text": bot.user.username
+                        },
+                    }]
+                }).catch(() => { })
+            }
+            return instruction
         }
 
         if (!options[args[1].toLowerCase()]) {
-            await msg.reply('Not a valid option.').catch(() => {})
+            await msg.reply('Not a valid option.').catch(() => { })
             return
         }
 
-        await options[args[1].toLowerCase()](msg, args.slice(1))
+        return await options[args[1].toLowerCase()](msg, args.slice(1))
     },
     help: {
         name: 'messages <option>',

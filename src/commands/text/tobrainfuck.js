@@ -15,8 +15,9 @@ module.exports = {
             await msg.channel.sendTyping().catch(() => { })
             return;
         };
-        await msg.reply({
-            content: tobrainfuck(saidMessage),
+        var tobf = tobrainfuck(saidMessage)
+        if (!msg.nosend) await msg.reply({
+            content: tobf,
             allowedMentions: {
                 parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
             }
@@ -31,7 +32,7 @@ module.exports = {
             }).catch(() => { })
             fs.rmSync(`${filepath}`, { force: true, recursive: true })
         })
-        await msg.channel.sendTyping().catch(() => { })
+        return tobf
     },
     help: {
         name: 'tobrainfuck/tobf <message>',

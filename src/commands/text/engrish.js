@@ -22,13 +22,14 @@ module.exports = {
       regex2: ["$1 $2 a $4", "$2 $1", "the $1 $2"]
     }
 
-    await msg.reply({
-      content: lingo(saidMessage, translateSettings),
+    var engrish = lingo(saidMessage, translateSettings)
+    if (!msg.nosend) await msg.reply({
+      content: engrish,
       allowedMentions: {
         parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
       }
     }).catch(() => { })
-    await msg.channel.sendTyping().catch(() => { })
+    return engrish
   },
   help: {
     name: 'engrish/caveman <message>',

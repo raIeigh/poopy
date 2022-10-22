@@ -34,8 +34,7 @@ module.exports = {
 
         if (type.mime.startsWith('image')) {
             var filepath = await downloadFile(currenturl, `input.${fileinfo.shortext}`, {
-                fileinfo: fileinfo
-            })
+                fileinfo            })
             var filename = `input.${fileinfo.shortext}`
             var width = fileinfo.info.width
             var height = fileinfo.info.height
@@ -43,8 +42,7 @@ module.exports = {
             return await sendFile(msg, filepath, `output.gif`)
         } else if (type.mime.startsWith('video')) {
             var filepath = await downloadFile(currenturl, `input.mp4`, {
-                fileinfo: fileinfo
-            })
+                fileinfo            })
             var filename = `input.${fileinfo.shortext}`
             var width = fileinfo.info.width
             var height = fileinfo.info.height

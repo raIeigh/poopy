@@ -73,19 +73,20 @@ module.exports = {
 
         var jsons = response.data.trim().split('\n').map(json => JSON.parse(json))
 
-        var stdOut = jsons.find(json => json.type === 'StdOut')
-        var stdErr = jsons.find(json => json.type === 'StdErr')
+        var stdOut = jsons.filter(json => json.type === 'StdOut').map(json => json.data)
+        var stdErr = jsons.filter(json => json.type === 'StdErr').map(json => json.data)
         var output
 
-        if (stdOut && stdErr) output = `StdOut: ${stdOut.data}\n\nStdErr: ${stdErr.data}`
-        else output = (stdOut ?? stdErr) ? (stdOut ?? stdErr).data : 'No output.'
+        if (stdOut && stdErr) output = `StdOut: ${stdOut.join('\n')}\n\nStdErr: ${stdErr.join('\n')}`
+        else output = (stdOut ?? stdErr) ? (stdOut ?? stdErr).join('\n') : 'No output.'
 
-        await msg.reply({
+        if (!msg.nosend) await msg.reply({
             content: output,
             allowedMentions: {
                 parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
             }
         }).catch(() => { })
+        return output
     },
     help: {
         name: 'compile <language> <code>',

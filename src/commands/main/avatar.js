@@ -77,7 +77,8 @@ module.exports = {
             }
         }]
 
-        await msg.reply(avObject).catch(() => {})
+        if (!msg.nosend) await msg.reply(avObject).catch(() => {})
+        return avatar
     },
     help: {
         name: 'avatar/av/pfp [user] [-global]',

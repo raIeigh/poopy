@@ -114,24 +114,26 @@ module.exports = {
                     name: allBlank ? '⠀': name,
                     avatar: avatar
                 }
-                await msg.reply({
+                if (!msg.nosend) await msg.reply({
                     content: member.user.username + ` is now ${name}.`,
                     allowedMentions: {
                         parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                     }
                 }).catch(() => {})
+                return member.user.username + ` is now ${name}.`
             } else {
                 await msg.reply('You need to have the manage webhooks/messages permission to execute that!').catch(() => {})
                 return;
             }
         } else {
-            await msg.reply({
+            if (!msg.nosend) await msg.reply({
                 content: member.user.username + ` is not ${data.guildData[msg.guild.id]['members'][member.id]['custom']['name']}.`,
                 allowedMentions: {
                     parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => {})
             data.guildData[msg.guild.id]['members'][member.id]['custom'] = false
+            return member.user.username + ` is not ${data.guildData[msg.guild.id]['members'][member.id]['custom']['name']}.`
         }
     },
     help: {

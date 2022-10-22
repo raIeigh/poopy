@@ -29,8 +29,7 @@ module.exports = {
 
         if (type.mime.startsWith('video')) {
             var filepath = await downloadFile(currenturl, `input.mp4`, {
-                fileinfo: fileinfo
-            })
+                fileinfo            })
             var filename = `input.mp4`
             var audio = fileinfo.info.audio
 
@@ -95,8 +94,7 @@ module.exports = {
             }
         } else if (type.mime.startsWith('audio')) {
             var filepath = await downloadFile(currenturl, `input.mp3`, {
-                fileinfo: fileinfo
-            })
+                fileinfo            })
             var filename = `input.mp3`
 
             var duration = fileinfo.info.aduration

@@ -63,16 +63,14 @@ module.exports = {
 
         if (type.mime.startsWith('image') && !(vars.gifFormats.find(f => f === type.ext))) {
             var filepath = await downloadFile(currenturl, `input.png`, {
-                fileinfo: fileinfo
-            })
+                fileinfo            })
             var filename = `input.png`
 
             await execPromise(`ffmpeg -i ${filepath}/${filename} -filter_complex "[0:v]split[input][blur];[blur]boxblur=luma_radius=${radius}:luma_power=${power}:chroma_radius=${radius}:chroma_power=${power}:alpha_radius=${radius}:alpha_power=${power},curves=r='0/1 1/1':g='0/1 1/1':b='0/1 1/1',curves=r='0/0 1/${rgb.r / 255}':g='0/0 1/${rgb.g / 255}':b='0/0 1/${rgb.b / 255}',split=${overlayrepeat}${bordersplit.join('')};${overlays.join(';')}[greatborder];[greatborder][input]overlay=x=0:y=0:format=auto[out]" -map "[out]" -preset ${findpreset(args)} ${filepath}/output.png`)
             return await sendFile(msg, filepath, `output.png`)
         } else if (type.mime.startsWith('image') && vars.gifFormats.find(f => f === type.ext)) {
             var filepath = await downloadFile(currenturl, `input.gif`, {
-                fileinfo: fileinfo
-            })
+                fileinfo            })
             var filename = `input.gif`
 
             await execPromise(`ffmpeg -i ${filepath}/${filename} -filter_complex "[0:v]split[input][blur];[blur]boxblur=luma_radius=${radius}:luma_power=${power}:chroma_radius=${radius}:chroma_power=${power}:alpha_radius=${radius}:alpha_power=${power},curves=r='0/1 1/1':g='0/1 1/1':b='0/1 1/1',curves=r='0/0 1/${rgb.r / 255}':g='0/0 1/${rgb.g / 255}':b='0/0 1/${rgb.b / 255}',split=${overlayrepeat}${bordersplit.join('')};${overlays.join(';')}[greatborder];[greatborder][input]overlay=x=0:y=0:format=auto,split[pout][ppout];[ppout]palettegen=reserve_transparent=1[palette];[pout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -preset ${findpreset(args)} -gifflags -offsetting ${filepath}/output.gif`)

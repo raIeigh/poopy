@@ -36,8 +36,7 @@ module.exports = {
 
         if (type.mime.startsWith('image') && !(vars.gifFormats.find(f => f === type.ext))) {
             var filepath = await downloadFile(currenturl, `input.png`, {
-                fileinfo: fileinfo
-            })
+                fileinfo            })
             var filename = `input.png`
 
             var benson = await Jimp.read(`assets/image/benson.png`)
@@ -54,8 +53,7 @@ module.exports = {
             return await sendFile(msg, filepath, `output.png`)
         } else if (type.mime.startsWith('video')) {
             var filepath = await downloadFile(currenturl, `input.mp4`, {
-                fileinfo: fileinfo
-            })
+                fileinfo            })
             var filename = `input.mp4`
 
             var benson = await Jimp.read(`assets/image/benson.png`)

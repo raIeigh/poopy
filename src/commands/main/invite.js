@@ -6,11 +6,11 @@ module.exports = {
     let bot = poopy.bot
 
     await msg.channel.sendTyping().catch(() => { })
-    if (process.env.BOT_WEBSITE) {
-        await msg.reply(`Bot invite link: <${process.env.BOT_WEBSITE}/invite>\nDiscord server link: <${process.env.BOT_WEBSITE}/discord>`).catch(() => { })
-    } else {
-        await msg.reply(`Bot invite link: <https://discord.com/oauth2/authorize?client_id=${bot.user.id}&scope=bot%20applications.commands&permissions=275415166152>`).catch(() => { })
-    }
+    var invite = process.env.BOT_WEBSITE ?
+      `Bot invite link: <${process.env.BOT_WEBSITE}/invite>\nDiscord server link: <${process.env.BOT_WEBSITE}/discord>` :
+      `Bot invite link: <https://discord.com/oauth2/authorize?client_id=${bot.user.id}&scope=bot%20applications.commands&permissions=275415166152>`
+    if (!msg.nosend) await msg.reply(invite).catch(() => { })
+    return invite
   },
   help: {
     name: 'invite',

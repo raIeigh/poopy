@@ -202,7 +202,7 @@ class Poopy {
             chunkArray, chunkObject, requireJSON, findCommand,
             dmSupport, sleep, gatherData, deleteMsgData, infoPost,
             getKeywordsFor, getUrls, randomChoice, similarity, yesno,
-            cleverbot, regexClean, decrypt } = functions
+            cleverbot, regexClean, decrypt, getOption } = functions
 
         let bot = poopy.bot = new Discord.Client({
             intents: config.intents,
@@ -721,7 +721,7 @@ class Poopy {
                         !config.poosonia &&
                         (
                             data.guildData[msg.guild.id]['keyexec'] == 2 ||
-                            data.guildData[msg.guild.id]['keyexec'] == 1 && cmd.toLowerCase().startsWith(prefix.toLowerCase())
+                            (data.guildData[msg.guild.id]['keyexec'] == 1 && cmd.toLowerCase().startsWith(prefix.toLowerCase()))
                         ) && !commands.find(
                             c => c.raw &&
                                 c.name.find(n => cmd.toLowerCase().startsWith(`${prefix.toLowerCase()}${n.toLowerCase()}`))
@@ -825,6 +825,9 @@ class Poopy {
                         var findLocalCmd = data.guildData[msg.guild.id]['localcmds'].find(cmd => cmd.name === args[0].toLowerCase())
                         var similarCmds = []
 
+                        delete msg.nosend
+                        msg.nosend = getOption(args, 'nosend', { n: 0, splice: true, dft: false })
+
                         if (args[0].length) {
                             for (var i in commands) {
                                 var fcmd = commands[i]
@@ -854,7 +857,7 @@ class Poopy {
                             if (data.guildData[msg.guild.id]['disabled'].find(cmd => cmd.find(n => n === args[0].toLowerCase()))) {
                                 await msg.reply('This command is disabled in this server.').catch(() => { })
                             } else {
-                                var increaseCount = !(findCmd.execute.toString().includes('sendFile') && args.includes('-nosend'))
+                                var increaseCount = !(findCmd.execute.toString().includes('sendFile') && msg.nosend)
 
                                 if (increaseCount) {
                                     if (tempdata[msg.author.id][msg.id]['execCount'] >= 1 && data.guildData[msg.guild.id]['chaincommands'] == false) {
@@ -939,7 +942,7 @@ class Poopy {
                                     } else {
                                         var findCmd = findCommand(similarCmds[0].name)
 
-                                        var increaseCount = !(findCmd.execute.toString().includes('sendFile') && args.includes('-nosend'))
+                                        var increaseCount = !(findCmd.execute.toString().includes('sendFile') && msg.nosend)
 
                                         if (increaseCount) {
                                             if (tempdata[msg.author.id][msg.id]['execCount'] >= 1 && data.guildData[msg.guild.id]['chaincommands'] == false) {
@@ -1032,10 +1035,10 @@ class Poopy {
             if (msg.content && ((!(msg.author.bot) && msg.author.id != bot.user.id) || config.allowbotusage) && data.guildData[msg.guild.id]['channels'][msg.channel.id]['read']) {
                 var cleanMessage = Discord.cleanContent(msg.content, msg).replace(/\@/g, '@‌')
 
-                if (!(cleanMessage.match(/nigg|https?\:\/\/.*(rule34|e621|pornhub|hentaihaven|xxx|iplogger)|discord\.(gift|gg)\/[\d\w]+\/?$/ig) || cleanMessage.includes(prefix.toLowerCase())) && !(data.guildData[msg.guild.id]['messages'].find(message => decrypt(message.content).toLowerCase() === cleanMessage.toLowerCase()))) {
+                if (!(cleanMessage.match(/nigg|fagg|https?\:\/\/.*(rule34|e621|pornhub|hentaihaven|xxx|iplogger)|discord\.(gift|gg)\/[\d\w]+\/?$/ig) || cleanMessage.includes(prefix.toLowerCase())) && !(data.guildData[msg.guild.id]['messages'].find(message => decrypt(message.content).toLowerCase() === cleanMessage.toLowerCase()))) {
                     var messages = [{
                         author: msg.author.id,
-                        content: CryptoJS.AES.encrypt(cleanMessage, process.env.AUTH_TOKEN)
+                        content: CryptoJS.AES.encrypt(cleanMessage, process.env.AUTH_TOKEN).toString()
                     }].concat(data.guildData[msg.guild.id]['messages'])
                     messages.splice(10000)
                     data.guildData[msg.guild.id]['messages'] = messages

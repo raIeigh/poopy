@@ -17,7 +17,8 @@ module.exports = {
 
       data.guildData[msg.guild.id]['channels'][msg.channel.id]['nsfw'] = !data.guildData[msg.guild.id]['channels'][msg.channel.id]['nsfw']
       msg.channel.nsfw = data.guildData[msg.guild.id]['channels'][msg.channel.id]['nsfw']
-      await msg.reply('Set to **' + data.guildData[msg.guild.id]['channels'][msg.channel.id]['nsfw'] + '**.').catch(() => { })
+      if (!msg.nosend) await msg.reply(`Set to **${data.guildData[msg.guild.id]['channels'][msg.channel.id]['nsfw']}**.`).catch(() => { })
+      return `Set to **${data.guildData[msg.guild.id]['channels'][msg.channel.id]['nsfw']}**.`
     } else {
       await msg.reply('You need to be a moderator to execute that!').catch(() => { })
       return;

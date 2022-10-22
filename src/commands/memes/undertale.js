@@ -123,8 +123,7 @@ module.exports = {
 
         if (type.mime.startsWith('image') && !(vars.gifFormats.find(f => f === type.ext))) {
             var filepath = await downloadFile(currenturl, `input.png`, {
-                fileinfo: fileinfo
-            })
+                fileinfo            })
             var filename = `input.png`
             await downloadFile(`https://www.demirramon.com/gen/undertale_text_box.png?text=${encodeURIComponent(text)}&box=${style}&boxcolor=${boxrgb}&character=blank&font=${font}&asterisk=${asteriskrgb}&mode=${mode}&small=true`, 'box.png', {
                 http: true,
@@ -140,8 +139,7 @@ module.exports = {
             return await sendFile(msg, filepath, `output.png`)
         } else if (type.mime.startsWith('video')) {
             var filepath = await downloadFile(currenturl, `input.mp4`, {
-                fileinfo: fileinfo
-            })
+                fileinfo            })
             var filename = `input.mp4`
             await downloadFile(`https://www.demirramon.com/gen/undertale_text_box.png?text=${encodeURIComponent(text)}&box=${style}&boxcolor=${boxrgb}&character=blank&font=${font}&asterisk=${asteriskrgb}&mode=${mode}&small=true`, 'box.png', {
                 http: true,
@@ -157,8 +155,7 @@ module.exports = {
             return await sendFile(msg, filepath, `output.mp4`)
         } else if (type.mime.startsWith('image') && vars.gifFormats.find(f => f === type.ext)) {
             var filepath = await downloadFile(currenturl, `input.gif`, {
-                fileinfo: fileinfo
-            })
+                fileinfo            })
             var filename = `input.gif`
             await downloadFile(`https://www.demirramon.com/gen/undertale_text_box.png?text=${encodeURIComponent(text)}&box=${style}&boxcolor=${boxrgb}&character=blank&font=${font}&asterisk=${asteriskrgb}&mode=${mode}&small=true`, 'box.png', {
                 http: true,

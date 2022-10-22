@@ -36,8 +36,7 @@ module.exports = {
 
         if (type.mime.startsWith('image') || type.mime.startsWith('video')) {
             var filepath = await downloadFile(currenturl, `input.${fileinfo.shortext}`, {
-                fileinfo: fileinfo
-            })
+                fileinfo            })
             var filename = `input.${fileinfo.shortext}`
 
             var gotham = await Jimp.loadFont(`assets/fonts/Gotham/Gotham.fnt`)

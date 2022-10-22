@@ -73,11 +73,16 @@ module.exports = {
         var output = fs.createWriteStream(`${filepath}/output.zip`)
         var archive = archiver('zip')
 
-        await new Promise(async resolve => {
+        return await new Promise(async resolve => {
             output.on('finish', async () => {
                 var frames = fs.readdirSync(`${filepath}/images`)
                 var catboxframes = {}
-    
+
+                if (!msg.nosend) {
+                    resolve(await sendFile(msg, filepath, `output.zip`))
+                    return
+                }
+
                 await navigateEmbed(msg.channel, async (page, ended) => {
                     var frameurl = ended ? await vars.Catbox.upload(`${filepath}/images/${frames[page - 1]}`).catch(() => { }) : catboxframes[frames[page - 1]]
     
@@ -126,7 +131,7 @@ module.exports = {
                 ], undefined, undefined, undefined, (reason) => {
                     if (reason == 'time') fs.rmSync(filepath, { force: true, recursive: true })
                 }, msg)
-                resolve()
+                resolve(catboxframes[frames[page - 1]])
             })
     
             archive.pipe(output)

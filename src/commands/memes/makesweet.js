@@ -93,7 +93,7 @@ module.exports = {
             var url = fetched[i]
 
             await downloadFile(url, `input${files.length}.${fileinfo.shortext}`, {
-                fileinfo: fileinfo,
+                fileinfo,
                 filepath: filepath
             })
             var filename = `input${files.length}.${fileinfo.shortext}`

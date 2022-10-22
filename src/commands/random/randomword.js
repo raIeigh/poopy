@@ -6,7 +6,9 @@ module.exports = {
     let json = poopy.json
 
     var wordJSON = json.wordJSON
-    await msg.reply(wordJSON.data[Math.floor(Math.random() * wordJSON.data.length)].word.value).catch(() => { })
+    var word = wordJSON.data[Math.floor(Math.random() * wordJSON.data.length)].word.value
+    if (!msg.nosend) await msg.reply(word).catch(() => { })
+    return word
   },
   help: { name: 'randomword', value: 'Generates a random word.' },
   cooldown: 2500,

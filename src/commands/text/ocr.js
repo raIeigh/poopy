@@ -55,7 +55,7 @@ module.exports = {
 
             var result = regions.map(region => region.lines.map(line => line.words.map(word => word.text).join(' ')).join('\n')).join('\n\n')
 
-            await msg.reply({
+            if (!msg.nosend) await msg.reply({
                 content: `Language: \`${body.language}\`\n\`\`\`\n${result}\n\`\`\``,
                 allowedMentions: {
                     parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
@@ -72,6 +72,7 @@ module.exports = {
                 }).catch(() => { })
                 fs.rmSync(`${filepath}`, { force: true, recursive: true })
             })
+            return `Language: \`${body.language}\`\n\`\`\`\n${result}\n\`\`\``
         } else {
             await msg.reply({
                 content: `Unsupported file: \`${currenturl}\``,

@@ -63,7 +63,7 @@ module.exports = {
             return
         }
 
-        var cmdmessage = await msg.reply(`Executing \`${cmd.name[0]}\`.`).catch(() => { })
+        var cmdmessage = !msg.nosend && await msg.reply(`Executing \`${cmd.name[0]}\`.`).catch(() => { })
         if (cmd.cooldown) {
             data.guildData[msg.guild.id]['members'][msg.author.id]['coolDown'] = (data.guildData[msg.guild.id]['members'][msg.author.id]['coolDown'] || Date.now()) + cmd.cooldown / ((msg.member.permissions.has('ManageGuild') || msg.member.permissions.has('ManageMessages') || msg.member.permissions.has('Administrator') || msg.author.id === msg.guild.ownerID) && (cmd.type === 'Text' || cmd.type === 'Main') ? 5 : 1)
         }
@@ -76,7 +76,7 @@ module.exports = {
 
         var phrase = await cmd.execute.call(poopy, msg, args).catch(() => { }) ?? 'error'
         if (tempdata[msg.guild.id][msg.channel.id]['shut']) return
-        if (cmd.type == 'Local') {
+        if (cmd.type == 'Local' && !msg.nosend) {
             await msg.reply({
                 content: phrase,
                 allowedMentions: {
@@ -84,6 +84,7 @@ module.exports = {
                 }
             }).catch(() => { })
         }
+        return phrase
     },
     help: {
         name: 'randomcmd [args] [-cmdtype <commandType>]',

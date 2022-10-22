@@ -84,8 +84,7 @@ module.exports = {
 
         if (type.mime.startsWith('image') && vars.gifFormats.find(f => f === type.ext) || type.mime.startsWith('video')) {
             var filepath = await downloadFile(currenturl, `input.${fileinfo.shortext}`, {
-                fileinfo: fileinfo
-            })
+                fileinfo            })
             var filename = `input.${fileinfo.shortext}`
 
             await wackywebm(mode, `${filepath}/${filename}`, {

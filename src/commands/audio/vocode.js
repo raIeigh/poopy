@@ -76,8 +76,7 @@ module.exports = {
             }
         }
         var filepath = await downloadFile(currenturl, `input.${fileinfo.shortext}`, {
-            fileinfo: fileinfo
-        })
+            fileinfo        })
         var filename = `input.${fileinfo.shortext}`
         await downloadFile(currenturl2, `input2.${fileinfo2.shortext}`, {
             fileinfo: fileinfo2,

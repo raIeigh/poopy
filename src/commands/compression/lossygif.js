@@ -29,8 +29,7 @@ module.exports = {
 
         if (type.mime.startsWith('image') && vars.gifFormats.find(f => f === type.ext)) {
             var filepath = await downloadFile(currenturl, `input.gif`, {
-                fileinfo: fileinfo
-            })
+                fileinfo            })
             var filename = `input.gif`
             await execPromise(`gifsicle -O3 --lossy=${lossy} -o ${filepath}/output.gif ${filepath}/${filename}`)
             return await sendFile(msg, filepath, `output.gif`)

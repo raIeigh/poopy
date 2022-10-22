@@ -33,7 +33,7 @@ module.exports = {
             keepcase: keepcase,
             randlerp: randlerp
         })
-        await msg.reply({
+        if (!msg.nosend) await msg.reply({
             content: markov,
             allowedMentions: {
                 parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
@@ -49,6 +49,7 @@ module.exports = {
             }).catch(() => { })
             fs.rmSync(`${filepath}`, { force: true, recursive: true })
         })
+        return markov
     },
     help: {
         name: 'markov [message] [-words <wordNumber>] [-nopunctuation] [-keepcase] [-randlerp <number (from 0 to 1)>] [-randomsentences]',

@@ -28,8 +28,7 @@ module.exports = {
 
         if (type.mime.startsWith('video')) {
             var filepath = await downloadFile(currenturl, `input.mp4`, {
-                fileinfo: fileinfo
-            })
+                fileinfo            })
             var filename = `input.mp4`
             var duration = Number(fileinfo.info.duration)
 
@@ -71,8 +70,7 @@ module.exports = {
             return await sendFile(msg, filepath, `output.mp4`)
         } else if (type.mime.startsWith('audio')) {
             var filepath = await downloadFile(currenturl, `input.mp3`, {
-                fileinfo: fileinfo
-            })
+                fileinfo            })
             var filename = `input.mp3`
             var duration = Number(fileinfo.info.duration)
 
@@ -114,8 +112,7 @@ module.exports = {
             return await sendFile(msg, filepath, `output.mp3`)
         } else if (type.mime.startsWith('image') && vars.gifFormats.find(f => f === type.ext)) {
             var filepath = await downloadFile(currenturl, `input.gif`, {
-                fileinfo: fileinfo
-            })
+                fileinfo            })
             var filename = `input.gif`
             var duration = Number(fileinfo.info.duration)
 

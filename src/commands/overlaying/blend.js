@@ -57,7 +57,7 @@ module.exports = {
             'center bottom',
             'right bottom',
         ]
-    }, { "name": "offsetpos", "required": false, "specifarg": true, "orig": "[-offsetpos <x> <y>]" }, { "name": "width", "required": false, "specifarg": true, "orig": "[-width <pixels or percentage>]" }, { "name": "height", "required": false, "specifarg": true, "orig": "[-height <pixels or percentage>]" }, { "name": "keepaspectratio", "required": false, "specifarg": true, "orig": "[-keepaspectratio <mode (increase or decrease)>]", "autocomplete": ['increase', 'decrease'] }],
+    }, { "name": "offsetpos", "required": false, "specifarg": true, "orig": "[-offsetpos <x> <y>]" }, { "name": "width", "required": false, "specifarg": true, "orig": "[-width/height <pixels or percentage>]" }, { "name": "height", "required": false, "specifarg": true, "orig": "[-width/height <pixels or percentage>]" }, { "name": "keepaspectratio", "required": false, "specifarg": true, "orig": "[-keepaspectratio <mode (increase or decrease)>]", "autocomplete": ['increase', 'decrease'] }],
     execute: async function (msg, args) {
         let poopy = this
         let { lastUrl, getUrls, validateFile, downloadFile, execPromise, findpreset, sendFile } = poopy.functions
@@ -216,7 +216,7 @@ module.exports = {
             }
         }
         var filepath = await downloadFile(currenturl, `input.${fileinfo.shortext}`, {
-            fileinfo: fileinfo,
+            fileinfo,
         })
         var filename = `input.${fileinfo.shortext}`
         await downloadFile(currenturl2, `input2.${fileinfo2.shortext}`, {

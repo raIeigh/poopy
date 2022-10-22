@@ -47,13 +47,13 @@ module.exports = {
                     ],
                 });
                 vars.statusChanges = permanent;
-                await msg.reply({
+                if (!msg.nosend) await msg.reply({
                     content: `Poopy\'s status set to: **${saidMessage} (${args[1]})**`,
                     allowedMentions: {
                         parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                     }
                 }).catch(() => { })
-                await msg.channel.sendTyping().catch(() => { })
+                return `Poopy\'s status set to: **${saidMessage} (${args[1]})**`
             }
             else {
                 await msg.reply({
@@ -62,7 +62,6 @@ module.exports = {
                         parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                     }
                 }).catch(() => { })
-                await msg.channel.sendTyping().catch(() => { })
             }
         };
     },

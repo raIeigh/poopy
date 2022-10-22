@@ -23,15 +23,15 @@ module.exports = {
             var evalMessage
 
             with (poopy)
-                with (functions)
-                    with (modules)
-                        evalMessage = await eval(saidMessage)
+            with (functions)
+            with (modules)
+            evalMessage = await eval(saidMessage)
 
             if (typeof (evalMessage) !== 'string') evalMessage = util.inspect(evalMessage)
 
             evalMessage = evalMessage.match(/[\s\S]{1,2000}/g)
 
-            for (var i in evalMessage) {
+            if (!msg.nosend) for (var i in evalMessage) {
                 if (tempdata[msg.guild.id][msg.channel.id]['shut']) break
                 var ev = evalMessage[i]
                 await msg.reply({
@@ -44,6 +44,8 @@ module.exports = {
                     return
                 })
             }
+
+            return evalMessage.join('')
         } catch (error) {
             await msg.reply({
                 content: error.message,

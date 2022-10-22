@@ -16,14 +16,14 @@ module.exports = {
             await msg.channel.sendTyping().catch(() => { })
             return;
         };
-        await msg.reply({
+        if (!msg.nosend) await msg.reply({
             content: '**' + (saidMessage || 'this') + '** has been successfully pooped on.',
             allowedMentions: {
                 parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
             },
             files: attachments
         }).catch(() => { })
-        await msg.channel.sendTyping().catch(() => { })
+        return '**' + (saidMessage || 'this') + '** has been successfully pooped on.'
     },
     help: { name: 'poopallover <subject>', value: 'Poop on something.' },
     type: 'OG'

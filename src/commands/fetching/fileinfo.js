@@ -1,6 +1,6 @@
 module.exports = {
     name: ['fileinfo'],
-    args: [{"name":"file","required":false,"specifarg":false,"orig":"{file}"}],
+    args: [{ "name": "file", "required": false, "specifarg": false, "orig": "{file}" }],
     execute: async function (msg, args) {
         let poopy = this
         let { lastUrl, validateFile, execPromise } = poopy.functions
@@ -305,18 +305,22 @@ module.exports = {
             }
         }
 
-        if (config.textEmbeds) msg.reply({
-            content: `\`${fileinfo.name}\`\n\n${params.join('\n')}`,
-            allowedMentions: {
-                parse: (!msg.member.permissions.has('Administrator') &&
-                    !msg.member.permissions.has('MentionEveryone') &&
-                    msg.author.id !== msg.guild.ownerID) ?
-                    ['users'] : ['users', 'everyone', 'roles']
-            }
-        }).catch(() => { })
-        else msg.reply({
-            embeds: [embed]
-        }).catch(() => { })
+        if (!msg.nosend) {
+            if (config.textEmbeds) msg.reply({
+                content: `\`${fileinfo.name}\`\n\n${params.join('\n')}`,
+                allowedMentions: {
+                    parse: (!msg.member.permissions.has('Administrator') &&
+                        !msg.member.permissions.has('MentionEveryone') &&
+                        msg.author.id !== msg.guild.ownerID) ?
+                        ['users'] : ['users', 'everyone', 'roles']
+                }
+            }).catch(() => { })
+            else msg.reply({
+                embeds: [embed]
+            }).catch(() => { })
+        }
+
+        return `\`${fileinfo.name}\`\n\n${params.join('\n')}`
     },
     help: { name: 'fileinfo {file}', value: 'Get info on a file.' },
     cooldown: 2500,

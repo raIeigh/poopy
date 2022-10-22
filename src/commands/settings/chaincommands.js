@@ -8,7 +8,8 @@ module.exports = {
 
     if (msg.member.permissions.has('ManageGuild') || msg.member.permissions.has('ManageMessages') || msg.member.permissions.has('Administrator') || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
       data.guildData[msg.guild.id]['chaincommands'] = !data.guildData[msg.guild.id]['chaincommands']
-      await msg.reply('Set to **' + data.guildData[msg.guild.id]['chaincommands'] + '**.').catch(() => { })
+      if (!msg.nosend) await msg.reply('Set to **' + data.guildData[msg.guild.id]['chaincommands'] + '**.').catch(() => { })
+      return 'Set to **' + data.guildData[msg.guild.id]['chaincommands'] + '**.'
     } else {
       await msg.reply('You need to be a moderator to execute that!').catch(() => { })
       return;

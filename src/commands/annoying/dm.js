@@ -30,7 +30,7 @@ module.exports = {
     }],
     execute: async function (msg, args, opts) {
         let poopy = this
-        let { shuffle, randomChoice, yesno, getOption } = poopy.functions
+        let { shuffle, randomChoice, yesno } = poopy.functions
         let { Discord } = poopy.modules
         let json = poopy.json
         let data = poopy.data
@@ -39,7 +39,6 @@ module.exports = {
         let tempdata = poopy.tempdata
 
         await msg.channel.sendTyping().catch(() => { })
-        var nosend = getOption(args, 'nosend', { n: 0, splice: true, dft: false })
         if (args[1] === undefined) {
             await msg.reply('Who do I DM?!').catch(() => { })
             return;
@@ -161,7 +160,7 @@ module.exports = {
             }).catch(() => { })
 
             if (dmMessage) {
-                if (!nosend) {
+                if (!msg.nosend) {
                     if (msg.type === Discord.InteractionType.ApplicationCommand && !msg.replied) await msg.reply({ content: 'Successfully sent.', ephemeral: true }).catch(() => { })
                     else msg.react('✅').catch(() => { })
                 }

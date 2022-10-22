@@ -23,7 +23,8 @@ module.exports = {
                 return
             }
             data.guildData[msg.guild.id]['prefix'] = saidMessage
-            await msg.reply(`The prefix was set to \`${saidMessage}\` (if this is wrong, mention me with "reset prefix")`).catch(() => { })
+            if (!msg.nosend) await msg.reply(`The prefix was set to \`${saidMessage}\` (if this is wrong, mention me with "reset prefix")`).catch(() => { })
+            return `The prefix was set to \`${saidMessage}\` (if this is wrong, mention me with "reset prefix")`
         } else {
             await msg.reply('You need to be a moderator to execute that!').catch(() => { })
             return;

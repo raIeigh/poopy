@@ -190,12 +190,13 @@ module.exports = {
                 var commands = [params].concat(globaldata['commandTemplates'])
                 globaldata['commandTemplates'] = commands
 
-                await msg.reply({
+                if (!msg.nosend) await msg.reply({
                     content: `✅ \`${name}\` was successfully registered to the command template database! (ID: \`${id}\`)`,
                     allowedMentions: {
                         parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                     }
                 }).catch(() => { })
+                return `✅ \`${name}\` was successfully registered to the command template database! (ID: \`${id}\`)`
             }
         }
 
@@ -204,21 +205,23 @@ module.exports = {
                 var dcmdTemplates = globaldata['commandTemplates']
 
                 if (dcmdTemplates.length <= 0) {
-                    if (config.textEmbeds) msg.reply('there is nothing').catch(() => { })
-                    else msg.reply({
-                        embeds: [{
-                            "title": `there is nothing`,
-                            "description": 'wow',
-                            "color": 0x472604,
-                            "footer": {
-                                "icon_url": bot.user.displayAvatarURL({
-                                    dynamic: true, size: 1024, format: 'png'
-                                }),
-                                "text": bot.user.username
-                            },
-                        }]
-                    }).catch(() => { })
-                    return
+                    if (!msg.nosend) {
+                        if (config.textEmbeds) await msg.reply('there is nothing').catch(() => { })
+                        else await msg.reply({
+                            embeds: [{
+                                "title": `there is nothing`,
+                                "description": 'wow',
+                                "color": 0x472604,
+                                "footer": {
+                                    "icon_url": bot.user.displayAvatarURL({
+                                        dynamic: true, size: 1024, format: 'png'
+                                    }),
+                                    "text": bot.user.username
+                                },
+                            }]
+                        }).catch(() => { })
+                    }
+                    return 'there is nothing'
                 }
 
                 dcmdTemplates.sort((a, b) => {
@@ -280,7 +283,7 @@ module.exports = {
                     })
                 }
 
-                await navigateEmbed(msg.channel, async (page) => {
+                if (!msg.nosend) await navigateEmbed(msg.channel, async (page) => {
                     if (config.textEmbeds) return cmdTemplates[page - 1].text
                     else return cmdTemplates[page - 1].embed
                 },
@@ -344,6 +347,7 @@ module.exports = {
                     undefined,
                     undefined,
                     msg)
+                return cmdTemplates[0].text
             },
 
             search: async (msg,
@@ -369,10 +373,10 @@ module.exports = {
                 }
 
                 if (ddcmdTemplates.length <= 0) {
-                    await msg.reply({
+                    if (!msg.nosend) await msg.reply({
                         embeds: [none]
                     }).catch(() => { })
-                    return
+                    return 'there is nothing'
                 }
 
                 var dcmdTemplates = []
@@ -386,10 +390,10 @@ module.exports = {
                 if (dcmdTemplates.length) {
                     dcmdTemplates.sort((a, b) => Math.abs(1 - similarity(a.name, saidMessage)) - Math.abs(1 - similarity(b.name, saidMessage)))
                 } else {
-                    await msg.reply({
+                    if (!msg.nosend) await msg.reply({
                         embeds: [none]
                     }).catch(() => { })
-                    return
+                    return 'there is nothing'
                 }
 
                 var cmdTemplates = []
@@ -441,7 +445,7 @@ module.exports = {
                     })
                 }
 
-                await navigateEmbed(msg.channel, async (page) => {
+                if (!msg.nosend) await navigateEmbed(msg.channel, async (page) => {
                     if (config.textEmbeds) return cmdTemplates[page - 1].text
                     else return cmdTemplates[page - 1].embed
                 },
@@ -505,17 +509,18 @@ module.exports = {
                     undefined,
                     undefined,
                     msg)
+                return cmdTemplates[0].text
             },
 
             register: async (msg,
                 args) => {
-                await createCommand(msg,
+                return await createCommand(msg,
                     args)
             },
 
             add: async (msg,
                 args) => {
-                await createCommand(msg,
+                return await createCommand(msg,
                     args)
             },
 
@@ -584,7 +589,8 @@ module.exports = {
                         globaldata['commandTemplates'][commandIndex][param] = params[param]
                     }
 
-                    await msg.reply(`✅ Command successfully updated.`).catch(() => { })
+                    if (!msg.nosend) await msg.reply(`✅ Command successfully updated.`).catch(() => { })
+                    return `✅ Command successfully updated.`
                 } else {
                     await msg.reply('Not a valid ID.').catch(() => { })
                 }
@@ -608,7 +614,8 @@ module.exports = {
 
                     globaldata['commandTemplates'].splice(commandIndex, 1)
 
-                    await msg.reply(`✅ Command successfully deleted.`).catch(() => { })
+                    if (!msg.nosend) await msg.reply(`✅ Command successfully deleted.`).catch(() => { })
+                    return `✅ Command successfully deleted.`
                 } else {
                     await msg.reply('Not a valid ID.').catch(() => { })
                 }
@@ -616,21 +623,24 @@ module.exports = {
         }
 
         if (!args[1]) {
-            if (config.textEmbeds) msg.reply("**list** - Sends a navigable embed with a list of all command templates made by the users of Poopy.\n\n**search** <query> - Searches for every command in the command database that matches the query.\n\n**register**/**add** <name> <phrase> {-description <text>} [-image <url>] [-syntax <text>] - Registers the command with the respective name, description and syntax (if supplied), it'll then be assigned an ID that can be used to import it via the `localcmds` command.\n\n**edit** <id> [-name <text>] [-phrase <text>] [-description <text>] [-image <url>] [-syntax <text>] - Allows you to edit the command with the respective ID in the database, if it exists and you made it.\n\n**delete** <id> - Permanently deletes the command from the database with the respective ID, if it exists and YOU made it.").catch(() => { })
-            else msg.reply({
-                embeds: [{
-                    "title": "Available Options",
-                    "description": "**list** - Sends a navigable embed with a list of all command templates made by the users of Poopy.\n\n**search** <query> - Searches for every command in the command database that matches the query.\n\n**register**/**add** <name> <phrase> {-description <text>} [-image <url>] [-syntax <text>] - Registers the command with the respective name, description and syntax (if supplied), it'll then be assigned an ID that can be used to import it via the `localcmds` command.\n\n**edit** <id> [-name <text>] [-phrase <text>] [-description <text>] [-image <url>] [-syntax <text>] - Allows you to edit the command with the respective ID in the database, if it exists and you made it.\n\n**delete** <id> - Permanently deletes the command from the database with the respective ID, if it exists and YOU made it.",
-                    "color": 0x472604,
-                    "footer": {
-                        "icon_url": bot.user.displayAvatarURL({
-                            dynamic: true, size: 1024, format: 'png'
-                        }),
-                        "text": bot.user.username
-                    },
-                }]
-            }).catch(() => { })
-            return
+            var instruction = "**list** - Sends a navigable embed with a list of all command templates made by the users of Poopy.\n\n**search** <query> - Searches for every command in the command database that matches the query.\n\n**register**/**add** <name> <phrase> {-description <text>} [-image <url>] [-syntax <text>] - Registers the command with the respective name, description and syntax (if supplied), it'll then be assigned an ID that can be used to import it via the `localcmds` command.\n\n**edit** <id> [-name <text>] [-phrase <text>] [-description <text>] [-image <url>] [-syntax <text>] - Allows you to edit the command with the respective ID in the database, if it exists and you made it.\n\n**delete** <id> - Permanently deletes the command from the database with the respective ID, if it exists and YOU made it."
+            if (!msg.nosend) {
+                if (config.textEmbeds) msg.reply(instruction).catch(() => { })
+                else msg.reply({
+                    embeds: [{
+                        "title": "Available Options",
+                        "description": instruction,
+                        "color": 0x472604,
+                        "footer": {
+                            "icon_url": bot.user.displayAvatarURL({
+                                dynamic: true, size: 1024, format: 'png'
+                            }),
+                            "text": bot.user.username
+                        },
+                    }]
+                }).catch(() => { })
+            }
+            return instruction
         }
 
         if (!options[args[1].toLowerCase()]) {

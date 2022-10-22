@@ -45,7 +45,7 @@ module.exports = {
 
         var chunks = resp.data.trim().split('\n').map(chunk => JSON.parse(chunk))
 
-        await msg.reply({
+        if (!msg.nosend) await msg.reply({
             content: `${saidMessage}${chunks.map(chunk => chunk.data.text).join('')}`,
             allowedMentions: {
                 parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
@@ -61,6 +61,7 @@ module.exports = {
             }).catch(() => { })
             fs.rmSync(`${filepath}`, { force: true, recursive: true })
         })
+        return `${saidMessage}${chunks.map(chunk => chunk.data.text).join('')}`
     },
     help: {
         name: 'inferkit/transformer <message> [-temperature <number (from 0.1 to 2)>] [-topp <number (from 0 to 1)>] [-keywords <words (separated by spaces)>]',

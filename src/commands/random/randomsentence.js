@@ -6,7 +6,9 @@ module.exports = {
     let json = poopy.json
 
     var sentenceJSON = json.sentenceJSON
-    await msg.reply(sentenceJSON.data[Math.floor(Math.random() * sentenceJSON.data.length)].sentence).catch(() => { })
+    var sentence = sentenceJSON.data[Math.floor(Math.random() * sentenceJSON.data.length)].sentence
+    if (!msg.nosend) await msg.reply(sentence).catch(() => { })
+    return sentence
   },
   help: { name: 'randomsentence', value: 'Generates a random sentence.' },
   cooldown: 2500,
