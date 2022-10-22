@@ -15,12 +15,12 @@ modules.util = require('util')
 modules.CryptoJS = require('crypto-js')
 if (modules.fs.existsSync('node_modules/@jimp/plugin-print'))
     modules.fs.rmSync('node_modules/@jimp/plugin-print', {
-        force: true, recursive: true
-    })
+    force: true, recursive: true
+})
 if (!modules.fs.existsSync('node_modules/@jimp/plugin-print'))
     modules.fs.copySync('lib/plugin-print', 'node_modules/@jimp/plugin-print', {
-        recursive: true
-    })
+    recursive: true
+})
 modules.Jimp = require('jimp')
 modules.whatwg = require('whatwg-url')
 modules.catbox = require('catbox.moe')
@@ -36,7 +36,7 @@ modules.DMGuild = class DMGuild {
     constructor(msg) {
         let members = new modules.Collection([[msg.client.database, msg.client.user]].concat(
             msg.channel.recipients ?
-            [...msg.channel.recipients] :
+            [...msg.channel.recipients]:
             [[msg.channel.recipient.id, msg.channel.recipient]]
         ))
 
@@ -62,73 +62,82 @@ modules.DMGuild = class DMGuild {
     }
 }
 
-    const Guild = Discord.Guild
-    const guildLeave = Guild.prototype.leave
+const Guild = modules.Discord.Guild
+const guildLeave = Guild.prototype.leave
 
-    Guild.prototype.leave = async function leave() {
-        let guild = this
-        let client = guild.client
-        let poopy = activeBots[client.database]
-        let config = poopy.config
+Guild.prototype.leave = async function leave() {
+    let guild = this
+    let client = guild.client
+    let poopy = activeBots[client.database]
+    let config = poopy.config
 
-        if (config.public) return 'nvm'
+    if (config.public) return 'nvm'
 
-        return guildLeave.call(guild)
-    }
+    return guildLeave.call(guild)
+}
 
-    const Channel = Discord.BaseGuildTextChannel
-    const channelSend = Channel.prototype.send
+const Channel = modules.Discord.BaseGuildTextChannel
+const channelSend = Channel.prototype.send
 
-    Channel.prototype.send = async function send(payload) {
-        var channel = this
-        let client = channel.client
-        let poopy = activeBots[client.database]
-        let tempdata = poopy.tempdata
-        let { waitMessageCooldown, setMessageCooldown } = poopy.functions
+Channel.prototype.send = async function send(payload) {
+    var channel = this
+    let client = channel.client
+    let poopy = activeBots[client.database]
+    let tempdata = poopy.tempdata
+    let {
+        waitMessageCooldown,
+        setMessageCooldown
+    } = poopy.functions
 
-        await waitMessageCooldown()
-        if (tempdata[channel.guild?.id]?.[channel.id]?.['shut']) return
+    await waitMessageCooldown()
+    if (tempdata[channel.guild?.id]?.[channel.id]?.['shut']) return
 
-        return channelSend.call(channel, payload).then(setMessageCooldown)
-    }
+    return channelSend.call(channel, payload).then(setMessageCooldown)
+}
 
-    const Message = Discord.Message
-    const messageReply = Message.prototype.reply
+const Message = modules.Discord.Message
+const messageReply = Message.prototype.reply
 
-    Message.prototype.reply = async function reply(payload) {
-        var message = this
-        let client = message.client
-        let poopy = activeBots[client.database]
-        let config = poopy.config
-        let tempdata = poopy.tempdata
-        let { waitMessageCooldown, setMessageCooldown } = poopy.functions
+Message.prototype.reply = async function reply(payload) {
+    var message = this
+    let client = message.client
+    let poopy = activeBots[client.database]
+    let config = poopy.config
+    let tempdata = poopy.tempdata
+    let {
+        waitMessageCooldown,
+        setMessageCooldown
+    } = poopy.functions
 
-        await waitMessageCooldown()
-        if (tempdata[message.guild?.id]?.[message.channel?.id]?.['shut']) return
+    await waitMessageCooldown()
+    if (tempdata[message.guild?.id]?.[message.channel?.id]?.['shut']) return
 
-        if (config.allowbotusage || message.replied) return message.channel.send(payload).then(setMessageCooldown)
-        else return message.replied = messageReply.call(message, payload).then(setMessageCooldown)
-    }
+    if (config.allowbotusage || message.replied) return message.channel.send(payload).then(setMessageCooldown)
+    else return message.replied = messageReply.call(message, payload).then(setMessageCooldown)
+}
 
-    const Interaction = Discord.CommandInteraction
-    const interactionReply = Interaction.prototype.reply
+const Interaction = modules.Discord.CommandInteraction
+const interactionReply = Interaction.prototype.reply
 
-    Interaction.prototype.reply = async function reply(payload) {
-        var interaction = this
-        let client = interaction.client
-        let poopy = activeBots[client.database]
-        let config = poopy.config
-        let tempdata = poopy.tempdata
-        let { waitMessageCooldown, setMessageCooldown } = poopy.functions
+Interaction.prototype.reply = async function reply(payload) {
+    var interaction = this
+    let client = interaction.client
+    let poopy = activeBots[client.database]
+    let config = poopy.config
+    let tempdata = poopy.tempdata
+    let {
+        waitMessageCooldown,
+        setMessageCooldown
+    } = poopy.functions
 
-        await waitMessageCooldown()
-        if (tempdata[interaction.guild?.id]?.[interaction.channel?.id]?.['shut']) return
+    await waitMessageCooldown()
+    if (tempdata[interaction.guild?.id]?.[interaction.channel?.id]?.['shut']) return
 
-        if (config.allowbotusage || interaction.replied) return interaction.channel.send(payload).then(setMessageCooldown)
-        else return (!interaction.replied && interaction.deferred ?
-            interaction.editReply(payload) :
-            interactionReply.call(interaction, payload)).then(setMessageCooldown)
-    }
+    if (config.allowbotusage || interaction.replied) return interaction.channel.send(payload).then(setMessageCooldown)
+    else return (!interaction.replied && interaction.deferred ?
+        interaction.editReply(payload):
+        interactionReply.call(interaction, payload)).then(setMessageCooldown)
+}
 
 if (process.env.DEEPAI_KEY) {
     modules.deepai = require('deepai')
@@ -137,7 +146,7 @@ if (process.env.DEEPAI_KEY) {
 
 if (process.env.ROBLOX_COOKIE) {
     modules.noblox = require('noblox.js')
-    modules.noblox.setCookie(process.env.ROBLOX_COOKIE).catch(() => { })
+    modules.noblox.setCookie(process.env.ROBLOX_COOKIE).catch(() => {})
 }
 
 if (process.env.GOOGLE_KEY) modules.google = require('googleapis').google
