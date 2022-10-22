@@ -1,7 +1,7 @@
 let modules = {}
 let activeBots = require('./dataValues').activeBots
 
-modules.Discord = [require('discord.js'), require('discord.js-selfbot-v13')]
+modules.Discord = require('discord.js')
 modules.fs = require('fs-extra')
 modules.nodefs = require('fs')
 modules.archiver = require('archiver')
@@ -62,7 +62,6 @@ modules.DMGuild = class DMGuild {
     }
 }
 
-for (var Discord of modules.Discord) {
     const Guild = Discord.Guild
     const guildLeave = Guild.prototype.leave
 
@@ -130,7 +129,6 @@ for (var Discord of modules.Discord) {
             interaction.editReply(payload) :
             interactionReply.call(interaction, payload)).then(setMessageCooldown)
     }
-}
 
 if (process.env.DEEPAI_KEY) {
     modules.deepai = require('deepai')
