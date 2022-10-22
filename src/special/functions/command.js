@@ -39,7 +39,7 @@ module.exports = {
                 return 'This command is disabled in this server.'
             } else {
                 var content = msg.content
-                
+
                 delete msg.nosend
                 msg.nosend = getOption(args, 'nosend', { n: 0, splice: true, dft: false })
                 args = args.join(' ')
