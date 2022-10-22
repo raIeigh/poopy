@@ -3,7 +3,7 @@ module.exports = {
     args: [{"name":"carrier","required":false,"specifarg":false,"orig":"{carrier}"},{"name":"modulator","required":false,"specifarg":false,"orig":"{modulator}"},{"name":"bandcount","required":false,"specifarg":true,"orig":"[-bandcount <value (max 512)>]"}],
     execute: async function (msg, args) {
         let poopy = this
-        let { getOption, lastUrl, getUrls, validateFile, downloadFile, execPromise, findpreset, sendFile } = poopy.functions
+        let { getOption, parseNumber, lastUrl, getUrls, validateFile, downloadFile, execPromise, findpreset, sendFile } = poopy.functions
         let { fs } = poopy.modules
 
         await msg.channel.sendTyping().catch(() => { })
