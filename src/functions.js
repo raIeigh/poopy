@@ -552,7 +552,6 @@ functions.execPromise = function (code) {
             var out = stdout.join('\n') || stderr.join('\n')
             clearInterval(memoryInterval)
             proc.removeAllListeners()
-            console.log(out)
             resolve(out)
         }
 
