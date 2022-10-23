@@ -1,6 +1,6 @@
 module.exports = {
     helpf: '(name | arguments)',
-    desc: 'Allows you to execute any command! This one returns its output. (if it exists)',
+    desc: 'Allows you to execute any command! This one returns its output, if it exists. Recommended to use with `-nosend`.',
     func: async function (matches, msg, isBot, _, opts) {
         let poopy = this
         let { splitKeyFunc, getUrls, infoPost, getKeywordsFor, getOption } = poopy.functions
@@ -43,8 +43,10 @@ module.exports = {
                 var ropts = { ...opts }
                 ropts.declaredonly = (command || localCommand).raw
                 args = await getKeywordsFor(args, msg, isBot, ropts).catch(() => { }) ?? args
-
-                msg.content = `${data.guildData[msg.guild.id]['prefix']}${commandname} ${args}`
+                args = (`${commandname}${args ? ` ${args}` : ''}`).split(' ')
+                delete msg.nosend
+                msg.nosend = getOption(args, 'nosend', { n: 0, splice: true, dft: false })
+                msg.content = `${data.guildData[msg.guild.id]['prefix']}${args.join(' ')}`
 
                 await getUrls(msg, {
                     string: msg.content,
@@ -78,7 +80,7 @@ module.exports = {
                     }, 1000)
 
                     infoPost(`Command \`${commandname}\` used`)
-                    var output = await command.execute.call(poopy, msg, [commandname].concat(args.split(' ')), { ownermode: opts.ownermode }).catch(err => {
+                    var output = await command.execute.call(poopy, msg, args, { ownermode: opts.ownermode }).catch(err => {
                         error = err.stack
                     })
                     data.botData['filecount'] = vars.filecount

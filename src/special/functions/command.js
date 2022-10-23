@@ -14,7 +14,7 @@ module.exports = {
         var word = matches[1]
         var split = splitKeyFunc(word, { args: 2 })
         var commandname = (await getKeywordsFor(split[0] ?? '', msg, isBot, opts).catch(() => { }) ?? split[0]).toLowerCase()
-        var args = (split[1] ?? '').split(' ')
+        var args = split[1] ?? ''
         var command = commands.find(fcmd => fcmd.name.find(fcmdname => fcmdname === commandname))
         var localCommand = data.guildData[msg.guild.id]['localcmds'].find(cmd => cmd.name === commandname)
         var error = ''
@@ -40,15 +40,16 @@ module.exports = {
             } else {
                 var content = msg.content
 
-                delete msg.nosend
-                msg.nosend = getOption(args, 'nosend', { n: 0, splice: true, dft: false })
-                args = args.join(' ')
-
                 var ropts = { ...opts }
                 ropts.declaredonly = (command || localCommand).raw
                 args = await getKeywordsFor(args, msg, isBot, ropts).catch(() => { }) ?? args
+                args = (`${commandname}${args ? ` ${args}` : ''}`).split(' ')
+                delete msg.nosend
+                msg.nosend = getOption(args, 'nosend', { n: 0, splice: true, dft: false })
+                msg.content = `${data.guildData[msg.guild.id]['prefix']}${args.join(' ')}`
 
-                msg.content = `${data.guildData[msg.guild.id]['prefix']}${commandname} ${args}`
+                console.log(args)
+                console.log(msg.content)
 
                 await getUrls(msg, {
                     string: msg.content,
@@ -82,7 +83,7 @@ module.exports = {
                     }, 1000)
 
                     infoPost(`Command \`${commandname}\` used`)
-                    await command.execute.call(poopy, msg, [commandname].concat(args.split(' ')), { ownermode: opts.ownermode }).catch(err => {
+                    await command.execute.call(poopy, msg, args, { ownermode: opts.ownermode }).catch(err => {
                         error = err.stack
                     })
                     data.botData['filecount'] = vars.filecount

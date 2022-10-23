@@ -17,6 +17,7 @@ module.exports = {
         let poopy = this
         let bot = poopy.bot
         let data = poopy.data
+        let vars = poopy.vars
         let config = poopy.config
         let { getLevel } = poopy.functions
 
@@ -35,6 +36,17 @@ module.exports = {
             }).catch(() => { })
             return
         }
+
+        if (!data.userData[member.id]) {
+            data.userData[member.id] = {}
+        }
+
+        for (var stat in vars.battleStats) {
+            if (data.userData[member.id][stat] === undefined) {
+                data.userData[member.id][stat] = vars.battleStats[stat]
+            }
+        }
+        if (!data.userData[member.id].battleSprites) data.userData[member.id].battleSprites = {}
 
         var levelData = getLevel(data.userData[member.id]['exp'])
 
@@ -96,7 +108,7 @@ module.exports = {
                 title: `${member.username}\'s Stats`,
                 color: 0x472604,
                 thumbnail: {
-                    url: msg.author.displayAvatarURL({
+                    url: member.displayAvatarURL({
                         dynamic: true, size: 1024, format: 'png'
                     })
                 },

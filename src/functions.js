@@ -552,7 +552,6 @@ functions.execPromise = function (code) {
             var out = stdout.join('\n') || stderr.join('\n')
             clearInterval(memoryInterval)
             proc.removeAllListeners()
-            console.log(out)
             resolve(out)
         }
 
@@ -1517,7 +1516,7 @@ functions.navigateEmbed = async function (channel, pageFunc, results, who, extra
                                 new Discord.TextInputBuilder()
                                     .setCustomId('page-num')
                                     .setLabel('Page')
-                                    .setStyle('SHORT')
+                                    .setStyle(Discord.TextInputStyle.Short)
                                     .setMinLength(1)
                                     .setMaxLength(String(results).length)
                                     .setPlaceholder(`1-${results}`)
@@ -3062,7 +3061,7 @@ functions.battle = async function (msg, subject, action, damage, chance) {
     let data = poopy.data
     let vars = poopy.vars
     let { Discord, fs } = poopy.modules
-    let { getLevel, execPromise, randomNumber, validateFile, downloadFile } = poopy.functions
+    let { getLevel, execPromise, randomNumber, randomChoice, downloadFile } = poopy.functions
 
     await msg.channel.sendTyping().catch(() => { })
     var attachments = msg.attachments.map(attachment => new Discord.AttachmentBuilder(attachment.url));
@@ -3189,34 +3188,37 @@ functions.battle = async function (msg, subject, action, damage, chance) {
     }
 
     var filepath
-    if (attacked && (member || vars.validUrl.test(subject))) {
+    if (member || vars.validUrl.test(subject)) {
         var avatar = member ? (subjData.battleSprites.hurt ?? member.displayAvatarURL({
             dynamic: false, size: 256, format: 'png'
         })) : subject
-        var fileinfo = await validateFile(avatar).catch(() => { })
 
-        if (fileinfo) {
-            filepath = await downloadFile(avatar, 'avatar.png', { fileinfo })
-            var randomizer = () => `(random(t+${Math.floor(Math.random() * 1000)})*2-1)*(0.44-mod(t,0.44))*15`
-            var attackPos = new Array(4).fill().map(() => [randomNumber(50, 150), randomNumber(25, 125)])
-            var attackOverlay = []
-            var attackConcat = []
-            var enemyConcat = []
-            for (var i in attackPos) {
-                var pos = attackPos[i]
-                var x = pos[0]
-                var y = pos[1]
+        filepath = await downloadFile(avatar, 'avatar.png')
 
-                attackOverlay.push(`[2:v][en${i}]overlay=x='(W-w)/2+${randomizer()}':y='(H-h)/2+${randomizer()}':format=auto[at${i}];[at${i}][1:v]overlay=shortest=1:x=${x}-w/2:y=${y}-h/2:format=auto[attack${i}]`)
-                attackConcat.push(`[attack${i}]`)
-                enemyConcat.push(`[en${i}]`)
-            }
+        var spazz = () => `+(random(t+${Math.floor(Math.random() * 1000)})*2-1)*(0.4-mod(t,0.4))*15`
+        var bossX = () => `+cos(PI/2*((t+${i + 1}*0.4)/0.4))*20`
+        var bossY = () => `+sin(PI*((t+${i + 1}*0.4)/0.4))*20`
 
-            await execPromise(`ffmpeg -stream_loop -1 -i ${filepath}/avatar.png -i assets/image/${critical ? 'crit' : ''}attack.gif -stream_loop -1 -f lavfi -i "color=0x00000000:s=200x150,format=rgba" -filter_complex "[0:v]scale=100:100:force_original_aspect_ratio=decrease,split=${enemyConcat.length}${enemyConcat.join('')};${attackOverlay.join(';')};${attackConcat.join('')}concat=n=${attackConcat.length},split[pout][ppout];[ppout]palettegen=reserve_transparent=1[palette];[pout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -preset ultrafast -gifflags -offsetting ${filepath}/attack.gif`)
+        var attackPos = new Array(4).fill().map(() => attacked ? [randomNumber(50, 150), randomNumber(25, 125)] : [randomChoice([randomNumber(0, 25), randomNumber(175, 200)]), randomChoice([0, 125])])
+        var attackOverlay = []
+        var attackConcat = []
+        var enemyConcat = []
 
-            payload.files = [new Discord.AttachmentBuilder(`${filepath}/attack.gif`)]
-            payload.embeds[0].image = { url: 'attachment://attack.gif' }
+        for (var i in attackPos) {
+            i = Number(i)
+            var pos = attackPos[i]
+            var x = pos[0]
+            var y = pos[1]
+
+            attackOverlay.push(`${!attacked && i % 2 != 0 ? `[en${i}]hflip[enf${i}];` : ''}[2:v][en${!attacked && i % 2 != 0 ? 'f' : ''}${i}]overlay=x='(W-w)/2${attacked ? spazz() : ''}':y='(H-h)/2${attacked ? spazz() : ''}${died ? `+t*40+(40*${i})` : ''}':format=auto[shake${i}];[shake${i}][1:v]overlay=shortest=1:x=${x}-w/2:y=${y}-h/2:format=auto[attack${i}]`)
+            attackConcat.push(`[attack${i}]`)
+            enemyConcat.push(`[en${i}]`)
         }
+
+        await execPromise(`ffmpeg -stream_loop -1 -i ${filepath}/avatar.png -i assets/image/${critical ? 'crit' : ''}attack.gif -stream_loop -1 -f lavfi -i "color=0x00000000:s=200x150,format=rgba" -filter_complex "[0:v]scale=100:100:force_original_aspect_ratio=decrease,split=${enemyConcat.length}${enemyConcat.join('')};${attackOverlay.join(';')};${attackConcat.join('')}concat=n=${attackConcat.length},split[pout][ppout];[ppout]palettegen=reserve_transparent=1[palette];[pout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -preset ultrafast -gifflags -offsetting ${filepath}/attack.gif`)
+
+        payload.files = [new Discord.AttachmentBuilder(`${filepath}/attack.gif`)]
+        payload.embeds[0].image = { url: 'attachment://attack.gif' }
     }
 
     if (config.textEmbeds) delete payload.embeds
@@ -3381,7 +3383,7 @@ functions.sendFile = async function (msg, filepath, filename, extraOptions) {
     var args = msg.content.substring(prefix.toLowerCase().length).split(' ')
 
     extraOptions.catbox = extraOptions.catbox ?? args.includes('-catbox')
-    extraOptions.nosend = extraOptions.nosend ?? args.includes('-nosend') ?? msg.nosend
+    extraOptions.nosend = extraOptions.nosend ?? msg.nosend ?? args.includes('-nosend')
     extraOptions.compress = extraOptions.compress ?? args.includes('-compress')
 
     if (extraOptions.compress) {
@@ -3400,34 +3402,39 @@ functions.sendFile = async function (msg, filepath, filename, extraOptions) {
             return
         }
 
-        if (fileinfo.size > 8) {
+        var size = fs.readFileSync(`${filepath}/${filename}`).length
+        var tries = 1
+        while (size > (8 * 1024 * 1024) && tries < 5) {
             fs.renameSync(`${filepath}/${filename}`, `${filepath}/compress_${filename}`)
 
             switch (fileinfo.shorttype) {
                 case 'image':
-                    await execPromise(`ffmpeg -i ${filepath}/compress_${filename} -vf "scale=iw*${7 / fileinfo.size}:ih*${7 / fileinfo.size}" ${filepath}/${filename}`)
+                    await execPromise(`ffmpeg -i ${filepath}/compress_${filename} -vf "scale=iw*${7 / fileinfo.size / tries}:ih*${7 / fileinfo.size / tries}" ${filepath}/${filename}`)
                     break;
 
                 case 'gif':
-                    await execPromise(`ffmpeg -i ${filepath}/compress_${filename} -filter_complex "[0:v]scale=iw*${7 / fileinfo.size}:ih*${7 / fileinfo.size},split[pout][ppout];[ppout]palettegen=reserve_transparent=1[palette];[pout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -gifflags -offsetting ${filepath}/compress2_${filename}`)
-                    await execPromise(`gifsicle -O3 --lossy=${Math.min(Math.max(Math.round(fileinfo.size * 10), 30), 200)} -o ${filepath}/${filename} ${filepath}/compress2_${filename}`)
-                    fs.rm(`${filepath}/compress2_${filename}`)
+                    await execPromise(`ffmpeg -i ${filepath}/compress_${filename} -filter_complex "[0:v]scale=iw*${7 / fileinfo.size / tries}:ih*${7 / fileinfo.size / tries},split[pout][ppout];[ppout]palettegen=reserve_transparent=1[palette];[pout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -gifflags -offsetting ${filepath}/compress2_${filename}`)
+                    await execPromise(`gifsicle -O3 --lossy=${Math.min(Math.max(Math.round(fileinfo.size * 10) * tries, 30), 200)} -o ${filepath}/${filename} ${filepath}/compress2_${filename}`)
+                    fs.rmSync(`${filepath}/compress2_${filename}`)
                     break;
 
                 case 'video':
-                    await execPromise(`ffmpeg -i ${filepath}/compress_${filename} -vf "scale='ceil(iw*${7 / fileinfo.size}/2)*2':'ceil(ih*${7 / fileinfo.size}/2)*2'" -preset veryslow ${filepath}/${filename}`)
+                    await execPromise(`ffmpeg -i ${filepath}/compress_${filename} -vf "scale='ceil(iw*${7 / fileinfo.size / tries}/2)*2':'ceil(ih*${7 / fileinfo.size / tries}/2)*2'" ${tries > 1 ? `-crf ${Math.min(28 + 10 * tries, 51)} -b:v ${Math.round(128 / tries)}k -b:a ${Math.round(256 / tries)}k ` : ''}-preset veryslow ${filepath}/${filename}`)
                     break;
 
                 case 'audio':
-                    await execPromise(`ffmpeg -i ${filepath}/compress_${filename} -b:a 128k ${filepath}/${filename}`)
+                    await execPromise(`ffmpeg -i ${filepath}/compress_${filename} -b:a ${Math.round(128 / tries)}k ${filepath}/${filename}`)
                     break;
 
                 default:
                     fs.copyFileSync(`${filepath}/compress_${filename}`, `${filepath}/${filename}`)
+                    tries = 5
                     break;
             }
 
-            fs.rm(`${filepath}/compress_${filename}`)
+            fs.rmSync(`${filepath}/compress_${filename}`)
+            size = fs.readFileSync(`${filepath}/${filename}`).length
+            tries++
         }
     }
 
