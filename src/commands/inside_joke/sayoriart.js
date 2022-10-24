@@ -120,11 +120,14 @@ module.exports = {
     ]
 
     var sayori = await bot.users.fetch('758638862590803968')
+    var art = sayoriart[Math.floor(Math.random() * sayoriart.length)]
 
-    await msg.reply({
+    if (!msg.nosend) await msg.reply({
       content: `This treasure was made by ${sayori.tag}.`,
-      files: [new Discord.AttachmentBuilder(sayoriart[Math.floor(Math.random() * sayoriart.length)])]
+      files: [new Discord.AttachmentBuilder(art)]
     }).catch(() => { })
+
+    return art
   },
   help: {
     name: 'sayoriart',

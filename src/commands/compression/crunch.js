@@ -24,29 +24,25 @@ module.exports = {
 
         if (type.mime.startsWith('video')) {
             var filepath = await downloadFile(currenturl, `input.mp4`, {
-                fileinfo: fileinfo
-            })
+                fileinfo            })
             var filename = `input.mp4`
             await execPromise(`ffmpeg -i ${filepath}/${filename} -b:v 50k -b:a 30k -vf "scale=ceil(iw/2)*2:ceil(ih/2)*2" -preset ${findpreset(args)} -c:v libx264 -pix_fmt yuv420p ${filepath}/output.mp4`)
             return await sendFile(msg, filepath, `output.mp4`)
         } else if (type.mime.startsWith('audio')) {
             var filepath = await downloadFile(currenturl, `input.mp3`, {
-                fileinfo: fileinfo
-            })
+                fileinfo            })
             var filename = `input.mp3`
             await execPromise(`ffmpeg -i ${filepath}/${filename} -b:a 30k -preset ${findpreset(args)} ${filepath}/output.mp3`)
             return await sendFile(msg, filepath, `output.mp3`)
         } else if (type.mime.startsWith('image') && !(vars.gifFormats.find(f => f === type.ext))) {
             var filepath = await downloadFile(currenturl, `input.png`, {
-                fileinfo: fileinfo
-            })
+                fileinfo            })
             var filename = `input.png`
             await execPromise(`ffmpeg -i ${filepath}/${filename} -q:v 31 -preset ${findpreset(args)} ${filepath}/output.jpg`)
             return await sendFile(msg, filepath, `output.jpg`)
         } else if (type.mime.startsWith('image') && vars.gifFormats.find(f => f === type.ext)) {
             var filepath = await downloadFile(currenturl, `input.gif`, {
-                fileinfo: fileinfo
-            })
+                fileinfo            })
             var filename = `input.gif`
             await execPromise(`ffmpeg -i ${filepath}/${filename} -preset ${findpreset(args)} ${filepath}/output.gif`)
             return await sendFile(msg, filepath, `output.gif`)

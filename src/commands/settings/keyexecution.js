@@ -33,8 +33,9 @@ module.exports = {
                 return
             }
 
-            data['guildData'][msg.guild.id]['keyexec'] = mode.value
-            await msg.reply(`Key execution mode set to \`${args[1].toCapperCase()}\`. ${mode.desc}`).catch(() => { })
+            data.guildData[msg.guild.id]['keyexec'] = mode.value
+            if (!msg.nosend) await msg.reply(`Key execution mode set to \`${args[1].toCapperCase()}\`. ${mode.desc}`).catch(() => { })
+            return `Key execution mode set to \`${args[1].toCapperCase()}\`. ${mode.desc}`
         } else {
             await msg.reply('You need to be a moderator to execute that!').catch(() => { })
             return;

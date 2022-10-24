@@ -18,6 +18,8 @@ module.exports = {
             optiontext = option['text']
         }
 
+        if (msg.nosend) return optiontext
+
         var botmsg
 
         var webhooks = await msg.channel.fetchWebhooks().catch(() => { })
@@ -117,6 +119,8 @@ module.exports = {
                 }
             }
         }
+
+        return optiontext
     },
     help: { name: 'sayori [phraseChoice]', value: 'no not sayori ai' },
     cooldown: 2500,

@@ -29,7 +29,7 @@ module.exports = {
 
         if (type.mime.startsWith('image') && !(vars.gifFormats.find(f => f === type.ext))) {
             var brailleText = await braille(currenturl, negative)
-            await msg.reply({
+            if (!msg.nosend) await msg.reply({
                 content: brailleText,
                 allowedMentions: {
                     parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
@@ -45,7 +45,7 @@ module.exports = {
                 }).catch(() => { })
                 fs.rmSync(`${filepath}`, { force: true, recursive: true })
             })
-            await msg.channel.sendTyping().catch(() => { })
+            return brailleText
         } else {
             await msg.reply({
                 content: `Unsupported file: \`${currenturl}\``,

@@ -36,12 +36,14 @@ module.exports = {
 
             if (!response) return
 
-            await msg.reply({
+            if (!msg.nosend) await msg.reply({
                 content: response.data.data[0].replace('caption: ', ''),
                 allowedMentions: {
                     parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
+
+            return response.data.data[0].replace('caption: ', '')
         } else {
             await msg.reply({
                 content: `Unsupported file: \`${currenturl}\``,

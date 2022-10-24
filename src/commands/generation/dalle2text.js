@@ -8,7 +8,7 @@ module.exports = {
         let { sleep, navigateEmbed, userToken } = poopy.functions
         let bot = poopy.bot
 
-        var tokens = data['userData'][msg.author.id]['tokens']['DALLE2_SESSION'] ?? []
+        var tokens = data.userData[msg.author.id]['tokens']['DALLE2_SESSION'] ?? []
 
         var ownerid = config.ownerids.find(id => id == msg.author.id);
         if (ownerid === undefined && !opts.ownermode && !tokens.length) {
@@ -97,7 +97,7 @@ module.exports = {
 
         var images = imageRes.data.generatidata.map(gdata => gdata.generation.image_path)
 
-        await navigateEmbed(msg.channel, async (page) => {
+        if (!msg.nosend) await navigateEmbed(msg.channel, async (page) => {
             if (config.textEmbeds) return `${images[page - 1]}\n\nImage ${page}/${images.length}`
             else return {
                 "title": `DALL·E 2 results for ${text}`,
@@ -123,6 +123,8 @@ module.exports = {
                 page: false
             }
         ], undefined, undefined, undefined, undefined, msg)
+
+        return images.join(' ')
     },
     help: {
         name: 'dalle2text <option> (requires DALLE2_SESSION token)',

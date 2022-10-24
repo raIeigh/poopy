@@ -24,8 +24,7 @@ module.exports = {
 
         if (type.mime.startsWith('video')) {
             var filepath = await downloadFile(currenturl, `input.mp4`, {
-                fileinfo: fileinfo
-            })
+                fileinfo            })
             var filename = `input.mp4`
             var audio = fileinfo.info.audio
 
@@ -42,8 +41,7 @@ module.exports = {
             }
         } else if (type.mime.startsWith('audio')) {
             var filepath = await downloadFile(currenturl, `input.mp3`, {
-                fileinfo: fileinfo
-            })
+                fileinfo            })
             var filename = `input.mp3`
             await execPromise(`ffmpeg -i ${filepath}/${filename} -vn -map_metadata -1 -c:a libvorbis -b:a 64k -ar 44100 -preset ${findpreset(args)} ${filepath}/44100.ogg`)
 

@@ -65,12 +65,12 @@ module.exports = {
 
     var jsons = response.data.trim().split('\n').map(json => JSON.parse(json))
 
-    var stdOut = jsons.find(json => json.type === 'StdOut')
-    var stdErr = jsons.find(json => json.type === 'StdErr')
+    var stdOut = jsons.filter(json => json.type === 'StdOut').map(json => json.data)
+    var stdErr = jsons.filter(json => json.type === 'StdErr').map(json => json.data)
     var output
 
-    if (stdOut && stdErr) output = `StdOut: ${stdOut.data}\n\nStdErr: ${stdErr.data}`
-    else output = (stdOut ?? stdErr) ? (stdOut ?? stdErr).data : ''
+    if (stdOut && stdErr) output = `StdOut: ${stdOut.join('\n')}\n\nStdErr: ${stdErr.join('\n')}`
+    else output = (stdOut ?? stdErr) ? (stdOut ?? stdErr).join('\n') : ''
 
     return output.trim()
   },

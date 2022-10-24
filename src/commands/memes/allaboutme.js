@@ -42,16 +42,14 @@ module.exports = {
 
         if (type.mime.startsWith('image') && !(vars.gifFormats.find(f => f === type.ext))) {
             var filepath = await downloadFile(currenturl, `input.png`, {
-                fileinfo: fileinfo
-            })
+                fileinfo            })
             var filename = `input.png`
 
             await execPromise(`ffmpeg -i ${filepath}/${filename} -i assets/image/allaboutme.png -i assets/image/white.png -filter_complex "[2:v][1:v]scale2ref[w][allabout];[0:v]split=${overlays.length}${osplit.join('')};${oover.join(';')};[whitest][allabout]overlay=x=0:y=0:format=auto[out]" -map "[out]" -vframes 1 -aspect 350:453 -preset ${findpreset(args)} ${filepath}/output.png`)
             return await sendFile(msg, filepath, `output.png`)
         } else if (type.mime.startsWith('video')) {
             var filepath = await downloadFile(currenturl, `input.mp4`, {
-                fileinfo: fileinfo
-            })
+                fileinfo            })
             var filename = `input.mp4`
             var duration = fileinfo.info.duration
 
@@ -59,8 +57,7 @@ module.exports = {
             return await sendFile(msg, filepath, `output.mp4`)
         } else if (type.mime.startsWith('image') && vars.gifFormats.find(f => f === type.ext)) {
             var filepath = await downloadFile(currenturl, `input.gif`, {
-                fileinfo: fileinfo
-            })
+                fileinfo            })
             var filename = `input.gif`
             var duration = fileinfo.info.duration
 

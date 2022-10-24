@@ -22,13 +22,14 @@ module.exports = {
       intraword2: ["2", "3", "4", "5", "6", "7", "8", "9", "1", "1"]
     }
 
-    await msg.reply({
-      content: lingo(saidMessage, translateSettings),
+    var opposite = lingo(saidMessage, translateSettings)
+    if (!msg.nosend) await msg.reply({
+      content: opposite,
       allowedMentions: {
         parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
       }
     }).catch(() => { })
-    await msg.channel.sendTyping().catch(() => { })
+    return opposite
   },
   help: {
     name: 'opposite/devil <message>',

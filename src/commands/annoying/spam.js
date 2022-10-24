@@ -6,11 +6,9 @@ module.exports = {
         let config = poopy.config
         let data = poopy.data
         let { Discord } = poopy.modules
-        let { getOption } = poopy.functions
         let tempdata = poopy.tempdata
 
         await msg.channel.sendTyping().catch(() => { })
-        var nosend = getOption(args, 'nosend', { n: 0, splice: true, dft: false })
         if (msg.member.permissions.has('ManageGuild') || msg.member.permissions.has('ManageMessages') || msg.member.permissions.has('Administrator') || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
             if (args[1] === undefined && args[2] === undefined) {
                 await msg.reply('How much do I spam?!').catch(() => { })
@@ -31,7 +29,7 @@ module.exports = {
                 tts = true
             }
 
-            var max = data['guildData'][msg.guild.id]['chaos'] ? 1984 : 25
+            var max = data.guildData[msg.guild.id]['chaos'] ? 1984 : 25
 
             var saidMessage = args.slice(2).join(' ')
             var attachments = msg.attachments.map(attachment => new Discord.AttachmentBuilder(attachment.url, attachment.name))
@@ -66,7 +64,7 @@ module.exports = {
             }
             var reply = await msg.fetchReference().catch(() => { })
 
-            if (nosend) return new Array(numToRepeat).map(() => saidMessage).join('\n')
+            if (msg.nosend) return new Array(numToRepeat).map(() => saidMessage).join('\n')
 
             if (msg.type === Discord.InteractionType.ApplicationCommand && del) await msg.deferReply({ ephemeral: true }).catch(() => { })
 

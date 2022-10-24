@@ -26,8 +26,7 @@ module.exports = {
 
         if (type.mime.startsWith('video')) {
             var filepath = await downloadFile(currenturl, `input.mp4`, {
-                fileinfo: fileinfo
-            })
+                fileinfo            })
             var filename = `input.mp4`
             var audio = fileinfo.info.audio
 
@@ -80,7 +79,7 @@ module.exports = {
                     return
                 }
 
-                await msg.reply({
+                if (!msg.nosend) await msg.reply({
                     content: response.data.data.text.toLowerCase(),
                     allowedMentions: {
                         parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
@@ -95,7 +94,8 @@ module.exports = {
                         files: [new Discord.AttachmentBuilder(`${filepath}/speechtotext.txt`)]
                     }).catch(() => { })
                 })
-                fs.rmSync(`${filepath}`, { force: true, recursive: true })
+                fs.rm(`${filepath}`, { force: true, recursive: true })
+                return response.data.data.text.toLowerCase()
             } else {
                 await msg.reply('No audio stream detected.').catch(() => { })
                 await msg.channel.sendTyping().catch(() => { })
@@ -103,8 +103,7 @@ module.exports = {
             }
         } else if (type.mime.startsWith('audio')) {
             var filepath = await downloadFile(currenturl, `input.mp3`, {
-                fileinfo: fileinfo
-            })
+                fileinfo            })
             var filename = `input.mp3`
 
             var aduration = Number(fileinfo.info.aduration.includes('N/A') ? '0' : fileinfo.info.aduration)
@@ -153,7 +152,7 @@ module.exports = {
                 return
             }
 
-            await msg.reply({
+            if (!msg.nosend) await msg.reply({
                 content: response.data.data.text.toLowerCase(),
                 allowedMentions: {
                     parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
@@ -168,7 +167,8 @@ module.exports = {
                     files: [new Discord.AttachmentBuilder(`${filepath}/speechtotext.txt`)]
                 }).catch(() => { })
             })
-            fs.rmSync(`${filepath}`, { force: true, recursive: true })
+            fs.rm(`${filepath}`, { force: true, recursive: true })
+            return response.data.data.text.toLowerCase()
         } else {
             await msg.reply({
                 content: `Unsupported file: \`${currenturl}\``,

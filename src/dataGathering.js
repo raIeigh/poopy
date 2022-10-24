@@ -3,6 +3,136 @@ const schemas = require('./schemas')
 let requests = 0
 
 module.exports = {
+    botData: async (dataid) => {
+        var botData = {}
+
+        var url = process.env.MONGOOSE_URL
+        if (requests <= 0) await mongoose.connect(url, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true
+        })
+        requests++
+
+        var dataobject = await schemas.botData.findOne({ dataid }).then(d => d.toJSON()).catch(() => { })
+
+        if (dataobject) {
+            for (var k in dataobject) {
+                var value = dataobject[k]
+                if ((schemas.botData.schema.obj[k] ?? { required: true }).required) continue
+                botData[k] = value
+            }
+        }
+
+        requests--
+        if (requests <= 0) mongoose.connection.close()
+
+        return botData
+    },
+
+    userData: async (dataid, uid) => {
+        var userData = {}
+
+        var url = process.env.MONGOOSE_URL
+        if (requests <= 0) await mongoose.connect(url, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true
+        })
+        requests++
+
+        var dataobject = await schemas.userData.find({ dataid, uid }).then(d => d.toJSON()).catch(() => { })
+
+        if (dataobject) {
+            for (var k in dataobject) {
+                var value = dataobject[k]
+                if ((schemas.userData.schema.obj[k] ?? { required: true }).required) continue
+                userData[k] = value
+            }
+        }
+
+        requests--
+        if (requests <= 0) mongoose.connection.close()
+
+        return userData
+    },
+
+    guildData: async (dataid, gid) => {
+        var guildData = {}
+
+        var url = process.env.MONGOOSE_URL
+        if (requests <= 0) await mongoose.connect(url, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true
+        })
+        requests++
+
+        var dataobject = await schemas.guildData.find({ dataid, gid }).then(d => d.toJSON()).catch(() => { })
+
+        if (dataobject) {
+            for (var k in dataobject) {
+                var value = dataobject[k]
+                if ((schemas.guildData.schema.obj[k] ?? { required: true }).required) continue
+                guildData[k] = value
+            }
+        }
+
+        requests--
+        if (requests <= 0) mongoose.connection.close()
+
+        return guildData
+    },
+
+    channelData: async (dataid, gid, cid) => {
+        var channelData = {}
+
+        var url = process.env.MONGOOSE_URL
+        if (requests <= 0) await mongoose.connect(url, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true
+        })
+        requests++
+
+        var dataobject = await schemas.channelData.find({ dataid, gid, cid }).then(d => d.toJSON()).catch(() => { })
+
+        if (dataobject) {
+            for (var k in dataobject) {
+                var value = dataobject[k]
+                if ((schemas.channelData.schema.obj[k] ?? { required: true }).required) continue
+                channelData[k] = value
+            }
+        }
+
+        requests--
+        if (requests <= 0) mongoose.connection.close()
+
+        return channelData
+    },
+
+    memberData: async (dataid, gid, uid) => {
+        var memberData = {}
+
+        var url = process.env.MONGOOSE_URL
+        if (requests <= 0) await mongoose.connect(url, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true
+        })
+        requests++
+
+        var dataobject = await schemas.memberData.find({ dataid, gid, uid }).then(d => d.toJSON()).catch(() => { })
+
+        if (dataobject) {
+            for (var k in dataobject) {
+                var value = dataobject[k]
+                if ((schemas.memberData.schema.obj[k] ?? { required: true }).required) continue
+                memberData[k] = value
+            }
+        }
+
+        requests--
+        if (requests <= 0) mongoose.connection.close()
+
+        return memberData
+    },
+
     globalData: async () => {
         var globalData = {}
 
@@ -13,16 +143,13 @@ module.exports = {
         })
         requests++
 
-        var globaldataobjects = await schemas.globalData.find({}).catch(() => { })
+        var dataobject = await schemas.globalData.find({}).then(d => d.toJSON()).catch(() => { })
 
-        if (globaldataobjects) {
-            var globaldataobject = globaldataobjects[0]
-            for (var k in globaldataobject) {
-                var value = globaldataobject[k]
-
-                if (k != 'dataid' && schemas.globalData.prototype.schema.obj[k]) {
-                    globalData[k] = value
-                }
+        if (dataobject) {
+            for (var k in dataobject) {
+                var value = dataobject[k]
+                if ((schemas.globalData.schema.obj[k] ?? { required: true }).required) continue
+                globalData[k] = value
             }
         }
 
@@ -44,32 +171,26 @@ module.exports = {
         })
         requests++
 
-        var dataobjects = await schemas.data.find({ dataid }).catch(() => { })
+        var dataobject = await schemas.data.find({ dataid }).then(d => d.toJSON()).catch(() => { })
 
-        if (dataobjects) {
-            var dataobject = dataobjects[0]
+        if (dataobject) {
             for (var k in dataobject) {
                 var value = dataobject[k]
-
-                if (k != 'dataid' && schemas.data.prototype.schema.obj[k]) {
-                    data.data[k] = value
-                }
+                if ((schemas.data.schema.obj[k] ?? { required: true }).required) continue
+                data[k] = value
             }
         }
 
         if (global) {
             data.globaldata = {}
 
-            var globaldataobjects = await schemas.globalData.find({}).catch(() => { })
+            var dataobject = await schemas.globalData.find({}).then(d => d.toJSON()).catch(() => { })
 
-            if (globaldataobjects) {
-                var globaldataobject = globaldataobjects[0]
-                for (var k in globaldataobject) {
-                    var value = globaldataobject[k]
-
-                    if (k != 'dataid' && schemas.globalData.prototype.schema.obj[k]) {
-                        data.globaldata[k] = value
-                    }
+            if (dataobject) {
+                for (var k in dataobject) {
+                    var value = dataobject[k]
+                    if ((schemas.globalData.schema.obj[k] ?? { required: true }).required) continue
+                    globalData[k] = value
                 }
             }
         }
@@ -80,7 +201,7 @@ module.exports = {
         return data
     },
 
-    update: async (dataid, { ...d }) => {
+    update: async (dataid, d) => {
         var url = process.env.MONGOOSE_URL
         if (requests <= 0) await mongoose.connect(url, {
             useNewUrlParser: true,
@@ -107,13 +228,13 @@ module.exports = {
 
         var guildData = data.guildData
         for (var gid in guildData) {
-            var guild = guildData[gid]
+            var guild = /*{ ...*/guildData[gid] /*}
 
             var channelData = guild.channels
             delete guild.channels
             for (var cid in channelData) {
                 var channel = channelData[cid]
-                await schemas.channelData.findOneAndUpdate({ dataid, cid, gid }, channel, {
+                await schemas.channelData.findOneAndUpdate({ dataid, gid, cid }, channel, {
                     upsert: true,
                     useFindAndModify: false
                 }).catch(() => { })
@@ -123,11 +244,11 @@ module.exports = {
             delete guild.members
             for (var uid in memberData) {
                 var member = memberData[uid]
-                await schemas.memberData.findOneAndUpdate({ dataid, uid, gid }, member, {
+                await schemas.memberData.findOneAndUpdate({ dataid, gid, uid }, member, {
                     upsert: true,
                     useFindAndModify: false
                 }).catch(() => { })
-            }
+            }*/
 
             await schemas.guildData.findOneAndUpdate({ dataid, gid }, guild, {
                 upsert: true,

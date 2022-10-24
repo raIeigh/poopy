@@ -10,7 +10,7 @@ module.exports = {
         "autocomplete": function (interaction) {
             let poopy = this
 
-            var memberData = poopy.data['guildData'][interaction.guild.id]['members']
+            var memberData = poopy.data.guildData[interaction.guild.id]['members']
             var memberKeys = Object.keys(memberData).sort((a, b) => memberData[b].messages - memberData[a].messages)
 
             return memberKeys.map(id => {
@@ -36,8 +36,7 @@ module.exports = {
 
         args[1] = args[1] ?? ' '
 
-        var member = msg.mentions.members.first() ??
-            await msg.guild.members.fetch((args[1].match(/\d+/) ?? [args[1]])[0]).catch(() => {}) ??
+        var member = await msg.guild.members.fetch((args[1].match(/\d+/) ?? [args[1]])[0]).catch(() => {}) ??
             await bot.users.fetch((args[1].match(/\d+/) ?? [args[1]])[0]).catch(() => {}) ??
             msg.member
 
@@ -78,7 +77,8 @@ module.exports = {
             }
         }]
 
-        await msg.reply(avObject).catch(() => {})
+        if (!msg.nosend) await msg.reply(avObject).catch(() => {})
+        return avatar
     },
     help: {
         name: 'avatar/av/pfp [user] [-global]',

@@ -26,8 +26,7 @@ module.exports = {
 
             if (type.mime.startsWith('image') || type.mime.startsWith('video')) {
                 var filepath = await downloadFile(currenturl, `input.${fileinfo.shortext}`, {
-                    fileinfo: fileinfo
-                })
+                    fileinfo                })
                 var filename = `input.${fileinfo.shortext}`
                 fs.copyFileSync(`assets/video/crash.webm`, `${filepath}/crash.webm`)
 

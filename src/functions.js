@@ -590,129 +590,115 @@ functions.execPromise = function (code) {
 
 functions.gatherData = async function (msg) {
     let poopy = this
-    let bot = poopy.bot
     let config = poopy.config
     let data = poopy.data
     let tempdata = poopy.tempdata
+    let vars = poopy.vars
+    let { dataGather } = poopy.functions
 
     var webhook = await msg.fetchWebhook().catch(() => { })
 
     if (!webhook) {
-        if (!data['userData'][msg.author.id]) {
-            data['userData'][msg.author.id] = {}
+        if (!data.userData[msg.author.id]) {
+            data.userData[msg.author.id] = !config.testing && process.env.MONGOOSE_URL && await dataGather.userData(config.database, msg.author.id).catch(() => { }) || {}
         }
 
-        data['userData'][msg.author.id]['username'] = msg.author.username
+        data.userData[msg.author.id]['username'] = msg.author.username
 
-        var stats = {
-            health: 100,
-            defense: 5,
-            attack: 5,
-            accuracy: 5,
-            level: 1,
-            bucks: 20
-        }
-
-        for (var stat in stats) {
-            if (data['userData'][msg.author.id][stat] === undefined) {
-                data['userData'][msg.author.id][stat] = stats[stat]
+        for (var stat in vars.battleStats) {
+            if (data.userData[msg.author.id][stat] === undefined) {
+                data.userData[msg.author.id][stat] = vars.battleStats[stat]
             }
         }
 
-        if (!data['userData'][msg.author.id]['tokens']) {
-            data['userData'][msg.author.id]['tokens'] = {}
+        if (!data.userData[msg.author.id]['tokens']) {
+            data.userData[msg.author.id]['tokens'] = {}
+        }
+        if (!data.userData[msg.author.id]['battleSprites']) {
+            data.userData[msg.author.id]['battleSprites'] = {}
         }
     }
 
-    if (!data['guildData'][msg.guild.id]) {
-        data['guildData'][msg.guild.id] = {}
+    if (!data.guildData[msg.guild.id]) {
+        data.guildData[msg.guild.id] = !config.testing && process.env.MONGOOSE_URL && await dataGather.guildData(config.database, msg.guild.id).catch(() => { }) || {}
     }
 
-    if (data['guildData'][msg.guild.id]['read'] === undefined) {
-        data['guildData'][msg.guild.id]['read'] = false
+    if (data.guildData[msg.guild.id]['read'] === undefined) {
+        data.guildData[msg.guild.id]['read'] = false
     }
 
-    if (data['guildData'][msg.guild.id]['chaincommands'] == undefined) {
-        data['guildData'][msg.guild.id]['chaincommands'] = true
+    if (data.guildData[msg.guild.id]['chaincommands'] == undefined) {
+        data.guildData[msg.guild.id]['chaincommands'] = true
     }
 
-    if (data['guildData'][msg.guild.id]['keyexec'] == undefined) {
-        data['guildData'][msg.guild.id]['keyexec'] = 1
+    if (data.guildData[msg.guild.id]['keyexec'] == undefined) {
+        data.guildData[msg.guild.id]['keyexec'] = 1
     }
 
-    if (!data['guildData'][msg.guild.id]['lastuse']) {
-        data['guildData'][msg.guild.id]['lastuse'] = Date.now()
+    if (!data.guildData[msg.guild.id]['lastuse']) {
+        data.guildData[msg.guild.id]['lastuse'] = Date.now()
     }
 
-    if (data['guildData'][msg.guild.id]['prefix'] === undefined) {
-        data['guildData'][msg.guild.id]['prefix'] = config.globalPrefix
+    if (data.guildData[msg.guild.id]['prefix'] === undefined) {
+        data.guildData[msg.guild.id]['prefix'] = config.globalPrefix
     }
 
-    if (!data['guildData'][msg.guild.id]['channels']) {
-        data['guildData'][msg.guild.id]['channels'] = {}
+    if (!data.guildData[msg.guild.id]['channels']) {
+        data.guildData[msg.guild.id]['channels'] = {}
     }
 
-    if (!data['guildData'][msg.guild.id]['channels'][msg.channel.id]) {
-        data['guildData'][msg.guild.id]['channels'][msg.channel.id] = {}
+    if (!data.guildData[msg.guild.id]['channels'][msg.channel.id]) {
+        data.guildData[msg.guild.id]['channels'][msg.channel.id] = /*!config.testing && process.env.MONGOOSE_URL && await dataGather.channelData(config.database, msg.guild.id, msg.channel.id).catch(() => { }) ||*/ {}
     }
 
-    if (!data['guildData'][msg.guild.id]['channels'][msg.channel.id]['lastUrls']) {
-        data['guildData'][msg.guild.id]['channels'][msg.channel.id]['lastUrls'] = []
+    if (!data.guildData[msg.guild.id]['channels'][msg.channel.id]['lastUrls']) {
+        data.guildData[msg.guild.id]['channels'][msg.channel.id]['lastUrls'] = []
     }
 
-    if (data['guildData'][msg.guild.id]['channels'][msg.channel.id]['read'] === undefined) {
-        data['guildData'][msg.guild.id]['channels'][msg.channel.id]['read'] = false
+    if (data.guildData[msg.guild.id]['channels'][msg.channel.id]['read'] === undefined) {
+        data.guildData[msg.guild.id]['channels'][msg.channel.id]['read'] = false
     }
 
-    if (data['guildData'][msg.guild.id]['channels'][msg.channel.id]['nsfw'] === undefined) {
-        data['guildData'][msg.guild.id]['channels'][msg.channel.id]['nsfw'] = msg.channel.nsfw
+    if (data.guildData[msg.guild.id]['channels'][msg.channel.id]['nsfw'] === undefined) {
+        data.guildData[msg.guild.id]['channels'][msg.channel.id]['nsfw'] = msg.channel.nsfw
     }
 
     if (!webhook) {
-        if (!data['guildData'][msg.guild.id]['members']) {
-            data['guildData'][msg.guild.id]['members'] = {}
+        if (!data.guildData[msg.guild.id]['members']) {
+            data.guildData[msg.guild.id]['members'] = {}
         }
 
-        if (!data['guildData'][msg.guild.id]['members'][msg.author.id]) {
-            data['guildData'][msg.guild.id]['members'][msg.author.id] = {}
+        if (!data.guildData[msg.guild.id]['members'][msg.author.id]) {
+            data.guildData[msg.guild.id]['members'][msg.author.id] = /*!config.testing && process.env.MONGOOSE_URL && await dataGather.memberData(config.database, msg.guild.id, msg.author.id).catch(() => { }) ||*/ {}
         }
 
-        if (!data['guildData'][msg.guild.id]['members'][msg.author.id]['messages']) {
-            data['guildData'][msg.guild.id]['members'][msg.author.id]['messages'] = 0
+        if (!data.guildData[msg.guild.id]['members'][msg.author.id]['messages']) {
+            data.guildData[msg.guild.id]['members'][msg.author.id]['messages'] = 0
         }
 
-        if (!data['guildData'][msg.guild.id]['members'][msg.author.id]['lastmessage']) {
-            data['guildData'][msg.guild.id]['members'][msg.author.id]['lastmessage'] = Date.now()
+        if (!data.guildData[msg.guild.id]['members'][msg.author.id]['lastmessage']) {
+            data.guildData[msg.guild.id]['members'][msg.author.id]['lastmessage'] = Date.now()
         }
 
-        if (!data['guildData'][msg.guild.id]['members'][msg.author.id]['coolDown']) {
-            data['guildData'][msg.guild.id]['members'][msg.author.id]['coolDown'] = false
+        if (!data.guildData[msg.guild.id]['members'][msg.author.id]['coolDown']) {
+            data.guildData[msg.guild.id]['members'][msg.author.id]['coolDown'] = false
         }
 
-        data['guildData'][msg.guild.id]['members'][msg.author.id]['messages']++
+        data.guildData[msg.guild.id]['members'][msg.author.id]['messages']++
 
-        data['guildData'][msg.guild.id]['members'][msg.author.id]['username'] = msg.author.username
+        data.guildData[msg.guild.id]['members'][msg.author.id]['username'] = msg.author.username
     }
 
-    if (!data['guildData'][msg.guild.id]['disabled']) {
-        data['guildData'][msg.guild.id]['disabled'] = []
+    if (!data.guildData[msg.guild.id]['disabled']) {
+        data.guildData[msg.guild.id]['disabled'] = []
     }
 
-    if (!data['guildData'][msg.guild.id]['localcmds']) {
-        data['guildData'][msg.guild.id]['localcmds'] = []
+    if (!data.guildData[msg.guild.id]['localcmds']) {
+        data.guildData[msg.guild.id]['localcmds'] = []
     }
 
-    if (!data['guildData'][msg.guild.id]['messages']) {
-        data['guildData'][msg.guild.id]['messages'] = []
-    }
-
-    if (typeof data['guildData'][msg.guild.id]['messages'][0] == 'string') {
-        data['guildData'][msg.guild.id]['messages'] = data['guildData'][msg.guild.id]['messages'].map(m => {
-            return {
-                author: bot.user.id,
-                content: m
-            }
-        })
+    if (!data.guildData[msg.guild.id]['messages']) {
+        data.guildData[msg.guild.id]['messages'] = []
     }
 
     if (!tempdata[msg.guild.id]) {
@@ -971,7 +957,7 @@ functions.infoPost = async function (message) {
     if (config.stfu || config.noInfoPost) return
 
     var avatar = bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' })
-    var color = config.testing ? { r: 255, g: 255, b: 255 } : await averageColor(avatar)
+    var color = os.platform() == 'win32' ? { r: 255, g: 255, b: 255 } : await averageColor(avatar)
 
     var infoChannel = bot.guilds.cache.get('834431435704107018')?.channels.cache.get('967083645619830834')
     if (!infoChannel) return
@@ -1530,7 +1516,7 @@ functions.navigateEmbed = async function (channel, pageFunc, results, who, extra
                                 new Discord.TextInputBuilder()
                                     .setCustomId('page-num')
                                     .setLabel('Page')
-                                    .setStyle('SHORT')
+                                    .setStyle(Discord.TextInputStyle.Short)
                                     .setMinLength(1)
                                     .setMaxLength(String(results).length)
                                     .setPlaceholder(`1-${results}`)
@@ -1938,9 +1924,9 @@ functions.rainmaze = async function (channel, who, reply, w = 8, h = 6) {
                 var reward = randomNumber(w * h, w * h * 2)
                 raindraw.fields.push({
                     name: "Reward",
-                    value: `${reward} P$`
+                    value: `+${reward} P$`
                 })
-                data['userData'][who]['bucks'] += reward
+                data.userData[who]['bucks'] += reward
             }
         }
 
@@ -2503,7 +2489,7 @@ functions.getUrls = async function (msg, options = {}) {
 
     if (!msg) return []
     var string = (options.string ?? msg.content ?? '').replace(/"([\s\S]*?)"/g, '')
-    var prefixFound = options.prefix ?? string.toLowerCase().includes(data['guildData'][msg.guild.id]['prefix'].toLowerCase())
+    var prefixFound = options.prefix ?? string.toLowerCase().includes(data.guildData[msg.guild.id]['prefix'].toLowerCase())
     var max = options.max ?? Infinity
     var urls = []
     var regexes = [
@@ -2691,7 +2677,7 @@ functions.lastUrl = function (msg, i, tempdir, global) {
 
     var urlsGlobal = !global &&
         tempdata[msg.author.id][msg.id]?.['lastUrls'] ||
-        data['guildData'][msg.guild.id]['channels'][msg.channel.id]['lastUrls']
+        data.guildData[msg.guild.id]['channels'][msg.channel.id]['lastUrls']
     var urls = urlsGlobal.slice()
     var url = urls[i]
 
@@ -2727,7 +2713,7 @@ functions.lastUrls = function (msg, tempdir, global) {
 
     var urlsGlobal = !global &&
         tempdata[msg.author.id][msg.id]?.['lastUrls'] ||
-        data['guildData'][msg.guild.id]['channels'][msg.channel.id]['lastUrls']
+        data.guildData[msg.guild.id]['channels'][msg.channel.id]['lastUrls']
     var urls = urlsGlobal.slice()
 
     for (var i = 0; i < urls.length; i++) {
@@ -2775,7 +2761,7 @@ functions.addLastUrl = function (msg, url) {
 
     var lasturls = [url].concat(lastUrls(msg, false, true))
     lasturls.splice(100)
-    data['guildData'][msg.guild.id]['channels'][msg.channel.id]['lastUrls'] = lasturls
+    data.guildData[msg.guild.id]['channels'][msg.channel.id]['lastUrls'] = lasturls
 }
 
 functions.rateLimit = async function (msg) {
@@ -2966,7 +2952,7 @@ functions.getKeywordsFor = async function (string, msg, isBot, { extrakeys = {},
                     var key = special.keys[keydata.match] || extradkeys[keydata.match]
 
                     if ((key.limit != undefined && equalValues(tempdata[msg.author.id][msg.id]['keywordsExecuted'], keyName) >= key.limit) ||
-                        (key.cmdconnected && data['guildData'][msg.guild.id]?.['disabled'].find(cmd => cmd.find(n => n === key.cmdconnected)))) {
+                        (key.cmdconnected && data.guildData[msg.guild.id]?.['disabled'].find(cmd => cmd.find(n => n === key.cmdconnected)))) {
                         string = string.replace(keydata.match, '')
                         break
                     }
@@ -2983,7 +2969,7 @@ functions.getKeywordsFor = async function (string, msg, isBot, { extrakeys = {},
                     }
 
                     string = typeof (change) === 'object' && change[1] === true ? String(change[0]) : string.replace(keydata.match, String(change).replace(/\$&/g, '$\\&'))
-                    tempdata[msg.author.id][msg.id]['keyattempts'] += !data['guildData'][msg.guild.id]['chaos'] ? (key.attemptvalue ?? 1) : 0
+                    tempdata[msg.author.id][msg.id]['keyattempts'] += !data.guildData[msg.guild.id]['chaos'] ? (key.attemptvalue ?? 1) : 0
                     break
 
                 case 'func':
@@ -2992,7 +2978,7 @@ functions.getKeywordsFor = async function (string, msg, isBot, { extrakeys = {},
                     var m = match
 
                     if ((func.limit != undefined && equalValues(tempdata[msg.author.id][msg.id]['keywordsExecuted'], funcName) >= func.limit) ||
-                        (func.cmdconnected && data['guildData'][msg.guild.id]?.['disabled'].find(cmd => cmd.find(n => n === func.cmdconnected)))) {
+                        (func.cmdconnected && data.guildData[msg.guild.id]?.['disabled'].find(cmd => cmd.find(n => n === func.cmdconnected)))) {
                         string = string.replace(`${funcName}(${match})`, '')
                         break
                     }
@@ -3014,7 +3000,7 @@ functions.getKeywordsFor = async function (string, msg, isBot, { extrakeys = {},
                     }
 
                     string = typeof (change) === 'object' && change[1] === true ? String(change[0]) : string.replace(`${funcName}(${match})`, String(change).replace(/\$&/g, '$\\&'))
-                    tempdata[msg.author.id][msg.id]['keyattempts'] += !data['guildData'][msg.guild.id]['chaos'] ? (func.attemptvalue ?? 1) : 0
+                    tempdata[msg.author.id][msg.id]['keyattempts'] += !data.guildData[msg.guild.id]['chaos'] ? (func.attemptvalue ?? 1) : 0
                     break
             }
 
@@ -3038,6 +3024,10 @@ functions.getKeywordsFor = async function (string, msg, isBot, { extrakeys = {},
             delete tempdata[msg.author.id][msg.id]['return']
         }
 
+        if (tempdata[msg.author.id][msg.id]['keyexecuting']) {
+            tempdata[msg.author.id][msg.id]['keyexecuting']--
+        }
+
         return string
     } catch (e) {
         if (tempdata[msg.author.id][msg.id]['keyexecuting']) {
@@ -3047,17 +3037,31 @@ functions.getKeywordsFor = async function (string, msg, isBot, { extrakeys = {},
         console.log(e)
         throw e
     }
+}
 
-    if (tempdata[msg.author.id][msg.id]['keyexecuting']) {
-        tempdata[msg.author.id][msg.id]['keyexecuting']--
+functions.getLevel = function (exp) {
+    let poopy = this
+    let vars = poopy.vars
+
+    let lastLevel = 0
+    let level = 0
+    while (exp >= vars.battleStats.exp * (lastLevel + 1)) {
+        exp -= vars.battleStats.exp * (lastLevel + 1)
+        lastLevel = level
+        level++
     }
+
+    return { level, exp, required: vars.battleStats.exp * (lastLevel + 1) }
 }
 
 functions.battle = async function (msg, subject, action, damage, chance) {
     let poopy = this
     let bot = poopy.bot
+    let config = poopy.config
     let data = poopy.data
-    let { Discord } = poopy.modules
+    let vars = poopy.vars
+    let { Discord, fs } = poopy.modules
+    let { getLevel, execPromise, randomNumber, randomChoice, downloadFile } = poopy.functions
 
     await msg.channel.sendTyping().catch(() => { })
     var attachments = msg.attachments.map(attachment => new Discord.AttachmentBuilder(attachment.url));
@@ -3067,43 +3071,165 @@ functions.battle = async function (msg, subject, action, damage, chance) {
         return;
     };
 
-    if (Math.random() >= chance) {
-        await msg.reply('You missed!').catch(() => { })
-        return
+    var member = await bot.users.fetch((subject.match(/\d+/) ?? [subject])[0]).catch(() => { })
+    var yourData = data.userData[msg.author.id]
+    var subjData = member && data.userData[member.id]
+
+    let attacked = Math.random() < chance + (yourData.accuracy * 0.1)
+    let critical = Math.random() < 0.1 + (yourData.accuracy * 0.05)
+    let critmult = critical ? Math.floor(Math.random() * 3) + 2 : 1
+    let died = false
+
+    damage += Math.floor(Math.random() * (yourData.attack + 1)) * 2
+    if (critical) damage *= critmult
+
+    var exp = 0
+    var reward = 0
+    var lastLevel = getLevel(yourData.exp).level
+
+    if (member && attacked) {
+        if (!subjData) {
+            data.userData[member.id] = {}
+            subjData = data.userData[member.id]
+        }
+
+        for (var stat in vars.battleStats) {
+            if (subjData[stat] === undefined) {
+                subjData[stat] = vars.battleStats[stat]
+            }
+        }
+        if (!subjData.battleSprites) subjData.battleSprites = {}
+
+        damage = Math.max(damage - (subjData.defense / 2 + Math.floor(Math.random() * subjData.defense * 11) * 0.1), 0)
+        subjData.health = subjData.health - damage
+        if (member.id != msg.author.id && msg.guild.members.cache.get(member.id)) exp = Math.floor(Math.random() * subjData.maxHealth / 5) + subjData.maxHealth / 20 + (yourData.loot * 10) * critmult
+
+        if (subjData.health <= 0) {
+            subjData.health = 0
+            if (member.id != msg.author.id && msg.guild.members.cache.get(member.id)) exp += Math.floor((subjData.maxHealth + subjData.attack + subjData.defense + subjData.accuracy + subjData.loot + yourData.loot) / 10) * 50
+            if (member.id != msg.author.id && msg.guild.members.cache.get(member.id)) reward = Math.floor(Math.random() * (subjData.maxHealth + subjData.attack + subjData.defense + subjData.accuracy + subjData.loot + yourData.loot)) + subjData.maxHealth / 2
+            died = true
+        }
+
+        yourData.exp += exp
+        yourData.bucks += reward
     }
 
-    var member = (msg.mentions.members.first() && msg.mentions.members.first().user) ??
-        await bot.users.fetch((subject.match(/\d+/) ?? [subject])[0]).catch(() => { })
+    var level = getLevel(yourData.exp).level
+    var actions = []
 
-    await msg.reply({
-        content: action
+    if (critical) actions.push('***CRITICAL HIT!***')
+    actions.push(
+        action
             .replace('{src}', msg.author.username)
             .replace('{trgt}', (member && member.username) ?? subject ?? 'this')
-            .replace('{dmg}', damage),
+            .replace('{dmg}', damage)
+    )
+    if (died) actions.push('They have died.')
+    if (level > lastLevel) actions.push(`You leveled UP!`)
+
+    var stats = []
+
+    if (member) {
+        stats.push({
+            name: `${msg.author.username}'s Health`,
+            value: `${yourData.health} HP`,
+            inline: true
+        })
+        if (member.id != msg.author.id) stats.push({
+            name: `${member.username}'s Health`,
+            value: `${subjData.health} HP`,
+            inline: true
+        })
+    }
+
+    if (exp) {
+        stats.push({
+            name: "Experience",
+            value: `+${exp} XP`,
+            inline: true
+        })
+    }
+
+    if (died && reward) {
+        stats.push({
+            name: "Reward",
+            value: `+${reward} P$`,
+            inline: true
+        })
+    }
+
+    if (level > lastLevel) {
+        stats.push({
+            name: "Level",
+            value: level,
+            inline: true
+        })
+    }
+
+    var payload = {
+        embeds: [{
+            description: attacked ? actions.join(' ') : 'You missed!',
+            color: 0x472604,
+            fields: stats,
+            footer: {
+                icon_url: bot.user.displayAvatarURL({
+                    dynamic: true, size: 1024, format: 'png'
+                }),
+                text: bot.user.username
+            },
+        }],
+        content: `${attacked ? actions.join(' ') : 'You missed!'}${stats.length ? `\n\n${stats.map(s => `**${s.name}**: ${s.value}`).join('\n')}` : ''}`,
         allowedMentions: {
             parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
         },
         files: attachments,
         stickers: msg.stickers
-    }).catch(() => { })
-
-    if (!member) return
-
-    if (!data['userData'][member.id]) {
-        data['userData'][member.id] = {}
-        data['userData'][member.id]['health'] = 100
     }
 
-    data['userData'][member.id]['health'] = data['userData'][member.id]['health'] - damage
-    if (data['userData'][member.id]['health'] <= 0) {
-        data['userData'][member.id]['health'] = 100
-        await msg.reply({
-            content: `**${member.username}** died!`,
-            allowedMentions: {
-                parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
-            }
-        }).catch(() => { })
+    var filepath
+    if (member || vars.validUrl.test(subject)) {
+        var avatar = member ? (subjData.battleSprites.hurt ?? member.displayAvatarURL({
+            dynamic: false, size: 256, format: 'png'
+        })) : subject
+
+        filepath = await downloadFile(avatar, 'avatar.png')
+
+        var spazz = () => `+(random(t+${Math.floor(Math.random() * 1000)})*2-1)*(0.4-mod(t,0.4))*15`
+        var bossX = () => `+cos(PI/2*((t+${i + 1}*0.4)/0.4))*20`
+        var bossY = () => `+sin(PI*((t+${i + 1}*0.4)/0.4))*20`
+
+        var attackPos = new Array(4).fill().map(() => attacked ? [randomNumber(50, 150), randomNumber(25, 125)] : [randomChoice([randomNumber(0, 25), randomNumber(175, 200)]), randomChoice([0, 125])])
+        var attackOverlay = []
+        var attackConcat = []
+        var enemyConcat = []
+
+        for (var i in attackPos) {
+            i = Number(i)
+            var pos = attackPos[i]
+            var x = pos[0]
+            var y = pos[1]
+
+            attackOverlay.push(`${!attacked && i % 2 != 0 ? `[en${i}]hflip[enf${i}];` : ''}[2:v][en${!attacked && i % 2 != 0 ? 'f' : ''}${i}]overlay=x='(W-w)/2${attacked ? spazz() : ''}':y='(H-h)/2${attacked ? spazz() : ''}${died ? `+t*40+(40*${i})` : ''}':format=auto[shake${i}];[shake${i}][1:v]overlay=shortest=1:x=${x}-w/2:y=${y}-h/2:format=auto[attack${i}]`)
+            attackConcat.push(`[attack${i}]`)
+            enemyConcat.push(`[en${i}]`)
+        }
+
+        await execPromise(`ffmpeg -stream_loop -1 -i ${filepath}/avatar.png -i assets/image/${critical ? 'crit' : ''}attack.gif -stream_loop -1 -f lavfi -i "color=0x00000000:s=200x150,format=rgba" -filter_complex "[0:v]scale=100:100:force_original_aspect_ratio=decrease,split=${enemyConcat.length}${enemyConcat.join('')};${attackOverlay.join(';')};${attackConcat.join('')}concat=n=${attackConcat.length},split[pout][ppout];[ppout]palettegen=reserve_transparent=1[palette];[pout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -preset ultrafast -gifflags -offsetting ${filepath}/attack.gif`)
+
+        payload.files = [new Discord.AttachmentBuilder(`${filepath}/attack.gif`)]
+        payload.embeds[0].image = { url: 'attachment://attack.gif' }
     }
+
+    if (config.textEmbeds) delete payload.embeds
+    else delete payload.content
+
+    if (!msg.nosend) await msg.reply(payload).catch(() => { })
+
+    if (died) subjData.health = subjData.maxHealth
+    if (filepath) fs.rm(filepath, { force: true, recursive: true })
+
+    return attacked ? actions.join(' ') : 'You missed!'
 }
 
 functions.userToken = function (id, token) {
@@ -3111,7 +3237,7 @@ functions.userToken = function (id, token) {
     let data = poopy.data
     let { randomChoice, decrypt, randomKey } = poopy.functions
 
-    var tokens = data['userData'][id]['tokens'][token] ?? []
+    var tokens = data.userData[id]['tokens'][token] ?? []
     var userTkn = randomChoice(tokens)
 
     return userTkn ? decrypt(userTkn) : randomKey(token)
@@ -3253,11 +3379,11 @@ functions.sendFile = async function (msg, filepath, filename, extraOptions) {
 
     var returnUrl
 
-    var prefix = data['guildData'][msg.guild.id]['prefix']
+    var prefix = data.guildData[msg.guild.id]['prefix']
     var args = msg.content.substring(prefix.toLowerCase().length).split(' ')
 
     extraOptions.catbox = extraOptions.catbox ?? args.includes('-catbox')
-    extraOptions.nosend = extraOptions.nosend ?? args.includes('-nosend')
+    extraOptions.nosend = extraOptions.nosend ?? msg.nosend ?? args.includes('-nosend')
     extraOptions.compress = extraOptions.compress ?? args.includes('-compress')
 
     if (extraOptions.compress) {
@@ -3276,34 +3402,39 @@ functions.sendFile = async function (msg, filepath, filename, extraOptions) {
             return
         }
 
-        if (fileinfo.size > 8) {
+        var size = fs.readFileSync(`${filepath}/${filename}`).length
+        var tries = 1
+        while (size > (8 * 1024 * 1024) && tries < 5) {
             fs.renameSync(`${filepath}/${filename}`, `${filepath}/compress_${filename}`)
 
             switch (fileinfo.shorttype) {
                 case 'image':
-                    await execPromise(`ffmpeg -i ${filepath}/compress_${filename} -vf "scale=iw*${7 / fileinfo.size}:ih*${7 / fileinfo.size}" ${filepath}/${filename}`)
+                    await execPromise(`ffmpeg -i ${filepath}/compress_${filename} -vf "scale=iw*${7 / fileinfo.size / tries}:ih*${7 / fileinfo.size / tries}" ${filepath}/${filename}`)
                     break;
 
                 case 'gif':
-                    await execPromise(`ffmpeg -i ${filepath}/compress_${filename} -filter_complex "[0:v]scale=iw*${7 / fileinfo.size}:ih*${7 / fileinfo.size},split[pout][ppout];[ppout]palettegen=reserve_transparent=1[palette];[pout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -gifflags -offsetting ${filepath}/compress2_${filename}`)
-                    await execPromise(`gifsicle -O3 --lossy=${Math.min(Math.max(Math.round(fileinfo.size * 10), 30), 200)} -o ${filepath}/${filename} ${filepath}/compress2_${filename}`)
-                    fs.rm(`${filepath}/compress2_${filename}`)
+                    await execPromise(`ffmpeg -i ${filepath}/compress_${filename} -filter_complex "[0:v]scale=iw*${7 / fileinfo.size / tries}:ih*${7 / fileinfo.size / tries},split[pout][ppout];[ppout]palettegen=reserve_transparent=1[palette];[pout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -gifflags -offsetting ${filepath}/compress2_${filename}`)
+                    await execPromise(`gifsicle -O3 --lossy=${Math.min(Math.max(Math.round(fileinfo.size * 10) * tries, 30), 200)} -o ${filepath}/${filename} ${filepath}/compress2_${filename}`)
+                    fs.rmSync(`${filepath}/compress2_${filename}`)
                     break;
 
                 case 'video':
-                    await execPromise(`ffmpeg -i ${filepath}/compress_${filename} -vf "scale='ceil(iw*${7 / fileinfo.size}/2)*2':'ceil(ih*${7 / fileinfo.size}/2)*2'" -preset veryslow ${filepath}/${filename}`)
+                    await execPromise(`ffmpeg -i ${filepath}/compress_${filename} -vf "scale='ceil(iw*${7 / fileinfo.size / tries}/2)*2':'ceil(ih*${7 / fileinfo.size / tries}/2)*2'" ${tries > 1 ? `-crf ${Math.min(28 + 10 * tries, 51)} -b:v ${Math.round(128 / tries)}k -b:a ${Math.round(256 / tries)}k ` : ''}-preset veryslow ${filepath}/${filename}`)
                     break;
 
                 case 'audio':
-                    await execPromise(`ffmpeg -i ${filepath}/compress_${filename} -b:a 128k ${filepath}/${filename}`)
+                    await execPromise(`ffmpeg -i ${filepath}/compress_${filename} -b:a ${Math.round(128 / tries)}k ${filepath}/${filename}`)
                     break;
 
                 default:
                     fs.copyFileSync(`${filepath}/compress_${filename}`, `${filepath}/${filename}`)
+                    tries = 5
                     break;
             }
 
-            fs.rm(`${filepath}/compress_${filename}`)
+            fs.rmSync(`${filepath}/compress_${filename}`)
+            size = fs.readFileSync(`${filepath}/${filename}`).length
+            tries++
         }
     }
 

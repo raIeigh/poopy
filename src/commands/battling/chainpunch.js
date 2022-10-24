@@ -5,7 +5,7 @@ module.exports = {
         "autocomplete": function (interaction) {
             let poopy = this
 
-            var memberData = poopy.data['guildData'][interaction.guild.id]['members']
+            var memberData = poopy.data.guildData[interaction.guild.id]['members']
             var memberKeys = Object.keys(memberData).sort((a, b) => memberData[b].messages - memberData[a].messages)
 
             return memberKeys.map(id => {
@@ -20,7 +20,7 @@ module.exports = {
         var damage = Math.round(Math.random() * 18) + 6 // from 6 to 24
         var chance = 1 / 3
 
-        await battle(msg, args.slice(1).join(' '), action, damage, chance)
+        return await battle(msg, args.slice(1).join(' '), action, damage, chance)
     },
     help: {
         name: 'chainpunch <subject>',

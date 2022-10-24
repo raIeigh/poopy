@@ -16,12 +16,13 @@ module.exports = {
       return;
     };
     var urls = await getUrls(msg).catch(() => { }) ?? []
-    await msg.reply({
+    if (!msg.nosend) await msg.reply({
       allowedMentions: {
         parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
       },
       content: urls.join('\n') || 'No URLs fetched.'
     }).catch(() => { })
+    return urls.join('\n') || 'No URLs fetched.'
   },
   help: {
     name: 'fetchurls/geturls <message>',

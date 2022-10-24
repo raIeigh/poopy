@@ -24,8 +24,7 @@ module.exports = {
 
         if (type.mime.startsWith('video') || type.mime.startsWith('image') && vars.gifFormats.find(f => f === type.ext)) {
             var filepath = await downloadFile(currenturl, `input.${fileinfo.shortext}`, {
-                fileinfo: fileinfo
-            })
+                fileinfo            })
             var filename = `input.${fileinfo.shortext}`
             var frames = fileinfo.info.frames
 

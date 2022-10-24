@@ -47,7 +47,7 @@ module.exports = {
 
             var removed = globaldata[type].splice(globaldata[type].findIndex(v => v === saidMessage), 1)
 
-            await msg.reply({
+            if (!msg.nosend) await msg.reply({
                 content: '✅ Removed ' + removed[0],
                 allowedMentions: {
                     parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
@@ -59,6 +59,8 @@ module.exports = {
             arrays.funnygifs = globaldata['funnygif']
             arrays.poopPhrases = globaldata['poop']
             arrays.dmPhrases = globaldata['dmphrases']
+
+            return '✅ Removed ' + removed[0]
         };
     },
     help: {

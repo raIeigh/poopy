@@ -6,11 +6,11 @@ module.exports = {
         let data = poopy.data
         let json = poopy.json
         let arrays = poopy.arrays
-        let { markov } = poopy.functions
+        let { markov, decrypt } = poopy.functions
 
         var word = matches[1]
 
-        var messages = data['guildData'][msg.guild.id]['messages'].slice().map(m => m.content)
+        var messages = data.guildData[msg.guild.id]['messages'].slice().map(m => decrypt(m.content))
         if (messages.length <= 0 || word) {
             messages = json.sentenceJSON.data.map(s => s.sentence).concat(arrays.psPasta)
         }

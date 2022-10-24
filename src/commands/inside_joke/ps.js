@@ -17,36 +17,21 @@ module.exports = {
             type = String(args[typeindex + 1]).toLowerCase()
         }
 
-        if (type === 'image') {
-            var psImages = []
+        var psFiles = arrays.psFiles.filter(file => {
+            switch (type) {
+                case 'image': return file.match(/\.(gif|mov|mp4)/)
 
-            for (var i in arrays.psFiles) {
-                var file = arrays.psFiles[i]
-                if (!(file.match(/\.(gif|mov|mp4|apng)/))) psImages.push(file)
+                case 'video': return file.match(/\.(mov|mp4)/)
+
+                case 'gif': return file.match(/\.(gif|apng)/)
+
+                default: return true
             }
+        })
 
-            await msg.reply(psImages[Math.floor(Math.random() * psImages.length)]).catch(() => { })
-        } else if (type === 'video') {
-            var psVideos = []
-
-            for (var i in arrays.psFiles) {
-                var file = arrays.psFiles[i]
-                if (file.match(/\.(mov|mp4)/)) psVideos.push(file)
-            }
-
-            await msg.reply(psVideos[Math.floor(Math.random() * psVideos.length)]).catch(() => { })
-        } else if (type === 'gif') {
-            var psGifs = []
-
-            for (var i in arrays.psFiles) {
-                var file = arrays.psFiles[i]
-                if (file.match(/\.(gif|apng)/)) psGifs.push(file)
-            }
-
-            await msg.reply(psGifs[Math.floor(Math.random() * psGifs.length)]).catch(() => { })
-        } else {
-            await msg.reply(arrays.psFiles[Math.floor(Math.random() * arrays.psFiles.length)]).catch(() => { })
-        }
+        var psFile = psFiles[Math.floor(Math.random() * psFiles.length)]
+        if (!msg.nosend) await msg.reply(psFile).catch(() => { })
+        return psFile
     },
     help: {
         name: 'ps/phexoniastudios [-type <extension (image/video/gif)>]',

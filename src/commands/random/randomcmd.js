@@ -16,7 +16,7 @@ module.exports = {
         let tempdata = poopy.tempdata
 
         var type
-        var allCmds = commands.concat(data['guildData'][msg.guild.id]['localcmds'].map(lcmd => {
+        var allCmds = commands.concat(data.guildData[msg.guild.id]['localcmds'].map(lcmd => {
             return {
                 name: [lcmd.name],
                 type: 'Local',
@@ -29,7 +29,7 @@ module.exports = {
                 var foundCmds = []
                 for (var i in allCmds) {
                     var cmd = allCmds[i]
-                    if (cmd.type === type && !(cmd.type === 'Owner' || cmd.type === 'JSON Club' || cmd.perms || data['guildData'][msg.guild.id]['disabled'].find(c => c.find(n => n === cmd.name.find(nn => nn === n))))) {
+                    if (cmd.type === type && !(cmd.type === 'Owner' || cmd.type === 'JSON Club' || cmd.perms || data.guildData[msg.guild.id]['disabled'].find(c => c.find(n => n === cmd.name.find(nn => nn === n))))) {
                         foundCmds.push(cmd)
                     }
                 }
@@ -41,7 +41,7 @@ module.exports = {
                 return allCmds[Math.floor(Math.random() * allCmds.length)]
             } else {
                 var cmd = allCmds[Math.floor(Math.random() * allCmds.length)]
-                if (cmd.type === 'Owner' || cmd.type === 'JSON Club' || cmd.perms || data['guildData'][msg.guild.id]['disabled'].find(c => c.find(n => n === cmd.name.find(nn => nn === n)))) {
+                if (cmd.type === 'Owner' || cmd.type === 'JSON Club' || cmd.perms || data.guildData[msg.guild.id]['disabled'].find(c => c.find(n => n === cmd.name.find(nn => nn === n)))) {
                     return chooseCmd()
                 }
                 return cmd
@@ -63,9 +63,9 @@ module.exports = {
             return
         }
 
-        var cmdmessage = await msg.reply(`Executing \`${cmd.name[0]}\`.`).catch(() => { })
+        var cmdmessage = !msg.nosend && await msg.reply(`Executing \`${cmd.name[0]}\`.`).catch(() => { })
         if (cmd.cooldown) {
-            data['guildData'][msg.guild.id]['members'][msg.author.id]['coolDown'] = (data['guildData'][msg.guild.id]['members'][msg.author.id]['coolDown'] || Date.now()) + cmd.cooldown / ((msg.member.permissions.has('ManageGuild') || msg.member.permissions.has('ManageMessages') || msg.member.permissions.has('Administrator') || msg.author.id === msg.guild.ownerID) && (cmd.type === 'Text' || cmd.type === 'Main') ? 5 : 1)
+            data.guildData[msg.guild.id]['members'][msg.author.id]['coolDown'] = (data.guildData[msg.guild.id]['members'][msg.author.id]['coolDown'] || Date.now()) + cmd.cooldown / ((msg.member.permissions.has('ManageGuild') || msg.member.permissions.has('ManageMessages') || msg.member.permissions.has('Administrator') || msg.author.id === msg.guild.ownerID) && (cmd.type === 'Text' || cmd.type === 'Main') ? 5 : 1)
         }
 
         var deletetimeout = setTimeout(() => {
@@ -76,7 +76,7 @@ module.exports = {
 
         var phrase = await cmd.execute.call(poopy, msg, args).catch(() => { }) ?? 'error'
         if (tempdata[msg.guild.id][msg.channel.id]['shut']) return
-        if (cmd.type == 'Local') {
+        if (cmd.type == 'Local' && !msg.nosend) {
             await msg.reply({
                 content: phrase,
                 allowedMentions: {
@@ -84,6 +84,7 @@ module.exports = {
                 }
             }).catch(() => { })
         }
+        return phrase
     },
     help: {
         name: 'randomcmd [args] [-cmdtype <commandType>]',

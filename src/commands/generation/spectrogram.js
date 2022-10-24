@@ -102,8 +102,7 @@ module.exports = {
 
         if (type.mime.startsWith('video')) {
             var filepath = await downloadFile(currenturl, `input.mp4`, {
-                fileinfo: fileinfo
-            })
+                fileinfo            })
             var filename = `input.mp4`
             var audio = fileinfo.info.audio
 
@@ -117,8 +116,7 @@ module.exports = {
             }
         } else if (type.mime.startsWith('audio')) {
             var filepath = await downloadFile(currenturl, `input.mp3`, {
-                fileinfo: fileinfo
-            })
+                fileinfo            })
             var filename = `input.mp3`
 
             await execPromise(`ffmpeg -i ${filepath}/${filename} -lavfi "showspectrumpic=size=1280x512:mode=separate:color=${color}:scale=${scale}:saturation=${saturation}" ${filepath}/output.png`)

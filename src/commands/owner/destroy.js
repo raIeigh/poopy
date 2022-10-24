@@ -12,10 +12,10 @@ module.exports = {
             return
         }
 
-        var confirm = await yesno(msg.channel, 'are you sure about killing me', msg.member, undefined, msg).catch(() => { })
+        var confirm = msg.nosend || await yesno(msg.channel, 'are you sure about killing me', msg.member, undefined, msg).catch(() => { })
         if (!confirm) return
 
-        await msg.reply('The salami lid').catch(() => { })
+        if (!msg.nosend) await msg.reply('The salami lid').catch(() => { })
         await poopy.destroy(true)
         if (config.quitOnDestroy) process.exit()
     },

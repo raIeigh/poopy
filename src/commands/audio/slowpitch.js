@@ -28,8 +28,7 @@ module.exports = {
 
             if (audio) {
                 var filepath = await downloadFile(currenturl, `input.mp4`, {
-                    fileinfo: fileinfo
-                })
+                    fileinfo                })
                 var filename = `input.mp4`
                 var fps = fileinfo.info.fps
 
@@ -46,8 +45,7 @@ module.exports = {
             }
         } else if (type.mime.startsWith('audio')) {
             var filepath = await downloadFile(currenturl, `input.mp3`, {
-                fileinfo: fileinfo
-            })
+                fileinfo            })
             var filename = `input.mp3`
             await execPromise(`ffmpeg -i ${filepath}/${filename} -filter_complex "[0:a]aresample=44100,asetrate=44100/${speed},aresample=44100[a]" -map "[a]" -preset ${findpreset(args)} ${filepath}/output.mp3`)
             return await sendFile(msg, filepath, `output.mp3`)

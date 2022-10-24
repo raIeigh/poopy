@@ -70,7 +70,6 @@ module.exports = {
         let data = poopy.data
         let bot = poopy.bot
         let config = poopy.config
-        let commands = poopy.commands
         let { CryptoJS } = poopy.modules
         let { decrypt } = poopy.functions
 
@@ -114,63 +113,79 @@ module.exports = {
 
         var options = {
             help: async (msg) => {
-                var dmChannel = await msg.author.createDM().catch(() => { })
+                if (!msg.nosend) {
+                    var dmChannel = await msg.author.createDM().catch(() => { })
 
-                if (dmChannel) {
-                    if (config.textEmbeds) await dmChannel.send(`Here, you can manage your own keys and tokens to freely access APIs without having to deal with the bot's quotas and limits! Multiple tokens can be used for each API, they're encrypted when saved.\n\n${Object.keys(tokenList).map(token => {
-                        var tokenInfo = tokenList[token]
+                    if (dmChannel) {
+                        if (config.textEmbeds) await dmChannel.send(`Here, you can manage your own keys and tokens to freely access APIs without having to deal with the bot's quotas and limits! Multiple tokens can be used for each API, they're encrypted when saved.\n\n${Object.keys(tokenList).map(token => {
+                            var tokenInfo = tokenList[token]
 
-                        return `\`${token}\`\n> **Used in:** ${tokenInfo.uses}\n> **Method:** ${tokenInfo.method}\n> **Example Token:** ${tokenInfo.example}`
-                    }).join('\n\n')}`.substring(0, 2000)).catch(async () => {
-                        await msg.reply('Couldn\'t send info to you. Do you have me blocked?').catch(() => { })
-                        return
-                    })
-                    else await dmChannel.send({
+                            return `\`${token}\`\n> **Used in:** ${tokenInfo.uses}\n> **Method:** ${tokenInfo.method}\n> **Example Token:** ${tokenInfo.example}`
+                        }).join('\n\n')}`.substring(0, 2000)).catch(async () => {
+                            await msg.reply('Couldn\'t send info to you. Do you have me blocked?').catch(() => { })
+                            return
+                        })
+                        else await dmChannel.send({
+                            embeds: [{
+                                "title": 'API Tokens',
+                                "description": "Here, you can manage your own keys and tokens to freely access APIs without having to deal with the bot's quotas and limits! Multiple tokens can be used for each API, they're encrypted when saved.",
+                                "color": 0x472604,
+                                "footer": {
+                                    icon_url: bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
+                                    text: bot.user.username
+                                },
+                                "fields": Object.keys(tokenList).map(token => {
+                                    var tokenInfo = tokenList[token]
+
+                                    return {
+                                        name: `\`${token}\``,
+                                        value: `**Used in:** ${tokenInfo.uses}\n**Method:** ${tokenInfo.method}\n**Example Token:** ${tokenInfo.example}`
+                                    }
+                                })
+                            }]
+                        }).then(async () => await msg.reply(`✅ Check your DMs.`).catch(() => { })).catch(async () => {
+                            await msg.reply('Couldn\'t send info to you. Do you have me blocked?').catch(() => { })
+                            return
+                        })
+                    } else await msg.reply('Couldn\'t send help to you. Do you have me blocked?').catch(() => { })
+                }
+
+                return `Here, you can manage your own keys and tokens to freely access APIs without having to deal with the bot's quotas and limits! Multiple tokens can be used for each API, they're encrypted when saved.\n\n${Object.keys(tokenList).map(token => {
+                    var tokenInfo = tokenList[token]
+
+                    return `\`${token}\`\n> **Used in:** ${tokenInfo.uses}\n> **Method:** ${tokenInfo.method}\n> **Example Token:** ${tokenInfo.example}`
+                }).join('\n\n')}`
+            },
+
+            list: async (msg) => {
+                if (!msg.nosend) {
+                    if (config.textEmbeds) await msg.reply(Object.keys(tokenList).map(token => {
+                        var tokens = data.userData[msg.author.id]['tokens'][token] ?? []
+
+                        return `\`${token}\` -> ${tokens.length > 0 ? tokens.map(t => decrypt(t, !args.includes('-show'))).join(', ') : 'None.'}`
+                    }).join('\n').substring(0, 2000)).catch(() => { })
+                    else await msg.reply({
                         embeds: [{
-                            "title": 'API Tokens',
-                            "description": "Here, you can manage your own keys and tokens to freely access APIs without having to deal with the bot's quotas and limits! Multiple tokens can be used for each API, they're encrypted when saved.",
+                            "title": 'Token Manager',
+                            "description": Object.keys(tokenList).map(token => {
+                                var tokens = data.userData[msg.author.id]['tokens'][token] ?? []
+
+                                return `\`${token}\` -> ${tokens.length > 0 ? tokens.map(t => decrypt(t, !args.includes('-show'))).join(', ') : 'None.'}`
+                            }).join('\n'),
                             "color": 0x472604,
                             "footer": {
                                 icon_url: bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
                                 text: bot.user.username
-                            },
-                            "fields": Object.keys(tokenList).map(token => {
-                                var tokenInfo = tokenList[token]
-
-                                return {
-                                    name: `\`${token}\``,
-                                    value: `**Used in:** ${tokenInfo.uses}\n**Method:** ${tokenInfo.method}\n**Example Token:** ${tokenInfo.example}`
-                                }
-                            })
+                            }
                         }]
-                    }).then(async () => await msg.reply(`✅ Check your DMs.`).catch(() => { })).catch(async () => {
-                        await msg.reply('Couldn\'t send info to you. Do you have me blocked?').catch(() => { })
-                        return
-                    })
-                } else await msg.reply('Couldn\'t send help to you. Do you have me blocked?').catch(() => { })
-            },
+                    }).catch(() => { })
+                }
 
-            list: async (msg) => {
-                if (config.textEmbeds) await msg.reply(Object.keys(tokenList).map(token => {
-                    var tokens = data['userData'][msg.author.id]['tokens'][token] ?? []
+                return Object.keys(tokenList).map(token => {
+                    var tokens = data.userData[msg.author.id]['tokens'][token] ?? []
 
                     return `\`${token}\` -> ${tokens.length > 0 ? tokens.map(t => decrypt(t, !args.includes('-show'))).join(', ') : 'None.'}`
-                }).join('\n').substring(0, 2000)).catch(() => { })
-                else await msg.reply({
-                    embeds: [{
-                        "title": 'Token Manager',
-                        "description": Object.keys(tokenList).map(token => {
-                            var tokens = data['userData'][msg.author.id]['tokens'][token] ?? []
-        
-                            return `\`${token}\` -> ${tokens.length > 0 ? tokens.map(t => decrypt(t, !args.includes('-show'))).join(', ') : 'None.'}`
-                        }).join('\n'),
-                        "color": 0x472604,
-                        "footer": {
-                            icon_url: bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
-                            text: bot.user.username
-                        }
-                    }]
-                }).catch(() => { })
+                }).join('\n')
             },
 
             add: async (msg, args) => {
@@ -188,7 +203,7 @@ module.exports = {
                 }
 
                 var tokenData = tokenList[token]
-                
+
                 if (!tokenData) {
                     await msg.reply("Invalid token name.").catch(() => { })
                     return
@@ -201,14 +216,15 @@ module.exports = {
                     return
                 }
 
-                var encrypted = CryptoJS.AES.encrypt(value, process.env.AUTH_TOKEN)
+                var encrypted = CryptoJS.AES.encrypt(value, process.env.AUTH_TOKEN).toString()
 
-                var tokens = data['userData'][msg.author.id]['tokens']
+                var tokens = data.userData[msg.author.id]['tokens']
 
                 tokens[token] = tokens[token] ?? []
                 tokens[token].push(encrypted)
 
-                await msg.reply(`✅ \`${token}\` added.`).catch(() => { })
+                if (!msg.nosend) await msg.reply(`✅ \`${token}\` added.`).catch(() => { })
+                return `✅ \`${token}\` added.`
             },
 
             reset: async (msg, args) => {
@@ -220,39 +236,44 @@ module.exports = {
                 }
 
                 var tokenData = tokenList[token]
-                
+
                 if (!tokenData) {
                     await msg.reply("Invalid token name.").catch(() => { })
                     return
                 }
 
-                delete data['userData'][msg.author.id]['tokens'][token]
+                delete data.userData[msg.author.id]['tokens'][token]
 
-                await msg.reply(`✅ \`${token}\` has been reset.`).catch(() => { })
+                if (!msg.nosend) await msg.reply(`✅ \`${token}\` has been reset.`).catch(() => { })
+                return `✅ \`${token}\` has been reset.`
             }
         }
 
         if (!args[1]) {
-            if (config.textEmbeds) msg.reply({
-                content: "**help** - Get a list of tokens you can manage, and how to get them.\n**list** [-show] - Show a list of all your tokens.\n**add** <token> <value> - **DON'T USE THIS IN A PUBLIC SERVER!** Add a new token value to your tokens, multiple can be used.\n**reset** <token> - Removes all of the token's values and resets to the bot's defaults.",
-                allowedMentions: {
-                    parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
-                }
-            }).catch(() => { })
-            else msg.reply({
-                embeds: [{
-                    "title": "Available Options",
-                    "description": "**help** - Get a list of tokens you can manage, and how to get them.\n**list** [-show] - Show a list of all your tokens.\n**add** <token> <value> - **DON'T USE THIS IN A PUBLIC SERVER!** Add a new token value to your tokens, multiple can be used.\n**reset** <token> - Removes all of the token's values and resets to the bot's defaults.",
-                    "color": 0x472604,
-                    "footer": {
-                        "icon_url": bot.user.displayAvatarURL({
-                            dynamic: true, size: 1024, format: 'png'
-                        }),
-                        "text": bot.user.username
-                    },
-                }]
-            }).catch(() => { })
-            return
+            var instruction = "**help** - Get a list of tokens you can manage, and how to get them.\n**list** [-show] - Show a list of all your tokens.\n**add** <token> <value> - **DON'T USE THIS IN A PUBLIC SERVER!** Add a new token value to your tokens, multiple can be used.\n**reset** <token> - Removes all of the token's values and resets to the bot's defaults."
+            if (!msg.nosend) {
+                if (config.textEmbeds) msg.reply({
+                    content: instruction,
+                    allowedMentions: {
+                        parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    }
+                }).catch(() => { })
+                else msg.reply({
+                    embeds: [{
+                        "title": "Available Options",
+                        "description": instruction,
+                        "color": 0x472604,
+                        "footer": {
+                            "icon_url": bot.user.displayAvatarURL({
+                                dynamic: true, size: 1024, format: 'png'
+                            }),
+                            "text": bot.user.username
+                        },
+                    }]
+                }).catch(() => { })
+            }
+
+            return instruction
         }
 
         if (!options[args[1].toLowerCase()]) {
@@ -260,7 +281,7 @@ module.exports = {
             return
         }
 
-        await options[args[1].toLowerCase()](msg, args.slice(1))
+        return await options[args[1].toLowerCase()](msg, args.slice(1))
     },
     help: {
         name: 'apitokens/managetokens <option>',

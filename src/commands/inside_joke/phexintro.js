@@ -23,8 +23,7 @@ module.exports = {
 
         if (type.mime.startsWith('video') || type.mime.startsWith('image')) {
             var filepath = await downloadFile(currenturl, `input.${fileinfo.shortext}`, {
-                fileinfo: fileinfo
-            })
+                fileinfo            })
             var filename = `input.${fileinfo.shortext}`
 
             var width = fileinfo.info.width

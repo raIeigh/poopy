@@ -12,13 +12,14 @@ module.exports = {
       await msg.channel.sendTyping().catch(() => { })
       return;
     };
-    await msg.reply({
-      content: gibberish(saidMessage),
+    var gibber = gibberish(saidMessage)
+    if (!msg.nosend) await msg.reply({
+      content: gibber,
       allowedMentions: {
         parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
       }
     }).catch(() => { })
-    await msg.channel.sendTyping().catch(() => { })
+    return gibber
   },
   help: {
     name: 'stroke/gibberish <message>',

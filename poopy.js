@@ -194,15 +194,13 @@ class Poopy {
             vars[key] = varb
         }
 
-        modules.Discord = modules.Discord[Number(config.self)]
-
         // we can create thge bot now
-        let { Discord, Collection, fs } = modules
+        let { Discord, Collection, fs, CryptoJS } = modules
         let { envsExist,
             chunkArray, chunkObject, requireJSON, findCommand,
             dmSupport, sleep, gatherData, deleteMsgData, infoPost,
             getKeywordsFor, getUrls, randomChoice, similarity, yesno,
-            cleverbot, regexClean } = functions
+            cleverbot, regexClean, decrypt, getOption } = functions
 
         let bot = poopy.bot = new Discord.Client({
             intents: config.intents,
@@ -546,9 +544,9 @@ class Poopy {
         callbacks.messageCallback = async msg => {
             dmSupport(msg)
 
-            data['botData']['messages']++
+            data.botData['messages']++
 
-            var prefix = data['guildData'][msg.guild.id]?.['prefix'] ?? config.globalPrefix
+            var prefix = data.guildData[msg.guild.id]?.['prefix'] ?? config.globalPrefix
 
             if (msg.channel.type == Discord.ChannelType.DM && !msg.type !== Discord.InteractionType.ApplicationCommand && !msg.content.includes(prefix)) {
                 if (msg.author.bot || msg.author.id == bot.user.id) return
@@ -569,7 +567,7 @@ class Poopy {
             if (dataError) return
 
             if (msg.channel.onsfw == undefined) msg.channel.onsfw = !!msg.channel.nsfw
-            msg.channel.nsfw = !!data['guildData'][msg.guild.id]['channels'][msg.channel.id]['nsfw']
+            msg.channel.nsfw = !!data.guildData[msg.guild.id]['channels'][msg.channel.id]['nsfw']
 
             var guildfilter = config.guildfilter
             var channelfilter = config.channelfilter
@@ -595,12 +593,12 @@ class Poopy {
                 return
             }
 
-            if (data['guildData'][msg.guild.id]['chaos'] && globaldata['shit'].find(id => id === msg.author.id)) {
+            if (data.guildData[msg.guild.id]['chaos'] && globaldata['shit'].find(id => id === msg.author.id)) {
                 await msg.reply('shit').catch(() => { })
                 return
             }
 
-            var cmds = data['guildData'][msg.guild.id]['chaincommands'] == true ? msg.content.split(/ ?-\|- ?/) : [msg.content]
+            var cmds = data.guildData[msg.guild.id]['chaincommands'] == true ? msg.content.split(/ ?-\|- ?/) : [msg.content]
             var allcontents = []
             var webhooked = false
 
@@ -616,15 +614,15 @@ class Poopy {
                     return
                 }
 
-                if (data['guildData'][msg.guild.id]['members'][msg.author.id]['custom']) {
+                if (data.guildData[msg.guild.id]['members'][msg.author.id]['custom']) {
                     var attachments = msg.attachments.map(attachment => new Discord.AttachmentBuilder(attachment.url, attachment.name))
                     var embeds = msg.embeds.filter(embed => embed.type === 'rich')
-                    var name = data['guildData'][msg.guild.id]['members'][msg.author.id]['custom']['name']
+                    var name = data.guildData[msg.guild.id]['members'][msg.author.id]['custom']['name']
                     var randomindex = Math.floor(Math.random() * name.length)
                     name = `${name.substring(0, randomindex)}​${name.substring(randomindex, name.length)}`
                     var sendObject = {
                         username: name.substring(0, 32),
-                        avatarURL: data['guildData'][msg.guild.id]['members'][msg.author.id]['custom']['avatar'],
+                        avatarURL: data.guildData[msg.guild.id]['members'][msg.author.id]['custom']['avatar'],
                         files: attachments,
                         embeds: embeds,
                         stickers: msg.stickers,
@@ -645,7 +643,7 @@ class Poopy {
                         } else {
                             var createdWebhook = await msg.channel.createWebhook({ name: 'Poopyhook', avatar: 'https://cdn.discordapp.com/attachments/760223418968047629/835923489834664056/poopy2.png' }).catch(() => { })
                             if (!createdWebhook) {
-                                await msg.reply(`I need the manage webhooks permission to turn you into ${data['guildData'][msg.guild.id]['members'][msg.author.id]['custom']['name']}.`).catch(() => { })
+                                await msg.reply(`I need the manage webhooks permission to turn you into ${data.guildData[msg.guild.id]['members'][msg.author.id]['custom']['name']}.`).catch(() => { })
                             } else {
                                 await createdWebhook.send(sendObject).then(() => {
                                     msg.delete().catch(() => { })
@@ -655,14 +653,14 @@ class Poopy {
                     } else {
                         var createdWebhook = await msg.channel.createWebhook({ name: 'Poopyhook', avatar: 'https://cdn.discordapp.com/attachments/760223418968047629/835923489834664056/poopy2.png' }).catch(() => { })
                         if (!createdWebhook) {
-                            await msg.reply(`I need the manage webhooks permission to turn you into ${data['guildData'][msg.guild.id]['members'][msg.author.id]['custom']['name']}.`).catch(() => { })
+                            await msg.reply(`I need the manage webhooks permission to turn you into ${data.guildData[msg.guild.id]['members'][msg.author.id]['custom']['name']}.`).catch(() => { })
                         } else {
                             await createdWebhook.send(sendObject).then(() => {
                                 msg.delete().catch(() => { })
                             }).catch(() => { })
                         }
                     }
-                } else if (data['guildData'][msg.guild.id]['members'][msg.author.id]['impostor']) {
+                } else if (data.guildData[msg.guild.id]['members'][msg.author.id]['impostor']) {
                     var attachments = msg.attachments.map(attachment => new Discord.AttachmentBuilder(attachment.url, attachment.name))
                     var embeds = msg.embeds.filter(embed => embed.type === 'rich')
                     var sendObject = {
@@ -720,8 +718,8 @@ class Poopy {
                     if (
                         !config.poosonia &&
                         (
-                            data['guildData'][msg.guild.id]['keyexec'] == 2 ||
-                            data['guildData'][msg.guild.id]['keyexec'] == 1 && cmd.toLowerCase().startsWith(prefix.toLowerCase())
+                            data.guildData[msg.guild.id]['keyexec'] == 2 ||
+                            (data.guildData[msg.guild.id]['keyexec'] == 1 && cmd.toLowerCase().startsWith(prefix.toLowerCase()))
                         ) && !commands.find(
                             c => c.raw &&
                                 c.name.find(n => cmd.toLowerCase().startsWith(`${prefix.toLowerCase()}${n.toLowerCase()}`))
@@ -778,7 +776,7 @@ class Poopy {
                     if (tempdata[msg.guild.id][msg.channel.id]['shut']) break
 
                     if (msg.content.toLowerCase().startsWith(prefix.toLowerCase()) && ((!msg.author.bot && msg.author.id != bot.user.id) || config.allowbotusage)) {
-                        data['guildData'][msg.guild.id]['lastuse'] = Date.now()
+                        data.guildData[msg.guild.id]['lastuse'] = Date.now()
 
                         if (tempdata[msg.author.id]['ratelimited']) {
                             notExecuted = false
@@ -807,13 +805,13 @@ class Poopy {
                             return
                         }
 
-                        if (data['guildData'][msg.guild.id]['members'][msg.author.id]['coolDown']) {
-                            if ((data['guildData'][msg.guild.id]['members'][msg.author.id]['coolDown'] - Date.now()) > 0 &&
+                        if (data.guildData[msg.guild.id]['members'][msg.author.id]['coolDown']) {
+                            if ((data.guildData[msg.guild.id]['members'][msg.author.id]['coolDown'] - Date.now()) > 0 &&
                                 tempdata[msg.author.id]['cooler'] !== msg.id) {
-                                await msg.reply(`Calm down! Wait more ${(data['guildData'][msg.guild.id]['members'][msg.author.id]['coolDown'] - Date.now()) / 1000} seconds.`).catch(() => { })
+                                await msg.reply(`Calm down! Wait more ${(data.guildData[msg.guild.id]['members'][msg.author.id]['coolDown'] - Date.now()) / 1000} seconds.`).catch(() => { })
                                 return
                             } else {
-                                data['guildData'][msg.guild.id]['members'][msg.author.id]['coolDown'] = false
+                                data.guildData[msg.guild.id]['members'][msg.author.id]['coolDown'] = false
                                 delete tempdata[msg.author.id]['cooler']
                             }
                         }
@@ -822,8 +820,11 @@ class Poopy {
 
                         var args = msg.content.substring(prefix.toLowerCase().length).split(' ')
                         var findCmd = findCommand(args[0].toLowerCase())
-                        var findLocalCmd = data['guildData'][msg.guild.id]['localcmds'].find(cmd => cmd.name === args[0].toLowerCase())
+                        var findLocalCmd = data.guildData[msg.guild.id]['localcmds'].find(cmd => cmd.name === args[0].toLowerCase())
                         var similarCmds = []
+
+                        delete msg.nosend
+                        msg.nosend = getOption(args, 'nosend', { n: 0, splice: true, dft: false })
 
                         if (args[0].length) {
                             for (var i in commands) {
@@ -837,8 +838,8 @@ class Poopy {
                                     })
                                 }
                             }
-                            for (var i in data['guildData'][msg.guild.id]['localcmds']) {
-                                var fcmd = data['guildData'][msg.guild.id]['localcmds'][i]
+                            for (var i in data.guildData[msg.guild.id]['localcmds']) {
+                                var fcmd = data.guildData[msg.guild.id]['localcmds'][i]
                                 similarCmds.push({
                                     name: fcmd.name,
                                     type: 'local',
@@ -851,13 +852,13 @@ class Poopy {
 
                         if (findCmd) {
                             notExecuted = false
-                            if (data['guildData'][msg.guild.id]['disabled'].find(cmd => cmd.find(n => n === args[0].toLowerCase()))) {
+                            if (data.guildData[msg.guild.id]['disabled'].find(cmd => cmd.find(n => n === args[0].toLowerCase()))) {
                                 await msg.reply('This command is disabled in this server.').catch(() => { })
                             } else {
-                                var increaseCount = !(findCmd.execute.toString().includes('sendFile') && args.includes('-nosend'))
+                                var increaseCount = !(findCmd.execute.toString().includes('sendFile') && msg.nosend)
 
                                 if (increaseCount) {
-                                    if (tempdata[msg.author.id][msg.id]['execCount'] >= 1 && data['guildData'][msg.guild.id]['chaincommands'] == false) {
+                                    if (tempdata[msg.author.id][msg.id]['execCount'] >= 1 && data.guildData[msg.guild.id]['chaincommands'] == false) {
                                         await msg.reply('You can\'t chain commands in this server.').catch(() => { })
                                         return
                                     }
@@ -867,15 +868,15 @@ class Poopy {
                                         return
                                     }
 
-                                    if (!data['guildData'][msg.guild.id]['chaos']) tempdata[msg.author.id][msg.id]['execCount']++
+                                    if (!data.guildData[msg.guild.id]['chaos']) tempdata[msg.author.id][msg.id]['execCount']++
                                 }
 
                                 if (findCmd.cooldown) {
-                                    data['guildData'][msg.guild.id]['members'][msg.author.id]['coolDown'] = (data['guildData'][msg.guild.id]['members'][msg.author.id]['coolDown'] || Date.now()) + findCmd.cooldown / ((msg.member.permissions.has('ManageGuild') || msg.member.permissions.has('ManageMessages') || msg.member.permissions.has('Administrator') || msg.author.id === msg.guild.ownerID) && (findCmd.type === 'Text' || findCmd.type === 'Main') ? 5 : 1)
+                                    data.guildData[msg.guild.id]['members'][msg.author.id]['coolDown'] = (data.guildData[msg.guild.id]['members'][msg.author.id]['coolDown'] || Date.now()) + findCmd.cooldown / ((msg.member.permissions.has('ManageGuild') || msg.member.permissions.has('ManageMessages') || msg.member.permissions.has('Administrator') || msg.author.id === msg.guild.ownerID) && (findCmd.type === 'Text' || findCmd.type === 'Main') ? 5 : 1)
                                 }
 
                                 vars.cps++
-                                data['botData']['commands']++
+                                data.botData['commands']++
                                 var t = setTimeout(() => {
                                     vars.cps--
                                     clearTimeout(t)
@@ -891,12 +892,12 @@ class Poopy {
                                         }).catch(() => { })
                                     } catch (_) { }
                                 })
-                                data['botData']['filecount'] = vars.filecount
+                                data.botData['filecount'] = vars.filecount
                             }
                         } else if (findLocalCmd) {
                             notExecuted = false
                             vars.cps++
-                            data['botData']['commands']++
+                            data.botData['commands']++
                             var t = setTimeout(() => {
                                 vars.cps--
                                 clearTimeout(t)
@@ -907,7 +908,7 @@ class Poopy {
                             var increaseCount = !!phrase.trim()
 
                             if (increaseCount) {
-                                if (tempdata[msg.author.id][msg.id]['execCount'] >= 1 && data['guildData'][msg.guild.id]['chaincommands'] == false) {
+                                if (tempdata[msg.author.id][msg.id]['execCount'] >= 1 && data.guildData[msg.guild.id]['chaincommands'] == false) {
                                     await msg.reply('You can\'t chain commands in this server.').catch(() => { })
                                     return
                                 }
@@ -917,7 +918,7 @@ class Poopy {
                                     return
                                 }
 
-                                if (!data['guildData'][msg.guild.id]['chaos']) tempdata[msg.author.id][msg.id]['execCount']++
+                                if (!data.guildData[msg.guild.id]['chaos']) tempdata[msg.author.id][msg.id]['execCount']++
                             }
 
                             if (tempdata[msg.guild.id][msg.channel.id]['shut']) break
@@ -928,21 +929,21 @@ class Poopy {
                                 }
                             }).catch(() => { })
 
-                            data['botData']['filecount'] = vars.filecount
+                            data.botData['filecount'] = vars.filecount
                         } else if (similarCmds ? similarCmds.find(fcmd => fcmd.similarity >= 0.5) : undefined) {
                             notExecuted = false
                             var useCmd = await yesno(msg.channel, `Did you mean to use \`${similarCmds[0].name}\`?`, msg.author.id, undefined, msg).catch(() => { })
                             if (useCmd) {
                                 if (similarCmds[0].type === 'cmd') {
-                                    if (data['guildData'][msg.guild.id]['disabled'].find(cmd => cmd.find(n => n === similarCmds[0].name))) {
+                                    if (data.guildData[msg.guild.id]['disabled'].find(cmd => cmd.find(n => n === similarCmds[0].name))) {
                                         await msg.reply('This command is disabled in this server.').catch(() => { })
                                     } else {
                                         var findCmd = findCommand(similarCmds[0].name)
 
-                                        var increaseCount = !(findCmd.execute.toString().includes('sendFile') && args.includes('-nosend'))
+                                        var increaseCount = !(findCmd.execute.toString().includes('sendFile') && msg.nosend)
 
                                         if (increaseCount) {
-                                            if (tempdata[msg.author.id][msg.id]['execCount'] >= 1 && data['guildData'][msg.guild.id]['chaincommands'] == false) {
+                                            if (tempdata[msg.author.id][msg.id]['execCount'] >= 1 && data.guildData[msg.guild.id]['chaincommands'] == false) {
                                                 await msg.reply('You can\'t chain commands in this server.').catch(() => { })
                                                 return
                                             }
@@ -952,15 +953,15 @@ class Poopy {
                                                 return
                                             }
 
-                                            if (!data['guildData'][msg.guild.id]['chaos']) tempdata[msg.author.id][msg.id]['execCount']++
+                                            if (!data.guildData[msg.guild.id]['chaos']) tempdata[msg.author.id][msg.id]['execCount']++
                                         }
 
                                         if (findCmd.cooldown) {
-                                            data['guildData'][msg.guild.id]['members'][msg.author.id]['coolDown'] = (data['guildData'][msg.guild.id]['members'][msg.author.id]['coolDown'] || Date.now()) + findCmd.cooldown / ((msg.member.permissions.has('ManageGuild') || msg.member.permissions.has('ManageMessages') || msg.member.permissions.has('Administrator') || msg.author.id === msg.guild.ownerID) && (findCmd.type === 'Text' || findCmd.type === 'Main') ? 5 : 1)
+                                            data.guildData[msg.guild.id]['members'][msg.author.id]['coolDown'] = (data.guildData[msg.guild.id]['members'][msg.author.id]['coolDown'] || Date.now()) + findCmd.cooldown / ((msg.member.permissions.has('ManageGuild') || msg.member.permissions.has('ManageMessages') || msg.member.permissions.has('Administrator') || msg.author.id === msg.guild.ownerID) && (findCmd.type === 'Text' || findCmd.type === 'Main') ? 5 : 1)
                                         }
 
                                         vars.cps++
-                                        data['botData']['commands']++
+                                        data.botData['commands']++
                                         var t = setTimeout(() => {
                                             vars.cps--
                                             clearTimeout(t)
@@ -977,12 +978,12 @@ class Poopy {
                                                 await msg.channel.sendTyping().catch(() => { })
                                             } catch (_) { }
                                         })
-                                        data['botData']['filecount'] = vars.filecount
+                                        data.botData['filecount'] = vars.filecount
                                     }
                                 } else if (similarCmds[0].type === 'local') {
-                                    var findLocalCmd = data['guildData'][msg.guild.id]['localcmds'].find(cmd => cmd.name === similarCmds[0].name)
+                                    var findLocalCmd = data.guildData[msg.guild.id]['localcmds'].find(cmd => cmd.name === similarCmds[0].name)
                                     vars.cps++
-                                    data['botData']['commands']++
+                                    data.botData['commands']++
                                     var t = setTimeout(() => {
                                         vars.cps--
                                         clearTimeout(t)
@@ -993,7 +994,7 @@ class Poopy {
                                     var increaseCount = !!phrase.trim()
 
                                     if (increaseCount) {
-                                        if (tempdata[msg.author.id][msg.id]['execCount'] >= 1 && data['guildData'][msg.guild.id]['chaincommands'] == false) {
+                                        if (tempdata[msg.author.id][msg.id]['execCount'] >= 1 && data.guildData[msg.guild.id]['chaincommands'] == false) {
                                             await msg.reply('You can\'t chain commands in this server.').catch(() => { })
                                             return
                                         }
@@ -1003,7 +1004,7 @@ class Poopy {
                                             return
                                         }
 
-                                        if (!data['guildData'][msg.guild.id]['chaos']) tempdata[msg.author.id][msg.id]['execCount']++
+                                        if (!data.guildData[msg.guild.id]['chaos']) tempdata[msg.author.id][msg.id]['execCount']++
                                     }
 
                                     if (tempdata[msg.guild.id][msg.channel.id]['shut']) return
@@ -1015,7 +1016,7 @@ class Poopy {
                                         }
                                     }).catch(() => { })
 
-                                    data['botData']['filecount'] = vars.filecount
+                                    data.botData['filecount'] = vars.filecount
                                 }
                             }
                         }
@@ -1029,16 +1030,16 @@ class Poopy {
 
             if (!webhooked) await webhookify().catch(() => { })
 
-            if (msg.content && ((!(msg.author.bot) && msg.author.id != bot.user.id) || config.allowbotusage) && data['guildData'][msg.guild.id]['channels'][msg.channel.id]['read']) {
+            if (msg.content && ((!(msg.author.bot) && msg.author.id != bot.user.id) || config.allowbotusage) && data.guildData[msg.guild.id]['channels'][msg.channel.id]['read']) {
                 var cleanMessage = Discord.cleanContent(msg.content, msg).replace(/\@/g, '@‌')
 
-                if (!(cleanMessage.match(/nigg|https?\:\/\/.*(rule34|e621|pornhub|hentaihaven|xxx|iplogger)|discord\.(gift|gg)\/[\d\w]+\/?$/ig) || cleanMessage.includes(prefix.toLowerCase())) && !(data['guildData'][msg.guild.id]['messages'].find(message => message.content.toLowerCase() === cleanMessage.toLowerCase()))) {
+                if (!(cleanMessage.match(/nigg|fagg|https?\:\/\/.*(rule34|e621|pornhub|hentaihaven|xxx|iplogger)|discord\.(gift|gg)\/[\d\w]+\/?$/ig) || cleanMessage.includes(prefix.toLowerCase())) && !(data.guildData[msg.guild.id]['messages'].find(message => decrypt(message.content).toLowerCase() === cleanMessage.toLowerCase()))) {
                     var messages = [{
                         author: msg.author.id,
-                        content: cleanMessage
-                    }].concat(data['guildData'][msg.guild.id]['messages'])
+                        content: CryptoJS.AES.encrypt(cleanMessage, process.env.AUTH_TOKEN).toString()
+                    }].concat(data.guildData[msg.guild.id]['messages'])
                     messages.splice(10000)
-                    data['guildData'][msg.guild.id]['messages'] = messages
+                    data.guildData[msg.guild.id]['messages'] = messages
                 }
             }
 
@@ -1114,7 +1115,7 @@ class Poopy {
                     var findCmd = findCommand('setprefix')
 
                     if (findCmd.cooldown) {
-                        data['guildData'][msg.guild.id]['members'][msg.author.id]['coolDown'] = (data['guildData'][msg.guild.id]['members'][msg.author.id]['coolDown'] || Date.now()) + findCmd.cooldown
+                        data.guildData[msg.guild.id]['members'][msg.author.id]['coolDown'] = (data.guildData[msg.guild.id]['members'][msg.author.id]['coolDown'] || Date.now()) + findCmd.cooldown
                     }
 
                     await findCmd.execute.call(this, msg, ['setprefix', config.globalPrefix]).catch(async err => {
@@ -1196,30 +1197,30 @@ class Poopy {
                     `stop ${kickType} me${kickEntry ? ` ${kickEntry.executor.username.toLowerCase()}` : ''}`
                 ]
 
-                if (!data['guildData']) {
-                    data['guildData'] = {}
+                if (!data.guildData) {
+                    data.guildData = {}
                 }
 
-                if (!data['guildData'][guild.id]) {
-                    data['guildData'][guild.id] = {}
+                if (!data.guildData[guild.id]) {
+                    data.guildData[guild.id] = {}
                 }
 
-                if (!data['guildData'][guild.id]['lastuse']) {
-                    data['guildData'][guild.id]['lastuse'] = Date.now()
+                if (!data.guildData[guild.id]['lastuse']) {
+                    data.guildData[guild.id]['lastuse'] = Date.now()
                 }
 
-                if (!data['guildData'][guild.id]['joins']) {
-                    data['guildData'][guild.id]['joins'] = 0
+                if (!data.guildData[guild.id]['joins']) {
+                    data.guildData[guild.id]['joins'] = 0
                 }
 
                 channel.send({
-                    content: joinPhrases[data['guildData'][guild.id]['joins'] % joinPhrases.length],
+                    content: joinPhrases[data.guildData[guild.id]['joins'] % joinPhrases.length],
                     allowedMentions: {
                         parse: ['users']
                     }
                 }).catch(() => { })
 
-                data['guildData'][guild.id]['joins']++
+                data.guildData[guild.id]['joins']++
             }
         }
 
@@ -1301,7 +1302,7 @@ class Poopy {
 
                         var cmdargs = findCmd.args
 
-                        var prefix = data['guildData'][interaction.guild?.id]?.['prefix'] ?? config.globalPrefix
+                        var prefix = data.guildData[interaction.guild?.id]?.['prefix'] ?? config.globalPrefix
                         var argcontent = []
 
                         var extracontent = interaction.options.getString('extrapayload') ?? ''
@@ -1397,9 +1398,12 @@ class Poopy {
         activeBots[config.database] = poopy
 
         async function requestData() {
-            if (config.testing || !process.env.MONGOOSE_URL) {
-                var data = {}
+            var data = {
+                data: {},
+                globaldata: {}
+            }
 
+            if (config.testing || !process.env.MONGOOSE_URL) {
                 if (fs.existsSync(`data/${config.database}.json`)) {
                     data.data = JSON.parse(fs.readFileSync(`data/${config.database}.json`).toString())
                 } else {
@@ -1420,26 +1424,12 @@ class Poopy {
 
                 return data
             } else {
-                var result
-
-                if (process.env.CLOUDAMQP_URL) {
-                    console.log(`${bot.user.username}: gathering from worker`)
-                    result = await processTask({
-                        type: 'dataget',
-                        database: config.database,
-                        global: Object.keys(globaldata).length <= 0
-                    }).catch(() => { })
+                data.data.botData = await dataGather.botData(config.database)
+                if (Object.keys(globaldata).length <= 0) {
+                    data.globaldata = await dataGather.globalData()
                 }
 
-                if (!result || !result.data || (Object.keys(globaldata).length <= 0 && !result.globaldata)) {
-                    if (process.env.CLOUDAMQP_URL) {
-                        bot.guilds.cache.get('834431435704107018')?.channels.cache.get('947167169718923341')?.send(!config.stfu ? 'this will take longer' : '').catch(() => { })
-                    }
-                    console.log(`${bot.user.username}: ${process.env.CLOUDAMQP_URL ? 'nvm ' : ''}gathering from mongodb`)
-                    result = await dataGather.allData(config.database, Object.keys(globaldata).length <= 0)
-                }
-
-                return result
+                return data
             }
         }
 
@@ -1462,8 +1452,6 @@ class Poopy {
             })
         })
 
-
-
         await infoPost(`Gathering data in \`${config.database}\``)
         if (process.env.CLOUDAMQP_URL) vars.amqpconn = await require('amqplib').connect(process.env.CLOUDAMQP_URL)
         var gdata = await requestData()
@@ -1484,34 +1472,34 @@ class Poopy {
             arrays[key] = array
         }
 
-        if (!data['botData']) {
-            data['botData'] = {}
+        if (!data.botData) {
+            data.botData = {}
         }
 
-        if (!data['guildData']) {
-            data['guildData'] = {}
+        if (!data.guildData) {
+            data.guildData = {}
         }
 
-        if (!data['userData']) {
-            data['userData'] = {}
+        if (!data.userData) {
+            data.userData = {}
         }
 
-        if (!data['botData']['messages']) {
-            data['botData']['messages'] = 0
+        if (!data.botData['messages']) {
+            data.botData['messages'] = 0
         }
 
-        if (!data['botData']['commands']) {
-            data['botData']['commands'] = 0
+        if (!data.botData['commands']) {
+            data.botData['commands'] = 0
         }
 
-        if (!data['botData']['filecount']) {
-            data['botData']['filecount'] = 0
+        if (!data.botData['filecount']) {
+            data.botData['filecount'] = 0
         }
 
-        if (data['botData']['reboots'] === undefined) {
-            data['botData']['reboots'] = 0
+        if (data.botData['reboots'] === undefined) {
+            data.botData['reboots'] = 0
         } else {
-            data['botData']['reboots']++
+            data.botData['reboots']++
         }
 
         if (!globaldata['commandTemplates']) {
@@ -1555,7 +1543,7 @@ class Poopy {
         arrays.poopPhrases = globaldata['poop']
         arrays.dmPhrases = globaldata['dmphrases']
 
-        vars.filecount = data['botData']['filecount'] || 0
+        vars.filecount = data.botData['filecount'] || 0
 
         if (config.testing || !process.env.MONGOOSE_URL) {
             if (!fs.existsSync('data')) {
@@ -1580,7 +1568,7 @@ class Poopy {
         console.log(`${bot.user.username}: some jsons`)
         //await updateSlashCommands()
         console.log(`${bot.user.username}: all done, he's actually online now`)
-        await infoPost(`Reboot ${data['botData']['reboots']} succeeded, he's up now`)
+        await infoPost(`Reboot ${data.botData['reboots']} succeeded, he's up now`)
         saveData()
         saveQueue()
         changeStatus()
@@ -1588,7 +1576,7 @@ class Poopy {
             changeStatus()
         }, 300000)
 
-        var wakecount = String(data['botData']['reboots'] + 1)
+        var wakecount = String(data.botData['reboots'] + 1)
         var thmatch = wakecount.match(/[^1][1-3]$|^[1-3]$/)
 
         if (thmatch) {

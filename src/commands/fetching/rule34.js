@@ -60,7 +60,7 @@ module.exports = {
         if (number > urls.length) number = urls.length;
         if (number < 1) number = 1
 
-        await navigateEmbed(msg.channel, async (page) => {
+        if (!msg.nosend) await navigateEmbed(msg.channel, async (page) => {
             addLastUrl(msg, urls[page - 1].url)
 
             if (config.textEmbeds) return `${urls[page - 1].url}\n**Rating**: ${urls[page - 1].rating}\n**Score**: ${urls[page - 1].score}\n\nPost ${page}/${urls.length}`
@@ -94,6 +94,7 @@ module.exports = {
                 page: false
             }
         ], number, undefined, undefined, undefined, msg)
+        return urls[page - 1].url
     },
     help: {
         name: 'rule34/r34 <query> [-page <number>] (nsfw channel only)',

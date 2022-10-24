@@ -28,10 +28,10 @@ module.exports = {
         var channels = bot.channels.cache.size
         var emojis = bot.emojis.cache.size
         var files = fs.readdirSync(`temp/${config.database}`).length
-        var messages = data['botData']['messages']
-        var users = Object.keys(data['userData']).length
-        var pcommands = data['botData']['commands']
-        var reboots = data['botData']['reboots']
+        var messages = data.botData['messages']
+        var users = Object.keys(data.userData).length
+        var pcommands = data.botData['commands']
+        var reboots = data.botData['reboots']
         var members = 0
 
         bot.guilds.cache.forEach(guild => members += guild.memberCount)
@@ -132,15 +132,18 @@ module.exports = {
             ]
         }
 
-        if (config.textEmbeds) msg.reply({
-            content: `${statsEmbed.fields.map(p => `**${p.name}**: ${p.value}`).join('\n')}\n\nv${pkg.version}`,
-            allowedMentions: {
-                parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
-            }
-        }).catch(() => { })
-        else msg.reply({
-            embeds: [statsEmbed]
-        }).catch(() => { })
+        if (!msg.nosend) {
+            if (config.textEmbeds) msg.reply({
+                content: `${statsEmbed.fields.map(p => `**${p.name}**: ${p.value}`).join('\n')}\n\nv${pkg.version}`,
+                allowedMentions: {
+                    parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                }
+            }).catch(() => { })
+            else msg.reply({
+                embeds: [statsEmbed]
+            }).catch(() => { })
+        }
+        return `${statsEmbed.fields.map(p => `**${p.name}**: ${p.value}`).join('\n')}\n\nv${pkg.version}`
     },
     help: { name: 'stats/botstats', value: "Shows Poopy's stats." },
     cooldown: 2500,

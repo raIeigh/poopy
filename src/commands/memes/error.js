@@ -61,8 +61,7 @@ module.exports = {
 
         if (type.mime.startsWith('image') && !(vars.gifFormats.find(f => f === type.ext))) {
             var filepath = await downloadFile(currenturl, `input.png`, {
-                fileinfo: fileinfo
-            })
+                fileinfo            })
             var filename = `input.png`
             await downloadFile(`http://atom.smasher.org/error/${encodeURIComponent(style)}.png.php?title=${encodeURIComponent(title)}&text=${encodeURIComponent(text)}&b1=${encodeURIComponent(b1)}&b1g=${encodeURIComponent(b1g)}&b2=${encodeURIComponent(b2)}&b2g=${encodeURIComponent(b2g)}&b3=${encodeURIComponent(b3)}&b3g=${encodeURIComponent(b3g)}`, 'error.png', {
                 http: true,
@@ -78,8 +77,7 @@ module.exports = {
             return await sendFile(msg, filepath, `output.png`)
         } else if (type.mime.startsWith('video')) {
             var filepath = await downloadFile(currenturl, `input.mp4`, {
-                fileinfo: fileinfo
-            })
+                fileinfo            })
             var filename = `input.mp4`
             await downloadFile(`http://atom.smasher.org/error/${encodeURIComponent(style)}.png.php?title=${encodeURIComponent(title)}&text=${encodeURIComponent(text)}&b1=${encodeURIComponent(b1)}&b1g=${encodeURIComponent(b1g)}&b2=${encodeURIComponent(b2)}&b2g=${encodeURIComponent(b2g)}&b3=${encodeURIComponent(b3)}&b3g=${encodeURIComponent(b3g)}`, 'error.png', {
                 http: true,
@@ -95,8 +93,7 @@ module.exports = {
             return await sendFile(msg, filepath, `output.mp4`)
         } else if (type.mime.startsWith('image') && vars.gifFormats.find(f => f === type.ext)) {
             var filepath = await downloadFile(currenturl, `input.gif`, {
-                fileinfo: fileinfo
-            })
+                fileinfo            })
             var filename = `input.gif`
             await downloadFile(`http://atom.smasher.org/error/${encodeURIComponent(style)}.png.php?title=${encodeURIComponent(title)}&text=${encodeURIComponent(text)}&b1=${encodeURIComponent(b1)}&b1g=${encodeURIComponent(b1g)}&b2=${encodeURIComponent(b2)}&b2g=${encodeURIComponent(b2g)}&b3=${encodeURIComponent(b3)}&b3g=${encodeURIComponent(b3g)}`, 'error.png', {
                 http: true,

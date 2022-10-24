@@ -432,17 +432,15 @@ async function start() {
             }
         })
 
-        app.get('/psfile', function (_, res) {
-            if (poopyStarted) {
-                const psfiles = mainPoopy.globaldata['psfiles']
-                res.redirect(psfiles[Math.floor(Math.random() * psfiles.length)])
-            } else {
-                res.sendFile(`${__dirname}/html/startPage.html`)
-            }
+        app.get('/psfile', async function (_, res) {
+            while (!poopyStarted) await sleep(1000)
+            const psfiles = mainPoopy.globaldata['psfiles']
+            res.redirect(psfiles[Math.floor(Math.random() * psfiles.length)])
         })
 
-        app.get('/invite', function (_, res) {
-            res.redirect(`https://discord.com/oauth2/authorize?client_id=789189158639501312&scope=bot%20applications.commands&permissions=275415166152`)
+        app.get('/invite', async function (_, res) {
+            while (!mainPoopy) await sleep(1000)
+            res.redirect(`https://discord.com/oauth2/authorize?client_id=${mainPoopy.bot.user.id}&scope=bot%20applications.commands&permissions=275415166152`)
         })
 
         app.get('/discord', function (_, res) {
@@ -467,7 +465,7 @@ async function start() {
     let tokens = []
 
     function testCondition() {
-        return !__dirname.includes('app')
+        return process.argv.includes('--test') || !__dirname.includes('app')
     }
 
     if (testCondition()) {
@@ -476,10 +474,10 @@ async function start() {
                 TOKEN: process.env.POOPYTEST_TOKEN,
                 config: {
                     testing: true,
+                    noInfoPost: true,
                     globalPrefix: '2p:',
                     database: 'testdata',
                     intents: 3276799,
-                    quitOnDestroy: true
                 }
             }
         ]
@@ -490,7 +488,6 @@ async function start() {
                 config: {
                     globalPrefix: 'p:',
                     public: true,
-                    quitOnDestroy: true
                 }
             },
 
@@ -503,7 +500,7 @@ async function start() {
                 }
             },
 
-            {
+            /*{
                 TOKEN: process.env.INDIA_TOKEN,
                 config: {
                     self: true,
@@ -515,16 +512,22 @@ async function start() {
                     noInfoPost: true,
                     illKillYouIfYouUseEval: []
                 }
-            }
+            }*/
         ]
     }
 
+    var lead = false
     for (var tokendata of tokens) {
+        if (!lead) {
+            tokendata.config.quitOnDestroy = true
+            lead = true
+        }
+
         let poopy = new Poopy(tokendata.config)
+        if (!mainPoopy) mainPoopy = poopy
 
         poopy.start(tokendata.TOKEN).then(() => {
             if (poopy.config.quitOnDestroy) {
-                mainPoopy = poopy
                 poopyStarted = true
             }
         }).catch((e) => console.log(e))

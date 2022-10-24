@@ -23,7 +23,7 @@ module.exports = {
             "orig": "<command>",
             "autocomplete": function (interaction) {
                 let poopy = this
-                return poopy.data['guildData'][interaction.guild.id]['localcmds'].map(cmd => cmd.name)
+                return poopy.data.guildData[interaction.guild.id]['localcmds'].map(cmd => cmd.name)
             }
         }],
         "description": "Displays the phrase of a specific command."
@@ -37,7 +37,7 @@ module.exports = {
             "orig": "<command>",
             "autocomplete": function (interaction) {
                 let poopy = this
-                return poopy.data['guildData'][interaction.guild.id]['localcmds'].map(cmd => cmd.name)
+                return poopy.data.guildData[interaction.guild.id]['localcmds'].map(cmd => cmd.name)
             }
         },
         {
@@ -107,7 +107,7 @@ module.exports = {
             "orig": "<command>",
             "autocomplete": function (interaction) {
                 let poopy = this
-                return poopy.data['guildData'][interaction.guild.id]['localcmds'].map(cmd => cmd.name)
+                return poopy.data.guildData[interaction.guild.id]['localcmds'].map(cmd => cmd.name)
             }
         },
         {
@@ -139,7 +139,7 @@ module.exports = {
             "orig": "<command>",
             "autocomplete": function (interaction) {
                 let poopy = this
-                return poopy.data['guildData'][interaction.guild.id]['localcmds'].map(cmd => cmd.name)
+                return poopy.data.guildData[interaction.guild.id]['localcmds'].map(cmd => cmd.name)
             }
         }],
         "description": "Deletes the local command, if it exists."
@@ -156,29 +156,32 @@ module.exports = {
         var options = {
             list: async (msg) => {
                 var localCmdsArray = []
-                for (var i in data['guildData'][msg.guild.id]['localcmds']) {
-                    var cmd = data['guildData'][msg.guild.id]['localcmds'][i]
+                for (var i in data.guildData[msg.guild.id]['localcmds']) {
+                    var cmd = data.guildData[msg.guild.id]['localcmds'][i]
                     localCmdsArray.push(`- ${cmd.name}`)
                 }
 
                 if (localCmdsArray.length <= 0) {
-                    if (config.textEmbeds) await msg.reply('None.').catch(() => { })
-                    else await msg.reply({
-                        "title": `List of local commands for ${msg.guild.name}`,
-                        "description": 'None.',
-                        "color": 0x472604,
-                        "footer": {
-                            "icon_url": bot.user.displayAvatarURL({
-                                dynamic: true, size: 1024, format: 'png'
-                            }),
-                            "text": `Poopy`
-                        },
-                    }).catch(() => { })
+                    if (!msg.nosend) {
+                        if (config.textEmbeds) await msg.reply('None.').catch(() => { })
+                        else await msg.reply({
+                            "title": `List of local commands for ${msg.guild.name}`,
+                            "description": 'None.',
+                            "color": 0x472604,
+                            "footer": {
+                                "icon_url": bot.user.displayAvatarURL({
+                                    dynamic: true, size: 1024, format: 'png'
+                                }),
+                                "text": `Poopy`
+                            },
+                        }).catch(() => { })
+                    }
+                    return 'None.'
                 }
 
                 var localCmds = chunkArray(localCmdsArray, 10)
 
-                await navigateEmbed(
+                if (!msg.nosend) await navigateEmbed(
                     msg.channel, async (page) => {
                         if (config.textEmbeds) return `${localCmds[page - 1].join('\n')}\n\nPage ${page}/${localCmds.length}`
                         else return {
@@ -202,6 +205,7 @@ module.exports = {
                     undefined,
                     msg
                 )
+                return `${localCmds[0].join('\n')}\n\nPage ${page}/${localCmds.length}`
             },
 
             phrase: async (msg, args) => {
@@ -210,10 +214,11 @@ module.exports = {
                     return
                 }
 
-                var findCommand = data['guildData'][msg.guild.id]['localcmds'].findIndex(cmd => cmd.name === args[1].toLowerCase())
+                var findCommand = data.guildData[msg.guild.id]['localcmds'].findIndex(cmd => cmd.name === args[1].toLowerCase())
 
                 if (findCommand > -1) {
-                    await msg.reply(`\`${data['guildData'][msg.guild.id]['localcmds'][findCommand].phrase}\``).catch(() => { })
+                    if (!msg.nosend) await msg.reply(`\`${data.guildData[msg.guild.id]['localcmds'][findCommand].phrase}\``).catch(() => { })
+                    return data.guildData[msg.guild.id]['localcmds'][findCommand].phrase
                 } else {
                     await msg.reply(`Not a valid command.`).catch(() => { })
                     return
@@ -226,20 +231,20 @@ module.exports = {
                     return
                 }
 
-                var findCommand = data['guildData'][msg.guild.id]['localcmds'].findIndex(cmd => cmd.name === args[1].toLowerCase())
+                var findCommand = data.guildData[msg.guild.id]['localcmds'].findIndex(cmd => cmd.name === args[1].toLowerCase())
 
                 if (findCommand > -1) {
                     var content = msg.content
 
-                    msg.content = `${data['guildData'][msg.guild.id]['prefix']}${args.slice(1).join(' ')}`
+                    msg.content = `${data.guildData[msg.guild.id]['prefix']}${args.slice(1).join(' ')}`
 
-                    var localCommand = data['guildData'][msg.guild.id]['localcmds'][findCommand]
+                    var localCommand = data.guildData[msg.guild.id]['localcmds'][findCommand]
                     var oopts = {
                         ...opts
                     }
                     oopts.ownermode = localCommand.ownermode || oopts.ownermode
                     var phrase = await getKeywordsFor(localCommand.phrase, msg, true, opts).catch(() => { }) ?? 'error'
-                    await msg.reply({
+                    if (!msg.nosend) await msg.reply({
                         content: phrase,
                         allowedMentions: {
                             parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
@@ -247,6 +252,8 @@ module.exports = {
                     }).catch(() => { })
 
                     msg.content = content
+
+                    return phrase
                 } else {
                     await msg.reply(`Not a valid command.`).catch(() => { })
                     return
@@ -291,20 +298,21 @@ module.exports = {
 
                     params.phrase = saidMessage
 
-                    var findCommand = commands.find(cmd => cmd.name.find(n => n === name.toLowerCase())) || data['guildData'][msg.guild.id]['localcmds'].find(cmd => cmd.name === name.toLowerCase())
+                    var findCommand = commands.find(cmd => cmd.name.find(n => n === name.toLowerCase())) || data.guildData[msg.guild.id]['localcmds'].find(cmd => cmd.name === name.toLowerCase())
 
                     if (findCommand) {
                         await msg.reply(`That name was already taken!`).catch(() => { })
                         return
                     } else {
-                        data['guildData'][msg.guild.id]['localcmds'].push(params)
+                        data.guildData[msg.guild.id]['localcmds'].push(params)
 
-                        await msg.reply({
+                        if (!msg.nosend) await msg.reply({
                             content: `✅ Added \`${name.toLowerCase()}\` command with phrase \`${saidMessage}\``,
                             allowedMentions: {
                                 parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                             }
                         }).catch(() => { })
+                        return `✅ Added \`${name.toLowerCase()}\` command with phrase \`${saidMessage}\``
                     }
                 } else {
                     await msg.reply('You need to be a moderator to execute that!').catch(() => { })
@@ -326,26 +334,27 @@ module.exports = {
                     if (findCommandTemplate) {
                         var name = args[2] ? args[2].toLowerCase() : findCommandTemplate.name
 
-                        var findCommand = commands.find(cmd => cmd.name.find(n => n === name)) || data['guildData'][msg.guild.id]['localcmds'].find(cmd => cmd.name === name)
+                        var findCommand = commands.find(cmd => cmd.name.find(n => n === name)) || data.guildData[msg.guild.id]['localcmds'].find(cmd => cmd.name === name)
 
                         if (findCommand) {
                             await msg.reply(`The name of that command was already taken!`).catch(() => { })
                             return
                         }
 
-                        data['guildData'][msg.guild.id]['localcmds'].push({
+                        data.guildData[msg.guild.id]['localcmds'].push({
                             name: name,
                             phrase: findCommandTemplate.phrase,
                             description: findCommandTemplate.description,
                             syntax: findCommandTemplate.syntax
                         })
 
-                        await msg.reply({
+                        if (!msg.nosend) await msg.reply({
                             content: `✅ Imported \`${name}\` command from the database.`,
                             allowedMentions: {
                                 parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                             }
                         }).catch(() => { })
+                        return `✅ Imported \`${name}\` command from the database.`
                     } else {
                         await msg.reply('Not a valid ID.').catch(() => { })
                     }
@@ -393,19 +402,20 @@ module.exports = {
 
                     params.phrase = saidMessage
 
-                    var findCommand = data['guildData'][msg.guild.id]['localcmds'].findIndex(cmd => cmd.name === name.toLowerCase())
+                    var findCommand = data.guildData[msg.guild.id]['localcmds'].findIndex(cmd => cmd.name === name.toLowerCase())
 
                     if (findCommand > -1) {
                         for (var param in params) {
-                            data['guildData'][msg.guild.id]['localcmds'][findCommand][param] = params[param]
+                            data.guildData[msg.guild.id]['localcmds'][findCommand][param] = params[param]
                         }
 
-                        await msg.reply({
+                        if (!msg.nosend) await msg.reply({
                             content: `✅ Edited \`${name.toLowerCase()}\` command with phrase \`${saidMessage}\``,
                             allowedMentions: {
                                 parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                             }
                         }).catch(() => { })
+                        return `✅ Edited \`${name.toLowerCase()}\` command with phrase \`${saidMessage}\``
                     } else {
                         await msg.reply(`Not a valid command.`).catch(() => { })
                         return
@@ -423,17 +433,18 @@ module.exports = {
                         return
                     }
 
-                    var findCommand = data['guildData'][msg.guild.id]['localcmds'].findIndex(cmd => cmd.name === args[1].toLowerCase())
+                    var findCommand = data.guildData[msg.guild.id]['localcmds'].findIndex(cmd => cmd.name === args[1].toLowerCase())
 
                     if (findCommand > -1) {
-                        var removed = data['guildData'][msg.guild.id]['localcmds'].splice(findCommand, 1)
+                        var removed = data.guildData[msg.guild.id]['localcmds'].splice(findCommand, 1)
 
-                        await msg.reply({
+                        if (!msg.nosend) await msg.reply({
                             content: `✅ Removed \`${removed[0].name}\` command with phrase \`${removed[0].phrase}\``,
                             allowedMentions: {
                                 parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                             }
                         }).catch(() => { })
+                        return `✅ Removed \`${removed[0].name}\` command with phrase \`${removed[0].phrase}\``
                     } else {
                         await msg.reply(`Not a valid command.`).catch(() => { })
                         return
@@ -446,21 +457,24 @@ module.exports = {
         }
 
         if (!args[1]) {
-            if (config.textEmbeds) msg.reply("**list** - Gets a list of local commands.\n**phrase** <command> - Displays the phrase of a specific command.\n**execute** <command> [args] - Execute a specific command.\n**add** <command> <phrase> {-description <text>} [-syntax <text>] (moderator only) - Adds a new local command, if the name is available for use.\n**import** <id> [name] (moderator only) - Imports a new local command from Poopy's command template database (`commandtemplates` command) by ID.\n**edit** <command> <phrase> [-description <text>] [-syntax <text>] (moderator only) - Edits the local command, if it exists.\n**delete** <command> (moderator only) - Deletes the local command, if it exists.").catch(() => { })
-            else msg.reply({
-                embeds: [{
-                    "title": "Available Options",
-                    "description": "**list** - Gets a list of local commands.\n**phrase** <command> - Displays the phrase of a specific command.\n**execute** <command> [args] - Execute a specific command.\n**add** <command> <phrase> {-description <text>} [-syntax <text>] (moderator only) - Adds a new local command, if the name is available for use.\n**import** <id> [name] (moderator only) - Imports a new local command from Poopy's command template database (`commandtemplates` command) by ID.\n**edit** <command> <phrase> [-description <text>] [-syntax <text>] (moderator only) - Edits the local command, if it exists.\n**delete** <command> (moderator only) - Deletes the local command, if it exists.",
-                    "color": 0x472604,
-                    "footer": {
-                        "icon_url": bot.user.displayAvatarURL({
-                            dynamic: true, size: 1024, format: 'png'
-                        }),
-                        "text": bot.user.username
-                    },
-                }]
-            }).catch(() => { })
-            return
+            var instruction = "**list** - Gets a list of local commands.\n**phrase** <command> - Displays the phrase of a specific command.\n**execute** <command> [args] - Execute a specific command.\n**add** <command> <phrase> {-description <text>} [-syntax <text>] (moderator only) - Adds a new local command, if the name is available for use.\n**import** <id> [name] (moderator only) - Imports a new local command from Poopy's command template database (`commandtemplates` command) by ID.\n**edit** <command> <phrase> [-description <text>] [-syntax <text>] (moderator only) - Edits the local command, if it exists.\n**delete** <command> (moderator only) - Deletes the local command, if it exists."
+            if (!msg.nosend) {
+                if (config.textEmbeds) msg.reply(instruction).catch(() => { })
+                else msg.reply({
+                    embeds: [{
+                        "title": "Available Options",
+                        "description": instruction,
+                        "color": 0x472604,
+                        "footer": {
+                            "icon_url": bot.user.displayAvatarURL({
+                                dynamic: true, size: 1024, format: 'png'
+                            }),
+                            "text": bot.user.username
+                        },
+                    }]
+                }).catch(() => { })
+            }
+            return instruction
         }
 
         if (!options[args[1].toLowerCase()]) {
@@ -468,7 +482,7 @@ module.exports = {
             return
         }
 
-        await options[args[1].toLowerCase()](msg, args.slice(1))
+        return await options[args[1].toLowerCase()](msg, args.slice(1))
     },
     help: {
         name: 'localcommands/localcmds/servercommands/servercmds <option>',

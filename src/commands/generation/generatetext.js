@@ -67,7 +67,7 @@ module.exports = {
             }).catch(() => { })
 
             if (resp) {
-                await msg.reply({
+                if (!msg.nosend) await msg.reply({
                     content: `${saidMessage}${resp.data.completions[0].data.text}`,
                     allowedMentions: {
                         parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
@@ -83,7 +83,7 @@ module.exports = {
                     }).catch(() => { })
                     fs.rmSync(`${filepath}`, { force: true, recursive: true })
                 })
-                return
+                return `${saidMessage}${resp.data.completions[0].data.text}`
             }
         }
         
@@ -105,12 +105,13 @@ module.exports = {
         })
         
         if (resp) {
-            await msg.reply({
+            if (!msg.nosend) await msg.reply({
                 content: resp.output,
                 allowedMentions: {
                     parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
+            return resp.output
         }
     },
     help: {

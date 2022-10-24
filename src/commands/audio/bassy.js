@@ -24,8 +24,7 @@ module.exports = {
 
         if (type.mime.startsWith('video')) {
             var filepath = await downloadFile(currenturl, `input.mp4`, {
-                fileinfo: fileinfo
-            })
+                fileinfo            })
             var filename = `input.mp4`
             var audio = fileinfo.info.audio
 
@@ -39,8 +38,7 @@ module.exports = {
             }
         } else if (type.mime.startsWith('audio')) {
             var filepath = await downloadFile(currenturl, `input.mp3`, {
-                fileinfo: fileinfo
-            })
+                fileinfo            })
             var filename = `input.mp3`
             await execPromise(`ffmpeg -i ${filepath}/${filename} -filter_complex "[0:a]lowpass=f=500[a]" -map "[a]" -preset ${findpreset(args)} ${filepath}/output.mp3`)
             return await sendFile(msg, filepath, `output.mp3`)

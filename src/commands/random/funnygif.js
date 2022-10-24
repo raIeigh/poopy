@@ -5,7 +5,9 @@ module.exports = {
     let poopy = this
     let special = poopy.special
 
-    await msg.reply(special.keys._funnygif.func.call(poopy)).catch(() => { })
+    let funny = special.keys._funnygif.func.call(poopy)
+    if (!msg.nosend) await msg.reply(funny).catch(() => { })
+    return funny
   },
   help: {
     name: 'funnygif/memegif',

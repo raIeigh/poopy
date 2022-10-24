@@ -6,7 +6,7 @@ module.exports = {
         let tempdata = poopy.tempdata
 
         await msg.channel.sendTyping().catch(() => { })
-        await msg.reply('Let\'s see...').catch(() => { })
+        if (!msg.nosend) await msg.reply('Let\'s see...').catch(() => { })
         var fartRating = Math.floor(Math.random() * 101)
         if (!tempdata[msg.author.id]['fartRate']) {
             tempdata[msg.author.id]['fartRate'] = fartRating;
@@ -19,13 +19,9 @@ module.exports = {
             tempdata[msg.author.id]['fartRate'] = fartRating;
             tempdata[msg.author.id]['lastFartRate'] = Date.now();
         }
-        if (tempdata[msg.author.id]['fartRate'] >= 70) {
-            await msg.reply('**' + tempdata[msg.author.id]['fartRate'] + '**/100, great farts!').catch(() => { })
-        }
-        else {
-            await msg.reply('**' + tempdata[msg.author.id]['fartRate'] + '**/100').catch(() => { })
-        }
-        await msg.channel.sendTyping().catch(() => { })
+        var fartrate = `**${tempdata[msg.author.id]['fartRate']}**/100${tempdata[msg.author.id]['fartRate'] >= 70 ? ', great farts!' : ''}`
+        if (!msg.nosend) await msg.reply(fartrate).catch(() => { })
+        return fartrate
     },
     help: { name: 'ratemyfarts', value: 'Poopy rates your farts.' },
     cooldown: 2500,

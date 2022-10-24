@@ -76,7 +76,7 @@ module.exports = {
         if (number > urls.length) number = urls.length;
         if (number < 1) number = 1
 
-        await navigateEmbed(msg.channel, async (page) => {
+        if (!msg.nosend) await navigateEmbed(msg.channel, async (page) => {
             addLastUrl(msg, urls[page - 1].url)
 
             if (config.textEmbeds) return `${urls[page - 1].url}\n**Rating**: ${urls[page - 1].rating}\n**Score**: ${urls[page - 1].score}\n**Favcount**: ${urls[page - 1].favcount}\n\nPost ${page}/${urls.length}`
@@ -110,6 +110,7 @@ module.exports = {
                 page: false
             }
         ], number, undefined, undefined, undefined, msg)
+        return urls[page - 1].url
     },
     help: {
         name: 'e621 <query> [-page <number>] (nsfw channel only)',

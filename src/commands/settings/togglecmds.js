@@ -42,7 +42,7 @@ module.exports = {
             list: async (msg) => {
                 var list = []
 
-                data['guildData'][msg.guild.id]['disabled'].forEach(cmd => {
+                data.guildData[msg.guild.id]['disabled'].forEach(cmd => {
                     list.push(`- \`${cmd.join('/')}\``)
                 })
 
@@ -62,15 +62,18 @@ module.exports = {
                     }
                 }
 
-                if (config.textEmbeds) msg.reply({
-                    content: list.join('\n'),
-                    allowedMentions: {
-                        parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
-                    }
-                }).catch(() => { })
-                else msg.reply({
-                    embeds: [listEmbed]
-                }).catch(() => { })
+                if (!msg.nosend) {
+                    if (config.textEmbeds) msg.reply({
+                        content: list.join('\n'),
+                        allowedMentions: {
+                            parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                        }
+                    }).catch(() => { })
+                    else msg.reply({
+                        embeds: [listEmbed]
+                    }).catch(() => { })
+                }
+                return list.join('\n')
             },
 
             toggle: async (msg, args) => {
@@ -83,27 +86,29 @@ module.exports = {
                     var findCommand = commands.find(cmd => cmd.name.find(n => n === args[2].toLowerCase()))
 
                     if (findCommand) {
-                        var findDCommand = data['guildData'][msg.guild.id]['disabled'].find(cmd => cmd.find(n => n === args[2].toLowerCase()))
+                        var findDCommand = data.guildData[msg.guild.id]['disabled'].find(cmd => cmd.find(n => n === args[2].toLowerCase()))
 
                         if (findDCommand) {
-                            var index = data['guildData'][msg.guild.id]['disabled'].findIndex(cmd => {
+                            var index = data.guildData[msg.guild.id]['disabled'].findIndex(cmd => {
                                 return cmd.find(n => {
                                     return n === args[2].toLowerCase()
                                 })
                             })
 
-                            data['guildData'][msg.guild.id]['disabled'].splice(index, 1)
+                            data.guildData[msg.guild.id]['disabled'].splice(index, 1)
 
-                            await msg.reply(`Enabled \`${findCommand.name.join('/')}\`.`)
+                            if (!msg.nosend) await msg.reply(`Enabled \`${findCommand.name.join('/')}\`.`)
+                            return `Enabled \`${findCommand.name.join('/')}\`.`
                         } else {
-                            if (findCommand.name.find(n => n === args[0].toLowerCase()) && !data['guildData'][msg.guild.id]['chaos']) {
+                            if (findCommand.name.find(n => n === args[0].toLowerCase()) && !data.guildData[msg.guild.id]['chaos']) {
                                 await msg.reply(`You can't disable the disabling command!`)
                                 return
                             }
 
-                            data['guildData'][msg.guild.id]['disabled'].push(findCommand.name)
+                            data.guildData[msg.guild.id]['disabled'].push(findCommand.name)
 
-                            await msg.reply(`Disabled \`${findCommand.name.join('/')}\`.`)
+                            if (!msg.nosend) await msg.reply(`Disabled \`${findCommand.name.join('/')}\`.`)
+                            return `Disabled \`${findCommand.name.join('/')}\`.`
                         }
                     } else {
                         await msg.reply('Not a valid command.')
@@ -117,26 +122,30 @@ module.exports = {
         }
 
         if (!args[1]) {
-            if (config.textEmbeds) msg.reply({
-                content: "**list** - Gets a list of disabled commands.\n**toggle** <command> (moderator only) - Disables/enables a command, if it exists.",
-                allowedMentions: {
-                    parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
-                }
-            }).catch(() => { })
-            else msg.reply({
-                embeds: [{
-                    "title": "Available Options",
-                    "description": "**list** - Gets a list of disabled commands.\n**toggle** <command> (moderator only) - Disables/enables a command, if it exists.",
-                    "color": 0x472604,
-                    "footer": {
-                        "icon_url": bot.user.displayAvatarURL({
-                            dynamic: true, size: 1024, format: 'png'
-                        }),
-                        "text": bot.user.username
-                    },
-                }]
-            }).catch(() => { })
-            return
+            var instruction = "**list** - Gets a list of disabled commands.\n**toggle** <command> (moderator only) - Disables/enables a command, if it exists."
+            if (!msg.nosend) {
+                if (config.textEmbeds) msg.reply({
+                    content: instruction,
+                    allowedMentions: {
+                        parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    }
+                }).catch(() => { })
+                else msg.reply({
+                    embeds: [{
+                        "title": "Available Options",
+                        "description": instruction,
+                        "color": 0x472604,
+                        "footer": {
+                            "icon_url": bot.user.displayAvatarURL({
+                                dynamic: true, size: 1024, format: 'png'
+                            }),
+                            "text": bot.user.username
+                        },
+                    }]
+                }).catch(() => { })
+            }
+
+            return instruction
         }
 
         if (!options[args[1].toLowerCase()]) {
@@ -144,7 +153,7 @@ module.exports = {
             return
         }
 
-        await options[args[1].toLowerCase()](msg, args)
+        return await options[args[1].toLowerCase()](msg, args)
     },
     help: {
         name: 'togglecmds/disablecmds/tcommands/togglecommands <option>',

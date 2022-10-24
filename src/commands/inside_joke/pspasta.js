@@ -5,7 +5,9 @@ module.exports = {
     let poopy = this
     let arrays = poopy.arrays
 
-    await msg.reply(arrays.psPasta[Math.floor(Math.random() * arrays.psPasta.length)]).catch(() => { })
+    let psPasta = arrays.psPasta[Math.floor(Math.random() * arrays.psPasta.length)]
+    if (!msg.nosend) await msg.reply(psPasta).catch(() => { })
+    return psPasta
   },
   help: {
     name: 'pspasta/phexoniastudiospasta',

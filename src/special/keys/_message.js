@@ -3,8 +3,9 @@ module.exports = {
   func: function (msg) {
     let poopy = this
     let data = poopy.data
+    let { decrypt } = poopy.functions
 
-    var messages = data['guildData'][msg.guild.id]['messages']
-    return messages.length ? messages[Math.floor(Math.random() * messages.length)].content.replace(/\@/g, '@‌') : ''
+    var messages = data.guildData[msg.guild.id]['messages']
+    return messages.length ? decrypt(messages[Math.floor(Math.random() * messages.length)].content).replace(/\@/g, '@‌') : ''
   }
 }

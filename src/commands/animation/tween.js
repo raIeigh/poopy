@@ -263,8 +263,7 @@ module.exports = {
 
         if (type.mime.startsWith('image') || type.mime.startsWith('video')) {
             var filepath = await downloadFile(currenturl, `input.${fileinfo.shortext}`, {
-                fileinfo: fileinfo
-            })
+                fileinfo            })
             var filename = `input.${fileinfo.shortext}`
             await execPromise(`ffmpeg -stream_loop -1 -t ${duration} -i ${filepath}/${filename} -r 50 -stream_loop -1 -t ${duration} -i assets/image/transparent.png -filter_complex "[0:v]fps=50,rotate=${easingstring(startangle, endangle)}*PI/180${args.find(arg => arg === '-fitangle') ? `:ow=rotw(45*PI/180):oh=roth(45*PI/180)`: ''}:c=0x00000000,scale=${easingstring(startsize[0], endsize[0])}:${easingstring(startsize[1], endsize[1])}:eval=frame[overlay];[1:v]scale=${width}:${height}[transparent];[transparent][overlay]overlay=x=${originx}+${easingstring(startpos[0], endpos[0])}:y=${originy}+${easingstring(startpos[1], endpos[1])}:format=auto,split[pout][ppout];[ppout]palettegen=reserve_transparent=1[palette];[pout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -preset ${findpreset(args)} -gifflags -offsetting -r 50 -t ${duration} ${filepath}/output.gif`)
             return await sendFile(msg, filepath, `output.gif`)

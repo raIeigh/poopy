@@ -47,7 +47,7 @@ module.exports = {
 
             globaldata[type].push(saidMessage)
 
-            await msg.reply({
+            if (!msg.nosend) await msg.reply({
                 content: '✅ Added ' + saidMessage,
                 allowedMentions: {
                     parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
@@ -59,6 +59,8 @@ module.exports = {
             arrays.funnygifs = globaldata['funnygif']
             arrays.poopPhrases = globaldata['poop']
             arrays.dmPhrases = globaldata['dmphrases']
+
+            return '✅ Added ' + saidMessage
         };
     },
     help: {

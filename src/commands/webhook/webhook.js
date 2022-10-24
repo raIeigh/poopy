@@ -10,7 +10,7 @@ module.exports = {
         "autocomplete": function (interaction) {
             let poopy = this
 
-            var memberData = poopy.data['guildData'][interaction.guild.id]['members']
+            var memberData = poopy.data.guildData[interaction.guild.id]['members']
             var memberKeys = Object.keys(memberData).sort((a, b) => memberData[b].messages - memberData[a].messages)
 
             return memberKeys.map(id => {
@@ -44,9 +44,7 @@ module.exports = {
 
         args[1] = args[1] ?? ' '
 
-        var member = msg.mentions.members.first() ??
-            await msg.guild.members.fetch((args[1].match(/\d+/) ?? [args[1]])[0]).catch(() => {}) ??
-            msg.member
+        var member = await msg.guild.members.fetch((args[1].match(/\d+/) ?? [args[1]])[0]).catch(() => {}) ?? msg.member
 
         if (!member) {
             await msg.reply({
@@ -58,10 +56,10 @@ module.exports = {
             return
         }
 
-        if (!data['guildData'][msg.guild.id]['members'][member.id]['custom']) {
-            data['guildData'][msg.guild.id]['members'][member.id]['custom'] = false
+        if (!data.guildData[msg.guild.id]['members'][member.id]['custom']) {
+            data.guildData[msg.guild.id]['members'][member.id]['custom'] = false
         }
-        if (data['guildData'][msg.guild.id]['members'][member.id]['custom'] === false) {
+        if (data.guildData[msg.guild.id]['members'][member.id]['custom'] === false) {
             if (msg.member.permissions.has('ManageWebhooks') || msg.member.permissions.has('Administrator') || msg.member.permissions.has('ManageGuild') || msg.member.permissions.has('ManageMessages') || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
                 var saidMessage = args.slice(1).join(' ')
                 var symbolReplacedMessage
@@ -112,28 +110,30 @@ module.exports = {
                 }
                 var avatar = args[args.length - 1]
 
-                data['guildData'][msg.guild.id]['members'][member.id]['custom'] = {
+                data.guildData[msg.guild.id]['members'][member.id]['custom'] = {
                     name: allBlank ? '⠀': name,
                     avatar: avatar
                 }
-                await msg.reply({
+                if (!msg.nosend) await msg.reply({
                     content: member.user.username + ` is now ${name}.`,
                     allowedMentions: {
                         parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                     }
                 }).catch(() => {})
+                return member.user.username + ` is now ${name}.`
             } else {
                 await msg.reply('You need to have the manage webhooks/messages permission to execute that!').catch(() => {})
                 return;
             }
         } else {
-            await msg.reply({
-                content: member.user.username + ` is not ${data['guildData'][msg.guild.id]['members'][member.id]['custom']['name']}.`,
+            if (!msg.nosend) await msg.reply({
+                content: member.user.username + ` is not ${data.guildData[msg.guild.id]['members'][member.id]['custom']['name']}.`,
                 allowedMentions: {
                     parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => {})
-            data['guildData'][msg.guild.id]['members'][member.id]['custom'] = false
+            data.guildData[msg.guild.id]['members'][member.id]['custom'] = false
+            return member.user.username + ` is not ${data.guildData[msg.guild.id]['members'][member.id]['custom']['name']}.`
         }
     },
     help: {

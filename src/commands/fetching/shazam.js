@@ -26,8 +26,7 @@ module.exports = {
 
         if (type.mime.startsWith('video')) {
             var filepath = await downloadFile(currenturl, `input.mp4`, {
-                fileinfo: fileinfo
-            })
+                fileinfo            })
             var filename = `input.mp4`
             var audio = fileinfo.info.audio
 
@@ -91,8 +90,9 @@ module.exports = {
                 if (config.textEmbeds) delete payload.embeds
                 else delete payload.content
 
-                await msg.reply(payload).catch(() => { })
-                fs.rmSync(`${filepath}`, { force: true, recursive: true })
+                if (!msg.nosend) await msg.reply(payload).catch(() => { })
+                fs.rm(`${filepath}`, { force: true, recursive: true })
+                return `**${result.title} - ${result.subtitle}** (<${result.url}>)\n\n**Genre**: ${result.genres.primary}\n\n${result.images.background}`
             } else {
                 await msg.reply('No audio stream detected.').catch(() => { })
                 await msg.channel.sendTyping().catch(() => { })
@@ -100,8 +100,7 @@ module.exports = {
             }
         } else if (type.mime.startsWith('audio')) {
             var filepath = await downloadFile(currenturl, `input.mp3`, {
-                fileinfo: fileinfo
-            })
+                fileinfo            })
             var filename = `input.mp3`
 
             var options = {
@@ -161,8 +160,9 @@ module.exports = {
             if (config.textEmbeds) delete payload.embeds
             else delete payload.content
 
-            await msg.reply(payload).catch(() => { })
-            fs.rmSync(`${filepath}`, { force: true, recursive: true })
+            if (!msg.nosend) await msg.reply(payload).catch(() => { })
+            fs.rm(`${filepath}`, { force: true, recursive: true })
+            return `**${result.title} - ${result.subtitle}** (<${result.url}>)\n\n**Genre**: ${result.genres.primary}\n\n${result.images.background}`
         } else {
             await msg.reply({
                 content: `Unsupported file: \`${currenturl}\``,

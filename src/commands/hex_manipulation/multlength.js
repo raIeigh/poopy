@@ -25,8 +25,7 @@ module.exports = {
 
         if (type.mime.startsWith('video')) {
             var filepath = await downloadFile(currenturl, `input.mp4`, {
-                fileinfo: fileinfo
-            })
+                fileinfo            })
             var filename = `input.mp4`
             var videohex = fs.readFileSync(`${filepath}/${filename}`)
             var mvhdindex = videohex.indexOf('mvhd')

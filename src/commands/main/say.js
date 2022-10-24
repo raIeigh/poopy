@@ -37,17 +37,18 @@ module.exports = {
         }
         var reply = await msg.fetchReference().catch(() => { })
         if (reply) {
-            await reply.reply(sendObject).catch(() => { })
+            if (!msg.nosend) await reply.reply(sendObject).catch(() => { })
         } else {
             if (del || (msg.replied && msg.deferred)) {
-                await msg.channel.send(sendObject).catch(() => { })
+                if (!msg.nosend) await msg.channel.send(sendObject).catch(() => { })
 
                 if (msg.type === Discord.InteractionType.ApplicationCommand && !msg.replied) await msg.reply({ content: 'Successfully sent.', ephemeral: true }).catch(() => { })
                 else msg.delete().catch(() => { })
             } else {
-                await msg.reply(sendObject).catch(() => { })
+                if (!msg.nosend) await msg.reply(sendObject).catch(() => { })
             }
         }
+        return saidMessage
     },
     help: {
         name: 'say/talk/speak <message> [-nodelete] [-tts]',

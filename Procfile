@@ -1,2 +1,3 @@
-web: node --trace-deprecation server.js
-worker: node --trace-deprecation worker.js
+web: node server.js
+webTest: node server.js --test
+worker: nod worker.js

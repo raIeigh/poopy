@@ -55,7 +55,7 @@ module.exports = {
                     chooseWord()
                 }
             }
-            await msg.reply({
+            if (!msg.nosend) await msg.reply({
                 content: arabArray.join(' '),
                 allowedMentions: {
                     parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
@@ -71,8 +71,7 @@ module.exports = {
                 }).catch(() => { })
                 fs.rmSync(`${filepath}`, { force: true, recursive: true })
             })
-            await msg.channel.sendTyping().catch(() => { })
-            return;
+            return arabArray.join(' ')
         };
         var arabArray = args.splice(1)
         var arabArray2 = []
@@ -101,7 +100,7 @@ module.exports = {
         if (wordsSpecified) {
             arabArray.splice(wordNumber)
         }
-        await msg.reply({
+        if (!msg.nosend) await msg.reply({
             content: arabArray.join(' '),
             allowedMentions: {
                 parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
@@ -117,7 +116,7 @@ module.exports = {
             }).catch(() => { })
             fs.rmSync(`${filepath}`, { force: true, recursive: true })
         })
-        await msg.channel.sendTyping().catch(() => { })
+        return arabArray.join(' ')
     },
     help: {
         name: 'arabottify [message] [-words <wordNumber>] [-noextrawords] [-nopunctuation]',
