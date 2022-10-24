@@ -1404,9 +1404,9 @@ class Poopy {
                     data.data = JSON.parse(fs.readFileSync(`data/${config.database}.json`).toString())
                 } else {
                     data.data = {
-                        'botData': {},
-                        'userData': {},
-                        'guildData': {}
+                        botData: {},
+                        userData: {},
+                        guildData: {}
                     }
                 }
 
