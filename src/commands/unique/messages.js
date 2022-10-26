@@ -56,7 +56,7 @@ module.exports = {
             "specifarg": false,
             "orig": "<message>"
         }],
-        "description": "Adds a new message to the guild's database, if it is available for use."
+        "description": "Adds a new permanent message to the guild's database, if it is not duplicated."
     },
     {
         "name": "delete",
@@ -206,7 +206,8 @@ module.exports = {
 
                     var messages = [{
                         author: msg.author.id,
-                        content: CryptoJS.AES.encrypt(cleanMessage).toString()
+                        content: CryptoJS.AES.encrypt(cleanMessage).toString(),
+                        timestamp: Infinity
                     }].concat(data.guildData[msg.guild.id]['messages'])
                     messages.splice(10000)
                     data.guildData[msg.guild.id]['messages'] = messages
@@ -295,7 +296,7 @@ module.exports = {
         }
 
         if (!args[1]) {
-            var instruction = "**list** - Sends a text file with a list of all messages that exist within the guild's message database.\n\n**search** <query> - Searches for every message in the server that matches the query.\n\n**random** - Sends a random message from the database to the channel.\n\n**member** <id> - Sends a random message from that member to the channel.\n\n**add** <message> - Adds a new message to the guild's database, if it is available for use.\n\n**delete** <message> - Deletes the message, if it exists.\n\n**clear** (manage server only) - Clears ALL the messages from the database.\n\n**read** (moderator only) - Toggles whether the bot can read the messages from the channel or not.\n\n**readall** (manage server only) - Toggles whether the bot can read the messages from all channels or not."
+            var instruction = "**list** - Sends a text file with a list of all messages that exist within the guild's message database.\n\n**search** <query> - Searches for every message in the server that matches the query.\n\n**random** - Sends a random message from the database to the channel.\n\n**member** <id> - Sends a random message from that member to the channel.\n\n**add** <message> - Adds a new permanent message to the guild's database, if it is not duplicated.\n\n**delete** <message> - Deletes the message, if it exists.\n\n**clear** (manage server only) - Clears ALL the messages from the database.\n\n**read** (moderator only) - Toggles whether the bot can read the messages from the channel or not.\n\n**readall** (manage server only) - Toggles whether the bot can read the messages from all channels or not."
             if (!msg.nosend) {
                 if (config.textEmbeds) msg.reply(instruction).catch(() => { })
                 else msg.reply({
@@ -324,7 +325,7 @@ module.exports = {
     },
     help: {
         name: 'messages <option>',
-        value: "Allows you to see or manage the server's message database. Used by the `_message` keyword and has a 10k messages limit. Use the command alone for more info."
+        value: "Allows you to see or manage the server's message database. Used by the `_message` keyword and has a 10k messages limit. They're auto-deleted after 30 days to abide with Discord's TOS, unless added manually. Use the command alone for more info."
     },
     cooldown: 2500,
     raw: true,
