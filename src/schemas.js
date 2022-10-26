@@ -25,6 +25,16 @@ module.exports = {
         reboots: {
             type: Number,
             required: false
+        },
+
+        users: {
+            type: Array,
+            required: false
+        },
+
+        leaderboard: {
+            type: Object,
+            required: false
         }
     })),
 

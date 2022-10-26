@@ -602,6 +602,9 @@ functions.gatherData = async function (msg) {
         if (!data.userData[msg.author.id]) {
             data.userData[msg.author.id] = !config.testing && process.env.MONGOOSE_URL && await dataGather.userData(config.database, msg.author.id).catch(() => { }) || {}
         }
+        if (!data.botData.users.includes(msg.author.id)) {
+            data.botData.users.push(msg.author.id)
+        }
 
         data.userData[msg.author.id]['username'] = msg.author.username
 
@@ -617,6 +620,7 @@ functions.gatherData = async function (msg) {
         if (!data.userData[msg.author.id]['battleSprites']) {
             data.userData[msg.author.id]['battleSprites'] = {}
         }
+        data.botData.leaderboard[msg.author.id] = data.userData[msg.author.id]['bucks']
     }
 
     if (!data.guildData[msg.guild.id]) {
@@ -1927,6 +1931,8 @@ functions.rainmaze = async function (channel, who, reply, w = 8, h = 6) {
                     value: `+${reward} P$`
                 })
                 data.userData[who]['bucks'] += reward
+
+                data.botData.leaderboard[who] = data.userData[who]['bucks']
             }
         }
 
@@ -3113,6 +3119,8 @@ functions.battle = async function (msg, subject, action, damage, chance) {
 
         yourData.exp += exp
         yourData.bucks += reward
+
+        data.botData.leaderboard[msg.author.id] = yourData.bucks
     }
 
     var level = getLevel(yourData.exp).level

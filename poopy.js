@@ -1502,6 +1502,14 @@ class Poopy {
             data.botData['reboots']++
         }
 
+        if (!data.botData['users']) {
+            data.botData['users'] = []
+        }
+
+        if (!data.botData['leaderboard']) {
+            data.botData['leaderboard'] = {}
+        }
+
         if (!globaldata['commandTemplates']) {
             globaldata['commandTemplates'] = []
         }
