@@ -700,6 +700,12 @@ functions.gatherData = async function (msg) {
     if (!data.guildData[msg.guild.id]['messages']) {
         data.guildData[msg.guild.id]['messages'] = []
     }
+    
+    for (var m of data.guildData[msg.guild.id]['messages']) {
+        if (!m.timestamp) m.timestamp = Date.now()
+    }
+    
+    data.guildData[msg.guild.id]['messages'] = data.guildData[msg.guild.id]['messages'].filter(m => Date.now() - m.timestamp < 1000 * 60 * 60 * 24 * 30)
 
     if (!tempdata[msg.guild.id]) {
         tempdata[msg.guild.id] = {}
@@ -3102,12 +3108,14 @@ functions.battle = async function (msg, subject, action, damage, chance) {
 
         damage = Math.max(damage - (subjData.defense / 2 + Math.floor(Math.random() * subjData.defense * 11) * 0.1), 0)
         subjData.health = subjData.health - damage
-        if (member.id != msg.author.id && msg.guild.members.cache.get(member.id)) exp = Math.floor(Math.random() * subjData.maxHealth / 5) + subjData.maxHealth / 20 + (yourData.loot * 10) * critmult
+        if (member.id != msg.author.id && msg.guild.members.cache.get(member.id)) exp = Math.floor(Math.random() * subjData.maxHealth / 5) + subjData.maxHealth / 20 + (yourData.loot * 10) * critmult * (Math.pow(getLevel(subjData.exp).level, 2) / 50)
 
         if (subjData.health <= 0) {
             subjData.health = 0
-            if (member.id != msg.author.id && msg.guild.members.cache.get(member.id)) exp += Math.floor((subjData.maxHealth + subjData.attack + subjData.defense + subjData.accuracy + subjData.loot + yourData.loot) / 10) * 50
-            if (member.id != msg.author.id && msg.guild.members.cache.get(member.id)) reward = Math.floor(Math.random() * (subjData.maxHealth + subjData.attack + subjData.defense + subjData.accuracy + subjData.loot + yourData.loot)) + subjData.maxHealth / 2
+            if (member.id != msg.author.id && msg.guild.members.cache.get(member.id)) {
+                exp += Math.floor((subjData.maxHealth + subjData.attack + subjData.defense + subjData.accuracy + subjData.loot + yourData.loot) / 10) * (Math.pow(getLevel(subjData.exp).level, 2) / 50) * 50
+                reward = Math.floor(Math.random() * (subjData.maxHealth + subjData.attack + subjData.defense + subjData.accuracy + subjData.loot + yourData.loot + (Math.pow(getLevel(subjData.exp).level, 2) / 50))) + subjData.maxHealth / 2
+            }
             died = true
         }
 
