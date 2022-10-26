@@ -7,5 +7,12 @@ module.exports = {
     var datamembers = data.guildData[msg.guild.id]['members'];
     var keys = Object.keys(datamembers)
     return keys[Math.floor(Math.random() * keys.length)]
+  },
+  array: function (msg) {
+    let poopy = this
+    let data = poopy.data
+
+    var datamembers = data.guildData[msg.guild.id]['members'];
+    return Object.keys(datamembers)
   }
 }

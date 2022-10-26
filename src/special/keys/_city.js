@@ -1,9 +1,17 @@
 module.exports = {
-    desc: 'Returns a random city.', func: function () {
+    desc: 'Returns a random city.',
+    func: function () {
         let poopy = this
         let json = poopy.json
 
         var cityJSON = json.cityJSON
         return cityJSON[Math.floor(Math.random() * cityJSON.length)].name
+    },
+    array: function () {
+        let poopy = this
+        let json = poopy.json
+
+        var cityJSON = json.cityJSON
+        return cityJSON.map(c => c.name)
     }
 }

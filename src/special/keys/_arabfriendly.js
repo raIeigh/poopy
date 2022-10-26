@@ -6,5 +6,11 @@ module.exports = {
     let { randomChoice } = poopy.functions
 
     return randomChoice(json.arabJSON.words.filter(arab => !json.arabJSON.danger.includes(arab)))
+  },
+  array: function () {
+    let poopy = this
+    let json = poopy.json
+
+    return json.arabJSON.words.filter(arab => !json.arabJSON.danger.includes(arab))
   }
 }

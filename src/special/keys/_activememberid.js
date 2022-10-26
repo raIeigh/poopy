@@ -25,5 +25,12 @@ module.exports = {
     }
 
     return keys[0]
+  },
+  array: function (msg) {
+    let poopy = this
+    let data = poopy.data
+
+    var datamembers = data.guildData[msg.guild.id]['members'];
+    return Object.keys(datamembers)
   }
 }

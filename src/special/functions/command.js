@@ -48,9 +48,6 @@ module.exports = {
                 msg.nosend = getOption(args, 'nosend', { n: 0, splice: true, dft: false })
                 msg.content = `${data.guildData[msg.guild.id]['prefix']}${args.join(' ')}`
 
-                console.log(args)
-                console.log(msg.content)
-
                 await getUrls(msg, {
                     string: msg.content,
                     update: true

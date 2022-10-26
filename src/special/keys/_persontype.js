@@ -1,5 +1,5 @@
 module.exports = {
-  desc: "Returns a random type of person you'd see on the internet, I guess. (this is a crime against humanity)",
+  desc: "Returns a random job, gender or stereotype, I guess. (this is a crime against humanity)",
   func: function () {
     let poopy = this
 
@@ -53,12 +53,67 @@ module.exports = {
       'futa',
       'twitter artist',
       'president',
-      'skin walker',
+      'skinwalker',
       'prime minister',
       'youtuber',
       'nerd'
     ]
 
     return type[Math.floor(Math.random() * type.length)]
-  }
+  },
+  array: [
+    'male',
+    'female',
+    'homosexual',
+    'lesbian',
+    'catboy',
+    'maid',
+    'transexual',
+    'bisexual',
+    'degenerate',
+    'femboy',
+    'furry',
+    'tomboy',
+    'racist',
+    'gamer',
+    'clown',
+    'gangsta',
+    'r34 artist',
+    'discord mod',
+    'moderator',
+    'reddit mod',
+    'twitter user',
+    'nft collector',
+    'r63 artist',
+    'twitch streamer',
+    'political',
+    'toxic',
+    'programmer',
+    '4chan user',
+    'rr34 modeller',
+    'game developer',
+    'homophobic',
+    'transphobic',
+    'weeb',
+    'troller',
+    'porn addict',
+    'criminal',
+    'pirate',
+    'drug addict',
+    'hacker',
+    'exploiter',
+    'meth addict',
+    'speedrunner',
+    'liberal',
+    'autistic',
+    'terrorist',
+    'artist',
+    'futa',
+    'twitter artist',
+    'president',
+    'skinwalker',
+    'prime minister',
+    'youtuber',
+    'nerd'
+  ]
 }

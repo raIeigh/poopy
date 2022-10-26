@@ -5,5 +5,11 @@ module.exports = {
     let arrays = poopy.arrays
 
     return arrays.funnygifs[Math.floor(Math.random() * arrays.funnygifs.length)]
+  },
+  array: function () {
+    let poopy = this
+    let arrays = poopy.arrays
+
+    return arrays.funnygifs
   }
 }

@@ -19,7 +19,7 @@ module.exports = {
 
         var psFiles = arrays.psFiles.filter(file => {
             switch (type) {
-                case 'image': return file.match(/\.(gif|mov|mp4)/)
+                case 'image': return file.match(/\.(png|jpe?g|bmp)/)
 
                 case 'video': return file.match(/\.(mov|mp4)/)
 

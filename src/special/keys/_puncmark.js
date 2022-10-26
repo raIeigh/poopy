@@ -5,5 +5,11 @@ module.exports = {
     let vars = poopy.vars
 
     return vars.punctuation[Math.floor(Math.random() * vars.punctuation.length)]
+  },
+  array: function () {
+    let poopy = this
+    let vars = poopy.vars
+
+    return vars.punctuation
   }
 }
