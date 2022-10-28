@@ -72,5 +72,5 @@ module.exports = {
     },
     help: { name: 'leave (manage server only)', value: 'good' },
     perms: ['Administrator', 'ManageGuild'],
-    type: 'Annoying'
+    type: 'Main'
 }

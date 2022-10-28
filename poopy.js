@@ -513,7 +513,6 @@ class Poopy {
 
         vars.categories = {
             Animation: 'Move and animate a file in an indefinite amount of ways.',
-            Annoying: 'why',
             Audio: 'Add an effect to an input\'s audio.',
             Battling: 'beat your parents',
             Captions: 'Add a caption to an input.',
@@ -1134,7 +1133,7 @@ class Poopy {
                     var activity = bot.user.presence.activities[0]
                     if (activity) {
                         await msg.reply({
-                            content: `Ya know, just ${activity.type.toLowerCase()} ${((activity.type === Discord.ActivityType.Competing && 'in ') || (activity.type === Discord.ActivityType.Listening && 'to ') || '')}${activity.name.replace(new RegExp(`${regexClean(` | ${config.globalPrefix}help`)}$`), '')}.`,
+                            content: `Ya know, just ${Discord.ActivityType[activity.type].toLowerCase()} ${((activity.type === Discord.ActivityType.Competing && 'in ') || (activity.type === Discord.ActivityType.Listening && 'to ') || '')}${activity.name.replace(new RegExp(`${regexClean(` | ${config.globalPrefix}help`)}$`), '')}.`,
                             allowedMentions: {
                                 parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                             }

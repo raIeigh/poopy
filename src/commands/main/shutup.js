@@ -28,5 +28,5 @@ module.exports = {
     value: 'he shuts up'
   },
   perms: ['Administrator', 'ManageMessages'],
-  type: 'Annoying'
+  type: 'Main'
 }

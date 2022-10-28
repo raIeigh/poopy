@@ -1,133 +1,139 @@
 module.exports = {
     name: ['userinfo', 'whois'],
-    args: [],
-    execute: async function (msg) {
+    args: [{
+        "name": "user", "required": true, "specifarg": false, "orig": "<user>",
+        "autocomplete": function (interaction) {
+            let poopy = this
+
+            var memberData = poopy.data.guildData[interaction.guild.id]['members']
+            var memberKeys = Object.keys(memberData).sort((a, b) => memberData[b].messages - memberData[a].messages)
+
+            return memberKeys.map(id => {
+                return { name: memberData[id].username, value: id }
+            })
+        }
+    }],
+    execute: async function (msg, args) {
         let poopy = this
         let bot = poopy.bot
-        let { os, fs } = poopy.modules
+        let { Discord } = poopy.modules
         let config = poopy.config
-        let data = poopy.data
-        let pkg = poopy.package
-        let commands = poopy.commands
-        let vars = poopy.vars
 
         args[1] = args[1] ?? ' '
 
-        var member = await msg.guild.members.fetch((args[1].match(/\d+/) ?? [args[1]])[0]).catch(() => {}) ??
-            await bot.users.fetch((args[1].match(/\d+/) ?? [args[1]])[0]).catch(() => {}) ??
+        var member = await msg.guild.members.fetch((args[1].match(/\d+/) ?? [args[1]])[0]).catch(() => { }) ??
+            await bot.users.fetch((args[1].match(/\d+/) ?? [args[1]])[0]).catch(() => { }) ??
             msg.member
 
-        var statsEmbed = {
-            title: `${bot.user.username}'s Stats`,
+        var user = member.user ?? member
+
+        var avatar = member.avatarURL({ dynamic: true, size: 1024, format: 'png' })
+        var banner = member.bannerURL({ dynamic: true, size: 1024, format: 'png' })
+
+        var urls = [`[Avatar URL](${avatar})`]
+        if (banner) urls.push(`[Banner URL](${banner})`)
+
+        var infoEmbed = {
+            author: {
+                name: `${member.nickname ?? user.username} (${user.tag})`,
+                icon_url: avatar
+            },
+            description: urls.join(' '),
             color: 0x472604,
+            thumbnail: {
+                url: avatar
+            },
             footer: {
                 icon_url: bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
-                text: `${bot.user.username} - v${pkg.version}`
+                text: bot.user.username
             },
-            fields: [
-                {
-                    name: "Servers",
-                    value: servers.toString(),
+            fields: []
+        }
+
+        var status = {
+            online: '🟢 Online',
+            idle: '🌙 Idle',
+            dnd: '⛔ Do Not Disturb',
+            offline: '⚫ Offline/Invisible'
+        }
+
+        infoEmbed.fields.push({
+            name: 'ID',
+            value: `\`${user.id}\``,
+            inline: true
+        })
+        infoEmbed.fields.push({
+            name: 'Created',
+            value: `<t:${Math.floor(user.createdTimestamp / 1000)}:R>`,
+            inline: true
+        })
+        if (member.joinedTimestamp) infoEmbed.fields.push({
+            name: 'Joined',
+            value: `<t:${Math.floor(member.joinedTimestamp / 1000)}:R>`,
+            inline: true
+        })
+        infoEmbed.fields.push({
+            name: 'Bot',
+            value: user.bot ? 'Yes' : 'No',
+            inline: true
+        })
+        /*infoEmbed.fields.push({
+            name: 'Badges',
+            value: user.flags.toArray().join(', '),
+            inline: true
+        })*/
+
+        if (member.presence) {
+            infoEmbed.fields.push({
+                name: 'Status',
+                value: status[member.presence.status],
+                inline: true
+            })
+
+            if (member.presence.activities && member.presence.activities.length) {
+                var emoji
+                var text
+
+                for (var activity of member.presence.activities) {
+                    if (activity.emoji && !emoji) emoji = activity.emoji.toString()
+                    if ((activity.state || activity.name) && !text) text = activity.type == Discord.ActivityType.Custom ? activity.state : `**${Discord.ActivityType[activity.type]}** ${activity.type === Discord.ActivityType.Competing && 'in ' || activity.type === Discord.ActivityType.Listening && 'to ' || ''}${activity.name}`
+                }
+
+                var activity
+                if (emoji && text) activity = `${emoji} ${text}`
+                else activity = emoji ?? text
+
+                infoEmbed.fields.push({
+                    name: 'Activity',
+                    value: activity,
                     inline: true
-                },
-                {
-                    name: "Channels",
-                    value: channels.toString(),
-                    inline: true
-                },
-                {
-                    name: "Messages",
-                    value: messages.toString(),
-                    inline: true
-                },
-                {
-                    name: "Emojis",
-                    value: emojis.toString(),
-                    inline: true
-                },
-                {
-                    name: "Users",
-                    value: users.toString(),
-                    inline: true
-                },
-                {
-                    name: "Members",
-                    value: members.toString(),
-                    inline: true
-                },
-                {
-                    name: "Uptime",
-                    value: `${days}d ${hours}h ${minutes}m ${seconds}s`,
-                    inline: true
-                },
-                {
-                    name: "Commands",
-                    value: commands.length.toString(),
-                    inline: true
-                },
-                {
-                    name: "Processed Commands",
-                    value: pcommands.toString(),
-                    inline: true
-                },
-                {
-                    name: "Commands per Minute",
-                    value: vars.cps.toString(),
-                    inline: true
-                },
-                {
-                    name: "File Count",
-                    value: vars.filecount.toString(),
-                    inline: true
-                },
-                {
-                    name: "Processing Files",
-                    value: files.toString(),
-                    inline: true
-                },
-                {
-                    name: "Reboots",
-                    value: reboots.toString(),
-                    inline: true
-                },
-                {
-                    name: "CPU",
-                    value: cpu.toString(),
-                    inline: true
-                },
-                {
-                    name: "Memory Usage",
-                    value: `${Math.round(mused * 100) / 100} MB`,
-                    inline: true
-                },
-                {
-                    name: "Resident Set Size",
-                    value: `${Math.round(rss * 100) / 100} MB`,
-                    inline: true
-                },
-                {
-                    name: "CPU Usage",
-                    value: `${Math.round(cused * 100) / 100} MB`,
-                    inline: true
-                },
-            ]
+                })
+            }
+        }
+
+        if (member.roles) {
+            infoEmbed.fields.push({
+                name: 'Roles',
+                value: member.roles.cache.map(role => role.toString()).join(' '),
+                inline: true
+            })
         }
 
         if (!msg.nosend) {
             if (config.textEmbeds) msg.reply({
-                content: `${statsEmbed.fields.map(p => `**${p.name}**: ${p.value}`).join('\n')}\n\nv${pkg.version}`,
+                content: `${infoEmbed.author.name}\n\n${infoEmbed.description}\n${infoEmbed.fields.map(p => `**${p.name}**: ${p.value}`).join('\n')}`,
                 allowedMentions: {
-                    parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ['users']
                 }
             }).catch(() => { })
             else msg.reply({
-                embeds: [statsEmbed]
+                embeds: [infoEmbed]
             }).catch(() => { })
         }
-        return `${statsEmbed.fields.map(p => `**${p.name}**: ${p.value}`).join('\n')}\n\nv${pkg.version}`
+        return `${infoEmbed.author.name}\n\n${infoEmbed.description}\n${infoEmbed.fields.map(p => `**${p.name}**: ${p.value}`).join('\n')}`
     },
     help: {
-        name: '<:newpoopy:839191885310066729> userinfo/whois',
+        name: '<:newpoopy:839191885310066729> userinfo/whois <user>',
         value: "Shows a user's info."
     },
     cooldown: 2500,

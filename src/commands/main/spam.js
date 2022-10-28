@@ -98,5 +98,5 @@ module.exports = {
     cooldown: 10000,
     nodefer: true,
     perms: ['ManageMessages', 'Administrator'],
-    type: 'Annoying'
+    type: 'Main'
 }

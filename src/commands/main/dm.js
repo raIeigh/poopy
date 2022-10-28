@@ -175,5 +175,5 @@ module.exports = {
         value: 'Allows Poopy to DM an user the message inside the command.'
     },
     nodefer: true,
-    type: 'Annoying'
+    type: 'Main'
 }
