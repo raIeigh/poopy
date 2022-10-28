@@ -194,6 +194,8 @@ class Poopy {
             vars[key] = varb
         }
 
+        modules.Discord = modules.Discord[Number(config.self)]
+
         // we can create thge bot now
         let { Discord, Collection, fs, CryptoJS } = modules
         let { envsExist,
@@ -217,7 +219,7 @@ class Poopy {
                 ]
             }
         })
-        poopy.rest = new Discord.REST({
+        if (Discord.REST) poopy.rest = new Discord.REST({
             version: '10'
         })
         poopy.package = JSON.parse(fs.readFileSync('package.json'))
@@ -1393,7 +1395,7 @@ class Poopy {
             writable: false
         })
 
-        rest.setToken(poopy.__TOKEN)
+        if (rest) rest.setToken(poopy.__TOKEN)
         await bot.login(poopy.__TOKEN).catch((e) => console.log(e))
 
         activeBots[config.database] = poopy

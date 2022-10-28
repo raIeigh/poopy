@@ -479,6 +479,22 @@ async function start() {
                     database: 'testdata',
                     intents: 3276799,
                 }
+            },
+
+            {
+                TOKEN: process.env.INDIA_TOKEN,
+                config: {
+                    testing: true,
+                    self: true,
+                    globalPrefix: '2i:',
+                    database: 'testracist',
+                    msgcooldown: 3000,
+                    useReactions: true,
+                    textEmbeds: true,
+                    noInfoPost: true,
+                    intents: 3276799,
+                    illKillYouIfYouUseEval: []
+                }
             }
         ]
     } else {
