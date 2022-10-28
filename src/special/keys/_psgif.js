@@ -6,7 +6,7 @@ module.exports = {
 
     var psGifs = arrays.psFiles.filter(file => file.match(/\.(gif|apng)/))
 
-    return psGifs[Math.floor(Math.random() * psImages.length)]
+    return psGifs[Math.floor(Math.random() * psGifs.length)]
   },
   array: function () {
     let poopy = this
