@@ -514,11 +514,12 @@ class Poopy {
         vars.categories = {
             Animation: 'Move and animate a file in an indefinite amount of ways.',
             Audio: 'Add an effect to an input\'s audio.',
-            Battling: 'beat your parents',
+            Battling: 'Beat people up. Yeah.',
             Captions: 'Add a caption to an input.',
             Color: 'Change an input\'s colors.',
             Compression: 'Useful commands for file compression.',
             Conversion: 'Convert a file between various different formats.',
+            Currency: 'Manage your money and spend it on upgrades and cosmetics.',
             Duration: 'Change the duration of a video, GIF or audio.',
             Effects: 'A wide range of commands that change the way the file looks.',
             Fetching: 'Image, GIF, and video fetching commands.',
@@ -1242,14 +1243,14 @@ class Poopy {
                         var commandGroup = findGroup(cmd)
                         var commandSubGroup = subcommand && findGroup(subcommand)
 
-                        if (!commandGroup && findCmd.subcommands && findCmd.subcommands.find(subcmd => subcmd.name == subcommand)) { // commands with subcommands
+                        if (!commandGroup && findCmd?.subcommands?.find(subcmd => subcmd.name == subcommand)) { // commands with subcommands
                             cmd += ` ${subcommand}`
                             findCmd = findCmd.subcommands.find(subcmd => subcmd.name == subcommand)
-                        } else if (commandGroup && commandSubGroup) { // commands in groups
+                        } else if (commandSubGroup) { // commands in groups
                             cmd = subcommand
                             findCmd = findSubCmd
                         } else if (!findCmd) { // command doesn't exist
-                            await interaction.respond([]).catch(() => { })
+                            await interaction.reply('No.').catch(() => { })
                             return
                         } // regular command
 
@@ -1289,10 +1290,10 @@ class Poopy {
                         var commandGroup = findGroup(cmd)
                         var commandSubGroup = subcommand && findGroup(subcommand)
 
-                        if (!commandGroup && findCmd.subcommands && findCmd.subcommands.find(subcmd => subcmd.name == subcommand)) { // commands with subcommands
+                        if (!commandGroup && findCmd?.subcommands?.find(subcmd => subcmd.name == subcommand)) { // commands with subcommands
                             cmd += ` ${subcommand}`
                             findCmd = findCmd.subcommands.find(subcmd => subcmd.name == subcommand)
-                        } else if (commandGroup && commandSubGroup) { // commands in groups
+                        } else if (commandSubGroup) { // commands in groups
                             cmd = subcommand
                             findCmd = findSubCmd
                         } else if (!findCmd) { // command doesn't exist
@@ -1380,7 +1381,7 @@ class Poopy {
         let globaldata = poopy.globaldata
         let activeBots = poopy.activeBots
         let { fs } = poopy.modules
-        let { infoPost, processTask, dataGather, saveData, saveQueue, changeStatus } = poopy.functions
+        let { infoPost, toOrdinal, dataGather, saveData, saveQueue, changeStatus } = poopy.functions
         let callbacks = poopy.callbacks
 
         if (!TOKEN && !poopy.__TOKEN) {
@@ -1584,16 +1585,8 @@ class Poopy {
             changeStatus()
         }, 300000)
 
-        var wakecount = String(data.botData['reboots'] + 1)
-        var thmatch = wakecount.match(/[^1][1-3]$|^[1-3]$/)
-
-        if (thmatch) {
-            wakecount += ['st', 'nd', 'rd'][Number(thmatch[0][thmatch[0].length - 1]) - 1]
-        } else {
-            wakecount += 'th'
-        }
-
-        bot.guilds.cache.get('834431435704107018')?.channels.cache.get('947167169718923341')?.send(!config.stfu ? (config.testing ? 'raleigh is testing' : `this is the ${wakecount} time this happens`) : '').catch(() => { })
+        var wakecount = data.botData['reboots'] + 1
+        bot.guilds.cache.get('834431435704107018')?.channels.cache.get('947167169718923341')?.send(!config.stfu ? (config.testing ? 'raleigh is testing' : `this is the ${toOrdinal(wakecount)} time this happens`) : '').catch(() => { })
 
         if (!config.apiMode) {
             bot.on('messageCreate', (msg) => {

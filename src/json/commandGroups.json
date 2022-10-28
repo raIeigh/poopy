@@ -64,6 +64,16 @@
         "description": "Add an effect to an input's audio."
     },
     {
+        "name": "battle",
+        "cmds": [
+            "chainpunch",
+            "punch",
+            "slam",
+            "slap"
+        ],
+        "description": "Beat people up. Yeah."
+    },
+    {
         "name": "caption",
         "cmds": [
             "caption",
@@ -123,6 +133,13 @@
             "topng"
         ],
         "description": "Convert a file between various different formats."
+    },
+    {
+        "name": "currency",
+        "cmds": [
+            "leaderboard"
+        ],
+        "description": "Manage your money and spend it on upgrades and cosmetics."
     },
     {
         "name": "dimensions",

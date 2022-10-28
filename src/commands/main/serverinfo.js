@@ -7,10 +7,10 @@ module.exports = {
         let { Discord } = poopy.modules
         let config = poopy.config
 
-        var icon = msg.guild.iconURL({ dynamic: true, size: 1024, format: 'png' })
-        var banner = msg.guild.bannerURL({ dynamic: true, size: 1024, format: 'png' })
-        var splash = msg.guild.splashURL({ dynamic: true, size: 1024, format: 'png' })
-        var dsplash = msg.guild.discoverySplashURL({ dynamic: true, size: 1024, format: 'png' })
+        var icon = msg.guild.iconURL({ dynamic: true, size: 1024, extension: 'png' })
+        var banner = msg.guild.bannerURL({ dynamic: true, size: 1024, extension: 'png' })
+        var splash = msg.guild.splashURL({ dynamic: true, size: 1024, extension: 'png' })
+        var dsplash = msg.guild.discoverySplashURL({ dynamic: true, size: 1024, extension: 'png' })
 
         var urls = []
         if (icon) urls.push(`[Icon URL](${icon})`)
@@ -23,7 +23,7 @@ module.exports = {
             description: urls.join(' '),
             color: 0x472604,
             footer: {
-                icon_url: bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
+                icon_url: bot.user.displayAvatarURL({ dynamic: true, size: 1024, extension: 'png' }),
                 text: bot.user.username
             },
             fields: [
@@ -102,6 +102,11 @@ module.exports = {
         if (msg.guild.widgetChannel) infoEmbed.fields.push({
             name: 'Widget Channel',
             value: msg.guild.widgetChannel.toString(),
+            inline: true
+        })
+        infoEmbed.fields.push({
+            name: 'Boost Level',
+            value: msg.guild.premiumTier ? `Level ${msg.guild.premiumTier}` : 'None',
             inline: true
         })
         infoEmbed.fields.push({

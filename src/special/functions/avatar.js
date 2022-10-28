@@ -9,6 +9,6 @@ module.exports = {
 
     var user = await bot.users.fetch(word).catch(() => { })
 
-    return user ? user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }) : ''
+    return user ? user.displayAvatarURL({ dynamic: true, size: 1024, extension: 'png' }) : ''
   }
 }

@@ -53,7 +53,7 @@ module.exports = {
         var username = member.username ?? member.user.username
         if (args.includes('-global') || member.user) member = member.user
         var avatar = new Discord.AttachmentBuilder(member.displayAvatarURL({
-            dynamic: true, size: 1024, format: 'png'
+            dynamic: true, size: 1024, extension: 'png'
         }));
         var parsedAvatar = whatwg.parseURL(avatar.attachment)
 
@@ -69,7 +69,7 @@ module.exports = {
             title: username + '\'s Avatar',
             color: 0x472604,
             footer: {
-                icon_url: bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
+                icon_url: bot.user.displayAvatarURL({ dynamic: true, size: 1024, extension: 'png' }),
                 text: bot.user.username
             },
             image: {

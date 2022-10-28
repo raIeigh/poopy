@@ -131,7 +131,7 @@ module.exports = {
                                 "description": "Here, you can manage your own keys and tokens to freely access APIs without having to deal with the bot's quotas and limits! Multiple tokens can be used for each API, they're encrypted when saved.",
                                 "color": 0x472604,
                                 "footer": {
-                                    icon_url: bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
+                                    icon_url: bot.user.displayAvatarURL({ dynamic: true, size: 1024, extension: 'png' }),
                                     text: bot.user.username
                                 },
                                 "fields": Object.keys(tokenList).map(token => {
@@ -174,7 +174,7 @@ module.exports = {
                             }).join('\n'),
                             "color": 0x472604,
                             "footer": {
-                                icon_url: bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
+                                icon_url: bot.user.displayAvatarURL({ dynamic: true, size: 1024, extension: 'png' }),
                                 text: bot.user.username
                             }
                         }]
@@ -265,7 +265,7 @@ module.exports = {
                         "color": 0x472604,
                         "footer": {
                             "icon_url": bot.user.displayAvatarURL({
-                                dynamic: true, size: 1024, format: 'png'
+                                dynamic: true, size: 1024, extension: 'png'
                             }),
                             "text": bot.user.username
                         },

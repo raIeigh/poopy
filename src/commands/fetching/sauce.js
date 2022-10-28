@@ -70,7 +70,7 @@ module.exports = {
                 "author": {
                     "name": msg.author.tag,
                     "icon_url": msg.author.displayAvatarURL({
-                        dynamic: true, size: 1024, format: 'png'
+                        dynamic: true, size: 1024, extension: 'png'
                     })
                 }
             }

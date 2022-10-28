@@ -27,6 +27,19 @@ String.prototype.toCapperCase = function toCapperCase() {
     return this.toUpperCase().substring(0, 1) + this.toLowerCase().substring(1)
 }
 
+functions.toOrdinal = function (num) {
+    num = String(num)
+    var thmatch = num.match(/[^1][1-3]$|^[1-3]$/)
+
+    if (thmatch) {
+        num += ['st', 'nd', 'rd'][Number(thmatch[0][thmatch[0].length - 1]) - 1]
+    } else {
+        num += 'th'
+    }
+
+    return num
+}
+
 functions.sleep = function (ms) {
     return new Promise(resolve => setTimeout(resolve, ms ?? 0))
 }
@@ -620,7 +633,10 @@ functions.gatherData = async function (msg) {
         if (!data.userData[msg.author.id]['battleSprites']) {
             data.userData[msg.author.id]['battleSprites'] = {}
         }
-        data.botData.leaderboard[msg.author.id] = data.userData[msg.author.id]['bucks']
+        data.botData.leaderboard[msg.author.id] = {
+            tag: msg.author.tag,
+            bucks: data.userData[msg.author.id]['bucks']
+        }
     }
 
     if (!data.guildData[msg.guild.id]) {
@@ -704,11 +720,11 @@ functions.gatherData = async function (msg) {
     if (!data.guildData[msg.guild.id]['messages']) {
         data.guildData[msg.guild.id]['messages'] = []
     }
-    
+
     for (var m of data.guildData[msg.guild.id]['messages']) {
         if (!m.timestamp) m.timestamp = Date.now()
     }
-    
+
     data.guildData[msg.guild.id]['messages'] = data.guildData[msg.guild.id]['messages'].filter(m => Date.now() - m.timestamp < 1000 * 60 * 60 * 24 * 30)
 
     if (!tempdata[msg.guild.id]) {
@@ -966,7 +982,7 @@ functions.infoPost = async function (message) {
 
     if (config.stfu || config.noInfoPost) return
 
-    var avatar = bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' })
+    var avatar = bot.user.displayAvatarURL({ dynamic: true, size: 1024, extension: 'png' })
     var color = os.platform() == 'win32' ? { r: 255, g: 255, b: 255 } : await averageColor(avatar)
 
     var infoChannel = bot.guilds.cache.get('834431435704107018')?.channels.cache.get('967083645619830834')
@@ -1901,6 +1917,7 @@ functions.rainmaze = async function (channel, who, reply, w = 8, h = 6) {
     var raindraw = rainmaze.draw()
     var rainObject = {}
     var allowedMentions
+    var tag
 
     if (config.textEmbeds) rainObject.content = `${raindraw.description}\n\n${raindraw.fields.map(f => `**${f.name}** - ${f.value}`).join('\n')}`
     else rainObject.embeds = [raindraw]
@@ -1915,6 +1932,7 @@ functions.rainmaze = async function (channel, who, reply, w = 8, h = 6) {
                 ['users'] : ['users', 'everyone', 'roles']
         }
         rainObject.allowedMentions = allowedMentions
+        tag = who.tag ?? who.user.tag
         who = who.id
     }
 
@@ -1938,7 +1956,10 @@ functions.rainmaze = async function (channel, who, reply, w = 8, h = 6) {
                 })
                 data.userData[who]['bucks'] += reward
 
-                data.botData.leaderboard[who] = data.userData[who]['bucks']
+                data.botData.leaderboard[who] = {
+                    tag: tag ?? (await bot.users.fetch(who).catch(() => { }))?.tag,
+                    bucks: data.userData[who]['bucks']
+                }
             }
         }
 
@@ -2551,7 +2572,7 @@ functions.getUrls = async function (msg, options = {}) {
                 var user = await bot.users.fetch(id).catch(() => { })
                 if (user) {
                     infoPost(`Discord avatar URL detected`)
-                    return user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' })
+                    return user.displayAvatarURL({ dynamic: true, size: 1024, extension: 'png' })
                 }
             }
         },
@@ -3088,7 +3109,7 @@ functions.battle = async function (msg, subject, action, damage, chance) {
     var subjData = member && data.userData[member.id]
 
     let attacked = Math.random() < chance + (yourData.accuracy * 0.1)
-    let critical = Math.random() < 0.1 + (yourData.accuracy * 0.05)
+    let critical = attacked && Math.random() < 0.1 + (yourData.accuracy * 0.05)
     let critmult = critical ? Math.floor(Math.random() * 3) + 2 : 1
     let died = false
 
@@ -3114,12 +3135,12 @@ functions.battle = async function (msg, subject, action, damage, chance) {
 
         damage = Math.max(damage - (subjData.defense / 2 + Math.floor(Math.random() * subjData.defense * 11) * 0.1), 0)
         subjData.health = subjData.health - damage
-        if (member.id != msg.author.id && msg.guild.members.cache.get(member.id)) exp = Math.floor(Math.random() * subjData.maxHealth / 5) + subjData.maxHealth / 20 + (yourData.loot * 10) * critmult * (Math.pow(getLevel(subjData.exp).level, 2) / 50)
+        if (member.id != msg.author.id && msg.guild.members.cache.get(member.id)) exp = Math.floor(Math.random() * subjData.maxHealth / 5) + subjData.maxHealth / 20 + (yourData.loot * 10) * critmult * (Math.pow(getLevel(subjData.exp).level, 2) / 50) * Math.round(1 / chance)
 
         if (subjData.health <= 0) {
             subjData.health = 0
             if (member.id != msg.author.id && msg.guild.members.cache.get(member.id)) {
-                exp += Math.floor((subjData.maxHealth + subjData.attack + subjData.defense + subjData.accuracy + subjData.loot + yourData.loot) / 10) * (Math.pow(getLevel(subjData.exp).level, 2) / 50) * 50
+                exp *= 50
                 reward = Math.floor(Math.random() * (subjData.maxHealth + subjData.attack + subjData.defense + subjData.accuracy + subjData.loot + yourData.loot + (Math.pow(getLevel(subjData.exp).level, 2) / 50))) + subjData.maxHealth / 2
             }
             died = true
@@ -3190,7 +3211,7 @@ functions.battle = async function (msg, subject, action, damage, chance) {
             fields: stats,
             footer: {
                 icon_url: bot.user.displayAvatarURL({
-                    dynamic: true, size: 1024, format: 'png'
+                    dynamic: true, size: 1024, extension: 'png'
                 }),
                 text: bot.user.username
             },
@@ -3205,17 +3226,21 @@ functions.battle = async function (msg, subject, action, damage, chance) {
 
     var filepath
     if (member || vars.validUrl.test(subject)) {
-        var avatar = member ? (subjData.battleSprites.hurt ?? member.displayAvatarURL({
-            dynamic: false, size: 256, format: 'png'
+        var avatar = member ? (subjData.battleSprites[died ? 'dead' : attacked ? 'hurt' : 'miss'] ?? member.displayAvatarURL({
+            dynamic: false, size: 256, extension: 'png'
         })) : subject
 
         filepath = await downloadFile(avatar, 'avatar.png')
 
         var spazz = () => `+(random(t+${Math.floor(Math.random() * 1000)})*2-1)*(0.4-mod(t,0.4))*15`
-        var bossX = () => `+cos(PI/2*((t+${i + 1}*0.4)/0.4))*20`
-        var bossY = () => `+sin(PI*((t+${i + 1}*0.4)/0.4))*20`
+        var bossX = () => `+cos(PI/2*((t+${i + 1}*0.4)/0.4))*10`
+        var bossY = () => `+sin(PI*((t+${i + 1}*0.4)/0.4))*10`
 
-        var attackPos = new Array(4).fill().map(() => attacked ? [randomNumber(50, 150), randomNumber(25, 125)] : [randomChoice([randomNumber(0, 25), randomNumber(175, 200)]), randomChoice([0, 125])])
+        var attackPos = new Array(4).fill().map(() =>
+            attacked ?
+                [randomNumber(50, 150), randomNumber(25, 125)] :
+                [randomChoice([randomNumber(0, 25), randomNumber(175, 200)]), randomChoice([randomNumber(0, 25), randomNumber(125, 150)])]
+        )
         var attackOverlay = []
         var attackConcat = []
         var enemyConcat = []
@@ -3226,7 +3251,7 @@ functions.battle = async function (msg, subject, action, damage, chance) {
             var x = pos[0]
             var y = pos[1]
 
-            attackOverlay.push(`${!attacked && i % 2 != 0 ? `[en${i}]hflip[enf${i}];` : ''}[2:v][en${!attacked && i % 2 != 0 ? 'f' : ''}${i}]overlay=x='(W-w)/2${attacked ? spazz() : ''}':y='(H-h)/2${attacked ? spazz() : ''}${died ? `+t*40+(40*${i})` : ''}':format=auto[shake${i}];[shake${i}][1:v]overlay=shortest=1:x=${x}-w/2:y=${y}-h/2:format=auto[attack${i}]`)
+            attackOverlay.push(`${!attacked && i % 2 != 0 ? `[en${i}]hflip[enf${i}];` : ''}[2:v][en${!attacked && i % 2 != 0 ? 'f' : ''}${i}]overlay=x='(W-w)/2${attacked ? spazz() : bossX(i)}':y='(H-h)/2${attacked ? spazz() : bossY(i)}${died ? `+t*40+(40*${i})` : ''}':format=auto[shake${i}];[shake${i}][1:v]overlay=shortest=1:x=${x}-w/2:y=${y}-h/2:format=auto[attack${i}]`)
             attackConcat.push(`[attack${i}]`)
             enemyConcat.push(`[en${i}]`)
         }

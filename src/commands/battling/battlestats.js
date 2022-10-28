@@ -109,11 +109,11 @@ module.exports = {
                 color: 0x472604,
                 thumbnail: {
                     url: member.displayAvatarURL({
-                        dynamic: true, size: 1024, format: 'png'
+                        dynamic: true, size: 1024, extension: 'png'
                     })
                 },
                 footer: {
-                    icon_url: bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
+                    icon_url: bot.user.displayAvatarURL({ dynamic: true, size: 1024, extension: 'png' }),
                     text: bot.user.username
                 },
                 fields: battleStats

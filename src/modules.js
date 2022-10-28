@@ -134,7 +134,7 @@ Interaction.prototype.reply = async function reply(payload) {
     if (tempdata[interaction.guild?.id]?.[interaction.channel?.id]?.['shut']) return
 
     if (config.allowbotusage || interaction.replied) return interaction.channel.send(payload).then(setMessageCooldown)
-    else return (!interaction.replied && interaction.deferred ?
+    else return interaction.replied = (!interaction.replied && interaction.deferred ?
         interaction.editReply(payload):
         interactionReply.call(interaction, payload)).then(setMessageCooldown)
 }

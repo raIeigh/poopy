@@ -21,7 +21,7 @@ module.exports = {
                         "title": 'Special Keywords/Functions',
                         "color": 0x472604,
                         "footer": {
-                            icon_url: bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
+                            icon_url: bot.user.displayAvatarURL({ dynamic: true, size: 1024, extension: 'png' }),
                             text: bot.user.username
                         },
                         "fields": [
@@ -51,7 +51,7 @@ module.exports = {
                         "description": "Here's a list of all keywords that can be used.",
                         "color": 0x472604,
                         "footer": {
-                            "icon_url": bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
+                            "icon_url": bot.user.displayAvatarURL({ dynamic: true, size: 1024, extension: 'png' }),
                             "text": `Page ${page}/${vars.keyfields.length}`
                         },
                         "fields": vars.keyfields[page - 1]
@@ -68,7 +68,7 @@ module.exports = {
                         "description": "Here's a list of all functions that can be used.",
                         "color": 0x472604,
                         "footer": {
-                            "icon_url": bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
+                            "icon_url": bot.user.displayAvatarURL({ dynamic: true, size: 1024, extension: 'png' }),
                             "text": `Page ${page}/${vars.funcfields.length}`
                         },
                         "fields": vars.funcfields[page - 1]

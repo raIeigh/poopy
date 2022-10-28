@@ -15,7 +15,7 @@ module.exports = {
         var tangoEmbed = {
             "author": {
                 "name": msg.author.tag,
-                "icon_url": msg.author.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' })
+                "icon_url": msg.author.displayAvatarURL({ dynamic: true, size: 1024, extension: 'png' })
             },
             "description": `**Message sent by <@${msg.author.id}> deleted in <#${rulesChannel && rulesChannel.id || msg.channel.id}>**\n${saidMessage}`,
             "color": 0xFF470F,

@@ -29,7 +29,7 @@ module.exports = {
                 botmsg = await findWebhook.send({
                     content: optiontext,
                     username: sayori.username,
-                    avatarURL: sayori.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
+                    avatarURL: sayori.displayAvatarURL({ dynamic: true, size: 1024, extension: 'png' }),
                     allowedMentions: {
                         parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                     }
@@ -40,7 +40,7 @@ module.exports = {
                     botmsg = await createdWebhook.send({
                         content: optiontext,
                         username: sayori.username,
-                        avatarURL: sayori.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
+                        avatarURL: sayori.displayAvatarURL({ dynamic: true, size: 1024, extension: 'png' }),
                         allowedMentions: {
                             parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                         }
@@ -53,7 +53,7 @@ module.exports = {
                 botmsg = await createdWebhook.send({
                     content: optiontext,
                     username: sayori.username,
-                    avatarURL: sayori.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
+                    avatarURL: sayori.displayAvatarURL({ dynamic: true, size: 1024, extension: 'png' }),
                     allowedMentions: {
                         parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                     }
@@ -69,7 +69,7 @@ module.exports = {
                         findWebhook.send({
                             content: '<@' + msg.author.id + '> ' + option['edit'] + ' ⁽ᵉᵈᶦᵗᵉᵈ⁾',
                             username: sayori.username,
-                            avatarURL: sayori.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
+                            avatarURL: sayori.displayAvatarURL({ dynamic: true, size: 1024, extension: 'png' }),
                             allowedMentions: {
                                 parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                             }
@@ -79,7 +79,7 @@ module.exports = {
                         findWebhook.send({
                             content: option['edit'] + ' ⁽ᵉᵈᶦᵗᵉᵈ⁾',
                             username: sayori.username,
-                            avatarURL: sayori.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
+                            avatarURL: sayori.displayAvatarURL({ dynamic: true, size: 1024, extension: 'png' }),
                             allowedMentions: {
                                 parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                             }

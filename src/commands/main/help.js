@@ -74,7 +74,7 @@ module.exports = {
                         "title": findCmds[page - 1].title,
                         "color": 0x472604,
                         "footer": {
-                            "icon_url": bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
+                            "icon_url": bot.user.displayAvatarURL({ dynamic: true, size: 1024, extension: 'png' }),
                             "text": `Command ${page}/${findCmds.length}`
                         },
                         "fields": findCmds[page - 1].fields,
@@ -89,7 +89,7 @@ module.exports = {
                             "description": "No commands match your search.",
                             "color": 0x472604,
                             "footer": {
-                                "icon_url": bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
+                                "icon_url": bot.user.displayAvatarURL({ dynamic: true, size: 1024, extension: 'png' }),
                                 "text": bot.user.username
                             },
                         }
@@ -132,7 +132,7 @@ module.exports = {
                 "description": "Arguments between \"<>\" are required.\nArguments between \"[]\" are optional.\nArguments between \"{}\" are optional but should normally be supplied.\nMultiple commands can be executed separating them with \"-|-\".\nFile manipulation commands have special options that can be used:\n`-encodingpreset <preset>` - More info in `reencode` command.\n`-filename <name>` - Saves the file as the specified name.\n`-catbox` - Forces the file to be uploaded to catbox.moe.\n`-nosend` - Does not send anything, can be used to execute commands silently.\n`-compress` - Compresses the file before sending it if it's above 8 MB.",
                 "color": 0x472604,
                 "footer": {
-                    "icon_url": bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
+                    "icon_url": bot.user.displayAvatarURL({ dynamic: true, size: 1024, extension: 'png' }),
                     "text": `Page ${page}/${vars.shelpCmds.length}`
                 },
                 "fields": vars.shelpCmds[page - 1].commands,
@@ -187,7 +187,7 @@ module.exports = {
                     "title": "JSON Club Commands",
                     "color": 0x472604,
                     "footer": {
-                        "icon_url": bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
+                        "icon_url": bot.user.displayAvatarURL({ dynamic: true, size: 1024, extension: 'png' }),
                         "text": bot.user.username
                     },
                     "fields": vars.jsonCmds
@@ -202,7 +202,7 @@ module.exports = {
                     "title": "Owner Commands",
                     "color": 0x472604,
                     "footer": {
-                        "icon_url": bot.user.displayAvatarURL({ dynamic: true, size: 1024, format: 'png' }),
+                        "icon_url": bot.user.displayAvatarURL({ dynamic: true, size: 1024, extension: 'png' }),
                         "text": bot.user.username
                     },
                     "fields": vars.devCmds
