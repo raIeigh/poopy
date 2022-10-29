@@ -742,12 +742,6 @@ class Poopy {
                         msg.content = cmd
                     }
 
-                    if (!msg.channel.permissionsFor(msg.guild.members.me).has('SendMessages', false)) {
-                        notExecuted = false
-                        var emojis = msg.guild.emojis.cache.filter(emoji => !config.self ? emoji.available : emoji.available && !emoji.animated).map(emoji => emoji.toString())
-                        await msg.react(randomChoice(emojis)).catch(() => { })
-                    }
-
                     if (!msg.guild || !msg.channel) {
                         return
                     }
@@ -779,6 +773,12 @@ class Poopy {
 
                     if (msg.content.toLowerCase().startsWith(prefix.toLowerCase()) && ((!msg.author.bot && msg.author.id != bot.user.id) || config.allowbotusage)) {
                         data.guildData[msg.guild.id]['lastuse'] = Date.now()
+
+                        if (!msg.channel.permissionsFor(msg.guild.members.me).has('SendMessages', false)) {
+                            notExecuted = false
+                            var emojis = msg.guild.emojis.cache.filter(emoji => !config.self ? emoji.available : emoji.available && !emoji.animated).map(emoji => emoji.toString())
+                            await msg.react(randomChoice(emojis)).catch(() => { })
+                        }
 
                         if (tempdata[msg.author.id]['ratelimited']) {
                             notExecuted = false
