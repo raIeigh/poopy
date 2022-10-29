@@ -3,7 +3,7 @@ module.exports = {
     args: [{ "name": "query", "required": true, "specifarg": false, "orig": "<query>" }, { "name": "page", "required": false, "specifarg": true, "orig": "[-page <number>]" }],
     execute: async function (msg, args) {
         let poopy = this
-        let { findCommand, navigateEmbed, addLastUrl } = poopy.functions
+        let { findCommand, navigateEmbed, lastUrl, addLastUrl } = poopy.functions
         let { axios, Discord } = poopy.modules
         let config = poopy.config
 
