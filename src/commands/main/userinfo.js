@@ -25,7 +25,7 @@ module.exports = {
             await bot.users.fetch((args[1].match(/\d+/) ?? [args[1]])[0]).catch(() => { }) ??
             msg.member
 
-        var user = member.user ?? member
+        var user = await (member.user ?? member).fetch(true)
 
         var avatar = member.displayAvatarURL({ dynamic: true, size: 1024, extension: 'png' }) ?? user.displayAvatarURL({ dynamic: true, size: 1024, extension: 'png' })
         var banner = user.bannerURL({ dynamic: true, size: 1024, extension: 'png' })
