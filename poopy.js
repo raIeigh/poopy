@@ -548,6 +548,10 @@ class Poopy {
 
             data.botData['messages']++
 
+            var dataError = false
+            await gatherData(msg).catch(() => dataError = true)
+            if (dataError) return
+
             var prefix = data.guildData[msg.guild.id]?.['prefix'] ?? config.globalPrefix
 
             if (msg.channel.type == Discord.ChannelType.DM && !msg.type !== Discord.InteractionType.ApplicationCommand && !msg.content.includes(prefix)) {
@@ -563,10 +567,6 @@ class Poopy {
                 await msg.reply('you won\'t use me any time soon')
                 return
             }
-
-            var dataError = false
-            await gatherData(msg).catch(() => dataError = true)
-            if (dataError) return
 
             if (msg.channel.onsfw == undefined) msg.channel.onsfw = !!msg.channel.nsfw
             msg.channel.nsfw = !!data.guildData[msg.guild.id]['channels'][msg.channel.id]['nsfw']
@@ -1407,6 +1407,7 @@ class Poopy {
             }
 
             if (config.testing || !process.env.MONGOOSE_URL) {
+                console.log(`${bot.user.username}: gathering from json`)
                 if (fs.existsSync(`data/${config.database}.json`)) {
                     data.data = JSON.parse(fs.readFileSync(`data/${config.database}.json`).toString())
                 } else {
@@ -1427,6 +1428,7 @@ class Poopy {
 
                 return data
             } else {
+                console.log(`${bot.user.username}: gathering from mongodb`)
                 data.data.botData = await dataGather.botData(config.database)
                 if (Object.keys(globaldata).length <= 0) {
                     data.globaldata = await dataGather.globalData()

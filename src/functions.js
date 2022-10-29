@@ -607,8 +607,10 @@ functions.gatherData = async function (msg) {
     let data = poopy.data
     let tempdata = poopy.tempdata
     let vars = poopy.vars
+
     let { dataGather } = poopy.functions
 
+    var now = Date.now()
     var webhook = await msg.fetchWebhook().catch(() => { })
 
     if (!webhook) {
@@ -620,6 +622,9 @@ functions.gatherData = async function (msg) {
         }
 
         data.userData[msg.author.id]['username'] = msg.author.username
+        if (data.userData[msg.author.id]['dms'] === undefined) {
+            data.userData[msg.author.id]['dms'] = false
+        }
 
         for (var stat in vars.battleStats) {
             if (data.userData[msg.author.id][stat] === undefined) {
@@ -655,9 +660,7 @@ functions.gatherData = async function (msg) {
         data.guildData[msg.guild.id]['keyexec'] = 1
     }
 
-    if (!data.guildData[msg.guild.id]['lastuse']) {
-        data.guildData[msg.guild.id]['lastuse'] = Date.now()
-    }
+    data.guildData[msg.guild.id]['lastuse'] = now
 
     if (data.guildData[msg.guild.id]['prefix'] === undefined) {
         data.guildData[msg.guild.id]['prefix'] = config.globalPrefix
@@ -668,7 +671,7 @@ functions.gatherData = async function (msg) {
     }
 
     if (!data.guildData[msg.guild.id]['channels'][msg.channel.id]) {
-        data.guildData[msg.guild.id]['channels'][msg.channel.id] = /*!config.testing && process.env.MONGOOSE_URL && await dataGather.channelData(config.database, msg.guild.id, msg.channel.id).catch(() => { }) ||*/ {}
+        data.guildData[msg.guild.id]['channels'][msg.channel.id] = !config.testing && process.env.MONGOOSE_URL && await dataGather.channelData(config.database, msg.guild.id, msg.channel.id).catch(() => { }) || {}
     }
 
     if (!data.guildData[msg.guild.id]['channels'][msg.channel.id]['lastUrls']) {
@@ -689,24 +692,36 @@ functions.gatherData = async function (msg) {
         }
 
         if (!data.guildData[msg.guild.id]['members'][msg.author.id]) {
-            data.guildData[msg.guild.id]['members'][msg.author.id] = /*!config.testing && process.env.MONGOOSE_URL && await dataGather.memberData(config.database, msg.guild.id, msg.author.id).catch(() => { }) ||*/ {}
+            data.guildData[msg.guild.id]['members'][msg.author.id] = !config.testing && process.env.MONGOOSE_URL && await dataGather.memberData(config.database, msg.guild.id, msg.author.id).catch(() => { }) || {}
         }
 
         if (!data.guildData[msg.guild.id]['members'][msg.author.id]['messages']) {
             data.guildData[msg.guild.id]['members'][msg.author.id]['messages'] = 0
         }
 
-        if (!data.guildData[msg.guild.id]['members'][msg.author.id]['lastmessage']) {
-            data.guildData[msg.guild.id]['members'][msg.author.id]['lastmessage'] = Date.now()
-        }
-
         if (!data.guildData[msg.guild.id]['members'][msg.author.id]['coolDown']) {
             data.guildData[msg.guild.id]['members'][msg.author.id]['coolDown'] = false
         }
 
-        data.guildData[msg.guild.id]['members'][msg.author.id]['messages']++
+        if (!data.guildData[msg.guild.id]['allMembers']) {
+            data.guildData[msg.guild.id]['allMembers'] = {}
+        }
 
+        if (!data.guildData[msg.guild.id]['allMembers'][msg.author.id]) {
+            data.guildData[msg.guild.id]['allMembers'][msg.author.id] = {}
+        }
+
+        if (!data.guildData[msg.guild.id]['allMembers'][msg.author.id]['messages']) {
+            data.guildData[msg.guild.id]['allMembers'][msg.author.id]['messages'] = 0
+        }
+
+        data.guildData[msg.guild.id]['members'][msg.author.id]['messages']++
         data.guildData[msg.guild.id]['members'][msg.author.id]['username'] = msg.author.username
+        data.guildData[msg.guild.id]['members'][msg.author.id]['lastmessage'] = now
+
+        data.guildData[msg.guild.id]['allMembers'][msg.author.id]['messages']++
+        data.guildData[msg.guild.id]['allMembers'][msg.author.id]['username'] = msg.author.username
+        data.guildData[msg.guild.id]['allMembers'][msg.author.id]['lastmessage'] = now
     }
 
     if (!data.guildData[msg.guild.id]['disabled']) {
@@ -721,11 +736,7 @@ functions.gatherData = async function (msg) {
         data.guildData[msg.guild.id]['messages'] = []
     }
 
-    for (var m of data.guildData[msg.guild.id]['messages']) {
-        if (!m.timestamp) m.timestamp = Date.now()
-    }
-
-    data.guildData[msg.guild.id]['messages'] = data.guildData[msg.guild.id]['messages'].filter(m => Date.now() - m.timestamp < 1000 * 60 * 60 * 24 * 30)
+    data.guildData[msg.guild.id]['messages'] = data.guildData[msg.guild.id]['messages'].filter(m => now - m.timestamp < 1000 * 60 * 60 * 24 * 30)
 
     if (!tempdata[msg.guild.id]) {
         tempdata[msg.guild.id] = {}
@@ -3091,7 +3102,7 @@ functions.battle = async function (msg, subject, action, damage, chance) {
     let data = poopy.data
     let vars = poopy.vars
     let { Discord, fs } = poopy.modules
-    let { getLevel, execPromise, randomNumber, randomChoice, downloadFile } = poopy.functions
+    let { getLevel, execPromise, randomNumber, randomChoice, downloadFile, dataGather } = poopy.functions
 
     await msg.channel.sendTyping().catch(() => { })
     var attachments = msg.attachments.map(attachment => new Discord.AttachmentBuilder(attachment.url));
@@ -3119,7 +3130,7 @@ functions.battle = async function (msg, subject, action, damage, chance) {
 
     if (member && attacked) {
         if (!subjData) {
-            data.userData[member.id] = {}
+            data.userData[member.id] = !config.testing && process.env.MONGOOSE_URL && await dataGather.userData(config.database, member.id).catch(() => { }) || {}
             subjData = data.userData[member.id]
         }
 

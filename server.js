@@ -473,18 +473,16 @@ async function start() {
             {
                 TOKEN: process.env.POOPYTEST_TOKEN,
                 config: {
-                    testing: true,
                     noInfoPost: true,
                     globalPrefix: '2p:',
                     database: 'testdata',
-                    intents: 3276799,
+                    intents: 3276799
                 }
             },
 
             {
                 TOKEN: process.env.INDIA_TOKEN,
                 config: {
-                    testing: true,
                     self: true,
                     globalPrefix: '2i:',
                     database: 'testracist',
@@ -532,11 +530,9 @@ async function start() {
         ]
     }
 
-    var lead = false
     for (var tokendata of tokens) {
-        if (!lead) {
+        if (!mainPoopy) {
             tokendata.config.quitOnDestroy = true
-            lead = true
         }
 
         let poopy = new Poopy(tokendata.config)

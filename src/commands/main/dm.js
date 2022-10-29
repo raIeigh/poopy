@@ -30,7 +30,7 @@ module.exports = {
     }],
     execute: async function (msg, args, opts) {
         let poopy = this
-        let { shuffle, randomChoice, yesno } = poopy.functions
+        let { shuffle, randomChoice, yesno, dataGather } = poopy.functions
         let { Discord } = poopy.modules
         let json = poopy.json
         let data = poopy.data
@@ -112,7 +112,7 @@ module.exports = {
         }
 
         if (!data.userData[member.id]) {
-            data.userData[member.id] = {}
+            data.userData[member.id] = !config.testing && process.env.MONGOOSE_URL && await dataGather.userData(config.database, member.id).catch(() => { }) || {}
         }
         if (!tempdata[member.id]) {
             tempdata[member.id] = {}

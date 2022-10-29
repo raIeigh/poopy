@@ -59,7 +59,9 @@ module.exports = {
 
         var badgeEmojis = {
             GuildOwner: `<:Guild_owner:1035668034934820966>`,
-            Bot: `<:Bot:1035679153917263995>`,
+            Bot: `<:Bot1:1035902581542764575><:Bot2:1035902583056908479>`,
+            VerifiedBot: `<:VerifiedBot1:1035902602577186878><:VerifiedBot2:1035902604489797733><:VerifiedBot3:1035902606029107220>`,
+            System: `<:System1:1035901984814944337><:System2:1035901986433925230><:System3:1035901988560457739><:System4:1035901990003290192>`,
             Staff: `<:Discord_Staff:1035668039338840144>`,
             Partner: `<:Partner:1035670800386248825>`,
             Hypesquad: `<:HypeSquad_Event:1035668031889748018>`,
@@ -81,15 +83,16 @@ module.exports = {
             PremiumEarlySupporter: `<:early_supporter:1035668025292099615>`,
             TeamPseudoUser: `<:Team_Pseudo_User:1035673000244170832>`,
             CertifiedModerator: `<:Discord_certified_moderator:1035668036608331836>`,
-            VerifiedBot: `<:Verified_Bot:1035673002202898545>`,
             VerifiedDeveloper: `<:Verified_Bot_Developer:1035668033663930429>`,
             BotHTTPInteractions: `<:BotHTTPInteractions:1035675213523845252>`,
             Spammer: `<:Spammer:1035673850085638285>`,
             Quarantined: `<:Quarantined:1035673851503325224>`
         }
 
-        var flags = user.flags.toArray()
+        var userFlags = user.flags.toArray()
+        var flags = []
 
+        if (user.id == msg.guild.ownerId) flags.push('GuildOwner')
         if (member.premiumSince) {
             flags.push(`Nitro`)
 
@@ -104,8 +107,13 @@ module.exports = {
                 }
             }
         }
-        if (user.id == msg.guild.ownerId) flags.push('GuildOwner')
-        if (user.bot) flags.push('Bot')
+        if (user.system) flags.push('System')
+        else if (user.bot) {
+            var verifiedBot = userFlags.indexOf('VerifiedBot')
+            if (verifiedBot > -1) userFlags.splice(verifiedBot, 1)
+            flags.push(verifiedBot > -1 ? 'VerifiedBot' : 'Bot')
+        }
+        flags = flags.concat(userFlags)
 
         infoEmbed.fields.push({
             name: 'ID',

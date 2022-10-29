@@ -39,7 +39,7 @@ module.exports = {
         })
         requests++
 
-        var dataobject = await schemas.userData.find({ dataid, uid }).then(d => d.toJSON()).catch(() => { })
+        var dataobject = await schemas.userData.findOne({ dataid, uid }).then(d => d.toJSON()).catch(() => { })
 
         if (dataobject) {
             for (var k in dataobject) {
@@ -65,7 +65,7 @@ module.exports = {
         })
         requests++
 
-        var dataobject = await schemas.guildData.find({ dataid, gid }).then(d => d.toJSON()).catch(() => { })
+        var dataobject = await schemas.guildData.findOne({ dataid, gid }).then(d => d.toJSON()).catch(() => { })
 
         if (dataobject) {
             for (var k in dataobject) {
@@ -91,7 +91,7 @@ module.exports = {
         })
         requests++
 
-        var dataobject = await schemas.channelData.find({ dataid, gid, cid }).then(d => d.toJSON()).catch(() => { })
+        var dataobject = await schemas.channelData.findOne({ dataid, gid, cid }).then(d => d.toJSON()).catch(() => { })
 
         if (dataobject) {
             for (var k in dataobject) {
@@ -117,7 +117,7 @@ module.exports = {
         })
         requests++
 
-        var dataobject = await schemas.memberData.find({ dataid, gid, uid }).then(d => d.toJSON()).catch(() => { })
+        var dataobject = await schemas.memberData.findOne({ dataid, gid, uid }).then(d => d.toJSON()).catch(() => { })
 
         if (dataobject) {
             for (var k in dataobject) {
@@ -143,7 +143,7 @@ module.exports = {
         })
         requests++
 
-        var dataobject = await schemas.globalData.find({}).then(d => d.toJSON()).catch(() => { })
+        var dataobject = await schemas.globalData.findOne({}).then(d => d.toJSON()).catch(() => { })
 
         if (dataobject) {
             for (var k in dataobject) {
@@ -157,48 +157,6 @@ module.exports = {
         if (requests <= 0) mongoose.connection.close()
 
         return globalData
-    },
-
-    allData: async (dataid, global) => {
-        var data = {
-            data: {}
-        }
-
-        var url = process.env.MONGOOSE_URL
-        if (requests <= 0) await mongoose.connect(url, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true
-        })
-        requests++
-
-        var dataobject = await schemas.data.find({ dataid }).then(d => d.toJSON()).catch(() => { })
-
-        if (dataobject) {
-            for (var k in dataobject) {
-                var value = dataobject[k]
-                if ((schemas.data.schema.obj[k] ?? { required: true }).required) continue
-                data[k] = value
-            }
-        }
-
-        if (global) {
-            data.globaldata = {}
-
-            var dataobject = await schemas.globalData.find({}).then(d => d.toJSON()).catch(() => { })
-
-            if (dataobject) {
-                for (var k in dataobject) {
-                    var value = dataobject[k]
-                    if ((schemas.globalData.schema.obj[k] ?? { required: true }).required) continue
-                    globalData[k] = value
-                }
-            }
-        }
-
-        requests--
-        if (requests <= 0) mongoose.connection.close()
-
-        return data
     },
 
     update: async (dataid, d) => {
@@ -228,7 +186,7 @@ module.exports = {
 
         var guildData = data.guildData
         for (var gid in guildData) {
-            var guild = /*{ ...*/guildData[gid] /*}
+            var guild = { ...guildData[gid] }
 
             var channelData = guild.channels
             delete guild.channels
@@ -248,7 +206,7 @@ module.exports = {
                     upsert: true,
                     useFindAndModify: false
                 }).catch(() => { })
-            }*/
+            }
 
             await schemas.guildData.findOneAndUpdate({ dataid, gid }, guild, {
                 upsert: true,

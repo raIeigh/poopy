@@ -41,6 +41,7 @@ module.exports = {
             axios,
             fileType
         } = poopy.modules
+        let { dataGather } = poopy.functions
 
         args[1] = args[1] ?? ' '
 
@@ -56,9 +57,14 @@ module.exports = {
             return
         }
 
+        if (!data.guildData[msg.guild.id]['members'][member.id]) {
+            data.guildData[msg.guild.id]['members'][member.id] = !config.testing && process.env.MONGOOSE_URL && await dataGather.memberData(config.database, msg.guild.id, msg.author.id).catch(() => { }) || {}
+        }
+
         if (!data.guildData[msg.guild.id]['members'][member.id]['custom']) {
             data.guildData[msg.guild.id]['members'][member.id]['custom'] = false
         }
+
         if (data.guildData[msg.guild.id]['members'][member.id]['custom'] === false) {
             if (msg.member.permissions.has('ManageWebhooks') || msg.member.permissions.has('Administrator') || msg.member.permissions.has('ManageGuild') || msg.member.permissions.has('ManageMessages') || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
                 var saidMessage = args.slice(1).join(' ')

@@ -5,12 +5,6 @@ module.exports = {
         let poopy = this
         let data = poopy.data
 
-        if (!data.userData[msg.author.id]) {
-            data.userData[msg.author.id] = {}
-        }
-        if (data.userData[msg.author.id]['dms'] === undefined) {
-            data.userData[msg.author.id]['dms'] = false
-        }
         data.userData[msg.author.id]['dms'] = !data.userData[msg.author.id]['dms']
         if (!msg.nosend) await msg.reply({
             content: `Unrelated DMs from \`dm\` will **${!data.userData[msg.author.id]['dms'] ? 'not ' : ''}be sent** to you now.`,

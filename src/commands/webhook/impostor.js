@@ -24,6 +24,7 @@ module.exports = {
         let poopy = this
         let data = poopy.data
         let config = poopy.config
+        let { dataGather } = poopy.functions
 
         args[1] = args[1] ?? ' '
 
@@ -37,6 +38,10 @@ module.exports = {
                 }
             }).catch(() => {})
             return
+        }
+
+        if (!data.guildData[msg.guild.id]['members'][member.id]) {
+            data.guildData[msg.guild.id]['members'][member.id] = !config.testing && process.env.MONGOOSE_URL && await dataGather.memberData(config.database, msg.guild.id, msg.author.id).catch(() => { }) || {}
         }
 
         if (!data.guildData[msg.guild.id]['members'][member.id]['impostor']) {

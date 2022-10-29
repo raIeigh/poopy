@@ -19,7 +19,7 @@ module.exports = {
         let data = poopy.data
         let vars = poopy.vars
         let config = poopy.config
-        let { getLevel } = poopy.functions
+        let { getLevel, dataGather } = poopy.functions
 
         await msg.channel.sendTyping().catch(() => { })
 
@@ -38,7 +38,7 @@ module.exports = {
         }
 
         if (!data.userData[member.id]) {
-            data.userData[member.id] = {}
+            data.userData[member.id] = !config.testing && process.env.MONGOOSE_URL && await dataGather.userData(config.database, member.id).catch(() => { }) || {}
         }
 
         for (var stat in vars.battleStats) {

@@ -1,7 +1,7 @@
 var mongoose = require('mongoose')
 
 module.exports = {
-    botData: mongoose.model('botData', mongoose.Schema({
+    botData: mongoose.model('botdata', mongoose.Schema({
         dataid: {
             type: String,
             required: true
@@ -38,7 +38,7 @@ module.exports = {
         }
     })),
 
-    userData: mongoose.model('userData', mongoose.Schema({
+    userData: mongoose.model('userdata', mongoose.Schema({
         dataid: {
             type: String,
             required: true
@@ -105,7 +105,7 @@ module.exports = {
         }
     })),
 
-    guildData: mongoose.model('guildData', mongoose.Schema({
+    guildData: mongoose.model('guilddata', mongoose.Schema({
         dataid: {
             type: String,
             required: true
@@ -124,6 +124,11 @@ module.exports = {
 
         prefix: {
             type: String,
+            required: false
+        },
+
+        allMembers: {
+            type: Object,
             required: false
         },
 
@@ -163,7 +168,7 @@ module.exports = {
         }
     })),
 
-    channelData: mongoose.model('channelData', mongoose.Schema({
+    channelData: mongoose.model('channeldata', mongoose.Schema({
         dataid: {
             type: String,
             required: true
@@ -195,7 +200,7 @@ module.exports = {
         }
     })),
 
-    memberData: mongoose.model('memberData', mongoose.Schema({
+    memberData: mongoose.model('memberdata', mongoose.Schema({
         dataid: {
             type: String,
             required: true
@@ -232,7 +237,7 @@ module.exports = {
         }
     })),
 
-    globalData: mongoose.model('globalData', mongoose.Schema({
+    globalData: mongoose.model('globaldata', mongoose.Schema({
         commandTemplates: {
             type: Array,
             required: false
@@ -267,27 +272,5 @@ module.exports = {
             type: Array,
             required: false
         }
-    })),
-
-    data: mongoose.model('database', mongoose.Schema({
-        dataid: {
-            type: String,
-            required: true
-        },
-
-        'bot-data': {
-            type: Object,
-            required: false
-        },
-
-        'user-data': {
-            type: Object,
-            required: false
-        },
-
-        'guild-data': {
-            type: Object,
-            required: false
-        }
-    })),
+    }))
 }

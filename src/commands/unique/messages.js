@@ -94,7 +94,7 @@ module.exports = {
         let config = poopy.config
         let { fs, Discord, CryptoJS } = poopy.modules
         let data = poopy.data
-        let { similarity, yesno, decrypt } = poopy.functions
+        let { similarity, yesno, decrypt, dataGather } = poopy.functions
         let bot = poopy.bot
 
         var options = {
@@ -275,15 +275,15 @@ module.exports = {
                     data.guildData[msg.guild.id]['read'] = !(data.guildData[msg.guild.id]['read'])
                     var channels = msg.guild.channels.cache
 
-                    channels.forEach(channel => {
+                    for (var channel of channels) {
                         if (channel.type === Discord.ChannelType.GuildText || channel.type === Discord.ChannelType.GuildNews) {
                             if (!data.guildData[msg.guild.id]['channels'][channel.id]) {
-                                data.guildData[msg.guild.id]['channels'][channel.id] = {}
+                                data.guildData[msg.guild.id]['channels'][channel.id] = !config.testing && process.env.MONGOOSE_URL && await dataGather.channelData(config.database, msg.guild.id, channel.id).catch(() => { }) || {}
                             }
 
                             data.guildData[msg.guild.id]['channels'][channel.id]['read'] = data.guildData[msg.guild.id]['read']
                         }
-                    })
+                    }
 
                     var read = data.guildData[msg.guild.id]['read']
                     if (!msg.nosend) await msg.reply(`I **can${!read ? '\'t' : ''} read** messages from all channels now.`).catch(() => { })
