@@ -37,7 +37,7 @@ module.exports = {
 
         var urls = results.map(result => {
             return {
-                url: result.data.ext_urls[0],
+                url: result.data.ext_urls?.[0] || result.header.thumbnail,
                 title: result.data.title || result.data.eng_name || result.data.jp_name || result.data.source || result.header.index_name,
                 thumb: result.header.thumbnail,
                 similarity: result.header.similarity
