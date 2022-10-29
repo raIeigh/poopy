@@ -10,7 +10,7 @@ module.exports = {
         var word = matches[1]
         var split = splitKeyFunc(word, { args: 2 })
         var id = getIndexOption(split, 0)[0]
-        var page = getIndexOption(split, 1, { n: Infinity }).join(' | ')
+        var page = getIndexOption(split, 1, { n: Infinity, dft: [] }).join(' | ')
 
         if (!tempdata.playlistvideos) tempdata.playlistvideos = {}
 
