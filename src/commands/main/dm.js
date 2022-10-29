@@ -8,7 +8,7 @@ module.exports = {
         "autocomplete": function (interaction) {
             let poopy = this
 
-            var memberData = poopy.data.guildData[interaction.guild.id]['members']
+            var memberData = poopy.data.guildData[interaction.guild.id]['allMembers']
             var memberKeys = Object.keys(memberData).sort((a, b) => memberData[b].messages - memberData[a].messages)
 
             return memberKeys.map(id => {

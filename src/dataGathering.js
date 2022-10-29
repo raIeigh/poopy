@@ -107,6 +107,36 @@ module.exports = {
         return channelData
     },
 
+    allChannelData: async (dataid, gid) => {
+        var channelData = {}
+
+        var url = process.env.MONGOOSE_URL
+        if (requests <= 0) await mongoose.connect(url, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true
+        })
+        requests++
+
+        var dataobjects = await schemas.channelData.find({ dataid, gid }).then(arr => arr.map(d => d.toJSON())).catch(() => { })
+
+        if (dataobjects) {
+            for (var dataobject of dataobjects) {
+                var cid = dataobject.cid
+                channelData[cid] = {}
+                for (var k in dataobject) {
+                    var value = dataobject[k]
+                    if ((schemas.channelData.schema.obj[k] ?? { required: true }).required) continue
+                    channelData[cid][k] = value
+                }
+            }
+        }
+
+        requests--
+        if (requests <= 0) mongoose.connection.close()
+
+        return channelData
+    },
+
     memberData: async (dataid, gid, uid) => {
         var memberData = {}
 
@@ -124,6 +154,36 @@ module.exports = {
                 var value = dataobject[k]
                 if ((schemas.memberData.schema.obj[k] ?? { required: true }).required) continue
                 memberData[k] = value
+            }
+        }
+
+        requests--
+        if (requests <= 0) mongoose.connection.close()
+
+        return memberData
+    },
+
+    allMemberData: async (dataid, gid) => {
+        var memberData = {}
+
+        var url = process.env.MONGOOSE_URL
+        if (requests <= 0) await mongoose.connect(url, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true
+        })
+        requests++
+
+        var dataobjects = await schemas.memberData.find({ dataid, gid }).then(arr => arr.map(d => d.toJSON())).catch(() => { })
+
+        if (dataobjects) {
+            for (var dataobject of dataobjects) {
+                var uid = dataobject.uid
+                memberData[uid] = {}
+                for (var k in dataobject) {
+                    var value = dataobject[k]
+                    if ((schemas.memberData.schema.obj[k] ?? { required: true }).required) continue
+                    memberData[uid][k] = value
+                }
             }
         }
 

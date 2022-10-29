@@ -4,7 +4,7 @@ module.exports = {
     let poopy = this
     let data = poopy.data
 
-    var datamembers = data.guildData[msg.guild.id]['members']
+    var datamembers = data.guildData[msg.guild.id]['allMembers']
     var keys = Object.keys(datamembers)
 
     var sum = 0
@@ -30,7 +30,7 @@ module.exports = {
     let poopy = this
     let data = poopy.data
 
-    var datamembers = data.guildData[msg.guild.id]['members'];
+    var datamembers = data.guildData[msg.guild.id]['allMembers'];
     return Object.keys(datamembers)
   }
 }

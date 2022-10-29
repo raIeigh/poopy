@@ -36,7 +36,7 @@ module.exports = {
             "autocomplete": function (interaction) {
                 let poopy = this
 
-                var memberData = poopy.data.guildData[interaction.guild.id]['members']
+                var memberData = poopy.data.guildData[interaction.guild.id]['allMembers']
                 var memberKeys = Object.keys(memberData).sort((a, b) => memberData[b].messages - memberData[a].messages)
 
                 return memberKeys.map(id => {
@@ -273,12 +273,13 @@ module.exports = {
             readall: async (msg) => {
                 if (msg.member.permissions.has('ManageGuild') || msg.member.permissions.has('Administrator') || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
                     data.guildData[msg.guild.id]['read'] = !(data.guildData[msg.guild.id]['read'])
-                    var channels = msg.guild.channels.cache
+                    var channels = [...msg.guild.channels.cache.values()]
+                    var channelData = !config.testing && process.env.MONGOOSE_URL && await dataGather.allChannelData(config.database, msg.guild.id).catch(() => { }) || {}
 
                     for (var channel of channels) {
                         if (channel.type === Discord.ChannelType.GuildText || channel.type === Discord.ChannelType.GuildNews) {
                             if (!data.guildData[msg.guild.id]['channels'][channel.id]) {
-                                data.guildData[msg.guild.id]['channels'][channel.id] = !config.testing && process.env.MONGOOSE_URL && await dataGather.channelData(config.database, msg.guild.id, channel.id).catch(() => { }) || {}
+                                data.guildData[msg.guild.id]['channels'][channel.id] = channelData[channel.id] || {}
                             }
 
                             data.guildData[msg.guild.id]['channels'][channel.id]['read'] = data.guildData[msg.guild.id]['read']
