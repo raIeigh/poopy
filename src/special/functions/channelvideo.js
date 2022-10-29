@@ -5,12 +5,16 @@ module.exports = {
         let poopy = this
         let { splitKeyFunc, getIndexOption, parseNumber } = poopy.functions
         let vars = poopy.vars
+        let tempdata = poopy.tempdata
 
         var word = matches[1]
         var split = splitKeyFunc(word, { args: 2 })
         var id = getIndexOption(split, 0)[0]
         var page = getIndexOption(split, 1, { n: Infinity }).join(' | ')
-        var countres = await vars.youtube.search.list({
+
+        if (!tempdata.channelvideos) tempdata.channelvideos = {}
+
+        var countres = tempdata.channelvideos[id]?.[0] ?? await vars.youtube.search.list({
             channelId: id,
             type: 'video',
             part: 'snippet',
@@ -20,24 +24,23 @@ module.exports = {
 
         if (!countres) return word
 
+        if (!tempdata.channelvideos[id]) tempdata.channelvideos[id] = []
+
+        tempdata.channelvideos[id][0] = countres
+
         var count = Math.min(countres.data.pageInfo.totalResults, 250)
         var page = parseNumber(page, { dft: Math.floor(Math.random() * count), min: -count, max: count - 1, round: true })
         if (page < 0) page += count
 
-        var pagecount = 1
+        var pagecount = 0
+        var res = countres
+        var nextToken = countres.data.nextPageToken
 
         while (page >= 50) {
             pagecount++
             page -= 50
-        }
-        console.log(pagecount)
 
-        var res = countres
-        var nextToken = countres.data.nextPageToken
-
-        while (pagecount > 1) {
-            pagecount--
-            var nres = await vars.youtube.search.list({
+            var nres = tempdata.channelvideos[id][pagecount] ?? await vars.youtube.search.list({
                 channelId: id,
                 type: 'video',
                 part: 'snippet',
@@ -48,6 +51,7 @@ module.exports = {
             if (!nres || !nres.data.items.length) break
             res = nres
             nextToken = res.data.nextPageToken
+            tempdata.channelvideos[id][pagecount] = res
         }
 
         page = Math.min(page, res.data.items.length)

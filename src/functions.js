@@ -2803,24 +2803,21 @@ functions.rateLimit = async function (msg) {
     let tempdata = poopy.tempdata
     let { infoPost } = poopy.functions
 
+    if (!process.env.CLOUDAMQP_URL) return false
     if (!tempdata[msg.author.id]) tempdata[msg.author.id] = {}
 
     tempdata[msg.author.id]['ratelimit'] = (tempdata[msg.author.id]['ratelimit'] ?? 0) + 1
-    setTimeout(() => tempdata[msg.author.id]['ratelimit'] - 1, 60000)
+    setTimeout(() => tempdata[msg.author.id]['ratelimit'] -= 1, 90000)
 
     if (tempdata[msg.author.id]['ratelimit'] >= config.rateLimit) {
         tempdata[msg.author.id]['ratelimits'] = (tempdata[msg.author.id]['ratelimits'] ?? 0.5) * 2
         var rateLimitTime = config.rateLimitTime * tempdata[msg.author.id]['ratelimits']
-        setTimeout(() => {
-            tempdata[msg.author.id]['ratelimits'] -= 1
-        }, rateLimitTime * 2)
+        setTimeout(() => tempdata[msg.author.id]['ratelimits'] -= 1, rateLimitTime * 2)
 
         await msg.reply(`you've been banned from using commands for ${rateLimitTime / 60000} minutes for crashing the file processor ${config.rateLimit * tempdata[msg.author.id]['ratelimits']} times LMAO!!!`).catch(() => { })
         infoPost(`${msg.author.id} was rate limited for ${rateLimitTime / 60000} minutes`).catch(() => { })
         tempdata[msg.author.id]['ratelimited'] = Date.now() + rateLimitTime
-        setTimeout(() => {
-            delete tempdata[msg.author.id]['ratelimited']
-        }, rateLimitTime)
+        setTimeout(() => delete tempdata[msg.author.id]['ratelimited'], rateLimitTime)
         return true
     }
 
