@@ -3085,6 +3085,8 @@ functions.getLevel = function (exp) {
     let poopy = this
     let vars = poopy.vars
 
+    if (exp > Number.MAX_SAFE_INTEGER) exp = Number.MAX_SAFE_INTEGER
+
     let lastLevel = 0
     let level = 0
     while (exp >= vars.battleStats.exp * (lastLevel + 1)) {
