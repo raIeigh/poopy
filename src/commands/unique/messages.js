@@ -206,7 +206,7 @@ module.exports = {
 
                     var messages = [{
                         author: msg.author.id,
-                        content: CryptoJS.AES.encrypt(cleanMessage).toString(),
+                        content: CryptoJS.AES.encrypt(cleanMessage, process.env.AUTH_TOKEN).toString(),
                         timestamp: Infinity
                     }].concat(data.guildData[msg.guild.id]['messages'])
                     messages.splice(10000)
