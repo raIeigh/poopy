@@ -3249,7 +3249,7 @@ functions.battle = async function (msg, subject, action, damage, chance) {
     var filepath
     if ((member && subjData) || (vars.validUrl.test(subject) && (await validateFile(subject).catch(() => { })))) {
         var avatar = member ? (subjData.battleSprites[died ? 'dead' : attacked ? 'hurt' : 'miss'] ?? member.displayAvatarURL({
-            dynamic: false, size: 256, extension: 'png'
+            dynamic: true, size: 256, extension: 'png'
         })) : subject
 
         filepath = await downloadFile(avatar, 'avatar.png')
