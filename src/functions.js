@@ -3166,7 +3166,10 @@ functions.battle = async function (msg, subject, action, damage, chance) {
         yourData.exp += exp
         yourData.bucks += reward
 
-        data.botData.leaderboard[msg.author.id] = yourData.bucks
+        data.botData.leaderboard[msg.author.id] = {
+            tag: msg.author.tag,
+            bucks: yourData.bucks
+        }
     }
 
     var level = getLevel(yourData.exp).level
@@ -3184,7 +3187,7 @@ functions.battle = async function (msg, subject, action, damage, chance) {
 
     var stats = []
 
-    if (member) {
+    if (member && subjData) {
         stats.push({
             name: `${msg.author.username}'s Health`,
             value: `${yourData.health} HP`,
@@ -3242,7 +3245,7 @@ functions.battle = async function (msg, subject, action, damage, chance) {
     }
 
     var filepath
-    if (member || vars.validUrl.test(subject)) {
+    if ((member && subjData) || vars.validUrl.test(subject)) {
         var avatar = member ? (subjData.battleSprites[died ? 'dead' : attacked ? 'hurt' : 'miss'] ?? member.displayAvatarURL({
             dynamic: false, size: 256, extension: 'png'
         })) : subject
