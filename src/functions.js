@@ -3116,6 +3116,15 @@ functions.battle = async function (msg, subject, action, damage, chance) {
     var yourData = data.userData[msg.author.id]
     var subjData = member && data.userData[member.id]
 
+    if (yourData.health <= 0) {
+        await msg.reply("But you're dead.").catch(() => { })
+        return
+    }
+    if (subjData && subjData.health <= 0) {
+        await msg.reply("But they're dead.").catch(() => { })
+        return
+    }
+
     let attacked = Math.random() < chance + (yourData.accuracy * 0.1)
     let critical = attacked && Math.random() < 0.1 + (yourData.accuracy * 0.05)
     let critmult = critical ? Math.floor(Math.random() * 3) + 2 : 1
@@ -3275,7 +3284,7 @@ functions.battle = async function (msg, subject, action, damage, chance) {
 
     if (!msg.nosend) await msg.reply(payload).catch(() => { })
 
-    if (died) subjData.health = subjData.maxHealth
+    if (died) setTimeout(() => subjData.health = subjData.maxHealth, 30_000)
     if (filepath) fs.rm(filepath, { force: true, recursive: true })
 
     return attacked ? actions.join(' ') : 'You missed!'
