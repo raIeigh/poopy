@@ -638,6 +638,7 @@ functions.gatherData = async function (msg) {
         if (!data.userData[msg.author.id]['battleSprites']) {
             data.userData[msg.author.id]['battleSprites'] = {}
         }
+
         data.botData.leaderboard[msg.author.id] = {
             tag: msg.author.tag,
             bucks: data.userData[msg.author.id]['bucks']
@@ -3105,12 +3106,15 @@ functions.battle = async function (msg, subject, action, damage, chance) {
     let { getLevel, execPromise, randomNumber, randomChoice, downloadFile, dataGather } = poopy.functions
 
     await msg.channel.sendTyping().catch(() => { })
-    var attachments = msg.attachments.map(attachment => new Discord.AttachmentBuilder(attachment.url));
+    var attachment = msg.attachments.first()?.url
+    var sticker = msg.stickers[0] && `https://cdn.discordapp.com/stickers/${msg.stickers[0].id}.png`
 
-    if (!subject && attachments.length <= 0 && msg.stickers.size <= 0) {
+    if (!subject && !attachment && !sticker) {
         await msg.reply('What/who is the subject?!').catch(() => { })
         return;
     };
+
+    subject = subject ?? attachment ?? sticker
 
     var member = await bot.users.fetch((subject.match(/\d+/) ?? [subject])[0]).catch(() => { })
     var yourData = data.userData[msg.author.id]
@@ -3239,13 +3243,11 @@ functions.battle = async function (msg, subject, action, damage, chance) {
         content: `${attacked ? actions.join(' ') : 'You missed!'}${stats.length ? `\n\n${stats.map(s => `**${s.name}**: ${s.value}`).join('\n')}` : ''}`,
         allowedMentions: {
             parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
-        },
-        files: attachments,
-        stickers: msg.stickers
+        }
     }
 
     var filepath
-    if ((member && subjData) || vars.validUrl.test(subject)) {
+    if ((member && subjData) || (vars.validUrl.test(subject) && (await validateFile(subject).catch(() => { })))) {
         var avatar = member ? (subjData.battleSprites[died ? 'dead' : attacked ? 'hurt' : 'miss'] ?? member.displayAvatarURL({
             dynamic: false, size: 256, extension: 'png'
         })) : subject
@@ -3278,8 +3280,10 @@ functions.battle = async function (msg, subject, action, damage, chance) {
 
         await execPromise(`ffmpeg -stream_loop -1 -i ${filepath}/avatar.png -i assets/image/${critical ? 'crit' : ''}attack.gif -stream_loop -1 -f lavfi -i "color=0x00000000:s=200x150,format=rgba" -filter_complex "[0:v]scale=100:100:force_original_aspect_ratio=decrease,split=${enemyConcat.length}${enemyConcat.join('')};${attackOverlay.join(';')};${attackConcat.join('')}concat=n=${attackConcat.length},split[pout][ppout];[ppout]palettegen=reserve_transparent=1[palette];[pout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -preset ultrafast -gifflags -offsetting ${filepath}/attack.gif`)
 
-        payload.files = [new Discord.AttachmentBuilder(`${filepath}/attack.gif`)]
-        payload.embeds[0].image = { url: 'attachment://attack.gif' }
+        if (fs.existsSync(`${filepath}/attack.gif`)) {
+            payload.files = [new Discord.AttachmentBuilder(`${filepath}/attack.gif`)]
+            payload.embeds[0].image = { url: 'attachment://attack.gif' }
+        }
     }
 
     if (config.textEmbeds) delete payload.embeds
@@ -3288,7 +3292,7 @@ functions.battle = async function (msg, subject, action, damage, chance) {
     if (!msg.nosend) await msg.reply(payload).catch(() => { })
 
     if (died) setTimeout(() => subjData.health = subjData.maxHealth, 30_000)
-    if (filepath) fs.rm(filepath, { force: true, recursive: true })
+    if (filepath && fs.existsSync(filepath)) fs.rm(filepath, { force: true, recursive: true })
 
     return attacked ? actions.join(' ') : 'You missed!'
 }
