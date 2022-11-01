@@ -11,7 +11,7 @@ module.exports = {
         var split = splitKeyFunc(word, { args: 2 })
         var name = await getKeywordsFor(split[0] ?? '', msg, isBot).catch(() => { }) ?? ''
         name = regexClean(name)
-        var value = split.slice(1).length ? split.slice(1).join(' | ') : ''
+        var value = split[1] ?? ''
         var phrase = string.replace(new RegExp(`${regexClean(fullword)}\\s*`, 'i'), '')
         tempdata[msg.author.id]['declared'][`[${name}]`] = value
         tempdata[msg.author.id]['funcdeclared'][`[${name}]`] = {

@@ -3,7 +3,7 @@ module.exports = {
     desc: 'e621',
     func: async function (matches, msg) {
         let poopy = this
-        let { splitKeyFunc, getIndexOption, parseNumber } = poopy.functions
+        let { splitKeyFunc, parseNumber } = poopy.functions
         let { axios } = poopy.modules
         let package = poopy.package
         
@@ -11,8 +11,8 @@ module.exports = {
 
         var word = matches[1]
         var split = splitKeyFunc(word, { args: 2 })
-        var query = getIndexOption(split, 0)[0]
-        var page = getIndexOption(split, 1, { n: Infinity }).join(' | ')
+        var query = split[0] ?? ''
+        var page = split[1] ?? ''
         var res = await axios.request({
             url: 'https://e621.net/posts.json',
             method: 'GET',

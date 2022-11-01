@@ -6,10 +6,10 @@ module.exports = {
     let { splitKeyFunc } = poopy.functions
 
     var word = matches[1]
-    var split = splitKeyFunc(word)
+    var split = splitKeyFunc(word, { args: 3 })
     var phrase = split[0] ?? ''
     var replacement = split[1] ?? ''
-    var reg = split.slice(2).length ? split.slice(2).join('|') : ''
+    var reg = split[2] ?? ''
     var regexp = new RegExp(reg, 'ig')
     return phrase.replace(regexp, replacement)
   }

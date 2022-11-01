@@ -6,9 +6,9 @@ module.exports = {
     let { splitKeyFunc } = poopy.functions
 
     var word = matches[1]
-    var split = splitKeyFunc(word)
+    var split = splitKeyFunc(word, { args: 2 })
     var phrase1 = split[0] ?? ''
-    var phrase2 = split.slice(1).length ? split.slice(1).join(' | ') : ''
-    return phrase1 === phrase2 ? 'true' : ''
+    var phrase2 = split[1] ?? ''
+    return phrase1 == phrase2 ? 'true' : ''
   }
 }

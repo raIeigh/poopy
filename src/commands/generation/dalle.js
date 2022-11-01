@@ -78,7 +78,7 @@ module.exports = {
                 var frames = fs.readdirSync(`${filepath}/images`)
                 var catboxframes = {}
 
-                if (!msg.nosend) {
+                if (msg.nosend) {
                     resolve(await sendFile(msg, filepath, `output.zip`))
                     return
                 }
@@ -131,7 +131,7 @@ module.exports = {
                 ], undefined, undefined, undefined, (reason) => {
                     if (reason == 'time') fs.rmSync(filepath, { force: true, recursive: true })
                 }, msg)
-                resolve(catboxframes[frames[page - 1]])
+                resolve(catboxframes[frames[0]])
             })
     
             archive.pipe(output)

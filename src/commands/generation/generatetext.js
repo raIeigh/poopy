@@ -116,7 +116,7 @@ module.exports = {
     },
     help: {
         name: 'generatetext/predicttext <message> [-temperature <number (from 0 to 1)] [-maxtokens <number (max 512)>] [-(pres/count/freq)penalty <number (from 0 to 5/1/500)>]',
-        value: 'Tries to predict subsequent text from the specified message with AI21, DeepAI otherwise. Default max tokens are 65 and temperature is 0.6.'
+        value: 'Tries to predict subsequent text from the specified message with AI21/DeepAI. Default max tokens are 65 and temperature is 0.6.'
     },
     type: 'Generation',
     envRequired: ['AI21_KEY', 'DEEPAI_KEY']

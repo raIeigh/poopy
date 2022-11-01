@@ -27,19 +27,6 @@ String.prototype.toCapperCase = function toCapperCase() {
     return this.toUpperCase().substring(0, 1) + this.toLowerCase().substring(1)
 }
 
-functions.toOrdinal = function (num) {
-    num = String(num)
-    var thmatch = num.match(/[^1][1-3]$|^[1-3]$/)
-
-    if (thmatch) {
-        num += ['st', 'nd', 'rd'][Number(thmatch[0][thmatch[0].length - 1]) - 1]
-    } else {
-        num += 'th'
-    }
-
-    return num
-}
-
 functions.sleep = function (ms) {
     return new Promise(resolve => setTimeout(resolve, ms ?? 0))
 }
@@ -221,6 +208,19 @@ functions.randomChoice = function (arr) {
 
 functions.roundTo = function (n, r) {
     return Math.round(n / r) * r
+}
+
+functions.toOrdinal = function (num) {
+    num = String(num)
+    var thmatch = num.match(/[^1][1-3]$|^[1-3]$/)
+
+    if (thmatch) {
+        num += ['st', 'nd', 'rd'][Number(thmatch[0][thmatch[0].length - 1]) - 1]
+    } else {
+        num += 'th'
+    }
+
+    return num
 }
 
 functions.randomNumber = function (min, max) {
@@ -2060,7 +2060,7 @@ functions.rainmaze = async function (channel, who, reply, w = 8, h = 6) {
 functions.correctUrl = async function (url) {
     let poopy = this
     let { infoPost, execPromise } = poopy.functions
-    let { axios, cheerio, noblox } = poopy.modules
+    let { axios, cheerio } = poopy.modules
 
     if (url.match(/^https\:\/\/(www\.)?tenor\.com\/view/) && url.match(/\d+/g) && process.env.TENOR_KEY) {
         var ids = url.match(/\d+/g)
@@ -2235,7 +2235,7 @@ functions.correctUrl = async function (url) {
         }
 
         async function getAsset(id) {
-            var info = await noblox.getProductInfo(id).catch(() => { })
+            var info = await axios.get(`https://api.roblox.com/marketplace/productinfo?assetId=${id}`).catch(() => { })
 
             if (info) {
                 if (info.AssetTypeId === 3) {
@@ -3120,15 +3120,19 @@ functions.battle = async function (msg, subject, action, damage, chance) {
 
     var member = await bot.users.fetch((subject.match(/\d+/) ?? [subject])[0]).catch(() => { })
     var yourData = data.userData[msg.author.id]
-    var subjData = member && data.userData[member.id]
+    var subjData = member && (data.userData[member.id] || (data.userData[member.id] = !config.testing && process.env.MONGOOSE_URL && await dataGather.userData(config.database, member.id).catch(() => { }) || {}))
 
-    if (yourData.health <= 0) {
-        await msg.reply("But you're dead.").catch(() => { })
-        return
+    if (yourData.death) {
+        if (yourData.death - Date.now() > 0) {
+            await msg.reply("But you're dead.").catch(() => { })
+            return
+        } else yourData.health = yourData.maxHealth
     }
-    if (subjData && subjData.health <= 0) {
-        await msg.reply("But they're dead.").catch(() => { })
-        return
+    if (subjData && subjData.death) {
+        if (subjData.death - Date.now() > 0) {
+            await msg.reply("But they're dead.").catch(() => { })
+            return
+        } else subjData.health = subjData.maxHealth
     }
 
     let attacked = Math.random() < chance + (yourData.accuracy * 0.1)
@@ -3144,11 +3148,6 @@ functions.battle = async function (msg, subject, action, damage, chance) {
     var lastLevel = getLevel(yourData.exp).level
 
     if (member && attacked) {
-        if (!subjData) {
-            data.userData[member.id] = !config.testing && process.env.MONGOOSE_URL && await dataGather.userData(config.database, member.id).catch(() => { }) || {}
-            subjData = data.userData[member.id]
-        }
-
         for (var stat in vars.battleStats) {
             if (subjData[stat] === undefined) {
                 subjData[stat] = vars.battleStats[stat]
@@ -3162,6 +3161,7 @@ functions.battle = async function (msg, subject, action, damage, chance) {
 
         if (subjData.health <= 0) {
             subjData.health = 0
+            subjData.death = Date.now() + 30_000
             if (member.id != msg.author.id && msg.guild.members.cache.get(member.id)) {
                 exp *= 50
                 reward = Math.floor(Math.random() * (subjData.maxHealth + subjData.attack + subjData.defense + subjData.accuracy + subjData.loot + yourData.loot + (Math.pow(getLevel(subjData.exp).level, 2) / 50))) + subjData.maxHealth / 2
@@ -3293,7 +3293,6 @@ functions.battle = async function (msg, subject, action, damage, chance) {
 
     if (!msg.nosend) await msg.reply(payload).catch(() => { })
 
-    if (died) setTimeout(() => subjData.health = subjData.maxHealth, 30_000)
     if (filepath && fs.existsSync(filepath)) fs.rm(filepath, { force: true, recursive: true })
 
     return attacked ? actions.join(' ') : 'You missed!'
