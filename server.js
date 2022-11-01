@@ -145,7 +145,7 @@ async function start() {
                     cache: new Collection()
                 },
                 ownerID: CryptoJS.MD5(req.ip).toString(),
-                id: CryptoJS.MD5(req.ip).toString().split('').reverse().join('')
+                id: Array.from(CryptoJS.MD5(req.ip).toString()).reverse().join('')
             }
 
             let channel = {

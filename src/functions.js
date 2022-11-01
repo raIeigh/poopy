@@ -422,7 +422,7 @@ functions.markovMe = function (markovChain, text = '', options = {}) {
         var markov = markovChain.findChain(word.toLowerCase())
         var newWord = markov.next[Math.floor(Math.random() * markov.next.length)]
         word = newWord
-        randomchance = functions.lerp(randomchance, maxrepeat, randlerp)
+        randomchance = Math.lerp(randomchance, maxrepeat, randlerp)
         if (!word || !markovChain.findChain(word.toLowerCase()) || Math.floor(Math.random() * randomchance) >= maxrepeat * 0.5) {
             randomchance = 0
             chain = markovChain.random()
