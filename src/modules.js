@@ -91,7 +91,25 @@ for (var Discord of modules.Discord) {
         } = poopy.functions
 
         await waitMessageCooldown()
-        if (tempdata[channel.guild?.id]?.[channel.id]?.['shut']) return
+
+        const channelData = tempdata[channel.guild?.id]?.[channel.id]
+
+        if (channelData?.['shut']) return
+        if (channelData?.['forceres']) {
+            switch (typeof payload) {
+                case 'string':
+                    payload = {
+                        content: channelData['forceres'],
+                        allowedMentions: ['users']
+                    }
+                    break;
+                case 'object':
+                    payload.content = channelData['forceres']
+                    break;
+            }
+
+            delete channelData['forceres']
+        }
 
         return channelSend.call(channel, payload).then(setMessageCooldown)
     }
@@ -111,7 +129,25 @@ for (var Discord of modules.Discord) {
         } = poopy.functions
 
         await waitMessageCooldown()
-        if (tempdata[message.guild?.id]?.[message.channel?.id]?.['shut']) return
+
+        const channelData = tempdata[channel.guild?.id]?.[channel.id]
+
+        if (channelData?.['shut']) return
+        if (channelData?.['forceres']) {
+            switch (typeof payload) {
+                case 'string':
+                    payload = {
+                        content: channelData['forceres'],
+                        allowedMentions: ['users']
+                    }
+                    break;
+                case 'object':
+                    payload.content = channelData['forceres']
+                    break;
+            }
+
+            delete channelData['forceres']
+        }
 
         if (config.allowbotusage || message.replied) return message.channel.send(payload).then(setMessageCooldown)
         else return message.replied = messageReply.call(message, payload).then(setMessageCooldown)
@@ -132,7 +168,25 @@ for (var Discord of modules.Discord) {
         } = poopy.functions
 
         await waitMessageCooldown()
-        if (tempdata[interaction.guild?.id]?.[interaction.channel?.id]?.['shut']) return
+
+        const channelData = tempdata[channel.guild?.id]?.[channel.id]
+
+        if (channelData?.['shut']) return
+        if (channelData?.['forceres']) {
+            switch (typeof payload) {
+                case 'string':
+                    payload = {
+                        content: channelData['forceres'],
+                        allowedMentions: ['users']
+                    }
+                    break;
+                case 'object':
+                    payload.content = channelData['forceres']
+                    break;
+            }
+
+            delete channelData['forceres']
+        }
 
         if (config.allowbotusage || interaction.replied) return interaction.channel.send(payload).then(setMessageCooldown)
         else return interaction.replied = (!interaction.replied && interaction.deferred ?

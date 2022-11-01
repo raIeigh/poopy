@@ -109,7 +109,7 @@ module.exports = {
     },
     help: {
         name: '<:newpoopy:839191885310066729> vocode/autotune {carrier} {modulator} [-bandcount <value (max 512)>]',
-        value: "Synthesizes the carrier's sound accordingly from the modulator. Default bandcount is 75."
+        value: "Synthesizes the carrier's sound with the modulator. Default bandcount is 75."
     },
     cooldown: 2500,
     type: 'Audio'

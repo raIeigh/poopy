@@ -23,5 +23,5 @@ module.exports = {
     value: "Play Undertale's tile puzzle minigame!"
   },
   cooldown: 5000,
-  type: 'Unique'
+  type: 'Currency'
 }
