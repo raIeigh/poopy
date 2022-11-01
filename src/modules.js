@@ -130,7 +130,7 @@ for (var Discord of modules.Discord) {
 
         await waitMessageCooldown()
 
-        const channelData = tempdata[channel.guild?.id]?.[channel.id]
+        const channelData = tempdata[message.guild?.id]?.[message.channel.id]
 
         if (channelData?.['shut']) return
         if (channelData?.['forceres']) {
@@ -169,7 +169,7 @@ for (var Discord of modules.Discord) {
 
         await waitMessageCooldown()
 
-        const channelData = tempdata[channel.guild?.id]?.[channel.id]
+        const channelData = tempdata[interaction.guild?.id]?.[interaction.channel.id]
 
         if (channelData?.['shut']) return
         if (channelData?.['forceres']) {
