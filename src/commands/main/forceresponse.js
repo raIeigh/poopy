@@ -25,7 +25,10 @@ module.exports = {
                     parse: ['users']
                 }
             }).catch(() => { })
-            tempdata[msg.guild.id][msg.channel.id]['forceres'] = saidMessage
+            tempdata[msg.guild.id][msg.channel.id]['forceres'] = {
+                msg,
+                res: saidMessage
+            }
             return `OK, the bot's next message here will be "${saidMessage}"`
         } else {
             await msg.reply('You need to be a moderator to execute that!').catch(() => { })
@@ -38,5 +41,6 @@ module.exports = {
     },
     cooldown: 5000,
     perms: ['Administrator', 'ManageMessages'],
-    type: 'Main'
+    type: 'Main',
+    raw: true
 }

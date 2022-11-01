@@ -87,7 +87,8 @@ for (var Discord of modules.Discord) {
         let tempdata = poopy.tempdata
         let {
             waitMessageCooldown,
-            setMessageCooldown
+            setMessageCooldown,
+            getKeywordsFor
         } = poopy.functions
 
         await waitMessageCooldown()
@@ -100,17 +101,29 @@ for (var Discord of modules.Discord) {
             payload.files || payload.embeds ||
             payload.stickers
         ) : payload)) {
+            var content = typeof payload == 'object' ? (payload.content ?? '') : payload
+            var msg = channelData['forceres'].msg
+            var res = await getKeywordsFor(channelData['forceres'].res, msg, true, {
+                extrakeys: {
+                    _msg: {
+                        func: async () => {
+                            return content
+                        }
+                    }
+                }
+            }).catch(() => { }) ?? channelData['forceres'].res
+
             switch (typeof payload) {
                 case 'string':
                     payload = {
-                        content: channelData['forceres'],
+                        content: res,
                         allowedMentions: {
                             parse: ['users']
                         }
                     }
                     break;
                 case 'object':
-                    payload.content = channelData['forceres']
+                    payload.content = res
                     break;
             }
 
@@ -131,7 +144,8 @@ for (var Discord of modules.Discord) {
         let tempdata = poopy.tempdata
         let {
             waitMessageCooldown,
-            setMessageCooldown
+            setMessageCooldown,
+            getKeywordsFor
         } = poopy.functions
 
         await waitMessageCooldown()
@@ -144,17 +158,29 @@ for (var Discord of modules.Discord) {
             payload.files || payload.embeds ||
             payload.stickers
         ) : payload)) {
+            var content = typeof payload == 'object' ? (payload.content ?? '') : payload
+            var msg = channelData['forceres'].msg
+            var res = await getKeywordsFor(channelData['forceres'].res, msg, true, {
+                extrakeys: {
+                    _msg: {
+                        func: async () => {
+                            return content
+                        }
+                    }
+                }
+            }).catch(() => { }) ?? channelData['forceres'].res
+
             switch (typeof payload) {
                 case 'string':
                     payload = {
-                        content: channelData['forceres'],
+                        content: res,
                         allowedMentions: {
                             parse: ['users']
                         }
                     }
                     break;
                 case 'object':
-                    payload.content = channelData['forceres']
+                    payload.content = res
                     break;
             }
 
@@ -176,7 +202,8 @@ for (var Discord of modules.Discord) {
         let tempdata = poopy.tempdata
         let {
             waitMessageCooldown,
-            setMessageCooldown
+            setMessageCooldown,
+            getKeywordsFor
         } = poopy.functions
 
         await waitMessageCooldown()
@@ -189,17 +216,29 @@ for (var Discord of modules.Discord) {
             payload.files || payload.embeds ||
             payload.stickers
         ) : payload)) {
+            var content = typeof payload == 'object' ? (payload.content ?? '') : payload
+            var msg = channelData['forceres'].msg
+            var res = await getKeywordsFor(channelData['forceres'].res, msg, true, {
+                extrakeys: {
+                    _msg: {
+                        func: async () => {
+                            return content
+                        }
+                    }
+                }
+            }).catch(() => { }) ?? channelData['forceres'].res
+
             switch (typeof payload) {
                 case 'string':
                     payload = {
-                        content: channelData['forceres'],
+                        content: res,
                         allowedMentions: {
                             parse: ['users']
                         }
                     }
                     break;
                 case 'object':
-                    payload.content = channelData['forceres']
+                    payload.content = res
                     break;
             }
 
