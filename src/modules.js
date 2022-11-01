@@ -100,7 +100,9 @@ for (var Discord of modules.Discord) {
                 case 'string':
                     payload = {
                         content: channelData['forceres'],
-                        allowedMentions: ['users']
+                        allowedMentions: {
+                            parse: ['users']
+                        }
                     }
                     break;
                 case 'object':
@@ -138,7 +140,9 @@ for (var Discord of modules.Discord) {
                 case 'string':
                     payload = {
                         content: channelData['forceres'],
-                        allowedMentions: ['users']
+                        allowedMentions: {
+                            parse: ['users']
+                        }
                     }
                     break;
                 case 'object':
@@ -177,7 +181,9 @@ for (var Discord of modules.Discord) {
                 case 'string':
                     payload = {
                         content: channelData['forceres'],
-                        allowedMentions: ['users']
+                        allowedMentions: {
+                            parse: ['users']
+                        }
                     }
                     break;
                 case 'object':
