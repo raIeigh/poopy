@@ -3,14 +3,14 @@ module.exports = {
     desc: 'Returns a random YouTube video from the channel, if no index is specified.',
     func: async function (matches) {
         let poopy = this
-        let { splitKeyFunc, getIndexOption, parseNumber } = poopy.functions
+        let { splitKeyFunc, parseNumber } = poopy.functions
         let vars = poopy.vars
         let tempdata = poopy.tempdata
 
         var word = matches[1]
         var split = splitKeyFunc(word, { args: 2 })
-        var id = getIndexOption(split, 0)[0]
-        var page = getIndexOption(split, 1, { n: Infinity, dft: [] }).join(' | ')
+        var id = split[0] ?? ''
+        var page = split[1] ?? ''
 
         if (!tempdata.channelvideos) tempdata.channelvideos = {}
 

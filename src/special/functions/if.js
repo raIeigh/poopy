@@ -6,10 +6,10 @@ module.exports = {
     let { splitKeyFunc, getKeywordsFor } = poopy.functions
 
     var word = matches[1]
-    var split = splitKeyFunc(word)
+    var split = splitKeyFunc(word, { args: 3 })
     var condition = await getKeywordsFor(split[0] ?? '', msg, isBot, opts).catch(() => { })
     var phrase = split[1] ?? ''
-    var elsephrase = split.slice(2).length ? split.slice(2).join(' | ') : ''
+    var elsephrase = split[2] ?? ''
     return condition ? phrase : elsephrase
   },
   raw: true

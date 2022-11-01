@@ -8,10 +8,10 @@ module.exports = {
     let config = poopy.config
 
     var word = matches[1]
-    var split = splitKeyFunc(word)
+    var split = splitKeyFunc(word, { args: 3 })
     var phrase = split[0] ?? ''
     var times = Math.min(Number(split[1] ?? ''), 100)
-    var separator = split.slice(2).length ? split.slice(2).join('|') : ''
+    var separator = split[2] ?? ''
     var repeat = []
     for (var i = 0; i < times; i++) {
       repeat.push(phrase)

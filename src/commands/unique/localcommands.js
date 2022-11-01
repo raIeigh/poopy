@@ -205,7 +205,7 @@ module.exports = {
                     undefined,
                     msg
                 )
-                return `${localCmds[0].join('\n')}\n\nPage ${page}/${localCmds.length}`
+                return `${localCmds[0].join('\n')}\n\nPage 1/${localCmds.length}`
             },
 
             phrase: async (msg, args) => {

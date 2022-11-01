@@ -146,11 +146,6 @@ if (process.env.DEEPAI_KEY) {
     modules.deepai.setApiKey(process.env.DEEPAI_KEY)
 }
 
-if (process.env.ROBLOX_COOKIE) {
-    modules.noblox = require('noblox.js')
-    modules.noblox.setCookie(process.env.ROBLOX_COOKIE).catch(() => { })
-}
-
 if (process.env.GOOGLE_KEY) modules.google = require('googleapis').google
 //if (process.env.TWITTER_CONSUMER_KEY && process.env.TWITTER_CONSUMER_SECRET && process.env.TWITTER_ACCESSTOKEN_KEY && process.env.TWITTER_ACCESSTOKEN_SECRET) modules.Twitter = require('twitter')
 

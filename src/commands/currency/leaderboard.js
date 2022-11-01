@@ -40,7 +40,6 @@ module.exports = {
         }, leaderParts.length, msg.member, undefined, undefined, undefined, undefined, undefined, msg)
 
         return `${leaderParts[0].join('\n')}\n\nYou are in ${toOrdinal(leaderpos)} place`
-
     },
     help: {
         name: '<:newpoopy:839191885310066729> leaderboard',

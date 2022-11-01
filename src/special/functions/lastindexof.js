@@ -23,9 +23,9 @@ module.exports = {
         }
 
         var word = matches[1]
-        var split = splitKeyFunc(word)
+        var split = splitKeyFunc(word, { args: 2 })
         var phrase = split[0] ?? ''
-        var reg = split.slice(1).length ? split.slice(1).join('|') : ''
+        var reg = split[1] ?? ''
         var regexp = new RegExp(reg, 'ig')
         return regexLastIndexOf(phrase, regexp)
     }

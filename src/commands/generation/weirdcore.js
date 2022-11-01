@@ -1,13 +1,14 @@
 module.exports = {
-    name: ['weirdcore', 'text2img', 'text2image', 't2i'],
-    args: [{"name":"message","required":true,"specifarg":false,"orig":"<message>"}],
+    name: ['stablediffusion', 'weirdcore', 'text2img'],
+    args: [{"name":"message","required":true,"specifarg":false,"orig":"<message>"},{"name":"single","required":false,"specifarg":true,"orig":"[-single]"}],
     execute: async function (msg, args) {
         let poopy = this
         let vars = poopy.vars
-        let { addLastUrl } = poopy.functions
+        let { addLastUrl, getOption } = poopy.functions
         let { deepai, Discord } = poopy.modules
 
         await msg.channel.sendTyping().catch(() => { })
+        var single = getOption(args, 'single', { n: 0, splice: true, dft: false })
         var saidMessage = args.slice(1).join(' ')
         if (args[1] === undefined) {
             await msg.reply('What is the text?!').catch(() => { })
@@ -19,7 +20,7 @@ module.exports = {
             await msg.channel.sendTyping().catch(() => { })
             return
         }
-        var resp = await deepai.callStandardApi("text2img", {
+        var resp = await deepai.callStandardApi(single ? "stable-diffusion" : "text2img", {
             text: saidMessage,
         }).catch(async err => {
             await msg.reply({
@@ -40,8 +41,8 @@ module.exports = {
         await msg.channel.sendTyping().catch(() => { })
     },
     help: {
-        name: 'weirdcore/text2img/text2image/t2i <message>',
-        value: 'Generates a picture depending on what the text is with DeepAI.'
+        name: 'stablediffusion/weirdcore/text2img <message> [-single]',
+        value: 'Generates a picture/pictures depending on what the text is with Stable Diffusion.'
     },
     cooldown: 2500,
     type: 'Generation',

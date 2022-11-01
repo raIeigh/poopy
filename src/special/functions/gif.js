@@ -3,13 +3,13 @@ module.exports = {
     desc: 'Returns a random Tenor GIF out of the search query, if no index is specified.',
     func: async function (matches, msg) {
         let poopy = this
-        let { splitKeyFunc, getIndexOption, parseNumber } = poopy.functions
+        let { splitKeyFunc, parseNumber } = poopy.functions
         let { axios } = poopy.modules
 
         var word = matches[1]
         var split = splitKeyFunc(word, { args: 2 })
-        var query = getIndexOption(split, 0)[0]
-        var page = getIndexOption(split, 1, { n: Infinity }).join(' | ')
+        var query = split[0] ?? ''
+        var page = split[1] ?? ''
         var res = await axios.request(`https://g.tenor.com/v1/search?q=${encodeURIComponent(query)}&key=${process.env.TENOR_KEY}&limit=100&contentfilter=${msg.channel.nsfw ? 'off' : 'medium'}`).catch(() => { })
         
         if (!res) return word

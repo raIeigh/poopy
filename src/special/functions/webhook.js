@@ -12,10 +12,10 @@ module.exports = {
         let bot = poopy.bot
 
         var word = matches[1]
-        var split = splitKeyFunc(word)
+        var split = splitKeyFunc(word, { args: 3 })
         var name = split[0] ?? ''
         var avatar = split[1] ?? ''
-        var message = split.slice(2).length ? split.slice(2).join(' | ') : ''
+        var message = split[2] ?? ''
         var allBlank = true
 
         if (tempdata[msg.guild.id][msg.channel.id]['shut']) return ''

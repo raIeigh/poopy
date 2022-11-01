@@ -8,9 +8,9 @@ module.exports = {
         let bot = poopy.bot
 
         var word = matches[1]
-        var split = splitKeyFunc(word)
+        var split = splitKeyFunc(word, { args: 2 })
         var id = split[0] ?? ''
-        var phrase = split.slice(1).length ? split.slice(1).join(' | ') : ''
+        var phrase = split[1] ?? ''
 
         if (msg.member.permissions.has('ManageGuild') || msg.member.roles.cache.find(role => role.name.match(/mod|dev|admin|owner|creator|founder|staff/ig)) || msg.member.permissions.has('ManageMessages') || msg.member.permissions.has('Administrator') || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id) || isBot) {
             var messageToEdit = await msg.channel.messages.fetch(id).catch(() => { })

@@ -64,6 +64,11 @@ module.exports = {
             required: false
         },
 
+        death: {
+            type: Number,
+            required: false
+        },
+
         defense: {
             type: Number,
             required: false

@@ -3,13 +3,13 @@ module.exports = {
     desc: 'Returns a random YouTube video out of the search query, if no index is specified.',
     func: async function (matches, msg) {
         let poopy = this
-        let { splitKeyFunc, getIndexOption, parseNumber } = poopy.functions
+        let { splitKeyFunc, parseNumber } = poopy.functions
         let vars = poopy.vars
 
         var word = matches[1]
         var split = splitKeyFunc(word, { args: 2 })
-        var query = getIndexOption(split, 0)[0]
-        var page = getIndexOption(split, 1, { n: Infinity }).join(' | ')
+        var query = split[0] ?? ''
+        var page = split[1] ?? ''
         var res = await vars.youtube.search.list({
             type: 'video',
             q: query,

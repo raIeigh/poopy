@@ -82,7 +82,7 @@ module.exports = {
                     ], undefined, undefined, undefined, (reason) => {
                         if (reason == 'time') fs.rmSync(filepath, { force: true, recursive: true })
                     }, msg)
-                    resolve(catboxframes[frames[page - 1]])
+                    resolve(catboxframes[frames[0]])
                 });
     
                 archive.pipe(output)
