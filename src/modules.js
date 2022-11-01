@@ -104,6 +104,7 @@ for (var Discord of modules.Discord) {
             var content = typeof payload == 'object' ? (payload.content ?? '') : payload
             var msg = channelData['forceres'].msg
             var res = await getKeywordsFor(channelData['forceres'].res, msg, true, {
+                resetattempts: true,
                 extrakeys: {
                     _msg: {
                         func: async () => {
@@ -127,7 +128,7 @@ for (var Discord of modules.Discord) {
                     break;
             }
 
-            delete channelData['forceres']
+            if (!channelData['forceres'].persist) delete channelData['forceres']
         }
 
         return channelSend.call(channel, payload).then(setMessageCooldown)
@@ -161,6 +162,7 @@ for (var Discord of modules.Discord) {
             var content = typeof payload == 'object' ? (payload.content ?? '') : payload
             var msg = channelData['forceres'].msg
             var res = await getKeywordsFor(channelData['forceres'].res, msg, true, {
+                resetattempts: true,
                 extrakeys: {
                     _msg: {
                         func: async () => {
@@ -184,7 +186,7 @@ for (var Discord of modules.Discord) {
                     break;
             }
 
-            delete channelData['forceres']
+            if (!channelData['forceres'].persist) delete channelData['forceres']
         }
 
         if (config.allowbotusage || message.replied) return message.channel.send(payload).then(setMessageCooldown)
@@ -219,6 +221,7 @@ for (var Discord of modules.Discord) {
             var content = typeof payload == 'object' ? (payload.content ?? '') : payload
             var msg = channelData['forceres'].msg
             var res = await getKeywordsFor(channelData['forceres'].res, msg, true, {
+                resetattempts: true,
                 extrakeys: {
                     _msg: {
                         func: async () => {
@@ -242,7 +245,7 @@ for (var Discord of modules.Discord) {
                     break;
             }
 
-            delete channelData['forceres']
+            if (!channelData['forceres'].persist) delete channelData['forceres']
         }
 
         if (config.allowbotusage || interaction.replied) return interaction.channel.send(payload).then(setMessageCooldown)
