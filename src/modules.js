@@ -95,7 +95,11 @@ for (var Discord of modules.Discord) {
         const channelData = tempdata[channel.guild?.id]?.[channel.id]
 
         if (channelData?.['shut']) return
-        if (channelData?.['forceres']) {
+        if (channelData?.['forceres'] && (typeof payload == 'object' ? (
+            payload.content ||
+            payload.files || payload.embeds ||
+            payload.stickers
+        ) : payload)) {
             switch (typeof payload) {
                 case 'string':
                     payload = {
@@ -135,7 +139,11 @@ for (var Discord of modules.Discord) {
         const channelData = tempdata[message.guild?.id]?.[message.channel.id]
 
         if (channelData?.['shut']) return
-        if (channelData?.['forceres']) {
+        if (channelData?.['forceres'] && (typeof payload == 'object' ? (
+            payload.content ||
+            payload.files || payload.embeds ||
+            payload.stickers
+        ) : payload)) {
             switch (typeof payload) {
                 case 'string':
                     payload = {
@@ -176,7 +184,11 @@ for (var Discord of modules.Discord) {
         const channelData = tempdata[interaction.guild?.id]?.[interaction.channel.id]
 
         if (channelData?.['shut']) return
-        if (channelData?.['forceres']) {
+        if (channelData?.['forceres'] && (typeof payload == 'object' ? (
+            payload.content ||
+            payload.files || payload.embeds ||
+            payload.stickers
+        ) : payload)) {
             switch (typeof payload) {
                 case 'string':
                     payload = {
