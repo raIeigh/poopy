@@ -20,7 +20,7 @@ module.exports = {
             var saidMessage = args.slice(1).join(' ')
 
             if (!msg.nosend) await msg.reply({
-                content: `OK, the bot's next message here will be "${saidMessage}"`
+                content: `OK, the bot's next message here will be "${saidMessage}"`,
                 allowedMentions: {
                     parse: ['users']
                 }
