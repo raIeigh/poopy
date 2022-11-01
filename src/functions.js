@@ -3499,7 +3499,11 @@ functions.sendFile = async function (msg, filepath, filename, extraOptions) {
                     break;
             }
 
-            fs.rmSync(`${filepath}/compress_${filename}`)
+            if (fs.existsSync(`${filepath}/${filename}`)) fs.rmSync(`${filepath}/compress_${filename}`)
+            else {
+                fs.renameSync(`${filepath}/compress_${filename}`, `${filepath}/${filename}`)
+                break
+            }
             size = fs.readFileSync(`${filepath}/${filename}`).length
             tries++
         }
