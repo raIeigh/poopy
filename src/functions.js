@@ -422,7 +422,7 @@ functions.markovMe = function (markovChain, text = '', options = {}) {
         var markov = markovChain.findChain(word.toLowerCase())
         var newWord = markov.next[Math.floor(Math.random() * markov.next.length)]
         word = newWord
-        randomchance = functions.lerp(randomchance, maxrepeat, randlerp)
+        randomchance = Math.lerp(randomchance, maxrepeat, randlerp)
         if (!word || !markovChain.findChain(word.toLowerCase()) || Math.floor(Math.random() * randomchance) >= maxrepeat * 0.5) {
             randomchance = 0
             chain = markovChain.random()
@@ -2930,7 +2930,13 @@ functions.getKeywordsFor = async function (string, msg, isBot, { extrakeys = {},
             return string
         }
 
-        while (getKeyFunc(string, { extrakeys: extradkeys, extrafuncs: extradfuncs, declaredonly: declaredonly }) !== false && tempdata[msg.author.id][msg.id]?.['return'] == undefined) {
+        var keydata
+
+        while ((keydata = getKeyFunc(string, {
+            extrakeys: extradkeys,
+            extrafuncs: extradfuncs,
+            declaredonly: declaredonly
+        })) && tempdata[msg.author.id][msg.id]?.['return'] == undefined) {
             if (!started || !tempdata[msg.author.id][msg.id]) {
                 if (!tempdata[msg.author.id][msg.id]) {
                     tempdata[msg.author.id][msg.id] = {}
@@ -2975,12 +2981,6 @@ functions.getKeywordsFor = async function (string, msg, isBot, { extrakeys = {},
                 infoPost(`Keyword attempts value exceeded`)
                 return 'Keyword attempts value exceeded.'
             }
-
-            var keydata = getKeyFunc(string, {
-                extrakeys: extradkeys,
-                extrafuncs: extradfuncs,
-                declaredonly: declaredonly
-            })
 
             var opts = {
                 extrakeys: extradkeys,

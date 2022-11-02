@@ -5,7 +5,7 @@ module.exports = {
         let poopy = this
 
         var word = matches[1]
-        var letters = word.split('')
+        var letters = Array.from(word)
         var shuffled = []
         var shuffled2 = []
         for (var i in letters) {

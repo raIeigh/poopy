@@ -101,9 +101,12 @@ for (var Discord of modules.Discord) {
             payload.files || payload.embeds ||
             payload.stickers
         ) : payload)) {
+            var forceres = channelData['forceres']
+            delete channelData['forceres']
+
             var content = typeof payload == 'object' ? (payload.content ?? '') : payload
-            var msg = channelData['forceres'].msg
-            var res = await getKeywordsFor(channelData['forceres'].res, msg, true, {
+            var msg = forceres.msg
+            var res = await getKeywordsFor(forceres.res, msg, true, {
                 resetattempts: true,
                 extrakeys: {
                     _msg: {
@@ -112,7 +115,9 @@ for (var Discord of modules.Discord) {
                         }
                     }
                 }
-            }).catch(() => { }) ?? channelData['forceres'].res
+            }).catch(() => { }) ?? forceres.res
+
+            if (forceres.persist && !channelData['forceres']) channelData['forceres'] = forceres
 
             switch (typeof payload) {
                 case 'string':
@@ -127,8 +132,6 @@ for (var Discord of modules.Discord) {
                     payload.content = res
                     break;
             }
-
-            if (!channelData['forceres'].persist) delete channelData['forceres']
         }
 
         return channelSend.call(channel, payload).then(setMessageCooldown)
@@ -159,9 +162,12 @@ for (var Discord of modules.Discord) {
             payload.files || payload.embeds ||
             payload.stickers
         ) : payload)) {
+            var forceres = channelData['forceres']
+            delete channelData['forceres']
+
             var content = typeof payload == 'object' ? (payload.content ?? '') : payload
-            var msg = channelData['forceres'].msg
-            var res = await getKeywordsFor(channelData['forceres'].res, msg, true, {
+            var msg = forceres.msg
+            var res = await getKeywordsFor(forceres.res, msg, true, {
                 resetattempts: true,
                 extrakeys: {
                     _msg: {
@@ -170,7 +176,9 @@ for (var Discord of modules.Discord) {
                         }
                     }
                 }
-            }).catch(() => { }) ?? channelData['forceres'].res
+            }).catch(() => { }) ?? forceres.res
+
+            if (forceres.persist && !channelData['forceres']) channelData['forceres'] = forceres
 
             switch (typeof payload) {
                 case 'string':
@@ -185,8 +193,6 @@ for (var Discord of modules.Discord) {
                     payload.content = res
                     break;
             }
-
-            if (!channelData['forceres'].persist) delete channelData['forceres']
         }
 
         if (config.allowbotusage || message.replied) return message.channel.send(payload).then(setMessageCooldown)
@@ -218,9 +224,12 @@ for (var Discord of modules.Discord) {
             payload.files || payload.embeds ||
             payload.stickers
         ) : payload)) {
+            var forceres = channelData['forceres']
+            delete channelData['forceres']
+
             var content = typeof payload == 'object' ? (payload.content ?? '') : payload
-            var msg = channelData['forceres'].msg
-            var res = await getKeywordsFor(channelData['forceres'].res, msg, true, {
+            var msg = forceres.msg
+            var res = await getKeywordsFor(forceres.res, msg, true, {
                 resetattempts: true,
                 extrakeys: {
                     _msg: {
@@ -229,7 +238,9 @@ for (var Discord of modules.Discord) {
                         }
                     }
                 }
-            }).catch(() => { }) ?? channelData['forceres'].res
+            }).catch(() => { }) ?? forceres.res
+
+            if (forceres.persist && !channelData['forceres']) channelData['forceres'] = forceres
 
             switch (typeof payload) {
                 case 'string':
@@ -244,8 +255,6 @@ for (var Discord of modules.Discord) {
                     payload.content = res
                     break;
             }
-
-            if (!channelData['forceres'].persist) delete channelData['forceres']
         }
 
         if (config.allowbotusage || interaction.replied) return interaction.channel.send(payload).then(setMessageCooldown)

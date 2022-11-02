@@ -1032,7 +1032,7 @@ class Poopy {
 
             if (!webhooked) await webhookify().catch(() => { })
 
-            if (msg.content && ((!(msg.author.bot) && msg.author.id != bot.user.id) || config.allowbotusage) && data.guildData[msg.guild.id]['channels'][msg.channel.id]['read']) {
+            if (msg.content && ((!(msg.author.bot) && msg.author.id != bot.user.id) || config.allowbotusage) && data.guildData[msg.guild?.id]['channels'][msg.channel?.id]['read']) {
                 var cleanMessage = Discord.cleanContent(msg.content, msg).replace(/\@/g, '@‌')
 
                 if (!(cleanMessage.match(/nigg|fagg|https?\:\/\/.*(rule34|e621|pornhub|hentaihaven|xxx|iplogger)|discord\.(gift|gg)\/[\d\w]+\/?$/ig) || cleanMessage.includes(prefix.toLowerCase())) && !(data.guildData[msg.guild.id]['messages'].find(message => decrypt(message.content).toLowerCase() === cleanMessage.toLowerCase()))) {
@@ -1157,7 +1157,7 @@ class Poopy {
                 } else {
                     var lastMention = Date.now() - tempdata[msg.author.id]['eggphrases']['lastmention']
                     if (lastMention > 60000) tempdata[msg.author.id]['eggphrases']['phrase'] = 0
-                    await msg.reply(eggPhrases[tempdata[msg.author.id]['eggphrases']['phrase']]).catch((e) => console.log(e))
+                    await msg.reply(eggPhrases[tempdata[msg.author.id]['eggphrases']['phrase']]).catch(() => { })
                     if (tempdata[msg.author.id]['eggphrases']['phrase'] < eggPhrases.length) tempdata[msg.author.id]['eggphrases']['phrase']++
                     tempdata[msg.author.id]['eggphrases']['lastmention'] = Date.now()
                 }
