@@ -825,9 +825,6 @@ class Poopy {
                         var findLocalCmd = data.guildData[msg.guild.id]['localcmds'].find(cmd => cmd.name === args[0].toLowerCase())
                         var similarCmds = []
 
-                        delete msg.nosend
-                        msg.nosend = getOption(args, 'nosend', { n: 0, splice: true, dft: false })
-
                         if (args[0].length) {
                             for (var i in commands) {
                                 var fcmd = commands[i]
@@ -876,6 +873,9 @@ class Poopy {
                                 if (findCmd.cooldown) {
                                     data.guildData[msg.guild.id]['members'][msg.author.id]['coolDown'] = (data.guildData[msg.guild.id]['members'][msg.author.id]['coolDown'] || Date.now()) + findCmd.cooldown / ((msg.member.permissions.has('ManageGuild') || msg.member.permissions.has('ManageMessages') || msg.member.permissions.has('Administrator') || msg.author.id === msg.guild.ownerID) && (findCmd.type === 'Text' || findCmd.type === 'Main') ? 5 : 1)
                                 }
+
+                                delete msg.nosend
+                                msg.nosend = getOption(args, 'nosend', { n: 0, splice: true, dft: false })
 
                                 vars.cps++
                                 data.botData['commands']++
