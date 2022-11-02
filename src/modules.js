@@ -166,7 +166,7 @@ for (var Discord of modules.Discord) {
             delete channelData['forceres']
 
             var content = typeof payload == 'object' ? (payload.content ?? '') : payload
-            var msg = forceres.msg
+            var msg = message
             var res = await getKeywordsFor(forceres.res, msg, true, {
                 resetattempts: true,
                 extrakeys: {
@@ -228,7 +228,7 @@ for (var Discord of modules.Discord) {
             delete channelData['forceres']
 
             var content = typeof payload == 'object' ? (payload.content ?? '') : payload
-            var msg = forceres.msg
+            var msg = interaction
             var res = await getKeywordsFor(forceres.res, msg, true, {
                 resetattempts: true,
                 extrakeys: {
