@@ -21,7 +21,7 @@ module.exports = {
     execute: async function (msg, args) {
         let poopy = this
         let vars = poopy.vars
-        let { userToken } = poopy.functions
+        let { getOption, userToken } = poopy.functions
         let { axios } = poopy.modules
 
         await msg.channel.sendTyping().catch(() => { })
