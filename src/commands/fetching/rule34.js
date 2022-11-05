@@ -27,7 +27,7 @@ module.exports = {
         }
         var search = args.slice(1).join(" ");
 
-        var body = await axios.request(`https://api.rule34.xxx/index.php?page=dapi&s=post&q=index&json=1&limit=100&tags=${encodeURIComponent(search)}`).catch(() => { })
+        var body = await axios(`https://api.rule34.xxx/index.php?page=dapi&s=post&q=index&json=1&limit=100&tags=${encodeURIComponent(search)}`).catch(() => { })
 
         if (!body) {
             await msg.reply('Error.').catch(() => { })

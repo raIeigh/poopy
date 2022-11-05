@@ -33,7 +33,7 @@ module.exports = {
             form.append('image_file', fs.readFileSync(`${filepath}/${filename}`), filename)
 
             var rejected = false
-            var response = await axios.request({
+            var response = await axios({
                 url: 'https://api.remove.bg/v1.0/removebg',
                 method: 'POST',
                 data: form,

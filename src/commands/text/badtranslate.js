@@ -90,7 +90,7 @@ module.exports = {
                 data: [{ Text: output }]
             };
 
-            var response = await axios.request(options).catch(async () => {
+            var response = await axios(options).catch(async () => {
                 await msg.reply('Error.').catch(() => { })
             })
 

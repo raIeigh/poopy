@@ -104,7 +104,7 @@ module.exports = {
 
         files.forEach(filename => form.append('images', fs.readFileSync(`${filepath}/${filename}`), filename))
 
-        var response = await axios.request({
+        var response = await axios({
             url: `http://api.makesweet.com/make/${template}${textes.length > 0 ? `?${textes.map(text => `text=${encodeURIComponent(text)}`).join('&')}${textfirst && templates[template] > 1 ? `&textfirst=1` : ''}` : ''}`,
             method: 'POST',
             data: form,

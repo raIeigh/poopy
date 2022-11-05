@@ -135,13 +135,6 @@
         "description": "Convert a file between various different formats."
     },
     {
-        "name": "currency",
-        "cmds": [
-            "leaderboard"
-        ],
-        "description": "Manage your money and spend it on upgrades and cosmetics."
-    },
-    {
         "name": "dimensions",
         "cmds": [
             "fix",

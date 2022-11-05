@@ -46,7 +46,7 @@ module.exports = {
                 data: [{ Text: output }]
             };
 
-            var response = await axios.request(options).catch(() => { })
+            var response = await axios(options).catch(() => { })
 
             if (!response) return word
 

@@ -13,7 +13,7 @@ module.exports = {
         var split = splitKeyFunc(word, { args: 2 })
         var query = split[0] ?? ''
         var page = split[1] ?? ''
-        var res = await axios.request({
+        var res = await axios({
             url: 'https://e621.net/posts.json',
             method: 'GET',
             data: {

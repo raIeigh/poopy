@@ -10,7 +10,7 @@ module.exports = {
         var split = splitKeyFunc(word, { args: 2 })
         var query = split[0] ?? ''
         var page = split[1] ?? ''
-        var res = await axios.request(`https://g.tenor.com/v1/search?q=${encodeURIComponent(query)}&key=${process.env.TENOR_KEY}&limit=100&contentfilter=${msg.channel.nsfw ? 'off' : 'medium'}`).catch(() => { })
+        var res = await axios(`https://g.tenor.com/v1/search?q=${encodeURIComponent(query)}&key=${process.env.TENOR_KEY}&limit=100&contentfilter=${msg.channel.nsfw ? 'off' : 'medium'}`).catch(() => { })
         
         if (!res) return word
 

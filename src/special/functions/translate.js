@@ -37,7 +37,7 @@ module.exports = {
       data: [{ Text: phrase }]
     };
 
-    var response = await axios.request(options).catch(() => { })
+    var response = await axios(options).catch(() => { })
 
     if (response) {
       return response.data[0].translations[0].text

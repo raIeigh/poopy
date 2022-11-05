@@ -39,7 +39,7 @@ module.exports = {
         }
 
         async function dalle2Request() {
-            var taskRes = await axios.request({
+            var taskRes = await axios({
                 url: 'https://labs.openai.com/api/labs/tasks',
                 method: 'POST',
                 data: {
@@ -65,7 +65,7 @@ module.exports = {
             while (!imageRes) {
                 await sleep(20000)
 
-                var taskCompleteRes = await axios.request({
+                var taskCompleteRes = await axios({
                     url: `https://labs.openai.com/api/labs/tasks/${taskId}`,
                     method: 'GET',
                     headers: {

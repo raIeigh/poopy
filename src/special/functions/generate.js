@@ -10,7 +10,7 @@ module.exports = {
     var models = ['j1-jumbo', 'j1-grande', 'j1-large']
 
     for (var model of models) {
-        var resp = await axios.request({
+        var resp = await axios({
           url: 'https://api.ai21.com/studio/v1/j1-jumbo/complete',
           method: 'POST',
           data: {

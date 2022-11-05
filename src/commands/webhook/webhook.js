@@ -97,7 +97,7 @@ module.exports = {
                     await msg.reply('Invalid name.').catch(() => {})
                     return
                 }
-                var fetchAvatar = await axios.request({
+                var fetchAvatar = await axios({
                     url: args[args.length - 1],
                     responseType: 'stream'
                 }).catch(() => {})

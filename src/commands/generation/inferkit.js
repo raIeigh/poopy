@@ -21,7 +21,7 @@ module.exports = {
             return
         }
 
-        var resp = await axios.request({
+        var resp = await axios({
             url: 'https://api.inferkit.com/v1/models/standard/generate?useDemoCredits=true',
             method: 'POST',
             data: {

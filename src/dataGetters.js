@@ -28,7 +28,7 @@ var dataGetters = {
     },
 
     languages: async function () {
-        var lresponse = await axios.request({
+        var lresponse = await axios({
             method: 'GET',
             url: 'https://microsoft-translator-text.p.rapidapi.com/languages',
             params: { 'api-version': '3.0' },
@@ -44,7 +44,7 @@ var dataGetters = {
     },
 
     uberduck: async function () {
-        var voiceResponse = await axios.request({
+        var voiceResponse = await axios({
             method: 'GET',
             url: 'https://api.uberduck.ai/voices?mode=tts-basic',
             headers: {

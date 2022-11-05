@@ -27,7 +27,7 @@ module.exports = {
         var retries = 0
 
         async function dalleRequest() {
-            var imageRes = await axios.request({
+            var imageRes = await axios({
                 url: 'https://backend.craiyon.com/generate',
                 method: 'POST',
                 data: { prompt: text }

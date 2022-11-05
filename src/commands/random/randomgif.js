@@ -8,7 +8,7 @@ module.exports = {
     let { axios } = poopy.modules
 
     var word = randomChoice(json.arabJSON.words.filter(arab => !json.arabJSON.danger.includes(arab))).toLowerCase()
-    var res = await axios.request(`https://g.tenor.com/v1/search?q=${encodeURIComponent(word)}&key=${process.env.TENOR_KEY}&limit=100&contentfilter=${msg.channel.nsfw ? 'off' : 'medium'}`).catch(() => { })
+    var res = await axios(`https://g.tenor.com/v1/search?q=${encodeURIComponent(word)}&key=${process.env.TENOR_KEY}&limit=100&contentfilter=${msg.channel.nsfw ? 'off' : 'medium'}`).catch(() => { })
     if (res) {
       var parsedBody = res.data
       var gif = parsedBody.results[Math.floor(Math.random() * parsedBody.results.length)].itemurl

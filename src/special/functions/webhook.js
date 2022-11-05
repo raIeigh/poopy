@@ -58,7 +58,7 @@ module.exports = {
             return 'Invalid name.'
         }
 
-        var fetchAvatar = await axios.request({
+        var fetchAvatar = await axios({
             url: avatar,
             responseType: 'stream'
         }).catch(() => { })

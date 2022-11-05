@@ -850,7 +850,7 @@ functions.cleverbot = async function (stim, id) {
         }
         payload += `&cb_settings_language=en&cb_settings_scripting=no&islearning=1&icognoid=wsf&icognocheck=`
         payload += CryptoJS.MD5(payload.substring(7, 33)).toString()
-        var res = await axios.request({
+        var res = await axios({
             method: "POST",
             url: "https://www.cleverbot.com/webservicemin?uc=UseOfficialCleverbotAPI&ncf=V2&",
             data: payload,
@@ -897,7 +897,7 @@ functions.cleverbot = async function (stim, id) {
             }
         }
 
-        var res = await axios.request(options).catch(() => { }) ?? { data: { AIResponse: '' } }
+        var res = await axios(options).catch(() => { }) ?? { data: { AIResponse: '' } }
 
         return res.data.AIResponse
     }
@@ -2057,6 +2057,230 @@ functions.rainmaze = async function (channel, who, reply, w = 8, h = 6) {
     return raindraw.description
 }
 
+functions.displayShop = async function (channel, who, reply, type) {
+    let poopy = this
+    let bot = poopy.bot
+    let config = poopy.config
+    let data = poopy.data
+    let { chunkArray, dmSupport, randomNumber } = poopy.functions
+    let { Discord } = poopy.modules
+
+    var buttonsData = []
+    switch (type) {
+        case 'upgrades':
+            buttonsData = [
+                /*{
+                    health: 100,
+                    maxHealth: 100,
+                    defense: 0,
+                    attack: 0,
+                    accuracy: 0,
+                    loot: 0,
+                    exp: 150,
+                    bucks: 20
+                },*/
+
+                {
+                    emoji: '❤',
+                    reactemoji: '❤',
+                    customid: 'health',
+                    style: Discord.ButtonStyle.Primary,
+                    desc: 'Upgrade your maximum health.',
+                    price: 80
+                },
+
+                {
+                    emoji: '🛡',
+                    reactemoji: '🛡',
+                    customid: 'defense',
+                    style: Discord.ButtonStyle.Primary,
+                    desc: 'Increase your defense.',
+                    price: 120
+                },
+
+                {
+                    emoji: '⚔',
+                    reactemoji: '⚔',
+                    customid: 'attack',
+                    style: Discord.ButtonStyle.Primary,
+                    desc: 'Increase your attack damage.',
+                    price: 120
+                },
+
+                {
+                    emoji: '🎯',
+                    reactemoji: '🎯',
+                    customid: 'accuracy',
+                    style: Discord.ButtonStyle.Primary,
+                    desc: 'Increase the accuracy of each attack.',
+                    price: 150
+                },
+
+                {
+                    emoji: '🪙',
+                    reactemoji: '🪙',
+                    customid: 'loot',
+                    style: Discord.ButtonStyle.Primary,
+                    desc: 'Get more loot each time you defeat someone.',
+                    price: 200
+                },
+            ]
+            break;
+    }
+
+    var components = []
+    var chunkButtonData = chunkArray(buttonsData, 3)
+
+    chunkButtonData.forEach(buttonsData => {
+        var buttonRow = new Discord.ActionRowBuilder()
+        var buttons = []
+
+        buttonsData.forEach(bdata => {
+            var button = new Discord.ButtonBuilder()
+                .setStyle(bdata.style)
+                .setEmoji(bdata.emoji)
+                .setCustomId(bdata.customid)
+
+            buttons.push(button)
+        })
+
+        buttonRow.addComponents(buttons)
+
+        components.push(buttonRow)
+    })
+
+    var rainmaze = new Rainmaze(w, h)
+    var raindraw = rainmaze.draw()
+    var rainObject = {}
+    var allowedMentions
+    var tag
+
+    if (config.textEmbeds) rainObject.content = `${raindraw.description}\n\n${raindraw.fields.map(f => `**${f.name}** - ${f.value}`).join('\n')}`
+    else rainObject.embeds = [raindraw]
+
+    if (!config.useReactions) rainObject.components = components
+
+    if (typeof (who) != 'string') {
+        allowedMentions = {
+            parse: (!who.permissions.has('Administrator') &&
+                !who.permissions.has('MentionEveryone') &&
+                who.id !== channel.guild.ownerID) ?
+                ['users'] : ['users', 'everyone', 'roles']
+        }
+        rainObject.allowedMentions = allowedMentions
+        tag = who.tag ?? who.user.tag
+        who = who.id
+    }
+
+    var rainMsg = await (reply ?? channel)[reply ? 'reply' : 'send'](rainObject).catch(() => { })
+    var ended = false
+
+    if (!rainMsg) throw new Error(`Couldn't send Rainmaze to channel`)
+
+    async function updateMaze() {
+        raindraw = rainmaze.draw()
+
+        if (ended) {
+            if (config.useReactions) rainMsg.reactions.removeAll().catch(() => { })
+            else rainObject.components = []
+
+            if (ended == 'win') {
+                var reward = randomNumber(w * h, w * h * 2)
+                raindraw.fields.push({
+                    name: "Reward",
+                    value: `+${reward} P$`
+                })
+                data.userData[who]['bucks'] += reward
+
+                data.botData.leaderboard[who] = {
+                    tag: tag ?? (await bot.users.fetch(who).catch(() => { }))?.tag,
+                    bucks: data.userData[who]['bucks']
+                }
+            }
+        }
+
+        if (config.textEmbeds) rainObject.content = `${raindraw.description}\n\n${raindraw.fields.map(f => `**${f.name}** - ${f.value}`).join('\n')}`
+        else rainObject.embeds = [raindraw]
+
+        rainMsg.edit(rainObject).catch(() => { })
+    }
+
+    if (config.useReactions) {
+        var collector = rainMsg.createReactionCollector({ time: 60_000 })
+
+        collector.on('collect', async (reaction, user) => {
+            dmSupport(reaction)
+
+            if (!(user.id === who && ((user.id !== bot.user.id && !user.bot) || config.allowbotusage))) {
+                return
+            }
+
+            var buttonData = buttonsData.find(bdata => bdata.emoji == reaction.emoji.name)
+
+            if (buttonData) {
+                collector.resetTimer()
+
+                reaction.users.remove(user).catch(() => { })
+
+                if (buttonData.control) {
+                    rainmaze.move(buttonData.customid)
+                    if (rainmaze.won) {
+                        collector.stop('win')
+                        return
+                    }
+
+                    await updateMaze().catch(() => { })
+                }
+            }
+        })
+
+        collector.on('end', async (_, reason) => {
+            ended = reason
+            await updateMaze().catch(() => { })
+        })
+
+        for (var i in buttonsData) {
+            var bdata = buttonsData[i]
+            await rainMsg.react(bdata.emoji).catch(() => { })
+        }
+    } else {
+        var collector = rainMsg.createMessageComponentCollector({ time: 60_000 })
+
+        collector.on('collect', async (button) => {
+            dmSupport(button)
+
+            if (!(button.user.id === who && ((button.user.id !== bot.user.id && !button.user.bot) || config.allowbotusage))) {
+                button.deferUpdate().catch(() => { })
+                return
+            }
+
+            var buttonData = buttonsData.find(bdata => bdata.customid == button.customId)
+
+            if (buttonData) {
+                collector.resetTimer()
+                button.deferUpdate().catch(() => { })
+
+                if (buttonData.control) {
+                    rainmaze.move(buttonData.customid)
+                    if (rainmaze.won) {
+                        collector.stop('win')
+                        return
+                    }
+
+                    await updateMaze().catch(() => { })
+                }
+            }
+        })
+
+        collector.on('end', async (_, reason) => {
+            ended = reason
+            await updateMaze().catch(() => { })
+        })
+    }
+
+    return raindraw.description
+}
+
 functions.correctUrl = async function (url) {
     let poopy = this
     let { infoPost, execPromise } = poopy.functions
@@ -2064,7 +2288,7 @@ functions.correctUrl = async function (url) {
 
     if (url.match(/^https\:\/\/(www\.)?tenor\.com\/view/) && url.match(/\d+/g) && process.env.TENOR_KEY) {
         var ids = url.match(/\d+/g)
-        var body = await axios.request(`https://g.tenor.com/v1/gifs?ids=${ids[ids.length - 1]}&key=${process.env.TENOR_KEY}`).catch(() => { })
+        var body = await axios(`https://g.tenor.com/v1/gifs?ids=${ids[ids.length - 1]}&key=${process.env.TENOR_KEY}`).catch(() => { })
         if (body && body.data.results.length) {
             infoPost(`Tenor URL detected`)
             return body.data.results[0].media[0].gif.url
@@ -2077,7 +2301,7 @@ functions.correctUrl = async function (url) {
         var gyazourl = undefined
         for (var i in gyazourls) {
             var url = gyazourls[i]
-            var response = await axios.request({
+            var response = await axios({
                 url: url,
                 validateStatus: () => true
             }).catch(() => { })
@@ -2097,7 +2321,7 @@ functions.correctUrl = async function (url) {
         var imgurl = undefined
         for (var i in imgurls) {
             var url = imgurls[i]
-            var response = await axios.request({
+            var response = await axios({
                 url: url,
                 validateStatus: () => true
             }).catch(() => { })
@@ -2129,7 +2353,7 @@ functions.correctUrl = async function (url) {
 
         async function getTexture(id) {
             return new Promise((resolve) => {
-                axios.request({
+                axios({
                     method: 'GET',
                     url: `https://assetdelivery.roblox.com/v1/assetId/${id}`,
                     headers: {
@@ -2144,7 +2368,7 @@ functions.correctUrl = async function (url) {
                         return
                     }
 
-                    axios.request(rbxmurl).then((rres) => {
+                    axios(rbxmurl).then((rres) => {
                         var rbody = rres.data
 
                         var $ = cheerio.load(rbody)
@@ -2154,7 +2378,7 @@ functions.correctUrl = async function (url) {
                             var ids = imageasseturl.match(/\d+/g)
                             var id = ids[0]
 
-                            axios.request({
+                            axios({
                                 method: 'GET',
                                 url: `https://assetdelivery.roblox.com/v1/assetId/${id}`,
                                 headers: {
@@ -2182,7 +2406,7 @@ functions.correctUrl = async function (url) {
 
         async function getGame(id) {
             return new Promise((resolve) => {
-                axios.request({
+                axios({
                     method: 'GET',
                     url: `https://thumbnails.roblox.com/v1/places/gameicons?placeIds=${id}&size=512x512&format=Png&isCircular=false`,
                     headers: {
@@ -2209,7 +2433,7 @@ functions.correctUrl = async function (url) {
 
         async function getThumb(id) {
             return new Promise((resolve) => {
-                axios.request({
+                axios({
                     method: 'GET',
                     url: `https://thumbnails.roblox.com/v1/assets?assetIds=${id}&size=700x700&format=Png&isCircular=false`,
                     headers: {
@@ -2280,7 +2504,7 @@ functions.correctUrl = async function (url) {
     } else if (url.match(/^https\:\/\/(www\.)?roblox\.com\/(badges)\//)) {
         async function getBadge(id) {
             return new Promise((resolve) => {
-                axios.request({
+                axios({
                     method: 'GET',
                     url: `https://thumbnails.roblox.com/v1/badges/icons?badgeIds=${id}&size=150x150&format=Png&isCircular=false`,
                     headers: {
@@ -2318,7 +2542,7 @@ functions.correctUrl = async function (url) {
     } else if (url.match(/^https\:\/\/(www\.)?roblox\.com\/(bundles)\//)) {
         async function getBundle(id) {
             return new Promise((resolve) => {
-                axios.request({
+                axios({
                     method: 'GET',
                     url: `https://thumbnails.roblox.com/v1/bundles/thumbnails?bundleIds=${id}&size=420x420&format=Png&isCircular=false`,
                     headers: {
@@ -2356,7 +2580,7 @@ functions.correctUrl = async function (url) {
     } else if (url.match(/^https\:\/\/(www\.)?roblox\.com\/(game-pass)\//)) {
         async function getGamePass(id) {
             return new Promise((resolve) => {
-                axios.request({
+                axios({
                     method: 'GET',
                     url: `https://thumbnails.roblox.com/v1/game-passes?gamePassIds=${id}&size=150x150&format=Png&isCircular=false`,
                     headers: {
@@ -2394,7 +2618,7 @@ functions.correctUrl = async function (url) {
     } else if (url.match(/^https\:\/\/(www\.)?roblox\.com\/(users)\//)) {
         async function getUser(id) {
             return new Promise((resolve) => {
-                axios.request({
+                axios({
                     method: 'GET',
                     url: `https://thumbnails.roblox.com/v1/users/avatar?userIds=${id}&size=720x720&format=Png&isCircular=false`,
                     headers: {
@@ -2432,7 +2656,7 @@ functions.correctUrl = async function (url) {
     } else if (url.match(/^https\:\/\/(www\.)?roblox\.com\/(groups)\//)) {
         async function getGroup(id) {
             return new Promise((resolve) => {
-                axios.request({
+                axios({
                     method: 'GET',
                     url: `https://thumbnails.roblox.com/v1/groups/icons?groupIds=${id}&size=420x420&format=Png&isCircular=false`,
                     headers: {
@@ -2563,7 +2787,7 @@ functions.getUrls = async function (msg, options = {}) {
                 var demojiurl = undefined
                 for (var i in demojiurls) {
                     var url = demojiurls[i]
-                    var response = await axios.request({
+                    var response = await axios({
                         url: url,
                         validateStatus: () => true
                     }).catch(() => { })
@@ -3155,7 +3379,9 @@ functions.battle = async function (msg, subject, action, damage, chance) {
         }
         if (!subjData.battleSprites) subjData.battleSprites = {}
 
-        damage = Math.max(damage - (subjData.defense / 2 + Math.floor(Math.random() * subjData.defense * 11) * 0.1), 0)
+        var power = Math.round((subjData.maxHealth + subjData.attack + subjData.defense + subjData.accuracy + subjData.loot) / 5 * 10) / 10
+
+        damage = Math.max(Math.round(damage / (subjData.defense / 20 + 1) * 10) / 10, 1)
         subjData.health = subjData.health - damage
         if (member.id != msg.author.id && msg.guild.members.cache.get(member.id)) exp = Math.floor(Math.random() * subjData.maxHealth / 5) + subjData.maxHealth / 20 + (yourData.loot * 10) * critmult * (Math.pow(getLevel(subjData.exp).level, 2) / 50) * Math.round(1 / chance)
 
@@ -3164,7 +3390,7 @@ functions.battle = async function (msg, subject, action, damage, chance) {
             subjData.death = Date.now() + 30_000
             if (member.id != msg.author.id && msg.guild.members.cache.get(member.id)) {
                 exp *= 50
-                reward = Math.floor(Math.random() * (subjData.maxHealth + subjData.attack + subjData.defense + subjData.accuracy + subjData.loot + yourData.loot + (Math.pow(getLevel(subjData.exp).level, 2) / 50))) + subjData.maxHealth / 2
+                reward = Math.floor(exp / 75 * power * (yourData.loot / 10 + 1))
             }
             died = true
         }
@@ -3326,7 +3552,7 @@ functions.fetchImages = async function (query, bing, safe, id) {
                 }
             }
 
-            var response = await axios.request(options).catch(() => { })
+            var response = await axios(options).catch(() => { })
 
             if (!response) {
                 resolve([])
@@ -3410,7 +3636,7 @@ functions.downloadFile = async function (url, filename, options) {
         fs.writeFileSync(`${filepath}/${filename}`, url)
     } else if (((!(options.fileinfo) ? true : ((options.fileinfo.shortext === options.fileinfo.type.ext) && (options.fileinfo.shortpixfmt === options.fileinfo.info.pixfmt))) || options.http) && !(options.ffmpeg)) {
         infoPost(`Downloading file through URL with name \`${filename}\``)
-        var response = await axios.request({
+        var response = await axios({
             method: 'GET',
             url: url,
             responseType: 'arraybuffer'
@@ -3803,7 +4029,7 @@ functions.validateFile = async function (url, exception, rejectMessages) {
             return
         }
 
-        var response = await axios.request({
+        var response = await axios({
             method: 'GET',
             url: url,
             responseType: 'stream',
@@ -3814,7 +4040,7 @@ functions.validateFile = async function (url, exception, rejectMessages) {
             reject(err.message)
         })
 
-        var bufferresponse = await axios.request({
+        var bufferresponse = await axios({
             method: 'GET',
             url: url,
             responseType: 'arraybuffer',

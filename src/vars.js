@@ -20,17 +20,17 @@ vars.gifFormats = ['gif', 'apng']
 vars.jimpFormats = ['png', 'jpeg', 'jpg', 'gif', 'bmp', 'tiff']
 vars.processingTools = require('./processingTools')
 vars.symbolreplacements = [{
-    target: ['‘',
-        '’',
-        '‛',
-        '❛',
-        '❜'],
-    replacement: '\''
+    target: ['\u2018',
+        '\u2019',
+        '\u201b',
+        '\u275b',
+        '\u275c'],
+    replacement: "'"
 },
     {
-        target: ['“',
-            '”',
-            '‟'],
+        target: ['\u201c',
+            '\u201d',
+            '\u201f'],
         replacement: '"'
     }]
 vars.punctuation = ['?', '.', '!', '...']

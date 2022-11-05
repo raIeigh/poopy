@@ -68,7 +68,7 @@ module.exports = {
             temperature = temperatures[parseNumber(args[temperatureindex + 1], { dft: Math.floor(Math.random() * temperatures.length), min: 0, max: temperatures.length - 1, round: true })]
         }
 
-        var createResponse = await axios.request({
+        var createResponse = await axios({
             method: 'POST',
             url: 'https://hf.space/embed/ai-guru/composer/task/create',
             headers: {

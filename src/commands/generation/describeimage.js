@@ -30,7 +30,7 @@ module.exports = {
                 headers: { 'Content-Type': 'application/json' }
             }
 
-            var response = await axios.request(options).catch(async () => {
+            var response = await axios(options).catch(async () => {
                 await msg.reply('Error.').catch(() => { })
             })
 

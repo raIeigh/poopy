@@ -27,7 +27,7 @@ module.exports = {
         }
         var search = args.slice(1).join(" ");
 
-        var body = await axios.request({
+        var body = await axios({
             url: 'https://e621.net/posts.json',
             method: 'GET',
             data: {

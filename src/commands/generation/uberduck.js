@@ -39,7 +39,7 @@ module.exports = {
         var saidMessage = args.slice(2).join(' ').replace(/'/g, '’').replace(/"/g, '\\"')
 
         var rejected = false
-        var response = await axios.request({
+        var response = await axios({
             method: 'POST',
             url: 'https://api.uberduck.ai/speak-synchronous',
             headers: {

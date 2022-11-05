@@ -46,7 +46,7 @@ module.exports = {
             return
         }
 
-        var response = await axios.request({
+        var response = await axios({
             url: 'https://wandbox.org/api/compile.ndjson',
             method: 'POST',
             data: {

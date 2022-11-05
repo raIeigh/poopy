@@ -62,7 +62,7 @@ module.exports = {
         if (!msg.nosend) await navigateEmbed(msg.channel, async (page) => {
             execPromise(`yt-dlp ${urls[page - 1].url} --format 18 --get-url`).then(youtubeurl => addLastUrl(msg, youtubeurl.trim())).catch(() => { })
 
-            var thumbresponse = await axios.request(urls[page - 1].thumb.replace('hqdefault', 'hq720')).catch(() => { })
+            var thumbresponse = await axios(urls[page - 1].thumb.replace('hqdefault', 'hq720')).catch(() => { })
 
             if (config.textEmbeds) return `${urls[page - 1].url}\n\nVideo ${page}/${urls.length}`
             else return {

@@ -277,7 +277,7 @@ module.exports = {
         }
 
         if (!options[args[1].toLowerCase()]) {
-            await msg.reply('Not a valid option.')
+            await msg.reply('Not a valid option.').catch(() => { })
             return
         }
 
