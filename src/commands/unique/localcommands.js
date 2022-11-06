@@ -172,7 +172,7 @@ module.exports = {
                                 "icon_url": bot.user.displayAvatarURL({
                                     dynamic: true, size: 1024, extension: 'png'
                                 }),
-                                "text": `Poopy`
+                                "text": bot.user.username
                             },
                         }).catch(() => { })
                     }

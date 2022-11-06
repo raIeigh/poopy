@@ -2062,74 +2062,89 @@ functions.displayShop = async function (channel, who, reply, type) {
     let bot = poopy.bot
     let config = poopy.config
     let data = poopy.data
-    let { chunkArray, dmSupport, randomNumber } = poopy.functions
+    let { chunkArray, dmSupport, randomNumber, getLevel } = poopy.functions
     let { Discord } = poopy.modules
 
-    var buttonsData = []
-    switch (type) {
-        case 'upgrades':
-            buttonsData = [
-                /*{
-                    health: 100,
-                    maxHealth: 100,
-                    defense: 0,
-                    attack: 0,
-                    accuracy: 0,
-                    loot: 0,
-                    exp: 150,
-                    bucks: 20
-                },*/
+    var buttonsData = [
+        /*{
+            health: 100,
+            maxHealth: 100,
+            defense: 0,
+            attack: 0,
+            accuracy: 0,
+            loot: 0,
+            exp: 150,
+            bucks: 20
+        },*/
 
-                {
-                    emoji: '❤',
-                    reactemoji: '❤',
-                    customid: 'health',
-                    style: Discord.ButtonStyle.Primary,
-                    desc: 'Upgrade your maximum health.',
-                    price: 80
-                },
+        {
+            emoji: '❤',
+            customid: 'health',
+            style: Discord.ButtonStyle.Primary,
+            desc: 'Upgrade your maximum health.',
+            price: 80
+        },
 
-                {
-                    emoji: '🛡',
-                    reactemoji: '🛡',
-                    customid: 'defense',
-                    style: Discord.ButtonStyle.Primary,
-                    desc: 'Increase your defense.',
-                    price: 120
-                },
+        {
+            emoji: '🛡',
+            customid: 'defense',
+            style: Discord.ButtonStyle.Primary,
+            desc: 'Increase your defense.',
+            price: 120
+        },
 
-                {
-                    emoji: '⚔',
-                    reactemoji: '⚔',
-                    customid: 'attack',
-                    style: Discord.ButtonStyle.Primary,
-                    desc: 'Increase your attack damage.',
-                    price: 120
-                },
+        {
+            emoji: '⚔',
+            customid: 'attack',
+            style: Discord.ButtonStyle.Primary,
+            desc: 'Increase your attack damage.',
+            price: 120
+        },
 
-                {
-                    emoji: '🎯',
-                    reactemoji: '🎯',
-                    customid: 'accuracy',
-                    style: Discord.ButtonStyle.Primary,
-                    desc: 'Increase the accuracy of each attack.',
-                    price: 150
-                },
+        {
+            emoji: '🎯',
+            customid: 'accuracy',
+            style: Discord.ButtonStyle.Primary,
+            desc: 'Increase the accuracy of each attack.',
+            price: 150
+        },
 
-                {
-                    emoji: '🪙',
-                    reactemoji: '🪙',
-                    customid: 'loot',
-                    style: Discord.ButtonStyle.Primary,
-                    desc: 'Get more loot each time you defeat someone.',
-                    price: 200
-                },
-            ]
-            break;
+        {
+            emoji: '🪙',
+            customid: 'loot',
+            style: Discord.ButtonStyle.Primary,
+            desc: 'Get more loot while fighting someone.',
+            price: 150
+        }
+    ]
+
+    var shopObject = {}
+    var allowedMentions
+    var tag
+
+    if (typeof (who) != 'string') {
+        allowedMentions = {
+            parse: (!who.permissions.has('Administrator') &&
+                !who.permissions.has('MentionEveryone') &&
+                who.id !== channel.guild.ownerID) ?
+                ['users'] : ['users', 'everyone', 'roles']
+        }
+        shopObject.allowedMentions = allowedMentions
+        tag = who.tag ?? who.user.tag
+        who = who.id
     }
 
     var components = []
     var chunkButtonData = chunkArray(buttonsData, 3)
+
+    var level = getLevel(data.userData[who]['exp'])
+    var cap = level >= 20 ? 25 :
+        level >= 10 ? 10 :
+            5
+
+    buttonsData.forEach(upgrade => {
+        upgrade.price *= data.userData[who][upgrade.customid] + 1
+    })
 
     chunkButtonData.forEach(buttonsData => {
         var buttonRow = new Discord.ActionRowBuilder()
@@ -2149,40 +2164,36 @@ functions.displayShop = async function (channel, who, reply, type) {
         components.push(buttonRow)
     })
 
-    var rainmaze = new Rainmaze(w, h)
-    var raindraw = rainmaze.draw()
-    var rainObject = {}
-    var allowedMentions
-    var tag
+    var upgradeList = buttonsData.map(u => `${u.emoji} **${data.userData[who][u.customid] >= cap ? `MAX` : u.price} P$** - ${u.desc} **(${data.userData[who][u.customid]}/${cap})**`).join('\n')
 
-    if (config.textEmbeds) rainObject.content = `${raindraw.description}\n\n${raindraw.fields.map(f => `**${f.name}** - ${f.value}`).join('\n')}`
-    else rainObject.embeds = [raindraw]
+    if (config.textEmbeds) shopObject.content = upgradeList
+    else shopObject.embeds = [{
+        title: `${type.toCapperCase()} Shop`,
+        description: upgradeList,
+        color: 0x472604,
+        footer: {
+            icon_url: bot.user.displayAvatarURL({
+                dynamic: true, size: 1024, extension: 'png'
+            }),
+            text: bot.user.username
+        },
+    }]
 
-    if (!config.useReactions) rainObject.components = components
+    if (!config.useReactions) shopObject.components = components
 
-    if (typeof (who) != 'string') {
-        allowedMentions = {
-            parse: (!who.permissions.has('Administrator') &&
-                !who.permissions.has('MentionEveryone') &&
-                who.id !== channel.guild.ownerID) ?
-                ['users'] : ['users', 'everyone', 'roles']
-        }
-        rainObject.allowedMentions = allowedMentions
-        tag = who.tag ?? who.user.tag
-        who = who.id
-    }
-
-    var rainMsg = await (reply ?? channel)[reply ? 'reply' : 'send'](rainObject).catch(() => { })
+    var shopMsg = await (reply ?? channel)[reply ? 'reply' : 'send'](shopObject).catch(() => { })
     var ended = false
 
-    if (!rainMsg) throw new Error(`Couldn't send Rainmaze to channel`)
+    if (!shopMsg) throw new Error(`Couldn't send shop to channel`)
+
+    return upgradeList
 
     async function updateMaze() {
         raindraw = rainmaze.draw()
 
         if (ended) {
-            if (config.useReactions) rainMsg.reactions.removeAll().catch(() => { })
-            else rainObject.components = []
+            if (config.useReactions) shopMsg.reactions.removeAll().catch(() => { })
+            else shopObject.components = []
 
             if (ended == 'win') {
                 var reward = randomNumber(w * h, w * h * 2)
@@ -2199,14 +2210,14 @@ functions.displayShop = async function (channel, who, reply, type) {
             }
         }
 
-        if (config.textEmbeds) rainObject.content = `${raindraw.description}\n\n${raindraw.fields.map(f => `**${f.name}** - ${f.value}`).join('\n')}`
-        else rainObject.embeds = [raindraw]
+        if (config.textEmbeds) shopObject.content = `${raindraw.description}\n\n${raindraw.fields.map(f => `**${f.name}** - ${f.value}`).join('\n')}`
+        else shopObject.embeds = [raindraw]
 
-        rainMsg.edit(rainObject).catch(() => { })
+        shopMsg.edit(shopObject).catch(() => { })
     }
 
     if (config.useReactions) {
-        var collector = rainMsg.createReactionCollector({ time: 60_000 })
+        var collector = shopMsg.createReactionCollector({ time: 60_000 })
 
         collector.on('collect', async (reaction, user) => {
             dmSupport(reaction)
@@ -2241,10 +2252,10 @@ functions.displayShop = async function (channel, who, reply, type) {
 
         for (var i in buttonsData) {
             var bdata = buttonsData[i]
-            await rainMsg.react(bdata.emoji).catch(() => { })
+            await shopMsg.react(bdata.emoji).catch(() => { })
         }
     } else {
-        var collector = rainMsg.createMessageComponentCollector({ time: 60_000 })
+        var collector = shopMsg.createMessageComponentCollector({ time: 60_000 })
 
         collector.on('collect', async (button) => {
             dmSupport(button)

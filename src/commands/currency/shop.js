@@ -3,6 +3,8 @@ module.exports = {
   args: [{ "name": "type", "required": true, "specifarg": false, "orig": "<type (upgrades, buffs or items)>", "autocomplete": ['upgrades', 'buffs', 'items'] }],
   execute: async function (msg, args) {
     let poopy = this
+    let config = poopy.config
+    let bot = poopy.bot
     let { displayShop } = poopy.functions
 
     let types = ['upgrades', 'buffs', 'items']

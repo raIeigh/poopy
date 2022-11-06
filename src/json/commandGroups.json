@@ -206,8 +206,8 @@
             "inferkit",
             "newimage",
             "spectrogram",
-            "uberduck",
-            "weirdcore"
+            "stablediffusion",
+            "uberduck"
         ],
         "description": "Generate media from an AI or not."
     },
