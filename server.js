@@ -2,7 +2,7 @@ const throng = require('throng')
 
 async function start() {
     let poopyStarted = false
-    let mainPoopy
+    let poopy
     let { APIMessage } = require('./src/modules')
     let { sleep, escapeHTML } = require('./src/functions')
 
@@ -42,7 +42,7 @@ async function start() {
             }
 
             while (!poopyStarted) await sleep(1000)
-            res.type('json').send(mainPoopy.globaldata['psfiles'])
+            res.type('json').send(poopy.globaldata['psfiles'])
         })
 
         app.get('/api/pspasta', async function (req, res) {
@@ -52,12 +52,12 @@ async function start() {
             }
 
             while (!poopyStarted) await sleep(1000)
-            res.type('json').send(mainPoopy.globaldata['pspasta'])
+            res.type('json').send(poopy.globaldata['pspasta'])
         })
 
         app.get('/ubervoices', async function (_, res) {
             while (!poopyStarted) await sleep(1000)
-            let vars = mainPoopy.vars
+            let vars = poopy.vars
             var listings = [[], [], []]
             var li = 0
 
@@ -73,18 +73,18 @@ async function start() {
         app.post('/api/command', async function (req, res) {
             while (!poopyStarted) await sleep(1000)
 
-            let callbacks = mainPoopy.callbacks
+            let callbacks = poopy.callbacks
 
             req.body.restype = req.body.restype ?? 'html'
             req.body = req.body ?? {}
 
             let messages = []
 
-            var msg = new APIMessage(req, res, mainPoopy, messages)
+            var msg = new APIMessage({ req, res, poopy, messages })
 
             var err
             await callbacks.messageCallback(msg).catch((e) => err = e.message)
-            if (!messages.length) messages.push(req.body.restype == 'json' ? new APIMessage(req, res, mainPoopy, messages, err ?? 'No output.') : err ?? 'No output.')
+            if (!messages.length) messages.push(req.body.restype == 'json' ? new APIMessage({ req, res, poopy, messages }, err ?? 'No output.') : err ?? 'No output.')
 
             switch (req.body.restype) {
                 case 'json':
@@ -104,13 +104,13 @@ async function start() {
 
         app.get('/psfile', async function (_, res) {
             while (!poopyStarted) await sleep(1000)
-            const psfiles = mainPoopy.globaldata['psfiles']
+            const psfiles = poopy.globaldata['psfiles']
             res.redirect(psfiles[Math.floor(Math.random() * psfiles.length)])
         })
 
         app.get('/invite', async function (_, res) {
-            while (!mainPoopy) await sleep(1000)
-            res.redirect(`https://discord.com/oauth2/authorize?client_id=${mainPoopy.bot.user.id}&scope=bot%20applications.commands&permissions=275415166152`)
+            while (!poopy) await sleep(1000)
+            res.redirect(`https://discord.com/oauth2/authorize?client_id=${poopy.bot.user.id}&scope=bot%20applications.commands&permissions=275415166152`)
         })
 
         app.get('/discord', function (_, res) {
@@ -201,15 +201,15 @@ async function start() {
     }
 
     for (var tokendata of tokens) {
-        if (!mainPoopy) {
+        if (!poopy) {
             tokendata.config.quitOnDestroy = true
         }
 
-        let poopy = new Poopy(tokendata.config)
-        if (!mainPoopy) mainPoopy = poopy
+        let poopo = new Poopy(tokendata.config)
+        if (!poopy) poopy = poopo
 
-        poopy.start(tokendata.TOKEN).then(() => {
-            if (poopy.config.quitOnDestroy) {
+        poopo.start(tokendata.TOKEN).then(() => {
+            if (poopo.config.quitOnDestroy) {
                 poopyStarted = true
             }
         }).catch((e) => console.log(e))
@@ -218,4 +218,4 @@ async function start() {
     }
 }
 
-throng({ workers: 1, start })
+throng({ workers: 1, start }) // My poopy will never die

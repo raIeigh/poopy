@@ -42,7 +42,9 @@ async function createEmbed(url, linkEmbed, poopy) {
 }
 
 async function send(payload) {
-    let { req, res, poopy, messages } = this
+    let data = this
+    let { req, res, poopy, messages } = data
+
     let { validateFileFromPath, replaceAsync, escapeHTML } = poopy.functions
     let vars = poopy.vars
 
@@ -69,7 +71,7 @@ async function send(payload) {
 
         messages.push(payload)
 
-        return new Message(req, res, poopy, payload)
+        return new Message(data, payload)
     }
 
     let message = []
@@ -115,7 +117,7 @@ async function send(payload) {
 
         messages.push(message.join('\n'))
 
-        return new Message(req, res, poopy, payload)
+        return new Message(data, payload)
     }
 
     let contents = []
@@ -170,17 +172,15 @@ async function send(payload) {
 
     messages.push(message)
 
-    return new Message(req, res, poopy, messages, payload)
+    return new Message(data, payload)
 }
 
 class Guild {
-    constructor(req, res, poopy, messages) {
-        let bot = poopy.bot
+    constructor(data) {
+        let { poopy } = data
+        this._data = data
 
-        this._req = req
-        this._res = res
-        this._poopy = poopy
-        this._messages = messages
+        let bot = poopy.bot
 
         this.name = `${bot.user.username}'s API`
         this.emojis = {
@@ -191,14 +191,14 @@ class Guild {
     }
 
     get channels() {
-        let channel = new Channel(this._req, this._res, this._poopy, this._messages)
+        let channel = new Channel(this._data)
         return {
             cache: new Collection([[channel.id, channel]])
         }
     }
 
     get members() {
-        let member = new GuildMember(this._req, this._res, this._poopy, this._messages)
+        let member = new GuildMember(this._data)
         return {
             fetch: async (id) => id == member.id && member,
             cache: new Collection([[member.id, member]])
@@ -213,13 +213,11 @@ class Guild {
 }
 
 class Channel {
-    constructor(req, res, poopy, messages) {
-        let bot = poopy.bot
+    constructor(data) {
+        let { req, poopy } = data
+        this._data = data
 
-        this._req = req
-        this._res = res
-        this._poopy = poopy
-        this._messages = messages
+        let bot = poopy.bot
 
         this.owner = bot.user
         this.nsfw = false
@@ -229,7 +227,7 @@ class Channel {
     }
 
     get messages() {
-        let message = new Message(this._req, this._res, this._poopy, this._messages)
+        let message = new Message(this._data)
         return {
             fetch: async (id) => id == message.id && message,
             cache: new Collection([[message.id, message]])
@@ -237,16 +235,11 @@ class Channel {
     }
 
     get guild() {
-        return new Guild(this._req, this._res, this._poopy, this._messages)
+        return new Guild(this._data)
     }
 
     async send(payload) {
-        return send.call({
-            req: this._req,
-            res: this._res,
-            poopy: this._poopy,
-            messages: this._messages
-        }, payload)
+        return send.call(this._data, payload)
     }
 
     permissionsFor() {
@@ -276,11 +269,9 @@ class Channel {
 }
 
 class GuildMember {
-    constructor(req, res, poopy, messages) {
-        this._req = req
-        this._res = res
-        this._poopy = poopy
-        this._messages = messages
+    constructor(data) {
+        let { req } = data
+        this._data = data
 
         this.nickname = 'Member'
         this.roles = {
@@ -293,25 +284,18 @@ class GuildMember {
     }
 
     get user() {
-        return new User(this._req, this._res, this._poopy, this._messages)
+        return new User(this._data)
     }
 
     async send(payload) {
-        return send.call({
-            req: this._req,
-            res: this._res,
-            poopy: this._poopy,
-            messages: this._messages
-        }, payload)
+        return send.call(this._data, payload)
     }
 }
 
 class User {
-    constructor(req, res, poopy, messages) {
-        this._req = req
-        this._res = res
-        this._poopy = poopy
-        this._messages = messages
+    constructor(data) {
+        let { req } = data
+        this._data = data
 
         this.username = 'User'
         this.tag = 'User'
@@ -319,20 +303,15 @@ class User {
     }
 
     get channel() {
-        return new Channel(this._req, this._res, this._poopy, this._messages)
+        return new Channel(this._data)
     }
 
     get dmChannel() {
-        return new Channel(this._req, this._res, this._poopy, this._messages)
+        return new Channel(this._data)
     }
 
     async send(payload) {
-        return send.call({
-            req: this._req,
-            res: this._res,
-            poopy: this._poopy,
-            messages: this._messages
-        }, payload)
+        return send.call(this._data, payload)
     }
 
     displayAvatarURL() {
@@ -340,12 +319,15 @@ class User {
     }
 
     async createDM() {
-        return new Channel()
+        return new Channel(this._data)
     }
 }
 
 class Message {
-    constructor(req, res, poopy, messages, payload) {
+    constructor(data, payload) {
+        let { req, poopy } = data
+        this._data = data
+
         let { generateId } = poopy.functions
         let config = poopy.config
 
@@ -361,11 +343,6 @@ class Message {
             }]))
             payload.stickers = payload.stickers ?? []
         }
-
-        this._req = req
-        this._res = res
-        this._poopy = poopy
-        this._messages = messages
 
         this.content = payload ? payload.content : `${config.globalPrefix}${req.body.args}`
         this.attachments = payload ? payload.attachments : new Collection()
@@ -383,37 +360,27 @@ class Message {
     }
 
     get author() {
-        return new User(this._req, this._res, this._poopy, this._messages)
+        return new User(this._data)
     }
 
     get member() {
-        return new GuildMember(this._req, this._res, this._poopy, this._messages)
+        return new GuildMember(this._data)
     }
 
     get channel() {
-        return new Channel(this._req, this._res, this._poopy, this._messages)
+        return new Channel(this._data)
     }
 
     get guild() {
-        return new Guild(this._req, this._res, this._poopy, this._messages)
+        return new Guild(this._data)
     }
 
     async reply(payload) {
-        return send.call({
-            req: this._req,
-            res: this._res,
-            poopy: this._poopy,
-            messages: this._messages
-        }, payload)
+        return send.call(this._data, payload)
     }
 
     async edit(payload) {
-        return send.call({
-            req: this._req,
-            res: this._res,
-            poopy: this._poopy,
-            messages: this._messages
-        }, payload)
+        return send.call(this._data, payload)
     }
 
     async delete() { }
