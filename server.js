@@ -143,7 +143,6 @@ async function start() {
             {
                 TOKEN: process.env.POOPYTEST_TOKEN,
                 config: {
-                    testing: true,
                     noInfoPost: true,
                     globalPrefix: '2p:',
                     database: 'testdata',
@@ -154,7 +153,6 @@ async function start() {
             {
                 TOKEN: process.env.INDIA_TOKEN,
                 config: {
-                    testing: true,
                     self: true,
                     globalPrefix: '2i:',
                     database: 'testracist',
