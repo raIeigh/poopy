@@ -32,6 +32,7 @@ modules.itob = require('istextorbinary')
 modules.os = require('os')
 modules.Collection = require('@discordjs/collection').Collection
 modules.Rainmaze = require('../lib/rainmaze/Rainmaze')
+modules.APIMessage = require('./apiMessage')
 modules.DMGuild = class DMGuild {
     constructor(msg) {
         let members = new modules.Collection([[msg.client.database, msg.client.user]].concat(

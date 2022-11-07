@@ -1,6 +1,6 @@
 let dataValues = {}
 
 dataValues.globaldata = {}
-dataValues.activeBots = []
+dataValues.activeBots = {}
 
 module.exports = dataValues
