@@ -43,137 +43,139 @@ async function createEmbed(url, linkEmbed) {
 }
 
 async function send(payload) {
-    let data = this
-    let { req, res, poopy, messages } = data
+    try {
+        let data = this
+        let { req, res, poopy, messages } = data
 
-    let { validateFileFromPath, replaceAsync, escapeHTML } = poopy.functions
-    let vars = poopy.vars
+        let { validateFileFromPath, replaceAsync, escapeHTML } = poopy.functions
+        let vars = poopy.vars
 
-    if (typeof (payload) == 'string') {
-        payload = {
-            content: payload
+        if (typeof (payload) == 'string') {
+            payload = {
+                content: payload
+            }
         }
-    }
 
-    if (req.body.restype == 'json') {
+        if (req.body.restype == 'json') {
+            if (payload.files && payload.files.length > 0) {
+                for (var i in payload.files) {
+                    var attachment = payload.files[i].attachment
+
+                    if (!vars.validUrl.test(attachment)) {
+                        var fileinfo = await validateFileFromPath(attachment, 'very true').catch(() => { })
+
+                        if (!fileinfo) continue
+
+                        payload.files[i].attachment = fileinfo.path
+                    }
+                }
+            }
+
+            messages.push(payload)
+
+            return new Message(data, payload)
+        }
+
+        let message = []
+
+        if (req.body.restype == 'raw') {
+            const attachment = (payload.files &&
+                payload.files.length > 0 &&
+                payload.files.find(file => file.attachment) &&
+                payload.files.find(file => file.attachment).attachment)
+
+                ||
+
+                (payload.embeds &&
+                    payload.embeds.length > 0 &&
+                    payload.embeds.find(embed => embed.image) &&
+                    payload.embeds.find(embed => embed.image).image &&
+                    payload.embeds.find(embed => embed.image).image.url)
+
+            if (attachment) {
+                sent = true
+                if (vars.validUrl.test(attachment)) {
+                    res.redirect(attachment)
+                } else {
+                    await new Promise(resolve => res.sendFile(`${__dirname}/${attachment}`, resolve))
+                }
+            } else {
+                if (payload.content) message.push(payload.content)
+
+                if (payload.embeds && payload.embeds.length > 0) {
+                    let textEmbed = []
+
+                    payload.embeds.forEach(embed => {
+                        if (embed.author && embed.author.name) textEmbed.push(embed.author.name)
+                        if (embed.title) textEmbed.push(embed.title)
+                        if (embed.description) textEmbed.push(embed.description)
+                        if (embed.fields && embed.fields.length > 0) textEmbed.push(embed.fields.map(field => `${field.name ?? ''}\n${field.value ?? ''}`).join('\n'))
+                        if (embed.footer && embed.footer.text) textEmbed.push(embed.footer.text)
+                    })
+
+                    message.push(textEmbed.join('\n'))
+                }
+            }
+
+            messages.push(message.join('\n'))
+
+            return new Message(data, payload)
+        }
+
+        let contents = []
+        let container = []
+
+        if (payload.content) contents.push(escapeHTML(payload.content))
+
+        if (payload.embeds && payload.embeds.length > 0) {
+            let textEmbed = []
+
+            for (var i in payload.embeds) {
+                const embed = payload.embeds[i]
+
+                if (embed.author && embed.author.name) textEmbed.push(escapeHTML(embed.author.name))
+                if (embed.title) textEmbed.push(escapeHTML(embed.title))
+                if (embed.description) textEmbed.push(escapeHTML(embed.description))
+                if (embed.fields && embed.fields.length > 0) textEmbed.push(embed.fields.map(field => escapeHTML(`${field.name ?? ''}\n${field.value ?? ''}`)).join('\n'))
+                if (embed.footer && embed.footer.text) textEmbed.push(escapeHTML(embed.footer.text))
+                if (embed.thumbnail && embed.thumbnail.url) container.push(await createEmbed.call(poopy, embed.thumbnail.url))
+                if (embed.image && embed.image.url) container.push(await createEmbed.call(poopy, embed.image.url))
+            }
+
+            contents.push(textEmbed.join('\n'))
+        }
+
         if (payload.files && payload.files.length > 0) {
             for (var i in payload.files) {
-                var attachment = payload.files[i].attachment
-
-                if (!vars.validUrl.test(attachment)) {
-                    var fileinfo = await validateFileFromPath(attachment, 'very true').catch(() => { })
-
-                    if (!fileinfo) continue
-
-                    payload.files[i].attachment = fileinfo.path
-                }
+                const attachment = payload.files[i].attachment
+                const attachEmbed = await createEmbed.call(poopy, attachment)
+                if (attachEmbed) container.push(attachEmbed)
             }
         }
 
-        messages.push(payload)
+        for (var i in contents) {
+            var valid = 0
+            contents[i] = await replaceAsync(contents[i], new RegExp(vars.validUrl, 'g'), async (url) => {
+                if (valid < 10) {
+                    const attachEmbed = await createEmbed.call(poopy, url, true)
+                    if (attachEmbed) {
+                        container.push(attachEmbed)
+                        valid++
+                    }
+                }
+
+                return `<a href="${url}" target="_blank">${url}</a>`
+            })
+        }
+
+        if (contents.length > 0) message.push(`<div class="contents">${contents.join('')}</div>`)
+        if (container.length > 0) message.push(`<div class="container">${container.join('')}</div>`)
+        message = `<div class="message">${message.join('')}</div>`
+
+        messages.push(message)
 
         return new Message(data, payload)
-    }
-
-    let message = []
-
-    if (req.body.restype == 'raw') {
-        const attachment = (payload.files &&
-            payload.files.length > 0 &&
-            payload.files.find(file => file.attachment) &&
-            payload.files.find(file => file.attachment).attachment)
-
-            ||
-
-            (payload.embeds &&
-                payload.embeds.length > 0 &&
-                payload.embeds.find(embed => embed.image) &&
-                payload.embeds.find(embed => embed.image).image &&
-                payload.embeds.find(embed => embed.image).image.url)
-
-        if (attachment) {
-            sent = true
-            if (vars.validUrl.test(attachment)) {
-                res.redirect(attachment)
-            } else {
-                await new Promise(resolve => res.sendFile(`${__dirname}/${attachment}`, resolve))
-            }
-        } else {
-            if (payload.content) message.push(payload.content)
-
-            if (payload.embeds && payload.embeds.length > 0) {
-                let textEmbed = []
-
-                payload.embeds.forEach(embed => {
-                    if (embed.author && embed.author.name) textEmbed.push(embed.author.name)
-                    if (embed.title) textEmbed.push(embed.title)
-                    if (embed.description) textEmbed.push(embed.description)
-                    if (embed.fields && embed.fields.length > 0) textEmbed.push(embed.fields.map(field => `${field.name ?? ''}\n${field.value ?? ''}`).join('\n'))
-                    if (embed.footer && embed.footer.text) textEmbed.push(embed.footer.text)
-                })
-
-                message.push(textEmbed.join('\n'))
-            }
-        }
-
-        messages.push(message.join('\n'))
-
-        return new Message(data, payload)
-    }
-
-    let contents = []
-    let container = []
-
-    if (payload.content) contents.push(escapeHTML(payload.content))
-
-    if (payload.embeds && payload.embeds.length > 0) {
-        let textEmbed = []
-
-        for (var i in payload.embeds) {
-            const embed = payload.embeds[i]
-
-            if (embed.author && embed.author.name) textEmbed.push(escapeHTML(embed.author.name))
-            if (embed.title) textEmbed.push(escapeHTML(embed.title))
-            if (embed.description) textEmbed.push(escapeHTML(embed.description))
-            if (embed.fields && embed.fields.length > 0) textEmbed.push(embed.fields.map(field => escapeHTML(`${field.name ?? ''}\n${field.value ?? ''}`)).join('\n'))
-            if (embed.footer && embed.footer.text) textEmbed.push(escapeHTML(embed.footer.text))
-            if (embed.thumbnail && embed.thumbnail.url) container.push(await createEmbed.call(poopy, embed.thumbnail.url))
-            if (embed.image && embed.image.url) container.push(await createEmbed.call(poopy, embed.image.url))
-        }
-
-        contents.push(textEmbed.join('\n'))
-    }
-
-    if (payload.files && payload.files.length > 0) {
-        for (var i in payload.files) {
-            const attachment = payload.files[i].attachment
-            const attachEmbed = await createEmbed.call(poopy, attachment)
-            if (attachEmbed) container.push(attachEmbed)
-        }
-    }
-
-    for (var i in contents) {
-        var valid = 0
-        contents[i] = await replaceAsync(contents[i], new RegExp(vars.validUrl, 'g'), async (url) => {
-            if (valid < 10) {
-                const attachEmbed = await createEmbed.call(poopy, url, true)
-                if (attachEmbed) {
-                    container.push(attachEmbed)
-                    valid++
-                }
-            }
-
-            return `<a href="${url}" target="_blank">${url}</a>`
-        })
-    }
-
-    if (contents.length > 0) message.push(`<div class="contents">${contents.join('')}</div>`)
-    if (container.length > 0) message.push(`<div class="container">${container.join('')}</div>`)
-    message = `<div class="message">${message.join('')}</div>`
-
-    messages.push(message)
-
-    return new Message(data, payload)
+    } catch (e) { console.log(e) }
 }
 
 class Guild {
@@ -187,8 +189,13 @@ class Guild {
         this.emojis = {
             cache: new Collection()
         }
+        this.roles = {
+            cache: new Collection([['Role', { name: 'Owner', id: 'Role' }]])
+        }
         this.ownerId = bot.user.id
         this.id = 'API'
+        this.createdTimestamp = Date.now()
+        this.verificationLevel = 0
     }
 
     get channels() {
@@ -210,6 +217,22 @@ class Guild {
         return {
             entries: new Collection()
         }
+    }
+
+    iconURL() {
+        return 'https://cdn.discordapp.com/embed/avatars/0.png'
+    }
+
+    bannerURL() {
+        return null
+    }
+
+    splashURL() {
+        return null
+    }
+
+    discoverySplashURL() {
+        return null
     }
 }
 
@@ -243,15 +266,9 @@ class Channel {
         return send.call(this._data, payload)
     }
 
-    permissionsFor() {
-        return {
-            has: () => true
-        }
-    }
-
     async sendTyping() { }
 
-    async fetchWebhook() {
+    async fetchWebhooks() {
         return new Collection([[this.id, this]])
     }
 
@@ -267,6 +284,12 @@ class Channel {
             stop: () => { }
         }
     }
+
+    permissionsFor() {
+        return {
+            has: () => true
+        }
+    }
 }
 
 class GuildMember {
@@ -274,6 +297,7 @@ class GuildMember {
         let { req } = data
         this._data = data
 
+        this.id = CryptoJS.MD5(req.ip).toString()
         this.nickname = 'Member'
         this.roles = {
             cache: new Collection([['Role', { name: 'Owner', id: 'Role' }]])
@@ -281,7 +305,8 @@ class GuildMember {
         this.permissions = {
             has: () => true
         }
-        this.id = CryptoJS.MD5(req.ip).toString()
+        this.joinedTimestamp = Date.now()
+        this.presence = {}
     }
 
     get user() {
@@ -290,6 +315,14 @@ class GuildMember {
 
     async send(payload) {
         return send.call(this._data, payload)
+    }
+
+    displayAvatarURL() {
+        return 'https://cdn.discordapp.com/embed/avatars/0.png'
+    }
+
+    avatarURL() {
+        return 'https://cdn.discordapp.com/embed/avatars/0.png'
     }
 }
 
@@ -301,6 +334,10 @@ class User {
         this.username = 'User'
         this.tag = 'User'
         this.id = CryptoJS.MD5(req.ip).toString()
+        this.createdTimestamp = Date.now()
+        this.flags = {
+            toArray: () => []
+        }
     }
 
     get channel() {
@@ -311,16 +348,28 @@ class User {
         return new Channel(this._data)
     }
 
+    async fetch() {
+        return this
+    }
+
     async send(payload) {
         return send.call(this._data, payload)
+    }
+
+    async createDM() {
+        return new Channel(this._data)
     }
 
     displayAvatarURL() {
         return 'https://cdn.discordapp.com/embed/avatars/0.png'
     }
 
-    async createDM() {
-        return new Channel(this._data)
+    avatarURL() {
+        return 'https://cdn.discordapp.com/embed/avatars/0.png'
+    }
+
+    bannerURL() {
+        return null
     }
 }
 
