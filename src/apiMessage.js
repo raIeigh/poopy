@@ -3,6 +3,7 @@ const Collection = require('@discordjs/collection').Collection
 
 async function createEmbed(url, linkEmbed) {
     let poopy = this
+    let vars = poopy.vars
     let { validateFile, validateFileFromPath, escapeHTML } = poopy.functions
 
     var fileinfo
