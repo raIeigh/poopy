@@ -74,6 +74,7 @@ async function start() {
             while (!poopyStarted) await sleep(1000)
 
             let callbacks = poopy.callbacks
+            let data = poopy.data
 
             req.body.restype = req.body.restype ?? 'html'
             req.body = req.body ?? {}
@@ -81,6 +82,9 @@ async function start() {
             let messages = []
 
             var msg = new APIMessage({ req, res, poopy, messages })
+
+            if (!data.guildData[msg.guild.id]) data.guildData[msg.guild.id] = {}
+            if (data.guildData[msg.guild.id]['prefix'] == undefined) data.guildData[msg.guild.id]['prefix'] = ''
 
             var err
             await callbacks.messageCallback(msg).catch((e) => err = e.message)

@@ -1,7 +1,8 @@
 const CryptoJS = require('crypto-js')
 const Collection = require('@discordjs/collection').Collection
 
-async function createEmbed(url, linkEmbed, poopy) {
+async function createEmbed(url, linkEmbed) {
+    let poopy = this
     let { validateFile, validateFileFromPath, escapeHTML } = poopy.functions
 
     var fileinfo
@@ -136,8 +137,8 @@ async function send(payload) {
             if (embed.description) textEmbed.push(escapeHTML(embed.description))
             if (embed.fields && embed.fields.length > 0) textEmbed.push(embed.fields.map(field => escapeHTML(`${field.name ?? ''}\n${field.value ?? ''}`)).join('\n'))
             if (embed.footer && embed.footer.text) textEmbed.push(escapeHTML(embed.footer.text))
-            if (embed.thumbnail && embed.thumbnail.url) container.push(await createEmbed(embed.thumbnail.url))
-            if (embed.image && embed.image.url) container.push(await createEmbed(embed.image.url))
+            if (embed.thumbnail && embed.thumbnail.url) container.push(await createEmbed.call(poopy, embed.thumbnail.url))
+            if (embed.image && embed.image.url) container.push(await createEmbed.call(poopy, embed.image.url))
         }
 
         contents.push(textEmbed.join('\n'))
@@ -146,7 +147,7 @@ async function send(payload) {
     if (payload.files && payload.files.length > 0) {
         for (var i in payload.files) {
             const attachment = payload.files[i].attachment
-            const attachEmbed = await createEmbed(attachment)
+            const attachEmbed = await createEmbed.call(poopy, attachment)
             if (attachEmbed) container.push(attachEmbed)
         }
     }
@@ -155,7 +156,7 @@ async function send(payload) {
         var valid = 0
         contents[i] = await replaceAsync(contents[i], new RegExp(vars.validUrl, 'g'), async (url) => {
             if (valid < 10) {
-                const attachEmbed = await createEmbed(url, true)
+                const attachEmbed = await createEmbed.call(poopy, url, true)
                 if (attachEmbed) {
                     container.push(attachEmbed)
                     valid++
@@ -329,23 +330,15 @@ class Message {
         this._data = data
 
         let { generateId } = poopy.functions
-        let config = poopy.config
 
-        if (payload) {
-            if (typeof payload == 'string') payload = { content: payload }
+        if (payload && typeof payload == 'string') payload = { content: payload }
 
-            payload.content = payload.content ?? ''
-            payload.embeds = payload.embeds ?? []
-            payload.attachments = new Collection((payload.files ?? []).map(a => [`Attachment${i++}`, {
-                id: `Attachment${i++}`,
-                name: a.name,
-                url: a.url
-            }]))
-            payload.stickers = payload.stickers ?? []
-        }
-
-        this.content = payload ? payload.content : `${config.globalPrefix}${req.body.args}`
-        this.attachments = payload ? payload.attachments : new Collection()
+        this.content = payload ? payload.content : req.body.args
+        this.attachments = payload ? new Collection((payload.files ?? []).map(a => [`Attachment${i++}`, {
+            id: `Attachment${i++}`,
+            name: a.name,
+            url: a.url
+        }])) : new Collection()
         this.embeds = payload ? payload.embeds : []
         this.stickers = payload ? payload.stickers : new Collection()
 
