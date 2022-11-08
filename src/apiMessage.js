@@ -320,6 +320,10 @@ class GuildMember {
         return send.call(this._data, payload)
     }
 
+    async fetch() {
+        return this
+    }
+
     displayAvatarURL() {
         return 'https://cdn.discordapp.com/embed/avatars/0.png'
     }
@@ -351,12 +355,12 @@ class User {
         return new Channel(this._data)
     }
 
-    async fetch() {
-        return this
-    }
-
     async send(payload) {
         return send.call(this._data, payload)
+    }
+
+    async fetch() {
+        return this
     }
 
     async createDM() {
