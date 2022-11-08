@@ -85,6 +85,7 @@ async function start() {
 
             if (!data.guildData[msg.guild.id]) data.guildData[msg.guild.id] = {}
             if (data.guildData[msg.guild.id]['prefix'] == undefined) data.guildData[msg.guild.id]['prefix'] = ''
+            if (data.guildData[msg.guild.id]['keyexec'] == undefined) data.guildData[msg.guild.id]['keyexec'] = 2
 
             var err
             await callbacks.messageCallback(msg).catch((e) => err = e.message)

@@ -196,6 +196,7 @@ class Guild {
         this.ownerId = bot.user.id
         this.id = 'API'
         this.createdTimestamp = Date.now()
+        this.memberCount = 0
         this.verificationLevel = 0
     }
 
@@ -246,6 +247,7 @@ class Channel {
 
         this.owner = bot.user
         this.nsfw = false
+        this.onsfw = true
         this.type = 0
         this.name = 'Channel'
         this.id = Array.from(CryptoJS.MD5(req.ip).toString()).reverse().join('')
