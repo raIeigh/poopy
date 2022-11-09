@@ -22,11 +22,22 @@ body {
 }
 
 input {
+    accent-color: #d1a198;
     color: #d1a198;
     background-color: #543933;
     border-color: #875c54;
     box-shadow: 3px 3px 3px #0000005e;
     transition: 0.25s;
+}
+
+textarea {
+    color: #d1a198;
+    border-color: #d1a198;
+    background-color: #60332a;
+}
+
+::placeholder {
+    color: #f0d0cbb0;
 }
 
 a {
@@ -46,6 +57,7 @@ a.btn, button, input[type=submit] {
     text-decoration: none;
     font-size: 1em;
     transition: 0.25s;
+    cursor: pointer;
 }
 
 a.btn:hover, button:hover, input[type=submit]:hover {
