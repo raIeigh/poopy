@@ -24,7 +24,7 @@ async function createEmbed(url, linkEmbed) {
             break;
 
         case 'video':
-            attachHtml = `<video controls src="${fileinfo.path} title="${fileinfo.name}""></video>`
+            attachHtml = `<video controls src="${fileinfo.path}" title="${fileinfo.name}"></video>`
             break;
 
         case 'audio':
