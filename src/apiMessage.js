@@ -49,7 +49,7 @@ async function send(payload) {
         let data = msg._data
         let { req, res, poopy, messages } = data
 
-        let { validateFileFromPath, replaceAsync, escapeHTML } = poopy.functions
+        let { validateFileFromPath, replaceAsync, escapeHTML, getKeywordsFor } = poopy.functions
         let vars = poopy.vars
         let tempdata = poopy.tempdata
 
