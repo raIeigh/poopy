@@ -206,9 +206,9 @@ async function start() {
     }
 
     for (var tokendata of tokens) {
-        if (!poopy) {
-            tokendata.config.quitOnDestroy = true
-        }
+        if (!tokendata?.TOKEN) continue
+
+        if (!poopy) tokendata.config.quitOnDestroy = true
 
         let poopo = new Poopy(tokendata.config)
         if (!poopy) poopy = poopo

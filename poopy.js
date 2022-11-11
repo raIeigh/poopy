@@ -554,7 +554,7 @@ class Poopy {
 
             var prefix = data.guildData[msg.guild.id]?.['prefix'] ?? config.globalPrefix
 
-            if (msg.channel.type == Discord.ChannelType.DM && !msg.type !== Discord.InteractionType.ApplicationCommand && !msg.content.includes(prefix)) {
+            if (msg.channel.type == Discord.ChannelType.DM && msg.type !== Discord.InteractionType.ApplicationCommand && !msg.content.includes(prefix)) {
                 if (msg.author.bot || msg.author.id == bot.user.id) return
                 await msg.channel.sendTyping().catch(() => { })
                 await sleep(Math.floor(Math.random() * 500) + 500)
