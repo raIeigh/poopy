@@ -46,7 +46,6 @@ class Poopy {
             textEmbeds: false,
             notSave: false,
             apiMode: false,
-            self: false,
             noInfoPost: false,
             poosoniablacklist: ['dm', 'tdms', 'spam', 'eval', 'leave'],
             poosoniakeywordblacklist: [],
@@ -193,8 +192,6 @@ class Poopy {
             var varb = varsList[key]
             vars[key] = varb
         }
-
-        modules.Discord = modules.Discord[Number(config.self)]
 
         // we can create thge bot now
         let { Discord, Collection, fs, CryptoJS } = modules
