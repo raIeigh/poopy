@@ -176,7 +176,7 @@ async function start() {
                 TOKEN: process.env.POOPY_TOKEN,
                 config: {
                     globalPrefix: 'p:',
-                    public: true,
+                    public: true
                 }
             },
 
@@ -189,7 +189,7 @@ async function start() {
                 }
             },
 
-            /*{
+            {
                 TOKEN: process.env.INDIA_TOKEN,
                 config: {
                     self: true,
@@ -201,7 +201,7 @@ async function start() {
                     noInfoPost: true,
                     illKillYouIfYouUseEval: []
                 }
-            }*/
+            }
         ]
     }
 
