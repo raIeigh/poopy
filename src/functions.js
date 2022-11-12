@@ -3340,7 +3340,7 @@ functions.battle = async function (msg, subject, action, damage, chance) {
     let data = poopy.data
     let vars = poopy.vars
     let { Discord, fs } = poopy.modules
-    let { getLevel, execPromise, randomNumber, randomChoice, downloadFile, dataGather } = poopy.functions
+    let { getLevel, execPromise, randomNumber, randomChoice, validateFile, downloadFile, dataGather } = poopy.functions
 
     await msg.channel.sendTyping().catch(() => { })
     var attachment = msg.attachments.first()?.url
