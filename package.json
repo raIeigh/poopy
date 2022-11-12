@@ -1,6 +1,6 @@
 {
   "name": "poopy",
-  "version": "1.8.12",
+  "version": "1.8.15",
   "description": "Ballfish",
   "main": "server.js",
   "scripts": {
@@ -24,7 +24,6 @@
     "crypto-js": "^4.1.1",
     "deepai": "^1.0.17",
     "discord.js": "^14.4.0",
-    "discord.js-selfbot-v14": "github:aiko-chan-ai/discord.js-selfbot-v13#v14",
     "emoji-regex": "^10.0.0",
     "express": "^4.18.0",
     "file-type": "^16.5.3",

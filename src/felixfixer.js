@@ -8,11 +8,11 @@ module.exports = function (poopy, ndata) {
         delete (ndata || data)['bot-data']
     }
     if ((ndata || data)['user-data']) {
-        data.botData = (ndata || data)['user-data']
+        data.userData = (ndata || data)['user-data']
         delete (ndata || data)['user-data']
     }
     if ((ndata || data)['guild-data']) {
-        data.botData = (ndata || data)['guild-data']
+        data.guildData = (ndata || data)['guild-data']
         delete (ndata || data)['guild-data']
     }
 
@@ -23,7 +23,6 @@ module.exports = function (poopy, ndata) {
             .replace(/randomnumber\(/g, 'random(')
             .replace(/messagecollector\(/g, 'msgcollector(')
             .replace(/membermessage\(/g, 'membermsg(')
-            .replace
     }
 
     for (var cmd of globaldata.commandTemplates) {

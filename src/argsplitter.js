@@ -73,7 +73,4 @@ function getArgs(text) {
     }
 }
 
-var text = "**list** - Gets a list of disabled commands.\n**toggle** <command> (moderator only) - Disables/enables a command, if it exists."
-var output = text.split('\n').map(text => getArgs(text))
-
-console.log(JSON.stringify(output))
+module.exports = getArgs

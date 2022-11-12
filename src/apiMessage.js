@@ -45,15 +45,58 @@ async function createEmbed(url, linkEmbed) {
 
 async function send(payload) {
     try {
-        let data = this
+        let msg = this
+        let data = msg._data
         let { req, res, poopy, messages } = data
 
-        let { validateFileFromPath, replaceAsync, escapeHTML } = poopy.functions
+        let { validateFileFromPath, replaceAsync, escapeHTML, getKeywordsFor } = poopy.functions
         let vars = poopy.vars
+        let tempdata = poopy.tempdata
 
         if (typeof (payload) == 'string') {
             payload = {
                 content: payload
+            }
+        }
+
+        const channelData = tempdata[msg.guild?.id]?.[msg.channel.id]
+
+        if (channelData?.['shut']) return
+        if (channelData?.['forceres'] && (typeof payload == 'object' ? (
+            payload.content ||
+            payload.files || payload.embeds ||
+            payload.stickers
+        ) : payload)) {
+            var forceres = channelData['forceres']
+            delete channelData['forceres']
+
+            var content = typeof payload == 'object' ? (payload.content ?? '') : payload
+            var m = msg
+            var r = await getKeywordsFor(forceres.res, m, true, {
+                resetattempts: true,
+                extrakeys: {
+                    _msg: {
+                        func: async () => {
+                            return content
+                        }
+                    }
+                }
+            }).catch(() => { }) ?? forceres.res
+
+            if (forceres.persist && !channelData['forceres']) channelData['forceres'] = forceres
+
+            switch (typeof payload) {
+                case 'string':
+                    payload = {
+                        content: r,
+                        allowedMentions: {
+                            parse: ['users']
+                        }
+                    }
+                    break;
+                case 'object':
+                    payload.content = r
+                    break;
             }
         }
 
@@ -266,7 +309,7 @@ class Channel {
     }
 
     async send(payload) {
-        return send.call(this._data, payload)
+        return send.call(this, payload)
     }
 
     async sendTyping() { }
@@ -317,7 +360,7 @@ class GuildMember {
     }
 
     async send(payload) {
-        return send.call(this._data, payload)
+        return send.call(this, payload)
     }
 
     async fetch() {
@@ -356,7 +399,7 @@ class User {
     }
 
     async send(payload) {
-        return send.call(this._data, payload)
+        return send.call(this, payload)
     }
 
     async fetch() {
@@ -425,11 +468,11 @@ class Message {
     }
 
     async reply(payload) {
-        return send.call(this._data, payload)
+        return send.call(this, payload)
     }
 
     async edit(payload) {
-        return send.call(this._data, payload)
+        return send.call(this, payload)
     }
 
     async delete() { }

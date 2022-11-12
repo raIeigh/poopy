@@ -13,7 +13,6 @@ class Poopy {
             textEmbeds: false,
             notSave: false,
             apiMode: false,
-            self: false,
             noInfoPost: false,
             poosoniablacklist: ['dm', 'tdms', 'spam', 'eval', 'leave'],
             poosoniakeywordblacklist: [],
@@ -160,8 +159,6 @@ class Poopy {
             var varb = varsList[key]
             vars[key] = varb
         }
-
-        modules.Discord = modules.Discord[Number(config.self)]
 
         // we can create thge bot now
         let { Discord, Collection, fs, CryptoJS } = modules
@@ -521,7 +518,7 @@ class Poopy {
 
             var prefix = data.guildData[msg.guild.id]?.['prefix'] ?? config.globalPrefix
 
-            if (msg.channel.type == Discord.ChannelType.DM && !msg.type !== Discord.InteractionType.ApplicationCommand && !msg.content.includes(prefix)) {
+            if (msg.channel.type == Discord.ChannelType.DM && msg.type !== Discord.InteractionType.ApplicationCommand && !msg.content.includes(prefix)) {
                 if (msg.author.bot || msg.author.id == bot.user.id) return
                 await msg.channel.sendTyping().catch(() => { })
                 await sleep(Math.floor(Math.random() * 500) + 500)
