@@ -9,7 +9,7 @@ module.exports = {
         var names = nameJSON.male.concat(nameJSON.female)
         return `${names[Math.floor(Math.random() * names.length)].name.value} ${surnames[Math.floor(Math.random() * surnames.length)].name.value}`
     },
-    func: function () {
+    array: function () {
         let poopy = this
         let json = poopy.json
 
