@@ -1,6 +1,6 @@
 module.exports = {
     name: ['duration', 'stretch'],
-    args: [{"name":"seconds","required":true,"specifarg":false,"orig":"<seconds (max 60)>"},{"name":"file","required":false,"specifarg":false,"orig":"{file}"}],
+    args: [{"name":"seconds","required":true,"specifarg":false,"orig":"<seconds (2 x fileduration, min 1 minute)>"},{"name":"file","required":false,"specifarg":false,"orig":"{file}"}],
     execute: async function (msg, args) {
         let poopy = this
         let { lastUrl, validateFile, downloadFile, execPromise, findpreset, sendFile } = poopy.functions
@@ -13,7 +13,9 @@ module.exports = {
             return;
         };
         var currenturl = lastUrl(msg, 0)
-        var duration = isNaN(Number(args[1])) ? undefined : Number(args[1]) <= 0 ? 0 : Number(args[1]) >= 60 ? 60 : Number(args[1]) || undefined
+
+        var maxDuration = Math.max(60, isNaN(Number(args[1])) ? 0 : Number(args[1])*6)
+        var duration = isNaN(Number(args[1])) ? undefined : Number(args[1]) <= 0 ? 0 : Number(args[1]) >= maxDuration ? maxDuration : Number(args[1]) || undefined
         if (duration === undefined) {
             await msg.reply('What is the duration?!').catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
@@ -96,7 +98,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'duration/stretch <seconds (max 60)> {file}',
+        name: 'duration/stretch <seconds (2 x fileduration, min 1 minute)> {file}',
         value: 'Stretches the file to match the supplied duration in seconds.'
     },
     cooldown: 2500,
