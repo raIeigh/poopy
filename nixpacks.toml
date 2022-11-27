@@ -1,3 +1,5 @@
+providers = ['node', 'python', 'java']
+
 [phases.setup]
 nixPkgs = ['ffmpeg', 'imagemagick']
 
