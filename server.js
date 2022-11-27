@@ -18,18 +18,18 @@ async function start() {
         app.use(cors())
         app.use(bp.json())
         app.use(bp.urlencoded({ extended: true }))
+        /* Ok so this is broken
         app.use(function (req, res, next) {
             const isNotSecure = (!req.get('x-forwarded-port') && req.protocol !== 'https') ||
                 parseInt(req.get('x-forwarded-port'), 10) !== 443 &&
                 (parseInt(req.get('x-forwarded-port'), 10) === parseInt(req.get('x-forwarded-port'), 10))
 
             if (isNotSecure && !req.hostname.includes('localhost')) {
-                console.log('nigeria')
                 return res.redirect(301, `https://${req.get('host')}${req.url}`)
             }
 
             next()
-        })
+        }) */
 
         app.get('/api/waitPoopyStart', async function (_, res) {
             while (!poopyStarted) await sleep(1000)
