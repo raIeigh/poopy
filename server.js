@@ -24,6 +24,7 @@ async function start() {
                 (parseInt(req.get('x-forwarded-port'), 10) === parseInt(req.get('x-forwarded-port'), 10))
 
             if (isNotSecure && !req.hostname.includes('localhost')) {
+                console.log('nigeria')
                 return res.redirect(301, `https://${req.get('host')}${req.url}`)
             }
 

@@ -2,6 +2,5 @@ providers = ['node', 'python', 'java']
 
 [phases.setup]
 nixPkgs = ['...', 'ffmpeg', 'imagemagick']
-
 [phase.name]
-paths = ['/app/bin']
+  paths = ['/app/bin']
