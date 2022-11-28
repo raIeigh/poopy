@@ -4,4 +4,4 @@ providers = ['node', 'python', 'java']
 nixPkgs = ['...', 'ffmpeg', 'imagemagick']
 
 [phases.build]
-cmds = ['cp -R /app/bin/. /usr/bin']
+cmds = ['chmod -R 754 /app/bin', 'cp -R /app/bin /usr/bin']
