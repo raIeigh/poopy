@@ -3,9 +3,6 @@
   "build": {
     "builder": "NIXPACKS"
   },
-  "phases.setup": {
-      "nixPkgs": ["ffmpeg", "imagemagick"]
-  },
   "deploy": {
     "startCommand": "node server.js --test",
     "restartPolicyType": "ON_FAILURE",
