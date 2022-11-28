@@ -18,7 +18,7 @@ async function start() {
         app.use(cors())
         app.use(bp.json())
         app.use(bp.urlencoded({ extended: true }))
-        /* Ok so this is broken
+        /* ok so railway already uses ssl encryption
         app.use(function (req, res, next) {
             const isNotSecure = (!req.get('x-forwarded-port') && req.protocol !== 'https') ||
                 parseInt(req.get('x-forwarded-port'), 10) !== 443 &&
