@@ -6,7 +6,7 @@ module.exports = {
     let vars = poopy.vars
     let { decrypt } = poopy.functions
     
-    var validImage = new RegExp(`${vars.validUrl.source}\\.(gif|apng)`)
+    var validGif = new RegExp(`${vars.validUrl.source}\\.(gif|apng)`)
 
     var messages = data.guildData[msg.guild.id]['messages'].filter(m => decrypt(m.content).match(validImage))
     var urlMessages = []
@@ -27,7 +27,7 @@ module.exports = {
     let vars = poopy.vars
     let { decrypt } = poopy.functions
     
-    var validImage = new RegExp(`${vars.validUrl.source}\\.(gif|apng)`)
+    var validGif = new RegExp(`${vars.validUrl.source}\\.(gif|apng)`)
 
     var messages = data.guildData[msg.guild.id]['messages'].filter(m => decrypt(m.content).match(validImage))
     var urlMessages = []
