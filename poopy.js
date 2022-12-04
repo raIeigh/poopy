@@ -16,7 +16,7 @@ class Poopy {
             noInfoPost: false,
             poosoniablacklist: ['dm', 'tdms', 'spam', 'eval', 'leave'],
             poosoniakeywordblacklist: [],
-            poosoniafunctionblacklist: ['messagecollector', 'stopcollector', 'stopallcollectors'],
+            poosoniafunctionblacklist: ['msgcollector', 'stopcollector', 'stopallcollectors'],
             allowtesting: true,
             allowbotusage: false,
             database: 'poopydata',
@@ -24,7 +24,7 @@ class Poopy {
             stfu: false,
             intents: 65209,
             ownerids: ['464438783866175489', '454732245425455105', '613501149282172970'],
-            jsoning: ['411624455194804224', '395947826690916362', '486845950200119307', '340847078236225537'],
+            jsoning: ['411624455194804224', '395947826690916362', '486845950200119307', '340847078236225537', '714448511508414547'],
             illKillYouIfYouUseEval: ['535467581881188354'],
             guildfilter: {
                 blacklist: true,
