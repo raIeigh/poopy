@@ -178,15 +178,16 @@ async function start() {
     }
 
     for (var tokendata of tokens) {
+        console.log("dongal")
         if (!tokendata?.TOKEN) continue
 
         if (!poopy) tokendata.config.quitOnDestroy = true
 
-        let poopo = new Poopy(tokendata.config)
-        if (!poopy) poopy = poopo
+        let poopoo = new Poopy(tokendata.config)
+        if (!poopy) poopy = poopoo
 
-        poopo.start(tokendata.TOKEN).then(() => {
-            if (poopo.config.quitOnDestroy) {
+        poopoo.start(tokendata.TOKEN).then(() => {
+            if (poopoo.config.quitOnDestroy) {
                 poopyStarted = true
             }
         }).catch((e) => console.log(e))
