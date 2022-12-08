@@ -147,8 +147,9 @@ async function start() {
     if (testCondition()) {
         tokens = [
             {
-                TOKEN: process.env.POOPYTEST_TOKEN,
+                TOKEN: process.env.TEST_TOKEN,
                 config: {
+                    testing: true,
                     noInfoPost: true,
                     globalPrefix: '2p:',
                     database: 'testdata',
@@ -159,26 +160,16 @@ async function start() {
     } else {
         tokens = [
             {
-                TOKEN: process.env.POOPY_TOKEN,
+                TOKEN: process.env.DEFAULT_TOKEN,
                 config: {
                     globalPrefix: 'p:',
                     public: true
-                }
-            },
-
-            {
-                TOKEN: process.env.POOSONIA_TOKEN,
-                config: {
-                    globalPrefix: 'ps:',
-                    database: 'poopypsdata',
-                    poosonia: true
                 }
             }
         ]
     }
 
     for (var tokendata of tokens) {
-        console.log("dongal")
         if (!tokendata?.TOKEN) continue
 
         if (!poopy) tokendata.config.quitOnDestroy = true
