@@ -141,7 +141,7 @@ async function start() {
     let tokens = []
 
     function testCondition() {
-        return process.argv.includes('--test') || !__dirname.includes('app')
+        return process.argv.includes('--test')
     }
 
     if (testCondition()) {
