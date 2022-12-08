@@ -1,4 +1,4 @@
-# poopy
+# Poopy BOT
 ![Poopy](https://cdn.discordapp.com/attachments/760223418968047629/950177194158719066/0ab4fb95d50f0c0bf1751b6c7103f4ac.png)
 
 Poopies for you.
@@ -8,12 +8,13 @@ const Poopy = require('poopy')
 let poopy = new Poopy({
     testing: true,
     keyLimit: 1500,
-    globalPrefix: 'i:',
-    
+    globalPrefix: 'i:'
 })
 
-poopy.start(process.env.TOKEN)
+poopy.start(process.env.DEFAULT_TOKEN)
 ```
+
+[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template/KRX2Oi?referralCode=Vb0OxC)
 
 If you decide to host this bot, it's recommended to be in a Unix-like environment (basically (windows subsystem for) linux)
 
