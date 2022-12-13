@@ -147,8 +147,9 @@ async function start() {
     if (testCondition()) {
         tokens = [
             {
-                TOKEN: process.env.POOPYTEST_TOKEN,
+                TOKEN: process.env.TOKEN,
                 config: {
+                    testing: true,
                     noInfoPost: true,
                     globalPrefix: '2p:',
                     database: 'testdata',
