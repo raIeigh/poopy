@@ -1,4 +1,4 @@
-# poopy
+# Poopy BOT
 ![Poopy](https://cdn.discordapp.com/attachments/760223418968047629/950177194158719066/0ab4fb95d50f0c0bf1751b6c7103f4ac.png)
 
 Poopies for you.
@@ -8,12 +8,13 @@ const Poopy = require('poopy')
 let poopy = new Poopy({
     testing: true,
     keyLimit: 1500,
-    globalPrefix: 'i:',
-    
+    globalPrefix: 'i:'
 })
 
-poopy.start(process.env.TOKEN)
+poopy.start(process.env.DEFAULT_TOKEN)
 ```
+
+[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template/KRX2Oi?referralCode=Vb0OxC)
 
 If you decide to host this bot, it's recommended to be in a Unix-like environment (basically (windows subsystem for) linux)
 
@@ -26,7 +27,7 @@ You'll also need to install:
 
 After everything's installed, run `build.sh`
 
-You'll need a Discord bot token to run this app, there is also a list of tokens you can set up in system variables:
+You'll need a Discord bot token to run this app (`DEFAULT_TOKEN` and `TEST_TOKEN`), there is also a list of tokens you can set up in system variables:
   - `AUTH_TOKEN` (SET THIS TO SOMETHING RANDOM! mainly used for encrypting/decrypting messages and private tokens from people, can also be used to access private apis from the website)
   - `BOT_WEBSITE` (url if you want a website for your bot)
   - `CLOUDAMQP_URL` (url used to send file processing queues, accessed at https://api.cloudamqp.com/console/<app-id>/details)

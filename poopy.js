@@ -16,7 +16,7 @@ class Poopy {
             noInfoPost: false,
             poosoniablacklist: ['dm', 'tdms', 'spam', 'eval', 'leave'],
             poosoniakeywordblacklist: [],
-            poosoniafunctionblacklist: ['messagecollector', 'stopcollector', 'stopallcollectors'],
+            poosoniafunctionblacklist: ['msgcollector', 'stopcollector', 'stopallcollectors'],
             allowtesting: true,
             allowbotusage: false,
             database: 'poopydata',
@@ -24,7 +24,7 @@ class Poopy {
             stfu: false,
             intents: 65209,
             ownerids: ['464438783866175489', '454732245425455105', '613501149282172970'],
-            jsoning: ['411624455194804224', '395947826690916362', '486845950200119307', '340847078236225537'],
+            jsoning: ['411624455194804224', '395947826690916362', '486845950200119307', '340847078236225537', '714448511508414547'],
             illKillYouIfYouUseEval: ['535467581881188354'],
             guildfilter: {
                 blacklist: true,
@@ -531,9 +531,6 @@ class Poopy {
                 await msg.reply('you won\'t use me any time soon')
                 return
             }
-
-            if (msg.channel.onsfw == undefined) msg.channel.onsfw = !!msg.channel.nsfw
-            msg.channel.nsfw = !!data.guildData[msg.guild.id]['channels'][msg.channel.id]['nsfw']
 
             var guildfilter = config.guildfilter
             var channelfilter = config.channelfilter

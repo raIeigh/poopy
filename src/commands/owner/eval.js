@@ -29,7 +29,7 @@ module.exports = {
 
             if (typeof (evalMessage) !== 'string') evalMessage = util.inspect(evalMessage)
 
-            evalMessage = evalMessage.match(/[\s\S]{1,2000}/g)
+            evalMessage = evalMessage.match(/[\s\S]{1,2000}/g) ?? []
 
             if (!msg.nosend) for (var i in evalMessage) {
                 if (tempdata[msg.guild.id][msg.channel.id]['shut']) break

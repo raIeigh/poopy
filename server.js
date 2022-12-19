@@ -5,6 +5,8 @@ async function start() {
     let poopy
     let { APIMessage } = require('./src/modules')
     let { sleep, escapeHTML } = require('./src/functions')
+    
+    if (process.env.RAILWAY_STATIC_URL && !process.env.BOT_WEBSITE) process.env.BOT_WEBSITE = `https://${process.env.RAILWAY_STATIC_URL}`
 
     if (process.env.BOT_WEBSITE) {
         const express = require('express')
@@ -141,7 +143,7 @@ async function start() {
     let tokens = []
 
     function testCondition() {
-        return process.argv.includes('--test') || !__dirname.includes('app')
+        return process.argv.includes('--test')
     }
 
     if (testCondition()) {
@@ -174,11 +176,11 @@ async function start() {
 
         if (!poopy) tokendata.config.quitOnDestroy = true
 
-        let poopo = new Poopy(tokendata.config)
-        if (!poopy) poopy = poopo
+        let poopoo = new Poopy(tokendata.config)
+        if (!poopy) poopy = poopoo
 
-        poopo.start(tokendata.TOKEN).then(() => {
-            if (poopo.config.quitOnDestroy) {
+        poopoo.start(tokendata.TOKEN).then(() => {
+            if (poopoo.config.quitOnDestroy) {
                 poopyStarted = true
             }
         }).catch((e) => console.log(e))
