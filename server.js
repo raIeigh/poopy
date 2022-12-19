@@ -147,7 +147,7 @@ async function start() {
     if (testCondition()) {
         tokens = [
             {
-                TOKEN: process.env.TOKEN,
+                TOKEN: process.env.TEST_TOKEN,
                 config: {
                     testing: true,
                     noInfoPost: true,
@@ -160,19 +160,10 @@ async function start() {
     } else {
         tokens = [
             {
-                TOKEN: process.env.POOPY_TOKEN,
+                TOKEN: process.env.DEFAULT_TOKEN,
                 config: {
                     globalPrefix: 'p:',
                     public: true
-                }
-            },
-
-            {
-                TOKEN: process.env.POOSONIA_TOKEN,
-                config: {
-                    globalPrefix: 'ps:',
-                    database: 'poopypsdata',
-                    poosonia: true
                 }
             }
         ]
