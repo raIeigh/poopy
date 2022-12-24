@@ -532,9 +532,6 @@ class Poopy {
                 return
             }
 
-            if (msg.channel.onsfw == undefined) msg.channel.onsfw = !!msg.channel.nsfw
-            msg.channel.nsfw = !!data.guildData[msg.guild.id]['channels'][msg.channel.id]['nsfw']
-
             var guildfilter = config.guildfilter
             var channelfilter = config.channelfilter
 

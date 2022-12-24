@@ -684,8 +684,17 @@ functions.gatherData = async function (msg) {
     }
 
     if (data.guildData[msg.guild.id]['channels'][msg.channel.id]['nsfw'] === undefined) {
-        data.guildData[msg.guild.id]['channels'][msg.channel.id]['nsfw'] = msg.channel.nsfw
+        data.guildData[msg.guild.id]['channels'][msg.channel.id]['nsfw'] = !!msg.channel.nsfw
     }
+
+    var channelFetch = await msg.channel.fetch(true).catch(() => { })
+    var nsfwChanged = channelFetch && channelFetch.nsfw != msg.channel.onsfw
+    if (msg.channel.onsfw == undefined || nsfwChanged) {
+        msg.channel.onsfw = !!(channelFetch || msg.channel).nsfw
+        if (nsfwChanged) data.guildData[msg.guild.id]['channels'][msg.channel.id]['nsfw'] = !!channelFetch.nsfw
+    }
+
+    msg.channel.nsfw = !!data.guildData[msg.guild.id]['channels'][msg.channel.id]['nsfw']
 
     if (!webhook) {
         if (!data.guildData[msg.guild.id]['members']) {
@@ -2709,11 +2718,14 @@ functions.correctUrl = async function (url) {
             infoPost(`YouTube video URL detected`)
             return youtubeurl.trim()
         }
-    } /*else if (url.match(/^https\:\/\/((www)\.)?reddit\.com\/r\/[a-zA-Z0-9][a-zA-Z0-9_]{2,20}/)) {
-        var redditurl = await execPromise(`yt-dlp ${url} --format 18 --get-url`).catch(() => { })
+    } else if (url.match(/^https\:\/\/(www|on\.)?soundcloud\.com/)) {
+        var soundcloudurl = await execPromise(`yt-dlp ${url} --get-url`).catch(() => { })
 
-        if (redditurl) return redditurl.trim()
-    }*/ else if (url.match(/^https\:\/\/((www)\.)?(fx)?twitter\.com\/\w{4,15}\/status\/\d+/)) {
+        if (soundcloudurl) {
+            infoPost(`SoundCloud URL detected`)
+            return soundcloudurl.trim()
+        }
+    } else if (url.match(/^https\:\/\/((www)\.)?(fx)?twitter\.com\/\w{4,15}\/status\/\d+/)) {
         async function getImageUrl(url) {
             var res = await axios.get(url)
             var $ = cheerio.load(res.data)
@@ -3361,13 +3373,19 @@ functions.battle = async function (msg, subject, action, damage, chance) {
         if (yourData.death - Date.now() > 0) {
             await msg.reply("But you're dead.").catch(() => { })
             return
-        } else yourData.health = yourData.maxHealth
+        } else {
+            yourData.health = yourData.maxHealth
+            delete yourData.death
+        }
     }
     if (subjData && subjData.death) {
         if (subjData.death - Date.now() > 0) {
             await msg.reply("But they're dead.").catch(() => { })
             return
-        } else subjData.health = subjData.maxHealth
+        } else {
+            subjData.health = subjData.maxHealth
+            delete subjData.death
+        }
     }
 
     let attacked = Math.random() < chance + (yourData.accuracy * 0.1)
