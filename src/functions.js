@@ -735,7 +735,7 @@ functions.gatherData = async function (msg) {
     }
 
     if (!data.guildData[msg.guild.id]['disabled']) {
-        data.guildData[msg.guild.id]['disabled'] = []
+        data.guildData[msg.guild.id]['disabled'] = config.defaultDisabled
     }
 
     if (!data.guildData[msg.guild.id]['localcmds']) {

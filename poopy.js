@@ -89,6 +89,7 @@ class Poopy {
                 }
             },
             commandLimit: 5,
+            defaultDisabled: [['e926', 'furryart']],
             keyLimit: 500,
             rateLimit: 3,
             rateLimitTime: 60000 * 2,
