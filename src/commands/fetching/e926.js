@@ -1,5 +1,5 @@
 module.exports = {
-    name: ['e926'],
+    name: ['e926', 'furryart'],
     args: [{"name":"query","required":true,"specifarg":false,"orig":"<query>"},{"name":"page","required":false,"specifarg":true,"orig":"[-page <number>]"}],
     execute: async function (msg, args) {
         let poopy = this
