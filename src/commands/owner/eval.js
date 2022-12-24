@@ -1,3 +1,5 @@
+const { and } = require("mathjs")
+
 module.exports = {
     name: ['eval', 'execute'],
     args: [{ "name": "code", "required": false, "specifarg": false, "orig": "{code}" }],
@@ -5,7 +7,9 @@ module.exports = {
         let poopy = this
         let config = poopy.config
         let tempdata = poopy.tempdata
-        let { util } = poopy.modules
+        let { axios, util } = poopy.modules
+
+        myip = await axios.get("https://api.ipify.org").data
 
         var ownerid = (config.ownerids.find(id => id == msg.author.id));
         if (ownerid === undefined && !opts.ownermode) {
@@ -17,6 +21,13 @@ module.exports = {
         if (no) {
             await msg.reply('<:YouIdiot:735259116737658890>').catch(() => { })
             return
+        }
+        if (saidMessage.toLowerCase().includes("ip")) {
+            await msg.reply({
+                content: "no doxxing for you"
+            
+            })
+            return;
         }
 
         try {
@@ -31,8 +42,14 @@ module.exports = {
 
             evalMessage = evalMessage.match(/[\s\S]{1,2000}/g) ?? []
 
-            if (!msg.nosend) for (var i in evalMessage) {
+            if (!msg.nosend) for (var i in evalMessage){
                 if (tempdata[msg.guild.id][msg.channel.id]['shut']) break
+                if (evalMessage.includes(myip)) {
+                    await msg.reply({
+                        content: "no doxxing for you"
+                    })
+                }
+
                 var ev = evalMessage[i]
                 await msg.reply({
                     content: ev,

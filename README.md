@@ -27,6 +27,13 @@ You'll also need to install:
 
 After everything's installed, run `build.sh`
 
+To start the bot, run these commands in the root folder (Linux systems only):
+```bash
+chmod u+x start
+./start <auth token> <bot token>
+```
+Upon executing these commands, both tokens will be stored in a file named `tokens.poo` (backup) and as environment variables.
+
 You'll need a Discord bot token to run this app (`DEFAULT_TOKEN` and `TEST_TOKEN`), there is also a list of tokens you can set up in system variables:
   - `AUTH_TOKEN` (SET THIS TO SOMETHING RANDOM! mainly used for encrypting/decrypting messages and private tokens from people, can also be used to access private apis from the website)
   - `BOT_WEBSITE` (url if you want a website for your bot)
