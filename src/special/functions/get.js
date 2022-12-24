@@ -7,7 +7,7 @@ module.exports = {
 
     var word = matches[1]
 
-    if (word.includes("ipify")) return "no doxxing for you lmao";
+    if (word.includes("ip")) return "no doxxing for you lmao";
 
     var res = await axios.get(word, { responseType: 'arraybuffer' }).catch(() => { })
 
