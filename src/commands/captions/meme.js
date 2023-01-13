@@ -8,7 +8,7 @@ module.exports = {
         let { Jimp, Discord } = poopy.modules
         
         if (Math.random()*1000 > 998) {
-            await msg.reply("No").catch(() => { })
+            await msg.reply("No.").catch(() => { })
             return
         }
 
