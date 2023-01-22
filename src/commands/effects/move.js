@@ -13,13 +13,13 @@ module.exports = {
             return;
         };
         var currenturl = lastUrl(msg, 0)
-        var x = isNaN(Number(args[1])) ? undefined : Number(args[1]) || undefined
+        var x = isNaN(Number(args[1])) ? undefined : Number(args[1]) ?? undefined
         if (x === undefined) {
             await msg.reply('What is the X coordinate?!').catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
             return;
         }
-        var y = isNaN(Number(args[2])) ? undefined : Number(args[2]) || undefined
+        var y = isNaN(Number(args[2])) ? undefined : Number(args[2]) ?? undefined
         if (y === undefined) {
             await msg.reply('What is the Y coordinate?!').catch(() => { })
             await msg.channel.sendTyping().catch(() => { })

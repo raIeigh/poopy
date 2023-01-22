@@ -6,7 +6,12 @@ module.exports = {
         let { lastUrl, validateFile, downloadFile, execPromise, findpreset, sendFile } = poopy.functions
         let vars = poopy.vars
         let { Jimp, Discord } = poopy.modules
-
+        
+        if (Math.random()*1000 > 998) {
+            await msg.reply("No.").catch(() => { })
+            return
+        }
+        
         await msg.channel.sendTyping().catch(() => { })
         if (lastUrl(msg, 0) === undefined && vars.validUrl.test(args[args.length - 1]) === false) {
             await msg.reply('What is the file?!').catch(() => { })

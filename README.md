@@ -27,18 +27,26 @@ You'll also need to install:
 
 After everything's installed, run `build.sh`
 
+To start the bot, run these commands in the root folder (Linux systems only):
+```bash
+chmod u+x start
+./start <auth token> <bot token>
+```
+Upon executing these commands, both tokens will be stored in a file named `tokens.poo` (backup) and as environment variables.
+
 You'll need a Discord bot token to run this app (`DEFAULT_TOKEN` and `TEST_TOKEN`), there is also a list of tokens you can set up in system variables:
   - `AUTH_TOKEN` (SET THIS TO SOMETHING RANDOM! mainly used for encrypting/decrypting messages and private tokens from people, can also be used to access private apis from the website)
   - `BOT_WEBSITE` (url if you want a website for your bot)
-  - `CLOUDAMQP_URL` (url used to send file processing queues, accessed at https://api.cloudamqp.com/console/<app-id>/details)
-  - `MONGOOSE_URL` (url used to access the database, generated at https://cloud.mongodb.com/v2/<project-id>#clusters/connect)
+  - `CLOUDAMQP_URL` (url used to send file processing queues, accessed at https://api.cloudamqp.com/console/`APP-ID`/details)
+  - `MONGOOSE_URL` (url used to access the database, generated at https://cloud.mongodb.com/v2/`PROJECT-ID`#clusters/connect)
   - `AI21_KEY` (key generated when you sign up in ai21 for generating text, accessed at https://studio.ai21.com/account/account)
   - `DALLE2_SESSION` (if you have dalle 2 access, go to https://labs.openai.com/, inspect element, go to Network, do a random generation, click the item with the name "tasks", then scroll down on the headers and copy the request's bearer authorization)
   - `DEEPAI_KEY` (key generated when you sign up in deepai, accessed at https://deepai.org/dashboard/profile)
-  - `GOOGLE_KEY` (key from google cloud for accessing the youtube api, generated at https://console.cloud.google.com/apis/credentials?project=<project-id>)
+  - `GOOGLE_KEY` (key from google cloud for accessing the youtube api, generated at https://console.cloud.google.com/apis/credentials?project=`PROJECT-ID`)
   - `MAKESWEET_KEY` (key from makesweet for generating heartlocket gifs, dm @mkswt on twitter asking for one)
   - `RANDOMSTUFF_KEY` (key used for a cleverbot alternative when it breaks, generated at https://api-info.pgamerx.com/manage-key)
-  - `RAPIDAPI_KEY` (key from rapid api when you sign up, accessed at https://rapidapi.com/developer/security/<app-name>)
+  - `RAPIDAPI_KEY` (key from rapid api when you sign up, accessed at https://rapidapi.com/developer/security/`APP-NAME`)
+
     you'll also need to subscribe to all of these apis:
     - https://rapidapi.com/microsoft-azure-org-microsoft-cognitive-services/api/microsoft-computer-vision3/ (ocr api)
     - https://rapidapi.com/microsoft-azure-org-microsoft-cognitive-services/api/microsoft-translator-text/ (translation api)

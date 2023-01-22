@@ -58,35 +58,36 @@ module.exports = {
         }
 
         var badgeEmojis = {
-            GuildOwner: `<:Guild_owner:1035668034934820966>`,
+            ActiveDeveloper: `<:ActiveDeveloper:1055895046844579871>`,
+            Boost1Month: `<:Boost1Month:1035668044661391371>`,
+            Boost2Month: `<:Boost2Month:1035668018195345419>`,
+            Boost3Month: `<:Boost3Month:1035668021143937094>`,
+            Boost6Month: `<:Boost6Month:1035668019747246080>`,
+            Boost9Month: `<:Boost9Month:1035668042555871252>`,
+            Boost12Month: `<:Boost12Month:1035668030279122964>`,
+            Boost15Month: `<:Boost15Month:1035668014458228847>`,
+            Boost18Month: `<:Boost18Month:1035668024113516605>`,
+            Boost24Month: `<:Boost24Month:1035668022595174581>`,
             Bot: `<:Bot1:1035902581542764575><:Bot2:1035902583056908479>`,
-            VerifiedBot: `<:VerifiedBot1:1035902602577186878><:VerifiedBot2:1035902604489797733><:VerifiedBot3:1035902606029107220>`,
-            System: `<:System1:1035901984814944337><:System2:1035901986433925230><:System3:1035901988560457739><:System4:1035901990003290192>`,
-            Staff: `<:Discord_Staff:1035668039338840144>`,
-            Partner: `<:Partner:1035670800386248825>`,
-            Hypesquad: `<:HypeSquad_Event:1035668031889748018>`,
-            BugHunterLevel1: `<:Bug_Hunter:1035668016572157952>`,
-            BugHunterLevel2: `<:Bug_Hunter_level2:1035668040966230170>`,
-            Nitro: `<:nitro:1035668012797276180>`,
-            Boost1Month: `<:boost1month:1035668044661391371>`,
-            Boost2Month: `<:boost2month:1035668018195345419>`,
-            Boost3Month: `<:boost3month:1035668021143937094>`,
-            Boost6Month: `<:boost6month:1035668019747246080>`,
-            Boost9Month: `<:boost9month:1035668042555871252>`,
-            Boost12Month: `<:boost12month:1035668030279122964>`,
-            Boost15Month: `<:boost15month:1035668014458228847>`,
-            Boost18Month: `<:boost18month:1035668024113516605>`,
-            Boost24Month: `<:boost24month:1035668022595174581>`,
-            HypeSquadOnlineHouse1: `<:HypeSquad_Bravery:1035668028932771840>`,
-            HypeSquadOnlineHouse2: `<:HypeSquad_Brilliance:1035668026957246555>`,
-            HypeSquadOnlineHouse3: `<:HypeSquad_Balance:1035668037971497040>`,
-            PremiumEarlySupporter: `<:early_supporter:1035668025292099615>`,
-            TeamPseudoUser: `<:Team_Pseudo_User:1035673000244170832>`,
-            CertifiedModerator: `<:Discord_certified_moderator:1035668036608331836>`,
-            VerifiedDeveloper: `<:Verified_Bot_Developer:1035668033663930429>`,
             BotHTTPInteractions: `<:BotHTTPInteractions:1035675213523845252>`,
+            BugHunterLevel1: `<:BugHunter:1035668016572157952>`,
+            BugHunterLevel2: `<:BugHunterLevel2:1035668040966230170>`,
+            CertifiedModerator: `<:CertifiedModerator:1055891693800521791>`,
+            GuildOwner: `<:GuildOwner:1035668034934820966>`,
+            Hypesquad: `<:HypesquadEvent:1035668031889748018>`,
+            HypeSquadOnlineHouse1: `<:HypeSquadBravery:1035668028932771840>`,
+            HypeSquadOnlineHouse2: `<:HypeSquadBrilliance:1035668026957246555>`,
+            HypeSquadOnlineHouse3: `<:HypeSquadBalance:1035668037971497040>`,
+            Nitro: `<:Nitro:1035668012797276180>`,
+            Partner: `<:Partner:1035670800386248825>`,
+            PremiumEarlySupporter: `<:NitroEarlySupporter:1035668025292099615>`,
+            Quarantined: `<:Quarantined:1035673851503325224>`,
             Spammer: `<:Spammer:1035673850085638285>`,
-            Quarantined: `<:Quarantined:1035673851503325224>`
+            Staff: `<:Staff:1035668039338840144>`,
+            System: `<:System1:1035901984814944337><:System2:1035901986433925230><:System3:1035901988560457739><:System4:1035901990003290192>`,
+            TeamPseudoUser: `<:TeamPseudoUser:1035673000244170832>`,
+            VerifiedBot: `<:VerifiedBot1:1035902602577186878><:VerifiedBot2:1035902604489797733><:VerifiedBot3:1035902606029107220>`,
+            VerifiedDeveloper: `<:VerifiedDeveloper:1055892568099008552>`
         }
 
         var userFlags = user.flags.toArray()
@@ -94,7 +95,7 @@ module.exports = {
 
         if (user.id == msg.guild.ownerId) flags.push('GuildOwner')
         if (member.premiumSince) {
-            flags.push(`Nitro`)
+            flags.push('Nitro')
 
             var now = new Date()
             var months = (now.getFullYear() - member.premiumSince.getFullYear()) * 12 - now.getMonth() + member.premiumSince.getMonth()

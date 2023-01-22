@@ -28,8 +28,6 @@ module.exports = {
 
             var width = fileinfo.info.width
             var height = fileinfo.info.height
-
-            await execPromise(`ffmpeg -i assets/video/phexintro.mp4 -filter_complex "[0:v]scale=-1:ceil(${height}/2)*2[vid];[0:v]scale=ceil(${width}/2)*2:ceil(${height}/2)*2,gblur=sigma=5:steps=6[bg];[bg][vid]overlay=x=W/2-w/2:y=H/2-h/2:format=auto[out]" -map "[out]" -preset ${findpreset(args)} -map 0:a -aspect ${width}:${height} -pix_fmt yuv420p ${filepath}/phexintro2.mp4`)
             await execPromise(`ffmpeg -i ${filepath} -i assets/audio/balance.mp3 -c:v copy -map 0:v:0 -map 1:a:0 balancing.mp4`)
             return await sendFile(msg, filepath, `balancing.mp4`)
         } else {
