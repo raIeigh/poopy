@@ -2071,7 +2071,7 @@ functions.displayShop = async function (channel, who, reply, type) {
     let bot = poopy.bot
     let config = poopy.config
     let data = poopy.data
-    let { chunkArray, dmSupport, randomNumber, getLevel } = poopy.functions
+    let { chunkArray, dmSupport, getLevel } = poopy.functions
     let { Discord } = poopy.modules
 
     var buttonsData = [
@@ -2091,15 +2091,15 @@ functions.displayShop = async function (channel, who, reply, type) {
             customid: 'health',
             style: Discord.ButtonStyle.Primary,
             desc: 'Upgrade your maximum health.',
-            price: 80
+            oprice: 80
         },
 
         {
             emoji: '🛡',
             customid: 'defense',
             style: Discord.ButtonStyle.Primary,
-            desc: 'Increase your defense.',
-            price: 120
+            desc: 'Increase your defense against attacks.',
+            oprice: 120
         },
 
         {
@@ -2107,7 +2107,7 @@ functions.displayShop = async function (channel, who, reply, type) {
             customid: 'attack',
             style: Discord.ButtonStyle.Primary,
             desc: 'Increase your attack damage.',
-            price: 120
+            oprice: 120
         },
 
         {
@@ -2115,7 +2115,7 @@ functions.displayShop = async function (channel, who, reply, type) {
             customid: 'accuracy',
             style: Discord.ButtonStyle.Primary,
             desc: 'Increase the accuracy of each attack.',
-            price: 150
+            oprice: 150
         },
 
         {
@@ -2123,13 +2123,14 @@ functions.displayShop = async function (channel, who, reply, type) {
             customid: 'loot',
             style: Discord.ButtonStyle.Primary,
             desc: 'Get more loot while fighting someone.',
-            price: 150
+            oprice: 150
         }
     ]
 
     var shopObject = {}
     var allowedMentions
-    var tag
+    var upgradeList
+    var ended = false
 
     if (typeof (who) != 'string') {
         allowedMentions = {
@@ -2139,91 +2140,67 @@ functions.displayShop = async function (channel, who, reply, type) {
                 ['users'] : ['users', 'everyone', 'roles']
         }
         shopObject.allowedMentions = allowedMentions
-        tag = who.tag ?? who.user.tag
         who = who.id
     }
 
-    var components = []
-    var chunkButtonData = chunkArray(buttonsData, 3)
-
-    var level = getLevel(data.userData[who]['exp'])
-    var cap = level >= 20 ? 25 :
-        level >= 10 ? 10 :
-            5
-
-    buttonsData.forEach(upgrade => {
-        upgrade.price *= data.userData[who][upgrade.customid] + 1
-    })
-
-    chunkButtonData.forEach(buttonsData => {
-        var buttonRow = new Discord.ActionRowBuilder()
-        var buttons = []
-
-        buttonsData.forEach(bdata => {
-            var button = new Discord.ButtonBuilder()
-                .setStyle(bdata.style)
-                .setEmoji(bdata.emoji)
-                .setCustomId(bdata.customid)
-
-            buttons.push(button)
+    async function updateShop() {
+        buttonsData.forEach(upgrade => {
+            upgrade.price = upgrade.oprice * (data.userData[who][upgrade.customid] + 1)
         })
 
-        buttonRow.addComponents(buttons)
+        var components = []
+        var chunkButtonData = chunkArray(buttonsData, 5)
+    
+        var level = getLevel(data.userData[who]['exp'])
+        var cap = level >= 20 ? 25 :
+            level >= 10 ? 10 :
+                5
 
-        components.push(buttonRow)
-    })
-
-    var upgradeList = buttonsData.map(u => `${u.emoji} **${data.userData[who][u.customid] >= cap ? `MAX` : u.price} P$** - ${u.desc} **(${data.userData[who][u.customid]}/${cap})**`).join('\n')
-
-    if (config.textEmbeds) shopObject.content = upgradeList
-    else shopObject.embeds = [{
-        title: `${type.toCapperCase()} Shop`,
-        description: upgradeList,
-        color: 0x472604,
-        footer: {
-            icon_url: bot.user.displayAvatarURL({
-                dynamic: true, size: 1024, extension: 'png'
-            }),
-            text: bot.user.username
-        },
-    }]
-
-    if (!config.useReactions) shopObject.components = components
-
-    var shopMsg = await (reply ?? channel)[reply ? 'reply' : 'send'](shopObject).catch(() => { })
-    var ended = false
-
-    if (!shopMsg) throw new Error(`Couldn't send shop to channel`)
-
-    return upgradeList
-
-    async function updateMaze() {
-        raindraw = rainmaze.draw()
-
+        chunkButtonData.forEach(buttonsData => {
+            var buttonRow = new Discord.ActionRowBuilder()
+            var buttons = []
+    
+            buttonsData.forEach(bdata => {
+                var button = new Discord.ButtonBuilder()
+                    .setStyle(bdata.style)
+                    .setEmoji(bdata.emoji)
+                    .setLabel(data.userData[who][bdata.customid] >= cap ? `MAX` : `${bdata.price} P$`)
+                    .setCustomId(bdata.customid)
+    
+                buttons.push(button)
+            })
+    
+            buttonRow.addComponents(buttons)
+    
+            components.push(buttonRow)
+        })
+    
+        upgradeList = buttonsData.map(u => `${u.emoji} **${data.userData[who][u.customid] >= cap ? `MAX` : `${u.price} P$`}** - ${u.desc} **(${data.userData[who][u.customid]}/${cap})**`).join('\n')
+    
+        if (config.textEmbeds) shopObject.content = upgradeList
+        else shopObject.embeds = [{
+            title: `${type.toCapperCase()} Shop`,
+            description: upgradeList,
+            color: 0x472604,
+            footer: {
+                icon_url: bot.user.displayAvatarURL({
+                    dynamic: true, size: 1024, extension: 'png'
+                }),
+                text: bot.user.username
+            },
+        }]
+        
         if (ended) {
             if (config.useReactions) shopMsg.reactions.removeAll().catch(() => { })
             else shopObject.components = []
-
-            if (ended == 'win') {
-                var reward = randomNumber(w * h, w * h * 2)
-                raindraw.fields.push({
-                    name: "Reward",
-                    value: `+${reward} P$`
-                })
-                data.userData[who]['bucks'] += reward
-
-                data.botData.leaderboard[who] = {
-                    tag: tag ?? (await bot.users.fetch(who).catch(() => { }))?.tag,
-                    bucks: data.userData[who]['bucks']
-                }
-            }
-        }
-
-        if (config.textEmbeds) shopObject.content = `${raindraw.description}\n\n${raindraw.fields.map(f => `**${f.name}** - ${f.value}`).join('\n')}`
-        else shopObject.embeds = [raindraw]
-
-        shopMsg.edit(shopObject).catch(() => { })
+        } else if (!config.useReactions) shopObject.components = components
     }
+
+    await updateShop().catch(() => { })
+
+    var shopMsg = await (reply ?? channel)[reply ? 'reply' : 'send'](shopObject).catch(() => { })
+
+    if (!shopMsg) throw new Error(`Couldn't send shop to channel`)
 
     if (config.useReactions) {
         var collector = shopMsg.createReactionCollector({ time: 60_000 })
@@ -2242,21 +2219,18 @@ functions.displayShop = async function (channel, who, reply, type) {
 
                 reaction.users.remove(user).catch(() => { })
 
-                if (buttonData.control) {
-                    rainmaze.move(buttonData.customid)
-                    if (rainmaze.won) {
-                        collector.stop('win')
-                        return
-                    }
-
-                    await updateMaze().catch(() => { })
+                if (buttonData.price <= data.userData[who]['bucks']) {
+                    data.userData[who]['bucks'] -= buttonData.price
+                    await updateShop().catch(() => { })
+                } else {
+                    await channel.send('Not enough moners.').catch(() => { })
                 }
             }
         })
 
         collector.on('end', async (_, reason) => {
             ended = reason
-            await updateMaze().catch(() => { })
+            await updateShop().catch(() => { })
         })
 
         for (var i in buttonsData) {
@@ -2278,27 +2252,27 @@ functions.displayShop = async function (channel, who, reply, type) {
 
             if (buttonData) {
                 collector.resetTimer()
-                button.deferUpdate().catch(() => { })
 
-                if (buttonData.control) {
-                    rainmaze.move(buttonData.customid)
-                    if (rainmaze.won) {
-                        collector.stop('win')
-                        return
-                    }
-
-                    await updateMaze().catch(() => { })
+                if (buttonData.price <= data.userData[who]['bucks']) {
+                    button.deferUpdate().catch(() => { })
+                    data.userData[who]['bucks'] -= buttonData.price
+                    await updateShop().catch(() => { })
+                } else {
+                    await button.deferReply({
+                        content: 'Not enough moners.',
+                        ephemeral: true
+                    }).catch((e) => console.log(e))
                 }
             }
         })
 
         collector.on('end', async (_, reason) => {
             ended = reason
-            await updateMaze().catch(() => { })
+            await updateShop().catch(() => { })
         })
     }
 
-    return raindraw.description
+    return upgradeList
 }
 
 functions.correctUrl = async function (url) {
