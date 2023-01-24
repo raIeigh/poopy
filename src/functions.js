@@ -661,8 +661,6 @@ functions.gatherData = async function (msg) {
         data.guildData[msg.guild.id]['keyexec'] = 1
     }
 
-    data.guildData[msg.guild.id]['lastuse'] = now
-
     if (data.guildData[msg.guild.id]['prefix'] === undefined) {
         data.guildData[msg.guild.id]['prefix'] = config.globalPrefix
     }
