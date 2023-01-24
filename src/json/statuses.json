@@ -242,5 +242,33 @@
     {
         "name":"gurt",
         "type":"Watching"
+    },
+    {
+        "name":"the zebra",
+        "type":"Watching"
+    },
+    {
+        "name":"the Colosseum of Fools",
+        "type":"Competing"
+    },
+    {
+        "name":"the seven deadly sins",
+        "type":"Listening"
+    },
+    {
+        "name":"my leech collection",
+        "type":"Streaming"
+    },
+    {
+        "name":"Raleigh's basement",
+        "type":"Streaming"
+    },
+    {
+        "name":"the concept art for like 3 min. Straight and then started crying I don't know why but it is a sad pic",
+        "type":"Watching"
+    },
+    {
+        "name":"Zhe'Poopening",
+        "type":"Listening"
     }
 ]
