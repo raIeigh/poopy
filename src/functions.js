@@ -525,10 +525,8 @@ functions.execPromise = function (code) {
 
         if (vars.processingTools.inputs[command] && !config.testing && process.env.CLOUDAMQP_URL) {
             var taskValue = await execTask().catch(() => { })
-            if (taskValue) {
-                resolve(taskValue)
-                return
-            }
+            resolve(taskValue ?? 'No output.')
+            return
         }
 
         var exargs = code.split(' ')

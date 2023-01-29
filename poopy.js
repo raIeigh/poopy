@@ -1530,13 +1530,13 @@ class Poopy {
 
         await infoPost(`Finishing extra steps...`);
 
-        var uberduck = await dataGetters.uberduck().catch(() => { })
+        var uberduck = await dataGetters.uberduck().catch(() => { }) ?? [[], []]
         vars.ubervoices = uberduck[0]
         vars.ubercategories = uberduck[1]
 
-        vars.languages = await dataGetters.languages().catch(() => { })
+        vars.languages = await dataGetters.languages().catch(() => { }) ?? []
 
-        vars.codelanguages = await dataGetters.codeLanguages().catch((e) => console.log(e))
+        vars.codelanguages = await dataGetters.codeLanguages().catch(() => { }) ?? []
 
         poopy.json = await dataGetters.jsons().catch(() => { }) ?? {}
 
