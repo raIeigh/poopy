@@ -3,6 +3,8 @@ const { catbox, google } = require('./modules')
 let vars = {}
 
 vars.validUrl = /https?:\/\/([!#$&-;=?-[\]_a-z~]|%[0-9a-fA-F]{2})+/
+vars.badFilter = /nigg|fagg|https?\:\/\/.*(rule34|e621|porn|hentai|xxx|iplogger|ipify|gay)/ig
+vars.scamFilter = /discord\.(gift|gg)\/[\d\w]+\/?/ig
 vars.emojiRegex = require('emoji-regex')()
 vars.Catbox = new catbox.Catbox()
 vars.Litterbox = new catbox.Litterbox()
@@ -20,19 +22,23 @@ vars.gifFormats = ['gif', 'apng']
 vars.jimpFormats = ['png', 'jpeg', 'jpg', 'gif', 'bmp', 'tiff']
 vars.processingTools = require('./processingTools')
 vars.symbolreplacements = [{
-    target: ['\u2018',
+    target: [
+        '\u2018',
         '\u2019',
         '\u201b',
         '\u275b',
-        '\u275c'],
+        '\u275c'
+    ],
     replacement: "'"
 },
-    {
-        target: ['\u201c',
-            '\u201d',
-            '\u201f'],
-        replacement: '"'
-    }]
+{
+    target: [
+        '\u201c',
+        '\u201d',
+        '\u201f'
+    ],
+    replacement: '"'
+}]
 vars.punctuation = ['?', '.', '!', '...']
 vars.caseModifiers = [
     function (text) {

@@ -10,6 +10,7 @@ modules.axios = require('axios')
 modules.request = require('request')
 modules.FormData = require('form-data')
 modules.cheerio = require('cheerio')
+modules.puppeteer = require('puppeteer')
 modules.xml2json = require('xml2js').parseStringPromise
 modules.util = require('util')
 modules.CryptoJS = require('crypto-js')

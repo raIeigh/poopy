@@ -149,6 +149,22 @@ async function start() {
     if (testCondition()) {
         tokens = [
             {
+                TOKEN: process.env.INDIA_TOKEN,
+                config: {
+                    testing: true,
+                    self: true,
+                    globalPrefix: 'i:',
+                    database: 'testracist',
+                    msgcooldown: 3000,
+                    useReactions: true,
+                    textEmbeds: true,
+                    noInfoPost: true,
+                    intents: 3276799,
+                    illKillYouIfYouUseEval: []
+                }
+            },
+
+            /*{
                 TOKEN: process.env.TEST_TOKEN,
                 config: {
                     testing: true,
@@ -157,7 +173,7 @@ async function start() {
                     database: 'testdata',
                     intents: 3276799
                 }
-            }
+            }*/
         ]
     } else {
         tokens = [

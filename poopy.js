@@ -671,8 +671,8 @@ class Poopy {
                 }
             }
 
-            var usedCommand = !(await (async () => {
-                var notExecuted = true
+            async function executeCommand() {
+                var executed = false
 
                 for (var i in cmds) {
                     var cmd = cmds[i]
@@ -737,13 +737,13 @@ class Poopy {
                         data.guildData[msg.guild.id]['lastuse'] = Date.now()
 
                         if (!msg.channel.permissionsFor(msg.guild.members.me).has('SendMessages', false)) {
-                            notExecuted = false
+                            executed = true
                             var emojis = msg.guild.emojis.cache.filter(emoji => !config.self ? emoji.available : emoji.available && !emoji.animated).map(emoji => emoji.toString())
                             await msg.react(randomChoice(emojis)).catch(() => { })
                         }
 
                         if (tempdata[msg.author.id]['ratelimited']) {
-                            notExecuted = false
+                            executed = true
 
                             var totalSeconds = (tempdata[msg.author.id]['ratelimited'] - Date.now()) / 1000
                             var days = Math.floor(totalSeconds / 86400);
@@ -764,7 +764,7 @@ class Poopy {
                         }
 
                         if (globaldata['shit'].find(id => id === msg.author.id)) {
-                            notExecuted = false
+                            executed = true
                             await msg.reply('shit').catch(() => { })
                             return
                         }
@@ -812,7 +812,7 @@ class Poopy {
                         similarCmds.sort((a, b) => Math.abs(1 - a.similarity) - Math.abs(1 - b.similarity))
 
                         if (findCmd) {
-                            notExecuted = false
+                            executed = true
                             if (data.guildData[msg.guild.id]['disabled'].find(cmd => cmd.find(n => n === args[0].toLowerCase()))) {
                                 await msg.reply('This command is disabled in this server.').catch(() => { })
                             } else {
@@ -859,7 +859,7 @@ class Poopy {
                                 data.botData['filecount'] = vars.filecount
                             }
                         } else if (findLocalCmd) {
-                            notExecuted = false
+                            executed = true
                             vars.cps++
                             data.botData['commands']++
                             var t = setTimeout(() => {
@@ -895,7 +895,7 @@ class Poopy {
 
                             data.botData['filecount'] = vars.filecount
                         } else if (similarCmds ? similarCmds.find(fcmd => fcmd.similarity >= 0.5) : undefined) {
-                            notExecuted = false
+                            executed = true
                             var useCmd = await yesno(msg.channel, `Did you mean to use \`${similarCmds[0].name}\`?`, msg.author.id, undefined, msg).catch(() => { })
                             if (useCmd) {
                                 if (similarCmds[0].type === 'cmd') {
@@ -987,8 +987,10 @@ class Poopy {
                     }
                 }
 
-                return notExecuted
-            })().catch(async (e) => await msg.reply(e.stack).catch(() => { })))
+                return executed
+            }
+
+            var executed = await executeCommand().catch(async (e) => await msg.reply(e.stack).catch(() => { }))
 
             msg.content = allcontents.length > 0 ? allcontents.join(' -|- ') : msg.content
 
@@ -997,7 +999,10 @@ class Poopy {
             if (msg.content && ((!(msg.author.bot) && msg.author.id != bot.user.id) || config.allowbotusage) && data.guildData[msg.guild?.id]['channels'][msg.channel?.id]['read']) {
                 var cleanMessage = Discord.cleanContent(msg.content, msg).replace(/\@/g, '@‌')
 
-                if (!(cleanMessage.match(/nigg|fagg|https?\:\/\/.*(rule34|e621|pornhub|hentaihaven|xxx|iplogger)|discord\.(gift|gg)\/[\d\w]+\/?$/ig) || cleanMessage.includes(prefix.toLowerCase())) && !(data.guildData[msg.guild.id]['messages'].find(message => decrypt(message.content).toLowerCase() === cleanMessage.toLowerCase()))) {
+                if (
+                    !(cleanMessage.match(vars.badFilter) || cleanMessage.match(vars.scamFilter) || cleanMessage.includes(prefix.toLowerCase())) &&
+                    !(data.guildData[msg.guild.id]['messages'].find(message => decrypt(message.content).toLowerCase() === cleanMessage.toLowerCase()))
+                ) {
                     var messages = [{
                         author: msg.author.id,
                         content: CryptoJS.AES.encrypt(cleanMessage, process.env.AUTH_TOKEN).toString(),
@@ -1014,7 +1019,7 @@ class Poopy {
                 return
             }
 
-            if (msg.mentions.members.find(member => member.user.id === bot.user.id) && ((!msg.author.bot && msg.author.id != bot.user.id) || config.allowbotusage) && !usedCommand) {
+            if (msg.mentions.members.find(member => member.user.id === bot.user.id) && ((!msg.author.bot && msg.author.id != bot.user.id) || config.allowbotusage) && !executed) {
                 var eggPhrases = [
                     `My prefix here is \`${prefix}\``,
                     `My prefix here is \`${prefix}\``,
