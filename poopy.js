@@ -846,7 +846,7 @@ class Poopy {
                                     clearTimeout(t)
                                 }, 60000)
                                 infoPost(`Command \`${args[0].toLowerCase()}\` used`)
-                                await findCmd.execute.call(this, msg, args, {}).catch(async err => {
+                                await findCmd.execute.call(poopy, msg, args, {}).catch(async err => {
                                     try {
                                         await msg.reply({
                                             content: err.stack,
@@ -931,7 +931,7 @@ class Poopy {
                                             clearTimeout(t)
                                         }, 1000)
                                         infoPost(`Command \`${similarCmds[0].name}\` used`)
-                                        await findCmd.execute.call(this, msg, args, {}).catch(async err => {
+                                        await findCmd.execute.call(poopy, msg, args, {}).catch(async err => {
                                             try {
                                                 await msg.reply({
                                                     content: err.stack,
@@ -1088,7 +1088,7 @@ class Poopy {
                         data.guildData[msg.guild.id]['members'][msg.author.id]['coolDown'] = (data.guildData[msg.guild.id]['members'][msg.author.id]['coolDown'] || Date.now()) + findCmd.cooldown
                     }
 
-                    await findCmd.execute.call(this, msg, ['setprefix', config.globalPrefix]).catch(async err => {
+                    await findCmd.execute.call(poopy, msg, ['setprefix', config.globalPrefix]).catch(async err => {
                         await msg.reply({
                             content: err.stack,
                             allowedMentions: {
