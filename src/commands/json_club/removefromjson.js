@@ -20,7 +20,7 @@ module.exports = {
             await msg.reply('json club only').catch(() => { })
             return
         } else {
-            var types = ['psfiles', 'pspasta', 'funnygif', 'poop', 'dmphrases']
+            var types = ['psfiles', 'pspasta', 'funnygif', 'poop', 'dmphrases','balancefiles']
 
             if (args[1] === undefined) {
                 await msg.reply(`What is the JSON to update?! (Available: ${types.map(t => `**${t}**`).join(', ')})`).catch(() => { })
