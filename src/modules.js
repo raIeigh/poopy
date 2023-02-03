@@ -1,7 +1,7 @@
 let modules = {}
 let activeBots = require('./dataValues').activeBots
 
-modules.Discord = require('discord.js')
+modules.Discord = [require('discord.js'), require('discord.js-selfbot')]
 modules.fs = require('fs-extra')
 modules.nodefs = require('fs')
 modules.archiver = require('archiver')
@@ -63,204 +63,206 @@ modules.DMGuild = class DMGuild {
     }
 }
 
-const Guild = modules.Discord.Guild
-const guildLeave = Guild.prototype.leave
+for (var Discord of modules.Discord) {
+    const Guild = Discord.Guild
+    const guildLeave = Guild.prototype.leave
 
-Guild.prototype.leave = async function leave() {
-    let guild = this
-    let client = guild.client
-    let poopy = activeBots[client.database]
-    let config = poopy.config
+    Guild.prototype.leave = async function leave() {
+        let guild = this
+        let client = guild.client
+        let poopy = activeBots[client.database]
+        let config = poopy.config
 
-    if (config.public) return 'nvm'
+        if (config.public) return 'nvm'
 
-    return guildLeave.call(guild)
-}
-
-const Channel = modules.Discord.BaseGuildTextChannel
-const channelSend = Channel.prototype.send
-
-Channel.prototype.send = async function send(payload) {
-    var channel = this
-    let client = channel.client
-    let poopy = activeBots[client.database]
-    let tempdata = poopy.tempdata
-    let {
-        waitMessageCooldown,
-        setMessageCooldown,
-        getKeywordsFor
-    } = poopy.functions
-
-    await waitMessageCooldown()
-
-    const channelData = tempdata[channel.guild?.id]?.[channel.id]
-
-    if (channelData?.['shut']) return
-    if (channelData?.['forceres'] && (typeof payload == 'object' ? (
-        payload.content ||
-        payload.files || payload.embeds ||
-        payload.stickers
-    ) : payload)) {
-        var forceres = channelData['forceres']
-        delete channelData['forceres']
-
-        var content = typeof payload == 'object' ? (payload.content ?? '') : payload
-        var msg = forceres.msg
-        var res = await getKeywordsFor(forceres.res, msg, true, {
-            resetattempts: true,
-            extrakeys: {
-                _msg: {
-                    func: async () => {
-                        return content
-                    }
-                }
-            }
-        }).catch(() => { }) ?? forceres.res
-
-        if (forceres.persist && !channelData['forceres']) channelData['forceres'] = forceres
-
-        switch (typeof payload) {
-            case 'string':
-                payload = {
-                    content: res,
-                    allowedMentions: {
-                        parse: ['users']
-                    }
-                }
-                break;
-            case 'object':
-                payload.content = res
-                break;
-        }
+        return guildLeave.call(guild)
     }
 
-    return channelSend.call(channel, payload).then(setMessageCooldown)
-}
+    const Channel = Discord.BaseGuildTextChannel
+    const channelSend = Channel.prototype.send
 
-const Message = modules.Discord.Message
-const messageReply = Message.prototype.reply
+    Channel.prototype.send = async function send(payload) {
+        var channel = this
+        let client = channel.client
+        let poopy = activeBots[client.database]
+        let tempdata = poopy.tempdata
+        let {
+            waitMessageCooldown,
+            setMessageCooldown,
+            getKeywordsFor
+        } = poopy.functions
 
-Message.prototype.reply = async function reply(payload) {
-    var message = this
-    let client = message.client
-    let poopy = activeBots[client.database]
-    let config = poopy.config
-    let tempdata = poopy.tempdata
-    let {
-        waitMessageCooldown,
-        setMessageCooldown,
-        getKeywordsFor
-    } = poopy.functions
+        await waitMessageCooldown()
 
-    await waitMessageCooldown()
+        const channelData = tempdata[channel.guild?.id]?.[channel.id]
 
-    const channelData = tempdata[message.guild?.id]?.[message.channel.id]
+        if (channelData?.['shut']) return
+        if (channelData?.['forceres'] && (typeof payload == 'object' ? (
+            payload.content ||
+            payload.files || payload.embeds ||
+            payload.stickers
+        ) : payload)) {
+            var forceres = channelData['forceres']
+            delete channelData['forceres']
 
-    if (channelData?.['shut']) return
-    if (channelData?.['forceres'] && (typeof payload == 'object' ? (
-        payload.content ||
-        payload.files || payload.embeds ||
-        payload.stickers
-    ) : payload)) {
-        var forceres = channelData['forceres']
-        delete channelData['forceres']
-
-        var content = typeof payload == 'object' ? (payload.content ?? '') : payload
-        var msg = message
-        var res = await getKeywordsFor(forceres.res, msg, true, {
-            resetattempts: true,
-            extrakeys: {
-                _msg: {
-                    func: async () => {
-                        return content
+            var content = typeof payload == 'object' ? (payload.content ?? '') : payload
+            var msg = forceres.msg
+            var res = await getKeywordsFor(forceres.res, msg, true, {
+                resetattempts: true,
+                extrakeys: {
+                    _msg: {
+                        func: async () => {
+                            return content
+                        }
                     }
                 }
+            }).catch(() => { }) ?? forceres.res
+
+            if (forceres.persist && !channelData['forceres']) channelData['forceres'] = forceres
+
+            switch (typeof payload) {
+                case 'string':
+                    payload = {
+                        content: res,
+                        allowedMentions: {
+                            parse: ['users']
+                        }
+                    }
+                    break;
+                case 'object':
+                    payload.content = res
+                    break;
             }
-        }).catch(() => { }) ?? forceres.res
-
-        if (forceres.persist && !channelData['forceres']) channelData['forceres'] = forceres
-
-        switch (typeof payload) {
-            case 'string':
-                payload = {
-                    content: res,
-                    allowedMentions: {
-                        parse: ['users']
-                    }
-                }
-                break;
-            case 'object':
-                payload.content = res
-                break;
         }
+
+        return channelSend.call(channel, payload).then(setMessageCooldown)
     }
 
-    if (config.allowbotusage || message.replied) return message.channel.send(payload).then(setMessageCooldown)
-    else return message.replied = messageReply.call(message, payload).then(setMessageCooldown)
-}
+    const Message = Discord.Message
+    const messageReply = Message.prototype.reply
 
-const Interaction = modules.Discord.CommandInteraction
-const interactionReply = Interaction.prototype.reply
+    Message.prototype.reply = async function reply(payload) {
+        var message = this
+        let client = message.client
+        let poopy = activeBots[client.database]
+        let config = poopy.config
+        let tempdata = poopy.tempdata
+        let {
+            waitMessageCooldown,
+            setMessageCooldown,
+            getKeywordsFor
+        } = poopy.functions
 
-Interaction.prototype.reply = async function reply(payload) {
-    var interaction = this
-    let client = interaction.client
-    let poopy = activeBots[client.database]
-    let config = poopy.config
-    let tempdata = poopy.tempdata
-    let {
-        waitMessageCooldown,
-        setMessageCooldown,
-        getKeywordsFor
-    } = poopy.functions
+        await waitMessageCooldown()
 
-    await waitMessageCooldown()
+        const channelData = tempdata[message.guild?.id]?.[message.channel.id]
 
-    const channelData = tempdata[interaction.guild?.id]?.[interaction.channel.id]
+        if (channelData?.['shut']) return
+        if (channelData?.['forceres'] && (typeof payload == 'object' ? (
+            payload.content ||
+            payload.files || payload.embeds ||
+            payload.stickers
+        ) : payload)) {
+            var forceres = channelData['forceres']
+            delete channelData['forceres']
 
-    if (channelData?.['shut']) return
-    if (channelData?.['forceres'] && (typeof payload == 'object' ? (
-        payload.content ||
-        payload.files || payload.embeds ||
-        payload.stickers
-    ) : payload)) {
-        var forceres = channelData['forceres']
-        delete channelData['forceres']
-
-        var content = typeof payload == 'object' ? (payload.content ?? '') : payload
-        var msg = interaction
-        var res = await getKeywordsFor(forceres.res, msg, true, {
-            resetattempts: true,
-            extrakeys: {
-                _msg: {
-                    func: async () => {
-                        return content
+            var content = typeof payload == 'object' ? (payload.content ?? '') : payload
+            var msg = message
+            var res = await getKeywordsFor(forceres.res, msg, true, {
+                resetattempts: true,
+                extrakeys: {
+                    _msg: {
+                        func: async () => {
+                            return content
+                        }
                     }
                 }
+            }).catch(() => { }) ?? forceres.res
+
+            if (forceres.persist && !channelData['forceres']) channelData['forceres'] = forceres
+
+            switch (typeof payload) {
+                case 'string':
+                    payload = {
+                        content: res,
+                        allowedMentions: {
+                            parse: ['users']
+                        }
+                    }
+                    break;
+                case 'object':
+                    payload.content = res
+                    break;
             }
-        }).catch(() => { }) ?? forceres.res
-
-        if (forceres.persist && !channelData['forceres']) channelData['forceres'] = forceres
-
-        switch (typeof payload) {
-            case 'string':
-                payload = {
-                    content: res,
-                    allowedMentions: {
-                        parse: ['users']
-                    }
-                }
-                break;
-            case 'object':
-                payload.content = res
-                break;
         }
+
+        if (config.allowbotusage || message.replied) return message.channel.send(payload).then(setMessageCooldown)
+        else return message.replied = messageReply.call(message, payload).then(setMessageCooldown)
     }
 
-    if (config.allowbotusage || interaction.replied) return interaction.channel.send(payload).then(setMessageCooldown)
-    else return interaction.replied = (!interaction.replied && interaction.deferred ?
-        interaction.editReply(payload) :
-        interactionReply.call(interaction, payload)).then(setMessageCooldown)
+    const Interaction = Discord.CommandInteraction
+    const interactionReply = Interaction.prototype.reply
+
+    Interaction.prototype.reply = async function reply(payload) {
+        var interaction = this
+        let client = interaction.client
+        let poopy = activeBots[client.database]
+        let config = poopy.config
+        let tempdata = poopy.tempdata
+        let {
+            waitMessageCooldown,
+            setMessageCooldown,
+            getKeywordsFor
+        } = poopy.functions
+
+        await waitMessageCooldown()
+
+        const channelData = tempdata[interaction.guild?.id]?.[interaction.channel.id]
+
+        if (channelData?.['shut']) return
+        if (channelData?.['forceres'] && (typeof payload == 'object' ? (
+            payload.content ||
+            payload.files || payload.embeds ||
+            payload.stickers
+        ) : payload)) {
+            var forceres = channelData['forceres']
+            delete channelData['forceres']
+
+            var content = typeof payload == 'object' ? (payload.content ?? '') : payload
+            var msg = interaction
+            var res = await getKeywordsFor(forceres.res, msg, true, {
+                resetattempts: true,
+                extrakeys: {
+                    _msg: {
+                        func: async () => {
+                            return content
+                        }
+                    }
+                }
+            }).catch(() => { }) ?? forceres.res
+
+            if (forceres.persist && !channelData['forceres']) channelData['forceres'] = forceres
+
+            switch (typeof payload) {
+                case 'string':
+                    payload = {
+                        content: res,
+                        allowedMentions: {
+                            parse: ['users']
+                        }
+                    }
+                    break;
+                case 'object':
+                    payload.content = res
+                    break;
+            }
+        }
+
+        if (config.allowbotusage || interaction.replied) return interaction.channel.send(payload).then(setMessageCooldown)
+        else return interaction.replied = (!interaction.replied && interaction.deferred ?
+            interaction.editReply(payload) :
+            interactionReply.call(interaction, payload)).then(setMessageCooldown)
+    }
 }
 
 if (process.env.DEEPAI_KEY) {

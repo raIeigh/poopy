@@ -149,6 +149,17 @@ async function start() {
     if (testCondition()) {
         tokens = [
             {
+                TOKEN: process.env.TEST_TOKEN,
+                config: {
+                    testing: true,
+                    noInfoPost: true,
+                    globalPrefix: '2p:',
+                    database: 'testdata',
+                    intents: 3276799
+                }
+            },
+
+            {
                 TOKEN: process.env.INDIA_TOKEN,
                 config: {
                     testing: true,
@@ -162,18 +173,7 @@ async function start() {
                     intents: 3276799,
                     illKillYouIfYouUseEval: []
                 }
-            },
-
-            /*{
-                TOKEN: process.env.TEST_TOKEN,
-                config: {
-                    testing: true,
-                    noInfoPost: true,
-                    globalPrefix: '2p:',
-                    database: 'testdata',
-                    intents: 3276799
-                }
-            }*/
+            }
         ]
     } else {
         tokens = [
@@ -183,7 +183,22 @@ async function start() {
                     globalPrefix: 'p:',
                     public: true
                 }
-            }
+            },
+
+            {
+                TOKEN: process.env.INDIA_TOKEN,
+                config: {
+                    self: true,
+                    globalPrefix: 'i:',
+                    database: 'racist',
+                    msgcooldown: 3000,
+                    useReactions: true,
+                    textEmbeds: true,
+                    noInfoPost: true,
+                    intents: 3276799,
+                    illKillYouIfYouUseEval: []
+                }
+            },
         ]
     }
 

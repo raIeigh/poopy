@@ -161,6 +161,8 @@ class Poopy {
             vars[key] = varb
         }
 
+        modules.Discord = modules.Discord[Number(!!config.self)]
+
         // we can create thge bot now
         let { Discord, Collection, fs, CryptoJS } = modules
         let { envsExist,
