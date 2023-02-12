@@ -12,7 +12,7 @@ module.exports = {
 
     var res = await axios.get(url, { headers: JSON.parse(headers), responseType: 'arraybuffer' }).catch(() => { })
 
-    if (!res || itob.isBinary(null, res.data)) return word
+    if (!res || itob.isBinary(null, res.data)) return url
 
     return res.data.toString()
   },
