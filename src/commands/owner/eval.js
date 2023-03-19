@@ -38,11 +38,6 @@ module.exports = {
 
             if (!msg.nosend) for (var i in evalMessage){
                 if (tempdata[msg.guild.id][msg.channel.id]['shut']) break
-                if (evalMessage.includes(myip)) {
-                    await msg.reply({
-                        content: "no doxxing for you"
-                    })
-                }
 
                 var ev = evalMessage[i]
                 await msg.reply({
