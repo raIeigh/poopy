@@ -14,18 +14,25 @@ module.exports = {
         var array = tempdata[msg.author.id]['arrays'][name]
         if (!array) return ''
 
-        return await findIndexAsync(array, async (val) => {
-            var valOpts = { ...opts }
-            valOpts.extrakeys._val = {
-                func: async () => {
-                    return val
+        var chunks = chunkArray(array, 50)
+        for (var chunk of chunks) {
+            var find = await findIndexAsync(chunk, async (val) => {
+                var valOpts = { ...opts }
+                valOpts.extrakeys._val = {
+                    func: async () => {
+                       return val
+                    }
                 }
-            }
 
-            var found = await getKeywordsFor(func, msg, isBot, valOpts).catch(() => { }) ?? ''
+                var found = await getKeywordsFor(func, msg, isBot, valOpts).catch(() => { }) ?? ''
 
-            return found
-        }).catch(() => { }) ?? ''
+                return found
+            }).catch(() => { })
+
+            if (find) return find
+        }
+
+        return ''
     },
     attemptvalue: 5,
     raw: true
