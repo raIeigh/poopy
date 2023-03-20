@@ -367,6 +367,12 @@ functions.findIndexAsync = async function (arr, asyncCallback) {
     return index
 }
 
+functions.filterAsync = async function (arr, asyncCallback) {
+    var promises = arr.map(asyncCallback)
+    var results = await Promise.all(promises)
+    return results.filter(result => result)
+}
+
 functions.markovChainGenerator = function (text) {
     var textArr = text.split(' ')
     var markovChain = []
