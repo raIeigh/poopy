@@ -3,7 +3,7 @@ module.exports = {
     desc: 'Filters the values of the array that match the function.',
     func: async function (matches, msg, isBot, _, opts) {
         let poopy = this
-        let { splitKeyFunc, getKeywordsFor, filterAsync } = poopy.functions
+        let { splitKeyFunc, getKeywordsFor, filterAsync, chunkArray } = poopy.functions
         let tempdata = poopy.tempdata
 
         var word = matches[1]

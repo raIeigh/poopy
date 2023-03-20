@@ -3,7 +3,7 @@ module.exports = {
     desc: 'Finds the key of the value in the array that matches the function.',
     func: async function (matches, msg, isBot, _, opts) {
         let poopy = this
-        let { splitKeyFunc, getKeywordsFor, findIndexAsync } = poopy.functions
+        let { splitKeyFunc, getKeywordsFor, findIndexAsync, chunkArray } = poopy.functions
         let tempdata = poopy.tempdata
 
         var word = matches[1]
