@@ -1,7 +1,6 @@
 module.exports = {
-    name: ['name here'],
-    args: [],
-    execute: async function (msg, args) {
+    name: ['peptalk'],
+    execute: async function (msg) {
       // code here
         let poopy = this
         let { Discord } = poopy.modules
