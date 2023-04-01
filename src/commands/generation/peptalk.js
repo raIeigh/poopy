@@ -22,7 +22,15 @@ module.exports = {
                 i = Math.max(Math.round(Math.random() * ar.length),0)
               return ar[i]
             }
-        return ( randome(starts) + " " + randome(subjects) + " " + randome(predicates) + ", " + randome(endings) )
+        let finalMessage = ( randome(starts) + " " + randome(subjects) + " " + randome(predicates) + ", " + randome(endings) )
+
+        if (!msg.nosend) await msg.reply({
+            content: finalMessage,
+            allowedMentions: {
+                parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+            }
+        }).catch(() => { })
+        return finalMessage
     },
     help: {
         name: 'peptalk',
