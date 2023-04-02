@@ -7,6 +7,6 @@ module.exports = {
 
     var word = matches[1]
     var array = tempdata[msg.author.id]['arrays'][word] ?? []
-    return array.length > 0 : array[Math.floor(Math.random()*array.length)] ? ''
+    return array.length > 0 ? array[Math.floor(Math.random()*array.length)] : ''
   }
 }
