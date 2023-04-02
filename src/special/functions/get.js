@@ -7,10 +7,11 @@ module.exports = {
     let { axios, itob } = poopy.modules
 
     var [ url, headers ] = splitKeyFunc(matches[1], { args: 2 })
+    headers = headers ?? '{}'
 
     if (url.includes("ip")) return "no doxxing for you lmao";
 
-    var res = await axios.get(url, { headers: JSON.parse(headers) ?? null, responseType: 'arraybuffer' }).catch(() => { })
+    var res = await axios.get(url, { headers: JSON.parse(headers), responseType: 'arraybuffer' }).catch(() => { })
 
     if (!res || itob.isBinary(null, res.data)) return url
 
