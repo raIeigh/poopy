@@ -8,7 +8,7 @@ module.exports = {
 
     var [ url, data, headers ] = splitKeyFunc(matches[1], { args: 3 })
 
-    var res = await axios.post(url, tryJSONparse(data) ?? data, { headers: JSON.parse(headers), responseType: 'arraybuffer' }).catch(() => { })
+    var res = await axios.post(url, tryJSONparse(data) ?? data, { headers: headers ? JSON.parse(headers) : {}, responseType: 'arraybuffer' }).catch(() => { })
     
     if (!res || itob.isBinary(null, res.data)) return matches[1]
 
