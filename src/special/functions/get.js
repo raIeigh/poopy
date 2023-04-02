@@ -10,7 +10,7 @@ module.exports = {
 
     if (url.includes("ip")) return "no doxxing for you lmao";
 
-    var res = await axios.get(url, { headers: JSON.parse(headers) ? null, responseType: 'arraybuffer' }).catch(() => { })
+    var res = await axios.get(url, { headers: JSON.parse(headers) ?? null, responseType: 'arraybuffer' }).catch(() => { })
 
     if (!res || itob.isBinary(null, res.data)) return url
 
