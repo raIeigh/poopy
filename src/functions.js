@@ -650,7 +650,7 @@ functions.gatherData = async function (msg) {
     }
 
     if (!data.guildData[msg.guild.id]) {
-        data.guildData[msg.guild.id] = !config.testing && process.env.MONGOOSE_URL && await dataGather.guildData(config.database, msg.guild.id).catch(() => { }) || {}
+        data.guildData[msg.guild.id] = !config.testing && process.env.MONGOOSE_URL && await dataGather.guildData(config.database, msg.guild.id).catch((e) => console.log(e)) || {}
     }
 
     if (data.guildData[msg.guild.id]['read'] === undefined) {
@@ -4242,7 +4242,7 @@ functions.saveData = async function () {
     let config = poopy.config
     let data = poopy.data
     let globaldata = poopy.globaldata
-    let { infoPost, processTask, dataGather } = poopy.functions
+    let { infoPost, dataGather } = poopy.functions
     let { fs } = poopy.modules
 
     if (config.notSave || Object.keys(data).length <= 0 || Object.keys(globaldata).length <= 0) return
@@ -4255,11 +4255,6 @@ functions.saveData = async function () {
     } else {
         const dataObject = { data, globaldata }
 
-        if (process.env.CLOUDAMQP_URL) await processTask({
-            type: 'datasave',
-            database: config.database,
-            data: dataObject
-        }).catch(() => { })
         await dataGather.update(config.database, dataObject).catch(() => { })
     }
 

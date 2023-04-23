@@ -1,7 +1,6 @@
 let throng = require('throng')
 let os = require('os')
 let fs = require('fs-extra')
-let axios = require('axios').default
 let { exec, spawn } = require('child_process')
 
 var url = process.env.CLOUDAMQP_URL || "amqp://localhost";
@@ -13,10 +12,6 @@ let datastores = {};
 let globaldata;
 
 if (!fs.existsSync('temp')) fs.mkdirSync('temp')
-
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms))
-}
 
 function regexClean(str) {
     return str.replace(/[\\^$.|?*+()[{]/g, (match) => `\\${match}`)
@@ -143,33 +138,6 @@ function execPromise(code) {
 }
 
 async function processJob(data) {
-    let getDataJob = async () => {
-        var database = data.database
-        var global = data.global
-
-        console.log(`${database} get`)
-
-        var returndata = {}
-
-        if (datastores[database]) {
-            returndata.data = datastores[database]
-
-            if (global && globaldata) returndata.globaldata = globaldata
-
-            return returndata
-        }
-    }
-
-    let saveDataJob = async () => {
-        var database = data.database
-        var datastore = data.data
-
-        console.log(`${database} save`)
-
-        if (datastore.data) datastores[database] = datastore.data
-        if (datastore.globaldata) globaldata = datastore.globaldata
-    }
-
     let execJob = async () => {
         let code = data.code
         if (!code) throw { err: 'No code was provided!' }
@@ -228,13 +196,6 @@ async function processJob(data) {
     }
 
     switch (data.type) {
-        case 'dataget':
-            return await getDataJob();
-
-        case 'datasave':
-            await saveDataJob();
-            break;
-
         case 'exec':
             return await execJob();
 
