@@ -152,8 +152,26 @@ async function start() {
                 TOKEN: process.env.TEST_TOKEN,
                 config: {
                     testing: true,
+                    noInfoPost: true,
                     globalPrefix: '2p:',
+                    database: 'testdata',
                     intents: 3276799
+                }
+            },
+
+            {
+                TOKEN: process.env.INDIA_TOKEN,
+                config: {
+                    testing: true,
+                    self: true,
+                    globalPrefix: 'i:',
+                    database: 'testracist',
+                    msgcooldown: 3000,
+                    useReactions: true,
+                    textEmbeds: true,
+                    noInfoPost: true,
+                    intents: 3276799,
+                    illKillYouIfYouUseEval: []
                 }
             }
         ]
