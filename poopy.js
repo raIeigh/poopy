@@ -516,8 +516,8 @@ class Poopy {
             data.botData['messages']++
 
             var dataError = false
-            await gatherData(msg).catch(() => dataError = true)
-            if (dataError) return
+            await gatherData(msg).catch((err) => dataError = err)
+            if (dataError) return console.log(dataError)
 
             var prefix = data.guildData[msg.guild.id]?.['prefix'] ?? config.globalPrefix
 
