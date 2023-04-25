@@ -200,7 +200,7 @@ for (var Discord of modules.Discord) {
         if (config.allowbotusage || message.replied) return message.channel.send(payload).then(setMessageCooldown)
         else {
             var reply = await messageReply.call(message, payload).then(setMessageCooldown)
-            Object.defineProperty(msg, 'replied', {
+            Object.defineProperty(message, 'replied', {
                 value: reply,
                 writable: true
             })
