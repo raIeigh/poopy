@@ -1384,8 +1384,6 @@ functions.yesno = async function (channel, content, who, btdata, reply) {
             var collector = yesnoMsg.createMessageComponentCollector({ time: 30_000 })
 
             collector.on('collect', (button) => {
-                console.log(button)
-                
                 dmSupport(button)
 
                 button.deferUpdate().catch(() => { })

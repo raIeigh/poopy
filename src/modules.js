@@ -198,7 +198,14 @@ for (var Discord of modules.Discord) {
         }
 
         if (config.allowbotusage || message.replied) return message.channel.send(payload).then(setMessageCooldown)
-        else return message.replied = messageReply.call(message, payload).then(setMessageCooldown)
+        else {
+            var reply = await messageReply.call(message, payload).then(setMessageCooldown)
+            Object.defineProperty(msg, 'replied', {
+                value: reply,
+                writable: true
+            })
+            return reply
+        }
     }
 
     const Interaction = Discord.CommandInteraction
@@ -260,9 +267,16 @@ for (var Discord of modules.Discord) {
         }
 
         if (config.allowbotusage || interaction.replied) return interaction.channel.send(payload).then(setMessageCooldown)
-        else return interaction.replied = (!interaction.replied && interaction.deferred ?
-            interaction.editReply(payload) :
-            interactionReply.call(interaction, payload)).then(setMessageCooldown)
+        else {
+            var reply = await (!interaction.replied && interaction.deferred ?
+                interaction.editReply(payload) :
+                interactionReply.call(interaction, payload)).then(setMessageCooldown)
+            Object.defineProperty(interaction, 'replied', {
+                value: reply,
+                writable: true
+            })
+            return reply
+        }
     }
 }
 
