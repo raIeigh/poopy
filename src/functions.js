@@ -617,7 +617,7 @@ functions.gatherData = async function (msg) {
 
     if (!webhook) {
         if (!data.userData[msg.author.id]) {
-            data.userData[msg.author.id] = !config.testing && process.env.MONGOOSE_URL && await dataGather.userData(config.database, msg.author.id).catch(() => { }) || {}
+            data.userData[msg.author.id] = !config.testing && process.env.MONGOOSE_URL && await dataGather.userData(config.database, msg.author.id).catch((e) => console.log(e)) || {}
         }
         if (!data.botData.users.includes(msg.author.id)) {
             data.botData.users.push(msg.author.id)
@@ -672,7 +672,7 @@ functions.gatherData = async function (msg) {
     }
 
     if (!data.guildData[msg.guild.id]['channels'][msg.channel.id]) {
-        data.guildData[msg.guild.id]['channels'][msg.channel.id] = !config.testing && process.env.MONGOOSE_URL && await dataGather.channelData(config.database, msg.guild.id, msg.channel.id).catch(() => { }) || {}
+        data.guildData[msg.guild.id]['channels'][msg.channel.id] = !config.testing && process.env.MONGOOSE_URL && await dataGather.channelData(config.database, msg.guild.id, msg.channel.id).catch((e) => console.log(e)) || {}
     }
 
     if (!data.guildData[msg.guild.id]['channels'][msg.channel.id]['lastUrls']) {
@@ -702,7 +702,7 @@ functions.gatherData = async function (msg) {
         }
 
         if (!data.guildData[msg.guild.id]['members'][msg.author.id]) {
-            data.guildData[msg.guild.id]['members'][msg.author.id] = !config.testing && process.env.MONGOOSE_URL && await dataGather.memberData(config.database, msg.guild.id, msg.author.id).catch(() => { }) || {}
+            data.guildData[msg.guild.id]['members'][msg.author.id] = !config.testing && process.env.MONGOOSE_URL && await dataGather.memberData(config.database, msg.guild.id, msg.author.id).catch((e) => console.log(e)) || {}
         }
 
         if (!data.guildData[msg.guild.id]['members'][msg.author.id]['messages']) {
@@ -1384,6 +1384,8 @@ functions.yesno = async function (channel, content, who, btdata, reply) {
             var collector = yesnoMsg.createMessageComponentCollector({ time: 30_000 })
 
             collector.on('collect', (button) => {
+                console.log(button)
+                
                 dmSupport(button)
 
                 button.deferUpdate().catch(() => { })
