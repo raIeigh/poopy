@@ -336,6 +336,22 @@ class Channel {
             has: () => true
         }
     }
+
+    isDMBased() {
+        return false
+    }
+
+    isTextBased() {
+        return true
+    }
+
+    isThread() {
+        return false
+    }
+
+    isVoiceBased() {
+        return false
+    }
 }
 
 class GuildMember {

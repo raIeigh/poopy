@@ -13,11 +13,9 @@ functions.dataGather = require('./dataGathering')
 functions.brainfuck = require('./brainfuck')
 functions.tobrainfuck = require('./tobrainfuck')
 functions.generateSayori = require('./sayorimessagegenerator')
-if (os.platform() != 'win32') { // i cant install canvas in windows LMAO!!!
-    functions.braille = require('./braille')
-    functions.averageColor = require('./averageColor')
-    functions.spectrogram = require('./spectrogram')
-}
+functions.braille = require('./braille')
+functions.averageColor = require('./averageColor')
+functions.spectrogram = require('./spectrogram')
 
 Math.lerp = function lerp(start, end, amt) {
     return (1 - amt) * start + amt * end
@@ -3077,7 +3075,9 @@ functions.deleteMsgData = function (msg) {
 
 functions.dmSupport = function (msg) {
     let poopy = this
-    let { DMGuild, Collection } = poopy.modules
+    let { Discord, DMGuild, Collection } = poopy.modules
+
+    if (msg.channel.type == Discord.ChannelType.DM && msg.channel.recipients) msg.channel.type = Discord.ChannelType.GroupDM
 
     if (!msg.author && msg.user) msg.author = msg.user
     if (!msg.user && msg.author) msg.user = msg.author
@@ -3097,6 +3097,8 @@ functions.dmSupport = function (msg) {
         writable: true
     })
 
+    if (!msg.fetchWebhook) msg.fetchWebhook = async () => { }
+
     if ((msg.user || msg.author) && !(msg.user || msg.author).permissions) (msg.user || msg.author).permissions = { has: () => true }
     if (msg.channel && !msg.channel.permissionsFor) msg.channel.permissionsFor = () => {
         return { has: () => true }
@@ -3104,6 +3106,10 @@ functions.dmSupport = function (msg) {
 
     if (msg.channel && !msg.channel.fetchWebhooks) msg.channel.fetchWebhooks = async () => new Collection()
     if (msg.channel && !msg.channel.createWebhook) msg.channel.createWebhook = async () => { }
+    if (msg.channel && !msg.channel.isDMBased) msg.channel.isDMBased = () => true
+    if (msg.channel && !msg.channel.isTextBased) msg.channel.isTextBased = () => true
+    if (msg.channel && !msg.channel.isThread) msg.channel.isThread = () => false
+    if (msg.channel && !msg.channel.isVoiceBased) msg.channel.isVoiceBased = () => false
 
     if (msg.mentions) {
         if (!msg.mentions.members) Object.defineProperty(msg.mentions, 'members', {
@@ -3119,6 +3125,7 @@ functions.dmSupport = function (msg) {
             writable: true
         })
     }
+
 }
 
 functions.getKeywordsFor = async function (string, msg, isBot, { extrakeys = {}, extrafuncs = {}, resetattempts = false, ownermode = false, declaredonly = false } = {}) {

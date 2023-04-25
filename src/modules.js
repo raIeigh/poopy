@@ -35,7 +35,7 @@ modules.Rainmaze = require('../lib/rainmaze/Rainmaze')
 modules.APIMessage = require('./apiMessage')
 modules.DMGuild = class DMGuild {
     constructor(msg) {
-        let members = new modules.Collection([[msg.client.database, msg.client.user]].concat(
+        let members = new modules.Collection([[msg.client.user.id, msg.client.user]].concat(
             msg.channel.recipients ?
                 [...msg.channel.recipients] :
                 [[msg.channel.recipient.id, msg.channel.recipient]]
@@ -58,7 +58,8 @@ modules.DMGuild = class DMGuild {
         this.members = {
             fetch: async (id) => members.get(id),
             resolve: (id) => members.get(id),
-            cache: members
+            cache: members,
+            me: members.get(msg.client.user.id)
         }
     }
 }

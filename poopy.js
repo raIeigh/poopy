@@ -1309,9 +1309,9 @@ class Poopy {
                         interaction.content = `${prefix}${content}`
                         interaction.author = interaction.user
                         interaction.bot = false
-                        interaction.attachments = new Collection()
+                        interaction.attachments = 
+                            interaction.stickers = new Collection()
                         interaction.embeds = []
-                        interaction.stickers = new Collection()
                         interaction.mentions = {
                             users: new Collection(),
                             members: new Collection(),
@@ -1321,11 +1321,11 @@ class Poopy {
 
                         interaction.edit = interaction.editReply
                         interaction.delete = interaction.deleteReply
-                        interaction.react = async () => { }
-                        interaction.fetchWebhook = async () => { }
-                        interaction.fetchReference = async () => { }
-                        interaction.createReactionCollector = () => new FakeCollector()
-                        interaction.createMessageComponentCollector = () => new FakeCollector()
+                        interaction.react =
+                            interaction.fetchWebhook =
+                            interaction.fetchReference = async () => { }
+                        interaction.createReactionCollector =
+                            interaction.createMessageComponentCollector = () => new FakeCollector()
 
                         await callbacks.messageCallback(interaction).catch(() => { })
 
