@@ -3074,7 +3074,6 @@ functions.deleteMsgData = function (msg) {
 }
 
 functions.dmSupport = function (msg) {
-    if (true) return
     let poopy = this
     let { Discord, DMGuild, Collection } = poopy.modules
 
