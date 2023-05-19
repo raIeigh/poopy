@@ -64,7 +64,6 @@ modules.DMGuild = class DMGuild {
     }
 }
 
-if (false)
 for (var Discord of modules.Discord) {
     const Guild = Discord.Guild
     const guildLeave = Guild.prototype.leave
