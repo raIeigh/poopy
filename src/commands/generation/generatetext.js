@@ -22,11 +22,11 @@ module.exports = {
             return
         }
 
-        var models = ['j1-jumbo', 'j1-grande', 'j1-large']
+        var models = ['j2-ultra', 'j2-mid', 'j1-light']
 
         for (var model of models) {
             var resp = await axios({
-                url: `https://api.ai21.com/studio/v1/${model}/complete`,
+                url: `https://api.ai21.com/studio/v2/${model}/complete`,
                 method: 'POST',
                 data: {
                     prompt: saidMessage,
