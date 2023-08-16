@@ -1,4 +1,20 @@
 const throng = require('throng')
+const fs = require('fs-extra')
+
+function updateEnvironment() {
+    if (!fs.existsSync('.env')) return
+
+    const env = fs.readFileSync('.env').toString()
+
+    for (const line of env.split(' ')) {
+        if (!line || !line.includes("=") || line.startsWith("#")) continue
+
+        let [key, value] = line.split("=", 2)
+        if (!key || !value || process.env[key]) continue
+
+        process.env[key] = value
+    }
+}
 
 async function start() {
     let poopyStarted = false
@@ -220,4 +236,5 @@ async function start() {
     }
 }
 
+updateEnvironment()
 throng({ workers: 1, start }) // My poopy will never die
