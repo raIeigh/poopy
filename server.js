@@ -6,7 +6,7 @@ function updateEnvironment() {
 
     const env = fs.readFileSync('.env').toString()
 
-    for (const line of env.split(' ')) {
+    for (const line of env.split('\n')) {
         if (!line || !line.includes("=") || line.startsWith("#")) continue
 
         let [key, value] = line.split("=", 2)
