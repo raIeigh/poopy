@@ -35,6 +35,9 @@ module.exports = {
         } else if (!matchedTextes[1]) {
             matchedTextes[1] = '""'
         }
+        for (let i = 0; i < matchedTextes.length; i++) {
+            matchedTextes[i].replace(/(?<!\\)"/g, "")
+        }
         var text = matchedTextes[0].substring(1, matchedTextes[0].length - 1)
         var text2 = matchedTextes[1].substring(1, matchedTextes[1].length - 1)
         var currenturl = lastUrl(msg, 0) || args[1]
