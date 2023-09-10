@@ -29,7 +29,7 @@ module.exports = {
                 saidMessage = saidMessage.replace(new RegExp(target, 'ig'), symbolReplacement.replacement)
             })
         })
-        var matchedTextes = saidMessage.match(/"([\s\S]*?)"/g)
+        var matchedTextes = saidMessage.match(/(?<!\\)"([\s\S]*?)(?<!\\)"/g)
         if (!matchedTextes) {
             matchedTextes = ['""']
         }
