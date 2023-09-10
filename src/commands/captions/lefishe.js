@@ -24,7 +24,7 @@ module.exports = {
             matchedTextes = ['""', '']
         }
         for (let i = 0; i < matchedTextes.length; i++) {
-            matchedTextes[i].replace(/(?<!\\)"/g, "")
+            matchedTextes[i] = matchedTextes[i].replace(/\\(?=")/g, "")
         }
         var text = matchedTextes[1]
         var currenturl = lastUrl(msg, 0) || args[1]
