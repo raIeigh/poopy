@@ -3556,11 +3556,12 @@ functions.fetchImages = async function (query, bing, safe, id) {
         if (bing) {
             var options = {
                 method: 'GET',
-                url: 'https://bing-image-search1.p.rapidapi.com/images/search',
-                params: { q: query, count: '100', safeSearch: safe ? 'moderate' : 'off' },
+                url: 'https://bing-web-search1.p.rapidapi.com/search',
+                params: { q: query, count: '100', safeSearch: safe ? 'Moderate' : 'Off' },
                 headers: {
-                    'x-rapidapi-host': 'bing-image-search1.p.rapidapi.com',
-                    'x-rapidapi-key': userToken(id, 'RAPIDAPI_KEY')
+                    'X-BingApis-SDK': 'true',
+                    'X-RapidAPI-Host': 'bing-web-search1.p.rapidapi.com',
+                    'X-RapidAPI-Key': userToken(id, 'RAPIDAPI_KEY')
                 }
             }
 
@@ -3575,6 +3576,8 @@ functions.fetchImages = async function (query, bing, safe, id) {
                 resolve([])
                 return
             }
+
+            console.log(response.data)
 
             var images = []
             var body = response.data

@@ -23,7 +23,7 @@
     "cors": "^2.8.5",
     "crypto-js": "^4.1.1",
     "deepai": "^1.0.17",
-    "discord.js": "^14.4.0",
+    "discord.js": "^14.14.1",
     "discord.js-selfbot": "github:aiko-chan-ai/discord.js-selfbot-v13#v14",
     "emoji-regex": "^10.0.0",
     "express": "^4.18.0",
@@ -42,7 +42,6 @@
     "request": "^2.88.2",
     "throng": "^5.0.0",
     "twemoji": "^14.0.2",
-    "twitter": "^1.7.1",
     "uuid": "^9.0.0",
     "whatwg-url": "^11.0.0",
     "xml2js": ">=0.5.0"

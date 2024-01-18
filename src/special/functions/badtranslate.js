@@ -1,66 +1,66 @@
 module.exports = {
-    helpf: '(phrase | languages | target | source)',
-    desc: 'Badly translates the phrase inside the function from source to target. You can specify how many languages it goes through.',
-    func: async function (matches, msg) {
-      let poopy = this
-      let { splitKeyFunc, parseNumber, randomChoice, userToken } = poopy.functions
-      let vars = poopy.vars
-      let { axios } = poopy.modules
-  
-      var word = matches[1]
-      var split = splitKeyFunc(word, { args: 4 })
-      var phrase = split[0] ?? ''
-      var repeat = parseNumber(split[1] ?? 5, { min: 2, max: 25, dft: 5, round: true })
-      var target = split[2] ?? 'en'
-      var source = split[3] ?? ''
-  
-      if (vars.languages.find(language => (language.language.toLowerCase() === target.toLowerCase()) || (language.name.toLowerCase() === target.toLowerCase()))) {
-        target = vars.languages.find(language => (language.language.toLowerCase() === target.toLowerCase()) || (language.name.toLowerCase() === target.toLowerCase())).language
-      } else {
-        target = 'en'
-      }
-  
-      if (vars.languages.find(language => (language.language.toLowerCase() === source.toLowerCase()) || (language.name.toLowerCase() === source.toLowerCase()))) {
-        source = vars.languages.find(language => (language.language.toLowerCase() === source.toLowerCase()) || (language.name.toLowerCase() === source.toLowerCase())).language
-      } else {
-        source = ''
-      }
+  helpf: '(phrase | languages | target | source)',
+  desc: 'Badly translates the phrase inside the function from source to target. You can specify how many languages it goes through.',
+  func: async function (matches, msg) {
+    let poopy = this
+    let { splitKeyFunc, parseNumber, randomChoice, userToken } = poopy.functions
+    let vars = poopy.vars
+    let { axios } = poopy.modules
 
-        var maxlength = Math.round(2000 / repeat)
-        if (phrase.length > maxlength) return `The input length must be smaller or equal to 2000 divided by the number of repetitions. (in this case ${maxlength} characters)`
+    var word = matches[1]
+    var split = splitKeyFunc(word, { args: 4 })
+    var phrase = split[0] ?? ''
+    var repeat = parseNumber(split[1] ?? 5, { min: 2, max: 250, dft: 5, round: true })
+    var target = split[2] ?? 'en'
+    var source = split[3] ?? 'auto'
 
-        var output = phrase
-        var lastlanguage = source
-        var currentlanguage = randomChoice(vars.languages).language
+    if (Object.entries(vars.languages).find(language => language[0] == target.toLowerCase() || language[1] == target.toLowerCase())) {
+      target = Object.entries(vars.languages).find(language => language[0] == target.toLowerCase() || language[1] == target.toLowerCase())[0]
+    } else {
+      target == 'en'
+    }
 
-        for (var i = 0; i < repeat; i++) {
-            var options = {
-                method: 'POST',
-                url: 'https://microsoft-translator-text.p.rapidapi.com/translate',
-                params: { from: lastlanguage, to: currentlanguage, 'api-version': '3.0', profanityAction: 'NoAction', textType: 'plain' },
-                headers: {
-                    'content-type': 'application/json',
-                    'x-rapidapi-host': 'microsoft-translator-text.p.rapidapi.com',
-                    'x-rapidapi-key': userToken(msg.author.id, 'RAPIDAPI_KEY')
-                },
-                data: [{ Text: output }]
-            };
+    if (Object.entries(vars.languages).find(language => language[0] == source.toLowerCase() || language[1] == source.toLowerCase())) {
+      source = Object.entries(vars.languages).find(language => language[0] == source.toLowerCase() || language[1] == source.toLowerCase())[0]
+    } else {
+      source == 'auto'
+    }
 
-            var response = await axios(options).catch(() => { })
+    var output = phrase
+    var lastlanguage = source
+    var currentlanguage = randomChoice(Object.keys(vars.languages))
 
-            if (!response) return word
+    for (var i = 0; i < repeat; i++) {
+      var options = {
+        method: 'GET',
+        url: "https://translate.googleapis.com/translate_a/single?" + new URLSearchParams({
+          client: "gtx",
+          sl: lastlanguage,
+          tl: currentlanguage,
+          dt: "t",
+          dj: "1",
+          source: "input",
+          q: output
+        })
+      };
 
-            output = response.data[0].translations[0].text
-            lastlanguage = currentlanguage
-            currentlanguage = i == repeat - 2 ? target : randomChoice(vars.languages).language
-        }
+      var response = await axios(options).catch(() => { })
 
-        if (output) return output
-  
-      return word
-    },
-    attemptvalue: 10,
-    limit: 5,
-    envRequired: ['RAPIDAPI_KEY'],
-    cmdconnected: ['badtranslate']
-  }
+      if (!response) return word
+
+      output = response.data.sentences.
+        map(s => s?.trans).
+        filter(Boolean).
+        join("")
+      lastlanguage = currentlanguage
+      currentlanguage = i == repeat - 2 ? target : randomChoice(Object.keys(vars.languages))
+    }
+
+    if (output) return output
+
+    return word
+  },
+  attemptvalue: 10,
+  limit: 5,
+  cmdconnected: ['badtranslate']
+}

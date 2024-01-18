@@ -21,7 +21,7 @@ module.exports = {
     execute: async function (msg, args) {
         let poopy = this
         let vars = poopy.vars
-        let { getOption, userToken } = poopy.functions
+        let { getOption } = poopy.functions
         let { axios } = poopy.modules
 
         await msg.channel.sendTyping().catch(() => { })
@@ -32,13 +32,13 @@ module.exports = {
             return;
         }
 
-        var source = null
+        var source = 'auto'
         var sourceindex = args.indexOf('-source')
         if (sourceindex > -1) {
-            if (vars.languages.find(language => (language.language === args[sourceindex + 1].toLowerCase()) || (language.name === args[sourceindex + 1].toLowerCase()))) {
-                source = vars.languages.find(language => (language.language === args[sourceindex + 1].toLowerCase()) || (language.name === args[sourceindex + 1].toLowerCase())).language
+            if (Object.entries(vars.languages).find(language => language[0] == args[sourceindex + 1].toLowerCase() || language[1] == args[sourceindex + 1].toLowerCase())) {
+                source = Object.entries(vars.languages).find(language => language[0] == args[sourceindex + 1].toLowerCase() || language[1] == args[sourceindex + 1].toLowerCase())[0]
             } else {
-                await msg.reply(`Not a supported source language. A list of supported languages are:\n${vars.languages.map(language => `\`${language.language}\``).join(', ')}`).catch(() => { })
+                await msg.reply(`Not a supported source language. A list of supported languages are:\n${Object.values(vars.languages).map(language => `\`${language}\``).join(', ')}`).catch(() => { })
                 return
             }
             args.splice(sourceindex, 2)
@@ -47,10 +47,10 @@ module.exports = {
         var target = 'en'
         var targetindex = args.indexOf('-target')
         if (targetindex > -1) {
-            if (vars.languages.find(language => (language.language === args[targetindex + 1].toLowerCase()) || (language.name === args[targetindex + 1].toLowerCase()))) {
-                target = vars.languages.find(language => (language.language === args[targetindex + 1].toLowerCase()) || (language.name === args[targetindex + 1].toLowerCase())).language
+            if (Object.entries(vars.languages).find(language => language[0] == args[targetindex + 1].toLowerCase() || language[1] == args[targetindex + 1].toLowerCase())) {
+                target = Object.entries(vars.languages).find(language => language[0] == args[targetindex + 1].toLowerCase() || language[1] == args[targetindex + 1].toLowerCase())[0]
             } else {
-                await msg.reply(`Not a supported target language. A list of supported languages are:\n${vars.languages.map(language => `\`${language.language}\``).join(', ')}`).catch(() => { })
+                await msg.reply(`Not a supported target language. A list of supported languages are:\n${Object.values(vars.languages).map(language => `\`${language}\``).join(', ')}`).catch(() => { })
                 return
             }
             args.splice(targetindex, 2)
@@ -59,35 +59,30 @@ module.exports = {
         var repeat = 5
         var languagesindex = args.indexOf('-languages')
         if (languagesindex > -1) {
-            repeat = isNaN(Number(args[languagesindex + 1])) ? 5 : Number(args[languagesindex + 1]) <= 2 ? 2 : Number(args[languagesindex + 1]) >= 25 ? 25 : Math.round(Number(args[languagesindex + 1])) || 5
+            repeat = isNaN(Number(args[languagesindex + 1])) ? 5 : Number(args[languagesindex + 1]) <= 2 ? 2 : Number(args[languagesindex + 1]) >= 250 ? 250 : Math.round(Number(args[languagesindex + 1])) || 5
             args.splice(languagesindex, 2)
         }
-        var maxlength = Math.round(2000 / repeat)
 
         var saidMessage = args.slice(1).join(' ')
 
-        if (saidMessage.length > maxlength) {
-            await msg.reply(`The input length must be smaller or equal to 2000 divided by the number of repetitions. (in this case ${maxlength} characters)`)
-            return
-        }
-
         var output = saidMessage
         var lastlanguage = source
-        var currentlanguage = vars.languages[Math.floor(Math.random() * vars.languages.length)].language
+        var currentlanguage = Object.keys(vars.languages)[Math.floor(Math.random() * Object.keys(vars.languages).length)]
 
-        var lmessage = !msg.nosend && details && await msg.reply(`Translating from ${vars.languages.find(language => language.language === lastlanguage) ? vars.languages.find(language => language.language === lastlanguage).name : 'Auto'} to ${vars.languages.find(language => language.language === currentlanguage).name}. (${output})`).catch(() => { })
+        var lmessage = !msg.nosend && details && await msg.reply(`Translating from ${vars.languages[lastlanguage]} to ${vars.languages[currentlanguage]}. (${output})`).catch(() => { })
 
         for (var i = 0; i < repeat; i++) {
             var options = {
-                method: 'POST',
-                url: 'https://microsoft-translator-text.p.rapidapi.com/translate',
-                params: { from: lastlanguage, to: currentlanguage, 'api-version': '3.0', profanityAction: 'NoAction', textType: 'plain' },
-                headers: {
-                    'content-type': 'application/json',
-                    'x-rapidapi-host': 'microsoft-translator-text.p.rapidapi.com',
-                    'x-rapidapi-key': userToken(msg.author.id, 'RAPIDAPI_KEY')
-                },
-                data: [{ Text: output }]
+                method: 'GET',
+                url: "https://translate.googleapis.com/translate_a/single?" + new URLSearchParams({
+                    client: "gtx",
+                    sl: lastlanguage,
+                    tl: currentlanguage,
+                    dt: "t",
+                    dj: "1",
+                    source: "input",
+                    q: output
+                })
             };
 
             var response = await axios(options).catch(async () => {
@@ -98,11 +93,15 @@ module.exports = {
                 return
             }
 
-            output = response.data[0].translations[0].text
+            output = response.data.sentences.
+                map(s => s?.trans).
+                filter(Boolean).
+                join("")
+
             lastlanguage = currentlanguage
-            currentlanguage = i == repeat - 2 ? target : vars.languages[Math.floor(Math.random() * vars.languages.length)].language
+            currentlanguage = i == repeat - 2 ? target : Object.keys(vars.languages)[Math.floor(Math.random() * Object.keys(vars.languages).length)]
             if (lmessage && i != repeat - 1 && !msg.nosend) {
-                await lmessage.edit(`Translating from ${vars.languages.find(language => language.language === lastlanguage) ? vars.languages.find(language => language.language === lastlanguage).name : 'Auto'} to ${vars.languages.find(language => language.language === currentlanguage).name}. (${output})`).catch(() => { })
+                await lmessage.edit(`Translating from ${vars.languages[lastlanguage]} to ${vars.languages[currentlanguage]}. (${output})`).catch(() => { })
             }
         }
 
@@ -119,9 +118,8 @@ module.exports = {
         return output
     },
     help: {
-        name: 'badtranslate/badtr <message> [-source <language>] [-target <language>] [-languages <number (max 25)>] [-details]',
+        name: 'badtranslate/badtr <message> [-source <language>] [-target <language>] [-languages <number (max 250)>] [-details]',
         value: 'Badly translates the specified message. The default source language is auto and the default target language is English.'
     },
-    type: 'Text',
-    envRequired: ['RAPIDAPI_KEY']
+    type: 'Text'
 }

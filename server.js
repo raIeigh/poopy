@@ -12,7 +12,7 @@ function updateEnvironment() {
         let [key, value] = line.split("=", 2)
         if (!key || !value || process.env[key]) continue
 
-        process.env[key] = value
+        process.env[key.trim()] = value.trim()
     }
 }
 
@@ -187,6 +187,8 @@ async function start() {
                     textEmbeds: true,
                     noInfoPost: true,
                     intents: 3276799,
+                    allowbotusage: true,
+                    allowpingresponses: false,
                     illKillYouIfYouUseEval: []
                 }
             }

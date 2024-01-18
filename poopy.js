@@ -18,6 +18,7 @@ class Poopy {
             poosoniakeywordblacklist: [],
             poosoniafunctionblacklist: ['msgcollector', 'stopcollector', 'stopallcollectors'],
             allowtesting: true,
+            allowpingresponses: true,
             allowbotusage: false,
             database: 'poopydata',
             globalPrefix: 'p:',
@@ -1021,7 +1022,7 @@ class Poopy {
                 return
             }
 
-            if (msg.mentions.members.find(member => member.user.id === bot.user.id) && ((!msg.author.bot && msg.author.id != bot.user.id) || config.allowbotusage) && !executed) {
+            if (config.allowpingresponses && msg.mentions.members.find(member => member.user.id === bot.user.id) && ((!msg.author.bot && msg.author.id != bot.user.id) || config.allowbotusage) && !executed) {
                 var eggPhrases = [
                     `My prefix here is \`${prefix}\``,
                     `My prefix here is \`${prefix}\``,

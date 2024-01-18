@@ -286,6 +286,5 @@ if (process.env.DEEPAI_KEY) {
 }
 
 if (process.env.GOOGLE_KEY) modules.google = require('googleapis').google
-//if (process.env.TWITTER_CONSUMER_KEY && process.env.TWITTER_CONSUMER_SECRET && process.env.TWITTER_ACCESSTOKEN_KEY && process.env.TWITTER_ACCESSTOKEN_SECRET) modules.Twitter = require('twitter')
 
 module.exports = modules

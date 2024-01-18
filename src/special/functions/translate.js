@@ -11,42 +11,45 @@ module.exports = {
     var split = splitKeyFunc(word, { args: 3 })
     var phrase = split[0] ?? ''
     var target = split[1] ?? 'en'
-    var source = split[2] ?? ''
+    var source = split[2] ?? 'auto'
 
-    if (vars.languages.find(language => (language.language.toLowerCase() === target.toLowerCase()) || (language.name.toLowerCase() === target.toLowerCase()))) {
-      target = vars.languages.find(language => (language.language.toLowerCase() === target.toLowerCase()) || (language.name.toLowerCase() === target.toLowerCase())).language
+    if (Object.entries(vars.languages).find(language => language[0] == target.toLowerCase() || language[1] == target.toLowerCase())) {
+      target = Object.entries(vars.languages).find(language => language[0] == target.toLowerCase() || language[1] == target.toLowerCase())[0]
     } else {
-      target = 'en'
+      target == 'en'
     }
 
-    if (vars.languages.find(language => (language.language.toLowerCase() === source.toLowerCase()) || (language.name.toLowerCase() === source.toLowerCase()))) {
-      source = vars.languages.find(language => (language.language.toLowerCase() === source.toLowerCase()) || (language.name.toLowerCase() === source.toLowerCase())).language
+    if (Object.entries(vars.languages).find(language => language[0] == source.toLowerCase() || language[1] == source.toLowerCase())) {
+      source = Object.entries(vars.languages).find(language => language[0] == source.toLowerCase() || language[1] == source.toLowerCase())[0]
     } else {
-      source = ''
+      source == 'auto'
     }
 
     var options = {
-      method: 'POST',
-      url: 'https://microsoft-translator-text.p.rapidapi.com/translate',
-      params: { from: source || null, to: target, 'api-version': '3.0', profanityAction: 'NoAction', textType: 'plain' },
-      headers: {
-        'content-type': 'application/json',
-        'x-rapidapi-host': 'microsoft-translator-text.p.rapidapi.com',
-        'x-rapidapi-key': userToken(msg.author.id, 'RAPIDAPI_KEY')
-      },
-      data: [{ Text: phrase }]
+      method: 'GET',
+      url: "https://translate.googleapis.com/translate_a/single?" + new URLSearchParams({
+        client: "gtx",
+        sl: source,
+        tl: target,
+        dt: "t",
+        dj: "1",
+        source: "input",
+        q: saidMessage
+      })
     };
 
     var response = await axios(options).catch(() => { })
 
     if (response) {
-      return response.data[0].translations[0].text
+      return response.data.sentences.
+        map(s => s?.trans).
+        filter(Boolean).
+        join("")
     }
 
     return phrase
   },
   attemptvalue: 10,
   limit: 5,
-  envRequired: ['RAPIDAPI_KEY'],
   cmdconnected: ['translate']
 }
