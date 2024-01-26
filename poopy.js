@@ -521,7 +521,7 @@ class Poopy {
             if (dataError) return console.log(dataError)
 
             var prefix = data.guildData[msg.guild.id]?.['prefix'] ?? config.globalPrefix
-            var hivemind = data.guildData[msg.guild.id]['poopymode'] && "On" ?? "Off"
+            var hivemind = data.guildData[msg.guild.id]['poopymode'] ? "On" : "Off"
 
             if (msg.channel.type == Discord.ChannelType.DM && msg.type !== Discord.InteractionType.ApplicationCommand && !msg.content.includes(prefix)) {
                 if (msg.author.bot || msg.author.id == bot.user.id) return
