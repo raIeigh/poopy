@@ -38,8 +38,6 @@ You'll need a Discord bot token to run this app (`DEFAULT_TOKEN` and `TEST_TOKEN
   - `AUTH_TOKEN` (SET THIS TO SOMETHING RANDOM! mainly used for encrypting/decrypting messages and private tokens from people, can also be used to access private apis from the website)
   - `BOT_WEBSITE` (url if you want a website for your bot)
   - `HIVEMIND_ID` (id for your bot to participate in the hivemind. leave blank to not have any of the hivemind functionality)
-  - `HIVEMIND_GUILD_ID` (guild id for the server where your bot will communicate with the hivemind, leave blank for poopy's lounge)
-  - `HIVEMIND_CHANNEL_ID` (channel id for the channel where your bot will communicate with the hivemind, leave blank for default)
   - `CLOUDAMQP_URL` (url used to send file processing queues, accessed at https://api.cloudamqp.com/console/`APP-ID`/details)
   - `MONGOOSE_URL` (url used to access the database, generated at https://cloud.mongodb.com/v2/`PROJECT-ID`#clusters/connect)
   - `AI21_KEY` (key generated when you sign up in ai21 for generating text, accessed at https://studio.ai21.com/account/account)
