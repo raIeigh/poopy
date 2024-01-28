@@ -27,5 +27,6 @@ module.exports = {
     cooldown: 5000,
     perms: ['Administrator'],
     type: 'Settings',
-    envRequired: ['HIVEMIND_ID']
+    envRequired: ['HIVEMIND_ID'],
+    hivemindForce: true
   }

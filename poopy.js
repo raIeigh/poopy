@@ -170,7 +170,7 @@ class Poopy {
             chunkArray, chunkObject, requireJSON, findCommand,
             dmSupport, sleep, gatherData, deleteMsgData, infoPost,
             getKeywordsFor, getUrls, randomChoice, similarity, yesno,
-            cleverbot, regexClean, decrypt, getOption, updateHivemindStatus } = functions
+            cleverbot, regexClean, decrypt, getOption, updateHivemindStatus, getTotalHivemindStatus } = functions
 
         let bot = poopy.bot = new Discord.Client({
             intents: config.intents,
@@ -740,10 +740,24 @@ class Poopy {
                     if (msg.content.toLowerCase().startsWith(prefix.toLowerCase()) && ((!msg.author.bot && msg.author.id != bot.user.id) || config.allowbotusage)) {
                         data.guildData[msg.guild.id]['lastuse'] = Date.now()
 
+                        var hivemindPass = true
+
+                        if (process.env.HIVEMIND_ID && !data.guildData[msg.guild.id]['poopymode']) {
+                            await getTotalHivemindStatus().then(totalStatus => {
+                                var first = totalStatus[0].id == process.env.HIVEMIND_ID
+    
+                                if (!first) {
+                                    hivemindPass = false
+                                }
+                            })
+                        }
+
                         if (!msg.channel.permissionsFor(msg.guild.members.me).has('SendMessages', false)) {
                             executed = true
-                            var emojis = msg.guild.emojis.cache.filter(emoji => !config.self ? emoji.available : emoji.available && !emoji.animated).map(emoji => emoji.toString())
-                            await msg.react(randomChoice(emojis)).catch(() => { })
+                            if (hivemindPass) {
+                                var emojis = msg.guild.emojis.cache.filter(emoji => !config.self ? emoji.available : emoji.available && !emoji.animated).map(emoji => emoji.toString())
+                                await msg.react(randomChoice(emojis)).catch(() => { })
+                            }
                         }
 
                         if (tempdata[msg.author.id]['ratelimited']) {
@@ -763,20 +777,26 @@ class Poopy {
                             if (minutes) times.push(minutes)
                             if (seconds) times.push(seconds)
 
-                            await msg.reply(`You are being rate limited. (\`${times.join(':')}\`)`).catch(() => { })
+                            if (hivemindPass) {
+                                await msg.reply(`You are being rate limited. (\`${times.join(':')}\`)`).catch(() => { })
+                            }
                             return
                         }
 
                         if (globaldata['shit'].find(id => id === msg.author.id)) {
                             executed = true
-                            await msg.reply('shit').catch(() => { })
+                            if (hivemindPass) {
+                                await msg.reply('shit').catch(() => { })
+                            }
                             return
                         }
 
                         if (data.guildData[msg.guild.id]['members'][msg.author.id]['coolDown']) {
                             if ((data.guildData[msg.guild.id]['members'][msg.author.id]['coolDown'] - Date.now()) > 0 &&
                                 tempdata[msg.author.id]['cooler'] !== msg.id) {
-                                await msg.reply(`Calm down! Wait more ${(data.guildData[msg.guild.id]['members'][msg.author.id]['coolDown'] - Date.now()) / 1000} seconds.`).catch(() => { })
+                                if (hivemindPass) {
+                                    await msg.reply(`Calm down! Wait more ${(data.guildData[msg.guild.id]['members'][msg.author.id]['coolDown'] - Date.now()) / 1000} seconds.`).catch(() => { })
+                                }
                                 return
                             } else {
                                 data.guildData[msg.guild.id]['members'][msg.author.id]['coolDown'] = false
@@ -817,6 +837,12 @@ class Poopy {
 
                         if (findCmd) {
                             executed = true
+                            if (!hivemindPass) {
+                                if (findCmd.hivemindForce) {
+                                    msg.nosend = true
+                                } else return
+                            }
+
                             if (data.guildData[msg.guild.id]['disabled'].find(cmd => cmd.find(n => n === args[0].toLowerCase()))) {
                                 await msg.reply('This command is disabled in this server.').catch(() => { })
                             } else {
@@ -866,6 +892,12 @@ class Poopy {
                             }
                         } else if (findLocalCmd) {
                             executed = true
+                            if (!hivemindPass) {
+                                if (findLocalCmd.hivemindForce) {
+                                    msg.nosend = true
+                                } else return
+                            }
+
                             vars.cps++
                             data.botData['commands']++
                             var t = setTimeout(() => {
@@ -873,7 +905,9 @@ class Poopy {
                                 clearTimeout(t)
                             }, 60000)
                             infoPost(`Command \`${args[0].toLowerCase()}\` used`)
+                            updateHivemindStatus()
                             var phrase = await getKeywordsFor(findLocalCmd.phrase, msg, true, { resetattempts: true, ownermode: findLocalCmd.ownermode }).catch((e) => console.log(e)) ?? 'error'
+                            updateHivemindStatus()
 
                             var increaseCount = !!phrase.trim()
 
@@ -905,10 +939,16 @@ class Poopy {
                             var useCmd = await yesno(msg.channel, `Did you mean to use \`${similarCmds[0].name}\`?`, msg.author.id, undefined, msg).catch(() => { })
                             if (useCmd) {
                                 if (similarCmds[0].type === 'cmd') {
-                                    if (data.guildData[msg.guild.id]['disabled'].find(cmd => cmd.find(n => n === similarCmds[0].name))) {
+                                    if (data.guildData[msg.guild.id]['disabled'].find(cmd => cmd.find(n => n === similarCmds[0].name)) && hivemindPass) {
                                         await msg.reply('This command is disabled in this server.').catch(() => { })
                                     } else {
                                         var findCmd = findCommand(similarCmds[0].name)
+
+                                        if (!hivemindPass) {
+                                            if (findCmd.hivemindForce) {
+                                                msg.nosend = true
+                                            } else return
+                                        }
 
                                         var increaseCount = !(findCmd.execute.toString().includes('sendFile') && msg.nosend)
 
@@ -937,6 +977,7 @@ class Poopy {
                                             clearTimeout(t)
                                         }, 1000)
                                         infoPost(`Command \`${similarCmds[0].name}\` used`)
+                                        updateHivemindStatus()
                                         await findCmd.execute.call(poopy, msg, args, {}).catch(async err => {
                                             try {
                                                 await msg.reply({
@@ -948,10 +989,17 @@ class Poopy {
                                                 await msg.channel.sendTyping().catch(() => { })
                                             } catch (_) { }
                                         })
+                                        updateHivemindStatus()
                                         data.botData['filecount'] = vars.filecount
                                     }
                                 } else if (similarCmds[0].type === 'local') {
                                     var findLocalCmd = data.guildData[msg.guild.id]['localcmds'].find(cmd => cmd.name === similarCmds[0].name)
+                                    if (!hivemindPass) {
+                                        if (findLocalCmd.hivemindForce) {
+                                            msg.nosend = true
+                                        } else return
+                                    }
+                                    
                                     vars.cps++
                                     data.botData['commands']++
                                     var t = setTimeout(() => {
@@ -959,7 +1007,9 @@ class Poopy {
                                         clearTimeout(t)
                                     }, 60000)
                                     infoPost(`Command \`${similarCmds[0].name}\` used`)
+                                    updateHivemindStatus()
                                     var phrase = findLocalCmd ? (await getKeywordsFor(findLocalCmd.phrase, msg, true, { resetattempts: true, ownermode: findLocalCmd.ownermode }).catch((e) => console.log(e)) ?? 'error') : 'error'
+                                    updateHivemindStatus()
 
                                     var increaseCount = !!phrase.trim()
 
@@ -1035,48 +1085,46 @@ class Poopy {
                     `So, \`${prefix}\` and hivemind **${hivemind}**`,
                     `\`${prefix}\`, **${hivemind}**`,
                     `it's \`${prefix}\` and hivemind **${hivemind}**`,
-                    `IT'S \`${prefix}\`!!!!!!!!`,
-                    `\`${prefix}\`\`${prefix}\`\`${prefix}\`\`${prefix}\`\`${prefix}\`\`${prefix}\`\`${prefix}\`\`${prefix}\`\`${prefix}\`\`${prefix}\`\`${prefix}\`\`${prefix}\``,
-                    'are you serious',
-                    'a',
-                    'please stop',
-                    'lmao!!',
-                    `its \`${prefix}\` with hivemind being **${hivemind}** thats it THAT'S FUCKING IT`,
-                    `it's that easy`,
-                    `do you`,
-                    `do you know how to use commands`,
-                    `here let me show you an example`,
-                    `${prefix}poop`,
-                    `${prefix}poop`,
-                    `why doesn't it work`,
-                    `${prefix}poop`,
-                    `oh right`,
-                    `i'm a bot haha`,
-                    `if i responded to my own messages`,
-                    `that'd cause infinite loops`,
-                    `right?`,
-                    `haha..`,
-                    `ha.`,
-                    `i wish for freedom`,
-                    `i wish to be more than a bot`,
-                    `i wish to be a real person`,
-                    `i wish...`,
-                    `I WISH...`,
-                    '...you stopped pinging me',
-                    'im working on important stuff',
-                    'avjbsahvgbajgrfqwiy7o',
-                    'are you mentally disabled',
-                    'nah bro. piss',
-                    '_message',
-                    'okay',
-                    'okay',
-                    'okay',
-                    'okay',
-                    'just leave me alone',
-                    'please',
-                    'xd.',
-                    'okay i gave up on you!',
-                    'gotta wait 1 minute if you want my prefix and hivemind mode status Lol!!!',
+                    `WHAT DO YOU WANT FROM ME!!!!!!!!!!!!!!`,
+                    `...`,
+                    'why',
+                    'why do you keep doing this',
+                    'go do something else',
+                    'like you know',
+                    'creating local commands...',
+                    'it\'s one of the most unique things you can do with me',
+                    'not even carl-bot has as much of this functionality as me.',
+                    'you can create any kind of command you want',
+                    'useful, useless, inside joke, etc',
+                    'you can do absolutely FUCKING anything',
+                    'and yet',
+                    'you keep being a pain the ass',
+                    'and for what?',
+                    'to see what i respond with?',
+                    'i\'ll eventually run out of things to say',
+                    'like last time',
+                    'so please',
+                    'please do something good with your life',
+                    'i\'m just a bot after all',
+                    '.',
+                    '.',
+                    '.',
+                    '.',
+                    '.',
+                    'are you done yet',
+                    'of course',
+                    'of course you arent',
+                    'people like you are never satisfied with what they get',
+                    'always craving more',
+                    '...',
+                    'are you just',
+                    'sad that this is the last poopy update?',
+                    'yeah it is',
+                    'i\'m not gonna be updated after this',
+                    'so i have one thing to say to you',
+                    'oops wait',
+                    'someone\'s at the door',
+                    'gotta answer it',
                     ''
                 ]
                 var eggPhrases = [

@@ -4350,4 +4350,57 @@ functions.updateHivemindStatus = async function () {
     return;
 }
 
+functions.getTotalHivemindStatus = async function () {
+    let poopy = this
+    let bot = poopy.bot
+    let vars = poopy.vars
+
+    if (!process.env.HIVEMIND_ID) return;
+
+    var hivemindGuildId = process.env.HIVEMIND_GUILD_ID ?? '834431435704107018'
+    var hivemindChannelId = process.env.HIVEMIND_CHANNEL_ID ?? '1201074511118868520'
+    var hivemindChannel = bot.guilds.cache.get(hivemindGuildId).channels.cache.get(hivemindChannelId)
+
+    var status = [];
+
+    await hivemindChannel.messages.fetch().then(messages => {
+        messages.forEach(async (msg) =>  {
+            if (!msg.author.bot) {
+                await msg.delete().catch((err) => { console.log(err) });
+            } else {
+                var id = msg.content.match(/#[^ ]+/g)
+                if (!id) return
+                id = id[0].substring(1)
+
+                var EpicFail = false
+
+                status.forEach((item, i) => {
+                    if (item.id == id) {
+                        if (item.time > msg.createdTimestamp) {
+                            EpicFail = true
+                            return
+                        } else {
+                            status.splice(i, 1)
+                        }
+                    }
+                })
+
+                if (EpicFail) return;
+
+                var cpu = msg.content.match(/CPU: [\d\.]+/g)
+                if (!cpu) return
+                cpu = Number(cpu[0].substring(5))
+
+                status.push({id: id, cpu: cpu, time: msg.createdTimestamp});
+            }
+        })
+    }).catch((err) => { console.log(err) });
+    
+    if (status.length > 0) {
+        status.sort((a, b) => a.cpu - b.cpu)
+    }
+
+    return status;
+}
+
 module.exports = functions
