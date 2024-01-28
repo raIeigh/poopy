@@ -1,5 +1,5 @@
 module.exports = {
-    name: ['destroy', 'shutdown'],
+    name: ['destroy', 'shutdown', 'die'],
     args: [],
     execute: async function (msg, _, opts) {
         let poopy = this
@@ -19,6 +19,6 @@ module.exports = {
         await poopy.destroy(true)
         if (config.quitOnDestroy) process.exit()
     },
-    help: { name: 'destroy/shutdown', value: 'Causes Poopy to shutdown.' },
+    help: { name: 'destroy/shutdown/die', value: 'Causes Poopy to shutdown.' },
     type: 'Owner'
 }

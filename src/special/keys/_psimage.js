@@ -4,7 +4,7 @@ module.exports = {
     let poopy = this
     let arrays = poopy.arrays
 
-    var psImages = arrays.psFiles.filter(file => file.match(/\.(png|jpe?g|bmp)/))
+    var psImages = arrays.psFiles.filter(file => file.match(/\.(png|jpe?g|bmp|tiff|webp)/))
 
     return psImages[Math.floor(Math.random() * psImages.length)]
   },
@@ -12,6 +12,6 @@ module.exports = {
     let poopy = this
     let arrays = poopy.arrays
 
-    return arrays.psFiles.filter(file => file.match(/\.(png|jpe?g|bmp)/))
+    return arrays.psFiles.filter(file => file.match(/\.(png|jpe?g|bmp|tiff|webp)/))
   }
 }

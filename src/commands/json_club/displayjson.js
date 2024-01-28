@@ -1,12 +1,13 @@
 module.exports = {
     name: ['displayjson'],
     args: [{
-        "name": "json", "required": true, "specifarg": false, "orig": "<json (psfiles, pspasta, funnygif, poop, dmphrases)>", "autocomplete": [
+        "name": "json", "required": true, "specifarg": false, "orig": "<json (psfiles, pspasta, funnygif, poop, dmphrases, shitting)>", "autocomplete": [
             'psfiles',
             'pspasta',
             'funnygif',
             'poop',
-            'dmphrases'
+            'dmphrases',
+            'shitting'
         ]
     }],
     execute: async function (msg, args) {
@@ -21,7 +22,7 @@ module.exports = {
             await msg.reply('json club only').catch(() => { })
             return
         } else {
-            var types = ['psfiles', 'pspasta', 'funnygif', 'poop', 'dmphrases']
+            var types = ['psfiles', 'pspasta', 'funnygif', 'poop', 'dmphrases', 'shitting']
 
             if (args[1] === undefined) {
                 await msg.reply(`What is the JSON to display?! (Available: ${types.map(t => `**${t}**`).join(', ')})`).catch(() => { })
@@ -51,7 +52,7 @@ module.exports = {
         };
     },
     help: {
-        name: 'displayjson <json (psfiles, pspasta, funnygif, poop, dmphrases)>',
+        name: 'displayjson <json (psfiles, pspasta, funnygif, poop, dmphrases, shitting)>',
         value: "Displays the values of a JSON like Phexonia Studio's files."
     },
     cooldown: 2500,

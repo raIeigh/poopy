@@ -257,6 +257,7 @@ var dataGetters = {
             funnygifs: 'funnygif',
             poopPhrases: 'poop',
             dmPhrases: 'dmphrases',
+            shitting: 'shitting',
             eightball: 'eightball'
         }
 

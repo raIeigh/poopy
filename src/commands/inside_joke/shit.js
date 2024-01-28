@@ -1,5 +1,5 @@
 module.exports = {
-    name: ['ps', 'phexoniastudios'],
+    name: ['shit'],
     args: [{
         "name": "type", "required": false, "specifarg": true, "orig": "[-type <extension (image/video/gif)>]", "autocomplete": [
             'image',
@@ -17,11 +17,11 @@ module.exports = {
             type = String(args[typeindex + 1]).toLowerCase()
         }
 
-        var psFiles = arrays.psFiles.filter(file => {
+        var shitting = arrays.shitting.filter(file => {
             switch (type) {
-                case 'image': return file.match(/\.(png|jpe?g|bmp|tiff|webp)/)
+                case 'image': return file.match(/\.(png|jpe?g|bmp|tiff)/)
 
-                case 'video': return file.match(/\.(mov|mp4|wmv|avi|webm)/)
+                case 'video': return file.match(/\.(mov|mp4|wmv|avi)/)
 
                 case 'gif': return file.match(/\.(gif|apng)/)
 
@@ -29,13 +29,13 @@ module.exports = {
             }
         })
 
-        var psFile = psFiles[Math.floor(Math.random() * psFiles.length)]
-        if (!msg.nosend) await msg.reply(psFile).catch(() => { })
-        return psFile
+        var shit = shitting[Math.floor(Math.random() * shitting.length)]
+        if (!msg.nosend) await msg.reply(shit).catch(() => { })
+        return shit
     },
     help: {
-        name: 'ps/phexoniastudios [-type <extension (image/video/gif)>]',
-        value: 'Sends a random Phexonia Studios related image, GIF or video to the channel.'
+        name: 'shit [-type <extension (image/video/gif)>]',
+        value: 'shit'
     },
     cooldown: 2500,
     type: 'Inside Joke'
