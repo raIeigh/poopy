@@ -4389,6 +4389,30 @@ functions.getTotalHivemindStatus = async function () {
             if (!msg.author.bot) {
                 await msg.delete().catch((err) => { console.log(err) });
             } else {
+
+                if (!msg.editedTimestamp) {
+                    var id = msg.content.match(/#[^ ]+/g)
+                    if (!id) return
+                    id = id[0].substring(1)
+
+                    if (id == process.env.HIVEMIND_ID) {
+                        await msg.delete().catch((err) => { console.log(err) });
+                    }
+
+                    return
+                }
+                if ((Date.now() - msg.editedTimestamp) > 20000 + 5000) {
+                    var id = msg.content.match(/#[^ ]+/g)
+                    if (!id) return
+                    id = id[0].substring(1)
+
+                    if (id == process.env.HIVEMIND_ID && (Date.now() - msg.editedTimestamp) > 60000) {
+                        await msg.delete().catch((err) => { console.log(err) });
+                    }
+                    
+                    return
+                }
+
                 var id = msg.content.match(/#[^ ]+/g)
                 if (!id) return
                 id = id[0].substring(1)
