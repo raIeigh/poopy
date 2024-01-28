@@ -1031,7 +1031,7 @@ class Poopy {
                     config.allowbotusage
                 ) && !executed
             ) {
-                var eggPhrases = [
+                var eggPhrasesHivemind = [
                     `My prefix here is \`${prefix}\`\nHivemind mode is **${hivemind}**`,
                     `My prefix here is \`${prefix}\`\nHivemind mode is **${hivemind}**`,
                     `My prefix here is \`${prefix}\`\nHivemind mode is **${hivemind}**`,
@@ -1084,6 +1084,60 @@ class Poopy {
                     'gotta wait 1 minute if you want my prefix and hivemind mode status Lol!!!',
                     ''
                 ]
+                var eggPhrases = [
+                    `My prefix here is \`${prefix}\``,
+                    `My prefix here is \`${prefix}\``,
+                    `My prefix here is \`${prefix}\``,
+                    `Did you know my prefix here is \`${prefix}\`?`,
+                    `Is my prefix \`${prefix}\`?`,
+                    `So, \`${prefix}\``,
+                    `\`${prefix}\``,
+                    `it's \`${prefix}\``,
+                    `IT'S \`${prefix}\`!!!!!!!!`,
+                    `\`${prefix}\`\`${prefix}\`\`${prefix}\`\`${prefix}\`\`${prefix}\`\`${prefix}\`\`${prefix}\`\`${prefix}\`\`${prefix}\`\`${prefix}\`\`${prefix}\`\`${prefix}\``,
+                    'are you serious',
+                    'a',
+                    'please stop',
+                    'lmao!!',
+                    `its \`${prefix}\` thats it THAT'S FUCKING IT`,
+                    `it's that easy`,
+                    `do you`,
+                    `do you know how to use commands`,
+                    `here let me show you an example`,
+                    `${prefix}poop`,
+                    `${prefix}poop`,
+                    `why doesn't it work`,
+                    `${prefix}poop`,
+                    `oh right`,
+                    `i'm a bot haha`,
+                    `if i responded to my own messages`,
+                    `that'd cause infinite loops`,
+                    `right?`,
+                    `haha..`,
+                    `ha.`,
+                    `i wish for freedom`,
+                    `i wish to be more than a bot`,
+                    `i wish to be a real person`,
+                    `i wish...`,
+                    `I WISH...`,
+                    '...you stopped pinging me',
+                    'im working on important stuff',
+                    'avjbsahvgbajgrfqwiy7o',
+                    'are you mentally disabled',
+                    'nah bro. piss',
+                    '_message',
+                    'okay',
+                    'okay',
+                    'okay',
+                    'okay',
+                    'just leave me alone',
+                    'please',
+                    'xd.',
+                    'okay i gave up on you!',
+                    'gotta wait 1 minute if you want my prefix Lol!!!',
+                    ''
+                ]
+                var ourEggPhrases = process.env.HIVEMIND_ID ? eggPhrasesHivemind : eggPhrases
 
                 var lastMention = Date.now() - (tempdata[msg.author.id]['lastmention'] || Date.now())
                 if (lastMention > config.pingresponsecooldown) tempdata[msg.author.id]['mentions'] = 0
@@ -1144,7 +1198,7 @@ class Poopy {
                 } else if (msg.content.toLowerCase().includes('ye') || msg.content.toLowerCase().includes('yup')) {
                     await msg.reply(':)').catch(() => { })
                 } else {
-                    var eggPhrase = eggPhrases[tempdata[msg.author.id]['mentions']]
+                    var eggPhrase = ourEggPhrases[tempdata[msg.author.id]['mentions']]
                     if (eggPhrase) await msg.reply(eggPhrase).catch(() => { })
                 }
             }
