@@ -876,7 +876,6 @@ class Poopy {
                                     clearTimeout(t)
                                 }, 60000)
                                 infoPost(`Command \`${args[0].toLowerCase()}\` used`)
-                                updateHivemindStatus()
                                 await findCmd.execute.call(poopy, msg, args, {}).catch(async err => {
                                     try {
                                         await msg.reply({
@@ -887,7 +886,6 @@ class Poopy {
                                         }).catch(() => { })
                                     } catch (_) { }
                                 })
-                                updateHivemindStatus()
                                 data.botData['filecount'] = vars.filecount
                             }
                         } else if (findLocalCmd) {
@@ -905,9 +903,7 @@ class Poopy {
                                 clearTimeout(t)
                             }, 60000)
                             infoPost(`Command \`${args[0].toLowerCase()}\` used`)
-                            updateHivemindStatus()
                             var phrase = await getKeywordsFor(findLocalCmd.phrase, msg, true, { resetattempts: true, ownermode: findLocalCmd.ownermode }).catch((e) => console.log(e)) ?? 'error'
-                            updateHivemindStatus()
 
                             var increaseCount = !!phrase.trim()
 
@@ -977,7 +973,6 @@ class Poopy {
                                             clearTimeout(t)
                                         }, 1000)
                                         infoPost(`Command \`${similarCmds[0].name}\` used`)
-                                        updateHivemindStatus()
                                         await findCmd.execute.call(poopy, msg, args, {}).catch(async err => {
                                             try {
                                                 await msg.reply({
@@ -989,7 +984,6 @@ class Poopy {
                                                 await msg.channel.sendTyping().catch(() => { })
                                             } catch (_) { }
                                         })
-                                        updateHivemindStatus()
                                         data.botData['filecount'] = vars.filecount
                                     }
                                 } else if (similarCmds[0].type === 'local') {
@@ -1007,9 +1001,7 @@ class Poopy {
                                         clearTimeout(t)
                                     }, 60000)
                                     infoPost(`Command \`${similarCmds[0].name}\` used`)
-                                    updateHivemindStatus()
                                     var phrase = findLocalCmd ? (await getKeywordsFor(findLocalCmd.phrase, msg, true, { resetattempts: true, ownermode: findLocalCmd.ownermode }).catch((e) => console.log(e)) ?? 'error') : 'error'
-                                    updateHivemindStatus()
 
                                     var increaseCount = !!phrase.trim()
 
@@ -1668,6 +1660,9 @@ class Poopy {
         bot.guilds.cache.get('834431435704107018')?.channels.cache.get('947167169718923341')?.send(!config.stfu ? (config.testing ? 'raleigh is testing' : `this is the ${toOrdinal(wakecount)} time this happens`) : '').catch(() => { })
 
         updateHivemindStatus()
+        vars.hivemindStatusInterval = setInterval(function () {
+            updateHivemindStatus()
+        }, 20000)
 
         if (!config.apiMode) {
             bot.on('messageCreate', (msg) => {
@@ -1699,15 +1694,8 @@ class Poopy {
         delete vars.statusInterval
         clearInterval(vars.saveInterval)
         delete vars.saveInterval
-
-        if (vars.hivemindMessageId) {
-            var hivemindGuildId = process.env.HIVEMIND_GUILD_ID ?? '834431435704107018'
-            var hivemindChannelId = process.env.HIVEMIND_CHANNEL_ID ?? '1201074511118868520'
-            var hivemindChannel = bot.guilds.cache.get(hivemindGuildId).channels.cache.get(hivemindChannelId)
-            await hivemindChannel.messages.cache.get(vars.hivemindMessageId).delete().catch((err) => { console.log(err) })
-
-            delete vars.hivemindMessageId
-        }
+        clearInterval(vars.hivemindStatusInterval)
+        delete vars.hivemindStatusInterval
 
         vars.started = false
         delete activeBots[config.database]
