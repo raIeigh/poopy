@@ -4332,4 +4332,43 @@ functions.setMessageCooldown = async function (msg) {
     return msg
 }
 
+functions.calculateHivemindStatus = async function (poopy) {
+    let bot = poopy.bot
+
+    if (!process.env.HIVEMIND_ID) return '';
+
+    var cusage = process.cpuUsage()
+    var cused = (cusage.user + cusage.system) / 1024 / 1024
+
+    return `${bot.user.username} #${process.env.HIVEMIND_ID} is here.\n\nCPU: ${cused}`
+}
+
+functions.updateHivemindStatus = async function () {
+    let poopy = this
+    let bot = poopy.bot
+    let vars = poopy.vars
+
+    if (!process.env.HIVEMIND_ID) return;
+
+    var hivemindGuildId = process.env.HIVEMIND_GUILD_ID ?? '834431435704107018'
+    var hivemindChannelId = process.env.HIVEMIND_CHANNEL_ID ?? '1201074511118868520'
+    var hivemindChannel = bot.guilds.cache.get(hivemindGuildId).channels.cache.get(hivemindChannelId)
+
+    if (!vars.hivemindMessageId) {
+        functions.calculateHivemindStatus(poopy).then(status => {
+            hivemindChannel.send(status).then(message => {
+                vars.hivemindMessageId = message.id
+            }).catch((err) => { console.log(err) });
+        }).catch((err) => { console.log(err) });
+
+        return;
+    }
+
+    functions.calculateHivemindStatus(poopy).then(status => {
+        hivemindChannel.messages.cache.get(vars.hivemindMessageId).edit(status).catch((err) => { console.log(err) })
+    }).catch((err) => { console.log(err) });
+    
+    return;
+}
+
 module.exports = functions
