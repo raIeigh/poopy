@@ -523,6 +523,7 @@ class Poopy {
             if (dataError) return console.log(dataError)
 
             var prefix = data.guildData[msg.guild.id]?.['prefix'] ?? config.globalPrefix
+            var hivemind = data.guildData[msg.guild.id]['poopymode'] ? "On" : "Off"
 
             if (msg.channel.type == Discord.ChannelType.DM && msg.type !== Discord.InteractionType.ApplicationCommand && !msg.content.includes(prefix)) {
                 if (msg.author.bot || msg.author.id == bot.user.id) return
@@ -1031,21 +1032,21 @@ class Poopy {
                 ) && !executed
             ) {
                 var eggPhrases = [
-                    `My prefix here is \`${prefix}\``,
-                    `My prefix here is \`${prefix}\``,
-                    `My prefix here is \`${prefix}\``,
-                    `Did you know my prefix here is \`${prefix}\`?`,
-                    `Is my prefix \`${prefix}\`?`,
-                    `So, \`${prefix}\``,
-                    `\`${prefix}\``,
-                    `it's \`${prefix}\``,
+                    `My prefix here is \`${prefix}\`\nHivemind mode is **${hivemind}**`,
+                    `My prefix here is \`${prefix}\`\nHivemind mode is **${hivemind}**`,
+                    `My prefix here is \`${prefix}\`\nHivemind mode is **${hivemind}**`,
+                    `Did you know my prefix here is \`${prefix}\` and hivemind mode is **${hivemind}**?`,
+                    `Is my prefix \`${prefix}\`? Is hivemind mode really **${hivemind}**?`,
+                    `So, \`${prefix}\` and hivemind **${hivemind}**`,
+                    `\`${prefix}\`, **${hivemind}**`,
+                    `it's \`${prefix}\` and hivemind **${hivemind}**`,
                     `IT'S \`${prefix}\`!!!!!!!!`,
                     `\`${prefix}\`\`${prefix}\`\`${prefix}\`\`${prefix}\`\`${prefix}\`\`${prefix}\`\`${prefix}\`\`${prefix}\`\`${prefix}\`\`${prefix}\`\`${prefix}\`\`${prefix}\``,
                     'are you serious',
                     'a',
                     'please stop',
                     'lmao!!',
-                    `its \`${prefix}\` thats it THAT'S FUCKING IT`,
+                    `its \`${prefix}\` with hivemind being **${hivemind}** thats it THAT'S FUCKING IT`,
                     `it's that easy`,
                     `do you`,
                     `do you know how to use commands`,
@@ -1080,7 +1081,7 @@ class Poopy {
                     'please',
                     'xd.',
                     'okay i gave up on you!',
-                    'gotta wait 1 minute if you want my prefix Lol!!!',
+                    'gotta wait 1 minute if you want my prefix and hivemind mode status Lol!!!',
                     ''
                 ]
 
