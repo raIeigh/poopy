@@ -170,7 +170,7 @@ class Poopy {
             chunkArray, chunkObject, requireJSON, findCommand,
             dmSupport, sleep, gatherData, deleteMsgData, infoPost,
             getKeywordsFor, getUrls, randomChoice, similarity, yesno,
-            cleverbot, regexClean, decrypt, getOption } = functions
+            cleverbot, regexClean, decrypt, getOption, updateHivemindStatus } = functions
 
         let bot = poopy.bot = new Discord.Client({
             intents: config.intents,
@@ -850,6 +850,7 @@ class Poopy {
                                     clearTimeout(t)
                                 }, 60000)
                                 infoPost(`Command \`${args[0].toLowerCase()}\` used`)
+                                updateHivemindStatus()
                                 await findCmd.execute.call(poopy, msg, args, {}).catch(async err => {
                                     try {
                                         await msg.reply({
@@ -860,6 +861,7 @@ class Poopy {
                                         }).catch(() => { })
                                     } catch (_) { }
                                 })
+                                updateHivemindStatus()
                                 data.botData['filecount'] = vars.filecount
                             }
                         } else if (findLocalCmd) {
@@ -1408,7 +1410,7 @@ class Poopy {
         let globaldata = poopy.globaldata
         let activeBots = poopy.activeBots
         let { fs } = poopy.modules
-        let { infoPost, toOrdinal, dataGather, saveData, saveQueue, changeStatus } = poopy.functions
+        let { infoPost, toOrdinal, dataGather, saveData, saveQueue, changeStatus, updateHivemindStatus } = poopy.functions
         let callbacks = poopy.callbacks
 
         if (!TOKEN && !poopy.__TOKEN) {
@@ -1617,6 +1619,8 @@ class Poopy {
         var wakecount = data.botData['reboots'] + 1
         bot.guilds.cache.get('834431435704107018')?.channels.cache.get('947167169718923341')?.send(!config.stfu ? (config.testing ? 'raleigh is testing' : `this is the ${toOrdinal(wakecount)} time this happens`) : '').catch(() => { })
 
+        updateHivemindStatus()
+
         if (!config.apiMode) {
             bot.on('messageCreate', (msg) => {
                 callbacks.messageCallback(msg).catch((e) => console.log(e))
@@ -1647,6 +1651,15 @@ class Poopy {
         delete vars.statusInterval
         clearInterval(vars.saveInterval)
         delete vars.saveInterval
+
+        if (vars.hivemindMessageId) {
+            var hivemindGuildId = process.env.HIVEMIND_GUILD_ID ?? '834431435704107018'
+            var hivemindChannelId = process.env.HIVEMIND_CHANNEL_ID ?? '1201074511118868520'
+            var hivemindChannel = bot.guilds.cache.get(hivemindGuildId).channels.cache.get(hivemindChannelId)
+            await hivemindChannel.messages.cache.get(vars.hivemindMessageId).delete().catch((err) => { console.log(err) })
+
+            delete vars.hivemindMessageId
+        }
 
         vars.started = false
         delete activeBots[config.database]
