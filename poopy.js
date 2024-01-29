@@ -37,6 +37,8 @@ class Poopy {
                 ids: []
             },
             msgcooldown: 0,
+            pingresponselimit: 0,
+            pingresponsecooldown: 0,
             limits: {
                 size: {
                     image: 20,
@@ -339,7 +341,7 @@ class Poopy {
 
             var slashBuilder = new Discord.SlashCommandBuilder()
 
-            slashBuilder.setName(slashCmd)
+            slashBuilder.setName(slashCmd || "undefined")
                 .setDescription(description)
 
             if (commandGroup) {
@@ -811,26 +813,25 @@ class Poopy {
                         var findLocalCmd = data.guildData[msg.guild.id]['localcmds'].find(cmd => cmd.name === args[0].toLowerCase())
                         var similarCmds = []
 
-                        if (args[0].length) {
-                            for (var i in commands) {
-                                var fcmd = commands[i]
-                                for (var j in fcmd.name) {
-                                    var fcmdname = fcmd.name[j]
-                                    similarCmds.push({
-                                        name: fcmd.name[j],
-                                        type: 'cmd',
-                                        similarity: similarity(fcmdname, args[0].toLowerCase())
-                                    })
-                                }
-                            }
-                            for (var i in data.guildData[msg.guild.id]['localcmds']) {
-                                var fcmd = data.guildData[msg.guild.id]['localcmds'][i]
+                        for (var i in commands) {
+                            var fcmd = commands[i]
+                            for (var j in fcmd.name) {
+                                var fcmdname = fcmd.name[j]
                                 similarCmds.push({
-                                    name: fcmd.name,
-                                    type: 'local',
-                                    similarity: similarity(fcmd.name, args[0].toLowerCase())
+                                    name: fcmd.name[j],
+                                    type: 'cmd',
+                                    similarity: similarity(fcmdname, args[0].toLowerCase())
                                 })
                             }
+                        }
+
+                        for (var i in data.guildData[msg.guild.id]['localcmds']) {
+                            var fcmd = data.guildData[msg.guild.id]['localcmds'][i]
+                            similarCmds.push({
+                                name: fcmd.name,
+                                type: 'local',
+                                similarity: similarity(fcmd.name, args[0].toLowerCase())
+                            })
                         }
 
                         similarCmds.sort((a, b) => Math.abs(1 - a.similarity) - Math.abs(1 - b.similarity))
@@ -1067,7 +1068,13 @@ class Poopy {
                 return
             }
 
-            if (config.allowpingresponses && msg.mentions.members.find(member => member.user.id === bot.user.id) && ((!msg.author.bot && msg.author.id != bot.user.id) || config.allowbotusage) && !executed) {
+            if (
+                config.allowpingresponses &&
+                msg.mentions.members.find(member => member.user.id === bot.user.id) && (
+                    (!msg.author.bot && msg.author.id != bot.user.id) ||
+                    config.allowbotusage
+                ) && !executed
+            ) {
                 var eggPhrasesHivemind = [
                     `My prefix here is \`${prefix}\`\nHivemind mode is **${hivemind}**`,
                     `My prefix here is \`${prefix}\`\nHivemind mode is **${hivemind}**`,
@@ -1174,6 +1181,17 @@ class Poopy {
                 ]
                 var ourEggPhrases = process.env.HIVEMIND_ID ? eggPhrasesHivemind : eggPhrases
 
+                var lastMention = Date.now() - (tempdata[msg.author.id]['lastmention'] || Date.now())
+                if (lastMention > config.pingresponsecooldown) tempdata[msg.author.id]['mentions'] = 0
+
+                tempdata[msg.author.id]['lastmention'] = Date.now()
+                tempdata[msg.author.id]['mentions']++
+
+                if (config.pingresponselimit && tempdata[msg.author.id]['mentions'] >= config.pingresponselimit) {
+                    if (tempdata[msg.author.id]['mentions'] == config.pingresponselimit) await msg.reply("Don't RIZZ me. Don't come by OHIO. We're DONE.").catch(() => { })
+                    return
+                }
+
                 // else if else if selselaesl seif sia esla fiwsa eaisf afis asifasfd
                 if (await msg.fetchReference().catch(() => { })) {
                     var resp = await cleverbot(msg.content, msg.author.id).catch(() => { })
@@ -1222,11 +1240,8 @@ class Poopy {
                 } else if (msg.content.toLowerCase().includes('ye') || msg.content.toLowerCase().includes('yup')) {
                     await msg.reply(':)').catch(() => { })
                 } else {
-                    var lastMention = Date.now() - tempdata[msg.author.id]['eggphrases']['lastmention']
-                    if (lastMention > 60000) tempdata[msg.author.id]['eggphrases']['phrase'] = 0
-                    await msg.reply(ourEggPhrases[tempdata[msg.author.id]['eggphrases']['phrase']]).catch(() => { })
-                    if (tempdata[msg.author.id]['eggphrases']['phrase'] < ourEggPhrases.length) tempdata[msg.author.id]['eggphrases']['phrase']++
-                    tempdata[msg.author.id]['eggphrases']['lastmention'] = Date.now()
+                    var eggPhrase = ourEggPhrases[tempdata[msg.author.id]['mentions']]
+                    if (eggPhrase) await msg.reply(eggPhrase).catch(() => { })
                 }
             }
         }
@@ -1354,18 +1369,21 @@ class Poopy {
                     execute: async () => {
                         var cmd = interaction.commandName
                         var subcommand = interaction.options.getSubcommand(false)
-                        var findCmd = findCommand(cmd)
+                        var findCmd = findCommand(cmd == "undefined" ? "" : cmd)
                         var findSubCmd = subcommand && findCommand(subcommand)
                         var commandGroup = findGroup(cmd)
                         var commandSubGroup = subcommand && findGroup(subcommand)
 
-                        if (!commandGroup && findCmd?.subcommands?.find(subcmd => subcmd.name == subcommand)) { // commands with subcommands
+                        if (!commandGroup && findCmd?.subcommands?.find(subcmd => subcmd.name == subcommand)) {
+                            // commands with subcommands
                             cmd += ` ${subcommand}`
                             findCmd = findCmd.subcommands.find(subcmd => subcmd.name == subcommand)
-                        } else if (commandSubGroup) { // commands in groups
+                        } else if (commandSubGroup) {
+                            // commands in groups
                             cmd = subcommand
                             findCmd = findSubCmd
-                        } else if (!findCmd) { // command doesn't exist
+                        } else if (!findCmd) {
+                            // command doesn't exist
                             await interaction.reply('No.').catch(() => { })
                             return
                         } // regular command
@@ -1407,7 +1425,7 @@ class Poopy {
                         interaction.content = `${prefix}${content}`
                         interaction.author = interaction.user
                         interaction.bot = false
-                        interaction.attachments = 
+                        interaction.attachments =
                             interaction.stickers = new Collection()
                         interaction.embeds = []
                         interaction.mentions = {
@@ -1617,11 +1635,16 @@ class Poopy {
             globaldata['dmphrases'] = arrays.dmPhrases
         }
 
+        if (!globaldata['shitting']) {
+            globaldata['shitting'] = arrays.shitting
+        }
+
         arrays.psFiles = globaldata['psfiles']
         arrays.psPasta = globaldata['pspasta']
         arrays.funnygifs = globaldata['funnygif']
         arrays.poopPhrases = globaldata['poop']
         arrays.dmPhrases = globaldata['dmphrases']
+        arrays.shitting = globaldata['shitting']
 
         vars.filecount = data.botData['filecount'] || 0
 

@@ -35,7 +35,7 @@ module.exports = {
         var infos = {}
 
         console.log(msg.content)
-        var fetched = await getUrls(msg, { tempdir: true }).catch(() => { }) ?? []
+        var fetched = await getUrls(msg, { tempdir: true, string: msg.content }).catch(() => { }) ?? []
         console.log(fetched)
         var nofiles = false
         if (fetched.length <= 0) nofiles = true

@@ -276,6 +276,11 @@ module.exports = {
         dmphrases: {
             type: Array,
             required: false
-        }
+        },
+        
+        shitting: {
+            type: Array,
+            required: false
+        },
     }))
 }

@@ -797,16 +797,12 @@ functions.gatherData = async function (msg) {
             tempdata[msg.author.id]['promises'] = []
         }
 
-        if (!tempdata[msg.author.id]['eggphrases']) {
-            tempdata[msg.author.id]['eggphrases'] = {}
+        if (!tempdata[msg.author.id]['lastmention']) {
+            tempdata[msg.author.id]['lastmention'] = 0
         }
 
-        if (!tempdata[msg.author.id]['eggphrases']['lastmention']) {
-            tempdata[msg.author.id]['eggphrases']['lastmention'] = 0
-        }
-
-        if (!tempdata[msg.author.id]['eggphrases']['phrase']) {
-            tempdata[msg.author.id]['eggphrases']['phrase'] = 0
+        if (!tempdata[msg.author.id]['mentions']) {
+            tempdata[msg.author.id]['mentions'] = 0
         }
     }
 }
@@ -2150,7 +2146,7 @@ functions.displayShop = async function (channel, who, reply, type) {
 
         var components = []
         var chunkButtonData = chunkArray(buttonsData, 5)
-    
+
         var level = getLevel(data.userData[who]['exp'])
         var cap = level >= 20 ? 25 :
             level >= 10 ? 10 :
@@ -2159,24 +2155,24 @@ functions.displayShop = async function (channel, who, reply, type) {
         chunkButtonData.forEach(buttonsData => {
             var buttonRow = new Discord.ActionRowBuilder()
             var buttons = []
-    
+
             buttonsData.forEach(bdata => {
                 var button = new Discord.ButtonBuilder()
                     .setStyle(bdata.style)
                     .setEmoji(bdata.emoji)
                     .setLabel(data.userData[who][bdata.customid] >= cap ? `MAX` : `${bdata.price} P$`)
                     .setCustomId(bdata.customid)
-    
+
                 buttons.push(button)
             })
-    
+
             buttonRow.addComponents(buttons)
-    
+
             components.push(buttonRow)
         })
-    
+
         upgradeList = buttonsData.map(u => `${u.emoji} **${data.userData[who][u.customid] >= cap ? `MAX` : `${u.price} P$`}** - ${u.desc} **(${data.userData[who][u.customid]}/${cap})**`).join('\n')
-    
+
         if (config.textEmbeds) shopObject.content = upgradeList
         else shopObject.embeds = [{
             title: `${type.toCapperCase()} Shop`,
@@ -2189,7 +2185,7 @@ functions.displayShop = async function (channel, who, reply, type) {
                 text: bot.user.username
             },
         }]
-        
+
         if (ended) {
             if (config.useReactions) shopMsg.reactions.removeAll().catch(() => { })
             else shopObject.components = []
@@ -3077,7 +3073,7 @@ functions.dmSupport = function (msg) {
     let poopy = this
     let { Discord, DMGuild, Collection } = poopy.modules
 
-    if (msg.channel.type == Discord.ChannelType.DM && msg.channel.recipients) msg.channel.type = Discord.ChannelType.GroupDM
+    if (msg.channel?.type == Discord.ChannelType.DM && msg.channel?.recipients) msg.channel.type = Discord.ChannelType.GroupDM
 
     if (!msg.author && msg.user) msg.author = msg.user
     if (!msg.user && msg.author) msg.user = msg.author
@@ -3333,6 +3329,7 @@ functions.battle = async function (msg, subject, action, damage, chance) {
     let bot = poopy.bot
     let config = poopy.config
     let data = poopy.data
+    let tempdata = poopy.tempdata
     let vars = poopy.vars
     let { Discord, fs } = poopy.modules
     let { getLevel, execPromise, randomNumber, randomChoice, validateFile, downloadFile, dataGather } = poopy.functions
@@ -3349,25 +3346,37 @@ functions.battle = async function (msg, subject, action, damage, chance) {
     subject = subject ?? attachment ?? sticker
 
     var member = await bot.users.fetch((subject.match(/\d+/) ?? [subject])[0]).catch(() => { })
-    var yourData = data.userData[msg.author.id]
-    var subjData = member && (data.userData[member.id] || (data.userData[member.id] = !config.testing && process.env.MONGOOSE_URL && await dataGather.userData(config.database, member.id).catch(() => { }) || {}))
+    var guildMember = await msg.guild.members.fetch((subject.match(/\d+/) ?? [subject])[0]).catch(() => { })
 
-    if (yourData.death) {
-        if (yourData.death - Date.now() > 0) {
-            await msg.reply("But you're dead.").catch(() => { })
-            return
-        } else {
-            yourData.health = yourData.maxHealth
-            delete yourData.death
-        }
-    }
-    if (subjData && subjData.death) {
-        if (subjData.death - Date.now() > 0) {
-            await msg.reply("But they're dead.").catch(() => { })
-            return
-        } else {
-            subjData.health = subjData.maxHealth
-            delete subjData.death
+    var yourData = data.userData[msg.author.id]
+
+    var subjData = member && (
+        data.userData[member.id] ||
+        (
+            data.userData[member.id] = !config.testing && process.env.MONGOOSE_URL && await dataGather.userData(config.database, member.id).catch(() => { }) || {}
+        )
+    )
+
+    var fakeSubj = !member && !guildMember
+    var fakeSubjData = fakeSubj && (
+        tempdata[`fakeSubj${subject}`] ||
+        (
+            tempdata[`fakeSubj${subject}`] = { health: 100, maxHealth: 100, death: 0 }
+        )
+    )
+
+    for (data of [[yourData, "you're"], [subjData, "they're"], [fakeSubjData, "it's"]]) {
+        var battleData = data[0]
+        var pronoun = data[1]
+
+        if (battleData && battleData.death) {
+            if (battleData.death - Date.now() > 0) {
+                await msg.reply(`But ${pronoun} dead.`).catch(() => { })
+                return
+            } else {
+                battleData.health = battleData.maxHealth
+                delete battleData.death
+            }
         }
     }
 
@@ -3383,36 +3392,48 @@ functions.battle = async function (msg, subject, action, damage, chance) {
     var reward = 0
     var lastLevel = getLevel(yourData.exp).level
 
-    if (member && attacked) {
+    if (member && subjData) {
         for (var stat in vars.battleStats) {
             if (subjData[stat] === undefined) {
                 subjData[stat] = vars.battleStats[stat]
             }
         }
         if (!subjData.battleSprites) subjData.battleSprites = {}
+    }
 
-        var power = Math.round((subjData.maxHealth + subjData.attack + subjData.defense + subjData.accuracy + subjData.loot) / 5 * 10) / 10
+    if (attacked) {
+        if (member) {
+            var power = Math.round((subjData.maxHealth + subjData.attack + subjData.defense + subjData.accuracy + subjData.loot) / 5 * 10) / 10
 
-        damage = Math.max(Math.round(damage / (subjData.defense / 20 + 1) * 10) / 10, 1)
-        subjData.health = subjData.health - damage
-        if (member.id != msg.author.id && msg.guild.members.cache.get(member.id)) exp = Math.floor(Math.random() * subjData.maxHealth / 5) + subjData.maxHealth / 20 + (yourData.loot * 10) * critmult * (Math.pow(getLevel(subjData.exp).level, 2) / 50) * Math.round(1 / chance)
+            damage = Math.max(Math.round(damage / (subjData.defense / 20 + 1) * 10) / 10, 1)
+            subjData.health -= damage
+            if (member.id != msg.author.id && guildMember) exp = Math.floor(Math.random() * subjData.maxHealth / 5) + subjData.maxHealth / 20 + (yourData.loot * 10) * critmult * (Math.pow(getLevel(subjData.exp).level, 2) / 50) * Math.round(1 / chance)
 
-        if (subjData.health <= 0) {
-            subjData.health = 0
-            subjData.death = Date.now() + 30_000
-            if (member.id != msg.author.id && msg.guild.members.cache.get(member.id)) {
-                exp *= 50
-                reward = Math.floor(exp / 75 * power * (yourData.loot / 10 + 1))
+            if (subjData.health <= 0) {
+                subjData.health = 0
+                subjData.death = Date.now() + 30_000
+                if (member.id != msg.author.id && guildMember) {
+                    exp *= 50
+                    reward = Math.floor(exp / 75 * power * (yourData.loot / 10 + 1))
+                }
+                died = true
             }
-            died = true
-        }
 
-        yourData.exp += exp
-        yourData.bucks += reward
+            yourData.exp += exp
+            yourData.bucks += reward
 
-        data.botData.leaderboard[msg.author.id] = {
-            tag: msg.author.tag,
-            bucks: yourData.bucks
+            data.botData.leaderboard[msg.author.id] = {
+                tag: msg.author.tag,
+                bucks: yourData.bucks
+            }
+        } else if (fakeSubj) {
+            fakeSubjData.health -= damage
+
+            if (fakeSubjData.health <= 0) {
+                fakeSubjData.health = 0
+                fakeSubjData.death = Date.now() + 30_000
+                died = true
+            }
         }
     }
 
@@ -3431,15 +3452,15 @@ functions.battle = async function (msg, subject, action, damage, chance) {
 
     var stats = []
 
-    if (member && subjData) {
+    if ((member && subjData) || (fakeSubj && fakeSubjData)) {
         stats.push({
             name: `${msg.author.username}'s Health`,
             value: `${yourData.health} HP`,
             inline: true
         })
-        if (member.id != msg.author.id) stats.push({
-            name: `${member.username}'s Health`,
-            value: `${subjData.health} HP`,
+        if (member ? member.id != msg.author.id : fakeSubj) stats.push({
+            name: `${subjData ? member.username : subject}'s Health`,
+            value: `${(subjData ? subjData : fakeSubjData).health} HP`,
             inline: true
         })
     }
@@ -4286,7 +4307,7 @@ functions.findCommand = function (name) {
     let poopy = this
     let commands = poopy.commands
 
-    return commands.find(c => c.name.find(n => n === name))
+    return commands.find(c => c.name.find(n => n === name) != undefined)
 }
 
 functions.waitMessageCooldown = async function () {

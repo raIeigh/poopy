@@ -1,6 +1,6 @@
 module.exports = function (msg, fixedchoice) {
     let poopy = this
-    let { _location, _arab, _funnygif, _ps, _activemember, _persontype,
+    let { _location, _arab, _funnygif, _ps, _shit, _activemember, _persontype,
         _insult, _compliment, _restaurant, _message, _restaurantfood,
         _platform, _noun, _animal, _segsy, _food, _country, _pspasta,
         _city, _sentence, _verb, _adj } = poopy.special.keys
@@ -33,6 +33,7 @@ module.exports = function (msg, fixedchoice) {
         { text: _funnygif() },
         { text: `${_funnygif()} lmap` },
         { text: `${_ps()} this is ${_activemember(msg).toLowerCase()}` },
+        { text: _shit() },
         { text: `${_activemember(msg).toLowerCase()} is a ${_persontype()}` },
         { text: `${_activemember(msg).toLowerCase()} is a ${_insult()}` },
         { text: `${_activemember(msg).toLowerCase()} is ${_compliment()}` },
