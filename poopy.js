@@ -1685,7 +1685,7 @@ class Poopy {
         updateHivemindStatus()
         vars.hivemindStatusInterval = setInterval(function () {
             updateHivemindStatus()
-        }, 20000)
+        }, 60000)
 
         if (!config.apiMode) {
             bot.on('messageCreate', (msg) => {

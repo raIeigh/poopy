@@ -45,5 +45,6 @@ module.exports = {
     cooldown: 5000,
     perms: ['Administrator', 'ManageMessages'],
     type: 'Main',
-    raw: true
+    raw: true,
+    hivemindForce: true
 }
