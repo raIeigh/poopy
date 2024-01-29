@@ -4401,7 +4401,7 @@ functions.getTotalHivemindStatus = async function () {
 
                     return
                 }
-                if ((Date.now() - msg.editedTimestamp) > 20000 + 5000) {
+                if ((Date.now() - msg.editedTimestamp) > 60000 + 5000) {
                     var id = msg.content.match(/#[^ ]+/g)
                     if (!id) return
                     id = id[0].substring(1)
