@@ -21,7 +21,7 @@ async function start() {
     let poopy
     let { APIMessage } = require('./src/modules')
     let { sleep, escapeHTML } = require('./src/functions')
-    
+
     if (process.env.RAILWAY_STATIC_URL && !process.env.BOT_WEBSITE) process.env.BOT_WEBSITE = `https://${process.env.RAILWAY_STATIC_URL}`
 
     if (process.env.BOT_WEBSITE) {
@@ -159,66 +159,86 @@ async function start() {
     let tokens = []
 
     function testCondition() {
-        return process.argv.includes('--test')
+        if (process.argv.includes('--test')) return 1
+        if (process.argv.includes('--hivemind')) return 2
     }
 
-    if (testCondition()) {
-        tokens = [
-            {
-                TOKEN: process.env.TEST_TOKEN,
-                config: {
-                    testing: true,
-                    noInfoPost: true,
-                    globalPrefix: '2p:',
-                    database: 'testdata',
-                    intents: 3276799
-                }
-            },
+    switch (testCondition()) {
+        case 1:
+            tokens = [
+                {
+                    TOKEN: process.env.TEST_TOKEN,
+                    config: {
+                        testing: true,
+                        noInfoPost: true,
+                        globalPrefix: '2p:',
+                        database: 'testdata',
+                        intents: 3276799
+                    }
+                },
 
-            {
-                TOKEN: process.env.INDIA_TOKEN,
-                config: {
-                    testing: true,
-                    self: true,
-                    globalPrefix: 'i:',
-                    database: 'testracist',
-                    msgcooldown: 3000,
-                    pingresponselimit: 5,
-                    pingresponsecooldown: 120000,
-                    useReactions: true,
-                    textEmbeds: true,
-                    noInfoPost: true,
-                    intents: 3276799,
-                    allowbotusage: true,
-                    illKillYouIfYouUseEval: []
+                {
+                    TOKEN: process.env.INDIA_TOKEN,
+                    config: {
+                        testing: true,
+                        self: true,
+                        globalPrefix: 'i:',
+                        database: 'testracist',
+                        msgcooldown: 3000,
+                        pingresponselimit: 5,
+                        pingresponsecooldown: 120000,
+                        useReactions: true,
+                        textEmbeds: true,
+                        noInfoPost: true,
+                        intents: 3276799,
+                        allowbotusage: true,
+                        illKillYouIfYouUseEval: []
+                    }
                 }
-            }
-        ]
-    } else {
-        tokens = [
-            {
-                TOKEN: process.env.DEFAULT_TOKEN,
-                config: {
-                    globalPrefix: 'p:',
-                    public: true
-                }
-            },
+            ]
+            break;
 
-            {
-                TOKEN: process.env.INDIA_TOKEN,
-                config: {
-                    self: true,
-                    globalPrefix: 'i:',
-                    database: 'racist',
-                    msgcooldown: 3000,
-                    useReactions: true,
-                    textEmbeds: true,
-                    noInfoPost: true,
-                    intents: 3276799,
-                    illKillYouIfYouUseEval: []
+        case 2:
+            tokens = [
+                {
+                    TOKEN: process.env.HIVEMIND_TOKEN,
+                    config: {
+                        testing: true,
+                        noInfoPost: true,
+                        globalPrefix: 'hp:',
+                        database: 'hiveminddata',
+                        intents: 3276799
+                    }
                 }
-            },
-        ]
+            ]
+            break;
+
+        default:
+            tokens = [
+                {
+                    TOKEN: process.env.DEFAULT_TOKEN,
+                    config: {
+                        globalPrefix: 'p:',
+                        public: true
+                    }
+                },
+
+                {
+                    TOKEN: process.env.INDIA_TOKEN,
+                    config: {
+                        self: true,
+                        globalPrefix: 'i:',
+                        database: 'racist',
+                        msgcooldown: 3000,
+                        useReactions: true,
+                        textEmbeds: true,
+                        noInfoPost: true,
+                        intents: 3276799,
+                        illKillYouIfYouUseEval: []
+                    }
+                },
+            ]
+            break;
     }
 
     for (var tokendata of tokens) {
