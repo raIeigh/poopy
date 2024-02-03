@@ -4367,7 +4367,7 @@ functions.updateHivemindStatus = async function () {
     functions.calculateHivemindStatus(poopy).then(status => {
         hivemindChannel.messages.cache.get(vars.hivemindMessageId).edit(status).catch((err) => { console.log(err) })
     }).catch((err) => { console.log(err) });
-    
+
     return;
 }
 
@@ -4384,63 +4384,60 @@ functions.getTotalHivemindStatus = async function () {
 
     var status = [];
 
-    await hivemindChannel.messages.fetch().then(messages => {
-        messages.forEach(async (msg) =>  {
-            if (!msg.author.bot) {
-                await msg.delete().catch((err) => { console.log(err) });
-            } else {
+    var timeSinceLastFetched = Date.now() - (vars.hivemindLastFetched ?? 0)
+    if (timeSinceLastFetched > 30000) {
+        hivemindChannel.messages.fetch({ cache: true, force: true })
+        vars.hivemindLastFetched = Date.now()
+    }
 
-                if (!msg.editedTimestamp) {
-                    var id = msg.content.match(/#[^ ]+/g)
-                    if (!id) return
-                    id = id[0].substring(1)
+    await hivemindChannel.messages.cache.forEach(async (msg) => {
+        if (!msg.author.bot) {
+            await msg.delete().catch((err) => { console.log(err) });
+        } else {
 
-                    if (id == process.env.HIVEMIND_ID) {
-                        await msg.delete().catch((err) => { console.log(err) });
-                    }
+            if (!msg.editedTimestamp) {
+                msg.editedTimestamp = msg.createdTimestamp
+            }
 
-                    return
-                }
-                if ((Date.now() - msg.editedTimestamp) > 60000 + 5000) {
-                    var id = msg.content.match(/#[^ ]+/g)
-                    if (!id) return
-                    id = id[0].substring(1)
-
-                    if (id == process.env.HIVEMIND_ID && (Date.now() - msg.editedTimestamp) > 60000) {
-                        await msg.delete().catch((err) => { console.log(err) });
-                    }
-                    
-                    return
-                }
-
+            if ((Date.now() - msg.editedTimestamp) > 60000 + 5000) {
                 var id = msg.content.match(/#[^ ]+/g)
                 if (!id) return
                 id = id[0].substring(1)
 
-                var EpicFail = false
+                if (id == process.env.HIVEMIND_ID && (Date.now() - msg.editedTimestamp) > 60000) {
+                    await msg.delete().catch((err) => { console.log(err) });
+                }
 
-                status.forEach((item, i) => {
-                    if (item.id == id) {
-                        if (item.time > msg.createdTimestamp) {
-                            EpicFail = true
-                            return
-                        } else {
-                            status.splice(i, 1)
-                        }
-                    }
-                })
-
-                if (EpicFail) return;
-
-                var cpu = msg.content.match(/CPU: [\d\.]+/g)
-                if (!cpu) return
-                cpu = Number(cpu[0].substring(5))
-
-                status.push({id: id, cpu: cpu, time: msg.createdTimestamp});
+                return
             }
-        })
+
+            var id = msg.content.match(/#[^ ]+/g)
+            if (!id) return
+            id = id[0].substring(1)
+
+            var EpicFail = false
+
+            status.forEach((item, i) => {
+                if (item.id == id) {
+                    if (item.time > msg.createdTimestamp) {
+                        EpicFail = true
+                        return
+                    } else {
+                        status.splice(i, 1)
+                    }
+                }
+            })
+
+            if (EpicFail) return;
+
+            var cpu = msg.content.match(/CPU: [\d\.]+/g)
+            if (!cpu) return
+            cpu = Number(cpu[0].substring(5))
+
+            status.push({ id: id, cpu: cpu, time: msg.createdTimestamp });
+        }
     }).catch((err) => { console.log(err) });
-    
+
     if (status.length > 0) {
         status.sort((a, b) => a.cpu - b.cpu)
     }
