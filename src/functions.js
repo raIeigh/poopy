@@ -4436,7 +4436,7 @@ functions.getTotalHivemindStatus = async function () {
 
             status.push({ id: id, cpu: cpu, time: msg.createdTimestamp });
         }
-    }).catch((err) => { console.log(err) });
+    })
 
     if (status.length > 0) {
         status.sort((a, b) => a.cpu - b.cpu)
