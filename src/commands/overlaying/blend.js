@@ -249,20 +249,56 @@ module.exports = {
             size[1] = (percentage ? height : 1) * ((isNaN(Number(args[heightindex + 1])) ? 0 : Number(args[heightindex + 1]) <= 0 ? 0 : Number(args[heightindex + 1]) || 0) / (percentage ? 100 : 1))
         }
 
+        var duration = Number(fileinfo.info.duration) || Number(fileinfo2.info.duration)
+
+        var start = 0
+        var startindex = args.indexOf('-start')
+        if (startindex > -1) {
+            var startstamp = args[startindex + 1]
+            if (startstamp !== undefined) {
+                var total = 0
+                startstamp = startstamp.split(':').reverse()
+                startstamp.splice(3)
+                for (var i = 0; i < startstamp.length; i++) {
+                    startstamp[i] = isNaN(Number(startstamp[i])) ? 0 : Number(startstamp[i]) <= 0 ? 0 : Number(startstamp[i]) * (Math.pow(60, i)) || 0
+                    total += startstamp[i]
+                }
+                start = total >= duration ? duration : total
+            }
+        }
+        var end = duration
+        var endindex = args.indexOf('-end')
+        if (endindex > -1) {
+            var endstamp = args[endindex + 1]
+            if (endstamp !== undefined) {
+                var total = 0
+                endstamp = endstamp.split(':').reverse()
+                endstamp.splice(3)
+                for (var i = 0; i < endstamp.length; i++) {
+                    endstamp[i] = isNaN(Number(endstamp[i])) ? 0 : Number(endstamp[i]) <= 0 ? 0 : Number(endstamp[i]) * (Math.pow(60, i)) || 0
+                    total += endstamp[i]
+                }
+                end = total >= duration ? duration : total
+            }
+        }
+        if (end <= start) {
+            end = start
+        }
+
         if ((filetype.mime.startsWith('image') && !(vars.gifFormats.find(f => f === filetype.ext))) && (filetype2.mime.startsWith('image') && !(vars.gifFormats.find(f => f === filetype2.ext)))) {
             await execPromise(`ffmpeg -i ${filepath}/${filename} -i ${filepath}/${filename2} -f lavfi -i "color=0x00000000:s=${width}x${height},format=rgba" -filter_complex "[1:v]scale=${size[0]}:${size[1]}${keepaspectratio ? `:force_original_aspect_ratio=${keepaspectratio}` : ''}[overlay];[2:v][overlay]overlay=x=${originx}+${Math.round(ox)}:y=${originy}+${Math.round(oy)}:format=auto[blend];[0:v][blend]blend=all_mode=${mode}[out]" -map "[out]" -preset ${findpreset(args)} ${filepath}/output.png`)
             return await sendFile(msg, filepath, `output.png`)
         } else if ((filetype.mime.startsWith('image') && !(vars.gifFormats.find(f => f === filetype.ext))) && ((filetype2.mime.startsWith('image') && vars.gifFormats.find(f => f === filetype2.ext)))) {
-            await execPromise(`ffmpeg -stream_loop -1 -i ${filepath}/${filename} -i ${filepath}/${filename2} -f lavfi -i "color=0x00000000:s=${width}x${height},format=rgba" -filter_complex "[1:v]scale=${size[0]}:${size[1]}${keepaspectratio ? `:force_original_aspect_ratio=${keepaspectratio}` : ''}[overlay];[2:v][overlay]overlay=x=${originx}+${Math.round(ox)}:y=${originy}+${Math.round(oy)}:format=auto[blend];[0:v][blend]blend=shortest=1:all_mode=${mode},scale='min(400,iw)':min'(400,ih)':force_original_aspect_ratio=decrease,split[gnout][gpout];[gpout]palettegen=reserve_transparent=1[palette];[gnout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -preset ${findpreset(args)} -gifflags -offsetting ${filepath}/output.gif`)
+            await execPromise(`ffmpeg -stream_loop -1 -i ${filepath}/${filename} -i ${filepath}/${filename2} -f lavfi -i "color=0x00000000:s=${width}x${height},format=rgba" -filter_complex "[1:v]scale=${size[0]}:${size[1]}${keepaspectratio ? `:force_original_aspect_ratio=${keepaspectratio}` : ''}[overlay];[2:v][overlay]overlay=x=${originx}+${Math.round(ox)}:y=${originy}+${Math.round(oy)}:format=auto:enable='between(t,${start},${end})'[blend];[0:v][blend]blend=shortest=1:all_mode=${mode},scale='min(400,iw)':min'(400,ih)':force_original_aspect_ratio=decrease:enable='between(t,${start},${end})',split[gnout][gpout];[gpout]palettegen=reserve_transparent=1[palette];[gnout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -preset ${findpreset(args)} -gifflags -offsetting ${filepath}/output.gif`)
             return await sendFile(msg, filepath, `output.gif`)
         } else if ((filetype.mime.startsWith('image') && vars.gifFormats.find(f => f === filetype.ext)) && (filetype2.mime.startsWith('image') && !(vars.gifFormats.find(f => f === filetype2.ext)))) {
-            await execPromise(`ffmpeg -i ${filepath}/${filename} -stream_loop -1 -i ${filepath}/${filename2} -f lavfi -i "color=0x00000000:s=${width}x${height},format=rgba" -filter_complex "[1:v]scale=${size[0]}:${size[1]}${keepaspectratio ? `:force_original_aspect_ratio=${keepaspectratio}` : ''}[overlay];[2:v][overlay]overlay=x=${originx}+${Math.round(ox)}:y=${originy}+${Math.round(oy)}:format=auto[blend];[0:v][blend]blend=shortest=1:all_mode=${mode},split[gnout][gpout];[gpout]palettegen=reserve_transparent=1[palette];[gnout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -preset ${findpreset(args)} -gifflags -offsetting ${filepath}/output.gif`)
+            await execPromise(`ffmpeg -i ${filepath}/${filename} -stream_loop -1 -i ${filepath}/${filename2} -f lavfi -i "color=0x00000000:s=${width}x${height},format=rgba" -filter_complex "[1:v]scale=${size[0]}:${size[1]}${keepaspectratio ? `:force_original_aspect_ratio=${keepaspectratio}` : ''}[overlay];[2:v][overlay]overlay=x=${originx}+${Math.round(ox)}:y=${originy}+${Math.round(oy)}:format=auto:enable='between(t,${start},${end})'[blend];[0:v][blend]blend=shortest=1:all_mode=${mode}:enable='between(t,${start},${end})',split[gnout][gpout];[gpout]palettegen=reserve_transparent=1[palette];[gnout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -preset ${findpreset(args)} -gifflags -offsetting ${filepath}/output.gif`)
             return await sendFile(msg, filepath, `output.gif`)
         } else if (filetype.mime.startsWith('video') || filetype2.mime.startsWith('video')) {
-            await execPromise(`ffmpeg ${(filetype2.mime.startsWith('video') && !(filetype.mime.startsWith('video'))) ? '-stream_loop -1 ' : ''}-i ${filepath}/${filename} ${(filetype.mime.startsWith('video') && !(filetype2.mime.startsWith('video'))) ? '-stream_loop -1 ' : ''}-i ${filepath}/${filename2} -f lavfi -i "color=0x00000000:s=${width}x${height},format=rgba" -map ${filetype.mime.startsWith('video') ? '0' : '1'}:a? -filter_complex "[1:v]scale=${size[0]}:${size[1]}${keepaspectratio ? `:force_original_aspect_ratio=${keepaspectratio}` : ''}[overlay];[2:v][overlay]overlay=x=${originx}+${Math.round(ox)}:y=${originy}+${Math.round(oy)}:format=auto[blend];[0:v][blend]blend=shortest=1:all_mode=${mode},scale=ceil(iw/2)*2:ceil(ih/2)*2[out]" -map "[out]" -preset ${findpreset(args)} -c:v libx264 -pix_fmt yuv420p ${filepath}/output.mp4`)
+            await execPromise(`ffmpeg ${(filetype2.mime.startsWith('video') && !(filetype.mime.startsWith('video'))) ? '-stream_loop -1 ' : ''}-i ${filepath}/${filename} ${(filetype.mime.startsWith('video') && !(filetype2.mime.startsWith('video'))) ? '-stream_loop -1 ' : ''}-i ${filepath}/${filename2} -f lavfi -i "color=0x00000000:s=${width}x${height},format=rgba" -map ${filetype.mime.startsWith('video') ? '0' : '1'}:a? -filter_complex "[1:v]scale=${size[0]}:${size[1]}${keepaspectratio ? `:force_original_aspect_ratio=${keepaspectratio}` : ''}[overlay];[2:v][overlay]overlay=x=${originx}+${Math.round(ox)}:y=${originy}+${Math.round(oy)}:format=auto:enable='between(t,${start},${end})'[blend];[0:v][blend]blend=shortest=1:all_mode=${mode}:enable='between(t,${start},${end})',scale=ceil(iw/2)*2:ceil(ih/2)*2[out]" -map "[out]" -preset ${findpreset(args)} -c:v libx264 -pix_fmt yuv420p ${filepath}/output.mp4`)
             return await sendFile(msg, filepath, `output.mp4`)
         } else {
-            await execPromise(`ffmpeg -stream_loop -1 -i ${filepath}/${filename} -i ${filepath}/${filename2} -f lavfi -i "color=0x00000000:s=${width}x${height},format=rgba" -filter_complex "[1:v]scale=${size[0]}:${size[1]}${keepaspectratio ? `:force_original_aspect_ratio=${keepaspectratio}` : ''}[overlay];[2:v][overlay]overlay=x=${originx}+${Math.round(ox)}:y=${originy}+${Math.round(oy)}:format=auto[blend];[0:v][blend]blend=shortest=1:all_mode=${mode},split[gnout][gpout];[gpout]palettegen=reserve_transparent=1[palette];[gnout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -preset ${findpreset(args)} -gifflags -offsetting ${filepath}/output.gif`)
+            await execPromise(`ffmpeg -stream_loop -1 -i ${filepath}/${filename} -i ${filepath}/${filename2} -f lavfi -i "color=0x00000000:s=${width}x${height},format=rgba" -filter_complex "[1:v]scale=${size[0]}:${size[1]}${keepaspectratio ? `:force_original_aspect_ratio=${keepaspectratio}` : ''}[overlay];[2:v][overlay]overlay=x=${originx}+${Math.round(ox)}:y=${originy}+${Math.round(oy)}:format=auto:enable='between(t,${start},${end})'[blend];[0:v][blend]blend=shortest=1:all_mode=${mode}:enable='between(t,${start},${end})',split[gnout][gpout];[gpout]palettegen=reserve_transparent=1[palette];[gnout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -preset ${findpreset(args)} -gifflags -offsetting ${filepath}/output.gif`)
             return await sendFile(msg, filepath, `output.gif`)
         }
     },
