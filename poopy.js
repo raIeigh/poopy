@@ -514,6 +514,8 @@ class Poopy {
         }
 
         callbacks.messageCallback = async msg => {
+            var origcontent = msg.content
+
             dmSupport(msg)
 
             data.botData['messages']++
@@ -525,7 +527,7 @@ class Poopy {
             var prefix = data.guildData[msg.guild.id]?.['prefix'] ?? config.globalPrefix
             var hivemind = data.guildData[msg.guild.id]['poopymode'] ? "On" : "Off"
 
-            if (msg.channel.type == Discord.ChannelType.DM && msg.type !== Discord.InteractionType.ApplicationCommand && !msg.content.includes(prefix)) {
+            if (msg.channel.type == Discord.ChannelType.DM && msg.type !== Discord.InteractionType.ApplicationCommand && !origcontent.includes(prefix)) {
                 if (msg.author.bot || msg.author.id == bot.user.id) return
                 await msg.channel.sendTyping().catch(() => { })
                 await sleep(Math.floor(Math.random() * 500) + 500)
@@ -568,14 +570,14 @@ class Poopy {
                 return
             }
 
-            var cmds = data.guildData[msg.guild.id]['chaincommands'] == true ? msg.content.split(/ ?-\|- ?/) : [msg.content]
+            var cmds = data.guildData[msg.guild.id]['chaincommands'] == true ? origcontent.split(/ ?-\|- ?/) : [origcontent]
             var allcontents = []
             var webhooked = false
 
             async function webhookify() {
                 webhooked = true
 
-                if (!(msg.content || msg.attachments.size || msg.embeds.length) ||
+                if (!(origcontent || msg.attachments.size || msg.embeds.length) ||
                     (
                         msg.channel.type === Discord.ChannelType.PublicThread ||
                         msg.channel.type === Discord.ChannelType.PrivateThread ||
@@ -600,8 +602,8 @@ class Poopy {
                             parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                         }
                     }
-                    if (msg.content) {
-                        sendObject.content = msg.content
+                    if (origcontent) {
+                        sendObject.content = origcontent
                     }
                     var webhooks = await msg.channel.fetchWebhooks().catch(() => { })
                     if (webhooks ? webhooks.size : undefined) {
@@ -643,8 +645,8 @@ class Poopy {
                             parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                         }
                     }
-                    if (msg.content) {
-                        sendObject.content = msg.content
+                    if (origcontent) {
+                        sendObject.content = origcontent
                     }
                     var webhooks = await msg.channel.fetchWebhooks().catch(() => { })
                     if (webhooks ? webhooks.size : undefined) {
@@ -705,27 +707,27 @@ class Poopy {
                             }).catch(() => { })
                         }) ?? 'error'
 
-                        msg.content = change
+                        msg.content = origcontent = change
                     } else {
-                        msg.content = cmd
+                        msg.content = origcontent = cmd
                     }
 
                     if (!msg.guild || !msg.channel) {
                         return
                     }
 
-                    allcontents.push(msg.content)
+                    allcontents.push(origcontent)
 
                     if (allcontents.length >= cmds.length && !webhooked) {
-                        var content = msg.content
-                        msg.content = allcontents.join(' -|- ')
+                        var content = origcontent
+                        msg.content = origcontent = allcontents.join(' -|- ')
                         await webhookify().catch(() => { })
-                        msg.content = content
+                        msg.content = origcontent = content
                     }
 
                     await getUrls(msg, {
                         update: true,
-                        string: msg.content
+                        string: origcontent
                     }).catch(async err => {
                         try {
                             await msg.reply({
@@ -739,7 +741,7 @@ class Poopy {
 
                     if (tempdata[msg.guild.id][msg.channel.id]['shut']) break
 
-                    if (msg.content.toLowerCase().startsWith(prefix.toLowerCase()) && ((!msg.author.bot && msg.author.id != bot.user.id) || config.allowbotusage)) {
+                    if (origcontent.toLowerCase().startsWith(prefix.toLowerCase()) && ((!msg.author.bot && msg.author.id != bot.user.id) || config.allowbotusage)) {
                         data.guildData[msg.guild.id]['lastuse'] = Date.now()
 
                         var hivemindPass = true
@@ -808,7 +810,7 @@ class Poopy {
 
                         tempdata[msg.author.id]['cooler'] = msg.id
 
-                        var args = msg.content.substring(prefix.toLowerCase().length).split(' ')
+                        var args = origcontent.substring(prefix.toLowerCase().length).split(' ')
                         var findCmd = findCommand(args[0].toLowerCase())
                         var findLocalCmd = data.guildData[msg.guild.id]['localcmds'].find(cmd => cmd.name === args[0].toLowerCase())
                         var similarCmds = []
@@ -1041,12 +1043,12 @@ class Poopy {
 
             var executed = await executeCommand().catch(async (e) => await msg.reply(e.stack).catch(() => { }))
 
-            msg.content = allcontents.length > 0 ? allcontents.join(' -|- ') : msg.content
+            msg.content = origcontent = allcontents.length > 0 ? allcontents.join(' -|- ') : origcontent
 
             if (!webhooked) await webhookify().catch(() => { })
 
-            if (msg.content && ((!(msg.author.bot) && msg.author.id != bot.user.id) || config.allowbotusage) && data.guildData[msg.guild?.id]['channels'][msg.channel?.id]['read']) {
-                var cleanMessage = Discord.cleanContent(msg.content, msg).replace(/\@/g, '@‌')
+            if (origcontent && ((!(msg.author.bot) && msg.author.id != bot.user.id) || config.allowbotusage) && data.guildData[msg.guild?.id]['channels'][msg.channel?.id]['read']) {
+                var cleanMessage = Discord.cleanContent(origcontent, msg).replace(/\@/g, '@‌')
 
                 if (
                     !(cleanMessage.match(vars.badFilter) || cleanMessage.match(vars.scamFilter) || cleanMessage.includes(prefix.toLowerCase())) &&
@@ -1194,12 +1196,12 @@ class Poopy {
 
                 // else if else if selselaesl seif sia esla fiwsa eaisf afis asifasfd
                 if (await msg.fetchReference().catch(() => { })) {
-                    var resp = await cleverbot(msg.content, msg.author.id).catch(() => { })
+                    var resp = await cleverbot(origcontent, msg.author.id).catch(() => { })
 
                     if (resp) {
                         await msg.reply(resp).catch(() => { })
                     }
-                } else if (msg.content.includes('prefix') && msg.content.includes('reset')) {
+                } else if (origcontent.includes('prefix') && origcontent.includes('reset')) {
                     var findCmd = findCommand('setprefix')
 
                     if (findCmd.cooldown) {
@@ -1215,9 +1217,9 @@ class Poopy {
                         }).catch(() => { })
                         await msg.channel.sendTyping().catch(() => { })
                     })
-                } else if (msg.content.toLowerCase().includes('lore')) {
+                } else if (origcontent.toLowerCase().includes('lore')) {
                     await msg.reply(`Well... If you played a little bit with \`${config.globalPrefix}poop\`, I could give you some...`).catch(() => { })
-                } else if ((msg.content.toLowerCase().includes('how') && msg.content.toLowerCase().includes('are') && msg.content.toLowerCase().includes('you')) || (msg.content.toLowerCase().includes('what') && msg.content.toLowerCase().includes('up')) || (msg.content.toLowerCase().includes('what') && msg.content.toLowerCase().includes('doing')) || msg.content.toLowerCase().includes('wassup') || (msg.content.toLowerCase().includes('how') && msg.content.toLowerCase().includes('it') && msg.content.toLowerCase().includes('going'))) {
+                } else if ((origcontent.toLowerCase().includes('how') && origcontent.toLowerCase().includes('are') && origcontent.toLowerCase().includes('you')) || (origcontent.toLowerCase().includes('what') && origcontent.toLowerCase().includes('up')) || (origcontent.toLowerCase().includes('what') && origcontent.toLowerCase().includes('doing')) || origcontent.toLowerCase().includes('wassup') || (origcontent.toLowerCase().includes('how') && origcontent.toLowerCase().includes('it') && origcontent.toLowerCase().includes('going'))) {
                     var activity = bot.user.presence.activities[0]
                     if (activity) {
                         await msg.reply({
@@ -1227,17 +1229,17 @@ class Poopy {
                             }
                         }).catch(() => { })
                     }
-                } else if (msg.content.toLowerCase().includes('\?') || msg.content.toLowerCase().includes('do you') || msg.content.toLowerCase().includes('are you') || msg.content.toLowerCase().includes('did you') || msg.content.toLowerCase().includes('will you') || msg.content.toLowerCase().includes('were you') || msg.content.toLowerCase().includes('do you') || msg.content.toLowerCase().includes('when') || msg.content.toLowerCase().includes('where') || msg.content.toLowerCase().includes('how') || msg.content.toLowerCase().includes('why') || msg.content.toLowerCase().includes('what') || msg.content.toLowerCase().includes('who')) {
+                } else if (origcontent.toLowerCase().includes('\?') || origcontent.toLowerCase().includes('do you') || origcontent.toLowerCase().includes('are you') || origcontent.toLowerCase().includes('did you') || origcontent.toLowerCase().includes('will you') || origcontent.toLowerCase().includes('were you') || origcontent.toLowerCase().includes('do you') || origcontent.toLowerCase().includes('when') || origcontent.toLowerCase().includes('where') || origcontent.toLowerCase().includes('how') || origcontent.toLowerCase().includes('why') || origcontent.toLowerCase().includes('what') || origcontent.toLowerCase().includes('who')) {
                     await msg.reply(randomChoice(arrays.eightball)).catch(() => { })
-                } else if (msg.content.toLowerCase().includes('thank') || msg.content.toLowerCase().includes('thx')) {
+                } else if (origcontent.toLowerCase().includes('thank') || origcontent.toLowerCase().includes('thx')) {
                     await msg.reply('You\'re welcome!').catch(() => { })
-                } else if (msg.content.toLowerCase().includes('mom') || msg.content.toLowerCase().includes('bitch') || msg.content.toLowerCase().includes('goatfucker') || msg.content.toLowerCase().includes('loser') || msg.content.toLowerCase().includes('asshole') || msg.content.toLowerCase().includes('dipshit') || msg.content.toLowerCase().includes('fucker') || msg.content.toLowerCase().includes('retard') || msg.content.toLowerCase().includes('shitass') || msg.content.toLowerCase().includes('moron') || msg.content.toLowerCase().includes('buffoon') || msg.content.toLowerCase().includes('idiot') || msg.content.toLowerCase().includes('stupid') || msg.content.toLowerCase().includes('gay') || msg.content.toLowerCase().includes('dumbass')) {
+                } else if (origcontent.toLowerCase().includes('mom') || origcontent.toLowerCase().includes('bitch') || origcontent.toLowerCase().includes('goatfucker') || origcontent.toLowerCase().includes('loser') || origcontent.toLowerCase().includes('asshole') || origcontent.toLowerCase().includes('dipshit') || origcontent.toLowerCase().includes('fucker') || origcontent.toLowerCase().includes('retard') || origcontent.toLowerCase().includes('shitass') || origcontent.toLowerCase().includes('moron') || origcontent.toLowerCase().includes('buffoon') || origcontent.toLowerCase().includes('idiot') || origcontent.toLowerCase().includes('stupid') || origcontent.toLowerCase().includes('gay') || origcontent.toLowerCase().includes('dumbass')) {
                     await msg.reply('Shut up.').catch(() => { })
-                } else if (msg.content.toLowerCase().includes('hi') || msg.content.toLowerCase().includes('yo') || msg.content.toLowerCase().includes('hello') || msg.content.toLowerCase().includes('howdy')) {
+                } else if (origcontent.toLowerCase().includes('hi') || origcontent.toLowerCase().includes('yo') || origcontent.toLowerCase().includes('hello') || origcontent.toLowerCase().includes('howdy')) {
                     await msg.reply('Yo! What\'s up?').catch(() => { })
-                } else if (msg.content.toLowerCase().includes('no') || msg.content.toLowerCase().includes('nah')) {
+                } else if (origcontent.toLowerCase().includes('no') || origcontent.toLowerCase().includes('nah')) {
                     await msg.reply(':(').catch(() => { })
-                } else if (msg.content.toLowerCase().includes('ye') || msg.content.toLowerCase().includes('yup')) {
+                } else if (origcontent.toLowerCase().includes('ye') || origcontent.toLowerCase().includes('yup')) {
                     await msg.reply(':)').catch(() => { })
                 } else {
                     var eggPhrase = ourEggPhrases[tempdata[msg.author.id]['mentions']]

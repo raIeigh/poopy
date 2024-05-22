@@ -1,63 +1,71 @@
 module.exports = {
     name: ['blend'],
-    args: [{ "name": "file", "required": false, "specifarg": false, "orig": "{file}" }, { "name": "file2", "required": false, "specifarg": false, "orig": "{file2}" }, {
-        "name": "mode", "required": false, "specifarg": true, "orig": "[-mode <mode>]",
-        "autocomplete": [
-            'addition',
-            'grainmerge',
-            'and',
-            'average',
-            'burn',
-            'bleach',
-            'darken',
-            'difference',
-            'grainextract',
-            'divide',
-            'dodge',
-            'freeze',
-            'exclusion',
-            'extremity',
-            'geometric',
-            'glow',
-            'hardlight',
-            'hardoverlay',
-            'harmonic',
-            'interpolate',
-            'hardmix',
-            'heat',
-            'lighten',
-            'linearlight',
-            'multiply',
-            'multiply128',
-            'negation',
-            'normal',
-            'or',
-            'overlay',
-            'phoenix',
-            'pinlight',
-            'reflect',
-            'screen',
-            'stain',
-            'softlight',
-            'softdifference',
-            'subtract',
-            'vividlight',
-            'xor'
-        ]
-    }, {
-        "name": "origin", "required": false, "specifarg": true, "orig": "[-origin <x (left/center/right)> <y (top/middle/bottom)>]",
-        "autocomplete": [
-            'left top',
-            'center top',
-            'right top',
-            'left middle',
-            'center middle',
-            'right middle',
-            'left bottom',
-            'center bottom',
-            'right bottom',
-        ]
-    }, { "name": "offsetpos", "required": false, "specifarg": true, "orig": "[-offsetpos <x> <y>]" }, { "name": "width", "required": false, "specifarg": true, "orig": "[-width/height <pixels or percentage>]" }, { "name": "height", "required": false, "specifarg": true, "orig": "[-width/height <pixels or percentage>]" }, { "name": "keepaspectratio", "required": false, "specifarg": true, "orig": "[-keepaspectratio <mode (increase or decrease)>]", "autocomplete": ['increase', 'decrease'] }],
+    args: [
+        { "name": "file", "required": false, "specifarg": false, "orig": "{file}" },
+        { "name": "file2", "required": false, "specifarg": false, "orig": "{file2}" }, {
+            "name": "mode", "required": false, "specifarg": true, "orig": "[-mode <mode>]",
+            "autocomplete": [
+                'addition',
+                'grainmerge',
+                'and',
+                'average',
+                'burn',
+                'bleach',
+                'darken',
+                'difference',
+                'grainextract',
+                'divide',
+                'dodge',
+                'freeze',
+                'exclusion',
+                'extremity',
+                'geometric',
+                'glow',
+                'hardlight',
+                'hardoverlay',
+                'harmonic',
+                'interpolate',
+                'hardmix',
+                'heat',
+                'lighten',
+                'linearlight',
+                'multiply',
+                'multiply128',
+                'negation',
+                'normal',
+                'or',
+                'overlay',
+                'phoenix',
+                'pinlight',
+                'reflect',
+                'screen',
+                'stain',
+                'softlight',
+                'softdifference',
+                'subtract',
+                'vividlight',
+                'xor'
+            ]
+        }, {
+            "name": "origin", "required": false, "specifarg": true, "orig": "[-origin <x (left/center/right)> <y (top/middle/bottom)>]",
+            "autocomplete": [
+                'left top',
+                'center top',
+                'right top',
+                'left middle',
+                'center middle',
+                'right middle',
+                'left bottom',
+                'center bottom',
+                'right bottom',
+            ]
+        }, { "name": "offsetpos", "required": false, "specifarg": true, "orig": "[-offsetpos <x> <y>]" },
+        { "name": "width", "required": false, "specifarg": true, "orig": "[-width/height <pixels or percentage>]" },
+        { "name": "height", "required": false, "specifarg": true, "orig": "[-width/height <pixels or percentage>]" },
+        { "name": "keepaspectratio", "required": false, "specifarg": true, "orig": "[-keepaspectratio <mode (increase or decrease)>]", "autocomplete": ['increase', 'decrease'] },
+        { "name": "start", "required": false, "specifarg": true, "orig": "[-start/end <timestamp (you can use hh:mm:ss)>]" },
+        { "name": "end", "required": false, "specifarg": true, "orig": "[-start/end <timestamp (you can use hh:mm:ss)>]" }
+    ],
     execute: async function (msg, args) {
         let poopy = this
         let { lastUrl, getUrls, validateFile, downloadFile, execPromise, findpreset, sendFile } = poopy.functions
@@ -289,7 +297,7 @@ module.exports = {
             await execPromise(`ffmpeg -i ${filepath}/${filename} -i ${filepath}/${filename2} -f lavfi -i "color=0x00000000:s=${width}x${height},format=rgba" -filter_complex "[1:v]scale=${size[0]}:${size[1]}${keepaspectratio ? `:force_original_aspect_ratio=${keepaspectratio}` : ''}[overlay];[2:v][overlay]overlay=x=${originx}+${Math.round(ox)}:y=${originy}+${Math.round(oy)}:format=auto[blend];[0:v][blend]blend=all_mode=${mode}[out]" -map "[out]" -preset ${findpreset(args)} ${filepath}/output.png`)
             return await sendFile(msg, filepath, `output.png`)
         } else if ((filetype.mime.startsWith('image') && !(vars.gifFormats.find(f => f === filetype.ext))) && ((filetype2.mime.startsWith('image') && vars.gifFormats.find(f => f === filetype2.ext)))) {
-            await execPromise(`ffmpeg -stream_loop -1 -i ${filepath}/${filename} -i ${filepath}/${filename2} -f lavfi -i "color=0x00000000:s=${width}x${height},format=rgba" -filter_complex "[1:v]scale=${size[0]}:${size[1]}${keepaspectratio ? `:force_original_aspect_ratio=${keepaspectratio}` : ''}[overlay];[2:v][overlay]overlay=x=${originx}+${Math.round(ox)}:y=${originy}+${Math.round(oy)}:format=auto:enable='between(t,${start},${end})'[blend];[0:v][blend]blend=shortest=1:all_mode=${mode},scale='min(400,iw)':min'(400,ih)':force_original_aspect_ratio=decrease:enable='between(t,${start},${end})',split[gnout][gpout];[gpout]palettegen=reserve_transparent=1[palette];[gnout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -preset ${findpreset(args)} -gifflags -offsetting ${filepath}/output.gif`)
+            await execPromise(`ffmpeg -stream_loop -1 -i ${filepath}/${filename} -i ${filepath}/${filename2} -f lavfi -i "color=0x00000000:s=${width}x${height},format=rgba" -filter_complex "[1:v]scale=${size[0]}:${size[1]}${keepaspectratio ? `:force_original_aspect_ratio=${keepaspectratio}` : ''}[overlay];[2:v][overlay]overlay=x=${originx}+${Math.round(ox)}:y=${originy}+${Math.round(oy)}:format=auto:enable='between(t,${start},${end})'[blend];[0:v][blend]blend=shortest=1:all_mode=${mode}:enable='between(t,${start},${end})',scale='min(400,iw)':min'(400,ih)':force_original_aspect_ratio=decrease,split[gnout][gpout];[gpout]palettegen=reserve_transparent=1[palette];[gnout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -preset ${findpreset(args)} -gifflags -offsetting ${filepath}/output.gif`)
             return await sendFile(msg, filepath, `output.gif`)
         } else if ((filetype.mime.startsWith('image') && vars.gifFormats.find(f => f === filetype.ext)) && (filetype2.mime.startsWith('image') && !(vars.gifFormats.find(f => f === filetype2.ext)))) {
             await execPromise(`ffmpeg -i ${filepath}/${filename} -stream_loop -1 -i ${filepath}/${filename2} -f lavfi -i "color=0x00000000:s=${width}x${height},format=rgba" -filter_complex "[1:v]scale=${size[0]}:${size[1]}${keepaspectratio ? `:force_original_aspect_ratio=${keepaspectratio}` : ''}[overlay];[2:v][overlay]overlay=x=${originx}+${Math.round(ox)}:y=${originy}+${Math.round(oy)}:format=auto:enable='between(t,${start},${end})'[blend];[0:v][blend]blend=shortest=1:all_mode=${mode}:enable='between(t,${start},${end})',split[gnout][gpout];[gpout]palettegen=reserve_transparent=1[palette];[gnout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -preset ${findpreset(args)} -gifflags -offsetting ${filepath}/output.gif`)

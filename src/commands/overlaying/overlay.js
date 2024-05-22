@@ -18,7 +18,9 @@ module.exports = {
         }, { "name": "offsetpos", "required": false, "specifarg": true, "orig": "[-offsetpos <x> <y>]" },
         { "name": "width", "required": false, "specifarg": true, "orig": "[-width/height <pixels or percentage>]" },
         { "name": "height", "required": false, "specifarg": true, "orig": "[-width/height <pixels or percentage>]" },
-        { "name": "keepaspectratio", "required": false, "specifarg": true, "orig": "[-keepaspectratio <mode (increase or decrease)>]", "autocomplete": ['increase', 'decrease'] }, {"name":"start","required":false,"specifarg":true,"orig":"[-start/end <timestamp (you can use hh:mm:ss)>]"},{"name":"end","required":false,"specifarg":true,"orig":"[-start/end <timestamp (you can use hh:mm:ss)>]"}
+        { "name": "keepaspectratio", "required": false, "specifarg": true, "orig": "[-keepaspectratio <mode (increase or decrease)>]", "autocomplete": ['increase', 'decrease'] },
+        { "name": "start", "required": false, "specifarg": true, "orig": "[-start/end <timestamp (you can use hh:mm:ss)>]" },
+        { "name": "end", "required": false, "specifarg": true, "orig": "[-start/end <timestamp (you can use hh:mm:ss)>]" }
     ],
     execute: async function (msg, args) {
         let poopy = this

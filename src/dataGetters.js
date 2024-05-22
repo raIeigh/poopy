@@ -237,6 +237,7 @@ var dataGetters = {
             arabJSON: 'arab',
             statusJSON: 'statuses',
             homophoneJSON: 'homophones',
+            cahJSON: 'cah',
             emojiJSONemojiJSON: require('@jimp/plugin-print/emojis')
         }
 
