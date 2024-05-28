@@ -20,7 +20,7 @@ module.exports = {
 
         await msg.channel.sendTyping().catch(() => { })
 
-        var temperature = getOption(args, 'temperature', { dft: 0.6, splice: true, n: 1, join: true, func: (opt) => parseNumber(opt, { dft: 0.6, min: 0, max: 1, round: false }) })
+        var temperature = getOption(args, 'temperature', { dft: 1, splice: true, n: 1, join: true, func: (opt) => parseNumber(opt, { dft: 1, min: 0, max: 1, round: false }) })
         var instruct = getOption(args, 'instruct', { dft: "", splice: true, n: Infinity, join: true })
         var saidMessage = args.slice(1).join(' ')
         if (args[1] === undefined) {
@@ -28,6 +28,7 @@ module.exports = {
             await msg.channel.sendTyping().catch(() => { })
             return
         }
+        
         var resp = await axios({
             url: `https://api.ai21.com/studio/v1/chat/completions`,
             method: 'POST',

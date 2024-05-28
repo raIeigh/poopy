@@ -1,5 +1,5 @@
 module.exports = {
-  helpf: '(pick1 | pick2 | pick3)',
+  helpf: '(pick1 | pick2 | pick3 | index)',
   desc: 'Returns a random black Cards Against Humanity phrase. The blank spaces will be filled with the picks.',
   func: async function (matches) {
     let poopy = this
@@ -10,8 +10,11 @@ module.exports = {
     var split = splitKeyFunc(word)
 
     var cahJSON = json.cahJSON
-    var black = cahJSON.black[Math.floor(Math.random() * cahJSON.black.length)]
 
+    var index = Math.floor(Math.random() * cahJSON.black.length)
+    if (split[split.length - 1].match(/^[0-9]+$/)) index = Number(split.splice(split.length - 1, 1)[0])
+
+    var black = cahJSON.black[index]
     var phrase = black.text
 
     if (split.length && split[0]) {

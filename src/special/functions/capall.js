@@ -2,8 +2,6 @@ module.exports = {
   helpf: '(phrase)',
   desc: 'Makes Every Word In The Phrase Inside The Function Start With A Capital',
   func: function (matches) {
-    let poopy = this
-
     var word = matches[1]
     var words = word.split(' ')
     for (var i in words) {
