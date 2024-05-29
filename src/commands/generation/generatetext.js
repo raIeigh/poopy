@@ -1,5 +1,5 @@
 module.exports = {
-    name: ['generatetext', 'predicttext'],
+    name: ['generatetext', 'generate', 'predicttext'],
     args: [{"name":"message","required":true,"specifarg":false,"orig":"<message>"},{"name":"temperature","required":false,"specifarg":true,"orig":"[-temperature <number (from 0 to 1)]"},{"name":"maxtokens","required":false,"specifarg":true,"orig":"[-maxtokens <number (max 512)>]"},{"name":"prespenalty","required":false,"specifarg":true,"orig":"[-(pres/count/freq)penalty <number (from 0 to 5/1/500)>]"},{"name":"countpenalty","required":false,"specifarg":true,"orig":"[-(pres/count/freq)penalty <number (from 0 to 5/1/500)>]"},{"name":"freqpenalty","required":false,"specifarg":true,"orig":"[-(pres/count/freq)penalty <number (from 0 to 5/1/500)>]"}],
     execute: async function (msg, args) {
         let poopy = this
@@ -22,11 +22,11 @@ module.exports = {
             return
         }
 
-        var models = ['j2-ultra', 'j2-mid', 'j1-light']
+        var models = ['j2-ultra', 'j2-mid', 'j2-light']
 
         for (var model of models) {
             var resp = await axios({
-                url: `https://api.ai21.com/studio/v2/${model}/complete`,
+                url: `https://api.ai21.com/studio/v1/${model}/complete`,
                 method: 'POST',
                 data: {
                     prompt: saidMessage,
@@ -64,7 +64,7 @@ module.exports = {
                 headers: {
                     Authorization: `Bearer ${userToken(msg.author.id, 'AI21_KEY')}`
                 }
-            }).catch(() => { })
+            }).catch((e) => console.log(e))
 
             if (resp) {
                 if (!msg.nosend) await msg.reply({
@@ -115,7 +115,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'generatetext/predicttext <message> [-temperature <number (from 0 to 1)] [-maxtokens <number (max 512)>] [-(pres/count/freq)penalty <number (from 0 to 5/1/500)>]',
+        name: 'generatetext/generate/predicttext <message> [-temperature <number (from 0 to 1)] [-maxtokens <number (max 512)>] [-(pres/count/freq)penalty <number (from 0 to 5/1/500)>]',
         value: 'Tries to predict subsequent text from the specified message with AI21/DeepAI. Default max tokens are 65 and temperature is 0.6.'
     },
     type: 'Generation',

@@ -48,7 +48,7 @@ module.exports = {
     },
     help: {
         name: '60fps {file}',
-        value: 'Makes the file 60 FPS by using interpolation.'
+        value: 'Tries to make the file 60 FPS by using interpolation.'
     },
     cooldown: 2500,
     type: 'Effects'
