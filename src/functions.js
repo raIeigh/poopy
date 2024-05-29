@@ -4375,7 +4375,6 @@ functions.updateHivemindStatus = async function () {
 functions.getTotalHivemindStatus = async function () {
     let poopy = this
     let bot = poopy.bot
-    let vars = poopy.vars
 
     if (!process.env.HIVEMIND_ID) return;
 

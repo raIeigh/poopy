@@ -1,10 +1,10 @@
 module.exports = {
     name: ['dalle', 'craiyon', 'text2images'],
-    args: [{"name":"prompt","required":true,"specifarg":false,"orig":"<prompt>"}],
+    args: [{ "name": "prompt", "required": true, "specifarg": false, "orig": "<prompt>" }],
     execute: async function (msg, args) {
         let poopy = this
-        let { axios, fs, archiver, Discord } = poopy.modules
-        let { sleep, navigateEmbed, sendFile } = poopy.functions
+        let { axios, fs, Discord } = poopy.modules
+        let { sleep, navigateEmbed } = poopy.functions
         let vars = poopy.vars
         let config = poopy.config
         let bot = poopy.bot
@@ -28,10 +28,16 @@ module.exports = {
 
         async function dalleRequest() {
             var imageRes = await axios({
-                url: 'https://backend.craiyon.com/generate',
+                url: 'https://api.craiyon.com/v3',
                 method: 'POST',
-                data: { prompt: text }
-            }).catch(() => { })
+                data: {
+                    model: "art",
+                    negative_prompt: "",
+                    prompt: text,
+                    token: null,
+                    version: "c4ue22fb7kb6wlac"
+                }
+            }).catch(e => console.log(e))
 
             if (!imageRes) {
                 retries++
@@ -57,87 +63,39 @@ module.exports = {
 
         var images = imageRes.data.images
 
-        var currentcount = vars.filecount
-        vars.filecount++
-        var filepath = `temp/${config.database}/file${currentcount}`
-        fs.mkdirSync(`${filepath}`)
-        fs.mkdirSync(`${filepath}/images`)
+        var frames = images.map(u => `https://pics.craiyon.com/${u}`)
 
-        var i = 0
+        if (!msg.nosend) await navigateEmbed(msg.channel, async (page, ended) => {
+            var frameurl = ended ? await vars.Catbox.upload(frames[page - 1]).catch(() => { }) : frames[page - 1]
 
-        images.forEach(data => {
-            i++
-            fs.writeFileSync(`${filepath}/images/image${i}.png`, Buffer.from(data, 'base64'))
-        })
-
-        var output = fs.createWriteStream(`${filepath}/output.zip`)
-        var archive = archiver('zip')
-
-        return await new Promise(async resolve => {
-            output.on('finish', async () => {
-                var frames = fs.readdirSync(`${filepath}/images`)
-                var catboxframes = {}
-
-                if (msg.nosend) {
-                    resolve(await sendFile(msg, filepath, `output.zip`))
-                    return
-                }
-
-                await navigateEmbed(msg.channel, async (page, ended) => {
-                    var frameurl = ended ? await vars.Catbox.upload(`${filepath}/images/${frames[page - 1]}`).catch(() => { }) : catboxframes[frames[page - 1]]
-    
-                    if (!frameurl && !ended) {
-                        frameurl = await vars.Litterbox.upload(`${filepath}/images/${frames[page - 1]}`).catch(() => { }) ?? ''
-                        catboxframes[frames[page - 1]] = frameurl
-                    }
-    
-                    if (config.textEmbeds) return `${frameurl}\n\nImage ${page}/${frames.length}`
-                    else return {
-                        "title": `DALL·E results for ${text}`,
-                        "color": 0x472604,
-                        "image": {
-                            "url": frameurl
-                        },
-                        "footer": {
-                            "icon_url": bot.user.displayAvatarURL({ dynamic: true, size: 1024, extension: 'png' }),
-                            "text": `Image ${page}/${frames.length}`
-                        },
-                    }
-                }, frames.length, msg.member, [
-                    {
-                        emoji: '939523064658526278',
-                        reactemoji: '⏬',
-                        customid: 'zip',
-                        style: Discord.ButtonStyle.Primary,
-                        function: async (_, __, resultsMsg, collector) => {
-                            collector.stop()
-                            resultsMsg.delete().catch(() => { })
-                            sendFile(msg, filepath, `output.zip`)
-                        },
-                        page: false
-                    },
-    
-                    {
-                        emoji: '874406183933444156',
-                        reactemoji: '❌',
-                        customid: 'delete',
-                        style: Discord.ButtonStyle.Danger,
-                        function: async (_, __, resultsMsg, collector) => {
-                            collector.stop()
-                            resultsMsg.delete().catch(() => { })
-                        },
-                        page: false
-                    }
-                ], undefined, undefined, undefined, (reason) => {
-                    if (reason == 'time') fs.rmSync(filepath, { force: true, recursive: true })
-                }, msg)
-                resolve(catboxframes[frames[0]])
-            })
-    
-            archive.pipe(output)
-            archive.directory(`${filepath}/images`, false)
-            archive.finalize()
-        })
+            if (config.textEmbeds) return `${frameurl}\n\nImage ${page}/${frames.length}`
+            else return {
+                "title": `DALL·E results for ${text}`,
+                "color": 0x472604,
+                "image": {
+                    "url": frameurl
+                },
+                "footer": {
+                    "icon_url": bot.user.displayAvatarURL({ dynamic: true, size: 1024, extension: 'png' }),
+                    "text": `Image ${page}/${frames.length}`
+                },
+            }
+        }, frames.length, msg.member, [
+            {
+                emoji: '874406183933444156',
+                reactemoji: '❌',
+                customid: 'delete',
+                style: Discord.ButtonStyle.Danger,
+                function: async (_, __, resultsMsg, collector) => {
+                    collector.stop()
+                    resultsMsg.delete().catch(() => { })
+                },
+                page: false
+            }
+        ], undefined, undefined, undefined, (reason) => {
+            if (reason == 'time') fs.rmSync(filepath, { force: true, recursive: true })
+        }, msg)
+        return frames[0]
     },
     help: {
         name: 'dalle/craiyon/text2images <prompt>',

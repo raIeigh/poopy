@@ -3,8 +3,6 @@ module.exports = {
     args: [],
     execute: async function (msg) {
         // code here
-        let poopy = this
-
         const starts = ["Champ,", "Fact:", "Everybody says", "Dang...", "Check it:", "Just sayin',", "Superstar,", "Tiger,", "Self,", "Know this:", "News alert:", "Girl,", "Ace,", "Excuse me but", "Experts agree:", "In my opinion,", "Hear ye, hear ye:", "Okay, listen up:"]
         const subjects = ["the mere idea of you", "your soul", "your hair today", "everything you do", "your personal style", "every thought you have", "that sparkle in your eye",
             "your presence here", "what you got goin' on", "the essential you", "your life's journey", "that saucy personality", "your DNA", "that brain of yours",
@@ -13,8 +11,6 @@ module.exports = {
             , "is the next big thing", "roars like a lion", "is a rainbow factory", "is made of diamonds", "makes birds sing", "should be taught in school", "makes my world go 'round", "is 100% legit"]
         const endings = ["24/7.", "can I get an amen?", "and that's a fact.", "so treat yourself.", "period.", "you feel me?", "that's just science.", "would I lie?", "fr."
             , "mic drop.", "you hidden gem.", "that's right.", "bro.", "now let's dance.", "now we're talking.", "high five.", "say it again!", "according to CNN.", "so get used to it."]
-
-
 
         function randome(ar) {
             i = Math.max(Math.round(Math.random() * ar.length), 0)

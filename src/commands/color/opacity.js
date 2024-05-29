@@ -1,6 +1,6 @@
 module.exports = {
     name: ['opacity'],
-    args: [{"name":"alpha","required":false,"specifarg":false,"orig":"{alpha (from 0 to 255)}"},{"name":"image","required":true,"specifarg":false,"orig":"<image>"}],
+    args: [{ "name": "alpha", "required": false, "specifarg": false, "orig": "{alpha (from 0 to 255)}" }, { "name": "image", "required": true, "specifarg": false, "orig": "<image>" }],
     execute: async function (msg, args) {
         let poopy = this
         let { lastUrl, validateFile, downloadFile, execPromise, findpreset, sendFile } = poopy.functions
@@ -25,7 +25,8 @@ module.exports = {
 
         if (type.mime.startsWith('image') && !(vars.gifFormats.find(f => f === type.ext))) {
             var filepath = await downloadFile(currenturl, `input.png`, {
-                fileinfo            })
+                fileinfo
+            })
             var filename = `input.png`
             await execPromise(`ffmpeg -i ${filepath}/${filename} -filter_complex "[0:v]geq=r='r(X,Y)':a='${opacity / 255}*alpha(X,Y)'[out]" -map "[out]" -preset ${findpreset(args)} ${filepath}/output.png`)
             return await sendFile(msg, filepath, `output.png`)

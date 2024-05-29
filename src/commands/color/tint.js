@@ -1,6 +1,6 @@
 module.exports = {
     name: ['tint'],
-    args: [{"name":"r","required":false,"specifarg":false,"orig":"[r]"},{"name":"g","required":false,"specifarg":false,"orig":"[g]"},{"name":"b","required":false,"specifarg":false,"orig":"[b]"},{"name":"a","required":false,"specifarg":false,"orig":"[a]"},{"name":"file","required":false,"specifarg":false,"orig":"{file}"}],
+    args: [{ "name": "r", "required": false, "specifarg": false, "orig": "[r]" }, { "name": "g", "required": false, "specifarg": false, "orig": "[g]" }, { "name": "b", "required": false, "specifarg": false, "orig": "[b]" }, { "name": "a", "required": false, "specifarg": false, "orig": "[a]" }, { "name": "file", "required": false, "specifarg": false, "orig": "{file}" }],
     execute: async function (msg, args) {
         let poopy = this
         let { lastUrl, validateFile, downloadFile, execPromise, findpreset, sendFile } = poopy.functions
@@ -28,7 +28,8 @@ module.exports = {
 
         if (type.mime.startsWith('image') && !(vars.gifFormats.find(f => f === type.ext))) {
             var filepath = await downloadFile(currenturl, `input.png`, {
-                fileinfo            })
+                fileinfo
+            })
             var filename = `input.png`
             var width = fileinfo.info.width
             var height = fileinfo.info.height
@@ -37,7 +38,8 @@ module.exports = {
             return await sendFile(msg, filepath, `output.png`)
         } else if (type.mime.startsWith('video')) {
             var filepath = await downloadFile(currenturl, `input.mp4`, {
-                fileinfo            })
+                fileinfo
+            })
             var filename = `input.mp4`
             var width = fileinfo.info.width
             var height = fileinfo.info.height
@@ -46,7 +48,8 @@ module.exports = {
             return await sendFile(msg, filepath, `output.mp4`)
         } else if (type.mime.startsWith('image') && vars.gifFormats.find(f => f === type.ext)) {
             var filepath = await downloadFile(currenturl, `input.gif`, {
-                fileinfo            })
+                fileinfo
+            })
             var filename = `input.gif`
             var width = fileinfo.info.width
             var height = fileinfo.info.height

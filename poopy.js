@@ -172,7 +172,7 @@ class Poopy {
             chunkArray, chunkObject, requireJSON, findCommand,
             dmSupport, sleep, gatherData, deleteMsgData, infoPost,
             getKeywordsFor, getUrls, randomChoice, similarity, yesno,
-            cleverbot, regexClean, decrypt, getOption, updateHivemindStatus, getTotalHivemindStatus } = functions
+            cleverbot, regexClean, decrypt, getOption, getTotalHivemindStatus } = functions
 
         let bot = poopy.bot = new Discord.Client({
             intents: config.intents,

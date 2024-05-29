@@ -30,7 +30,7 @@ module.exports = {
                 delete tempdata[guildid][channelid][authorid].messageCollector
             }
 
-            var filter = m => (config.allowbotusage || data.guildData[msg.guild.id]['chaos'] || !m.author.bot) && m.author.id != bot.user.id
+            var filter = m => (config.allowbotusage || (data.guildData[msg.guild.id]['chaos'] && !m.webhookId) || !m.author.bot) && m.author.id != bot.user.id
             var collected = []
             var collector = channel.createMessageCollector({ filter, time: timeout * 1000 })
 
