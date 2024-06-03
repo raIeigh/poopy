@@ -732,6 +732,7 @@ functions.gatherData = async function (msg) {
         data.guildData[msg.guild.id]['allMembers'][msg.author.id]['messages']++
         data.guildData[msg.guild.id]['allMembers'][msg.author.id]['username'] = msg.author.username
         data.guildData[msg.guild.id]['allMembers'][msg.author.id]['lastmessage'] = now
+        data.guildData[msg.guild.id]['allMembers'][msg.author.id]['bot'] = msg.author.bot
     }
 
     if (!data.guildData[msg.guild.id]['disabled']) {

@@ -9,7 +9,7 @@ module.exports = {
 
     var sum = 0
     for (var id in datamembers) {
-      var value = Math.max(Math.min(datamembers[id].messages || 0, 1000), 0) - Math.floor((Date.now() - datamembers[id].lastmessage || 0) / 604800000) * 100 || 0
+      var value = Math.max(Math.min((datamembers[id].messages || 0) / (datamembers[id].bot ? 10 : 1), 1000) - Math.floor((Date.now() - datamembers[id].lastmessage || 0) / 604800000) * 100, 0) || 0
       sum += value
     }
 
@@ -17,7 +17,7 @@ module.exports = {
     var counter = 0
 
     for (var id in datamembers) {
-      var value = Math.max(Math.min(datamembers[id].messages || 0, 1000), 0) - Math.floor((Date.now() - datamembers[id].lastmessage || 0) / 604800000) * 100 || 0
+      var value = Math.max(Math.min((datamembers[id].messages || 0) / (datamembers[id].bot ? 10 : 1), 1000) - Math.floor((Date.now() - datamembers[id].lastmessage || 0) / 604800000) * 100, 0) || 0
       counter += value
       if (counter > rnd) {
         return id
