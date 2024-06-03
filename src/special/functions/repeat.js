@@ -16,7 +16,7 @@ module.exports = {
     for (var i = 0; i < times; i++) {
       repeat.push(phrase)
       tempdata[msg.author.id][msg.id]['keyattempts']++
-      if (tempdata[msg.author.id][msg.id]['keyattempts'] >= config.keyLimit) break
+      if (!opts.ownermode && tempdata[msg.author.id][msg.id]['keyattempts'] >= config.keyLimit) break
     }
     return repeat.join(separator)
   },

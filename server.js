@@ -170,7 +170,6 @@ async function start() {
                     TOKEN: process.env.TEST_TOKEN,
                     config: {
                         testing: true,
-                        noInfoPost: true,
                         globalPrefix: '2p:',
                         database: 'testdata',
                         intents: 3276799
