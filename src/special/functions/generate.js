@@ -4,14 +4,14 @@ module.exports = {
   func: async function (matches, msg) {
     let poopy = this
     let { userToken } = poopy.functions
-    let { axios, deepai } = poopy.modules
+    let { axios } = poopy.modules
 
     var word = matches[1]
-    var models = ['j1-jumbo', 'j1-grande', 'j1-large']
+    var models = ['j2-ultra', 'j2-mid', 'j2-light']
 
     for (var model of models) {
         var resp = await axios({
-          url: 'https://api.ai21.com/studio/v1/j1-jumbo/complete',
+          url: `https://api.ai21.com/studio/v1/${model}/complete`,
           method: 'POST',
           data: {
               prompt: word,
@@ -55,18 +55,8 @@ module.exports = {
         return `${word}${resp.data.completions[0].data.text}`
       }
     }
-    
-    var resp = await deepai.callStandardApi("text-generator", {
-      text: word,
-    }).catch(() => { })
-
-    if (resp) {
-      return resp.output
-    }
-
-    return word
   },
   attemptvalue: 10,
   limit: 1,
-  envRequired: ['AI21_KEY', 'DEEPAI_KEY']
+  envRequired: ['AI21_KEY']
 }

@@ -4,7 +4,7 @@ module.exports = {
     execute: async function (msg, args) {
         let poopy = this
         let { getOption, parseNumber, userToken } = poopy.functions
-        let { axios, fs, Discord, deepai } = poopy.modules
+        let { axios, fs, Discord } = poopy.modules
         let vars = poopy.vars
         let config = poopy.config
 
@@ -86,38 +86,11 @@ module.exports = {
                 return `${saidMessage}${resp.data.completions[0].data.text}`
             }
         }
-        
-        if (vars.validUrl.test(saidMessage)) {
-            await msg.reply('URLs in this command will break it.').catch(() => { })
-            await msg.channel.sendTyping().catch(() => { })
-            return
-        }
-        
-        var resp = await deepai.callStandardApi("text-generator", {
-            text: saidMessage,
-        }).catch(async err => {
-            await msg.reply({
-                content: err.stack,
-                allowedMentions: {
-                    parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
-                }
-            }).catch(() => { })
-        })
-        
-        if (resp) {
-            if (!msg.nosend) await msg.reply({
-                content: resp.output,
-                allowedMentions: {
-                    parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
-                }
-            }).catch(() => { })
-            return resp.output
-        }
     },
     help: {
         name: 'generatetext/generate/predicttext <message> [-temperature <number (from 0 to 1)] [-maxtokens <number (max 512)>] [-(pres/count/freq)penalty <number (from 0 to 5/1/500)>]',
-        value: 'Tries to predict subsequent text from the specified message with AI21/DeepAI. Default max tokens are 65 and temperature is 0.6.'
+        value: 'Tries to predict subsequent text from the specified message with AI21. Default max tokens are 65 and temperature is 0.6.'
     },
     type: 'Generation',
-    envRequired: ['AI21_KEY', 'DEEPAI_KEY']
+    envRequired: ['AI21_KEY']
 }
