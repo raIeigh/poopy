@@ -180,7 +180,7 @@ var dataGetters = {
         })
     },
 
-    uberduck: async function () {
+    /* uberduck: async function () {
         var voiceResponse = await axios({
             method: 'GET',
             url: 'https://api.uberduck.ai/voices?mode=tts-basic',
@@ -216,7 +216,7 @@ var dataGetters = {
 
             return [voices, categories]
         }
-    },
+    }, */
 
     jsons: async function () {
         var jsonList = {
