@@ -57,11 +57,11 @@ module.exports = {
                     var increaseCount = !(command.execute.toString().includes('sendFile') && msg.nosend)
 
                     if (increaseCount) {
-                        if (tempdata[msg.author.id][msg.id]['execCount'] >= 1 && data.guildData[msg.guild.id]['chaincommands'] == false && !(msg.member.permissions.has('ManageGuild') || msg.member.permissions.has('ManageMessages') || msg.member.permissions.has('Administrator') || msg.author.id === msg.guild.ownerID || isBot)) {
+                        if (!opts.ownermode && tempdata[msg.author.id][msg.id]['execCount'] >= 1 && data.guildData[msg.guild.id]['chaincommands'] == false && !(msg.member.permissions.has('ManageGuild') || msg.member.permissions.has('ManageMessages') || msg.member.permissions.has('Administrator') || msg.author.id === msg.guild.ownerID || isBot)) {
                             msg.content = content
                             return 'You can\'t chain commands in this server.'
                         }
-                        if (tempdata[msg.author.id][msg.id]['execCount'] >= config.commandLimit * ((msg.member.permissions.has('ManageGuild') || msg.member.permissions.has('ManageMessages') || msg.member.permissions.has('Administrator') || msg.author.id === msg.guild.ownerID || isBot) ? 5 : 1)) {
+                        if (!opts.ownermode && tempdata[msg.author.id][msg.id]['execCount'] >= config.commandLimit * ((msg.member.permissions.has('ManageGuild') || msg.member.permissions.has('ManageMessages') || msg.member.permissions.has('Administrator') || msg.author.id === msg.guild.ownerID || isBot) ? 5 : 1)) {
                             msg.content = content
                             return `Number of commands to run at the same time must be smaller or equal to **${config.commandLimit * ((msg.member.permissions.has('ManageGuild') || msg.member.permissions.has('ManageMessages') || msg.member.permissions.has('Administrator') || msg.author.id === msg.guild.ownerID || isBot) ? 5 : 1)}**!`
                         }

@@ -1,7 +1,7 @@
 module.exports = {
     helpf: '(phrase) (manage messages only)',
     desc: 'Creates a new yes/no choice in the channel. Returns true if yes is chosen, blank otherwise. Has a cooldown.',
-    func: async function (matches, msg, isBot) {
+    func: async function (matches, msg, isBot, _, opts) {
         let poopy = this
         let tempdata = poopy.tempdata
         let { yesno } = poopy.functions
@@ -26,8 +26,8 @@ module.exports = {
 
         tempdata[msg.author.id]['cooler'] = msg.id
         
-        if (tempdata[msg.author.id][msg.id]['execCount'] >= 1 && data.guildData[msg.guild.id]['chaincommands'] == false && !(msg.member.permissions.has('ManageGuild') || msg.member.permissions.has('ManageMessages') || msg.member.permissions.has('Administrator') || msg.author.id === msg.guild.ownerID || isBot)) return 'You can\'t chain commands in this server.'
-        if (tempdata[msg.author.id][msg.id]['execCount'] >= config.commandLimit * ((msg.member.permissions.has('ManageGuild') || msg.member.permissions.has('ManageMessages') || msg.member.permissions.has('Administrator') || msg.author.id === msg.guild.ownerID || isBot) ? 5 : 1)) return `Number of commands to run at the same time must be smaller or equal to **${config.commandLimit * ((msg.member.permissions.has('ManageGuild') || msg.member.permissions.has('ManageMessages') || msg.member.permissions.has('Administrator') || msg.author.id === msg.guild.ownerID || isBot) ? 5 : 1)}**!`
+        if (!opts.ownermode && tempdata[msg.author.id][msg.id]['execCount'] >= 1 && data.guildData[msg.guild.id]['chaincommands'] == false && !(msg.member.permissions.has('ManageGuild') || msg.member.permissions.has('ManageMessages') || msg.member.permissions.has('Administrator') || msg.author.id === msg.guild.ownerID || isBot)) return 'You can\'t chain commands in this server.'
+        if (!opts.ownermode && tempdata[msg.author.id][msg.id]['execCount'] >= config.commandLimit * ((msg.member.permissions.has('ManageGuild') || msg.member.permissions.has('ManageMessages') || msg.member.permissions.has('Administrator') || msg.author.id === msg.guild.ownerID || isBot) ? 5 : 1)) return `Number of commands to run at the same time must be smaller or equal to **${config.commandLimit * ((msg.member.permissions.has('ManageGuild') || msg.member.permissions.has('ManageMessages') || msg.member.permissions.has('Administrator') || msg.author.id === msg.guild.ownerID || isBot) ? 5 : 1)}**!`
         tempdata[msg.author.id][msg.id]['execCount']++
         
         data.guildData[msg.guild.id]['members'][msg.author.id]['coolDown'] = (data.guildData[msg.guild.id]['members'][msg.author.id]['coolDown'] || Date.now()) + 2500 / ((msg.member.permissions.has('ManageGuild') || msg.member.permissions.has('ManageMessages') || msg.member.permissions.has('Administrator') || msg.author.id === msg.guild.ownerID) ? 5 : 1)
