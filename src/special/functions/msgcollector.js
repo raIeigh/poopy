@@ -17,7 +17,7 @@ module.exports = {
         var split = splitKeyFunc(word, { args: 3 })
         var collectphrase = split[0] ?? ''
         split[1] = await getKeywordsFor(split[1] ?? '', msg, isBot, opts).catch(() => { }) || ''
-        var timeout = isNaN(Number(split[1])) ? 10 : Number(split[1]) <= 1 ? 1 : Number(split[1]) >= 60 ? 60 : Number(split[1]) || 10
+        var timeout = isNaN(Number(split[1])) ? 10 : Number(split[1]) <= 1 ? 1 : (!opts.ownermode && Number(split[1]) >= 60) ? 60 : Number(split[1]) || 10
         var finishphrase = split[2] ?? ''
         var channel = msg.channel
         var guildid = msg.guild.id
