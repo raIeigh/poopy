@@ -19,7 +19,7 @@ module.exports = {
             },
             "description": `**Message sent by <@${msg.author.id}> deleted in <#${rulesChannel && rulesChannel.id || msg.channel.id}>**\n${saidMessage}`,
             "color": 0xFF470F,
-            "timestamp": Date.now(),
+            "timestamp": new Date().toISOString(),
             "footer": {
                 "text": `Author: ${msg.author.id} | Message ID: ${msg.id}`
             },
@@ -29,7 +29,7 @@ module.exports = {
                 parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
             },
             embeds: [tangoEmbed]
-        }).catch(() => { })
+        }).catch((e) => console.log(e))
         return 'but how'
     },
     help: { name: 'tango/deleteembed/dembed {message}', value: 'tango' },
