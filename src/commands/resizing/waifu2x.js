@@ -1,11 +1,11 @@
 module.exports = {
     name: ['waifu2x'],
-    args: [{"name":"image","required":true,"specifarg":false,"orig":"<image>"}],
+    args: [{ "name": "image", "required": true, "specifarg": false, "orig": "<image>" }],
     execute: async function (msg, args) {
         let poopy = this
         let { lastUrl, validateFile, downloadFile, execPromise, findpreset, sendFile } = poopy.functions
         let vars = poopy.vars
-        let { deepai, fs } = poopy.modules
+        let { axios, fs, FormData } = poopy.modules
 
         await msg.channel.sendTyping().catch(() => { })
         if (lastUrl(msg, 0) === undefined && args[1] === undefined) {
@@ -26,16 +26,32 @@ module.exports = {
 
         if (type.mime.startsWith('image') && !(vars.gifFormats.find(f => f === type.ext))) {
             var filepath = await downloadFile(currenturl, `input.png`, {
-                fileinfo            })
+                fileinfo
+            })
             var filename = `input.png`
             await execPromise(`ffmpeg -i ${filepath}/${filename} -vf alphaextract -preset ${findpreset(args)} ${filepath}/mask.png`)
 
-            var resp = await deepai.callStandardApi("waifu2x", {
-                image: fs.createReadStream(`${filepath}/${filename}`),
-            }).catch(() => { })
-            var maskresp = await deepai.callStandardApi("waifu2x", {
-                image: fs.createReadStream(`${filepath}/mask.png`),
-            }).catch(() => { })
+            var formData = new FormData()
+            formData.append('image', fs.createReadStream(`${filepath}/${filename}`))
+            var formDataMask = new FormData()
+            formDataMask.append('image', fs.createReadStream(`${filepath}/mask.png`))
+
+            var resp = await axios({
+                url: "https://api.deepai.org/api/waifu2x",
+                method: "POST",
+                headers: {
+                    "api-key": process.env.DEEPAI_KEY
+                },
+                data: formData
+            }).catch((e) => console.log(e))
+            var maskresp = await axios({
+                url: "https://api.deepai.org/api/waifu2x",
+                method: "POST",
+                headers: {
+                    "api-key": process.env.DEEPAI_KEY
+                },
+                data: formDataMask
+            }).catch((e) => console.log(e))
 
             if (!resp || !maskresp) {
                 await msg.reply(`Couldn't process file.`)

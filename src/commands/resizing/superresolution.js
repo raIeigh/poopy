@@ -5,7 +5,7 @@ module.exports = {
         let poopy = this
         let { lastUrl, validateFile, downloadFile, execPromise, findpreset, sendFile } = poopy.functions
         let vars = poopy.vars
-        let { deepai, fs } = poopy.modules
+        let { fs } = poopy.modules
 
         await msg.channel.sendTyping().catch(() => { })
         if (lastUrl(msg, 0) === undefined && args[1] === undefined) {

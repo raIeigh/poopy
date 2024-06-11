@@ -280,11 +280,6 @@ for (var Discord of modules.Discord) {
     }
 }
 
-if (process.env.DEEPAI_KEY) {
-    modules.deepai = require('deepai')
-    modules.deepai.setApiKey(process.env.DEEPAI_KEY)
-}
-
 if (process.env.GOOGLE_KEY) modules.google = require('googleapis').google
 
 module.exports = modules

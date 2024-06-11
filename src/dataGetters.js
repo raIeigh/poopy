@@ -238,7 +238,7 @@ var dataGetters = {
             statusJSON: 'statuses',
             homophoneJSON: 'homophones',
             cahJSON: 'cah',
-            emojiJSONemojiJSON: require('@jimp/plugin-print/emojis')
+            emojiJSON: require('@jimp/plugin-print/emojis')
         }
 
         for (var k in jsonList) {

@@ -624,10 +624,6 @@ functions.gatherData = async function (msg) {
         }
 
         data.userData[msg.author.id]['username'] = msg.author.username
-        if (data.userData[msg.author.id]['dms'] === undefined) {
-            data.userData[msg.author.id]['dms'] = false
-        }
-
         for (var stat in vars.battleStats) {
             if (data.userData[msg.author.id][stat] === undefined) {
                 data.userData[msg.author.id][stat] = vars.battleStats[stat]
