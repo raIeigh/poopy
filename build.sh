@@ -1,3 +1,7 @@
 npm install
 pip install -r requirements.txt
-cp -R bin/* /bin
+chmod -R 754 bin/*
+sudo cp -R bin/linux/* /bin
+
+echo You did it.
+read

@@ -26,4 +26,4 @@ aptPkgs = [
 ]
 
 [phases.build]
-cmds = ['chmod -R 754 /app/bin/* /app/lib/*', 'cp -R /app/bin/* /usr/bin']
+cmds = ['chmod -R 754 /app/bin/* /app/lib/*', 'cp -R /app/bin/linux/* /usr/bin']
