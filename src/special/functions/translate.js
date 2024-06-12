@@ -1,9 +1,9 @@
 module.exports = {
   helpf: '(phrase | target | source)',
   desc: 'Translates the phrase inside the function from source to target, otherwise auto.',
-  func: async function (matches, msg) {
+  func: async function (matches) {
     let poopy = this
-    let { splitKeyFunc, userToken } = poopy.functions
+    let { splitKeyFunc } = poopy.functions
     let vars = poopy.vars
     let { axios } = poopy.modules
 
@@ -34,7 +34,7 @@ module.exports = {
         dt: "t",
         dj: "1",
         source: "input",
-        q: saidMessage
+        q: phrase
       })
     };
 
