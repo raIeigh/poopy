@@ -213,7 +213,7 @@ function handleDuplicates(words1, words2) {
 
 function makeArrayClone(existingArray) {
     var newObj = (existingArray instanceof Array) ? [] : {};
-    for (i in existingArray) {
+    for (var i in existingArray) {
         if (i == 'clone') continue;
         if (existingArray[i] && typeof existingArray[i] == "object") {
             newObj[i] = makeArrayClone(existingArray[i]);
@@ -475,7 +475,7 @@ function Lunicode() {
     this.tools = {
         flip: {
             init: function() {
-                for (i in this.map) this.map[this.map[i]] = i
+                for (var i in this.map) this.map[this.map[i]] = i
             },
             encode: function(i) {
                 for (var r, t = [], o = 0, h = i.length; h > o; o++) r = i.charAt(o), o > 0 && ("̤" == r || "̗" == r || "̖" == r || "̮" == r) ? (r = this.map[i.charAt(o - 1) + r], t.pop()) : (r = this.map[r], "undefined" == typeof r && (r = i.charAt(o))), t.push(r);
@@ -586,7 +586,7 @@ function Lunicode() {
         },
         mirror: {
             init: function() {
-                for (i in this.map) this.map[this.map[i]] = i
+                for (var i in this.map) this.map[this.map[i]] = i
             },
             encode: function(i) {
                 for (var r, t = [], o = [], h = 0, n = i.length; n > h; h++) r = i.charAt(h), h > 0 && ("̈" == r || "̀" == r || "́" == r || "̂" == r) ? (r = this.map[i.charAt(h - 1) + r], t.pop()) : (r = this.map[r], "undefined" == typeof r && (r = i.charAt(h))), "\n" == r ? (o.push(t.reverse().join("")), t = []) : t.push(r);
@@ -677,7 +677,7 @@ function Lunicode() {
             },
             encode: function(r) {
                 var t, o = "";
-                for (i in r) {
+                for (var i in r) {
                     if (t = r[i], this.options.middle && (t += this.diacriticsMiddle[Math.floor(Math.random() * this.diacriticsMiddle.length)]), this.options.top)
                         for (var h = this.diacriticsTop.length - 1, n = 0, a = this.options.maxHeight - Math.random() * (this.options.randomization / 100 * this.options.maxHeight); a > n; n++) t += this.diacriticsTop[Math.floor(Math.random() * h)];
                     if (this.options.bottom)
@@ -688,7 +688,7 @@ function Lunicode() {
             },
             decode: function(r) {
                 var t, o = "";
-                for (i in r) t = r[i].charCodeAt(0), (768 > t || t > 865) && (o += r[i]);
+                for (var i in r) t = r[i].charCodeAt(0), (768 > t || t > 865) && (o += r[i]);
                 return o
             },
             diacriticsTop: [],
@@ -708,19 +708,19 @@ function Lunicode() {
                 this.map[0] = "⓪";
                 for (var i = 65; 90 >= i; i++) this.map[String.fromCharCode(i)] = String.fromCharCode(i + 9333);
                 for (var i = 97; 122 >= i; i++) this.map[String.fromCharCode(i)] = String.fromCharCode(i + 9327);
-                for (i in this.map) this.mapInverse[this.map[i]] = i
+                for (var i in this.map) this.mapInverse[this.map[i]] = i
             },
             encode: function(r) {
                 var t, o = "",
                     h = !0;
-                for (i in r) t = this.map[r[i]], "undefined" == typeof t && (r[i].charCodeAt(0) >= 33 ? (t = r[i] + String.fromCharCode(8413), h || (t = String.fromCharCode(8239) + String.fromCharCode(160) + String.fromCharCode(160) + String.fromCharCode(8239) + t)) : t = r[i]), o += t, h = "\n" == t;
+                for (var i in r) t = this.map[r[i]], "undefined" == typeof t && (r[i].charCodeAt(0) >= 33 ? (t = r[i] + String.fromCharCode(8413), h || (t = String.fromCharCode(8239) + String.fromCharCode(160) + String.fromCharCode(160) + String.fromCharCode(8239) + t)) : t = r[i]), o += t, h = "\n" == t;
                 return o
             },
             decode: function(r) {
                 var t, o = "",
                     h = "";
-                for (i in r) t = this.mapInverse[r[i]], o += "undefined" == typeof t ? r[i] : t;
-                for (i in o) t = o[i].charCodeAt(0), 160 != t && 8239 != t && 8413 != t && (h += o[i]);
+                for (var i in r) t = this.mapInverse[r[i]], o += "undefined" == typeof t ? r[i] : t;
+                for (var i in o) t = o[i].charCodeAt(0), 160 != t && 8239 != t && 8413 != t && (h += o[i]);
                 return h
             },
             map: {},
@@ -731,12 +731,12 @@ function Lunicode() {
             encode: function(r) {
                 var t, o = "",
                     h = !0;
-                for (i in r) r[i].charCodeAt(0) >= 33 ? (t = r[i] + String.fromCharCode(8414), h || (t = String.fromCharCode(8239) + String.fromCharCode(160) + String.fromCharCode(160) + String.fromCharCode(8239) + t)) : t = r[i], o += t, h = "\n" == t;
+                for (var i in r) r[i].charCodeAt(0) >= 33 ? (t = r[i] + String.fromCharCode(8414), h || (t = String.fromCharCode(8239) + String.fromCharCode(160) + String.fromCharCode(160) + String.fromCharCode(8239) + t)) : t = r[i], o += t, h = "\n" == t;
                 return o
             },
             decode: function(r) {
                 var t, o = "";
-                for (i in r) t = r[i].charCodeAt(0), 160 != t && 8239 != t && 8414 != t && (o += r[i]);
+                for (var i in r) t = r[i].charCodeAt(0), 160 != t && 8239 != t && 8414 != t && (o += r[i]);
                 return o
             }
         },
@@ -745,18 +745,18 @@ function Lunicode() {
             encode: function(r) {
                 var t, o = "",
                     h = !0;
-                for (i in r) r[i].charCodeAt(0) >= 33 ? (t = r[i] + String.fromCharCode(8419), h || (t = String.fromCharCode(160) + String.fromCharCode(160) + String.fromCharCode(160) + t)) : t = r[i], o += t, h = "\n" == t;
+                for (var i in r) r[i].charCodeAt(0) >= 33 ? (t = r[i] + String.fromCharCode(8419), h || (t = String.fromCharCode(160) + String.fromCharCode(160) + String.fromCharCode(160) + t)) : t = r[i], o += t, h = "\n" == t;
                 return o
             },
             decode: function(r) {
                 var t, o = "";
-                for (i in r) t = r[i].charCodeAt(0), 160 != t && 8239 != t && 8419 != t && (o += r[i]);
+                for (var i in r) t = r[i].charCodeAt(0), 160 != t && 8239 != t && 8419 != t && (o += r[i]);
                 return o
             }
         },
         bent: {
             init: function() {
-                for (i in this.map) this.map[this.map[i]] = i
+                for (var i in this.map) this.map[this.map[i]] = i
             },
             encode: function(i) {
                 for (var r, t = "", o = 0, h = i.length; h > o; o++) r = this.map[i.charAt(o)], "undefined" == typeof r && (r = i.charAt(o)), t += r;
@@ -868,7 +868,7 @@ function Lunicode() {
         },
         tiny: {
             init: function() {
-                for (i in this.map) this.map[this.map[i]] = i
+                for (var i in this.map) this.map[this.map[i]] = i
             },
             encode: function(i) {
                 var r, t = "";
@@ -910,7 +910,7 @@ function Lunicode() {
             }
         }
     };
-    for (i in this.tools) this.tools[i].init();
+    for (var i in this.tools) this.tools[i].init();
     this.getHTML = function(i) {
         for (var r, t = "", o = !0, h = 0, n = 0, a = 0, s = i.length; s > a; a++) r = i.charCodeAt(a), 10 == r || 13 == r ? (t += "<br>\n", o = !0) : 32 == r ? o ? (t += " ", o = !1) : (t += " ", o = !0) : (r >= 55296 && 56319 >= r ? (h = r, n = 0) : h > 0 ? (r >= 56320 && 57343 >= r && (n = 1024 * (h - 55296) + (r - 56320) + 65536), h = 0) : n = r, 0 != n && (t += "&#x" + n.toString(16) + ";", o = !0));
         return t

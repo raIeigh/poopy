@@ -19,7 +19,7 @@ module.exports = {
     return rainstring
   },
   help: {
-    name: '<:newpoopy:839191885310066729> rainmaze/tilemaze [w (max 27)] [h (max 7)]',
+    name: 'rainmaze/tilemaze [w (max 27)] [h (max 7)]',
     value: "Play Undertale's tile puzzle minigame!"
   },
   cooldown: 5000,

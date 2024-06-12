@@ -90,7 +90,7 @@ module.exports = {
         return urls[page - 1].url
     },
     help: {
-        name: '<:newpoopy:839191885310066729> sauce <query> [-page <number>] (nsfw channel only)',
+        name: 'sauce <query> [-page <number>] (nsfw channel only)',
         value: 'it gives you a sauce'
     },
     cooldown: 2500,

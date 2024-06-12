@@ -21,7 +21,7 @@ module.exports = {
       };
     },
     help: {
-      name: '<:newpoopy:839191885310066729> poopymode/hivemindmode (moderator only)',
+      name: 'poopymode/hivemindmode (moderator only)',
       value: "Toggle between having just 1 bot respond to your messages or all of the ones available."
     },
     cooldown: 5000,

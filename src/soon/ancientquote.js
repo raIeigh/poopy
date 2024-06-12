@@ -125,7 +125,7 @@ module.exports = {
         return await poopy.functions.sendFile(msg, filepath, `output.mp4`)
     },
     help: {
-        name: '<:newpoopy:839191885310066729> ancientquote <prompt>',
+        name: 'ancientquote <prompt>',
         value: 'very important!1!!! Try it yourself at https://intromaker.com/intro/408/ancient-quote'
     },
     cooldown: 2500,

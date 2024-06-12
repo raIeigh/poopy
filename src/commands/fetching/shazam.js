@@ -175,7 +175,7 @@ module.exports = {
         }
     },
     help: {
-        name: '<:newpoopy:839191885310066729> shazam/identifysong/getsong {file}',
+        name: 'shazam/identifysong/getsong {file}',
         value: 'Identifies the song in the file with Shazam. You may need to trim it.'
     },
     cooldown: 2500,

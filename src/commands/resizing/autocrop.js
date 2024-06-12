@@ -94,7 +94,7 @@ module.exports = {
         }
     },
     help: {
-        name: '<:newpoopy:839191885310066729> autocrop {file} [-limit <threshold (from 0 to 255)>] [-round <divisor>] [-invert]',
+        name: 'autocrop {file} [-limit <threshold (from 0 to 255)>] [-round <divisor>] [-invert]',
         value: 'Autocrops the file by recurring to black borders.'
     },
     cooldown: 2500,

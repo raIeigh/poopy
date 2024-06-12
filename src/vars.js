@@ -54,6 +54,7 @@ vars.caseModifiers = [
 vars.battleStats = {
     health: 100,
     maxHealth: 100,
+    heal: 0,
     defense: 0,
     attack: 0,
     accuracy: 0,

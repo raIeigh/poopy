@@ -2081,7 +2081,7 @@ functions.displayShop = async function (channel, who, reply, type) {
 
         {
             emoji: '❤',
-            customid: 'health',
+            customid: 'heal',
             style: Discord.ButtonStyle.Primary,
             desc: 'Upgrade your maximum health.',
             oprice: 80
@@ -2120,6 +2120,7 @@ functions.displayShop = async function (channel, who, reply, type) {
         }
     ]
 
+    var shopMsg
     var shopObject = {}
     var allowedMentions
     var upgradeList
@@ -2137,9 +2138,9 @@ functions.displayShop = async function (channel, who, reply, type) {
     }
 
     async function updateShop() {
-        buttonsData.forEach(upgrade => {
+        for (var upgrade of buttonsData) {
             upgrade.price = upgrade.oprice * (data.userData[who][upgrade.customid] + 1)
-        })
+        }
 
         var components = []
         var chunkButtonData = chunkArray(buttonsData, 5)
@@ -2187,11 +2188,13 @@ functions.displayShop = async function (channel, who, reply, type) {
             if (config.useReactions) shopMsg.reactions.removeAll().catch(() => { })
             else shopObject.components = []
         } else if (!config.useReactions) shopObject.components = components
+
+        if (shopMsg) shopMsg.edit(shopObject).catch(() => { })
     }
 
     await updateShop().catch(() => { })
 
-    var shopMsg = await (reply ?? channel)[reply ? 'reply' : 'send'](shopObject).catch(() => { })
+    shopMsg = await (reply ?? channel)[reply ? 'reply' : 'send'](shopObject).catch(() => { })
 
     if (!shopMsg) throw new Error(`Couldn't send shop to channel`)
 
@@ -2214,6 +2217,8 @@ functions.displayShop = async function (channel, who, reply, type) {
 
                 if (buttonData.price <= data.userData[who]['bucks']) {
                     data.userData[who]['bucks'] -= buttonData.price
+                    data.userData[who][button.customId]++
+                    if (button.customId == 'heal') data.userData[who]['maxHealth'] += 10
                     await updateShop().catch(() => { })
                 } else {
                     await channel.send('Not enough moners.').catch(() => { })
@@ -2249,9 +2254,11 @@ functions.displayShop = async function (channel, who, reply, type) {
                 if (buttonData.price <= data.userData[who]['bucks']) {
                     button.deferUpdate().catch(() => { })
                     data.userData[who]['bucks'] -= buttonData.price
+                    data.userData[who][button.customId]++
+                    if (button.customId == 'heal') data.userData[who]['maxHealth'] += 10
                     await updateShop().catch(() => { })
                 } else {
-                    await button.deferReply({
+                    await button.reply({
                         content: 'Not enough moners.',
                         ephemeral: true
                     }).catch((e) => console.log(e))
@@ -3363,9 +3370,9 @@ functions.battle = async function (msg, subject, action, damage, chance) {
         )
     )
 
-    for (data of [[yourData, "you're"], [subjData, "they're"], [fakeSubjData, "it's"]]) {
-        var battleData = data[0]
-        var pronoun = data[1]
+    for (var dt of [[yourData, "you're"], [subjData, "they're"], [fakeSubjData, "it's"]]) {
+        var battleData = dt[0]
+        var pronoun = dt[1]
 
         if (battleData && battleData.death) {
             if (battleData.death - Date.now() > 0) {

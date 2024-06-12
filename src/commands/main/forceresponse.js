@@ -39,7 +39,7 @@ module.exports = {
         };
     },
     help: {
-        name: '<:newpoopy:839191885310066729> forceresponse <message<_msg>> [-persist] (moderator only)',
+        name: 'forceresponse <message<_msg>> [-persist] (moderator only)',
         value: "Forces the bot's next response(s) to be the one supplied. Why? It's funny"
     },
     cooldown: 5000,

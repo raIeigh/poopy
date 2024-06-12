@@ -44,7 +44,7 @@ module.exports = {
     return await displayShop(msg.channel, msg.member, msg, args[1].toLowerCase())
   },
   help: {
-    name: '<:newpoopy:839191885310066729> shop <type (upgrades, buffs or items)>',
+    name: 'shop <type (upgrades, buffs or items)>',
     value: "Access the shop, and buy battle upgrades, buffs, and other items from it."
   },
   cooldown: 5000,

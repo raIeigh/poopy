@@ -42,7 +42,7 @@ module.exports = {
         return `${leaderParts[0].join('\n')}\n\nYou are in ${toOrdinal(leaderpos)} place`
     },
     help: {
-        name: '<:newpoopy:839191885310066729> leaderboard',
+        name: 'leaderboard',
         value: "Displays the bot's money leaderboard."
     },
     cooldown: 2500,

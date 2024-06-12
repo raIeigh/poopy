@@ -187,7 +187,7 @@ module.exports = {
         return `${infoEmbed.author.name}\n\n${infoEmbed.description}\n${infoEmbed.fields.map(p => `**${p.name}**: ${p.value}`).join('\n')}`
     },
     help: {
-        name: '<:newpoopy:839191885310066729> userinfo/whois <user>',
+        name: 'userinfo/whois <user>',
         value: "Shows a user's info."
     },
     cooldown: 2500,

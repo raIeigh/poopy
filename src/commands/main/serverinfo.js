@@ -129,7 +129,7 @@ module.exports = {
         return `${infoEmbed.title}\n\n${infoEmbed.description}\n${infoEmbed.fields.map(p => `**${p.name}**: ${p.value}`).join('\n')}`
     },
     help: {
-        name: '<:newpoopy:839191885310066729> serverinfo/guildinfo',
+        name: 'serverinfo/guildinfo',
         value: "Shows info about the server."
     },
     cooldown: 2500,

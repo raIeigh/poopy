@@ -1,5 +1,6 @@
 .git
 .env
+.directory
 temp
 tempfiles
 data

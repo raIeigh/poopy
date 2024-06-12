@@ -34,7 +34,7 @@ module.exports = {
         return ''
     },
     help: {
-        name: '<:newpoopy:839191885310066729> alerthost <text>',
+        name: 'alerthost <text>',
         value: "Alert's the bot's host machine with your message."
     },
     cooldown: 30000,

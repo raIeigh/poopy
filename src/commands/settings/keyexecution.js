@@ -42,7 +42,7 @@ module.exports = {
         };
     },
     help: {
-        name: '<:newpoopy:839191885310066729> keyexecution/keyexec <mode (Message, Command or None)> (moderator only)',
+        name: 'keyexecution/keyexec <mode (Message, Command or None)> (moderator only)',
         value: "Set Poopy's mode of executing keywords, by message, command, or none."
     },
     cooldown: 5000,

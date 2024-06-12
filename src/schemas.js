@@ -69,6 +69,11 @@ module.exports = {
             required: false
         },
 
+        heal: {
+            type: Number,
+            required: false
+        },
+
         defense: {
             type: Number,
             required: false

@@ -152,7 +152,7 @@ module.exports = {
         }
     },
     help: {
-        name: '<:newpoopy:839191885310066729> autotrim/autocut {file} [-threshold <percentage>] [-silenceduration <seconds (from 0.1 to 10)>] [-trimmiddle]',
+        name: 'autotrim/autocut {file} [-threshold <percentage>] [-silenceduration <seconds (from 0.1 to 10)>] [-trimmiddle]',
         value: "Automatically trims the audio's silence."
     },
     cooldown: 2500,
