@@ -1,7 +1,7 @@
 # Poopy BOT
-![Poopy](https://cdn.discordapp.com/attachments/760223418968047629/950177194158719066/0ab4fb95d50f0c0bf1751b6c7103f4ac.png)
+![Poopy](https://raw.githubusercontent.com/raIeigh/poopy/main/assets/image/poopy.png)
 
-Poopies for you.
+_Poopies for you._
 
 ```javascript
 const Poopy = require('poopy')
@@ -16,32 +16,51 @@ poopy.start(process.env.DEFAULT_TOKEN)
 
 [![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template/KRX2Oi?referralCode=Vb0OxC)
 
-If you decide to host this bot, it's recommended to be in a Unix-like environment (basically (windows subsystem for) linux)
+## Table of Contents
+1. [Installation](#installation)
+2. [Getting Sharted](#getting-sharted)
+3. [Environment Variables](#environment-variables)
+4. [Horse](#horse)
 
-You'll also need to install:
-  - Node.JS
-  - Python
-  - Java
-  - FFmpeg
-  - ImageMagick
+## Installation
 
-After everything's installed, run `build.sh`
+If you wanna host this bot you'll need to install the following tools and add some to your environment variables:
+  - [Node.JS](https://nodejs.org/en/download)
+  - [Java](https://www.java.com/download/manual.jsp)
+  - [FFmpeg](https://ffmpeg.org/download.html)
+  - [ImageMagick](https://imagemagick.org/script/download.php)
+  - [G'MIC](https://gmic.eu/download.html)
 
-To start the bot, run these commands in the root folder (Linux systems only):
+You can also try and run the `install` script that corresponds to your system to do the job for you.
+
+After everything's installed, run the `build` script to set up the binaries and dependencies.
+
+## Getting Sharted
+
+For the bot to authenticate, you'll need a Discord bot token (`DEFAULT_TOKEN` or `TEST_TOKEN`), and a completely random `AUTH_TOKEN` to encrypt and decrypt some data that is stored. You can easily get a Discord token by going to your application (or creating one if you haven't) in the [Discord Developer Portal](https://discord.com/developers/applications), then going to the bot section and copying the generated token.
+
+![Token up!](https://raw.githubusercontent.com/raIeigh/poopy/main/assets/image/token.png)
+
+After retrieving your token, you can run these commands in the root folder (Linux systems only):
 ```bash
-chmod u+x start
+chmod u+x start.sh
 ./start <auth token> <bot token>
 ```
 Upon executing these commands, both tokens will be stored in a file named `tokens.poo` (backup) and as environment variables.
 
-You'll need a Discord bot token to run this app (`DEFAULT_TOKEN` and `TEST_TOKEN`), there is also a list of tokens you can set up in system variables:
-  - `AUTH_TOKEN` (SET THIS TO SOMETHING RANDOM! mainly used for encrypting/decrypting messages and private tokens from people, can also be used to access private apis from the website)
+You can also just run `node server.js` in the current folder to start him up, and optionally append the `--test` flag to it. Keep in mind you'll still have to store the token in the environment variables.
+
+There's also a script for a worker you can run to do background tasks like image processing by typing in `node worker.js`, but you need a CloudAMQP instance to do so.
+
+## Environment Variables
+
+Here's a list of tokens you can set up in system variables to bring more functionality to Poopy:
+  - `AUTH_TOKEN` (SET THIS TO SOMETHING COMPLETELY RANDOM! mainly used for encrypting/decrypting messages and private tokens from people, can also be used to access private apis from the website)
   - `BOT_WEBSITE` (url if you want a website for your bot)
   - `HIVEMIND_ID` (id for your bot to participate in the hivemind. leave blank to not have any of the hivemind functionality)
   - `CLOUDAMQP_URL` (url used to send file processing queues, accessed at https://api.cloudamqp.com/console/`APP-ID`/details)
   - `MONGOOSE_URL` (url used to access the database, generated at https://cloud.mongodb.com/v2/`PROJECT-ID`#clusters/connect)
   - `AI21_KEY` (key generated when you sign up in ai21 for generating text, accessed at https://studio.ai21.com/account/account)
-  - `DALLE2_SESSION` (if you have dalle 2 access, go to https://labs.openai.com/, inspect element, go to Network, do a random generation, click the item with the name "tasks", then scroll down on the headers and copy the request's bearer authorization)
   - `GOOGLE_KEY` (key from google cloud for accessing the youtube api, generated at https://console.cloud.google.com/apis/credentials?project=`PROJECT-ID`)
   - `MAKESWEET_KEY` (key from makesweet for generating heartlocket gifs, dm @mkswt on twitter asking for one)
   - `RANDOMSTUFF_KEY` (key used for a cleverbot alternative when it breaks, generated at https://api-info.pgamerx.com/manage-key)
@@ -56,3 +75,9 @@ You'll need a Discord bot token to run this app (`DEFAULT_TOKEN` and `TEST_TOKEN
     - https://rapidapi.com/pgamerxdev/api/random-stuff-api/ (the random stuff api i talked about)
   - `REMOVEBG_KEY` (key from remove.bg, generated at https://www.remove.bg/dashboard#api-key)
   - `TENOR_KEY` (key generated by tenor when signing up, accessed at https://tenor.com/developer/dashboard)
+
+## Horse
+
+Horse
+
+![Horse](https://raw.githubusercontent.com/raIeigh/poopy/main/assets/image/horse.gif)
