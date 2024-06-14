@@ -1,7 +1,7 @@
-providers = ['node', 'python', 'java']
+providers = ['node', 'java']
 
 [phases.setup]
-nixPkgs = ['...', 'ffmpeg', 'imagemagick']
+nixPkgs = ['...', 'ffmpeg', 'imagemagick', 'gmic']
 aptPkgs = [
     '...',
     'fonts-liberation',
