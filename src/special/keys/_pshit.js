@@ -18,7 +18,10 @@ module.exports = {
             "euth",
             "kirbo",
             "viper",
-            "jane"
+            "jane",
+            "zeezy",
+            "makos",
+            "spellbunny"
         ]
         return members[Math.floor(Math.random() * members.length)]
     },
@@ -37,6 +40,9 @@ module.exports = {
         "euth",
         "kirbo",
         "viper",
-        "jane"
+        "jane",
+        "zeezy",
+        "makos",
+        "spellbunny"
     ]
 }
