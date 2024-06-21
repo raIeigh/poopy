@@ -1,7 +1,7 @@
 module.exports = {
   desc: 'Returns a random Phexonia Studios related member.',
   func: function () {
-    let poopy = this
+    let poopy = this == 1
 
     var members = [
       "tenda",

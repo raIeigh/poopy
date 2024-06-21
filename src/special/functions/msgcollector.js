@@ -1,9 +1,10 @@
 module.exports = {
-    helpf: '(collectPhrase<_msg|resettimer()|stop(sendFinishPhrase)> | timeout | finishPhrase<_collected>) (manage messages permission only)',
+    helpf: '(collectPhrase<_msg|resettimer()|stop(sendFinishPhrase)|source(...)> | timeout | finishPhrase<_collected>) (manage messages permission only)',
     desc: 'Creates a message collector that collects any messages sent in the channel, within the timeout.\n' +
         '**_msg** - Keyword used when a message is sent\n' +
         "**resettimer()** - Resets the collector's timer\n" +
         "**stop(sendFinishPhrase)** - Stops the collector from running, sends the finishPhrase if sendFinishPhrase isn't blank.\n" +
+        "**source(...)** - Perform a keyword execution using the variables of the user who made the message collector.\n" +
         '**_collected** - Used when the collector stops running, containing all collected messages.',
     func: async function (matches, msg, isBot, _, opts) {
         let poopy = this
@@ -62,6 +63,14 @@ module.exports = {
                             return ''
                         }
                     }
+                    valOpts.extrafuncs.source = {
+                        func: async (matches) => {
+                            var word = matches[1]
+                            var content = await getKeywordsFor(word, msg, true, opts).catch((e) => console.log(e)) ?? word
+                            return content
+                        },
+                        raw: true
+                    }
 
                     var collect = await getKeywordsFor(collectphrase, m, true, valOpts).catch((e) => console.log(e)) ?? ''
 
@@ -112,7 +121,7 @@ module.exports = {
     raw: true,
     potential: {
         keys: { _msg: {}, _collected: {} },
-        funcs: { resettimer: {}, stop: {} }
+        funcs: { resettimer: {}, stop: {}, source: {} }
     },
     attemptvalue: 10
 }

@@ -191,6 +191,7 @@ async function start() {
                         noInfoPost: true,
                         intents: 3276799,
                         allowbotusage: true,
+                        allowpingresponses: false,
                         illKillYouIfYouUseEval: []
                     }
                 }
