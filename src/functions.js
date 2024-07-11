@@ -3146,6 +3146,7 @@ functions.dmSupport = function (msg) {
 }
 
 functions.escapeKeywordResult = async function (string) {
+    if (!(typeof string === 'string' || string instanceof String)) return string
     return string
         .replace(/(?<!\\)\(/g, '\\\(')
         .replace(/(?<!\\)\)/g, '\\\)')
