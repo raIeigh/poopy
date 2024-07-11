@@ -3129,6 +3129,17 @@ functions.dmSupport = function (msg) {
 
 }
 
+functions.escapeKeywordResult = async function (string) {
+    return string
+        .replace(/\(/g, '\\\(')
+        .replace(/\)/g, '\\\)')
+        .replace(/\[/g, '\\\[')
+        .replace(/\]/g, '\\\]')
+        .replace(/\{/g, '\\\{')
+        .replace(/\}/g, '\\\}')
+        .replace(/\_/g, '\\\_')
+}
+
 functions.getKeywordsFor = async function (string, msg, isBot, { extrakeys = {}, extrafuncs = {}, resetattempts = false, ownermode = false, declaredonly = false } = {}) {
     let poopy = this
     let config = poopy.config
@@ -3136,7 +3147,7 @@ functions.getKeywordsFor = async function (string, msg, isBot, { extrakeys = {},
     let data = poopy.data
     let tempdata = poopy.tempdata
     let globaldata = poopy.globaldata
-    let { getKeyFunc, infoPost, equalValues, sleep } = poopy.functions
+    let { getKeyFunc, infoPost, equalValues, sleep, escapeKeywordResult } = poopy.functions
 
     if (!tempdata[msg.author.id]) {
         tempdata[msg.author.id] = {}
@@ -3235,7 +3246,7 @@ functions.getKeywordsFor = async function (string, msg, isBot, { extrakeys = {},
                     var change
 
                     try {
-                        change = await key.func.call(poopy, msg, isBot, string, opts)
+                        change = await escapeKeywordResult(await key.func.call(poopy, msg, isBot, string, opts))
                     } catch (e) {
                         console.log(e)
                         change = ''
@@ -3266,7 +3277,7 @@ functions.getKeywordsFor = async function (string, msg, isBot, { extrakeys = {},
                     var change
 
                     try {
-                        change = await func.func.call(poopy, [funcName, match], msg, isBot, string, opts)
+                        change = await escapeKeywordResult(await func.func.call(poopy, [funcName, match], msg, isBot, string, opts))
                     } catch (e) {
                         console.log(e)
                         change = ''
@@ -4372,7 +4383,7 @@ functions.updateHivemindStatus = async function () {
     functions.calculateHivemindStatus(poopy).then(status => {
         hivemindChannel.messages.cache.get(vars.hivemindMessageId).edit(status).catch((err) => { console.log(err) })
     }).catch((err) => { console.log(err) });
-    
+
     return;
 }
 
@@ -4389,62 +4400,49 @@ functions.getTotalHivemindStatus = async function () {
     var status = [];
 
     await hivemindChannel.messages.fetch().then(messages => {
-        messages.forEach(async (msg) =>  {
-            if (!msg.author.bot) {
-                await msg.delete().catch((err) => { console.log(err) });
-            } else {
-
-                if (!msg.editedTimestamp) {
-                    var id = msg.content.match(/#[^ ]+/g)
-                    if (!id) return
-                    id = id[0].substring(1)
-
-                    if (id == process.env.HIVEMIND_ID) {
-                        await msg.delete().catch((err) => { console.log(err) });
-                    }
-
-                    return
-                }
-                if ((Date.now() - msg.editedTimestamp) > 60000 + 5000) {
-                    var id = msg.content.match(/#[^ ]+/g)
-                    if (!id) return
-                    id = id[0].substring(1)
-
-                    if (id == process.env.HIVEMIND_ID && (Date.now() - msg.editedTimestamp) > 60000) {
-                        await msg.delete().catch((err) => { console.log(err) });
-                    }
-                    
-                    return
-                }
-
-                var id = msg.content.match(/#[^ ]+/g)
-                if (!id) return
-                id = id[0].substring(1)
-
-                var EpicFail = false
-
-                status.forEach((item, i) => {
-                    if (item.id == id) {
-                        if (item.time > msg.createdTimestamp) {
-                            EpicFail = true
-                            return
-                        } else {
-                            status.splice(i, 1)
-                        }
-                    }
-                })
-
-                if (EpicFail) return;
-
-                var cpu = msg.content.match(/CPU: [\d\.]+/g)
-                if (!cpu) return
-                cpu = Number(cpu[0].substring(5))
-
-                status.push({id: id, cpu: cpu, time: msg.createdTimestamp});
+        messages.forEach(async (msg) => {
+            var regexResult = /(?<botName>[^#]+) #(?<id>[^ ]+)/g.exec(msg.content)
+            if (!regexResult) {
+                await msg.delete().then(msg => console.log(`Deleted non-hivemind message from ${msg.author.username} as ${bot.user.username} #${process.env.HIVEMIND_ID}.`)).catch((err) => { console.log(err) });
+                return;
             }
+            var { botName, id } = regexResult.groups
+            if (botName !== bot.user.username) return;
+
+            var timestamp = msg.editedTimestamp || msg.createdTimestamp
+
+            if ((Date.now() - timestamp) > 60000 + 5000) {
+                if (id == process.env.HIVEMIND_ID) {
+                    await msg.delete().then(msg => console.log(`Deleted outdated message from ${msg.author.username} as ${bot.user.username} #${process.env.HIVEMIND_ID}.\nTimestamp is: ${timestamp} (${(new Date(timestamp)).toDateString()})`)).catch((err) => { console.log(err) });
+                }
+
+                return
+            }
+
+            var EpicFail = false
+
+            status.forEach((item, i) => {
+                if (item.id == id) {
+                    if (item.time > msg.createdTimestamp) {
+                        EpicFail = true
+                        return
+                    } else {
+                        status.splice(i, 1)
+                    }
+                }
+            })
+
+            if (EpicFail) return;
+
+            var regexResult = /CPU: (?<cpu>[\d\.]+)/g.exec(msg.content)
+            if (!regexResult) return;
+            var { cpu } = regexResult.groups
+            cpu = Number(cpu)
+
+            status.push({ botName: botName, id: id, cpu: cpu, time: msg.createdTimestamp });
         })
     }).catch((err) => { console.log(err) });
-    
+
     if (status.length > 0) {
         status.sort((a, b) => a.cpu - b.cpu)
     }
