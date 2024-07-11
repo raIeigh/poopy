@@ -77,7 +77,7 @@ functions.unescapeHTML = function (value) {
         .replace(/&gt;/g, '>')
         .replace(/&quot;/g, '"')
         .replace(/&apos;/g, '\'')
-        .replace(/&#\d+;/g, (match) => {
+        .replace(/&#[0-9]+;/g, (match) => {
             return String.fromCharCode(match.substring(2, match.length - 1))
         })
 }
@@ -2280,8 +2280,24 @@ functions.correctUrl = async function (url) {
     let { infoPost, execPromise } = poopy.functions
     let { axios, cheerio } = poopy.modules
 
-    if (url.match(/^https\:\/\/(www\.)?tenor\.com\/view/) && url.match(/\d+/g) && process.env.TENOR_KEY) {
-        var ids = url.match(/\d+/g)
+    if (url.match(/^https\:\/\/((cdn|media)\.)?discordapp\.(com|net)\/attachments/) && url.match(/[0-9]+/g) && process.env.DISCORD_REFRESHER_TOKEN) {
+        var response = await axios({
+            method: 'POST',
+            url: `https://discord.com/api/v9/attachments/refresh-urls`,
+            data: {
+                attachment_urls: [url]
+            },
+            headers: {
+                "Authorization": process.env.DISCORD_REFRESHER_TOKEN,
+                "Accept": "application/json"
+            }
+        }).catch((e) => console.log(e))
+        if (response && response.status >= 200 && response.status < 300 && response.data.refreshed_urls.length) {
+            infoPost(`Discord URL detected`)
+            return response.data.refreshed_urls[0].refreshed
+        }
+    } else if (url.match(/^https\:\/\/(www\.)?tenor\.com\/view/) && url.match(/[0-9]+/g) && process.env.TENOR_KEY) {
+        var ids = url.match(/[0-9]+/g)
         var body = await axios(`https://g.tenor.com/v1/gifs?ids=${ids[ids.length - 1]}&key=${process.env.TENOR_KEY}`).catch(() => { })
         if (body && body.data.results.length) {
             infoPost(`Tenor URL detected`)
@@ -2369,7 +2385,7 @@ functions.correctUrl = async function (url) {
                         var urls = $("url")
                         if (urls.length > 0) {
                             var imageasseturl = urls[0].children[0].data
-                            var ids = imageasseturl.match(/\d+/g)
+                            var ids = imageasseturl.match(/[0-9]+/g)
                             var id = ids[0]
 
                             axios({
@@ -2488,7 +2504,7 @@ functions.correctUrl = async function (url) {
             }
         }
 
-        var ids = url.match(/\d+/g)
+        var ids = url.match(/[0-9]+/g)
         if (ids.length) {
             var id = ids[0]
             var asseturl = await getAsset(id).catch(() => { })
@@ -2523,7 +2539,7 @@ functions.correctUrl = async function (url) {
             })
         }
 
-        var ids = url.match(/\d+/g)
+        var ids = url.match(/[0-9]+/g)
         if (ids.length) {
             var id = ids[0]
             var badgeurl = await getBadge(id).catch(() => { })
@@ -2561,7 +2577,7 @@ functions.correctUrl = async function (url) {
             })
         }
 
-        var ids = url.match(/\d+/g)
+        var ids = url.match(/[0-9]+/g)
         if (ids.length) {
             var id = ids[0]
             var bundleurl = await getBundle(id).catch(() => { })
@@ -2599,7 +2615,7 @@ functions.correctUrl = async function (url) {
             })
         }
 
-        var ids = url.match(/\d+/g)
+        var ids = url.match(/[0-9]+/g)
         if (ids.length) {
             var id = ids[0]
             var gamepassurl = await getGamePass(id).catch(() => { })
@@ -2637,7 +2653,7 @@ functions.correctUrl = async function (url) {
             })
         }
 
-        var ids = url.match(/\d+/g)
+        var ids = url.match(/[0-9]+/g)
         if (ids.length) {
             var id = ids[0]
             var userurl = await getUser(id).catch(() => { })
@@ -2675,7 +2691,7 @@ functions.correctUrl = async function (url) {
             })
         }
 
-        var ids = url.match(/\d+/g)
+        var ids = url.match(/[0-9]+/g)
         if (ids.length) {
             var id = ids[0]
             var groupurl = await getGroup(id).catch(() => { })
@@ -2699,7 +2715,7 @@ functions.correctUrl = async function (url) {
             infoPost(`SoundCloud URL detected`)
             return soundcloudurl.trim()
         }
-    } else if (url.match(/^https\:\/\/((www)\.)?(fx)?twitter\.com\/\w{4,15}\/status\/\d+/)) {
+    } else if (url.match(/^https\:\/\/((www)\.)?(fx)?twitter\.com\/\w{4,15}\/status\/[0-9]+/)) {
         async function getImageUrl(url) {
             var res = await axios.get(url)
             var $ = cheerio.load(res.data)
@@ -2775,9 +2791,9 @@ functions.getUrls = async function (msg, options = {}) {
             }
         },
         {
-            regexp: /<a?:[a-zA-Z\d_]+?:\d+>/g,
+            regexp: /<a?:[a-zA-Z0-9_]+?:[0-9]+>/g,
             func: async function (demoji) {
-                var demojiidmatch = demoji.match(/\d+/g)
+                var demojiidmatch = demoji.match(/[0-9]+/g)
                 var demojiid = demojiidmatch[demojiidmatch.length - 1]
                 var gifurl = `https://cdn.discordapp.com/emojis/${demojiid}.gif?size=1024`
                 var pngurl = `https://cdn.discordapp.com/emojis/${demojiid}.png?size=1024`
@@ -2801,7 +2817,7 @@ functions.getUrls = async function (msg, options = {}) {
             }
         },
         {
-            regexp: /\d{10,}/g,
+            regexp: /[0-9]{10,}/g,
             func: async function (id) {
                 var user = await bot.users.fetch(id).catch(() => { })
                 if (user) {
@@ -3361,8 +3377,8 @@ functions.battle = async function (msg, subject, action, damage, chance) {
 
     subject = subject ?? attachment ?? sticker
 
-    var member = await bot.users.fetch((subject.match(/\d+/) ?? [subject])[0]).catch(() => { })
-    var guildMember = await msg.guild.members.fetch((subject.match(/\d+/) ?? [subject])[0]).catch(() => { })
+    var member = await bot.users.fetch((subject.match(/[0-9]+/) ?? [subject])[0]).catch(() => { })
+    var guildMember = await msg.guild.members.fetch((subject.match(/[0-9]+/) ?? [subject])[0]).catch(() => { })
 
     var yourData = data.userData[msg.author.id]
 
@@ -4434,7 +4450,7 @@ functions.getTotalHivemindStatus = async function () {
 
             if (EpicFail) return;
 
-            var regexResult = /CPU: (?<cpu>[\d\.]+)/g.exec(msg.content)
+            var regexResult = /CPU: (?<cpu>[0-9\.]+)/g.exec(msg.content)
             if (!regexResult) return;
             var { cpu } = regexResult.groups
             cpu = Number(cpu)
