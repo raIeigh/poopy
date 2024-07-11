@@ -4429,7 +4429,7 @@ functions.getTotalHivemindStatus = async function () {
 
             if ((Date.now() - timestamp) > 60000 + 5000) {
                 if (id == process.env.HIVEMIND_ID) {
-                    await msg.delete().then(msg => console.log(`Deleted outdated message from ${msg.author.username} as ${bot.user.username} #${process.env.HIVEMIND_ID}.\nTimestamp is: ${timestamp} (${(new Date(timestamp)).toDateString()})`)).catch((err) => { console.log(err) });
+                    await msg.delete().then(msg => console.log(`Deleted outdated message from ${msg.author.username} as ${bot.user.username} #${process.env.HIVEMIND_ID}.\nTimestamp is: ${timestamp} (${(new Date(timestamp)).toLocaleString('en-gb')})`)).catch((err) => { console.log(err) });
                 }
 
                 return
