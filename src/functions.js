@@ -3147,13 +3147,14 @@ functions.dmSupport = function (msg) {
 
 functions.escapeKeywordResult = async function (string) {
     return string
-        .replace(/\(/g, '\\\(')
-        .replace(/\)/g, '\\\)')
-        .replace(/\[/g, '\\\[')
-        .replace(/\]/g, '\\\]')
-        .replace(/\{/g, '\\\{')
-        .replace(/\}/g, '\\\}')
-        .replace(/\_/g, '\\\_')
+        .replace(/(?<!\\)\(/g, '\\\(')
+        .replace(/(?<!\\)\)/g, '\\\)')
+        .replace(/(?<!\\)\[/g, '\\\[')
+        .replace(/(?<!\\)\]/g, '\\\]')
+        .replace(/(?<!\\)\{/g, '\\\{')
+        .replace(/(?<!\\)\}/g, '\\\}')
+        .replace(/(?<!\\)\_/g, '\\\_')
+        .replace(/(?<!\\)\"/g, '\\\"')
 }
 
 functions.getKeywordsFor = async function (string, msg, isBot, { extrakeys = {}, extrafuncs = {}, resetattempts = false, ownermode = false, declaredonly = false } = {}) {

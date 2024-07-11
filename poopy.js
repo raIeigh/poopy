@@ -38,7 +38,7 @@ class Poopy {
             },
             msgcooldown: 0,
             pingresponselimit: 0,
-            pingresponsecooldown: 0,
+            pingresponsecooldown: 60000,
             limits: {
                 size: {
                     image: 20,
@@ -525,7 +525,7 @@ class Poopy {
             if (dataError) return console.log(dataError)
 
             var prefix = data.guildData[msg.guild.id]?.['prefix'] ?? config.globalPrefix
-            var hivemind = data.guildData[msg.guild.id]['poopymode'] ? "On" : "Off"
+            var hivemind = data.guildData[msg.guild.id]['poopymode'] ? "All" : "One"
 
             if (msg.channel.type == Discord.ChannelType.DM && msg.type !== Discord.InteractionType.ApplicationCommand && !origcontent.includes(prefix)) {
                 if (msg.author.bot || msg.author.id == bot.user.id) return
