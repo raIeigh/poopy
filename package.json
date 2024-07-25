@@ -1,0 +1,49 @@
+{
+  "name": "poopy",
+  "version": "1.10.2",
+  "description": "Ballfish",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "engines": {
+    "node": ">= 16.11.1"
+  },
+  "author": "raleigh",
+  "license": "MIT",
+  "dependencies": {
+    "@discordjs/voice": "^0.8.0",
+    "amqplib": "^0.10.0",
+    "archiver": "^5.3.0",
+    "axios": "^0.25.0",
+    "body-parser": "^1.20.0",
+    "canvas": "^2.11.2",
+    "catbox.moe": "^1.0.2",
+    "cheerio": "^1.0.0-rc.10",
+    "cors": "^2.8.5",
+    "crypto-js": "^4.1.1",
+    "discord.js": "^14.14.1",
+    "discord.js-selfbot": "github:aiko-chan-ai/discord.js-selfbot-v13#v14",
+    "emoji-regex": "^10.0.0",
+    "express": "^4.18.0",
+    "file-type": "^16.5.3",
+    "form-data": "^4.0.0",
+    "fs-extra": "^10.0.1",
+    "g-i-s": "^2.1.6",
+    "googleapis": "^92.0.0",
+    "grapheme-splitter": "^1.0.4",
+    "istextorbinary": "^6.0.0",
+    "jimp": "^0.16.1",
+    "mathjs": "^9.5.1",
+    "mongoose": ">=6.4.6",
+    "pluralize": "^8.0.0",
+    "pretty-bytes": "^5.6.0",
+    "request": "^2.88.2",
+    "throng": "^5.0.0",
+    "twemoji": "^14.0.2",
+    "uuid": "^9.0.0",
+    "whatwg-url": "^11.0.0",
+    "ws": ">=8.17.1",
+    "xml2js": ">=0.5.0"
+  }
+}

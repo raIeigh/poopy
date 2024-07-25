@@ -1,0 +1,14 @@
+[
+    {
+        "name":"Mario Kart",
+        "type":"Playing"
+    },
+    {
+        "name":"Mario",
+        "type":"Watching"
+    },
+    {
+        "name":"nonsense",
+        "type":"Streaming"
+    }
+]

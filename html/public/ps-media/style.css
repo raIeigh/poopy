@@ -1,0 +1,119 @@
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu&display=swap');
+
+div#options {
+    transform: translate(-50%, -110%);
+    left: 50%;
+    top: 100%;
+    position: fixed;
+    width: fit-content;
+    height: fit-content;
+    display: table;
+    z-index: 1;
+}
+
+button {
+    font-size: x-large;
+    padding: 1rem;
+    border-color: #673ab7;
+    background: #673ab7;
+    color: white;
+    font-family: 'Ubuntu';
+    box-shadow: 3px 3px 3px black;
+    text-shadow: 3px 3px 3px black;
+    border-radius: 10px;
+    width: fit-content;
+    transition: 0.5s;
+    display: table-cell;
+}
+
+button:hover {
+    font-size: x-large;
+    padding: 1rem;
+    border-color: #ddcaff;
+    background: #ddcaff;
+    color: white;
+    box-shadow: 3px 3px 3px black;
+    text-shadow: 3px 3px 3px black;
+    border-radius: 10px;
+    width: fit-content;
+    transition: 0.5s;
+    cursor: pointer;
+    display: table-cell;
+}
+
+
+button:active {
+    font-size: x-large;
+    padding: 1rem;
+    border-color: #1b0049;
+    background: #1b0049;
+    color: white;
+    box-shadow: 3px 3px 3px black;
+    text-shadow: 3px 3px 3px black;
+    border-radius: 10px;
+    width: fit-content;
+    transition: 0.5s;
+    cursor: pointer;
+    display: table-cell;
+}
+
+div#options button {
+    padding: 0.5rem;
+    width: 70px;
+    height: 70px;
+    border-color: #673ab7;
+    background: #673ab7;
+    color: white;
+    box-shadow: 3px 3px 3px black;
+    text-shadow: 3px 3px 3px black;
+    border-radius: 10px;
+    transition: 0.5s;
+    display: table-cell;
+}
+
+div#options button:hover {
+    padding: 0.5rem;
+    width: 70px;
+    height: 70px;
+    border-color: #ddcaff;
+    background: #ddcaff;
+    color: white;
+    box-shadow: 3px 3px 3px black;
+    text-shadow: 3px 3px 3px black;
+    border-radius: 10px;
+    transition: 0.5s;
+    cursor: pointer;
+    display: table-cell;
+}
+
+
+div#options button:active {
+    padding: 0.5rem;
+    width: 70px;
+    height: 70px;
+    border-color: #1b0049;
+    background: #1b0049;
+    color: white;
+    box-shadow: 3px 3px 3px black;
+    text-shadow: 3px 3px 3px black;
+    border-radius: 10px;
+    transition: 0.5s;
+    cursor: pointer;
+    display: table-cell;
+}
+
+div#options button img {
+    height: 100%;
+    filter: drop-shadow(3px 3px 3px black);
+}
+
+.top {
+    left: 50%;
+    transform: translate(-50%, 10%);
+    position: fixed;
+    z-index: 1;
+}
+
+body {
+    background: #a16dfd;
+}

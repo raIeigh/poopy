@@ -1,0 +1,410 @@
+[
+    {
+        "name": "animate",
+        "cmds": [
+            "blob",
+            "bouncy",
+            "circle",
+            "infinity",
+            "jumpscare",
+            "loophole",
+            "morph",
+            "piranha",
+            "spazz",
+            "spin",
+            "squishy",
+            "transition",
+            "tween",
+            "wackywebm"
+        ],
+        "description": "Move and animate a file in an indefinite amount of ways."
+    },
+    {
+        "name": "area",
+        "cmds": [
+            "autorop",
+            "contract",
+            "crop",
+            "expand",
+            "areascale",
+            "hcontract",
+            "hexpand",
+            "hremove",
+            "vcontract",
+            "vexpand",
+            "vremove"
+        ],
+        "description": "Expand or crop the area of some file."
+    },
+    {
+        "name": "audio",
+        "cmds": [
+            "addaudio",
+            "bassy",
+            "distort",
+            "echo",
+            "gradualhighpitch",
+            "graduallowpitch",
+            "gradualslowpitch",
+            "gradualspeedpitch",
+            "higherpitch",
+            "lowerpitch",
+            "mixaudio",
+            "mute",
+            "reverb",
+            "slowpitch",
+            "speedpitch",
+            "tospectrogram",
+            "trebly",
+            "tremolo",
+            "vibrato",
+            "vocode",
+            "volume"
+        ],
+        "description": "Add an effect to an input's audio."
+    },
+    {
+        "name": "battle",
+        "cmds": [
+            "chainpunch",
+            "punch",
+            "slam",
+            "slap"
+        ],
+        "description": "Beat people up. Yeah."
+    },
+    {
+        "name": "caption",
+        "cmds": [
+            "caption",
+            "cooltext",
+            "inspiration",
+            "lefishe",
+            "meme",
+            "motivator",
+            "newcaption",
+            "snapchat",
+            "stuff",
+            "tenorcaption"
+        ],
+        "description": "Add a caption to an input."
+    },
+    {
+        "name": "color",
+        "cmds": [
+            "brightcontrast",
+            "colordark",
+            "colorlight",
+            "curves",
+            "hsl",
+            "opacity",
+            "pseudocolor",
+            "rainbow",
+            "tint"
+        ],
+        "description": "Change an input's colors."
+    },
+    {
+        "name": "compress",
+        "cmds": [
+            "crunch",
+            "extracrunch",
+            "jpeg",
+            "lossygif",
+            "reencode",
+            "setaudiobitrate",
+            "setbitrate",
+            "setcrf",
+            "setfps",
+            "reducecolors"
+        ],
+        "description": "Useful commands for file compression."
+    },
+    {
+        "name": "convert",
+        "cmds": [
+            "frames",
+            "makegif",
+            "makewebm",
+            "toapng",
+            "togif",
+            "tomp3",
+            "tomp4",
+            "topng"
+        ],
+        "description": "Convert a file between various different formats."
+    },
+    {
+        "name": "dimensions",
+        "cmds": [
+            "fix",
+            "fixratio",
+            "magik",
+            "perspective",
+            "pixenlarge",
+            "superresolution",
+            "unmagik",
+            "waifu2x"
+        ],
+        "description": "Change and fix the dimensions of a file in some way."
+    },
+    {
+        "name": "duration",
+        "cmds": [
+            "autotrim",
+            "duration",
+            "gradualslowdown",
+            "gradualspeedup",
+            "loop",
+            "noloop",
+            "offset",
+            "remove",
+            "slowdown",
+            "speedup",
+            "trim"
+        ],
+        "description": "Change the duration of a video, GIF or audio."
+    },
+    {
+        "name": "effect",
+        "cmds": [
+            "60fps",
+            "alphaextract",
+            "blur",
+            "boomerang",
+            "chew",
+            "chromakeybg",
+            "convolution",
+            "dilate",
+            "dizzy",
+            "erode",
+            "glow",
+            "hd",
+            "invert",
+            "melt",
+            "nervous",
+            "outline",
+            "pixelate",
+            "removebg",
+            "reverse",
+            "reverseboomerang",
+            "rotate",
+            "ytp"
+        ],
+        "description": "A wide range of commands that change the way the file looks."
+    },
+    {
+        "name": "generate",
+        "cmds": [
+            "cleverbot",
+            "compose",
+            "dalle",
+            "dalle2text",
+            "dalle2variations",
+            "describeimage",
+            "generatetext",
+            "inferkit",
+            "newimage",
+            "spectrogram",
+            "stablediffusion",
+            "uberduck"
+        ],
+        "description": "Generate media from an AI or not."
+    },
+    {
+        "name": "hex",
+        "cmds": [
+            "crasher",
+            "dividelength",
+            "donotplaytwice",
+            "enlongate",
+            "multlength",
+            "virus"
+        ],
+        "description": "Manipulate the file's Hex Code to make it shorter, longer, etc."
+    },
+    {
+        "name": "inside-joke",
+        "cmds": [
+            "babis",
+            "coin",
+            "emotegame",
+            "flip",
+            "hankjump",
+            "idfsgs",
+            "larry",
+            "phexintro",
+            "phexoutro",
+            "ps",
+            "pspasta",
+            "sayori",
+            "sayoriart",
+            "sayorichoice",
+            "srlogo",
+            "tango",
+            "tdumpy",
+            "tord",
+            "zekk"
+        ],
+        "description": "phexonia studios"
+    },
+    {
+        "name": "json",
+        "cmds": [
+            "addtojson",
+            "displayjson",
+            "removefromjson"
+        ],
+        "description": "Exclusive to some people for editing the JSONs used by Poopy."
+    },
+    {
+        "name": "memes",
+        "cmds": [
+            "allaboutme",
+            "backrooms",
+            "battlecats",
+            "bisexual",
+            "canyoufind",
+            "country",
+            "crewmate",
+            "dababy",
+            "desktopdestroy",
+            "dontrepost",
+            "dumpy",
+            "fail",
+            "favorite",
+            "heaven",
+            "hell",
+            "install",
+            "notclickbait",
+            "pillow",
+            "playbutton",
+            "rap",
+            "rowley",
+            "skin",
+            "tshirt"
+        ],
+        "description": "Integrate an input in many different meme formats."
+    },
+    {
+        "name": "meme-captions",
+        "cmds": [
+            "amazon",
+            "benson",
+            "bloxys",
+            "call",
+            "choicegif",
+            "countdown",
+            "error",
+            "iceberg",
+            "makesweet",
+            "pvz",
+            "reddit",
+            "robloxgame",
+            "twitterban",
+            "undertale",
+            "yall"
+        ],
+        "description": "Create memes with files and captions."
+    },
+    {
+        "name": "mirror",
+        "cmds": [
+            "bottommirror",
+            "hflip",
+            "leftmirror",
+            "rightmirror",
+            "topmirror",
+            "vflip"
+        ],
+        "description": "Flip or mirror a file in different axes."
+    },
+    {
+        "name": "owner",
+        "cmds": [
+            "destroy",
+            "eval",
+            "reset",
+            "setstatus"
+        ],
+        "description": "salami commands"
+    },
+    {
+        "name": "overlay",
+        "cmds": [
+            "blend",
+            "chromakey",
+            "hmerge",
+            "hstack",
+            "mask",
+            "move",
+            "overlay",
+            "vmerge",
+            "vstack"
+        ],
+        "description": "For stacking or overlaying a file on top of another."
+    },
+    {
+        "name": "random",
+        "cmds": [
+            "randomcmd",
+            "randomgif",
+            "randomimage",
+            "randomname",
+            "randomsentence",
+            "randomword"
+        ],
+        "description": "Send a random value from a collection of values."
+    },
+    {
+        "name": "search",
+        "cmds": [
+            "bing",
+            "e621",
+            "gif",
+            "image",
+            "rule34",
+            "sauce",
+            "youtube"
+        ],
+        "description": "Search for things on the web."
+    },
+    {
+        "name": "settings",
+        "cmds": [
+            "chaincommands",
+            "keyexecution",
+            "setprefix",
+            "togglecmds",
+            "toggledms",
+            "togglensfw"
+        ],
+        "description": "Manage a server's Poopy settings, or your own Poopy settings."
+    },
+    {
+        "name": "size",
+        "cmds": [
+            "enlarge",
+            "hshrink",
+            "hstretch",
+            "scale",
+            "shrink",
+            "vshrink",
+            "vstretch"
+        ],
+        "description": "Scale the size of some file."
+    },
+    {
+        "name": "zoom",
+        "cmds": [
+            "hzoomin",
+            "hzoomout",
+            "vzoomin",
+            "vzoomout",
+            "zoomin",
+            "zoomout",
+            "zoomscale"
+        ],
+        "description": "Zoom some file in or out."
+    }
+]
