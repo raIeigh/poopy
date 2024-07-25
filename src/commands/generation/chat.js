@@ -13,6 +13,7 @@ module.exports = {
     ],
     execute: async function (msg, args) {
         let poopy = this
+        let { tempdata } = poopy
         let { getOption, parseNumber, userToken } = poopy.functions
         let { axios, fs, Discord } = poopy.modules
         let vars = poopy.vars
@@ -28,22 +29,31 @@ module.exports = {
             await msg.channel.sendTyping().catch(() => { })
             return
         }
+
+        if (!tempdata[msg.channel.id]) tempdata[msg.channel.id] = {}
         
+        var history = tempdata[msg.channel.id]?.['chathistories']
+        if (!history) history = tempdata[msg.channel.id]['chathistories'] = {} 
+
+        var ourHistory = history[instruct]
+        if (!ourHistory) ourHistory = history[instruct] = [
+            {
+                role: "system",
+                content: instruct
+            }
+        ]
+
+        ourHistory.push({
+            role: "user",
+            content: saidMessage
+        })
+
         var resp = await axios({
             url: `https://api.ai21.com/studio/v1/chat/completions`,
             method: 'POST',
             data: {
                 model: "jamba-instruct",
-                messages: [
-                    {
-                        role: "system",
-                        content: instruct,
-                    },
-                    {
-                        role: "user",
-                        content: saidMessage,
-                    },
-                ],
+                messages: ourHistory,
                 temperature: temperature,
                 top_p: 1,
             },
@@ -53,6 +63,15 @@ module.exports = {
         }).catch(() => { })
 
         if (resp) {
+            ourHistory.push({
+                role: "assistant",
+                content: resp.data.choices[0].message.content
+            })
+
+            var tokenAmount = resp.data.usage.total_tokens
+
+            if (tokenAmount > 200000) ourHistory.slice(1, 1) // ._.
+
             if (!msg.nosend) await msg.reply({
                 content: resp.data.choices[0].message.content,
                 allowedMentions: {
