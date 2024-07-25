@@ -102,7 +102,7 @@ for (var Discord of modules.Discord) {
             payload.content ||
             payload.files || payload.embeds ||
             payload.stickers
-        ) : payload)) {
+        ) : payload) && !channelData['forceres'].repliesonly) {
             var forceres = channelData['forceres']
             delete channelData['forceres']
 
@@ -163,7 +163,7 @@ for (var Discord of modules.Discord) {
             payload.content ||
             payload.files || payload.embeds ||
             payload.stickers
-        ) : payload)) {
+        ) : payload) && !channelData['forceres'].repliesonly) {
             var forceres = channelData['forceres']
             delete channelData['forceres']
 
@@ -232,7 +232,7 @@ for (var Discord of modules.Discord) {
             payload.content ||
             payload.files || payload.embeds ||
             payload.stickers
-        ) : payload)) {
+        ) : payload) && !channelData['forceres'].repliesonly) {
             var forceres = channelData['forceres']
             delete channelData['forceres']
 

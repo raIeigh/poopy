@@ -44,5 +44,6 @@ module.exports = {
   perms: ['Administrator'],
   type: 'Settings',
   envRequired: ['HIVEMIND_ID'],
+  configRequired: ['hivemind'],
   hivemindForce: true
 }

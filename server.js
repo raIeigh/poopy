@@ -213,6 +213,7 @@ async function start() {
                     TOKEN: process.env.HIVEMIND_TOKEN,
                     config: {
                         testing: true,
+                        hivemind: true,
                         noInfoPost: true,
                         globalPrefix: 'hp:',
                         database: 'hiveminddata',
@@ -227,6 +228,7 @@ async function start() {
                         TOKEN: process.env.INDIA_TOKEN,
                         config: {
                             testing: true,
+                            hivemind: true,
                             self: true,
                             globalPrefix: 'i:',
                             database: 'hivemindracist',

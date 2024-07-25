@@ -129,7 +129,7 @@ functions.matchLongestKey = function (str, keys) {
     var longest = ['']
     var matched = false
     for (var i in keys) {
-        var match = str.match(new RegExp(`^${functions.regexClean(keys[i])}`))
+        var match = str.match(new RegExp(`^(?<!\\\\)_?(?<!\\\\)${functions.regexClean(keys[i])}`))
         if (match && match[0].length >= longest[0].length) {
             matched = true
             longest = match
@@ -143,7 +143,7 @@ functions.matchLongestFunc = function (str, funcs) {
     var longest = ['']
     var matched = false
     for (var i in funcs) {
-        var match = str.match(new RegExp(`${functions.regexClean(funcs[i])}$`))
+        var match = str.match(new RegExp(`${functions.regexClean(funcs[i])}_?$`))
         if (match && match[0].length >= longest[0].length) {
             matched = true
             longest = match
@@ -480,6 +480,19 @@ functions.envsExist = function (envs = []) {
 
     envs.forEach(env => {
         if (!process.env[env]) exist = false
+    })
+
+    return exist
+}
+
+functions.configFlagsEnabled = function(reqConfigs = []) {
+    let poopy = this
+    let config = poopy.config
+
+    var exist = true
+
+    reqConfigs.forEach(reqConfig => {
+        if (config[reqConfig] !== true) exist = false
     })
 
     return exist
@@ -1065,9 +1078,9 @@ functions.getKeyFunc = function (string, { extrakeys = {}, extrafuncs = {}, decl
     var funcs = Object.keys(funclist).sort((a, b) => b.length - a.length)
     var pfuncs = Object.keys(pfunclist).sort((a, b) => b.length - a.length)
 
-    var keyfiltered = keys.filter((key) => string.includes(key))
-    var funcfiltered = funcs.filter((func) => string.includes(`${func}(`))
-    var pfuncfiltered = pfuncs.filter((pfunc) => string.includes(`${pfunc}(`))
+    var keyfiltered = keys.filter((key) => new RegExp(`(?<!\\\\)_?(?<!\\\\)${functions.regexClean(key)}`, 'g').exec(string))
+    var funcfiltered = funcs.filter((func) => new RegExp(`${functions.regexClean(func)}(?!\\\\)_?\\(`, 'g').exec(string))
+    var pfuncfiltered = pfuncs.filter((pfunc) => new RegExp(`${functions.regexClean(pfunc)}(?!\\\\)_?\\(`, 'g').exec(string))
     var keyfirstletters = keyfiltered.map(key => key[0]).filter(function (item, pos, self) {
         return self.indexOf(item) == pos
     })
@@ -1087,7 +1100,7 @@ functions.getKeyFunc = function (string, { extrakeys = {}, extrafuncs = {}, decl
                         parindex++ // open parentheses found
                         lastParenthesesIndex = i // set the index of the last parentheses
                         if (!rawMatch) {
-                            var func = funclist[funcmatch[0]]
+                            var func = funclist[funcmatch[0]] || funclist[funcmatch[0].substring(0, funcmatch[0].length - 1)]
                             if (func) {
                                 if (func.raw) {
                                     rawParenthesesIndex = i
@@ -1206,7 +1219,7 @@ functions.splitKeyFunc = function (string, { extrafuncs = {}, args = Infinity, s
     var pfuncs = Object.keys(pfunclist).sort((a, b) => b.length - a.length)
     var afuncs = funcs.concat(pfuncs).sort((a, b) => b.length - a.length)
 
-    var afuncfiltered = afuncs.filter((afunc) => string.includes(`${afunc}(`))
+    var afuncfiltered = afuncs.filter((afunc) => new RegExp(`${functions.regexClean(afunc)}(?!\\\\)_?\\(`, 'g').exec(string))
 
     for (var i in string) {
         var char = string[i]
@@ -1216,7 +1229,7 @@ functions.splitKeyFunc = function (string, { extrafuncs = {}, args = Infinity, s
             case '(':
                 if (afuncfiltered.length > 0) {
                     var funcmatch = matchLongestFunc(string.substring(0, i), parenthesesGoal.length <= 0 ? afuncfiltered : [''])
-                    if (funcmatch) {
+                    if (funcmatch && string[i - 1] !== '\\') {
                         lastParenthesesIndex = i
                         parenthesesrequired++
                         var func = funclist[funcmatch[0]]
@@ -3251,11 +3264,13 @@ functions.getKeywordsFor = async function (string, msg, isBot, { extrakeys = {},
             switch (keydata.type) {
                 case 'key':
                     var keyName = keydata.match
-                    var key = special.keys[keydata.match] || extradkeys[keydata.match]
+                    var key = special.keys[keyName] || extradkeys[keyName]
+                    var keyCut = keyName
+                    if (key === undefined) var keyCut = keyName.substring(1); key = special.keys[keyCut] || extradkeys[keyCut]
 
                     if (!ownermode && (key.limit != undefined && equalValues(tempdata[msg.author.id][msg.id]['keywordsExecuted'], keyName) >= key.limit) ||
                         (key.cmdconnected && data.guildData[msg.guild.id]?.['disabled'].find(cmd => cmd.find(n => n === key.cmdconnected)))) {
-                        string = string.replace(keydata.match, '')
+                        string = string.replace(keyName, '')
                         break
                     }
 
@@ -3264,7 +3279,10 @@ functions.getKeywordsFor = async function (string, msg, isBot, { extrakeys = {},
                     var change
 
                     try {
-                        change = await escapeKeywordResult(await key.func.call(poopy, msg, isBot, string, opts))
+                        var doEscape = keyCut !== keyName
+                        var result = await key.func.call(poopy, msg, isBot, string, opts)
+
+                        change = doEscape ? await escapeKeywordResult(result) : result
                     } catch (e) {
                         console.log(e)
                         change = ''
@@ -3277,6 +3295,8 @@ functions.getKeywordsFor = async function (string, msg, isBot, { extrakeys = {},
                 case 'func':
                     var [funcName, match] = keydata.match
                     var func = special.functions[funcName] || extradfuncs[funcName]
+                    var funcCut = funcName
+                    if (func === undefined) funcCut = funcName.substring(0, funcName.length -1); func = special.functions[funcCut] || extradfuncs[funcCut]
                     var m = match
 
                     if (!ownermode && (func.limit != undefined && equalValues(tempdata[msg.author.id][msg.id]['keywordsExecuted'], funcName) >= func.limit) ||
@@ -3295,7 +3315,10 @@ functions.getKeywordsFor = async function (string, msg, isBot, { extrakeys = {},
                     var change
 
                     try {
-                        change = await escapeKeywordResult(await func.func.call(poopy, [funcName, match], msg, isBot, string, opts))
+                        var doEscape = funcCut !== funcName
+                        var result = await func.func.call(poopy, [funcName, match], msg, isBot, string, opts)
+
+                        change = doEscape ? await escapeKeywordResult(result) : result
                     } catch (e) {
                         console.log(e)
                         change = ''
@@ -4369,7 +4392,7 @@ functions.setMessageCooldown = async function (msg) {
 functions.calculateHivemindStatus = async function (poopy) {
     let bot = poopy.bot
 
-    if (!process.env.HIVEMIND_ID) return '';
+    if (!process.env.HIVEMIND_ID || !poopy.config.hivemind) return '';
 
     var cusage = process.cpuUsage()
     var cused = (cusage.user + cusage.system) / 1024 / 1024
@@ -4382,7 +4405,7 @@ functions.updateHivemindStatus = async function () {
     let bot = poopy.bot
     let vars = poopy.vars
 
-    if (!process.env.HIVEMIND_ID) return;
+    if (!process.env.HIVEMIND_ID || !poopy.config.hivemind) return;
 
     var hivemindGuildId = process.env.HIVEMIND_GUILD_ID ?? '834431435704107018'
     var hivemindChannelId = process.env.HIVEMIND_CHANNEL_ID ?? '1201074511118868520'
@@ -4409,7 +4432,7 @@ functions.getTotalHivemindStatus = async function () {
     let poopy = this
     let bot = poopy.bot
 
-    if (!process.env.HIVEMIND_ID) return;
+    if (!process.env.HIVEMIND_ID || !poopy.config.hivemind) return;
 
     var hivemindGuildId = process.env.HIVEMIND_GUILD_ID ?? '834431435704107018'
     var hivemindChannelId = process.env.HIVEMIND_CHANNEL_ID ?? '1201074511118868520'
@@ -4429,7 +4452,7 @@ functions.getTotalHivemindStatus = async function () {
 
             var timestamp = msg.editedTimestamp || msg.createdTimestamp
 
-            if ((Date.now() - timestamp) > 60000 + 5000) {
+            if ((Date.now() - timestamp) > 60000 + 30000) {
                 if (id == process.env.HIVEMIND_ID) {
                     await msg.delete().then(msg => console.log(`Deleted outdated message from ${msg.author.username} as ${bot.user.username} #${process.env.HIVEMIND_ID}.\nTimestamp is: ${timestamp} (${(new Date(timestamp)).toLocaleString('en-gb')})`)).catch((err) => { console.log(err) });
                 }

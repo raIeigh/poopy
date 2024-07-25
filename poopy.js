@@ -8,6 +8,7 @@ class Poopy {
         let config = poopy.config = {
             testing: false,
             poosonia: false,
+            hivemind: false,
             forcetrue: false,
             useReactions: false,
             textEmbeds: false,
@@ -168,7 +169,7 @@ class Poopy {
 
         // we can create thge bot now
         let { Discord, Collection, fs, CryptoJS } = modules
-        let { envsExist,
+        let { envsExist, configFlagsEnabled,
             chunkArray, chunkObject, requireJSON, findCommand,
             dmSupport, sleep, gatherData, deleteMsgData, infoPost,
             getKeywordsFor, getUrls, randomChoice, similarity, yesno,
@@ -208,7 +209,7 @@ class Poopy {
         fs.readdirSync('src/special/keys').forEach(name => {
             var key = name.replace(/\.js$/, '')
             var keyData = require(`./src/special/keys/${key}`)
-            if (!(config.poosonia && config.poosoniakeywordblacklist.find(keyname => keyname == key)) && envsExist(keyData.envRequired ?? [])) {
+            if (!(config.poosonia && config.poosoniakeywordblacklist.find(keyname => keyname == key)) && envsExist(keyData.envRequired ?? []) && configFlagsEnabled(keyData.configRequired ?? []) && !(keyData.configBlacklist && configFlagsEnabled(keyData.configBlacklist))) {
                 function keyFunc(...args) {
                     return keyData.func.call(poopy, ...args)
                 }
@@ -224,7 +225,7 @@ class Poopy {
         fs.readdirSync('src/special/functions').forEach(name => {
             var func = name.replace(/\.js$/, '')
             var funcData = require(`./src/special/functions/${name}`)
-            if (!(config.poosonia && config.poosoniafunctionblacklist.find(funcname => funcname == func)) && envsExist(funcData.envRequired ?? [])) {
+            if (!(config.poosonia && config.poosoniafunctionblacklist.find(funcname => funcname == func)) && envsExist(funcData.envRequired ?? []) && configFlagsEnabled(funcData.configRequired ?? []) && !(funcData.configBlacklist && configFlagsEnabled(funcData.configBlacklist))) {
                 function funcFunc(...args) {
                     return funcData.func.call(poopy, ...args)
                 }
@@ -273,7 +274,9 @@ class Poopy {
                 var cmdData = require(`./src/commands/${category}/${name}`)
 
                 if ((config.poosonia && config.poosoniablacklist.find(cmdname => cmdname == cmd)) ||
-                    !envsExist(cmdData.envRequired ?? [])) return
+                    !envsExist(cmdData.envRequired ?? []) ||
+                    !configFlagsEnabled(cmdData.configRequired ?? []) ||
+                    (cmdData.configBlacklist && configFlagsEnabled(cmdData.configBlacklist))) return
 
                 commands.push(cmdData)
             })
@@ -282,7 +285,7 @@ class Poopy {
         if (config.testing) fs.readdirSync('src/soon').forEach(name => {
             var cmd = name.replace(/\.js$/, '')
             var cmdData = require(`./src/soon/${name}`)
-            if (!(config.poosonia && config.poosoniablacklist.find(cmdname => cmdname == cmd)) && envsExist(cmdData.envRequired ?? [])) {
+            if (!(config.poosonia && config.poosoniablacklist.find(cmdname => cmdname == cmd)) && envsExist(cmdData.envRequired ?? []) && configFlagsEnabled(cmdData.configRequired ?? []) && !(cmdData.configBlacklist && configFlagsEnabled(cmdData.configBlacklist))) {
                 commands.push(cmdData)
             }
         })
@@ -746,7 +749,7 @@ class Poopy {
 
                         var hivemindPass = true
 
-                        if (process.env.HIVEMIND_ID && !data.guildData[msg.guild.id]['poopymode']) {
+                        if (process.env.HIVEMIND_ID && config.hivemind && !data.guildData[msg.guild.id]['poopymode']) {
                             await getTotalHivemindStatus().then(totalStatus => {
                                 var first = totalStatus[0].id == process.env.HIVEMIND_ID
     
@@ -1181,7 +1184,7 @@ class Poopy {
                     'gotta wait 1 minute if you want my prefix Lol!!!',
                     ''
                 ]
-                var ourEggPhrases = process.env.HIVEMIND_ID ? eggPhrasesHivemind : eggPhrases
+                var ourEggPhrases = (process.env.HIVEMIND_ID && config.hivemind) ? eggPhrasesHivemind : eggPhrases
 
                 var lastMention = Date.now() - (tempdata[msg.author.id]['lastmention'] || Date.now())
                 if (lastMention > config.pingresponsecooldown) tempdata[msg.author.id]['mentions'] = 0
@@ -1196,10 +1199,34 @@ class Poopy {
 
                 // else if else if selselaesl seif sia esla fiwsa eaisf afis asifasfd
                 if (await msg.fetchReference().catch(() => { })) {
-                    var resp = await cleverbot(origcontent, msg.author.id).catch(() => { })
+                    const channelData = tempdata[msg.channel.guild?.id]?.[msg.channel.id]
+                    
+                    var forceres = channelData?.['forceres']
+                    if (forceres && forceres.repliesonly) {
+                        delete channelData['forceres']
+        
+                        var res = await getKeywordsFor(forceres.res, msg, true, {
+                            resetattempts: true,
+                            extrakeys: {
+                                _msg: {
+                                    func: async () => {
+                                        return msg.content
+                                    }
+                                }
+                            }
+                        }).catch(() => { }) ?? forceres.res
+            
+                        if (forceres.persist && !channelData['forceres']) channelData['forceres'] = forceres
 
-                    if (resp) {
-                        await msg.reply(resp).catch(() => { })
+                        if (res) {
+                            await msg.reply(res).catch(() => { })
+                        }
+                    } else {
+                        var resp = await cleverbot(origcontent, msg.author.id).catch(() => { })
+
+                        if (resp) {
+                            await msg.reply(resp).catch(() => { })
+                        }
                     }
                 } else if (origcontent.includes('prefix') && origcontent.includes('reset')) {
                     var findCmd = findCommand('setprefix')
