@@ -1077,7 +1077,7 @@ class Poopy {
 
             var hasTriggerPhrase = config.triggerPhrase && origcontent.toLowerCase().match(config.triggerPhrase.toLowerCase())
 
-            if (hasTriggerPhrase && (config.allowbottriggers || config.allowbotusage)) {
+            if (hasTriggerPhrase && (!msg.author.bot || (config.allowbottriggers || config.allowbotusage))) {
                 var content = randomChoice(arrays.eightball)
                 if (msg.author.id == bot.user.id) {
                     await msg.channel.send(content).catch(() => { })
