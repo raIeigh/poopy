@@ -1,5 +1,5 @@
 module.exports = {
-    name: ['chat', 'ask'],
+    name: ['aichat', 'aiask'],
     args: [
         {
             "name": "message", "required": true, "specifarg": false, "orig": "<message>"
