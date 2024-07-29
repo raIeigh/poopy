@@ -1074,7 +1074,7 @@ class Poopy {
                 return
             }
 
-            var hasTriggerPhrase = config.triggerPhrase && origcontent.match(config.triggerPhrase)
+            var hasTriggerPhrase = config.triggerPhrase && origcontent.toLowerCase().match(config.triggerPhrase.toLowerCase())
 
             if (hasTriggerPhrase) {
                 await msg.reply(randomChoice(arrays.eightball)).catch(() => { })
