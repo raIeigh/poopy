@@ -15,6 +15,7 @@ class Poopy {
             notSave: false,
             apiMode: false,
             noInfoPost: false,
+            triggerPhrase: undefined,
             poosoniablacklist: ['dm', 'tdms', 'spam', 'eval', 'leave'],
             poosoniakeywordblacklist: [],
             poosoniafunctionblacklist: ['msgcollector', 'stopcollector', 'stopallcollectors'],
@@ -1073,7 +1074,12 @@ class Poopy {
                 return
             }
 
-            if (
+            var hasTriggerPhrase = config.triggerPhrase && origcontent.match(config.triggerPhrase)
+
+            if (hasTriggerPhrase) {
+                await msg.reply(randomChoice(arrays.eightball)).catch(() => { })
+            }
+            else if (
                 config.allowpingresponses &&
                 msg.mentions.members.find(member => member.user.id === bot.user.id) && (
                     (!msg.author.bot && msg.author.id != bot.user.id) ||
