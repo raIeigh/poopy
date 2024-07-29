@@ -22,6 +22,7 @@ class Poopy {
             allowtesting: true,
             allowpingresponses: true,
             allowbotusage: false,
+            allowbottriggers: false,
             database: 'poopydata',
             globalPrefix: 'p:',
             stfu: false,
@@ -1076,8 +1077,13 @@ class Poopy {
 
             var hasTriggerPhrase = config.triggerPhrase && origcontent.toLowerCase().match(config.triggerPhrase.toLowerCase())
 
-            if (hasTriggerPhrase) {
-                await msg.reply(randomChoice(arrays.eightball)).catch(() => { })
+            if (hasTriggerPhrase && (config.allowbottriggers || config.allowbotusage)) {
+                var content = randomChoice(arrays.eightball)
+                if (msg.author.id == bot.user.id) {
+                    await msg.channel.send(content).catch(() => { })
+                } else {
+                    await msg.reply(content).catch(() => { })
+                }
             }
             else if (
                 config.allowpingresponses &&
