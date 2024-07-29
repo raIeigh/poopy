@@ -15,7 +15,7 @@ class Poopy {
             notSave: false,
             apiMode: false,
             noInfoPost: false,
-            triggerPhrase: undefined,
+            triggerPhrase: 'angry luigi',
             poosoniablacklist: ['dm', 'tdms', 'spam', 'eval', 'leave'],
             poosoniakeywordblacklist: [],
             poosoniafunctionblacklist: ['msgcollector', 'stopcollector', 'stopallcollectors'],
@@ -1077,7 +1077,9 @@ class Poopy {
             var hasTriggerPhrase = config.triggerPhrase && origcontent.match(config.triggerPhrase)
 
             if (hasTriggerPhrase) {
-                await msg.reply(randomChoice(arrays.eightball)).catch(() => { })
+                await commands.find(fcmd => fcmd.name.find(fcmdname => fcmdname === 'alchat')).execute.call(poopy, msg, ['', origcontent]).catch(err => {
+                    console.log(err)
+                })
             }
             else if (
                 config.allowpingresponses &&
