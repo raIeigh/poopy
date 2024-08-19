@@ -38,10 +38,12 @@ modules.DMGuild = class DMGuild {
         let members = new modules.Collection([[msg.client.user.id, msg.client.user]].concat(
             msg.channel.recipients ?
                 [...msg.channel.recipients] :
-                [[msg.channel.recipient.id, msg.channel.recipient]]
+                msg.channel.recipient ? 
+                [[msg.channel.recipient.id, msg.channel.recipient]] :
+                [[msg.author.id, msg.author]]
         ))
 
-        this.ownerId = msg.channel.ownerId || msg.channel.recipient.id
+        this.ownerId = msg.channel.ownerId || msg.channel.recipient?.id || msg.author?.id || msg.id
         this.id = msg.channel.id
         this.name = msg.channel.name || `${(msg.user || msg.author).username}'s DMs`
         this.fetchAuditLogs = async () => {
