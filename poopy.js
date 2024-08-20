@@ -349,6 +349,9 @@ class Poopy {
             slashBuilder.setName(slashCmd || "undefined")
                 .setDescription(description)
 
+            slashBuilder.integration_types = [0, 1]
+            slashBuilder.contexts = [0, 1, 2]
+
             if (commandGroup) {
                 commandGroup.cmds.forEach(cmd => {
                     var fcmdData = findCommand(cmd)

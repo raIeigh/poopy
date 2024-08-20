@@ -1,3 +1,5 @@
+#!/usr/bin/env -S /bin/node server.js --test
+
 const throng = require('throng')
 const fs = require('fs-extra')
 
@@ -159,12 +161,12 @@ async function start() {
     let tokens = []
 
     function testCondition() {
-        if (process.argv.includes('--test')) return 1
-        if (process.argv.includes('--hivemind')) return 2
+        if (process.argv.find(a => a.trim() == '--test')) return 1
+        if (process.argv.find(a => a.trim() == '--hivemind')) return 2
     }
 
     function indiaCondition() {
-        return process.argv.includes('--india')
+        return process.argv.find(a => a.trim() == '--india')
     }
 
     switch (testCondition()) {

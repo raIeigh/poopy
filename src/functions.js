@@ -3116,6 +3116,23 @@ functions.dmSupport = function (msg) {
         value: (msg.user || msg.author),
         writable: true
     })
+    if (msg.member && (!msg.member.permissions || typeof msg.member.permissions == "string")) Object.defineProperty(msg.member, 'permissions', {
+        value: { has: () => true },
+        writable: true
+    })
+
+    if (!msg.channel) Object.defineProperty(msg, 'channel', {
+        value: msg.client.channels.cache.get(msg.channelId) || msg.author,
+        writable: true
+    })
+    if (msg.channel && !msg.channel.sendTyping) Object.defineProperty(msg.channel, 'sendTyping', {
+        value: async () => true,
+        writable: true
+    })
+    if (msg.channel && !msg.channel.permissionsFor) Object.defineProperty(msg.channel, 'permissionsFor', {
+        value: () => { return { has: () => true } },
+        writable: true
+    })
 
     if (!msg.guild && (msg.user || msg.author)) Object.defineProperty(msg, 'guild', {
         value: new DMGuild(msg),
@@ -3128,11 +3145,6 @@ functions.dmSupport = function (msg) {
     })
 
     if (!msg.fetchWebhook) msg.fetchWebhook = async () => { }
-
-    if ((msg.user || msg.author) && !(msg.user || msg.author).permissions) (msg.user || msg.author).permissions = { has: () => true }
-    if (msg.channel && !msg.channel.permissionsFor) msg.channel.permissionsFor = () => {
-        return { has: () => true }
-    }
 
     if (msg.channel && !msg.channel.fetchWebhooks) msg.channel.fetchWebhooks = async () => new Collection()
     if (msg.channel && !msg.channel.createWebhook) msg.channel.createWebhook = async () => { }
