@@ -59,7 +59,7 @@ async function send(payload) {
             }
         }
 
-        const channelData = tempdata[msg.guild?.id]?.[msg.channel.id]
+        const channelData = tempdata[msg.guild?.id]?.[msg.channel?.id]
 
         if (channelData?.['shut']) return
         if (channelData?.['forceres'] && (typeof payload == 'object' ? (
@@ -142,6 +142,7 @@ async function send(payload) {
                     res.redirect(attachment)
                 } else {
                     await new Promise(resolve => res.sendFile(`${__dirname}/${attachment}`, resolve))
+                    res.end()
                 }
             } else {
                 if (payload.content) message.push(payload.content)
@@ -306,6 +307,10 @@ class Channel {
 
     get guild() {
         return new Guild(this._data)
+    }
+
+    async fetch() {
+        return this
     }
 
     async send(payload) {

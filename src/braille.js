@@ -8,13 +8,13 @@ const settings = {
 module.exports = async function (src, negative) {
 	if (src === undefined) return;
 
-	const canvas = await createImageCanvas(src);
+	const canvas = await createImageCanvas(src, negative);
 	if (!canvas) return ''
 	const text = await canvasToText(canvas, negative);
 	return text
 }
 
-async function createImageCanvas(src) {
+async function createImageCanvas(src, negative) {
 	const canvas = Canvas.createCanvas(1, 1);
 	const image = await Canvas.loadImage(src).catch(() => { });
 
@@ -28,7 +28,7 @@ async function createImageCanvas(src) {
 	canvas.height = height - (height % 4);
 
 	ctx = canvas.getContext("2d");
-	ctx.fillStyle = "#FFFFFF"; //get rid of alpha
+	ctx.fillStyle = negative ? "#FFFFFF" : "#000000"; //get rid of alpha
 	ctx.fillRect(0, 0, canvas.width, canvas.height);
 
 	ctx.mozImageSmoothingEnabled = false;
