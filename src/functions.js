@@ -77,7 +77,7 @@ functions.unescapeHTML = function (value) {
         .replace(/&gt;/g, '>')
         .replace(/&quot;/g, '"')
         .replace(/&apos;/g, '\'')
-        .replace(/&#\d+;/g, (match) => {
+        .replace(/&#[0-9]+;/g, (match) => {
             return String.fromCharCode(match.substring(2, match.length - 1))
         })
 }
@@ -129,7 +129,7 @@ functions.matchLongestKey = function (str, keys) {
     var longest = ['']
     var matched = false
     for (var i in keys) {
-        var match = str.match(new RegExp(`^${functions.regexClean(keys[i])}`))
+        var match = str.match(new RegExp(`^(?<!\\\\)_?(?<!\\\\)${functions.regexClean(keys[i])}`))
         if (match && match[0].length >= longest[0].length) {
             matched = true
             longest = match
@@ -143,7 +143,7 @@ functions.matchLongestFunc = function (str, funcs) {
     var longest = ['']
     var matched = false
     for (var i in funcs) {
-        var match = str.match(new RegExp(`${functions.regexClean(funcs[i])}$`))
+        var match = str.match(new RegExp(`${functions.regexClean(funcs[i])}_?$`))
         if (match && match[0].length >= longest[0].length) {
             matched = true
             longest = match
@@ -480,6 +480,19 @@ functions.envsExist = function (envs = []) {
 
     envs.forEach(env => {
         if (!process.env[env]) exist = false
+    })
+
+    return exist
+}
+
+functions.configFlagsEnabled = function(reqConfigs = []) {
+    let poopy = this
+    let config = poopy.config
+
+    var exist = true
+
+    reqConfigs.forEach(reqConfig => {
+        if (config[reqConfig] !== true) exist = false
     })
 
     return exist
@@ -1065,9 +1078,9 @@ functions.getKeyFunc = function (string, { extrakeys = {}, extrafuncs = {}, decl
     var funcs = Object.keys(funclist).sort((a, b) => b.length - a.length)
     var pfuncs = Object.keys(pfunclist).sort((a, b) => b.length - a.length)
 
-    var keyfiltered = keys.filter((key) => string.includes(key))
-    var funcfiltered = funcs.filter((func) => string.includes(`${func}(`))
-    var pfuncfiltered = pfuncs.filter((pfunc) => string.includes(`${pfunc}(`))
+    var keyfiltered = keys.filter((key) => new RegExp(`(?<!\\\\)_?(?<!\\\\)${functions.regexClean(key)}`, 'g').exec(string))
+    var funcfiltered = funcs.filter((func) => new RegExp(`${functions.regexClean(func)}(?!\\\\)_?\\(`, 'g').exec(string))
+    var pfuncfiltered = pfuncs.filter((pfunc) => new RegExp(`${functions.regexClean(pfunc)}(?!\\\\)_?\\(`, 'g').exec(string))
     var keyfirstletters = keyfiltered.map(key => key[0]).filter(function (item, pos, self) {
         return self.indexOf(item) == pos
     })
@@ -1087,7 +1100,7 @@ functions.getKeyFunc = function (string, { extrakeys = {}, extrafuncs = {}, decl
                         parindex++ // open parentheses found
                         lastParenthesesIndex = i // set the index of the last parentheses
                         if (!rawMatch) {
-                            var func = funclist[funcmatch[0]]
+                            var func = funclist[funcmatch[0]] || funclist[funcmatch[0].substring(0, funcmatch[0].length - 1)]
                             if (func) {
                                 if (func.raw) {
                                     rawParenthesesIndex = i
@@ -1206,7 +1219,7 @@ functions.splitKeyFunc = function (string, { extrafuncs = {}, args = Infinity, s
     var pfuncs = Object.keys(pfunclist).sort((a, b) => b.length - a.length)
     var afuncs = funcs.concat(pfuncs).sort((a, b) => b.length - a.length)
 
-    var afuncfiltered = afuncs.filter((afunc) => string.includes(`${afunc}(`))
+    var afuncfiltered = afuncs.filter((afunc) => new RegExp(`${functions.regexClean(afunc)}(?!\\\\)_?\\(`, 'g').exec(string))
 
     for (var i in string) {
         var char = string[i]
@@ -1216,7 +1229,7 @@ functions.splitKeyFunc = function (string, { extrafuncs = {}, args = Infinity, s
             case '(':
                 if (afuncfiltered.length > 0) {
                     var funcmatch = matchLongestFunc(string.substring(0, i), parenthesesGoal.length <= 0 ? afuncfiltered : [''])
-                    if (funcmatch) {
+                    if (funcmatch && string[i - 1] !== '\\') {
                         lastParenthesesIndex = i
                         parenthesesrequired++
                         var func = funclist[funcmatch[0]]
@@ -2280,8 +2293,24 @@ functions.correctUrl = async function (url) {
     let { infoPost, execPromise } = poopy.functions
     let { axios, cheerio } = poopy.modules
 
-    if (url.match(/^https\:\/\/(www\.)?tenor\.com\/view/) && url.match(/\d+/g) && process.env.TENOR_KEY) {
-        var ids = url.match(/\d+/g)
+    if (url.match(/^https\:\/\/((cdn|media)\.)?discordapp\.(com|net)\/attachments/) && url.match(/[0-9]+/g) && process.env.DISCORD_REFRESHER_TOKEN) {
+        var response = await axios({
+            method: 'POST',
+            url: `https://discord.com/api/v9/attachments/refresh-urls`,
+            data: {
+                attachment_urls: [url]
+            },
+            headers: {
+                "Authorization": process.env.DISCORD_REFRESHER_TOKEN,
+                "Accept": "application/json"
+            }
+        }).catch((e) => console.log(e))
+        if (response && response.status >= 200 && response.status < 300 && response.data.refreshed_urls.length) {
+            infoPost(`Discord URL detected`)
+            return response.data.refreshed_urls[0].refreshed
+        }
+    } else if (url.match(/^https\:\/\/(www\.)?tenor\.com\/view/) && url.match(/[0-9]+/g) && process.env.TENOR_KEY) {
+        var ids = url.match(/[0-9]+/g)
         var body = await axios(`https://g.tenor.com/v1/gifs?ids=${ids[ids.length - 1]}&key=${process.env.TENOR_KEY}`).catch(() => { })
         if (body && body.data.results.length) {
             infoPost(`Tenor URL detected`)
@@ -2369,7 +2398,7 @@ functions.correctUrl = async function (url) {
                         var urls = $("url")
                         if (urls.length > 0) {
                             var imageasseturl = urls[0].children[0].data
-                            var ids = imageasseturl.match(/\d+/g)
+                            var ids = imageasseturl.match(/[0-9]+/g)
                             var id = ids[0]
 
                             axios({
@@ -2488,7 +2517,7 @@ functions.correctUrl = async function (url) {
             }
         }
 
-        var ids = url.match(/\d+/g)
+        var ids = url.match(/[0-9]+/g)
         if (ids.length) {
             var id = ids[0]
             var asseturl = await getAsset(id).catch(() => { })
@@ -2523,7 +2552,7 @@ functions.correctUrl = async function (url) {
             })
         }
 
-        var ids = url.match(/\d+/g)
+        var ids = url.match(/[0-9]+/g)
         if (ids.length) {
             var id = ids[0]
             var badgeurl = await getBadge(id).catch(() => { })
@@ -2561,7 +2590,7 @@ functions.correctUrl = async function (url) {
             })
         }
 
-        var ids = url.match(/\d+/g)
+        var ids = url.match(/[0-9]+/g)
         if (ids.length) {
             var id = ids[0]
             var bundleurl = await getBundle(id).catch(() => { })
@@ -2599,7 +2628,7 @@ functions.correctUrl = async function (url) {
             })
         }
 
-        var ids = url.match(/\d+/g)
+        var ids = url.match(/[0-9]+/g)
         if (ids.length) {
             var id = ids[0]
             var gamepassurl = await getGamePass(id).catch(() => { })
@@ -2637,7 +2666,7 @@ functions.correctUrl = async function (url) {
             })
         }
 
-        var ids = url.match(/\d+/g)
+        var ids = url.match(/[0-9]+/g)
         if (ids.length) {
             var id = ids[0]
             var userurl = await getUser(id).catch(() => { })
@@ -2675,7 +2704,7 @@ functions.correctUrl = async function (url) {
             })
         }
 
-        var ids = url.match(/\d+/g)
+        var ids = url.match(/[0-9]+/g)
         if (ids.length) {
             var id = ids[0]
             var groupurl = await getGroup(id).catch(() => { })
@@ -2699,7 +2728,7 @@ functions.correctUrl = async function (url) {
             infoPost(`SoundCloud URL detected`)
             return soundcloudurl.trim()
         }
-    } else if (url.match(/^https\:\/\/((www)\.)?(fx)?twitter\.com\/\w{4,15}\/status\/\d+/)) {
+    } else if (url.match(/^https\:\/\/((www)\.)?(fx)?twitter\.com\/\w{4,15}\/status\/[0-9]+/)) {
         async function getImageUrl(url) {
             var res = await axios.get(url)
             var $ = cheerio.load(res.data)
@@ -2775,9 +2804,9 @@ functions.getUrls = async function (msg, options = {}) {
             }
         },
         {
-            regexp: /<a?:[a-zA-Z\d_]+?:\d+>/g,
+            regexp: /<a?:[a-zA-Z0-9_]+?:[0-9]+>/g,
             func: async function (demoji) {
-                var demojiidmatch = demoji.match(/\d+/g)
+                var demojiidmatch = demoji.match(/[0-9]+/g)
                 var demojiid = demojiidmatch[demojiidmatch.length - 1]
                 var gifurl = `https://cdn.discordapp.com/emojis/${demojiid}.gif?size=1024`
                 var pngurl = `https://cdn.discordapp.com/emojis/${demojiid}.png?size=1024`
@@ -2801,7 +2830,7 @@ functions.getUrls = async function (msg, options = {}) {
             }
         },
         {
-            regexp: /\d{10,}/g,
+            regexp: /[0-9]{10,}/g,
             func: async function (id) {
                 var user = await bot.users.fetch(id).catch(() => { })
                 if (user) {
@@ -3087,6 +3116,23 @@ functions.dmSupport = function (msg) {
         value: (msg.user || msg.author),
         writable: true
     })
+    if (msg.member && (!msg.member.permissions || typeof msg.member.permissions == "string")) Object.defineProperty(msg.member, 'permissions', {
+        value: { has: () => true },
+        writable: true
+    })
+
+    if (!msg.channel) Object.defineProperty(msg, 'channel', {
+        value: msg.client.channels.cache.get(msg.channelId) || msg.author,
+        writable: true
+    })
+    if (msg.channel && !msg.channel.sendTyping) Object.defineProperty(msg.channel, 'sendTyping', {
+        value: async () => true,
+        writable: true
+    })
+    if (msg.channel && !msg.channel.permissionsFor) Object.defineProperty(msg.channel, 'permissionsFor', {
+        value: () => { return { has: () => true } },
+        writable: true
+    })
 
     if (!msg.guild && (msg.user || msg.author)) Object.defineProperty(msg, 'guild', {
         value: new DMGuild(msg),
@@ -3099,11 +3145,6 @@ functions.dmSupport = function (msg) {
     })
 
     if (!msg.fetchWebhook) msg.fetchWebhook = async () => { }
-
-    if ((msg.user || msg.author) && !(msg.user || msg.author).permissions) (msg.user || msg.author).permissions = { has: () => true }
-    if (msg.channel && !msg.channel.permissionsFor) msg.channel.permissionsFor = () => {
-        return { has: () => true }
-    }
 
     if (msg.channel && !msg.channel.fetchWebhooks) msg.channel.fetchWebhooks = async () => new Collection()
     if (msg.channel && !msg.channel.createWebhook) msg.channel.createWebhook = async () => { }
@@ -3129,6 +3170,19 @@ functions.dmSupport = function (msg) {
 
 }
 
+functions.escapeKeywordResult = async function (string) {
+    if (!(typeof string === 'string' || string instanceof String)) return string
+    return string
+        .replace(/(?<!\\)\(/g, '\\\(')
+        .replace(/(?<!\\)\)/g, '\\\)')
+        .replace(/(?<!\\)\[/g, '\\\[')
+        .replace(/(?<!\\)\]/g, '\\\]')
+        .replace(/(?<!\\)\{/g, '\\\{')
+        .replace(/(?<!\\)\}/g, '\\\}')
+        .replace(/(?<!\\)\_/g, '\\\_')
+        .replace(/(?<!\\)\"/g, '\\\"')
+}
+
 functions.getKeywordsFor = async function (string, msg, isBot, { extrakeys = {}, extrafuncs = {}, resetattempts = false, ownermode = false, declaredonly = false } = {}) {
     let poopy = this
     let config = poopy.config
@@ -3136,7 +3190,7 @@ functions.getKeywordsFor = async function (string, msg, isBot, { extrakeys = {},
     let data = poopy.data
     let tempdata = poopy.tempdata
     let globaldata = poopy.globaldata
-    let { getKeyFunc, infoPost, equalValues, sleep } = poopy.functions
+    let { getKeyFunc, infoPost, equalValues, sleep, escapeKeywordResult } = poopy.functions
 
     if (!tempdata[msg.author.id]) {
         tempdata[msg.author.id] = {}
@@ -3222,11 +3276,13 @@ functions.getKeywordsFor = async function (string, msg, isBot, { extrakeys = {},
             switch (keydata.type) {
                 case 'key':
                     var keyName = keydata.match
-                    var key = special.keys[keydata.match] || extradkeys[keydata.match]
+                    var key = special.keys[keyName] || extradkeys[keyName]
+                    var keyCut = keyName
+                    if (key === undefined) var keyCut = keyName.substring(1); key = special.keys[keyCut] || extradkeys[keyCut]
 
                     if (!ownermode && (key.limit != undefined && equalValues(tempdata[msg.author.id][msg.id]['keywordsExecuted'], keyName) >= key.limit) ||
                         (key.cmdconnected && data.guildData[msg.guild.id]?.['disabled'].find(cmd => cmd.find(n => n === key.cmdconnected)))) {
-                        string = string.replace(keydata.match, '')
+                        string = string.replace(keyName, '')
                         break
                     }
 
@@ -3235,7 +3291,10 @@ functions.getKeywordsFor = async function (string, msg, isBot, { extrakeys = {},
                     var change
 
                     try {
-                        change = await key.func.call(poopy, msg, isBot, string, opts)
+                        var doEscape = keyCut !== keyName
+                        var result = await key.func.call(poopy, msg, isBot, string, opts)
+
+                        change = doEscape ? await escapeKeywordResult(result) : result
                     } catch (e) {
                         console.log(e)
                         change = ''
@@ -3248,6 +3307,8 @@ functions.getKeywordsFor = async function (string, msg, isBot, { extrakeys = {},
                 case 'func':
                     var [funcName, match] = keydata.match
                     var func = special.functions[funcName] || extradfuncs[funcName]
+                    var funcCut = funcName
+                    if (func === undefined) funcCut = funcName.substring(0, funcName.length -1); func = special.functions[funcCut] || extradfuncs[funcCut]
                     var m = match
 
                     if (!ownermode && (func.limit != undefined && equalValues(tempdata[msg.author.id][msg.id]['keywordsExecuted'], funcName) >= func.limit) ||
@@ -3266,7 +3327,10 @@ functions.getKeywordsFor = async function (string, msg, isBot, { extrakeys = {},
                     var change
 
                     try {
-                        change = await func.func.call(poopy, [funcName, match], msg, isBot, string, opts)
+                        var doEscape = funcCut !== funcName
+                        var result = await func.func.call(poopy, [funcName, match], msg, isBot, string, opts)
+
+                        change = doEscape ? await escapeKeywordResult(result) : result
                     } catch (e) {
                         console.log(e)
                         change = ''
@@ -3350,8 +3414,8 @@ functions.battle = async function (msg, subject, action, damage, chance) {
 
     subject = subject ?? attachment ?? sticker
 
-    var member = await bot.users.fetch((subject.match(/\d+/) ?? [subject])[0]).catch(() => { })
-    var guildMember = await msg.guild.members.fetch((subject.match(/\d+/) ?? [subject])[0]).catch(() => { })
+    var member = await bot.users.fetch((subject.match(/[0-9]+/) ?? [subject])[0]).catch(() => { })
+    var guildMember = await msg.guild.members.fetch((subject.match(/[0-9]+/) ?? [subject])[0]).catch(() => { })
 
     var yourData = data.userData[msg.author.id]
 
@@ -4340,7 +4404,7 @@ functions.setMessageCooldown = async function (msg) {
 functions.calculateHivemindStatus = async function (poopy) {
     let bot = poopy.bot
 
-    if (!process.env.HIVEMIND_ID) return '';
+    if (!process.env.HIVEMIND_ID || !poopy.config.hivemind) return '';
 
     var cusage = process.cpuUsage()
     var cused = (cusage.user + cusage.system) / 1024 / 1024
@@ -4353,7 +4417,7 @@ functions.updateHivemindStatus = async function () {
     let bot = poopy.bot
     let vars = poopy.vars
 
-    if (!process.env.HIVEMIND_ID) return;
+    if (!process.env.HIVEMIND_ID || !poopy.config.hivemind) return;
 
     var hivemindGuildId = process.env.HIVEMIND_GUILD_ID ?? '834431435704107018'
     var hivemindChannelId = process.env.HIVEMIND_CHANNEL_ID ?? '1201074511118868520'
@@ -4372,7 +4436,7 @@ functions.updateHivemindStatus = async function () {
     functions.calculateHivemindStatus(poopy).then(status => {
         hivemindChannel.messages.cache.get(vars.hivemindMessageId).edit(status).catch((err) => { console.log(err) })
     }).catch((err) => { console.log(err) });
-    
+
     return;
 }
 
@@ -4380,7 +4444,7 @@ functions.getTotalHivemindStatus = async function () {
     let poopy = this
     let bot = poopy.bot
 
-    if (!process.env.HIVEMIND_ID) return;
+    if (!process.env.HIVEMIND_ID || !poopy.config.hivemind) return;
 
     var hivemindGuildId = process.env.HIVEMIND_GUILD_ID ?? '834431435704107018'
     var hivemindChannelId = process.env.HIVEMIND_CHANNEL_ID ?? '1201074511118868520'
@@ -4389,62 +4453,49 @@ functions.getTotalHivemindStatus = async function () {
     var status = [];
 
     await hivemindChannel.messages.fetch().then(messages => {
-        messages.forEach(async (msg) =>  {
-            if (!msg.author.bot) {
-                await msg.delete().catch((err) => { console.log(err) });
-            } else {
-
-                if (!msg.editedTimestamp) {
-                    var id = msg.content.match(/#[^ ]+/g)
-                    if (!id) return
-                    id = id[0].substring(1)
-
-                    if (id == process.env.HIVEMIND_ID) {
-                        await msg.delete().catch((err) => { console.log(err) });
-                    }
-
-                    return
-                }
-                if ((Date.now() - msg.editedTimestamp) > 60000 + 5000) {
-                    var id = msg.content.match(/#[^ ]+/g)
-                    if (!id) return
-                    id = id[0].substring(1)
-
-                    if (id == process.env.HIVEMIND_ID && (Date.now() - msg.editedTimestamp) > 60000) {
-                        await msg.delete().catch((err) => { console.log(err) });
-                    }
-                    
-                    return
-                }
-
-                var id = msg.content.match(/#[^ ]+/g)
-                if (!id) return
-                id = id[0].substring(1)
-
-                var EpicFail = false
-
-                status.forEach((item, i) => {
-                    if (item.id == id) {
-                        if (item.time > msg.createdTimestamp) {
-                            EpicFail = true
-                            return
-                        } else {
-                            status.splice(i, 1)
-                        }
-                    }
-                })
-
-                if (EpicFail) return;
-
-                var cpu = msg.content.match(/CPU: [\d\.]+/g)
-                if (!cpu) return
-                cpu = Number(cpu[0].substring(5))
-
-                status.push({id: id, cpu: cpu, time: msg.createdTimestamp});
+        messages.forEach(async (msg) => {
+            var regexResult = /(?<botName>[^#]+) #(?<id>[^ ]+)/g.exec(msg.content)
+            if (!regexResult) {
+                await msg.delete().then(msg => console.log(`Deleted non-hivemind message from ${msg.author.username} as ${bot.user.username} #${process.env.HIVEMIND_ID}.`)).catch((err) => { console.log(err) });
+                return;
             }
+            var { botName, id } = regexResult.groups
+            if (botName !== bot.user.username) return;
+
+            var timestamp = msg.editedTimestamp || msg.createdTimestamp
+
+            if ((Date.now() - timestamp) > 60000 + 30000) {
+                if (id == process.env.HIVEMIND_ID) {
+                    await msg.delete().then(msg => console.log(`Deleted outdated message from ${msg.author.username} as ${bot.user.username} #${process.env.HIVEMIND_ID}.\nTimestamp is: ${timestamp} (${(new Date(timestamp)).toLocaleString('en-gb')})`)).catch((err) => { console.log(err) });
+                }
+
+                return
+            }
+
+            var EpicFail = false
+
+            status.forEach((item, i) => {
+                if (item.id == id) {
+                    if (item.time > msg.createdTimestamp) {
+                        EpicFail = true
+                        return
+                    } else {
+                        status.splice(i, 1)
+                    }
+                }
+            })
+
+            if (EpicFail) return;
+
+            var regexResult = /CPU: (?<cpu>[0-9\.]+)/g.exec(msg.content)
+            if (!regexResult) return;
+            var { cpu } = regexResult.groups
+            cpu = Number(cpu)
+
+            status.push({ botName: botName, id: id, cpu: cpu, time: msg.createdTimestamp });
         })
     }).catch((err) => { console.log(err) });
-    
+
     if (status.length > 0) {
         status.sort((a, b) => a.cpu - b.cpu)
     }

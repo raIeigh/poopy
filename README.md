@@ -57,7 +57,8 @@ There's also a script for a worker you can run to do background tasks like image
 Here's a list of tokens you can set up in system variables to bring more functionality to Poopy:
   - `AUTH_TOKEN` (SET THIS TO SOMETHING COMPLETELY RANDOM! mainly used for encrypting/decrypting messages and private tokens from people, can also be used to access private apis from the website)
   - `BOT_WEBSITE` (url if you want a website for your bot)
-  - `HIVEMIND_ID` (id for your bot to participate in the hivemind. leave blank to not have any of the hivemind functionality)
+  - `HIVEMIND_ID` (id for your bot to participate in the hivemind, leave blank to not have any of the hivemind functionality)
+  - `DISCORD_REFRESHER_TOKEN` (discord **user** token used for refreshing expired urls, without it using keywords such as _ps and _shit will generally not function if you don't manually refresh the url)
   - `CLOUDAMQP_URL` (url used to send file processing queues, accessed at https://api.cloudamqp.com/console/`APP-ID`/details)
   - `MONGOOSE_URL` (url used to access the database, generated at https://cloud.mongodb.com/v2/`PROJECT-ID`#clusters/connect)
   - `AI21_KEY` (key generated when you sign up in ai21 for generating text, accessed at https://studio.ai21.com/account/account)

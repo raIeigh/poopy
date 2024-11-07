@@ -9,6 +9,7 @@ module.exports = {
 
         if (msg.member.permissions.has('ManageGuild') || msg.member.permissions.has('ManageMessages') || msg.member.permissions.has('Administrator') || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
             var persist = getOption(args, 'persist', { dft: false, splice: true, n: 0 })
+            var repliesonly = getOption(args, 'repliesonly', { dft: false, splice: true, n: 0 })
             if (args[1] === undefined) {
                 await msg.reply('You must specify the response!').catch(() => { })
                 return
@@ -22,7 +23,7 @@ module.exports = {
             var saidMessage = args.slice(1).join(' ')
 
             if (!msg.nosend) await msg.reply({
-                content: `OK, the bot's next message${persist ? 's' : ''} here will be "${saidMessage}"`,
+                content: `OK, the bot's next ${repliesonly ? `response${persist ? 's' : ''} to ${persist ? 'replies' : 'a reply'}` : `message${persist ? 's' : ''}`} here will be "${saidMessage}"`,
                 allowedMentions: {
                     parse: ['users']
                 }
@@ -30,9 +31,10 @@ module.exports = {
             tempdata[msg.guild.id][msg.channel.id]['forceres'] = {
                 persist,
                 msg,
+                repliesonly,
                 res: saidMessage
             }
-            return `OK, the bot's next message${persist ? 's' : ''} here will be "${saidMessage}"`
+            return `OK, the bot's next ${repliesonly ? `response${persist ? 's' : ''} to ${persist ? 'replies' : 'a reply'}` : `message${persist ? 's' : ''}`} here will be "${saidMessage}"`
         } else {
             await msg.reply('You need to be a moderator to execute that!').catch(() => { })
             return;

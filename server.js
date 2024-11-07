@@ -1,3 +1,5 @@
+#!/usr/bin/env -S /bin/node server.js --test
+
 const throng = require('throng')
 const fs = require('fs-extra')
 
@@ -160,8 +162,12 @@ async function start() {
     let tokens = []
 
     function testCondition() {
-        if (process.argv.includes('--test')) return 1
-        if (process.argv.includes('--hivemind')) return 2
+        if (process.argv.find(a => a.trim() == '--test')) return 1
+        if (process.argv.find(a => a.trim() == '--hivemind')) return 2
+    }
+
+    function indiaCondition() {
+        return process.argv.find(a => a.trim() == '--india')
     }
 
     switch (testCondition()) {
@@ -175,28 +181,33 @@ async function start() {
                         database: 'testdata',
                         intents: 3276799
                     }
-                },
-
-                {
-                    TOKEN: process.env.INDIA_TOKEN,
-                    config: {
-                        testing: true,
-                        self: true,
-                        globalPrefix: 'i:',
-                        database: 'testracist',
-                        msgcooldown: 3000,
-                        pingresponselimit: 5,
-                        pingresponsecooldown: 120000,
-                        useReactions: true,
-                        textEmbeds: true,
-                        noInfoPost: true,
-                        intents: 3276799,
-                        allowbotusage: true,
-                        allowpingresponses: false,
-                        illKillYouIfYouUseEval: []
-                    }
                 }
             ]
+
+            if (indiaCondition()) {
+                tokens.push(
+                    {
+                        TOKEN: process.env.INDIA_TOKEN,
+                        config: {
+                            testing: true,
+                            self: true,
+                            globalPrefix: 'i:',
+                            database: 'testracist',
+                            msgcooldown: 3000,
+                            pingresponselimit: 5,
+                            pingresponsecooldown: 120000,
+                            useReactions: true,
+                            textEmbeds: true,
+                            noInfoPost: true,
+                            intents: 3276799,
+                            allowbotusage: true,
+                            allowpingresponses: false,
+                            illKillYouIfYouUseEval: []
+                        }
+                    }
+                )
+            }
+
             break;
 
         case 2:
@@ -205,6 +216,7 @@ async function start() {
                     TOKEN: process.env.HIVEMIND_TOKEN,
                     config: {
                         testing: true,
+                        hivemind: true,
                         noInfoPost: true,
                         globalPrefix: 'hp:',
                         database: 'hiveminddata',
@@ -212,6 +224,32 @@ async function start() {
                     }
                 }
             ]
+
+            if (indiaCondition()) {
+                tokens.push(
+                    {
+                        TOKEN: process.env.INDIA_TOKEN,
+                        config: {
+                            testing: true,
+                            hivemind: true,
+                            self: true,
+                            globalPrefix: 'i:',
+                            database: 'hivemindracist',
+                            msgcooldown: 3000,
+                            pingresponselimit: 5,
+                            pingresponsecooldown: 120000,
+                            useReactions: true,
+                            textEmbeds: true,
+                            noInfoPost: true,
+                            intents: 3276799,
+                            allowbotusage: true,
+                            allowpingresponses: false,
+                            illKillYouIfYouUseEval: []
+                        }
+                    }
+                )
+            }
+
             break;
 
         default:
@@ -223,22 +261,27 @@ async function start() {
                         public: true
                     }
                 },
-
-                {
-                    TOKEN: process.env.INDIA_TOKEN,
-                    config: {
-                        self: true,
-                        globalPrefix: 'i:',
-                        database: 'racist',
-                        msgcooldown: 3000,
-                        useReactions: true,
-                        textEmbeds: true,
-                        noInfoPost: true,
-                        intents: 3276799,
-                        illKillYouIfYouUseEval: []
-                    }
-                },
             ]
+
+            if (indiaCondition()) {
+                tokens.push(
+                    {
+                        TOKEN: process.env.INDIA_TOKEN,
+                        config: {
+                            self: true,
+                            globalPrefix: 'i:',
+                            database: 'racist',
+                            msgcooldown: 3000,
+                            useReactions: true,
+                            textEmbeds: true,
+                            noInfoPost: true,
+                            intents: 3276799,
+                            illKillYouIfYouUseEval: []
+                        }
+                    },
+                )
+            }
+
             break;
     }
 

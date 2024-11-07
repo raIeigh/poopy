@@ -1,3 +1,5 @@
+#!/bin/node worker.js
+
 let throng = require('throng')
 let os = require('os')
 let fs = require('fs-extra')
