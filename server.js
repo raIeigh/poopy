@@ -116,16 +116,17 @@ async function start() {
                 case 'json':
                     res.type('json').send(messages)
                     break;
-
+            
                 case 'raw':
                     res.type('text').send(messages.join('\n'))
                     break;
-
+            
                 default:
                     const doc = `<!DOCTYPE html><html><head><title>your command sir</title><link rel="icon" href="https://cdn.discordapp.com/attachments/760223418968047629/973329887433736233/94b2caa2c814b2a08f880d0ea57df45e.png"><link rel="stylesheet" href="/assets/discord.css"><script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/highlight.min.js"></script><script src="/assets/discord.js"></script></head><body class="theme-dark">${messages.join('\n')}</body></html>`
                     res.type('html').send(doc)
                     break;
             }
+            res.end()
         })
 
         app.get('/psfile', async function (_, res) {
