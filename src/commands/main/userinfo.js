@@ -16,7 +16,7 @@ module.exports = {
     execute: async function (msg, args) {
         let poopy = this
         let bot = poopy.bot
-        let { Discord } = poopy.modules
+        let { DiscordTypes } = poopy.modules
         let config = poopy.config
 
         args[1] = args[1] ?? ' '
@@ -150,7 +150,7 @@ module.exports = {
 
                 for (var activity of member.presence.activities) {
                     if (activity.emoji && !emoji) emoji = activity.emoji.toString()
-                    if ((activity.state || activity.name) && !text) text = activity.type == Discord.ActivityType.Custom ? activity.state : `${Discord.ActivityType[activity.type]} ${activity.type === Discord.ActivityType.Competing && 'in ' || activity.type === Discord.ActivityType.Listening && 'to ' || ''}**${activity.name}**`
+                    if ((activity.state || activity.name) && !text) text = activity.type == DiscordTypes.ActivityType.Custom ? activity.state : `${DiscordTypes.ActivityType[activity.type]} ${activity.type === DiscordTypes.ActivityType.Competing && 'in ' || activity.type === DiscordTypes.ActivityType.Listening && 'to ' || ''}**${activity.name}**`
                 }
 
                 var activity

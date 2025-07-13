@@ -5,7 +5,7 @@ module.exports = {
         let poopy = this
         let vars = poopy.vars
         let { addLastUrl } = poopy.functions
-        let { deepai, Discord } = poopy.modules
+        let { deepai, Discord, DiscordTypes } = poopy.modules
 
         await msg.channel.sendTyping().catch(() => { })
         var saidMessage = args.slice(1).join(' ')
@@ -25,7 +25,7 @@ module.exports = {
             await msg.reply({
                 content: err.stack,
                 allowedMentions: {
-                    parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) && !msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.MentionEveryone) && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
         })

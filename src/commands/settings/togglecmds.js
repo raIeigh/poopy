@@ -37,6 +37,7 @@ module.exports = {
         let bot = poopy.bot
         let config = poopy.config
         let commands = poopy.commands
+        let { DiscordTypes } = poopy.modules
 
         var options = {
             list: async (msg) => {
@@ -66,7 +67,7 @@ module.exports = {
                     if (config.textEmbeds) msg.reply({
                         content: list.join('\n'),
                         allowedMentions: {
-                            parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                            parse: ((!msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) && !msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.MentionEveryone) && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                         }
                     }).catch(() => { })
                     else msg.reply({
@@ -77,7 +78,7 @@ module.exports = {
             },
 
             toggle: async (msg, args) => {
-                if (msg.member.permissions.has('ManageGuild') || msg.member.permissions.has('ManageMessages') || msg.member.permissions.has('Administrator') || msg.author.id === msg.guild.ownerID || (config.ownerids.find(id => id == msg.author.id))) {
+                if (msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.ManageGuild) || msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.ManageMessages) || msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) || msg.author.id === msg.guild.ownerID || (config.ownerids.find(id => id == msg.author.id))) {
                     if (!args[2]) {
                         await msg.reply('You gotta specify a command!')
                         return
@@ -127,7 +128,7 @@ module.exports = {
                 if (config.textEmbeds) msg.reply({
                     content: instruction,
                     allowedMentions: {
-                        parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                        parse: ((!msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) && !msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.MentionEveryone) && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                     }
                 }).catch(() => { })
                 else msg.reply({

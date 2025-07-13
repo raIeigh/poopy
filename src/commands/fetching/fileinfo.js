@@ -4,7 +4,7 @@ module.exports = {
     execute: async function (msg, args) {
         let poopy = this
         let { lastUrl, validateFile, execPromise } = poopy.functions
-        let { prettyBytes } = poopy.modules
+        let { prettyBytes, DiscordTypes } = poopy.modules
         let vars = poopy.vars
         let bot = poopy.bot
         let config = poopy.config
@@ -309,8 +309,8 @@ module.exports = {
             if (config.textEmbeds) msg.reply({
                 content: `\`${fileinfo.name}\`\n\n${params.join('\n')}`,
                 allowedMentions: {
-                    parse: (!msg.member.permissions.has('Administrator') &&
-                        !msg.member.permissions.has('MentionEveryone') &&
+                    parse: (!msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) &&
+                        !msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.MentionEveryone) &&
                         msg.author.id !== msg.guild.ownerID) ?
                         ['users'] : ['users', 'everyone', 'roles']
                 }

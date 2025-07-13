@@ -25,6 +25,7 @@ module.exports = {
         let data = poopy.data
         let config = poopy.config
         let { dataGather } = poopy.functions
+        let { DiscordTypes } = poopy.modules
 
         args[1] = args[1] ?? ' '
 
@@ -32,9 +33,9 @@ module.exports = {
 
         if (!member) {
             await msg.reply({
-                content: `Invalid user id: **${args[1]}**`,
+                content: `Invalid user ID: **${args[1]}**`,
                 allowedMentions: {
-                    parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) && !msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.MentionEveryone) && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => {})
             return
@@ -49,12 +50,12 @@ module.exports = {
         }
 
         if (data.guildData[msg.guild.id]['members'][member.id]['impostor'] === false) {
-            if (msg.member.permissions.has('ManageGuild') || msg.member.permissions.has('ManageWebhooks') || msg.member.permissions.has('Administrator') || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
+            if (msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.ManageGuild) || msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.ManageWebhooks) || msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
                 data.guildData[msg.guild.id]['members'][member.id]['impostor'] = true
                 if (!msg.nosend) await msg.reply({
                     content: member.user.username + ' is now the Impostor.',
                     allowedMentions: {
-                        parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                        parse: ((!msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) && !msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.MentionEveryone) && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                     }
                 }).catch(() => {})
                 return member.user.username + ' is now the Impostor.'
@@ -67,7 +68,7 @@ module.exports = {
             if (!msg.nosend) await msg.reply({
                 content: member.user.username + ' is not the Impostor.',
                 allowedMentions: {
-                    parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) && !msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.MentionEveryone) && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => {})
             return member.user.username + ' is not the Impostor.'

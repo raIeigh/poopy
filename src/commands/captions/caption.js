@@ -4,6 +4,7 @@ module.exports = {
     execute: async function (msg, args) {
         let poopy = this
         let { lastUrl, validateFile, downloadFile, execPromise, findpreset, sendFile } = poopy.functions
+        let { DiscordTypes } = poopy.modules
         let vars = poopy.vars
         let { Jimp, Discord } = poopy.modules
         
@@ -61,7 +62,7 @@ module.exports = {
             white.resize(Math.round(2000 / size), Jimp.AUTO)
             var textheight = Jimp.measureTextHeight(futura, text, white.bitmap.width - Math.round(160 / size))
             white.resize(Math.round(2000 / size), textheight + Math.round(160 / size))
-            await white.print(futura, Math.round(80 / size), Math.round(80 / size), { text: Discord.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, white.bitmap.width - Math.round(160 / size), white.bitmap.height - Math.round(160 / size))
+            await white.print(futura, Math.round(80 / size), Math.round(80 / size), { text: Discord.Util.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, white.bitmap.width - Math.round(160 / size), white.bitmap.height - Math.round(160 / size))
             white.resize(width, Jimp.AUTO)
             await white.writeAsync(`${filepath}/caption.png`)
 
@@ -83,7 +84,7 @@ module.exports = {
             white.resize(Math.round(2000 / size), Jimp.AUTO)
             var textheight = Jimp.measureTextHeight(futura, text, white.bitmap.width - Math.round(160 / size))
             white.resize(Math.round(2000 / size), textheight + Math.round(160 / size))
-            await white.print(futura, Math.round(80 / size), Math.round(80 / size), { text: Discord.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, white.bitmap.width - Math.round(160 / size), white.bitmap.height - Math.round(160 / size))
+            await white.print(futura, Math.round(80 / size), Math.round(80 / size), { text: Discord.Util.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, white.bitmap.width - Math.round(160 / size), white.bitmap.height - Math.round(160 / size))
             white.resize(width, Jimp.AUTO)
             await white.writeAsync(`${filepath}/caption.png`)
 
@@ -105,7 +106,7 @@ module.exports = {
             white.resize(Math.round(2000 / size), Jimp.AUTO)
             var textheight = Jimp.measureTextHeight(futura, text, white.bitmap.width - Math.round(160 / size))
             white.resize(Math.round(2000 / size), textheight + Math.round(160 / size))
-            await white.print(futura, Math.round(80 / size), Math.round(80 / size), { text: Discord.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, white.bitmap.width - Math.round(160 / size), white.bitmap.height - Math.round(160 / size))
+            await white.print(futura, Math.round(80 / size), Math.round(80 / size), { text: Discord.Util.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, white.bitmap.width - Math.round(160 / size), white.bitmap.height - Math.round(160 / size))
             white.resize(width, Jimp.AUTO)
             await white.writeAsync(`${filepath}/caption.png`)
 
@@ -116,7 +117,7 @@ module.exports = {
             await msg.reply({
                 content: `Unsupported file: \`${currenturl}\``,
                 allowedMentions: {
-                    parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) && !msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.MentionEveryone) && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })

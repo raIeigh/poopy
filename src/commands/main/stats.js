@@ -4,7 +4,7 @@ module.exports = {
     execute: async function (msg) {
         let poopy = this
         let bot = poopy.bot
-        let { os, fs } = poopy.modules
+        let { os, fs, DiscordTypes } = poopy.modules
         let config = poopy.config
         let data = poopy.data
         let pkg = poopy.package
@@ -136,7 +136,7 @@ module.exports = {
             if (config.textEmbeds) msg.reply({
                 content: `${statsEmbed.fields.map(p => `**${p.name}**: ${p.value}`).join('\n')}\n\nv${pkg.version}`,
                 allowedMentions: {
-                    parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) && !msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.MentionEveryone) && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
             else msg.reply({

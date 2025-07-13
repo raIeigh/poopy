@@ -4,6 +4,7 @@ module.exports = {
     execute: async function (msg, args) {
         let poopy = this
         let { getOption, parseNumber, lastUrl, getUrls, validateFile, downloadFile, execPromise, findpreset, sendFile } = poopy.functions
+        let { DiscordTypes } = poopy.modules
         let { fs } = poopy.modules
 
         await msg.channel.sendTyping().catch(() => { })
@@ -55,7 +56,7 @@ module.exports = {
                 await msg.reply({
                     content: error,
                     allowedMentions: {
-                        parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                        parse: ((!msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) && !msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.MentionEveryone) && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                     }
                 }).catch(() => { })
                 await msg.channel.sendTyping().catch(() => { })
@@ -68,7 +69,7 @@ module.exports = {
                 await msg.reply({
                     content: 'Unsupported file types.',
                     allowedMentions: {
-                        parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                        parse: ((!msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) && !msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.MentionEveryone) && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                     }
                 }).catch(() => { })
                 await msg.channel.sendTyping().catch(() => { })

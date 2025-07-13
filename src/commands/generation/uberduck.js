@@ -14,6 +14,7 @@ module.exports = {
         let vars = poopy.vars
         let { axios } = poopy.modules
         let { downloadFile, sendFile } = poopy.functions
+        let { DiscordTypes } = poopy.modules
 
         await msg.channel.sendTyping().catch(() => { })
 
@@ -66,8 +67,8 @@ module.exports = {
             await msg.reply({
                 content: response.data,
                 allowedMentions: {
-                    parse: (!msg.member.permissions.has('Administrator') &&
-                        !msg.member.permissions.has('MentionEveryone') &&
+                    parse: (!msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) &&
+                        !msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.MentionEveryone) &&
                         msg.member.id !== msg.guild.ownerID) ?
                         ['users'] : ['users', 'everyone', 'roles']
                 }

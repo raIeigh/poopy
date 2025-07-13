@@ -485,7 +485,7 @@ functions.envsExist = function (envs = []) {
     return exist
 }
 
-functions.configFlagsEnabled = function(reqConfigs = []) {
+functions.configFlagsEnabled = function (reqConfigs = []) {
     let poopy = this
     let config = poopy.config
 
@@ -626,7 +626,7 @@ functions.gatherData = async function (msg) {
     let { dataGather } = poopy.functions
 
     var now = Date.now()
-    var webhook = await msg.fetchWebhook().catch(() => { })
+    var webhook = config.self ? msg.webhookId : await msg.fetchWebhook().catch(() => { })
 
     if (!webhook) {
         if (!data.userData[msg.author.id]) {
@@ -696,7 +696,7 @@ functions.gatherData = async function (msg) {
         data.guildData[msg.guild.id]['channels'][msg.channel.id]['nsfw'] = !!msg.channel.nsfw
     }
 
-    var channelFetch = await msg.channel.fetch(true).catch(() => { })
+    var channelFetch = config.self ? msg.channel : await msg.channel.fetch(true).catch(() => { })
     var nsfwChanged = channelFetch && channelFetch.nsfw != msg.channel.onsfw
     if (msg.channel.onsfw == undefined || nsfwChanged) {
         msg.channel.onsfw = !!(channelFetch || msg.channel).nsfw
@@ -1278,7 +1278,7 @@ functions.yesno = async function (channel, content, who, btdata, reply) {
     let bot = poopy.bot
     let config = poopy.config
     let { chunkArray, dmSupport } = poopy.functions
-    let { Discord } = poopy.modules
+    let { Discord, DiscordTypes } = poopy.modules
 
     return new Promise(async (resolve) => {
         if (config.forcetrue) {
@@ -1292,8 +1292,8 @@ functions.yesno = async function (channel, content, who, btdata, reply) {
 
         if (typeof (who) != 'string') {
             sendObject.allowedMentions = {
-                parse: (!who.permissions.has('Administrator') &&
-                    !who.permissions.has('MentionEveryone') &&
+                parse: (!who.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) &&
+                    !who.permissions.has(DiscordTypes.PermissionFlagsBits.MentionEveryone) &&
                     who.id !== channel.guild.ownerID) ?
                     ['users'] : ['users', 'everyone', 'roles']
             }
@@ -1305,7 +1305,7 @@ functions.yesno = async function (channel, content, who, btdata, reply) {
                 emoji: '874406154619469864',
                 reactemoji: '✅',
                 customid: 'yes',
-                style: Discord.ButtonStyle.Success,
+                style: DiscordTypes.ButtonStyle.Success,
                 resolve: true
             },
 
@@ -1313,7 +1313,7 @@ functions.yesno = async function (channel, content, who, btdata, reply) {
                 emoji: '874406183933444156',
                 reactemoji: '❌',
                 customid: 'no',
-                style: Discord.ButtonStyle.Danger,
+                style: DiscordTypes.ButtonStyle.Danger,
                 resolve: false
             }
         ]
@@ -1440,8 +1440,8 @@ functions.selectMenu = async function (channel, content, placeholder, options, e
 
         if (typeof (who) != 'string') {
             sendObject.allowedMentions = {
-                parse: (!who.permissions.has('Administrator') &&
-                    !who.permissions.has('MentionEveryone') &&
+                parse: (!who.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) &&
+                    !who.permissions.has(DiscordTypes.PermissionFlagsBits.MentionEveryone) &&
                     who.id !== channel.guild.ownerID) ?
                     ['users'] : ['users', 'everyone', 'roles']
             }
@@ -1499,7 +1499,7 @@ functions.navigateEmbed = async function (channel, pageFunc, results, who, extra
     let config = poopy.config
     let tempdata = poopy.tempdata
     let { chunkArray, dmSupport, parseNumber } = poopy.functions
-    let { Discord } = poopy.modules
+    let { Discord, DiscordTypes } = poopy.modules
 
     page = page ?? 1
 
@@ -1508,7 +1508,7 @@ functions.navigateEmbed = async function (channel, pageFunc, results, who, extra
             emoji: '861253229726793728',
             reactemoji: '⬅️',
             customid: 'previous',
-            style: Discord.ButtonStyle.Primary,
+            style: DiscordTypes.ButtonStyle.Primary,
             function: async () => page - 1,
             page: true
         },
@@ -1517,7 +1517,7 @@ functions.navigateEmbed = async function (channel, pageFunc, results, who, extra
             emoji: '861253230070988860',
             reactemoji: '🔀',
             customid: 'random',
-            style: Discord.ButtonStyle.Primary,
+            style: DiscordTypes.ButtonStyle.Primary,
             function: async () => Math.floor(Math.random() * results) + 1,
             page: true
         },
@@ -1526,7 +1526,7 @@ functions.navigateEmbed = async function (channel, pageFunc, results, who, extra
             emoji: '861253229798621205',
             reactemoji: '➡️',
             customid: 'next',
-            style: Discord.ButtonStyle.Primary,
+            style: DiscordTypes.ButtonStyle.Primary,
             function: async () => page + 1,
             page: true
         },
@@ -1535,7 +1535,7 @@ functions.navigateEmbed = async function (channel, pageFunc, results, who, extra
             emoji: '970292877785727036',
             reactemoji: '🔢',
             customid: 'page',
-            style: Discord.ButtonStyle.Primary,
+            style: DiscordTypes.ButtonStyle.Primary,
             function: async (_, interaction) => new Promise(async resolve => {
                 var newpage = page
 
@@ -1581,7 +1581,7 @@ functions.navigateEmbed = async function (channel, pageFunc, results, who, extra
                         var done = false
 
                         var modalCallback = (modal) => {
-                            if (modal.type !== Discord.InteractionType.ModalSubmit) return
+                            if (modal.type !== DiscordTypes.InteractionType.ModalSubmit) return
 
                             if (modal.deferUpdate) modal.deferUpdate().catch(() => { })
 
@@ -1656,8 +1656,8 @@ functions.navigateEmbed = async function (channel, pageFunc, results, who, extra
 
     if (typeof (who) != 'string') {
         allowedMentions = {
-            parse: (!who.permissions.has('Administrator') &&
-                !who.permissions.has('MentionEveryone') &&
+            parse: (!who.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) &&
+                !who.permissions.has(DiscordTypes.PermissionFlagsBits.MentionEveryone) &&
                 who.id !== channel.guild.ownerID) ?
                 ['users'] : ['users', 'everyone', 'roles']
         }
@@ -1837,14 +1837,14 @@ functions.rainmaze = async function (channel, who, reply, w = 8, h = 6) {
     let config = poopy.config
     let data = poopy.data
     let { chunkArray, dmSupport, randomNumber } = poopy.functions
-    let { Discord, Rainmaze } = poopy.modules
+    let { Discord, DiscordTypes, Rainmaze } = poopy.modules
 
     var buttonsData = config.useReactions ? [
         {
             emoji: '861253229726793728',
             reactemoji: '⬅️',
             customid: 'left',
-            style: Discord.ButtonStyle.Primary,
+            style: DiscordTypes.ButtonStyle.Primary,
             control: true
         },
 
@@ -1852,7 +1852,7 @@ functions.rainmaze = async function (channel, who, reply, w = 8, h = 6) {
             emoji: '1030784553738063882',
             reactemoji: '⬆️',
             customid: 'up',
-            style: Discord.ButtonStyle.Primary,
+            style: DiscordTypes.ButtonStyle.Primary,
             control: true
         },
 
@@ -1860,7 +1860,7 @@ functions.rainmaze = async function (channel, who, reply, w = 8, h = 6) {
             emoji: '1030784552081293383',
             reactemoji: '⬇️',
             customid: 'down',
-            style: Discord.ButtonStyle.Primary,
+            style: DiscordTypes.ButtonStyle.Primary,
             control: true
         },
 
@@ -1868,14 +1868,14 @@ functions.rainmaze = async function (channel, who, reply, w = 8, h = 6) {
             emoji: '861253229798621205',
             reactemoji: '➡️',
             customid: 'right',
-            style: Discord.ButtonStyle.Primary,
+            style: DiscordTypes.ButtonStyle.Primary,
             control: true
         }
     ] : [
         {
             emoji: '1030786210555248640',
             customid: 'null1',
-            style: Discord.ButtonStyle.Secondary,
+            style: DiscordTypes.ButtonStyle.Secondary,
             control: false
         },
 
@@ -1883,14 +1883,14 @@ functions.rainmaze = async function (channel, who, reply, w = 8, h = 6) {
             emoji: '1030784553738063882',
             reactemoji: '⬆️',
             customid: 'up',
-            style: Discord.ButtonStyle.Primary,
+            style: DiscordTypes.ButtonStyle.Primary,
             control: true
         },
 
         {
             emoji: '1030786210555248640',
             customid: 'null2',
-            style: Discord.ButtonStyle.Secondary,
+            style: DiscordTypes.ButtonStyle.Secondary,
             control: false
         },
 
@@ -1898,7 +1898,7 @@ functions.rainmaze = async function (channel, who, reply, w = 8, h = 6) {
             emoji: '861253229726793728',
             reactemoji: '⬅️',
             customid: 'left',
-            style: Discord.ButtonStyle.Primary,
+            style: DiscordTypes.ButtonStyle.Primary,
             control: true
         },
 
@@ -1906,7 +1906,7 @@ functions.rainmaze = async function (channel, who, reply, w = 8, h = 6) {
             emoji: '1030784552081293383',
             reactemoji: '⬇️',
             customid: 'down',
-            style: Discord.ButtonStyle.Primary,
+            style: DiscordTypes.ButtonStyle.Primary,
             control: true
         },
 
@@ -1914,7 +1914,7 @@ functions.rainmaze = async function (channel, who, reply, w = 8, h = 6) {
             emoji: '861253229798621205',
             reactemoji: '➡️',
             customid: 'right',
-            style: Discord.ButtonStyle.Primary,
+            style: DiscordTypes.ButtonStyle.Primary,
             control: true
         }
     ]
@@ -1953,8 +1953,8 @@ functions.rainmaze = async function (channel, who, reply, w = 8, h = 6) {
 
     if (typeof (who) != 'string') {
         allowedMentions = {
-            parse: (!who.permissions.has('Administrator') &&
-                !who.permissions.has('MentionEveryone') &&
+            parse: (!who.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) &&
+                !who.permissions.has(DiscordTypes.PermissionFlagsBits.MentionEveryone) &&
                 who.id !== channel.guild.ownerID) ?
                 ['users'] : ['users', 'everyone', 'roles']
         }
@@ -2078,7 +2078,7 @@ functions.displayShop = async function (channel, who, reply, type) {
     let config = poopy.config
     let data = poopy.data
     let { chunkArray, dmSupport, getLevel } = poopy.functions
-    let { Discord } = poopy.modules
+    let { Discord, DiscordTypes } = poopy.modules
 
     var buttonsData = [
         /*{
@@ -2095,7 +2095,7 @@ functions.displayShop = async function (channel, who, reply, type) {
         {
             emoji: '❤',
             customid: 'heal',
-            style: Discord.ButtonStyle.Primary,
+            style: DiscordTypes.ButtonStyle.Primary,
             desc: 'Upgrade your maximum health.',
             oprice: 80
         },
@@ -2103,7 +2103,7 @@ functions.displayShop = async function (channel, who, reply, type) {
         {
             emoji: '🛡',
             customid: 'defense',
-            style: Discord.ButtonStyle.Primary,
+            style: DiscordTypes.ButtonStyle.Primary,
             desc: 'Increase your defense against attacks.',
             oprice: 120
         },
@@ -2111,7 +2111,7 @@ functions.displayShop = async function (channel, who, reply, type) {
         {
             emoji: '⚔',
             customid: 'attack',
-            style: Discord.ButtonStyle.Primary,
+            style: DiscordTypes.ButtonStyle.Primary,
             desc: 'Increase your attack damage.',
             oprice: 120
         },
@@ -2119,7 +2119,7 @@ functions.displayShop = async function (channel, who, reply, type) {
         {
             emoji: '🎯',
             customid: 'accuracy',
-            style: Discord.ButtonStyle.Primary,
+            style: DiscordTypes.ButtonStyle.Primary,
             desc: 'Increase the accuracy of each attack.',
             oprice: 150
         },
@@ -2127,7 +2127,7 @@ functions.displayShop = async function (channel, who, reply, type) {
         {
             emoji: '🪙',
             customid: 'loot',
-            style: Discord.ButtonStyle.Primary,
+            style: DiscordTypes.ButtonStyle.Primary,
             desc: 'Get more loot while fighting someone.',
             oprice: 150
         }
@@ -2141,8 +2141,8 @@ functions.displayShop = async function (channel, who, reply, type) {
 
     if (typeof (who) != 'string') {
         allowedMentions = {
-            parse: (!who.permissions.has('Administrator') &&
-                !who.permissions.has('MentionEveryone') &&
+            parse: (!who.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) &&
+                !who.permissions.has(DiscordTypes.PermissionFlagsBits.MentionEveryone) &&
                 who.id !== channel.guild.ownerID) ?
                 ['users'] : ['users', 'everyone', 'roles']
         }
@@ -2305,6 +2305,7 @@ functions.correctUrl = async function (url) {
                 "Accept": "application/json"
             }
         }).catch((e) => console.log(e))
+        
         if (response && response.status >= 200 && response.status < 300 && response.data.refreshed_urls.length) {
             infoPost(`Discord URL detected`)
             return response.data.refreshed_urls[0].refreshed
@@ -3105,9 +3106,9 @@ functions.deleteMsgData = function (msg) {
 
 functions.dmSupport = function (msg) {
     let poopy = this
-    let { Discord, DMGuild, Collection } = poopy.modules
+    let { DiscordTypes, DMGuild, Collection } = poopy.modules
 
-    if (msg.channel?.type == Discord.ChannelType.DM && msg.channel?.recipients) msg.channel.type = Discord.ChannelType.GroupDM
+    if (msg.channel?.type == DiscordTypes.ChannelType.DM && msg.channel?.recipients) msg.channel.type = DiscordTypes.ChannelType.GroupDM
 
     if (!msg.author && msg.user) msg.author = msg.user
     if (!msg.user && msg.author) msg.user = msg.author
@@ -3308,7 +3309,7 @@ functions.getKeywordsFor = async function (string, msg, isBot, { extrakeys = {},
                     var [funcName, match] = keydata.match
                     var func = special.functions[funcName] || extradfuncs[funcName]
                     var funcCut = funcName
-                    if (func === undefined) funcCut = funcName.substring(0, funcName.length -1); func = special.functions[funcCut] || extradfuncs[funcCut]
+                    if (func === undefined) funcCut = funcName.substring(0, funcName.length - 1); func = special.functions[funcCut] || extradfuncs[funcCut]
                     var m = match
 
                     if (!ownermode && (func.limit != undefined && equalValues(tempdata[msg.author.id][msg.id]['keywordsExecuted'], funcName) >= func.limit) ||
@@ -3572,7 +3573,7 @@ functions.battle = async function (msg, subject, action, damage, chance) {
         }],
         content: `${attacked ? actions.join(' ') : 'You missed!'}${stats.length ? `\n\n${stats.map(s => `**${s.name}**: ${s.value}`).join('\n')}` : ''}`,
         allowedMentions: {
-            parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+            parse: ((!msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) && !msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.MentionEveryone) && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
         }
     }
 
@@ -4298,7 +4299,9 @@ functions.changeStatus = function () {
     let config = poopy.config
     let json = poopy.json
     let { infoPost } = poopy.functions
-    let { Discord } = poopy.modules
+    let { DiscordTypes } = poopy.modules
+
+    if (!config.allowpresence) return
 
     if (bot && vars.statusChanges) {
         var choosenStatus = json.statusJSON[Math.floor(Math.random() * json.statusJSON.length)]
@@ -4308,7 +4311,7 @@ functions.changeStatus = function () {
             activities: [
                 {
                     name: choosenStatus['name'] + ` | ${config.globalPrefix}help`,
-                    type: Discord.ActivityType[choosenStatus['type']],
+                    type: DiscordTypes.ActivityType[choosenStatus['type']],
                     url: 'https://www.youtube.com/watch?v=LDQO0ALm0gE',
                 }
             ],
@@ -4452,49 +4455,50 @@ functions.getTotalHivemindStatus = async function () {
 
     var status = [];
 
-    await hivemindChannel.messages.fetch().then(messages => {
-        messages.forEach(async (msg) => {
-            var regexResult = /(?<botName>[^#]+) #(?<id>[^ ]+)/g.exec(msg.content)
-            if (!regexResult) {
-                await msg.delete().then(msg => console.log(`Deleted non-hivemind message from ${msg.author.username} as ${bot.user.username} #${process.env.HIVEMIND_ID}.`)).catch((err) => { console.log(err) });
-                return;
+    var messages = await hivemindChannel.messages.fetch()
+    if (messages.catch) messages.catch((err) => { console.log(err) })
+
+    messages.forEach(async (msg) => {
+        var regexResult = /(?<botName>[^#]+) #(?<id>[^ ]+)/g.exec(msg.content)
+        if (!regexResult) {
+            await msg.delete().then(msg => console.log(`Deleted non-hivemind message from ${msg.author.username} as ${bot.user.username} #${process.env.HIVEMIND_ID}.`)).catch((err) => { console.log(err) });
+            return;
+        }
+        var { botName, id } = regexResult.groups
+        if (botName !== bot.user.username) return;
+
+        var timestamp = msg.editedTimestamp || msg.createdTimestamp
+
+        if ((Date.now() - timestamp) > 60000 + 30000) {
+            if (id == process.env.HIVEMIND_ID) {
+                await msg.delete().then(msg => console.log(`Deleted outdated message from ${msg.author.username} as ${bot.user.username} #${process.env.HIVEMIND_ID}.\nTimestamp is: ${timestamp} (${(new Date(timestamp)).toLocaleString('en-gb')})`)).catch((err) => { console.log(err) });
             }
-            var { botName, id } = regexResult.groups
-            if (botName !== bot.user.username) return;
 
-            var timestamp = msg.editedTimestamp || msg.createdTimestamp
+            return
+        }
 
-            if ((Date.now() - timestamp) > 60000 + 30000) {
-                if (id == process.env.HIVEMIND_ID) {
-                    await msg.delete().then(msg => console.log(`Deleted outdated message from ${msg.author.username} as ${bot.user.username} #${process.env.HIVEMIND_ID}.\nTimestamp is: ${timestamp} (${(new Date(timestamp)).toLocaleString('en-gb')})`)).catch((err) => { console.log(err) });
+        var EpicFail = false
+
+        status.forEach((item, i) => {
+            if (item.id == id) {
+                if (item.time > msg.createdTimestamp) {
+                    EpicFail = true
+                    return
+                } else {
+                    status.splice(i, 1)
                 }
-
-                return
             }
-
-            var EpicFail = false
-
-            status.forEach((item, i) => {
-                if (item.id == id) {
-                    if (item.time > msg.createdTimestamp) {
-                        EpicFail = true
-                        return
-                    } else {
-                        status.splice(i, 1)
-                    }
-                }
-            })
-
-            if (EpicFail) return;
-
-            var regexResult = /CPU: (?<cpu>[0-9\.]+)/g.exec(msg.content)
-            if (!regexResult) return;
-            var { cpu } = regexResult.groups
-            cpu = Number(cpu)
-
-            status.push({ botName: botName, id: id, cpu: cpu, time: msg.createdTimestamp });
         })
-    }).catch((err) => { console.log(err) });
+
+        if (EpicFail) return;
+
+        var regexResult = /CPU: (?<cpu>[0-9\.]+)/g.exec(msg.content)
+        if (!regexResult) return;
+        var { cpu } = regexResult.groups
+        cpu = Number(cpu)
+
+        status.push({ botName: botName, id: id, cpu: cpu, time: msg.createdTimestamp });
+    })
 
     if (status.length > 0) {
         status.sort((a, b) => a.cpu - b.cpu)

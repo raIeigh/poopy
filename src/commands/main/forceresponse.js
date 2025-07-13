@@ -6,8 +6,9 @@ module.exports = {
         let config = poopy.config
         let tempdata = poopy.tempdata
         let { getOption } = poopy.functions
+        let { DiscordTypes } = poopy.modules
 
-        if (msg.member.permissions.has('ManageGuild') || msg.member.permissions.has('ManageMessages') || msg.member.permissions.has('Administrator') || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
+        if (msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.ManageGuild) || msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.ManageMessages) || msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
             var persist = getOption(args, 'persist', { dft: false, splice: true, n: 0 })
             var repliesonly = getOption(args, 'repliesonly', { dft: false, splice: true, n: 0 })
             if (args[1] === undefined) {

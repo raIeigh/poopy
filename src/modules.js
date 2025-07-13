@@ -1,7 +1,9 @@
 let modules = {}
 let activeBots = require('./dataValues').activeBots
 
-modules.Discord = [require('discord.js'), require('discord.js-selfbot')]
+modules.Discord = [require('discord.js'), require('discord.js-selfbot-v13')]
+modules.DiscordTypes = require('discord-api-types/v10')
+
 modules.fs = require('fs-extra')
 modules.nodefs = require('fs')
 modules.archiver = require('archiver')
@@ -38,9 +40,9 @@ modules.DMGuild = class DMGuild {
         let members = new modules.Collection([[msg.client.user.id, msg.client.user]].concat(
             msg.channel.recipients ?
                 [...msg.channel.recipients] :
-                msg.channel.recipient ? 
-                [[msg.channel.recipient.id, msg.channel.recipient]] :
-                [[msg.author.id, msg.author]]
+                msg.channel.recipient ?
+                    [[msg.channel.recipient.id, msg.channel.recipient]] :
+                    [[msg.author.id, msg.author]]
         ))
 
         this.ownerId = msg.channel.ownerId || msg.channel.recipient?.id || msg.author?.id || msg.id
@@ -211,73 +213,75 @@ for (var Discord of modules.Discord) {
     }
 
     const Interaction = Discord.CommandInteraction
-    const interactionReply = Interaction.prototype.reply
+    const interactionReply = Interaction?.prototype?.reply
 
-    Interaction.prototype.reply = async function reply(payload) {
-        var interaction = this
-        let client = interaction.client
-        let poopy = activeBots[client.database]
-        let config = poopy.config
-        let tempdata = poopy.tempdata
-        let {
-            waitMessageCooldown,
-            setMessageCooldown,
-            getKeywordsFor
-        } = poopy.functions
+    if (interactionReply) {
+        Interaction.prototype.reply = async function reply(payload) {
+            var interaction = this
+            let client = interaction.client
+            let poopy = activeBots[client.database]
+            let config = poopy.config
+            let tempdata = poopy.tempdata
+            let {
+                waitMessageCooldown,
+                setMessageCooldown,
+                getKeywordsFor
+            } = poopy.functions
 
-        await waitMessageCooldown()
+            await waitMessageCooldown()
 
-        const channelData = tempdata[interaction.guild?.id]?.[interaction.channel.id]
+            const channelData = tempdata[interaction.guild?.id]?.[interaction.channel.id]
 
-        if (channelData?.['shut']) return
-        if (channelData?.['forceres'] && (typeof payload == 'object' ? (
-            payload.content ||
-            payload.files || payload.embeds ||
-            payload.stickers
-        ) : payload) && !channelData['forceres'].repliesonly) {
-            var forceres = channelData['forceres']
-            delete channelData['forceres']
+            if (channelData?.['shut']) return
+            if (channelData?.['forceres'] && (typeof payload == 'object' ? (
+                payload.content ||
+                payload.files || payload.embeds ||
+                payload.stickers
+            ) : payload) && !channelData['forceres'].repliesonly) {
+                var forceres = channelData['forceres']
+                delete channelData['forceres']
 
-            var content = typeof payload == 'object' ? (payload.content ?? '') : payload
-            var msg = interaction
-            var res = await getKeywordsFor(forceres.res, msg, true, {
-                resetattempts: true,
-                extrakeys: {
-                    _msg: {
-                        func: async () => {
-                            return content
+                var content = typeof payload == 'object' ? (payload.content ?? '') : payload
+                var msg = interaction
+                var res = await getKeywordsFor(forceres.res, msg, true, {
+                    resetattempts: true,
+                    extrakeys: {
+                        _msg: {
+                            func: async () => {
+                                return content
+                            }
                         }
                     }
+                }).catch(() => { }) ?? forceres.res
+
+                if (forceres.persist && !channelData['forceres']) channelData['forceres'] = forceres
+
+                switch (typeof payload) {
+                    case 'string':
+                        payload = {
+                            content: res,
+                            allowedMentions: {
+                                parse: ['users']
+                            }
+                        }
+                        break;
+                    case 'object':
+                        payload.content = res
+                        break;
                 }
-            }).catch(() => { }) ?? forceres.res
-
-            if (forceres.persist && !channelData['forceres']) channelData['forceres'] = forceres
-
-            switch (typeof payload) {
-                case 'string':
-                    payload = {
-                        content: res,
-                        allowedMentions: {
-                            parse: ['users']
-                        }
-                    }
-                    break;
-                case 'object':
-                    payload.content = res
-                    break;
             }
-        }
 
-        if (config.allowbotusage || interaction.replied) return interaction.channel.send(payload).then(setMessageCooldown)
-        else {
-            var reply = await (!interaction.replied && interaction.deferred ?
-                interaction.editReply(payload) :
-                interactionReply.call(interaction, payload)).then(setMessageCooldown)
-            Object.defineProperty(interaction, 'replied', {
-                value: reply,
-                writable: true
-            })
-            return reply
+            if (config.allowbotusage || interaction.replied) return interaction.channel.send(payload).then(setMessageCooldown)
+            else {
+                var reply = await (!interaction.replied && interaction.deferred ?
+                    interaction.editReply(payload) :
+                    interactionReply.call(interaction, payload)).then(setMessageCooldown)
+                Object.defineProperty(interaction, 'replied', {
+                    value: reply,
+                    writable: true
+                })
+                return reply
+            }
         }
     }
 }

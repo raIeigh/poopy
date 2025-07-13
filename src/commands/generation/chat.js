@@ -15,7 +15,7 @@ module.exports = {
         let poopy = this
         let { tempdata } = poopy
         let { getOption, parseNumber, userToken } = poopy.functions
-        let { axios, fs, Discord } = poopy.modules
+        let { axios, fs, Discord, DiscordTypes } = poopy.modules
         let vars = poopy.vars
         let config = poopy.config
 
@@ -75,7 +75,7 @@ module.exports = {
             if (!msg.nosend) await msg.reply({
                 content: resp.data.choices[0].message.content,
                 allowedMentions: {
-                    parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) && !msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.MentionEveryone) && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(async () => {
                 var currentcount = vars.filecount

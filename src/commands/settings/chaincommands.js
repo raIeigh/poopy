@@ -5,8 +5,9 @@ module.exports = {
     let poopy = this
     let config = poopy.config
     let data = poopy.data
+    let { DiscordTypes } = poopy.modules
 
-    if (msg.member.permissions.has('ManageGuild') || msg.member.permissions.has('ManageMessages') || msg.member.permissions.has('Administrator') || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
+    if (msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.ManageGuild) || msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.ManageMessages) || msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
       data.guildData[msg.guild.id]['chaincommands'] = !data.guildData[msg.guild.id]['chaincommands']
       if (!msg.nosend) await msg.reply('Set to **' + data.guildData[msg.guild.id]['chaincommands'] + '**.').catch(() => { })
       return 'Set to **' + data.guildData[msg.guild.id]['chaincommands'] + '**.'

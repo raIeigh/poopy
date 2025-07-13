@@ -4,6 +4,7 @@ module.exports = {
     execute: async function (msg, args) {
         let poopy = this
         let { lastUrl, validateFile, downloadFile, execPromise, findpreset, sendFile } = poopy.functions
+        let { DiscordTypes } = poopy.modules
         let vars = poopy.vars
         let { Jimp, Discord } = poopy.modules
 
@@ -53,9 +54,9 @@ module.exports = {
             var game = await Jimp.read(`assets/image/game.png`)
             var gothamed = await Jimp.loadFont('assets/fonts/GothamMedium/GothamMedium.fnt')
             var gothasm = await Jimp.loadFont('assets/fonts/GothamSmall/GothamSmall.fnt')
-            await game.print(gothamed, 5, 165, { text: Discord.cleanContent(name, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_LEFT, alignmentY: Jimp.VERTICAL_ALIGN_TOP }, 150, 35)
-            await game.print(gothasm, 22, 211, { text: Discord.cleanContent(likepercentage, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_LEFT, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 138, 17)
-            await game.print(gothasm, 79, 211, { text: Discord.cleanContent(playercount, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_LEFT, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 81, 17)
+            await game.print(gothamed, 5, 165, { text: Discord.Util.cleanContent(name, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_LEFT, alignmentY: Jimp.VERTICAL_ALIGN_TOP }, 150, 35)
+            await game.print(gothasm, 22, 211, { text: Discord.Util.cleanContent(likepercentage, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_LEFT, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 138, 17)
+            await game.print(gothasm, 79, 211, { text: Discord.Util.cleanContent(playercount, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_LEFT, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 81, 17)
             await game.writeAsync(`${filepath}/game.png`)
 
             var width = fileinfo.info.width
@@ -73,9 +74,9 @@ module.exports = {
             var game = await Jimp.read(`assets/image/game.png`)
             var gothamed = await Jimp.loadFont('assets/fonts/GothamMedium/GothamMedium.fnt')
             var gothasm = await Jimp.loadFont('assets/fonts/GothamSmall/GothamSmall.fnt')
-            await game.print(gothamed, 5, 165, { text: Discord.cleanContent(name, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_LEFT, alignmentY: Jimp.VERTICAL_ALIGN_TOP }, 150, 35)
-            await game.print(gothasm, 22, 211, { text: Discord.cleanContent(likepercentage, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_LEFT, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 138, 17)
-            await game.print(gothasm, 79, 211, { text: Discord.cleanContent(playercount, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_LEFT, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 81, 17)
+            await game.print(gothamed, 5, 165, { text: Discord.Util.cleanContent(name, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_LEFT, alignmentY: Jimp.VERTICAL_ALIGN_TOP }, 150, 35)
+            await game.print(gothasm, 22, 211, { text: Discord.Util.cleanContent(likepercentage, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_LEFT, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 138, 17)
+            await game.print(gothasm, 79, 211, { text: Discord.Util.cleanContent(playercount, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_LEFT, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 81, 17)
             await game.writeAsync(`${filepath}/game.png`)
 
             var width = fileinfo.info.width
@@ -92,9 +93,9 @@ module.exports = {
             var game = await Jimp.read(`assets/image/game.png`)
             var gothamed = await Jimp.loadFont('assets/fonts/GothamMedium/GothamMedium.fnt')
             var gothasm = await Jimp.loadFont('assets/fonts/GothamSmall/GothamSmall.fnt')
-            await game.print(gothamed, 5, 165, { text: Discord.cleanContent(name, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_LEFT, alignmentY: Jimp.VERTICAL_ALIGN_TOP }, 150, 35)
-            await game.print(gothasm, 22, 211, { text: Discord.cleanContent(likepercentage, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_LEFT, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 138, 17)
-            await game.print(gothasm, 79, 211, { text: Discord.cleanContent(playercount, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_LEFT, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 81, 17)
+            await game.print(gothamed, 5, 165, { text: Discord.Util.cleanContent(name, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_LEFT, alignmentY: Jimp.VERTICAL_ALIGN_TOP }, 150, 35)
+            await game.print(gothasm, 22, 211, { text: Discord.Util.cleanContent(likepercentage, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_LEFT, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 138, 17)
+            await game.print(gothasm, 79, 211, { text: Discord.Util.cleanContent(playercount, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_LEFT, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 81, 17)
             await game.writeAsync(`${filepath}/game.png`)
 
             var width = fileinfo.info.width
@@ -108,7 +109,7 @@ module.exports = {
             await msg.reply({
                 content: `Unsupported file: \`${currenturl}\``,
                 allowedMentions: {
-                    parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) && !msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.MentionEveryone) && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })

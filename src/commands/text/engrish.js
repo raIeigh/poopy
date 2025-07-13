@@ -1,9 +1,10 @@
 module.exports = {
   name: ['engrish', 'caveman'],
-  args: [{"name":"message","required":true,"specifarg":false,"orig":"<message>"}],
+  args: [{ "name": "message", "required": true, "specifarg": false, "orig": "<message>" }],
   execute: async function (msg, args) {
     let poopy = this
     let { lingo } = poopy.functions
+    let { DiscordTypes } = poopy.modules
 
     await msg.channel.sendTyping().catch(() => { })
     var saidMessage = args.slice(1).join(' ')
@@ -26,7 +27,7 @@ module.exports = {
     if (!msg.nosend) await msg.reply({
       content: engrish,
       allowedMentions: {
-        parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+        parse: ((!msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) && !msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.MentionEveryone) && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
       }
     }).catch(() => { })
     return engrish

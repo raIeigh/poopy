@@ -4,6 +4,7 @@ module.exports = {
     execute: async function (msg, args) {
         let poopy = this
         let { lastUrl, validateFile, downloadFile, execPromise, findpreset, sendFile } = poopy.functions
+        let { DiscordTypes } = poopy.modules
         let vars = poopy.vars
         let { Jimp, Discord } = poopy.modules
 
@@ -54,7 +55,7 @@ module.exports = {
             snapchat.resize(Jimp.AUTO, Math.round(2000 / size))
             var textheight = Jimp.measureTextHeight(helvetica, text, snapchat.bitmap.width - Math.round(100 / size))
             snapchat.resize(snapchat.bitmap.width, textheight + Math.round(100 / size))
-            await snapchat.print(helvetica, Math.round(50 / size), Math.round(50 / size), { text: Discord.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, snapchat.bitmap.width - Math.round(100 / size), snapchat.bitmap.height - Math.round(100 / size))
+            await snapchat.print(helvetica, Math.round(50 / size), Math.round(50 / size), { text: Discord.Util.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, snapchat.bitmap.width - Math.round(100 / size), snapchat.bitmap.height - Math.round(100 / size))
             snapchat.resize(width, Jimp.AUTO)
             await snapchat.writeAsync(`${filepath}/caption.png`)
 
@@ -72,7 +73,7 @@ module.exports = {
             snapchat.resize(Jimp.AUTO, Math.round(2000 / size))
             var textheight = Jimp.measureTextHeight(helvetica, text, snapchat.bitmap.width - Math.round(100 / size))
             snapchat.resize(snapchat.bitmap.width, textheight + Math.round(100 / size))
-            await snapchat.print(helvetica, Math.round(50 / size), Math.round(50 / size), { text: Discord.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, snapchat.bitmap.width - Math.round(100 / size), snapchat.bitmap.height - Math.round(100 / size))
+            await snapchat.print(helvetica, Math.round(50 / size), Math.round(50 / size), { text: Discord.Util.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, snapchat.bitmap.width - Math.round(100 / size), snapchat.bitmap.height - Math.round(100 / size))
             snapchat.resize(width, Jimp.AUTO)
             await snapchat.writeAsync(`${filepath}/caption.png`)
 
@@ -90,7 +91,7 @@ module.exports = {
             snapchat.resize(Jimp.AUTO, Math.round(2000 / size))
             var textheight = Jimp.measureTextHeight(helvetica, text, snapchat.bitmap.width - Math.round(100 / size))
             snapchat.resize(snapchat.bitmap.width, textheight + Math.round(100 / size))
-            await snapchat.print(helvetica, Math.round(50 / size), Math.round(50 / size), { text: Discord.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, snapchat.bitmap.width - Math.round(100 / size), snapchat.bitmap.height - Math.round(100 / size))
+            await snapchat.print(helvetica, Math.round(50 / size), Math.round(50 / size), { text: Discord.Util.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, snapchat.bitmap.width - Math.round(100 / size), snapchat.bitmap.height - Math.round(100 / size))
             snapchat.resize(width, Jimp.AUTO)
             await snapchat.writeAsync(`${filepath}/caption.png`)
 
@@ -100,7 +101,7 @@ module.exports = {
             await msg.reply({
                 content: `Unsupported file: \`${currenturl}\``,
                 allowedMentions: {
-                    parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) && !msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.MentionEveryone) && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })

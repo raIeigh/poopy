@@ -6,7 +6,7 @@ module.exports = {
         let { lastUrl, validateFile, braille } = poopy.functions
         let vars = poopy.vars
         let config = poopy.config
-        let { fs, Discord } = poopy.modules
+        let { fs, Discord, DiscordTypes } = poopy.modules
 
         await msg.channel.sendTyping().catch(() => { })
         if (lastUrl(msg, 0, true) === undefined && args[1] === undefined) {
@@ -32,7 +32,7 @@ module.exports = {
             if (!msg.nosend) await msg.reply({
                 content: brailleText,
                 allowedMentions: {
-                    parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) && !msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.MentionEveryone) && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(async () => {
                 var currentcount = vars.filecount
@@ -50,7 +50,7 @@ module.exports = {
             await msg.reply({
                 content: `Unsupported file: \`${currenturl}\``,
                 allowedMentions: {
-                    parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) && !msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.MentionEveryone) && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })

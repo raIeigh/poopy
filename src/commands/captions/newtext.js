@@ -142,7 +142,7 @@ module.exports = {
         var width = textwidth + padding.left + padding.right
         var height = textheight + padding.top + padding.bottom
         transparent.resize(width, height)
-        await transparent.print(loadedfont, padding.left, padding.top, { text: Discord.cleanContent(text, msg), alignmentX: originx, alignmentY: originy }, textwidth, textheight)
+        await transparent.print(loadedfont, padding.left, padding.top, { text: Discord.Util.cleanContent(text, msg), alignmentX: originx, alignmentY: originy }, textwidth, textheight)
         if (args.find(arg => arg === '-resetcolor')) {
             transparent.color([
                 {

@@ -15,6 +15,7 @@ module.exports = {
         let config = poopy.config
         let globaldata = poopy.globaldata
         let arrays = poopy.arrays
+        let { DiscordTypes } = poopy.modules
 
         var jsonid = config.ownerids.find(id => id == msg.author.id) || config.jsoning.find(id => id == msg.author.id);
         if (jsonid === undefined) {
@@ -51,7 +52,7 @@ module.exports = {
             if (!msg.nosend) await msg.reply({
                 content: '✅ Removed ' + removed[0],
                 allowedMentions: {
-                    parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) && !msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.MentionEveryone) && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
 

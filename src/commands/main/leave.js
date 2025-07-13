@@ -5,14 +5,14 @@ module.exports = {
         let poopy = this
         let config = poopy.config
         let { yesno } = poopy.functions
-        let { Discord } = poopy.modules
+        let { DiscordTypes } = poopy.modules
 
-        if (msg.channel.type == Discord.ChannelType.DM) {
+        if (msg.channel.type == DiscordTypes.ChannelType.DM) {
             await msg.reply(`You can't get rid of me.`).catch(() => { })
             return
         }
 
-        if (msg.member.permissions.has('ManageGuild') || msg.member.permissions.has('Administrator') || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
+        if (msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.ManageGuild) || msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
             var phrases = [
                 'idiot',
                 'the salt',
@@ -58,7 +58,7 @@ module.exports = {
                 var phrase = phrases[Math.floor(Math.random() * phrases.length)]
                 if (!msg.nosend) await msg.reply(phrase).catch(() => { })
                 
-                if (msg.channel.type == Discord.ChannelType.GroupDM) msg.channel.delete().catch(() => { })
+                if (msg.channel.type == DiscordTypes.ChannelType.GroupDM) msg.channel.delete().catch(() => { })
                 else {
                     var left = await msg.guild.leave().catch(() => { })
                     if (!msg.nosend) await msg.channel?.send(left).catch(() => { })

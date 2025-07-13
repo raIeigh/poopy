@@ -4,6 +4,7 @@ module.exports = {
     execute: async function (msg, args) {
         let poopy = this
         let { lastUrl, validateFile, downloadFile, execPromise, findpreset, sendFile } = poopy.functions
+        let { DiscordTypes } = poopy.modules
         let vars = poopy.vars
         let { Jimp, Discord } = poopy.modules
 
@@ -41,7 +42,7 @@ module.exports = {
 
             var reddittop = await Jimp.read(`assets/image/reddittop.png`)
             var ibm = await Jimp.loadFont(`assets/fonts/IBMPlexSans/IBMPlexSans.fnt`)
-            await reddittop.print(ibm, 18, 315, { text: Discord.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_LEFT, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 364, 66)
+            await reddittop.print(ibm, 18, 315, { text: Discord.Util.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_LEFT, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 364, 66)
             await reddittop.writeAsync(`${filepath}/top.png`)
 
             await execPromise(`ffmpeg -i ${filepath}/${filename} -filter_complex "[0:v]scale=${reddittop.bitmap.width}:-1[out]" -map "[out]" -preset ${findpreset(args)} ${filepath}/scaled.png`)
@@ -55,7 +56,7 @@ module.exports = {
             var reddittop = await Jimp.read(`assets/image/reddittop.png`)
             var redditbottom = await Jimp.read(`assets/image/redditbottom.png`)
             var ibm = await Jimp.loadFont(`assets/fonts/IBMPlexSans/IBMPlexSans.fnt`)
-            await reddittop.print(ibm, 18, 315, { text: Discord.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_LEFT, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 364, 66)
+            await reddittop.print(ibm, 18, 315, { text: Discord.Util.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_LEFT, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 364, 66)
             await reddittop.writeAsync(`${filepath}/top.png`)
 
             var fps = fileinfo.info.fps
@@ -74,7 +75,7 @@ module.exports = {
 
             var reddittop = await Jimp.read(`assets/image/reddittop.png`)
             var ibm = await Jimp.loadFont(`assets/fonts/IBMPlexSans/IBMPlexSans.fnt`)
-            await reddittop.print(ibm, 18, 315, { text: Discord.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_LEFT, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 364, 66)
+            await reddittop.print(ibm, 18, 315, { text: Discord.Util.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_LEFT, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 364, 66)
             await reddittop.writeAsync(`${filepath}/top.png`)
 
             var fps = fileinfo.info.fps
@@ -91,7 +92,7 @@ module.exports = {
             await msg.reply({
                 content: `Unsupported file: \`${currenturl}\``,
                 allowedMentions: {
-                    parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) && !msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.MentionEveryone) && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })

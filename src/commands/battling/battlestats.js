@@ -20,6 +20,7 @@ module.exports = {
         let vars = poopy.vars
         let config = poopy.config
         let { getLevel, dataGather } = poopy.functions
+        let { DiscordTypes } = poopy.modules
 
         await msg.channel.sendTyping().catch(() => { })
 
@@ -29,9 +30,9 @@ module.exports = {
 
         if (!member) {
             await msg.reply({
-                content: `Invalid user id: **${args[1]}**`,
+                content: `Invalid user ID: **${args[1]}**`,
                 allowedMentions: {
-                    parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) && !msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.MentionEveryone) && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
             return
@@ -120,7 +121,7 @@ module.exports = {
             }],
             content: `**${member.username}'s Stats**\n\n${battleStats.map(s => `**${s.name}**: ${s.value}`).join('\n')}`,
             allowedMentions: {
-                parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                parse: ((!msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) && !msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.MentionEveryone) && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
             }
         }
         if (config.textEmbeds) delete sendObject.embeds

@@ -4,6 +4,7 @@ module.exports = {
     execute: async function (msg, args) {
         let poopy = this
         let { lastUrl, validateFile, downloadFile, execPromise, findpreset, sendFile } = poopy.functions
+        let { DiscordTypes } = poopy.modules
         let vars = poopy.vars
         let { Jimp, Discord } = poopy.modules
 
@@ -52,7 +53,7 @@ module.exports = {
                 white.resize(stuff.bitmap.width, textheight + 120)
                 white.composite(stuff, 0, white.bitmap.height - stuff.bitmap.height)
             }
-            await caption.print(tnr, 60, 60, { text: Discord.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_LEFT, alignmentY: Jimp.VERTICAL_ALIGN_TOP }, 643, caption.bitmap.height - 120)
+            await caption.print(tnr, 60, 60, { text: Discord.Util.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_LEFT, alignmentY: Jimp.VERTICAL_ALIGN_TOP }, 643, caption.bitmap.height - 120)
             caption.resize(width, Jimp.AUTO)
             await caption.writeAsync(`${filepath}/stuff.png`)
 
@@ -76,7 +77,7 @@ module.exports = {
                 white.resize(stuff.bitmap.width, textheight + 120)
                 white.composite(stuff, 0, white.bitmap.height - stuff.bitmap.height)
             }
-            await caption.print(tnr, 60, 60, { text: Discord.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_LEFT, alignmentY: Jimp.VERTICAL_ALIGN_TOP }, 643, caption.bitmap.height - 120)
+            await caption.print(tnr, 60, 60, { text: Discord.Util.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_LEFT, alignmentY: Jimp.VERTICAL_ALIGN_TOP }, 643, caption.bitmap.height - 120)
             caption.resize(width, Jimp.AUTO)
             await caption.writeAsync(`${filepath}/stuff.png`)
 
@@ -100,7 +101,7 @@ module.exports = {
                 white.resize(stuff.bitmap.width, textheight + 120)
                 white.composite(stuff, 0, white.bitmap.height - stuff.bitmap.height)
             }
-            await caption.print(tnr, 60, 60, { text: Discord.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_LEFT, alignmentY: Jimp.VERTICAL_ALIGN_TOP }, 643, caption.bitmap.height - 120)
+            await caption.print(tnr, 60, 60, { text: Discord.Util.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_LEFT, alignmentY: Jimp.VERTICAL_ALIGN_TOP }, 643, caption.bitmap.height - 120)
             caption.resize(width, Jimp.AUTO)
             await caption.writeAsync(`${filepath}/stuff.png`)
 
@@ -110,7 +111,7 @@ module.exports = {
             await msg.reply({
                 content: `Unsupported file: \`${currenturl}\``,
                 allowedMentions: {
-                    parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) && !msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.MentionEveryone) && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })

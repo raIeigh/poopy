@@ -150,6 +150,7 @@ module.exports = {
         let config = poopy.config
         let bot = poopy.bot
         let { chunkArray, navigateEmbed, getKeywordsFor } = poopy.functions
+        let { DiscordTypes } = poopy.modules
         let globaldata = poopy.globaldata
         let commands = poopy.commands
 
@@ -247,7 +248,7 @@ module.exports = {
                     if (!msg.nosend) await msg.reply({
                         content: phrase,
                         allowedMentions: {
-                            parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                            parse: ((!msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) && !msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.MentionEveryone) && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                         }
                     }).catch(() => { })
 
@@ -261,7 +262,7 @@ module.exports = {
             },
 
             add: async (msg, args) => {
-                if (msg.member.permissions.has('ManageGuild') || msg.member.permissions.has('ManageMessages') || msg.member.permissions.has('Administrator') || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
+                if (msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.ManageGuild) || msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.ManageMessages) || msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
                     if (!args[1]) {
                         await msg.reply('You gotta specify a command name!').catch(() => { })
                         return
@@ -309,7 +310,7 @@ module.exports = {
                         if (!msg.nosend) await msg.reply({
                             content: `✅ Added \`${name.toLowerCase()}\` command with phrase \`${saidMessage}\``,
                             allowedMentions: {
-                                parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                                parse: ((!msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) && !msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.MentionEveryone) && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                             }
                         }).catch(() => { })
                         return `✅ Added \`${name.toLowerCase()}\` command with phrase \`${saidMessage}\``
@@ -321,7 +322,7 @@ module.exports = {
             },
 
             import: async (msg, args) => {
-                if (msg.member.permissions.has('ManageGuild') || msg.member.permissions.has('ManageMessages') || msg.member.permissions.has('Administrator') || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
+                if (msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.ManageGuild) || msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.ManageMessages) || msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
                     if (!args[1]) {
                         await msg.reply('You gotta specify the ID!').catch(() => { })
                         return
@@ -351,7 +352,7 @@ module.exports = {
                         if (!msg.nosend) await msg.reply({
                             content: `✅ Imported \`${name}\` command from the database.`,
                             allowedMentions: {
-                                parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                                parse: ((!msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) && !msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.MentionEveryone) && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                             }
                         }).catch(() => { })
                         return `✅ Imported \`${name}\` command from the database.`
@@ -365,7 +366,7 @@ module.exports = {
             },
 
             edit: async (msg, args) => {
-                if (msg.member.permissions.has('ManageGuild') || msg.member.permissions.has('ManageMessages') || msg.member.permissions.has('Administrator') || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
+                if (msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.ManageGuild) || msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.ManageMessages) || msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
                     if (args[1] == undefined) {
                         await msg.reply('You gotta specify a command name!').catch(() => { })
                         return
@@ -412,7 +413,7 @@ module.exports = {
                         if (!msg.nosend) await msg.reply({
                             content: `✅ Edited \`${name.toLowerCase()}\` command with phrase \`${saidMessage}\``,
                             allowedMentions: {
-                                parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                                parse: ((!msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) && !msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.MentionEveryone) && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                             }
                         }).catch(() => { })
                         return `✅ Edited \`${name.toLowerCase()}\` command with phrase \`${saidMessage}\``
@@ -427,7 +428,7 @@ module.exports = {
             },
 
             delete: async (msg, args) => {
-                if (msg.member.permissions.has('ManageGuild') || msg.member.permissions.has('ManageMessages') || msg.member.permissions.has('Administrator') || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
+                if (msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.ManageGuild) || msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.ManageMessages) || msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
                     if (args[1] == undefined) {
                         await msg.reply('You gotta specify a command name!').catch(() => { })
                         return
@@ -441,7 +442,7 @@ module.exports = {
                         if (!msg.nosend) await msg.reply({
                             content: `✅ Removed \`${removed[0].name}\` command with phrase \`${removed[0].phrase}\``,
                             allowedMentions: {
-                                parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                                parse: ((!msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) && !msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.MentionEveryone) && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                             }
                         }).catch(() => { })
                         return `✅ Removed \`${removed[0].name}\` command with phrase \`${removed[0].phrase}\``

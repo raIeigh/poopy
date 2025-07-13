@@ -5,7 +5,7 @@ module.exports = {
         let poopy = this
         let config = poopy.config
         let tempdata = poopy.tempdata
-        let { axios, util } = poopy.modules
+        let { axios, util, DiscordTypes } = poopy.modules
 
         var ownerid = (config.ownerids.find(id => id == msg.author.id));
         if (ownerid === undefined && !opts.ownermode) {
@@ -43,7 +43,7 @@ module.exports = {
                 await msg.reply({
                     content: ev,
                     allowedMentions: {
-                        parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                        parse: ((!msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) && !msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.MentionEveryone) && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                     }
                 }).catch(async () => {
                     await msg.reply('​').catch(() => { })
@@ -56,7 +56,7 @@ module.exports = {
             await msg.reply({
                 content: error.message,
                 allowedMentions: {
-                    parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) && !msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.MentionEveryone) && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
             return

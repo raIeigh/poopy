@@ -4,6 +4,7 @@ module.exports = {
     func: async function (matches, msg, isBot) {
         let poopy = this
         let { splitKeyFunc } = poopy.functions
+        let { DiscordTypes } = poopy.modules
         let config = poopy.config
         let bot = poopy.bot
 
@@ -12,8 +13,9 @@ module.exports = {
         var id = split[0] ?? ''
         var phrase = split[1] ?? ''
 
-        if (msg.member.permissions.has('ManageGuild') || msg.member.roles.cache.find(role => role.name.match(/mod|dev|admin|owner|creator|founder|staff/ig)) || msg.member.permissions.has('ManageMessages') || msg.member.permissions.has('Administrator') || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id) || isBot) {
-            var messageToEdit = await msg.channel.messages.fetch(id).catch(() => { })
+        if (msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.ManageGuild) || msg.member.roles.cache.find(role => role.name.match(/mod|dev|admin|owner|creator|founder|staff/ig)) || msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.ManageMessages) || msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id) || isBot) {
+            var messageToEdit = await msg.channel.messages.fetch(id)
+            if (messageToEdit.catch) messageToEdit.catch(() => { })
 
             if (messageToEdit) {
                 if (messageToEdit.author.id !== bot.user.id) {
@@ -22,7 +24,7 @@ module.exports = {
 
                 await messageToEdit.edit({
                     allowedMentions: {
-                        parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                        parse: ((!msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) && !msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.MentionEveryone) && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                     },
                     content: phrase
                 }).catch(() => { })

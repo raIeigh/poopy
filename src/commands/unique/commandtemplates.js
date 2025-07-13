@@ -121,7 +121,7 @@ module.exports = {
     execute: async function (msg, args) {
         let poopy = this
         let { generateId, navigateEmbed, similarity } = poopy.functions
-        let { Discord } = poopy.modules
+        let { DiscordTypes } = poopy.modules
         let globaldata = poopy.globaldata
         let vars = poopy.vars
         let config = poopy.config
@@ -193,7 +193,7 @@ module.exports = {
                 if (!msg.nosend) await msg.reply({
                     content: `✅ \`${name}\` was successfully registered to the command template database! (ID: \`${id}\`)`,
                     allowedMentions: {
-                        parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                        parse: ((!msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) && !msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.MentionEveryone) && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                     }
                 }).catch(() => { })
                 return `✅ \`${name}\` was successfully registered to the command template database! (ID: \`${id}\`)`
@@ -293,9 +293,9 @@ module.exports = {
                         emoji: '939523064658526278',
                         reactemoji: '⏬',
                         customid: 'import',
-                        style: Discord.ButtonStyle.Primary,
+                        style: DiscordTypes.ButtonStyle.Primary,
                         function: async (page, button) => {
-                            if (msg.member.permissions.has('ManageGuild') || msg.member.permissions.has('ManageMessages') || msg.member.permissions.has('Administrator') || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
+                            if (msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.ManageGuild) || msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.ManageMessages) || msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
                                 var findCommandTemplate = dcmdTemplates[page - 1]
 
                                 if (findCommandTemplate) {
@@ -322,7 +322,7 @@ module.exports = {
                                     await msg.reply({
                                         content: `✅ Imported \`${name}\` command from the database.`,
                                         allowedMentions: {
-                                            parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                                            parse: ((!msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) && !msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.MentionEveryone) && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                                         }
                                     }).catch(() => { })
                                 } else {
@@ -455,9 +455,9 @@ module.exports = {
                         emoji: '939523064658526278',
                         reactemoji: '⏬',
                         customid: 'import',
-                        style: Discord.ButtonStyle.Primary,
+                        style: DiscordTypes.ButtonStyle.Primary,
                         function: async (page, button) => {
-                            if (msg.member.permissions.has('ManageGuild') || msg.member.permissions.has('ManageMessages') || msg.member.permissions.has('Administrator') || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
+                            if (msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.ManageGuild) || msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.ManageMessages) || msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
                                 var findCommandTemplate = dcmdTemplates[page - 1]
 
                                 if (findCommandTemplate) {
@@ -484,7 +484,7 @@ module.exports = {
                                     await msg.reply({
                                         content: `✅ Imported \`${name}\` command from the database.`,
                                         allowedMentions: {
-                                            parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                                            parse: ((!msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) && !msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.MentionEveryone) && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                                         }
                                     }).catch(() => { })
                                 } else {

@@ -3,7 +3,7 @@ module.exports = {
     args: [{ "name": "prompt", "required": true, "specifarg": false, "orig": "<prompt>" }],
     execute: async function (msg, args) {
         let poopy = this
-        let { axios, fs, Discord } = poopy.modules
+        let { axios, fs, DiscordTypes } = poopy.modules
         let { sleep, navigateEmbed } = poopy.functions
         let vars = poopy.vars
         let config = poopy.config
@@ -85,7 +85,7 @@ module.exports = {
                 emoji: '874406183933444156',
                 reactemoji: '❌',
                 customid: 'delete',
-                style: Discord.ButtonStyle.Danger,
+                style: DiscordTypes.ButtonStyle.Danger,
                 function: async (_, __, resultsMsg, collector) => {
                     collector.stop()
                     resultsMsg.delete().catch(() => { })

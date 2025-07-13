@@ -5,10 +5,15 @@ module.exports = {
         let poopy = this
         let bot = poopy.bot
         let { generateSayori } = poopy.functions
+        let { DiscordTypes } = poopy.modules
 
         var fixedchoice = args[1];
 
-        var sayori = await bot.users.fetch('758638862590803968')
+        var sayori = await bot.users.fetch('758638862590803968').catch(() => { })
+        if (!sayori) {
+            await msg.channel.send("She was not found.").catch(() => { })
+            return
+        }
 
         var option = generateSayori(msg, fixedchoice)
         var optiontext
@@ -31,7 +36,7 @@ module.exports = {
                     username: sayori.username,
                     avatarURL: sayori.displayAvatarURL({ dynamic: true, size: 1024, extension: 'png' }),
                     allowedMentions: {
-                        parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                        parse: ((!msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) && !msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.MentionEveryone) && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                     }
                 }).catch(() => { })
             } else {
@@ -42,7 +47,7 @@ module.exports = {
                         username: sayori.username,
                         avatarURL: sayori.displayAvatarURL({ dynamic: true, size: 1024, extension: 'png' }),
                         allowedMentions: {
-                            parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                            parse: ((!msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) && !msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.MentionEveryone) && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                         }
                     }).catch(() => { })
                 }
@@ -55,7 +60,7 @@ module.exports = {
                     username: sayori.username,
                     avatarURL: sayori.displayAvatarURL({ dynamic: true, size: 1024, extension: 'png' }),
                     allowedMentions: {
-                        parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                        parse: ((!msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) && !msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.MentionEveryone) && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                     }
                 }).catch(() => { })
             }
@@ -71,7 +76,7 @@ module.exports = {
                             username: sayori.username,
                             avatarURL: sayori.displayAvatarURL({ dynamic: true, size: 1024, extension: 'png' }),
                             allowedMentions: {
-                                parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                                parse: ((!msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) && !msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.MentionEveryone) && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                             }
                         }).catch(() => { })
                     } else {
@@ -81,7 +86,7 @@ module.exports = {
                             username: sayori.username,
                             avatarURL: sayori.displayAvatarURL({ dynamic: true, size: 1024, extension: 'png' }),
                             allowedMentions: {
-                                parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                                parse: ((!msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) && !msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.MentionEveryone) && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                             }
                         }).catch(() => { })
                     }
@@ -92,7 +97,7 @@ module.exports = {
             botmsg = await msg.reply({
                 content: optiontext,
                 allowedMentions: {
-                    parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) && !msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.MentionEveryone) && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
 
@@ -103,14 +108,14 @@ module.exports = {
                             botmsg.edit({
                                 content: '<@' + msg.author.id + '> ' + option['edit'],
                                 allowedMentions: {
-                                    parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                                    parse: ((!msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) && !msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.MentionEveryone) && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                                 }
                             }).catch(() => { })
                         } else {
                             botmsg.edit({
                                 content: option['edit'],
                                 allowedMentions: {
-                                    parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                                    parse: ((!msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) && !msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.MentionEveryone) && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                                 }
                             }).catch(() => { })
                         }

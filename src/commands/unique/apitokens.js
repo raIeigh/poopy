@@ -70,7 +70,7 @@ module.exports = {
         let data = poopy.data
         let bot = poopy.bot
         let config = poopy.config
-        let { CryptoJS } = poopy.modules
+        let { CryptoJS, DiscordTypes } = poopy.modules
         let { decrypt } = poopy.functions
 
         let tokenList = {
@@ -255,7 +255,7 @@ module.exports = {
                 if (config.textEmbeds) msg.reply({
                     content: instruction,
                     allowedMentions: {
-                        parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                        parse: ((!msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) && !msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.MentionEveryone) && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                     }
                 }).catch(() => { })
                 else msg.reply({

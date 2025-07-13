@@ -92,7 +92,7 @@ module.exports = {
         let poopy = this
         let vars = poopy.vars
         let config = poopy.config
-        let { fs, Discord, CryptoJS } = poopy.modules
+        let { fs, Discord, DiscordTypes, CryptoJS } = poopy.modules
         let data = poopy.data
         let { similarity, yesno, decrypt, dataGather } = poopy.functions
         let bot = poopy.bot
@@ -120,7 +120,7 @@ module.exports = {
                 }
 
                 var saidMessage = args.slice(1).join(' ')
-                var cleanMessage = Discord.cleanContent(saidMessage, msg).replace(/\@/g, '@‌')
+                var cleanMessage = Discord.Util.cleanContent(saidMessage, msg).replace(/\@/g, '@‌')
                 var results = []
 
                 data.guildData[msg.guild.id]['messages'].forEach(message => {
@@ -189,7 +189,7 @@ module.exports = {
                 }
 
                 var saidMessage = args.slice(1).join(' ')
-                var cleanMessage = Discord.cleanContent(saidMessage, msg).replace(/\@/g, '@‌')
+                var cleanMessage = Discord.Util.cleanContent(saidMessage, msg).replace(/\@/g, '@‌')
                 var findMessage = data.guildData[msg.guild.id]['messages'].find(message => decrypt(message.content).toLowerCase() === cleanMessage.toLowerCase())
 
                 if (findMessage) {
@@ -215,7 +215,7 @@ module.exports = {
                     if (!msg.nosend) await msg.reply({
                         content: `✅ Added ${cleanMessage}`,
                         allowedMentions: {
-                            parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                            parse: ((!msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) && !msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.MentionEveryone) && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                         }
                     }).catch(() => { })
                     return `✅ Added ${cleanMessage}`
@@ -229,7 +229,7 @@ module.exports = {
                 }
 
                 var saidMessage = args.slice(1).join(' ')
-                var cleanMessage = Discord.cleanContent(saidMessage, msg).replace(/\@/g, '@‌')
+                var cleanMessage = Discord.Util.cleanContent(saidMessage, msg).replace(/\@/g, '@‌')
                 var findMessage = data.guildData[msg.guild.id]['messages'].findIndex(message => decrypt(message.content).toLowerCase() === cleanMessage.toLowerCase())
 
                 if (findMessage > -1) {
@@ -243,7 +243,7 @@ module.exports = {
             },
 
             clear: async (msg) => {
-                if (msg.member.permissions.has('ManageGuild') || msg.member.permissions.has('Administrator') || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
+                if (msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.ManageGuild) || msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
                     var confirm = msg.nosend || await yesno(msg.channel, 'are you sure about this', msg.member, undefined, msg).catch(() => { })
 
                     if (confirm) {
@@ -258,7 +258,7 @@ module.exports = {
             },
 
             read: async (msg) => {
-                if (msg.member.permissions.has('ManageGuild') || msg.member.permissions.has('ManageMessages') || msg.member.permissions.has('Administrator') || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
+                if (msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.ManageGuild) || msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.ManageMessages) || msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
                     data.guildData[msg.guild.id]['channels'][msg.channel.id]['read'] = !(data.guildData[msg.guild.id]['channels'][msg.channel.id]['read'])
 
                     var read = data.guildData[msg.guild.id]['channels'][msg.channel.id]['read']
@@ -271,13 +271,13 @@ module.exports = {
             },
 
             readall: async (msg) => {
-                if (msg.member.permissions.has('ManageGuild') || msg.member.permissions.has('Administrator') || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
+                if (msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.ManageGuild) || msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
                     data.guildData[msg.guild.id]['read'] = !(data.guildData[msg.guild.id]['read'])
                     var channels = [...msg.guild.channels.cache.values()]
                     var channelData = !config.testing && process.env.MONGOOSE_URL && await dataGather.allChannelData(config.database, msg.guild.id).catch(() => { }) || {}
 
                     for (var channel of channels) {
-                        if (channel.type === Discord.ChannelType.GuildText || channel.type === Discord.ChannelType.GuildNews) {
+                        if (channel.type === DiscordTypes.ChannelType.GuildText || channel.type === DiscordTypes.ChannelType.GuildNews) {
                             if (!data.guildData[msg.guild.id]['channels'][channel.id]) {
                                 data.guildData[msg.guild.id]['channels'][channel.id] = channelData[channel.id] || {}
                             }

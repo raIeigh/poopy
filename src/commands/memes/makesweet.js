@@ -14,6 +14,7 @@ module.exports = {
         let poopy = this
         let vars = poopy.vars
         let { getUrls, validateFile, downloadFile, sendFile } = poopy.functions
+        let { DiscordTypes } = poopy.modules
         let config = poopy.config
         let { fs, FormData, axios } = poopy.modules
 
@@ -76,7 +77,7 @@ module.exports = {
                 await msg.reply({
                     content: `Unsupported file: \`${url}\``,
                     allowedMentions: {
-                        parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                        parse: ((!msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) && !msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.MentionEveryone) && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                     }
                 }).catch(() => { })
                 return

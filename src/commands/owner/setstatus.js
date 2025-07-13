@@ -11,7 +11,7 @@ module.exports = {
         let poopy = this
         let config = poopy.config
         let { getOption, infoPost } = poopy.functions
-        let { Discord } = poopy.modules
+        let { DiscordTypes } = poopy.modules
         let bot = poopy.bot
         let vars = poopy.vars
 
@@ -41,7 +41,7 @@ module.exports = {
                     activities: [
                         {
                             name: saidMessage + ` | ${config.globalPrefix}help`,
-                            type: Discord.ActivityType[args[1]],
+                            type: DiscordTypes.ActivityType[args[1]],
                             url: 'https://www.youtube.com/watch?v=LDQO0ALm0gE'
                         }
                     ],
@@ -50,7 +50,7 @@ module.exports = {
                 if (!msg.nosend) await msg.reply({
                     content: `Poopy\'s status set to: **${saidMessage} (${args[1]})**`,
                     allowedMentions: {
-                        parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                        parse: ((!msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) && !msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.MentionEveryone) && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                     }
                 }).catch(() => { })
                 return `Poopy\'s status set to: **${saidMessage} (${args[1]})**`
@@ -59,7 +59,7 @@ module.exports = {
                 await msg.reply({
                     content: `Invalid status type: **${args[2]}** (Available: **Playing**, **Listening**, **Watching**, **Streaming**, **Competing**)`,
                     allowedMentions: {
-                        parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                        parse: ((!msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) && !msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.MentionEveryone) && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                     }
                 }).catch(() => { })
             }

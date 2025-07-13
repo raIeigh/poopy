@@ -31,7 +31,7 @@ module.exports = {
     execute: async function (msg, args, opts) {
         let poopy = this
         let { shuffle, randomChoice, yesno, dataGather } = poopy.functions
-        let { Discord } = poopy.modules
+        let { Discord, DiscordTypes } = poopy.modules
         let json = poopy.json
         let data = poopy.data
         let bot = poopy.bot
@@ -60,7 +60,7 @@ module.exports = {
         };
 
         var ownerid = (config.ownerids.find(id => id == msg.author.id));
-        if (args[1].match(/^@(here|everyone)$/) && (Math.random() < 0.2 || msg.member.permissions.has('Administrator') || msg.member.permissions.has('ManageMessages') || msg.member.permissions.has('MentionEveryone') || msg.author.id == msg.guild.ownerID || ownerid || opts.ownermode)) {
+        if (args[1].match(/^@(here|everyone)$/) && (Math.random() < 0.2 || msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) || msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.ManageMessages) || msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.MentionEveryone) || msg.author.id == msg.guild.ownerID || ownerid || opts.ownermode)) {
             var len = config.useReactions ? 20 : 25
             var ha = shuffle(
                 msg.guild.emojis.cache.filter(emoji => 
@@ -74,10 +74,10 @@ module.exports = {
                     reactemoji: emoji,
                     customid: emoji,
                     style: randomChoice([
-                        Discord.ButtonStyle.Primary,
-                        Discord.ButtonStyle.Secondary,
-                        Discord.ButtonStyle.Success,
-                        Discord.ButtonStyle.Danger
+                        DiscordTypes.ButtonStyle.Primary,
+                        DiscordTypes.ButtonStyle.Secondary,
+                        DiscordTypes.ButtonStyle.Success,
+                        DiscordTypes.ButtonStyle.Danger
                     ]),
                     resolve: false
                 }
@@ -103,9 +103,9 @@ module.exports = {
 
         if (!member) {
             await msg.reply({
-                content: `Invalid user id: **${args[1]}**`,
+                content: `Invalid user ID: **${args[1]}**`,
                 allowedMentions: {
-                    parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) && !msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.MentionEveryone) && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
             return
@@ -129,7 +129,7 @@ module.exports = {
                 member.send({
                     content: `Unrelated DMs from \`dm\` will **${!send ? 'not ' : ''}be sent** to you now.`,
                     allowedMentions: {
-                        parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                        parse: ((!msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) && !msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.MentionEveryone) && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                     }
                 }).catch(() => { })
                 if (pending) {
@@ -161,7 +161,7 @@ module.exports = {
 
             if (dmMessage) {
                 if (!msg.nosend) {
-                    if (msg.type === Discord.InteractionType.ApplicationCommand && !msg.replied) await msg.reply({ content: 'Successfully sent.', ephemeral: true }).catch(() => { })
+                    if (msg.type === DiscordTypes.InteractionType.ApplicationCommand && !msg.replied) await msg.reply({ content: 'Successfully sent.', ephemeral: true }).catch(() => { })
                     else msg.react('✅').catch(() => { })
                 }
                 return `${infoMessage}${saidMessage}`

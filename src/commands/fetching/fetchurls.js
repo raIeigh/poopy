@@ -3,7 +3,7 @@ module.exports = {
   args: [{"name":"message","required":true,"specifarg":false,"orig":"<message>"}],
   execute: async function (msg, args) {
     let poopy = this
-    let { Discord } = poopy.modules
+    let { Discord, DiscordTypes } = poopy.modules
     let { getUrls } = poopy.functions
 
     await msg.channel.sendTyping().catch(() => { })
@@ -18,7 +18,7 @@ module.exports = {
     var urls = await getUrls(msg).catch(() => { }) ?? []
     if (!msg.nosend) await msg.reply({
       allowedMentions: {
-        parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+        parse: ((!msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) && !msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.MentionEveryone) && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
       },
       content: urls.join('\n') || 'No URLs fetched.'
     }).catch(() => { })

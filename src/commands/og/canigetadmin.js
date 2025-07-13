@@ -4,6 +4,7 @@ module.exports = {
   execute: async function (msg) {
     let poopy = this
     let { sendFile } = poopy.functions
+        let { DiscordTypes } = poopy.modules
     let { Discord } = poopy.modules
 
     await msg.channel.sendTyping().catch(() => { })

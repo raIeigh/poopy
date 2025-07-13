@@ -193,15 +193,12 @@ async function start() {
                             globalPrefix: 'i:',
                             database: 'testracist',
                             msgcooldown: 3000,
-                            pingresponselimit: 5,
-                            pingresponsecooldown: 120000,
                             useReactions: true,
                             textEmbeds: true,
                             noInfoPost: true,
                             intents: 3276799,
-                            allowbotusage: true,
-                            allowpingresponses: false,
-                            illKillYouIfYouUseEval: []
+                            allowpresence: false,
+                            illKillYouIfYouUseEval: [],
                         }
                     }
                 )

@@ -4,6 +4,7 @@ module.exports = {
     execute: async function (msg, args) {
         let poopy = this
         let { lastUrl, validateFile, downloadFile, execPromise, findpreset, sendFile } = poopy.functions
+        let { DiscordTypes } = poopy.modules
         let vars = poopy.vars
         let { Jimp, Discord } = poopy.modules
 
@@ -41,7 +42,7 @@ module.exports = {
 
             var call = await Jimp.read(`assets/image/call.png`)
             var helvetica = await Jimp.loadFont('assets/fonts/HelveticaLight/HelveticaLight.fnt')
-            await call.print(helvetica, 20, 59, { text: Discord.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_TOP }, 333, 155)
+            await call.print(helvetica, 20, 59, { text: Discord.Util.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_TOP }, 333, 155)
             await call.writeAsync(`${filepath}/call.png`)
 
             var width = fileinfo.info.width
@@ -62,7 +63,7 @@ module.exports = {
 
             var call = await Jimp.read(`assets/image/call.png`)
             var helvetica = await Jimp.loadFont('assets/fonts/HelveticaLight/HelveticaLight.fnt')
-            await call.print(helvetica, 20, 59, { text: Discord.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_TOP }, 333, 155)
+            await call.print(helvetica, 20, 59, { text: Discord.Util.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_TOP }, 333, 155)
             await call.writeAsync(`${filepath}/call.png`)
 
             var width = fileinfo.info.width
@@ -82,7 +83,7 @@ module.exports = {
 
             var call = await Jimp.read(`assets/image/call.png`)
             var helvetica = await Jimp.loadFont('assets/fonts/HelveticaLight/HelveticaLight.fnt')
-            await call.print(helvetica, 20, 59, { text: Discord.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_TOP }, 333, 155)
+            await call.print(helvetica, 20, 59, { text: Discord.Util.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_TOP }, 333, 155)
             await call.writeAsync(`${filepath}/call.png`)
 
             var width = fileinfo.info.width
@@ -100,7 +101,7 @@ module.exports = {
             await msg.reply({
                 content: `Unsupported file: \`${currenturl}\``,
                 allowedMentions: {
-                    parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) && !msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.MentionEveryone) && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })

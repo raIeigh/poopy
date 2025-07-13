@@ -9,6 +9,7 @@ module.exports = {
     func: async function (matches, msg, isBot, _, opts) {
         let poopy = this
         let { splitKeyFunc, getKeywordsFor, dmSupport, deleteMsgData } = poopy.functions
+        let { DiscordTypes } = poopy.modules
         let config = poopy.config
         let data = poopy.data
         let bot = poopy.bot
@@ -25,7 +26,7 @@ module.exports = {
         var channelid = channel.id
         var authorid = msg.author.id
 
-        if (msg.member.permissions.has('ManageGuild') || msg.member.roles.cache.find(role => role.name.match(/mod|dev|admin|owner|creator|founder|staff/ig)) || msg.member.permissions.has('ManageMessages') || msg.member.permissions.has('Administrator') || authorid === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id) || isBot || authorid == bot.user.id) {
+        if (msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.ManageGuild) || msg.member.roles.cache.find(role => role.name.match(/mod|dev|admin|owner|creator|founder|staff/ig)) || msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.ManageMessages) || msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) || authorid === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id) || isBot || authorid == bot.user.id) {
             if (tempdata[guildid][channelid][authorid].messageCollector) {
                 tempdata[guildid][channelid][authorid].messageCollector.stop()
                 delete tempdata[guildid][channelid][authorid].messageCollector
@@ -79,7 +80,7 @@ module.exports = {
                     await channel.send({
                         content: collect,
                         allowedMentions: {
-                            parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && authorid !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                            parse: ((!msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) && !msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.MentionEveryone) && authorid !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                         }
                     }).catch(() => { })
                 } catch (_) { }
@@ -104,7 +105,7 @@ module.exports = {
                         await channel.send({
                             content: finishphrasek,
                             allowedMentions: {
-                                parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && authorid !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                                parse: ((!msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) && !msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.MentionEveryone) && authorid !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                             }
                         }).catch(() => { })
                     }

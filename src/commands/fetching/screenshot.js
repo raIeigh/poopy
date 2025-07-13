@@ -4,7 +4,8 @@ module.exports = {
     execute: async function (msg, args) {
         let poopy = this;
         let vars = poopy.vars;
-        let { sendFile } = poopy.functions;
+        let { sendFile } = poopy.functions
+        let { DiscordTypes } = poopy.modules;
         let { fs, puppeteer } = poopy.modules;
 
         const site = args.slice(1).join(' ').trim();

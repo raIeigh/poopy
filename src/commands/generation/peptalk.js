@@ -2,6 +2,9 @@ module.exports = {
     name: ['peptalk'],
     args: [],
     execute: async function (msg) {
+        let poopy = this
+        let { DiscordTypes } = poopy.modules
+        
         // code here
         const starts = ["Champ,", "Fact:", "Everybody says", "Dang...", "Check it:", "Just sayin',", "Superstar,", "Tiger,", "Self,", "Know this:", "News alert:", "Girl,", "Ace,", "Excuse me but", "Experts agree:", "In my opinion,", "Hear ye, hear ye:", "Okay, listen up:"]
         const subjects = ["the mere idea of you", "your soul", "your hair today", "everything you do", "your personal style", "every thought you have", "that sparkle in your eye",
@@ -21,7 +24,7 @@ module.exports = {
         if (!msg.nosend) await msg.reply({
             content: finalMessage,
             allowedMentions: {
-                parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                parse: ((!msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) && !msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.MentionEveryone) && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
             }
         }).catch(() => { })
         return finalMessage

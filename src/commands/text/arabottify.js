@@ -6,7 +6,7 @@ module.exports = {
         let vars = poopy.vars
         let json = poopy.json
         let config = poopy.config
-        let { fs, Discord } = poopy.modules
+        let { fs, Discord, DiscordTypes } = poopy.modules
 
         await msg.channel.sendTyping().catch(() => { })
         var wordNumber = Math.floor(Math.random() * 40) + 1
@@ -58,7 +58,7 @@ module.exports = {
             if (!msg.nosend) await msg.reply({
                 content: arabArray.join(' '),
                 allowedMentions: {
-                    parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) && !msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.MentionEveryone) && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(async () => {
                 var currentcount = vars.filecount
@@ -103,7 +103,7 @@ module.exports = {
         if (!msg.nosend) await msg.reply({
             content: arabArray.join(' '),
             allowedMentions: {
-                parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                parse: ((!msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) && !msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.MentionEveryone) && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
             }
         }).catch(async () => {
             var currentcount = vars.filecount

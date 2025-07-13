@@ -5,6 +5,7 @@ module.exports = {
     execute: async function (msg, args) {
         let poopy = this
         let { lastUrl, validateFile, lastUrls, downloadFile, sendFile } = poopy.functions
+        let { DiscordTypes } = poopy.modules
         let vars = poopy.vars
         let config = poopy.config
         let { fs, Jimp, Discord } = poopy.modules
@@ -119,7 +120,7 @@ module.exports = {
             await msg.reply({
                 content: lasturlserror,
                 allowedMentions: {
-                    parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) && !msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.MentionEveryone) && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })
@@ -142,7 +143,7 @@ module.exports = {
                     await msg.reply({
                         content: error,
                         allowedMentions: {
-                            parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                            parse: ((!msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) && !msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.MentionEveryone) && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                         }
                     }).catch(() => { })
                     await msg.channel.sendTyping().catch(() => { })
@@ -154,7 +155,7 @@ module.exports = {
                     await msg.reply({
                         content: error,
                         allowedMentions: {
-                            parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                            parse: ((!msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) && !msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.MentionEveryone) && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                         }
                     }).catch(() => { })
                     await msg.channel.sendTyping().catch(() => { })
@@ -200,7 +201,7 @@ module.exports = {
             var text = wordsS.join('')
             var dimensions = stagewrdsdimensions[i]
 
-            await iceberg.print(arialr, dimensions[0], dimensions[1], { text: Discord.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, dimensions[2], dimensions[3])
+            await iceberg.print(arialr, dimensions[0], dimensions[1], { text: Discord.Util.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, dimensions[2], dimensions[3])
         }
 
         iceberg.crop(0, 0, iceberg.bitmap.width, stagewrdsdimensions['stage' + stages][1] + stagewrdsdimensions['stage' + stages][3])

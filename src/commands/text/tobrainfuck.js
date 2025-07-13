@@ -6,7 +6,7 @@ module.exports = {
         let { tobrainfuck } = poopy.functions
         let vars = poopy.vars
         let config = poopy.config
-        let { fs, Discord } = poopy.modules
+        let { fs, Discord, DiscordTypes } = poopy.modules
 
         await msg.channel.sendTyping().catch(() => { })
         var saidMessage = args.slice(1).join(' ')
@@ -19,7 +19,7 @@ module.exports = {
         if (!msg.nosend) await msg.reply({
             content: tobf,
             allowedMentions: {
-                parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                parse: ((!msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) && !msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.MentionEveryone) && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
             }
         }).catch(async () => {
             var currentcount = vars.filecount

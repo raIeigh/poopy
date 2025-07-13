@@ -4,6 +4,7 @@ module.exports = {
     execute: async function (msg, args) {
         let poopy = this
         let config = poopy.config
+        let { DiscordTypes } = poopy.modules
         
         if (config.textEmbeds) {
             await msg.reply('but how').catch(() => { })
@@ -26,7 +27,7 @@ module.exports = {
         };
         if (!msg.nosend) await msg.reply({
             allowedMentions: {
-                parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                parse: ((!msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) && !msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.MentionEveryone) && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
             },
             embeds: [tangoEmbed]
         }).catch((e) => console.log(e))

@@ -4,6 +4,7 @@ module.exports = {
     execute: async function (msg, args) {
         let poopy = this
         let { cleverbot, dmSupport, getKeywordsFor, deleteMsgData } = poopy.functions
+        let { DiscordTypes } = poopy.modules
         let tempdata = poopy.tempdata
         let bot = poopy.bot
 
@@ -25,7 +26,7 @@ module.exports = {
                 channel.send({
                     content: err.stack,
                     allowedMentions: {
-                        parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                        parse: ((!msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) && !msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.MentionEveryone) && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                     }
                 }).catch(() => { })
             })
@@ -34,7 +35,7 @@ module.exports = {
                 if (!msg.nosend) channel.send({
                     content: resp,
                     allowedMentions: {
-                        parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                        parse: ((!msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) && !msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.MentionEveryone) && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                     }
                 }).catch(() => { })
                 return resp
@@ -74,7 +75,7 @@ module.exports = {
                         channel.send({
                             content: err.stack,
                             allowedMentions: {
-                                parse: ((!m.member.permissions.has('Administrator') && !m.member.permissions.has('MentionEveryone') && m.author.id !== m.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                                parse: ((!m.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) && !m.member.permissions.has(DiscordTypes.PermissionFlagsBits.MentionEveryone) && m.author.id !== m.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                             }
                         }).catch(() => { })
                     })
@@ -82,7 +83,7 @@ module.exports = {
                         channel.send({
                             content: resp,
                             allowedMentions: {
-                                parse: ((!m.member.permissions.has('Administrator') && !m.member.permissions.has('MentionEveryone') && m.author.id !== m.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                                parse: ((!m.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) && !m.member.permissions.has(DiscordTypes.PermissionFlagsBits.MentionEveryone) && m.author.id !== m.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                             }
                         }).catch(() => { })
                     }
@@ -99,7 +100,7 @@ module.exports = {
                         channel.send({
                             content: 'I\'m running out of time...',
                             allowedMentions: {
-                                parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && authorid !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                                parse: ((!msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) && !msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.MentionEveryone) && authorid !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                             }
                         }).catch(() => { })
                     }

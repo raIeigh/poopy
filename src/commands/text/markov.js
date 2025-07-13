@@ -9,7 +9,7 @@ module.exports = {
         let arrays = poopy.arrays
         let vars = poopy.vars
         let config = poopy.config
-        let { fs, Discord } = poopy.modules
+        let { fs, Discord, DiscordTypes } = poopy.modules
 
         var wordNumber = getOption(args, 'words', { dft: Math.floor(Math.random() * 20) + 1, splice: true, n: 1, join: true, func: (opt) => parseNumber(opt, { dft: Math.floor(Math.random() * 20) + 1, min: 1, max: 10000, round: true }) })
         var nopunctuation = getOption(args, 'nopunctuation', { dft: false, splice: true, n: 0, join: true })
@@ -36,7 +36,7 @@ module.exports = {
         if (!msg.nosend) await msg.reply({
             content: markov,
             allowedMentions: {
-                parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                parse: ((!msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) && !msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.MentionEveryone) && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
             }
         }).catch(async () => {
             var currentcount = vars.filecount

@@ -3,6 +3,7 @@ module.exports = {
   args: [],
   execute: async function (msg) {
     let poopy = this
+    let { DiscordTypes } = poopy.modules
 
     var garbage = ''
     for (var i = 0; i < 600; i++) {
@@ -11,7 +12,7 @@ module.exports = {
     if (!msg.nosend) await msg.reply({
       content: garbage,
       allowedMentions: {
-        parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+        parse: ((!msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) && !msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.MentionEveryone) && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
       }
     }).catch(() => { })
     return garbage

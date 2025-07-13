@@ -4,6 +4,7 @@ module.exports = {
     execute: async function (msg, args) {
         let poopy = this
         let { lastUrl, validateFile, downloadFile, execPromise, findpreset, sendFile } = poopy.functions
+        let { DiscordTypes } = poopy.modules
         let vars = poopy.vars
         let { Jimp, Discord } = poopy.modules
         
@@ -71,10 +72,10 @@ module.exports = {
             await black.writeAsync(`${filepath}/border.png`)
             var textheight = Jimp.measureTextHeight(tnr, text, 500 - 40)
             textblack.resize(500, textheight)
-            await textblack.print(tnr, 20, 0, { text: Discord.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, textblack.bitmap.width - 40, textblack.bitmap.height)
+            await textblack.print(tnr, 20, 0, { text: Discord.Util.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, textblack.bitmap.width - 40, textblack.bitmap.height)
             var text2height = Jimp.measureTextHeight(arial, text2, 500 - 40)
             text2black.resize(500, text2height + 10)
-            await text2black.print(arial, 20, 5, { text: Discord.cleanContent(text2, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, text2black.bitmap.width - 40, text2black.bitmap.height - 10)
+            await text2black.print(arial, 20, 5, { text: Discord.Util.cleanContent(text2, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, text2black.bitmap.width - 40, text2black.bitmap.height - 10)
             bottomblack.resize(500, 20)
             bgblack.resize(500, textblack.bitmap.height + text2black.bitmap.height + bottomblack.bitmap.height)
             bgblack.composite(textblack, 0, 0)
@@ -111,10 +112,10 @@ module.exports = {
             await black.writeAsync(`${filepath}/border.png`)
             var textheight = Jimp.measureTextHeight(tnr, text, 500 - 40)
             textblack.resize(500, textheight)
-            await textblack.print(tnr, 20, 0, { text: Discord.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, textblack.bitmap.width - 40, textblack.bitmap.height)
+            await textblack.print(tnr, 20, 0, { text: Discord.Util.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, textblack.bitmap.width - 40, textblack.bitmap.height)
             var text2height = Jimp.measureTextHeight(arial, text2, 500 - 40)
             text2black.resize(500, text2height + 10)
-            await text2black.print(arial, 20, 5, { text: Discord.cleanContent(text2, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, text2black.bitmap.width - 40, text2black.bitmap.height - 10)
+            await text2black.print(arial, 20, 5, { text: Discord.Util.cleanContent(text2, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, text2black.bitmap.width - 40, text2black.bitmap.height - 10)
             bottomblack.resize(500, 20)
             bgblack.resize(500, textblack.bitmap.height + text2black.bitmap.height + bottomblack.bitmap.height)
             bgblack.composite(textblack, 0, 0)
@@ -151,10 +152,10 @@ module.exports = {
             await black.writeAsync(`${filepath}/border.png`)
             var textheight = Jimp.measureTextHeight(tnr, text, 500 - 40)
             textblack.resize(500, textheight)
-            await textblack.print(tnr, 20, 0, { text: Discord.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, textblack.bitmap.width - 40, textblack.bitmap.height)
+            await textblack.print(tnr, 20, 0, { text: Discord.Util.cleanContent(text, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, textblack.bitmap.width - 40, textblack.bitmap.height)
             var text2height = Jimp.measureTextHeight(arial, text2, 500 - 40)
             text2black.resize(500, text2height + 10)
-            await text2black.print(arial, 20, 5, { text: Discord.cleanContent(text2, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, text2black.bitmap.width - 40, text2black.bitmap.height - 10)
+            await text2black.print(arial, 20, 5, { text: Discord.Util.cleanContent(text2, msg), alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, text2black.bitmap.width - 40, text2black.bitmap.height - 10)
             bottomblack.resize(500, 20)
             bgblack.resize(500, textblack.bitmap.height + text2black.bitmap.height + bottomblack.bitmap.height)
             bgblack.composite(textblack, 0, 0)
@@ -169,7 +170,7 @@ module.exports = {
             await msg.reply({
                 content: `Unsupported file: \`${currenturl}\``,
                 allowedMentions: {
-                    parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) && !msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.MentionEveryone) && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })

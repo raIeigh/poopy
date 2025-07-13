@@ -20,7 +20,7 @@ module.exports = {
     execute: async function (msg, args) {
         let poopy = this
         let vars = poopy.vars
-        let { axios } = poopy.modules
+        let { axios, DiscordTypes } = poopy.modules
 
         await msg.channel.sendTyping().catch(() => { })
         if (args[1] === undefined) {
@@ -80,7 +80,7 @@ module.exports = {
                 filter(Boolean).
                 join(""),
             allowedMentions: {
-                parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                parse: ((!msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) && !msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.MentionEveryone) && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
             }
         }).catch(() => { })
         return response.data.sentences.

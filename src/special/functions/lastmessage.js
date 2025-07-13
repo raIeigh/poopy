@@ -8,7 +8,8 @@ module.exports = {
     var f = matches[0]
     var word = matches[1]
 
-    var messages = await msg.channel.messages.fetch().catch(() => { })
+    var messages = await msg.channel.messages.fetch()
+    if (messages.catch) messages.catch(() => { })
     if (!messages) return ''
 
     var index = parseNumber(word, { dft: 0, min: 0, max: messages.size - 1, round: true })

@@ -27,6 +27,7 @@ module.exports = {
         let poopy = this
         let vars = poopy.vars
         let { lastUrl, downloadFile, sendFile, validateFile, execPromise, findpreset } = poopy.functions
+        let { DiscordTypes } = poopy.modules
 
         await msg.channel.sendTyping().catch(() => { })
         var saidMessage = args.slice(1).join(' ').replace(/’/g, '\'')
@@ -173,7 +174,7 @@ module.exports = {
             await msg.reply({
                 content: `Unsupported file: \`${currenturl}\``,
                 allowedMentions: {
-                    parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                    parse: ((!msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) && !msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.MentionEveryone) && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
                 }
             }).catch(() => { })
             await msg.channel.sendTyping().catch(() => { })

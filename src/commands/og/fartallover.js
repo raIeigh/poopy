@@ -3,7 +3,7 @@ module.exports = {
     args: [{ "name": "subject", "required": true, "specifarg": false, "orig": "<subject>" }],
     execute: async function (msg, args) {
         let poopy = this
-        let { Discord } = poopy.modules
+        let { Discord, DiscordTypes } = poopy.modules
 
         await msg.channel.sendTyping().catch(() => { })
         var saidMessage = args.slice(1).join(' ')
@@ -19,7 +19,7 @@ module.exports = {
         if (!msg.nosend) await msg.reply({
             content: '**' + (saidMessage || 'this') + '** has been successfully farted on.',
             allowedMentions: {
-                parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                parse: ((!msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) && !msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.MentionEveryone) && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
             },
             files: attachments
         }).catch(() => { })

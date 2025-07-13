@@ -4,7 +4,7 @@ module.exports = {
     func: async function (matches, msg) {
         let poopy = this
         let { splitKeyFunc } = poopy.functions
-        let { Discord } = poopy.modules
+        let { Discord, DiscordTypes } = poopy.modules
 
         var word = matches[1]
         var split = splitKeyFunc(word)
@@ -26,7 +26,7 @@ module.exports = {
             for (var i in perms) {
                 var perm = perms[i]
 
-                if (!(user.permissions.has(perm))) {
+                if (!(user.permissions.has(DiscordTypes.PermissionFlagsBits[perm]))) {
                     return ''
                 }
             }

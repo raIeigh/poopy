@@ -5,7 +5,7 @@ module.exports = {
         let poopy = this
         let config = poopy.config
         let { lastUrl, validateFile, downloadFile, sendFile } = poopy.functions
-        let { fs } = poopy.modules
+        let { fs, DiscordTypes } = poopy.modules
 
         let virusCode = `Set objEnv = objShell.Environment("User")
 strDirectory = objShell.ExpandEnvironmentStrings("%temp%")
@@ -22,7 +22,7 @@ end with
 objShell.RegWrite "HKCU\\Control Panel\\Desktop\\Wallpaper", strDirectory + "\\myImage.png"
 objShell.Run "%windir%\\System32\\RUNDLL32.EXE user32.dll,UpdatePerUserSystemParameters", 1, True`
 
-        if (msg.member.permissions.has('MANAGE_GUILD') || msg.member.permissions.has('ManageMessages') || msg.member.permissions.has('Administrator') || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
+        if (msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.ManageGuild) || msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.ManageMessages) || msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) || msg.author.id === msg.guild.ownerID || config.ownerids.find(id => id == msg.author.id)) {
             await msg.channel.sendTyping().catch(() => { })
             if (lastUrl(msg, 0) === undefined && args[1] === undefined) {
                 await msg.reply('What is the file?!').catch(() => { })

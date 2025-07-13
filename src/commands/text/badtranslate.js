@@ -22,7 +22,7 @@ module.exports = {
         let poopy = this
         let vars = poopy.vars
         let { getOption } = poopy.functions
-        let { axios } = poopy.modules
+        let { axios, DiscordTypes } = poopy.modules
 
         await msg.channel.sendTyping().catch(() => { })
         var details = getOption(args, 'details', { n: 0, splice: true, dft: false })
@@ -112,7 +112,7 @@ module.exports = {
         if (!msg.nosend) await msg.reply({
             content: output,
             allowedMentions: {
-                parse: ((!msg.member.permissions.has('Administrator') && !msg.member.permissions.has('MentionEveryone') && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
+                parse: ((!msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) && !msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.MentionEveryone) && msg.author.id !== msg.guild.ownerID) && ['users']) || ['users', 'everyone', 'roles']
             }
         }).catch(() => { })
         return output
