@@ -17,10 +17,10 @@ module.exports = {
     {
         name: "toggle",
         args: [{
-            name: "channel",
+            name: "channels",
             required: false,
             specifarg: false,
-            orig: "[channel]",
+            orig: "[channels]",
             autocomplete: function (interaction) {
                 let poopy = this
                 let { Discord } = poopy.modules
@@ -30,8 +30,15 @@ module.exports = {
                     .sort((a, b) => a.name.localeCompare(b.name))
                     .map(c => ({ name: c.name, value: c.id }))
             }
+        },
+        {
+            name: "set",
+            required: false,
+            specifarg: false,
+            orig: "[-set <true or false>]",
+            autocomplete: ["true", "false"]
         }],
-        description: "Restricts/unrestricts bot usage in the channel to moderators only."
+        description: "Restricts/unrestricts bot usage in the channels to moderators only."
     }],
     execute: async function (msg, args, opts = {}) {
         let poopy = this
@@ -39,7 +46,7 @@ module.exports = {
         let bot = poopy.bot
         let config = poopy.config
         let { DiscordTypes, Discord } = poopy.modules
-        let { fetchPingPerms } = poopy.functions
+        let { fetchPingPerms, getOption } = poopy.functions
 
         if (opts.sourceMsg && msg.author.id != opts.sourceMsg.author.id) {
             await msg.reply("bro").catch(() => { })
@@ -83,29 +90,63 @@ module.exports = {
             },
 
             toggle: async (msg, args) => {
-                if (msg.channel.permissionsFor(msg.member).has(DiscordTypes.PermissionFlagsBits.ManageGuild) || msg.channel.permissionsFor(msg.member).has(DiscordTypes.PermissionFlagsBits.ManageMessages) || msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) || msg.author.id === msg.guild.ownerId || (config.ownerids.find(id => id == msg.author.id))) {
-                    var channelId = (args[2] && (args[2].match(/[0-9]+/) ?? [])[0]) || msg.channel.id
-
-                    var findChannel = msg.guild.channels.cache.find(c => c.id === channelId)
-
-                    if (findChannel && findChannel.type != Discord.ChannelType.GuildCategory) {
-                        var findChannelIndex = data.guildData[msg.guild.id].restricted.indexOf(channelId)
-
-                        if (findChannelIndex > -1) {
-                            data.guildData[msg.guild.id].restricted.splice(findChannelIndex, 1)
-
-                            if (!msg.nosend) await msg.reply(`Unrestricted <#${findChannel.id}>.`)
-                            return `Unrestricted <#${findChannel.id}>.`
-                        } else {
-                            data.guildData[msg.guild.id].restricted.push(findChannel.id)
-
-                            if (!msg.nosend) await msg.reply(`Restricted <#${findChannel.id}>.`)
-                            return `Restricted <#${findChannel.id}>.`
-                        }
-                    } else {
-                        await msg.reply('Not a valid channel.')
-                        return
+                if (
+                    msg.channel.permissionsFor(msg.member).has(DiscordTypes.PermissionFlagsBits.ManageGuild)
+                    || msg.channel.permissionsFor(msg.member).has(DiscordTypes.PermissionFlagsBits.ManageMessages)
+                    || msg.member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator)
+                    || msg.author.id === msg.guild.ownerId
+                    || (config.ownerids.find(id => id == msg.author.id))
+                ) {
+                    var setOption = getOption(args, 'set', { splice: true, n: 1, join: true })
+                    if (setOption != undefined) {
+                        setOption = String(setOption)
+                        setOption = ['true', '1'].includes(setOption.toLowerCase()) ? true
+                            : ['false', '0'].includes(setOption.toLowerCase()) ? false : undefined
                     }
+
+                    var channelIds = []
+                    for (let i = 2; i < args.length; i++) {
+                        var channelId = (args[i] && (args[i].match(/[0-9]+/) ?? [])[0]) || msg.channel.id
+                        
+                        if (!channelIds.includes(channelId))
+                            channelIds.push(channelId)
+                    }
+
+                    var newRestricted = []
+                    var newUnrestricted = []
+
+                    for (let channelId of channelIds) {
+                        var findChannel = msg.guild.channels.cache.find(c => c.id === channelId)
+
+                        if (findChannel && findChannel.type != Discord.ChannelType.GuildCategory) {
+                            var findChannelIndex = data.guildData[msg.guild.id].restricted.indexOf(channelId)
+
+                            var toRestrict = setOption !== undefined ? setOption
+                                : findChannelIndex > -1 ? false : true
+
+                            if (!toRestrict) {
+                                if (findChannelIndex > -1)
+                                    data.guildData[msg.guild.id].restricted.splice(findChannelIndex, 1)
+
+                                newUnrestricted.push(findChannel.id)
+                            } else {
+                                if (!(findChannelIndex > -1))
+                                    data.guildData[msg.guild.id].restricted.push(findChannel.id)
+
+                                newRestricted.push(findChannel.id)
+                            }
+                        }
+                    }
+
+                    var results = []
+                    if (newRestricted.length > 0)
+                        results.push(`Restricted ${newRestricted.map(id => `<#${id}>`).join(', ')}.`)
+                    if (newUnrestricted.length > 0)
+                        results.push(`Unrestricted ${newUnrestricted.map(id => `<#${id}>`).join(', ')}.`)
+                    var resultStr = results.length > 0 ? results.join(' ') : 'No valid channels were specified.'
+
+                    if (!msg.nosend) await msg.reply(resultStr)
+                    return resultStr
                 } else {
                     await msg.reply('You need to be a moderator to execute that!').catch(() => { })
                     return;
@@ -114,7 +155,8 @@ module.exports = {
         }
 
         if (!args[1]) {
-            var instruction = "**list** - Gets a list of restricted channels.\n**toggle** [channel] (moderator only) - Restricts/unrestricts bot usage in the channel to moderators only."
+            var instruction = "**list** - Gets a list of restricted channels.\n"
+                + "**toggle** [channels] [-set <true or false>] (moderator only) - Restricts/unrestricts bot usage in the channels to moderators only."
             if (!msg.nosend) {
                 if (config.textEmbeds) msg.reply({
                     content: instruction,

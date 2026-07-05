@@ -508,7 +508,7 @@ functions.rotAway = function (str = "", {
     return newStr
 }
 
-functions.rotMedia = async function (filepath, fileinfo, rottingChance = 0) {
+functions.rotMedia = async function (filepath, fileinfo, rottingChance = 0, rottingMethod) {
     let poopy = this
     let { validateFileFromPath, execPromise } = poopy.functions
     let { path } = poopy.modules
@@ -554,6 +554,29 @@ functions.rotMedia = async function (filepath, fileinfo, rottingChance = 0) {
             break;
     }
 
+    switch (rottingMethod) {
+        case 'PNG':
+            scriptext = 'png'
+            convertext = fileinfo.type.ext == 'png' ? ''
+                : (fileinfo.shorttype == 'gif' || fileinfo.shorttype == 'video') ? 'apng'
+                : 'png'
+            
+            break;
+
+        case 'JPEG':
+            scriptext = 'jpg'
+            convertext = (fileinfo.type.ext == 'jpg' || fileinfo.type.ext == 'jpeg') ? ''
+                : 'jpg'
+            
+            break;
+
+        case 'AVI':
+            scriptext = 'avi'
+            convertext = fileinfo.type.ext == 'avi' ? '' : 'avi'
+            
+            break;
+    }
+
     // console.log(`scriptext:`, scriptext)
     // console.log(`convertext:`, convertext)
 
@@ -568,6 +591,7 @@ functions.rotMedia = async function (filepath, fileinfo, rottingChance = 0) {
         await execPromise(`ffedit -i "${dirpath}/rotconvert_${filename}.${convertext}" -s src/rot_${scriptext}.js -sp [${chanceInteger},${chanceDecimalDigits}] -o "${dirpath}/${filename}.${convertext}"`).then(stdout => { if (Math.random() < 0.05) console.log(stdout) })
         await execPromise(`ffmpeg -i "${dirpath}/${filename}.${convertext}"`
             + `${fileinfo.shortext === 'gif' ? ` -filter_complex "[0:v]split[pout][ppout];[ppout]palettegen=reserve_transparent=1[palette];[pout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -gifflags -offsetting` : ''}`
+            + `${(fileinfo.shorttype === 'video' && convertext !== 'avi') ? ` -i "${dirpath}/rot_${filename}" -c:a copy -map 0:v:0 -map 1:a:0` : ''}`
             + ` "${dirpath}/${filename}"`)
     } else {
         // console.log(`ffedit -i "${dirpath}/rot_${filename}" -s src/rot_${scriptext}.js -sp [${chanceInteger},${chanceDecimalDigits}] -o "${dirpath}/${filename}"`)
