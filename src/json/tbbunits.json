@@ -836,11 +836,11 @@
         {
             "name": "Remote Battler",
             "image": "https://static.wikia.nocookie.net/the-battle-bricks/images/b/b2/Remote_Battler.png",
-            "alt": "Voodoo Battler"
+            "alt": "Occult Battler"
         },
         {
-            "name": "Voodoo Battler",
-            "image": "https://static.wikia.nocookie.net/the-battle-bricks/images/8/83/Voodoo_Battler.png",
+            "name": "Occult Battler",
+            "image": "https://static.wikia.nocookie.net/the-battle-bricks/images/8/83/Occult_Battler.png",
             "normal": "Remote Battler"
         },
         {
@@ -1063,12 +1063,12 @@
         },
         {
             "name": "Duck Battler",
-            "image": "https://cdn.discordapp.com/attachments/1452946864377696317/1499482739987058708/Duck_Battler_Friendly.png",
+            "image": "https://static.wikia.nocookie.net/the-battle-bricks/images/f/f9/Duck_Battler.png",
             "alt": "Epikduck Battler"
         },
         {
             "name": "Epikduck Battler",
-            "image": "https://cdn.discordapp.com/attachments/1452946864377696317/1504121663032393748/Epikduck_Battler_Friendly.png",
+            "image": "https://static.wikia.nocookie.net/the-battle-bricks/images/2/2f/EpikDuck_Battler.png",
             "normal": "Duck Battler"
         },
         {
@@ -1174,18 +1174,6 @@
             "image": "https://cdn.discordapp.com/attachments/1430236703217680436/1499536903496667236/this_stupid_big_fatass_who_takes_up_too_much_space.png",
             "normal": "Tumored Rocket",
             "joke": true
-        },
-        {
-            "name": "Casual Battler",
-            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1460414649538314282/Casual_Battler.png",
-            "custom": ["710276888039522316"],
-            "ignoreCustomBlacklist": true
-        },
-        {
-            "name": "Casual EX",
-            "image": "https://static.wikia.nocookie.net/the-battle-bricks/images/9/93/Casual_Challenger.png",
-            "custom": ["710276888039522316"],
-            "ignoreCustomBlacklist": true
         },
         {
             "name": "Deinx94",
@@ -3092,26 +3080,26 @@
         },
         {
             "name": "FunK1d",
-            "image": "https://static.wikia.nocookie.net/the-battle-bricks/images/8/8b/Funk1d.png",
+            "image": "https://static.wikia.nocookie.net/the-battle-bricks/images/8/8b/FunK1d.png",
             "alt": "GameK1d",
             "boss": true
         },
         {
             "name": "GameK1d",
-            "image": "https://static.wikia.nocookie.net/the-battle-bricks/images/b/ba/Gamek1d.png",
+            "image": "https://static.wikia.nocookie.net/the-battle-bricks/images/b/ba/GameK1d.png",
             "normal": "FunK1d",
             "boss": true
         },
         {
             "name": "BulkK1d",
-            "image": "https://static.wikia.nocookie.net/the-battle-bricks/images/0/00/Bulkk1d.png",
+            "image": "https://static.wikia.nocookie.net/the-battle-bricks/images/0/00/BulkK1d.png",
             "alt": "RetroK1d",
             "origin": "FunK1d",
             "summon": true
         },
         {
             "name": "RetroK1d",
-            "image": "https://static.wikia.nocookie.net/the-battle-bricks/images/9/92/Retrok1d.png",
+            "image": "https://static.wikia.nocookie.net/the-battle-bricks/images/9/92/RetroK1d.png",
             "normal": "BulkK1d",
             "origin": "GameK1d",
             "summon": true
@@ -3205,6 +3193,18 @@
             "normal": "Root",
             "origin": "Mortis",
             "summon": true
+        },
+        {
+            "name": "Casual Battler",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1460414649538314282/Casual_Battler.png",
+            "custom": ["710276888039522316"],
+            "ignoreCustomBlacklist": true
+        },
+        {
+            "name": "Casual EX",
+            "image": "https://static.wikia.nocookie.net/the-battle-bricks/images/9/93/Casual_Challenger.png",
+            "custom": ["710276888039522316"],
+            "ignoreCustomBlacklist": true
         },
         {
             "name": "Thief King",
