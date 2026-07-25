@@ -840,7 +840,7 @@
         },
         {
             "name": "Occult Battler",
-            "image": "https://static.wikia.nocookie.net/the-battle-bricks/images/8/83/Occult_Battler.png",
+            "image": "https://static.wikia.nocookie.net/the-battle-bricks/images/0/0e/Occult_Battler.png",
             "normal": "Remote Battler"
         },
         {
@@ -1464,7 +1464,8 @@
             "name": "Arm Cannoneer",
             "image": "https://static.wikia.nocookie.net/the-battle-bricks/images/0/05/Arm_Cannoneer.png",
             "alt": "Uzi Rambo",
-            "origin": "Cannonary"
+            "origin": "Cannonary",
+            "unobtainable": true
         },
         {
             "name": "Captain Red",
@@ -1477,7 +1478,8 @@
             "image": "https://static.wikia.nocookie.net/the-battle-bricks/images/8/83/Redbeard.png",
             "alt": "Bulldozer",
             "origin": "Captain Red",
-            "boss": true
+            "boss": true,
+            "unobtainable": true
         },
         {
             "name": "Bugle Battler",
@@ -1571,7 +1573,8 @@
             "name": "Uzi Rambo",
             "image": "https://static.wikia.nocookie.net/the-battle-bricks/images/7/71/Uzi_Rambo.png",
             "normal": "Arm Cannoneer",
-            "origin": "Mercenary"
+            "origin": "Mercenary",
+            "unobtainable": true
         },
         {
             "name": "Scarlet Storm",
@@ -1584,7 +1587,8 @@
             "image": "https://static.wikia.nocookie.net/the-battle-bricks/images/f/f5/Bulldozer.png",
             "normal": "Redbeard",
             "origin": "Scarlet Storm",
-            "boss": true
+            "boss": true,
+            "unobtainable": true
         },
         {
             "name": "Drummer Battler",
@@ -1698,7 +1702,8 @@
             "image": "https://static.wikia.nocookie.net/the-battle-bricks/images/3/35/Doctor_Bright.png",
             "alt": "Mister Mancer",
             "origin": "Doctor Despair",
-            "boss": true
+            "boss": true,
+            "unobtainable": true
         },
         {
             "name": "Jester Battler",
@@ -1805,7 +1810,8 @@
             "name": "Executioner",
             "image": "https://static.wikia.nocookie.net/the-battle-bricks/images/9/93/Executioner.png",
             "normal": "Amputator",
-            "origin": "Necromancer"
+            "origin": "Necromancer",
+            "unobtainable": true
         },
         {
             "name": "Skull",
@@ -3080,26 +3086,26 @@
         },
         {
             "name": "FunK1d",
-            "image": "https://static.wikia.nocookie.net/the-battle-bricks/images/8/8b/FunK1d.png",
+            "image": "https://static.wikia.nocookie.net/the-battle-bricks/images/c/c1/FunK1d.png",
             "alt": "GameK1d",
             "boss": true
         },
         {
             "name": "GameK1d",
-            "image": "https://static.wikia.nocookie.net/the-battle-bricks/images/b/ba/GameK1d.png",
+            "image": "https://static.wikia.nocookie.net/the-battle-bricks/images/7/78/GameK1d.png",
             "normal": "FunK1d",
             "boss": true
         },
         {
             "name": "BulkK1d",
-            "image": "https://static.wikia.nocookie.net/the-battle-bricks/images/0/00/BulkK1d.png",
+            "image": "https://static.wikia.nocookie.net/the-battle-bricks/images/7/7e/BulkK1d.png",
             "alt": "RetroK1d",
             "origin": "FunK1d",
             "summon": true
         },
         {
             "name": "RetroK1d",
-            "image": "https://static.wikia.nocookie.net/the-battle-bricks/images/9/92/RetroK1d.png",
+            "image": "https://static.wikia.nocookie.net/the-battle-bricks/images/e/ee/RetroK1d.png",
             "normal": "BulkK1d",
             "origin": "GameK1d",
             "summon": true
