@@ -6180,7 +6180,7 @@ functions.sendFile = async function (msg, filepath, filename, extraOptions) {
                 infoPost(`Couldn\'t upload file`)
                 await rateLimit(msg)
             }
-        } else returnUrl = fileMsg.attachments.first().url
+        } else returnUrl = fileMsg.attachments?.first?.()?.url ?? "oops i forgot"
     }
 
     if (extraOptions.keep ||

@@ -5,7 +5,7 @@ module.exports = {
     let json = poopy.json
     let { randomChoice } = poopy.functions
 
-    return randomChoice(json.doopleyJSON.images)
+    return `https://assetdelivery.vercel.app/${randomChoice(json.doopleyJSON.images)}.png`
   },
   array: function () {
     let poopy = this

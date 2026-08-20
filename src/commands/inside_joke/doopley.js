@@ -14,7 +14,7 @@ module.exports = {
         const text1 = randomChoice(textes)
         const text2 = randomChoice(textes)
 
-        const image = new Discord.AttachmentBuilder(randomChoice(images), { name: "doopley.png" })
+        const image = new Discord.AttachmentBuilder(`https://assetdelivery.vercel.app/${randomChoice(images)}.png`, { name: "doopley.png" })
 
         if (!msg.nosend) {
             if (config.textEmbeds) await msg.reply({
