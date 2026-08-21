@@ -11,7 +11,7 @@ module.exports = {
       oilFolder = oilFolder.concat(globaldata.secretShit ?? [])
     }
 
-    return globaldata[Math.floor(Math.random() * globaldata.length)]
+    return oilFolder[Math.floor(Math.random() * oilFolder.length)]
   },
   array: function (msg) {
     let poopy = this

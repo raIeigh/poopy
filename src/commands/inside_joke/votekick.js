@@ -31,7 +31,7 @@ module.exports = {
         let poopy = this
         let config = poopy.config
         let data = poopy.data
-        let { fetchPingPerms, resolveUser, getOption, parseNumber, parseString, votekick } = poopy.functions
+        let { fetchPingPerms, resolveUser, getOption, parseNumber, parseString, votekick, yesno } = poopy.functions
         let { DiscordTypes } = poopy.modules
 
         const goal = getOption(
