@@ -272,7 +272,8 @@ async function start() {
                 {
                     TOKEN: process.env.DEFAULT_TOKEN,
                     config: {
-                        globalPrefix: 'p:'
+                        globalPrefix: 'p:',
+                        noInvite: true
                     }
                 },
             ]

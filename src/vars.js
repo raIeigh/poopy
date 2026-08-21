@@ -48,6 +48,7 @@ vars.defaultConfig = {
     notSave: false,
     apiMode: false,
     noInfoPost: true,
+    noInvite: false,
     triggerPhrase: undefined,
     poosoniablacklist: ['dm', 'tdms', 'spam', 'eval', 'leave'],
     poosoniakeywordblacklist: [],
