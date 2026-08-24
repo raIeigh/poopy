@@ -16,9 +16,10 @@ module.exports = {
 
         var mapped = []
         var chunks = chunkArray(array, 50)
+        var chunksRead = 0
         
         for (var chunk of chunks) {
-            var map = await Promise.all(chunk.map((val) => {
+            var map = await Promise.all(chunk.map((val, index) => {
                 var valOpts = { ...opts }
                 valOpts.extraKeys = { ...valOpts.extraKeys }
 
@@ -29,7 +30,7 @@ module.exports = {
                 }
                 valOpts.extraKeys._index = {
                     func: async () => {
-                        return index
+                        return index + chunksRead
                     }
                 }
 
@@ -37,6 +38,7 @@ module.exports = {
             })).catch(() => { }) ?? []
 
             mapped = mapped.concat(map)
+            chunksRead += chunk.length
         }
 
         tempdata[msg.guild.id][msg.channel.id].arrays[name] = mapped
