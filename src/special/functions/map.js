@@ -18,7 +18,7 @@ module.exports = {
         var chunks = chunkArray(array, 50)
         
         for (var chunk of chunks) {
-            var map = await Promise.all(chunk.map((val) => {
+            var map = await Promise.all(chunk.map((val, index) => {
                 var valOpts = { ...opts }
                 valOpts.extraKeys = { ...valOpts.extraKeys }
 
