@@ -51,7 +51,7 @@ module.exports = {
             {
                 value: -1,
                 match: /^(?:-1|all|everything|chaos)$/i,
-                message: "https://static.wikia.nocookie.net/the-battle-bricks/images/0/03/TBB_current_logo.png"
+                message: "https://tenor.com/view/skeleton-run-ufo-explosion-guilty-gear-strive-gif-22126943"
             },
             
             {
