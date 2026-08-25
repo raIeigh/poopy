@@ -565,40 +565,40 @@ class Poopy {
 
                 sendObject.content = sendObject.content.trim().substring(0, 2000)
 
-                var turnInto = "a webhook"
-
                 if (data.guildData[msg.guild.id].members[msg.author.id].impostor) {
-                    turnInto = "the impostor"
                     sendObject.avatarURL = 'https://cdn.discordapp.com/attachments/760223418968047629/835923486668750888/imposter.jpg'
                 }
 
                 if (data.guildData[msg.guild.id].channels[msg.channel.id].battling) {
-                    var type = data.guildData[msg.guild.id].channels[msg.channel.id].battling == 1 ? "battlers" :
-                        data.guildData[msg.guild.id].channels[msg.channel.id].battling == 2 ? "enemies" :
-                            "all"
+                    var battlingTypes = [
+                        "disabled", "battlers", "enemies", "all", "deltarune"
+                    ]
+                    
+                    var battlingJSONs = {
+                        battlers: [poopy.json.battlerJSON.battlers],
+                        enemies: [poopy.json.battlerJSON.enemies],
+                        all: [poopy.json.battlerJSON.battlers, poopy.json.battlerJSON.enemies],
+                        deltarune: [poopy.json.deltaruneJSON]
+                    }
+                    
+                    var battlingValue = data.guildData[msg.guild.id].channels[msg.channel.id].battling
+                    var type = battlingTypes[battlingValue]
 
-                    var allBattlers = poopy.json.battlerJSON.battlers.concat(poopy.json.battlerJSON.enemies)
+                    var battlers = [].concat(...(battlingJSONs[type] ?? []))
+                        .filter(b => !b.custom || (b.custom && b.ignoreCustomBlacklist))
 
-                    var battlers = (
-                        type == "all"
-                            ? allBattlers
-                            : poopy.json.battlerJSON[type]
-                    ).filter(b => !b.custom || (b.custom && b.ignoreCustomBlacklist))
-
-                    var battler = allBattlers.find(battler => battler.custom && battler.custom.some(id => id == msg.author.id)) ??
+                    var battler = battlers.find(battler => battler.custom && battler.custom.some(id => id == msg.author.id)) ??
                         battlers.reduce((closestBattler, currentBattler) =>
                             similarity(currentBattler.name ?? "", msg.member.displayName ?? msg.author.displayName ?? "")
                                 > similarity(closestBattler.name ?? "", msg.member.displayName ?? msg.author.displayName ?? "")
                                 ? currentBattler : closestBattler
                         )
 
-                    turnInto = battler.name
                     sendObject.username = battler.name
                     sendObject.avatarURL = battler.image
                 }
 
                 if (customHook) {
-                    turnInto = customHook.name
                     sendObject.username = customHook.name.substring(0, 32)
                     sendObject.avatarURL = customHook.avatar
                 }
