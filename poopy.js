@@ -572,14 +572,14 @@ class Poopy {
                 // yeah the data value is still battling i should change this soon probably idk
                 if (data.guildData[msg.guild.id].channels[msg.channel.id].battling) {
                     var battlingJSONs = {
-                    	-1: [poopy.json.utdrJSON.undertale, poopy.json.utdrJSON.deltarune, poopy.json.glaggleJSON, poopy.json.battlerJSON.battlers, poopy.json.battlerJSON.enemies],
-                        1: [poopy.json.battlerJSON.battlers],
-                        2: [poopy.json.battlerJSON.enemies],
-                        3: [poopy.json.battlerJSON.battlers, poopy.json.battlerJSON.enemies],
-                        4: [poopy.json.utdrJSON.deltarune],
-                        5: [poopy.json.utdrJSON.undertale],
-                        6: [poopy.json.utdrJSON.undertale, poopy.json.utdrJSON.deltarune],
-                        7: [poopy.json.glaggleJSON]
+                    	[-1]: [poopy.json.utdrJSON.undertale, poopy.json.utdrJSON.deltarune, poopy.json.glaggleJSON, poopy.json.battlerJSON.battlers, poopy.json.battlerJSON.enemies],
+                        [1]: [poopy.json.battlerJSON.battlers],
+                        [2]: [poopy.json.battlerJSON.enemies],
+                        [3]: [poopy.json.battlerJSON.battlers, poopy.json.battlerJSON.enemies],
+                        [4]: [poopy.json.utdrJSON.deltarune],
+                        [5]: [poopy.json.utdrJSON.undertale],
+                        [6]: [poopy.json.utdrJSON.undertale, poopy.json.utdrJSON.deltarune],
+                        [7]: [poopy.json.glaggleJSON]
                     }
                     
                     var battlingValue = data.guildData[msg.guild.id].channels[msg.channel.id].battling
