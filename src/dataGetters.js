@@ -213,7 +213,7 @@ var dataGetters = {
             tsunamiJSON: 'tsunamis',
             shieldJSON: 'shields',
             doopleyJSON: 'doopley',
-            deltaruneJSON: 'deltarune',
+            utdrJSON: 'utdr',
             eggphraseJSON: 'eggphrases',
             autoModJSON: 'automodFilter',
             emojiJSON: getEmojis

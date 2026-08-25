@@ -1,0 +1,2488 @@
+{
+    "undertale": [
+        {
+            "name": "Frisk",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852023920795728/Frisk.png"
+        },
+        {
+            "name": "Flowey",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852029821919332/Flowey.png"
+        },
+        {
+            "name": "Toriel",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852031554158592/Toriel.png"
+        },
+        {
+            "name": "Sans",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852033626275952/Sans.png"
+        },
+        {
+            "name": "Papyrus",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852038957240451/Papyrus.png"
+        },
+        {
+            "name": "Undyne",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852041121632266/Undyne.png"
+        },
+        {
+            "name": "Alphys",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852043109466182/Alphys.png"
+        },
+        {
+            "name": "Mettaton",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852045580177509/Mettaton.png"
+        },
+        {
+            "name": "Mettaton EX",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852048696287362/MettatonEX.png"
+        },
+        {
+            "name": "Asgore",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852050881511495/Asgore.png"
+        },
+        {
+            "name": "Asriel",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852053075394732/Asriel.png"
+        },
+        {
+            "name": "Chara",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852074751565945/Chara.png"
+        },
+        {
+            "name": "Froggit",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852077129601114/Froggit.png"
+        },
+        {
+            "name": "Whimsun",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852079604240464/Whimsun.png"
+        },
+        {
+            "name": "Moldsmal",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852082989178970/Moldsmal.png"
+        },
+        {
+            "name": "Napstablook",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852085329592362/Napstablook.png"
+        },
+        {
+            "name": "Loox",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852088118673488/Loox.png"
+        },
+        {
+            "name": "Vegetoid",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852091029528606/Vegetoid.png"
+        },
+        {
+            "name": "Migosp",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852093424603348/Migosp.png"
+        },
+        {
+            "name": "Moldessa",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852096620666880/Moldessa.png"
+        },
+        {
+            "name": "Parsnik",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852099221127348/Parsnik.png"
+        },
+        {
+            "name": "Migospel",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852119538077777/Migospel.png"
+        },
+        {
+            "name": "Rock",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852121828171826/Rock.png"
+        },
+        {
+            "name": "Snowdrake",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852124873498774/Snowdrake.png"
+        },
+        {
+            "name": "Chilldrake",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852126773387305/Chilldrake.png"
+        },
+        {
+            "name": "Ice Cap",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852128803299468/IceCap.png"
+        },
+        {
+            "name": "Lesser Dog",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852131596968027/LesserDog.png"
+        },
+        {
+            "name": "Doggo",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852144250921060/Doggo.png"
+        },
+        {
+            "name": "Jerry",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852149552513086/Jerry.png"
+        },
+        {
+            "name": "Dogamy",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852151725428838/Dogamy.png"
+        },
+        {
+            "name": "Dogaressa",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852153600020590/Dogaressa.png"
+        },
+        {
+            "name": "Gyftrot",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852164559740988/Gyftrot.png"
+        },
+        {
+            "name": "Glyde",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852166762008626/Glyde.png"
+        },
+        {
+            "name": "Greater Dog",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852169207021668/GreaterDog.png"
+        },
+        {
+            "name": "Mad Mew Mew",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852171719540866/MadMewMew.png"
+        },
+        {
+            "name": "Snowman",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852173745397770/Snowman.png"
+        },
+        {
+            "name": "Nice Cream Guy",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852175754465411/NiceCreamGuy.png"
+        },
+        {
+            "name": "Faun",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852177964994691/Faun.png"
+        },
+        {
+            "name": "QC",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852180154425565/QC.png"
+        },
+        {
+            "name": "Innkeeper",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852200475697252/Innkeeper.png"
+        },
+        {
+            "name": "Innkeeper's Child",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852202363256926/InnkeepersChild.png"
+        },
+        {
+            "name": "Snoring Guest",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852207450955796/SnoringGuest.png"
+        },
+        {
+            "name": "Rabbit Kid",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852210386702406/RabbitKid.png"
+        },
+        {
+            "name": "Rabbit Lady and Cinnamon",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852213645811882/RabbitLadyandCinnamon.png"
+        },
+        {
+            "name": "Gift Bear",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852216187691008/GiftBear.png"
+        },
+        {
+            "name": "Monster Kid",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852218314072144/MonsterKid.png"
+        },
+        {
+            "name": "Politics Bear",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852220432326693/PoliticsBear.png"
+        },
+        {
+            "name": "Red Demon",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852223296905316/RedDemon.png"
+        },
+        {
+            "name": "Wrap Mouse",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852227503788042/WrapMouse.png"
+        },
+        {
+            "name": "Dad Slime",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852231387717633/DadSlime.png"
+        },
+        {
+            "name": "Slime Son",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852236433465474/SlimeSon.png"
+        },
+        {
+            "name": "Slime Daughter",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852250052501665/SlimeDaughter.png"
+        },
+        {
+            "name": "Knock Lover",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852252870934540/KnockLover.png"
+        },
+        {
+            "name": "Ice Wolf",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852256683692132/IceWolf.png"
+        },
+        {
+            "name": "Grillby",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852261829841037/Grillby.png"
+        },
+        {
+            "name": "Crazy Bun",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852264673706115/CrazyBun.png"
+        },
+        {
+            "name": "Big Mouth",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852269266337893/BigMouth.png"
+        },
+        {
+            "name": "Punk Hamster",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852272261210276/PunkHamster.png"
+        },
+        {
+            "name": "Red Bird",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852274773725184/RedBird.png"
+        },
+        {
+            "name": "Ugly Fish",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852278074380289/UglyFish.png"
+        },
+        {
+            "name": "Library Lizard",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852280700141659/LibraryLizard.png"
+        },
+        {
+            "name": "Library Loox",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852283057217607/LibraryLoox.png"
+        },
+        {
+            "name": "Scarf Lady",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852285728981152/ScarfLady.png"
+        },
+        {
+            "name": "Lady Garf",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852295422287922/LadyGarf.png"
+        },
+        {
+            "name": "Aaron",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852303219232798/Aaron.png"
+        },
+        {
+            "name": "Woshua",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852308344934470/Woshua.png"
+        },
+        {
+            "name": "Shyren",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852310462800023/Shyren.png"
+        },
+        {
+            "name": "Mad Dummy",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852313348604015/MadDummy.png"
+        },
+        {
+            "name": "Glad Dummy",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852317467549726/GladDummy.png"
+        },
+        {
+            "name": "Temmie",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852319686336664/Temmie.png"
+        },
+        {
+            "name": "Moldbygg",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852322060050482/Moldbygg.png"
+        },
+        {
+            "name": "Echo Flower Explainer",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852324211851284/EchoFlowerExplainer.png"
+        },
+        {
+            "name": "Ferry",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852326695018557/Ferry.png"
+        },
+        {
+            "name": "Goner Kid",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852328951283823/GonerKid.png"
+        },
+        {
+            "name": "Loren",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852350262546534/Loren.png"
+        },
+        {
+            "name": "Small Bird",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852352577933392/SmallBird.png"
+        },
+        {
+            "name": "Onionsan",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852354863833199/Onionsan.png"
+        },
+        {
+            "name": "Clam Girl",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852357321822350/ClamGirl.png"
+        },
+        {
+            "name": "Snail",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852359939063940/Snail.png"
+        },
+        {
+            "name": "Sam Byool",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852366033125417/SamByool.png"
+        },
+        {
+            "name": "Snail Guy",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852367962771506/SnailGuy.png"
+        },
+        {
+            "name": "Slug",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852370462445678/Slug.png"
+        },
+        {
+            "name": "Yellow Snail",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852373335547915/YellowSnail.png"
+        },
+        {
+            "name": "Red Snail",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852376749572132/RedSnail.png"
+        },
+        {
+            "name": "Blue Snail",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852379832520724/BlueSnail.png"
+        },
+        {
+            "name": "Gerson",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852381950644274/Gerson.png"
+        },
+        {
+            "name": "Bob",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852403706499102/Bob.png"
+        },
+        {
+            "name": "Ragel",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852406160031874/Ragel.png"
+        },
+        {
+            "name": "Tem Shop",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852408085221456/TemShop.png"
+        },
+        {
+            "name": "Elder Puzzler",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852410127982694/ElderPuzzler.png"
+        },
+        {
+            "name": "Vulkin",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852412405612545/Vulkin.png"
+        },
+        {
+            "name": "Tsunderplane",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852414515347537/Tsunderplane.png"
+        },
+        {
+            "name": "Pyrope",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852416985534514/Pyrope.png"
+        },
+        {
+            "name": "So Sorry",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852419313373225/SoSorry.png"
+        },
+        {
+            "name": "RG 01",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852440532615168/RG01.png"
+        },
+        {
+            "name": "RG 02",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852442688491570/RG02.png"
+        },
+        {
+            "name": "Muffet",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852445313998879/Muffet.png"
+        },
+        {
+            "name": "Madjick",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852447407087826/Madjick.png"
+        },
+        {
+            "name": "Knight Knight",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852449466224750/KnightKnight.png"
+        },
+        {
+            "name": "Final Froggit",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852451357859881/FinalFroggit.png"
+        },
+        {
+            "name": "Whimsalot",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852453794742362/Whimsalot.png"
+        },
+        {
+            "name": "Astigmatism",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852455875117186/Astigmatism.png"
+        },
+        {
+            "name": "Clam Guy",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852476968538253/ClamGuy.png"
+        },
+        {
+            "name": "Business Dude",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852479967207434/BusinessDude.png"
+        },
+        {
+            "name": "Fire Coffee",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852484249587874/FireCoffee.png"
+        },
+        {
+            "name": "Disembodied Fox Head",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852495989575690/DisembodiedFoxHead.png"
+        },
+        {
+            "name": "Fuku Fire",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852498325807246/FukuFire.png"
+        },
+        {
+            "name": "Skateboard Girl",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852500653646026/SkateboardGirl.png"
+        },
+        {
+            "name": "Gaster Follower 2",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852503832920207/GasterFollower2.png"
+        },
+        {
+            "name": "Heats Flamesman",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852506668277781/HeatsFlamesman.png"
+        },
+        {
+            "name": "Hot Dog Harpy",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852509117620335/HotDogHarpy.png"
+        },
+        {
+            "name": "Gaster Follower 3",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852511311503410/GasterFollower3.png"
+        },
+        {
+            "name": "Gaster Follower 1",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852514679529602/GasterFollower1.png"
+        },
+        {
+            "name": "Scared Donut Guy",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852516831199293/ScaredDonutGuy.png"
+        },
+        {
+            "name": "Diamond Boy",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852536640635040/DiamondBoy.png"
+        },
+        {
+            "name": "Tall Diamond Boy",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852539006353418/TallDiamondBoy.png"
+        },
+        {
+            "name": "Dress Lion",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852541187264582/DressLion.png"
+        },
+        {
+            "name": "Bratty",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852545386024990/Bratty.png"
+        },
+        {
+            "name": "Catty",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852547914928299/Catty.png"
+        },
+        {
+            "name": "Diamond Receptionist",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852549760688248/DiamondReceptionist.png"
+        },
+        {
+            "name": "Hand Receptionist",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852555863396413/HandReceptionist.png"
+        },
+        {
+            "name": "Sad Dragon",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852558191099984/SadDragon.png"
+        },
+        {
+            "name": "Business Manticore",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852560263221329/BusinessManticore.png"
+        },
+        {
+            "name": "Shambling Mass",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852562578477226/ShamblingMass.png"
+        },
+        {
+            "name": "Burgerpants",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852565233205321/Burgerpants.png"
+        },
+        {
+            "name": "Slime Janitor",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852586003669082/SlimeJanitor.png"
+        },
+        {
+            "name": "Fish Receptionist",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852589237338172/FishReceptionist.png"
+        },
+        {
+            "name": "Snowdrake's Father",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852592122888192/SnowdrakesFather.png"
+        },
+        {
+            "name": "Charles",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852595193249973/Charles.png"
+        },
+        {
+            "name": "Oni",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852597160378368/Oni.png"
+        },
+        {
+            "name": "Ficus Licker",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852599295287336/FicusLicker.png"
+        },
+        {
+            "name": "Black Sausage",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852601920913458/BlackSausage.png"
+        },
+        {
+            "name": "Omega Flowey",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852604878036992/OmegaFlowey.png"
+        },
+        {
+            "name": "Memoryhead",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852617972387891/Memoryhead.png"
+        },
+        {
+            "name": "Reaper Bird",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852620791091220/ReaperBird.png"
+        },
+        {
+            "name": "Endogeny",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852622787575920/Endogeny.png"
+        },
+        {
+            "name": "Lemon Bread",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852624842653757/LemonBread.png"
+        },
+        {
+            "name": "Snowdrake's Mother",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852627581804694/SnowdrakesMother.png"
+        },
+        {
+            "name": "Watching Man",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852629662179459/WatchingMan.png"
+        },
+        {
+            "name": "Shower Curtain Man",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852631910191205/ShowerCurtainMan.png"
+        },
+        {
+            "name": "Annoying Dog",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852651774287952/AnnoyingDog.png"
+        },
+        {
+            "name": "River Person",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852653666172938/RiverPerson.png"
+        },
+        {
+            "name": "Determination",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852655599489156/Determination.png"
+        },
+        {
+            "name": "Patience",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852657944232036/Patience.png"
+        },
+        {
+            "name": "Bravery",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852661773504534/Bravery.png"
+        },
+        {
+            "name": "Integrity",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852664516841572/Integrity.png"
+        },
+        {
+            "name": "Perseverance",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852667867828294/Perseverance.png"
+        },
+        {
+            "name": "Kindness",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852670237876465/Kindness.png"
+        },
+        {
+            "name": "Justice",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852673006108702/Justice.png"
+        },
+        {
+            "name": "W.D. Gaster",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852675535273985/WDGaster.png"
+        },
+        {
+            "name": "Lumberjack",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852696473243788/Lumberjack.png"
+        },
+        {
+            "name": "Noel",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852698574594111/Noel.png"
+        },
+        {
+            "name": "Underwater NPC 2",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852701032456212/UnderwaterNPC2.png"
+        },
+        {
+            "name": "Underwater NPC 4",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852707118121001/UnderwaterNPC4.png"
+        },
+        {
+            "name": "Underwater NPC 1",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852709588701234/UnderwaterNPC1.png"
+        },
+        {
+            "name": "Underwater NPC 3",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852712428118168/UnderwaterNPC3.png"
+        },
+        {
+            "name": "Underwater NPC 5",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852714311491777/UnderwaterNPC5.png"
+        },
+        {
+            "name": "Hall Monitor",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852717041852516/HallMonitor.png"
+        },
+        {
+            "name": "Ficus Student",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852719189458965/FicusStudent.png"
+        },
+        {
+            "name": "Milk Student",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852721345208340/MilkStudent.png"
+        },
+        {
+            "name": "Bird Teacher",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852741385588766/BirdTeacher.png"
+        },
+        {
+            "name": "Hotland High Student 2",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852743411564585/HotlandHighStudent2.png"
+        },
+        {
+            "name": "Hotland High Student 1",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852745320108112/HotlandHighStudent1.png"
+        },
+        {
+            "name": "Hotland High Student 3",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852747547287552/HotlandHighStudent3.png"
+        },
+        {
+            "name": "Temmie Student",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852749874855966/TemmieStudent.png"
+        },
+        {
+            "name": "Vent Fan",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852753599402075/VentFan.png"
+        },
+        {
+            "name": "Panet",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852757148045332/Panet.png"
+        },
+        {
+            "name": "Griffon Claw",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852759106527313/GriffonClaw.png"
+        },
+        {
+            "name": "Arbiter Crab",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852762101260298/ArbiterCrab.png"
+        },
+        {
+            "name": "Manners",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852781604773888/Manners.png"
+        },
+        {
+            "name": "Squident",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852783521697802/Squident.png"
+        },
+        {
+            "name": "Mr. Sunshine",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852786768093304/MrSunshine.png"
+        },
+        {
+            "name": "Abberant",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852789016236152/Abberant.png"
+        },
+        {
+            "name": "3D Toriel",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541852791377764432/3DToriel.png"
+        }
+    ],
+    "deltarune": [
+        {
+            "name": "Kris",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599285617893516/Kris.png"
+        },
+        {
+            "name": "Susie",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599288491118723/Susie.png"
+        },
+        {
+            "name": "Ralsei",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599290655379476/Ralsei.png"
+        },
+        {
+            "name": "Noelle",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599294644289626/Noelle.png"
+        },
+        {
+            "name": "Toriel",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599298230157442/Toriel.png"
+        },
+        {
+            "name": "Asriel",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599301824942162/Asriel.png"
+        },
+        {
+            "name": "Undyne",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599304387530793/Undyne.png"
+        },
+        {
+            "name": "Alphys",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599306492940389/Alphys.png"
+        },
+        {
+            "name": "Berdly",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599310322606090/Berdly.png"
+        },
+        {
+            "name": "Lancer",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599313313009764/Lancer.png"
+        },
+        {
+            "name": "Rouxls Kaard",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599328140005386/RouxlsKaard.png"
+        },
+        {
+            "name": "King",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599350046589049/King.png"
+        },
+        {
+            "name": "Rudy",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599352483483778/Rudy.png"
+        },
+        {
+            "name": "Dess",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541844158678048958/Dess.png"
+        },
+        {
+            "name": "Sans",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599357093281812/Sans.png"
+        },
+        {
+            "name": "Asgore",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599366773612606/Asgore.png"
+        },
+        {
+            "name": "Queen",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599369147457646/Queen.png"
+        },
+        {
+            "name": "Tenna",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599371781734460/Tenna.png"
+        },
+        {
+            "name": "Knight",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599373824237568/Knight.png"
+        },
+        {
+            "name": "Carol",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599376751853568/Carol.png"
+        },
+        {
+            "name": "Old Man",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599379243401327/OldMan.png"
+        },
+        {
+            "name": "Flowery",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599381902336060/Flowery.png"
+        },
+        {
+            "name": "Catty",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599387464245348/Catty.png"
+        },
+        {
+            "name": "Dad Cat",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599390232346687/DadCat.png"
+        },
+        {
+            "name": "Bratty",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599392597938267/Bratty.png"
+        },
+        {
+            "name": "Froggit",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599394741362728/Froggit.png"
+        },
+        {
+            "name": "Politics Bear",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599415947759687/PoliticsBear.png"
+        },
+        {
+            "name": "QC",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599419386953728/QC.png"
+        },
+        {
+            "name": "Temmie",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599421454745651/Temmie.png"
+        },
+        {
+            "name": "Catti",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599423434465310/Catti.png"
+        },
+        {
+            "name": "Monster Kid",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599427054141510/MonsterKid.png"
+        },
+        {
+            "name": "Jockington",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599429625380905/Jockington.png"
+        },
+        {
+            "name": "Snowy",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599432997347450/Snowy.png"
+        },
+        {
+            "name": "Alvin",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599435073781810/Alvin.png"
+        },
+        {
+            "name": "Snail Guy",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599437342900347/SnailGuy.png"
+        },
+        {
+            "name": "Scared Donut Guy",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599439641255977/Scareddonutguy.png"
+        },
+        {
+            "name": "Normal NPC",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599459979559033/NormalNPC.png"
+        },
+        {
+            "name": "Hots Fireguy",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599462076456991/HotsFireguy.png"
+        },
+        {
+            "name": "Nurse",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599464001900584/Nurse.png"
+        },
+        {
+            "name": "The Warrior",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599467071995934/TheWarrior.png"
+        },
+        {
+            "name": "Business Guy",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599470339362836/BusinessGuy.png"
+        },
+        {
+            "name": "Hand Receptionist",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599478027522078/HandReceptionist.png"
+        },
+        {
+            "name": "Purple Guy",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599481328304200/PurpleGuy.png"
+        },
+        {
+            "name": "Blue Ears",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599484495138826/BlueEars.png"
+        },
+        {
+            "name": "Pizzapants",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599486906863616/Pizzapants.png"
+        },
+        {
+            "name": "Papyrus",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599489318584542/Papyrus.png"
+        },
+        {
+            "name": "Innkeeper's Child",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599494511272088/Innkeeperschild.png"
+        },
+        {
+            "name": "Door Knocking Guy",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599497778503701/Doorknockingguy.png"
+        },
+        {
+            "name": "Glad Dragon",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599500580167771/GladDragon.png"
+        },
+        {
+            "name": "Dress Lion",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599502710874153/DressLion.png"
+        },
+        {
+            "name": "Green Fire",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599505491697704/GreenFire.png"
+        },
+        {
+            "name": "Flannel Demon",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599538366910634/FlannelDemon.png"
+        },
+        {
+            "name": "Mom Cat",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599544561893556/MomCat.png"
+        },
+        {
+            "name": "Hat Monster",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599546964967594/HatMonster.png"
+        },
+        {
+            "name": "Faw Faw",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599549054001223/FawFaw.png"
+        },
+        {
+            "name": "Royal Guard Bunny",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599551071461527/RoyalGuardBunny.png"
+        },
+        {
+            "name": "Royal Guard Dragon",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599553017610250/RoyalGuardDragon.png"
+        },
+        {
+            "name": "Snowy's Father",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599555009777714/Snowysfather.png"
+        },
+        {
+            "name": "Onion",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599556956065934/Onion.png"
+        },
+        {
+            "name": "Crystal",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599559560462450/Crystal.png"
+        },
+        {
+            "name": "Muttler",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599580544565328/Muttler.png"
+        },
+        {
+            "name": "Shyra",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599582503309362/Shyra.png"
+        },
+        {
+            "name": "Clam Guy",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599584780820590/ClamGuy.png"
+        },
+        {
+            "name": "Shyren",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599587884728360/Shyren.png"
+        },
+        {
+            "name": "Napstablook",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599590489260082/Napstablook.png"
+        },
+        {
+            "name": "Nobody",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599593249382500/Nobody.png"
+        },
+        {
+            "name": "Doggo",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599596776787979/Doggo.png"
+        },
+        {
+            "name": "Lesser Dog",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599613079789578/LesserDog.png"
+        },
+        {
+            "name": "Dogamy",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599616787816478/Dogamy.png"
+        },
+        {
+            "name": "Dogaressa",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599622831804516/Dogaressa.png"
+        },
+        {
+            "name": "Greater Dog",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599625318895636/GreaterDog.png"
+        },
+        {
+            "name": "Rainy",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599627294281840/Rainy.png"
+        },
+        {
+            "name": "Rabbit Kid",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599629857136640/RabbitKid.png"
+        },
+        {
+            "name": "Terry",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599636404441098/Terry.png"
+        },
+        {
+            "name": "Ice Caps",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599640670052414/IceCaps.png"
+        },
+        {
+            "name": "Scarf Lady",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599647980584960/ScarfLady.png"
+        },
+        {
+            "name": "Ficus Licker",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599650933637251/Ficuslicker.png"
+        },
+        {
+            "name": "Aaron",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599655660363888/Aaron.png"
+        },
+        {
+            "name": "Tall Diamond Boy",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599658344710144/TallDiamondBoy.png"
+        },
+        {
+            "name": "Milklooker",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599661394100385/Milklooker.png"
+        },
+        {
+            "name": "Pink's Ghost",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599664741154886/Pinksghost.png"
+        },
+        {
+            "name": "Rabbit Lady",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599667618582639/RabbitLady.png"
+        },
+        {
+            "name": "Flower Shop Loox",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599670185369692/FlowerShopLoox.png"
+        },
+        {
+            "name": "Wrap Mouse",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599673964429442/WrapMouse.png"
+        },
+        {
+            "name": "Shambling Mass",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599676531478598/ShamblingMass.png"
+        },
+        {
+            "name": "Manticore",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599682487132222/Manticore.png"
+        },
+        {
+            "name": "Ms. Boom",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599684588470292/MsBoom.png"
+        },
+        {
+            "name": "Innkeeper",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599687809831002/Innkeeper.png"
+        },
+        {
+            "name": "Vegetoid",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599689877753996/Vegetoid.png"
+        },
+        {
+            "name": "Takoyaki Harpy",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599709733584916/TakoyakiHarpy.png"
+        },
+        {
+            "name": "Vulkin",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599712262619156/Vulkin.png"
+        },
+        {
+            "name": "Dummy",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599722987589673/Dummy.png"
+        },
+        {
+            "name": "Small Mike",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599726573592636/SmallMike.png"
+        },
+        {
+            "name": "Cat Mike",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599729123721276/CatMike.png"
+        },
+        {
+            "name": "Cowboy Hat Mike",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599732214796430/CowboyHatMike.png"
+        },
+        {
+            "name": "Kikky",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599734979100743/Kikky.png"
+        },
+        {
+            "name": "Trashy Trio",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599738468507688/TrashyTrio.png"
+        },
+        {
+            "name": "Wobbly Thing",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599740679159908/Wobblything.png"
+        },
+        {
+            "name": "Dust Pile",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599742839103518/Dustpile.png"
+        },
+        {
+            "name": "Castle Rudinn",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599747419283607/CastleRudinn.png"
+        },
+        {
+            "name": "Rudinn",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599750879711272/Rudinn.png"
+        },
+        {
+            "name": "Hathy",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599752779735111/Hathy.png"
+        },
+        {
+            "name": "C. Round",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599755623469086/CRound.png"
+        },
+        {
+            "name": "Jigsawry",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599776431411210/Jigsawry.png"
+        },
+        {
+            "name": "Ponman",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599778704462056/Ponman.png"
+        },
+        {
+            "name": "K. Round",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599781078696046/KRound.png"
+        },
+        {
+            "name": "Rabbick",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599784039612547/Rabbick.png"
+        },
+        {
+            "name": "Clover",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599786623570010/Clover.png"
+        },
+        {
+            "name": "Bloxer",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599789261656064/Bloxer.png"
+        },
+        {
+            "name": "Rudinn Ranger",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599792570966086/RudinnRanger.png"
+        },
+        {
+            "name": "Head Hathy",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599794424709231/HeadHathy.png"
+        },
+        {
+            "name": "Jevil",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599796312281228/Jevil.png"
+        },
+        {
+            "name": "Top Chef",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599816813903965/TopChef.png"
+        },
+        {
+            "name": "Jigsaw Joe",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599819611775007/JigsawJoe.png"
+        },
+        {
+            "name": "TP Master",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599821499080704/TPMaster.png"
+        },
+        {
+            "name": "Ralsei Master",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599823604752435/RalseiMaster.png"
+        },
+        {
+            "name": "Susie Master",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599825777270995/SusieMaster.png"
+        },
+        {
+            "name": "Kris Master",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599827815571466/KrisMaster.png"
+        },
+        {
+            "name": "Seam",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599833226481874/Seam.png"
+        },
+        {
+            "name": "Mr. Elegance",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599835721826384/MrElegance.png"
+        },
+        {
+            "name": "Mr. Society",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599837835890768/MrSociety.png"
+        },
+        {
+            "name": "Dark Ponman",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599839610077304/DarkPonman.png"
+        },
+        {
+            "name": "Royal Coat Rack",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599861617729546/RoyalCoatRack.png"
+        },
+        {
+            "name": "Ball",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599865916882944/Ball.png"
+        },
+        {
+            "name": "B Blockler",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599868487733368/BBlockler.png"
+        },
+        {
+            "name": "O Blockler",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599871830859837/OBlockler.png"
+        },
+        {
+            "name": "Malius",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599875936944198/Malius.png"
+        },
+        {
+            "name": "Worm",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599879439061073/Worm.png"
+        },
+        {
+            "name": "Sheary",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599882790445137/Sheary.png"
+        },
+        {
+            "name": "Starwalker Bird",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599884912758825/StarwalkerBird.png"
+        },
+        {
+            "name": "Starwalker",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599888083779616/Starwalker.png"
+        },
+        {
+            "name": "Block Tree",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599890700902490/BlockTree.png"
+        },
+        {
+            "name": "Pair of Eyes",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599893955809370/Pairofeyes.png"
+        },
+        {
+            "name": "Goulden Sam",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599898355634277/GouldenSam.png"
+        },
+        {
+            "name": "Former Kings",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599900800782406/FormerKings.png"
+        },
+        {
+            "name": "Jailed Puzzle Master",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599902646140978/JailedPuzzleMaster.png"
+        },
+        {
+            "name": "Cage Animals",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599924079042730/CageAnimals.png"
+        },
+        {
+            "name": "Werewire",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599929150083162/Werewire.png"
+        },
+        {
+            "name": "Tasque",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599931263877140/Tasque.png"
+        },
+        {
+            "name": "Virovirokun",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599933835251782/Virovirokun.png"
+        },
+        {
+            "name": "Sweet",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599936901156974/Sweet.png"
+        },
+        {
+            "name": "Cap'n",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599939027800144/Capn.png"
+        },
+        {
+            "name": "K_K",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599941120491540/KK.png"
+        },
+        {
+            "name": "Poppup",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599943054073866/Poppup.png"
+        },
+        {
+            "name": "Ambyu-Lance",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599945688092803/AmbyuLance.png"
+        },
+        {
+            "name": "Maus",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599967460982865/Maus.png"
+        },
+        {
+            "name": "Spamton",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599970174705765/Spamton.png"
+        },
+        {
+            "name": "Swatchling",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599975140626492/Swatchling.png"
+        },
+        {
+            "name": "Tasque Manager",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599978424631296/TasqueManager.png"
+        },
+        {
+            "name": "Mauswheel",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599981444530288/Mauswheel.png"
+        },
+        {
+            "name": "Pipis",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599983890071595/PipisWeirdRoute.png"
+        },
+        {
+            "name": "Werewerewire",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599986184093837/Werewerewire.png"
+        },
+        {
+            "name": "Spamton NEO",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599989313044571/SpamtonNEO.png"
+        },
+        {
+            "name": "GIGA Queen",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599991619919922/GIGAQueen.png"
+        },
+        {
+            "name": "Plugboy",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599994497335407/Plugboy.png"
+        },
+        {
+            "name": "Nubert",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541599999261933689/Nubert.png"
+        },
+        {
+            "name": "Hacker",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600004840624218/Hacker.png"
+        },
+        {
+            "name": "Fommt",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600007117869146/Fommt.png"
+        },
+        {
+            "name": "Trashy",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600010347745290/Trashy.png"
+        },
+        {
+            "name": "Electro-Dasher",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600012700749885/ElectroDasher.png"
+        },
+        {
+            "name": "Werewire",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600033625874593/Werewire.png"
+        },
+        {
+            "name": "Addison",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600035739799712/Addisons.png"
+        },
+        {
+            "name": "Icon Man",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600038193594459/IconMan.png"
+        },
+        {
+            "name": "Icon Man's Friend",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600040680955944/IconMansfriend.png"
+        },
+        {
+            "name": "Proud Door Owner",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600042849411112/Prouddoorowner.png"
+        },
+        {
+            "name": "Wig Robot",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600052265619486/WigRobot.png"
+        },
+        {
+            "name": "Swatch",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600054601715782/Swatch.png"
+        },
+        {
+            "name": "Wall Plug",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600056510124123/WallPlug.png"
+        },
+        {
+            "name": "Yes Man",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600058884096010/YesMan.png"
+        },
+        {
+            "name": "Yes Man",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600061098827916/YesMan.png"
+        },
+        {
+            "name": "Mousemillian",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600063460212736/Mousemillian.png"
+        },
+        {
+            "name": "Saucer UFO",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600065892778084/SaucerUFO.png"
+        },
+        {
+            "name": "Shadowguy",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600087296450661/Shadowguy.png"
+        },
+        {
+            "name": "Lanino",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600089578016850/Lanino.png"
+        },
+        {
+            "name": "Elnina",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600092283473960/Elnina.png"
+        },
+        {
+            "name": "Watercooler",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600094367916162/Watercooler.png"
+        },
+        {
+            "name": "Pippins",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600096834162771/Pippins.png"
+        },
+        {
+            "name": "Purple Monster",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541606979628310558/PurpleMonster.png"
+        },
+        {
+            "name": "Goldenrod Monster",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541606982132301904/GoldenrodMonster.png"
+        },
+        {
+            "name": "Yellow Monster",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541606983768219738/YellowMonster.png"
+        },
+        {
+            "name": "Orange Flower",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541606986024616017/OrangeFlower.png"
+        },
+        {
+            "name": "Purple Flower",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541606987664728064/PurpleFlower.png"
+        },
+        {
+            "name": "Yellow Flower",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541606990269120542/YellowFlower.png"
+        },
+        {
+            "name": "Blue Fish",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541606992437706772/BlueFish.png"
+        },
+        {
+            "name": "Blue Bird",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541607407116095668/BlueBird.png"
+        },
+        {
+            "name": "Yellow Lizard",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541607000104894614/YellowLizard.png"
+        },
+        {
+            "name": "Gray Monster",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541607020354871373/GrayMonster.png"
+        },
+        {
+            "name": "White Monster",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541607023177764864/WhiteMonster.png"
+        },
+        {
+            "name": "Orange Monster",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541607025316864091/OrangeMonster.png"
+        },
+        {
+            "name": "Black Monster",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541607027292242043/BlackMonster.png"
+        },
+        {
+            "name": "Green Lizard",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541607031562051675/GreenLizard.png"
+        },
+        {
+            "name": "Blue Lizard",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541607035525796010/BlueLizard.png"
+        },
+        {
+            "name": "Gray Fish",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541607037870538833/GrayFish.png"
+        },
+        {
+            "name": "Singing Cat",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541607039552200765/SingingCat.png"
+        },
+        {
+            "name": "Silent Cat",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541607041519452394/SilentCat.png"
+        },
+        {
+            "name": "Rotaty",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541607044044562503/Rotaty.png"
+        },
+        {
+            "name": "Bouncy",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541607065066274857/Bouncy.png"
+        },
+        {
+            "name": "Black Deer",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541607067616411759/BlackDeer.png"
+        },
+        {
+            "name": "Shuttah",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600103142522900/Shuttah.png"
+        },
+        {
+            "name": "Zapper",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600108489998336/Zapper.png"
+        },
+        {
+            "name": "Ribbick",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600111325610174/Ribbick.png"
+        },
+        {
+            "name": "Shadow Mantle Holder",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600113531686992/ShadowMantleholder.png"
+        },
+        {
+            "name": "ERAM",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541604684735709254/ERAM.png"
+        },
+        {
+            "name": "Couch",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600116056657971/Couch.png"
+        },
+        {
+            "name": "Crowd",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600135996506172/Crowd.png"
+        },
+        {
+            "name": "Ramb",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600138139668540/Ramb.png"
+        },
+        {
+            "name": "Quiz Vortex",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600140266053672/Quizvortex.png"
+        },
+        {
+            "name": "Sphinx-Tenna",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600142291894332/SphinxTenna.png"
+        },
+        {
+            "name": "Cactus",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600144313679902/Cactus.png"
+        },
+        {
+            "name": "Sniper",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600146343862292/Sniper.png"
+        },
+        {
+            "name": "Antlion",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600148428161045/Antlion.png"
+        },
+        {
+            "name": "Curtain NPC",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600167969558578/CurtainNPC.png"
+        },
+        {
+            "name": "Suilver Sam",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600170360438874/SuilverSam.png"
+        },
+        {
+            "name": "Serious Trashy",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600172335833138/SeriousTrashy.png"
+        },
+        {
+            "name": "Goulden Son",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600174231650435/GouldenSon.png"
+        },
+        {
+            "name": "Flying Ace",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600176337322086/7FlyingAces.png"
+        },
+        {
+            "name": "Munmi",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600179461816400/Munmiunused.png"
+        },
+        {
+            "name": "HERO_SWORD",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600184021033110/HEROSWORD.png"
+        },
+        {
+            "name": "HERO_AXE",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600186332356628/HEROAXE.png"
+        },
+        {
+            "name": "HERO_SCARF",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600188768976936/HEROSCARF.png"
+        },
+        {
+            "name": "Lancer",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600207953993798/Lancer.png"
+        },
+        {
+            "name": "White Cloak",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600209639964772/WhiteCloak.png"
+        },
+        {
+            "name": "Guei",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600212190101636/Guei.png"
+        },
+        {
+            "name": "Balthizard",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600215621050479/Balthizard.png"
+        },
+        {
+            "name": "Mizzle",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600217785303051/Mizzle.png"
+        },
+        {
+            "name": "Bibliox",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600221140619345/Bibliox.png"
+        },
+        {
+            "name": "Jackenstein",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600223279972373/Jackenstein.png"
+        },
+        {
+            "name": "Miss Mizzle",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600225288921098/MissMizzle.png"
+        },
+        {
+            "name": "Hammer of Justice",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600228665335949/HammerofJustice.png"
+        },
+        {
+            "name": "Winglade",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600250945601617/Winglade.png"
+        },
+        {
+            "name": "Organikk",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600253189300234/Organikk.png"
+        },
+        {
+            "name": "Wicabel",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600255831838802/Wicabel.png"
+        },
+        {
+            "name": "Sound of Justice",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600258079985694/SoundofJustice.png"
+        },
+        {
+            "name": "Titan Spawn",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600260143587438/TitanSpawn.png"
+        },
+        {
+            "name": "Titan",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600262110843020/Titan.png"
+        },
+        {
+            "name": "Wafer",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600264807780402/Wafer.png"
+        },
+        {
+            "name": "Tao",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600266711990282/Tao.png"
+        },
+        {
+            "name": "Unknown",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600287079534592/Unknown.png"
+        },
+        {
+            "name": "Jackenstein's Pumpkin",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600290032062464/Jackensteinspumpkinmain.png"
+        },
+        {
+            "name": "Jackenstein's Pumpkin (Polite)",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600292301185175/Jackensteinspumpkinpoliter.png"
+        },
+        {
+            "name": "Jackenstein's Pumpkin (Small)",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600295082266754/Jackensteinspumpkinsmall.png"
+        },
+        {
+            "name": "Cuptain",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600297263177800/Cuptain.png"
+        },
+        {
+            "name": "Fire Extinguisher",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600299402395788/Fireextinguisher.png"
+        },
+        {
+            "name": "Organikk Philosopher (Branch)",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600301440704582/Organikkphilosopherbranch.png"
+        },
+        {
+            "name": "Organikk Philosopher (Disk)",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600303999090789/Organikkphilosopherdisk.png"
+        },
+        {
+            "name": "Organikk Philosopher (Cross)",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600306738110494/Organikkphilosophercross.png"
+        },
+        {
+            "name": "Secretary",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600330880651465/Secretary.png"
+        },
+        {
+            "name": "Artist",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600332809773096/Artist.png"
+        },
+        {
+            "name": "Candle Lighter",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600334688944348/CandleLighterunused.png"
+        },
+        {
+            "name": "Floradinn",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600336664330311/Floradinn.png"
+        },
+        {
+            "name": "Yellow",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600340414046368/Yellow.png"
+        },
+        {
+            "name": "Netskie",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600342397952112/Netskie.png"
+        },
+        {
+            "name": "Green",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600344793030666/Green.png"
+        },
+        {
+            "name": "Aqua",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600347619991603/Aqua.png"
+        },
+        {
+            "name": "Seth",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600369170325556/Seth.png"
+        },
+        {
+            "name": "Shi",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600371896483842/Shi.png"
+        },
+        {
+            "name": "Leafling",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600375440801862/Leafling.png"
+        },
+        {
+            "name": "Kawkaw",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600378360168478/Kawkaw.png"
+        },
+        {
+            "name": "Shinobeetle",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600380964577370/Shinobeetle.png"
+        },
+        {
+            "name": "Terakota",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600383657320558/Terakota.png"
+        },
+        {
+            "name": "Orange",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600385846743081/Orange.png"
+        },
+        {
+            "name": "Blue",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600387948089364/Blue.png"
+        },
+        {
+            "name": "Pink",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600390141976716/Pink.png"
+        },
+        {
+            "name": "Shrubbery",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600392138199130/Shrubbery.png"
+        },
+        {
+            "name": "Kooby",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600414321999912/Kooby.png"
+        },
+        {
+            "name": "Doubter",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600416750633040/Doubter.png"
+        },
+        {
+            "name": "Hopschef",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600419216629831/Hopschef.png"
+        },
+        {
+            "name": "Umbrella",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600421636743288/Umbrella.png"
+        },
+        {
+            "name": "Small Netskie",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600423939543171/SmallNetskie.png"
+        },
+        {
+            "name": "Spikery",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600425755549766/Spikery.png"
+        },
+        {
+            "name": "Pumpkin",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600428360470628/Pumpkin.png"
+        },
+        {
+            "name": "Zenlooker",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600431489421363/Zenlooker.png"
+        },
+        {
+            "name": "Tropical Starwalker Bird",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600434257661982/TropicalStarwalkerBird.png"
+        },
+        {
+            "name": "Tropical Starwalker",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600455115677876/TropicalStarwalker.png"
+        },
+        {
+            "name": "Farmer Shi",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600458018263090/FarmerShi.png"
+        },
+        {
+            "name": "Ferroll",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600461931421696/Ferroll.png"
+        },
+        {
+            "name": "Windstruggler",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600465106509844/Windstruggler.png"
+        },
+        {
+            "name": "Signery",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600467090673674/Signery.png"
+        },
+        {
+            "name": "Pot Archer",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600469158461440/Potarcher.png"
+        },
+        {
+            "name": "Mantis Dancer",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600471142109226/Mantisdancer.png"
+        },
+        {
+            "name": "Chairery",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600473923067934/Chairery.png"
+        },
+        {
+            "name": "Mr. Butterfly",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600476603220099/MrButterfly.png"
+        },
+        {
+            "name": "Laddery",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600478725410846/Laddery.png"
+        },
+        {
+            "name": "Unoriginal Starwalker",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600499583680653/UnoriginalStarwalker.png"
+        },
+        {
+            "name": "Voice",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600501529845870/Voice.png"
+        },
+        {
+            "name": "Annoying Dog",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600504222720050/AnnoyingDog.png"
+        },
+        {
+            "name": "Man",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600506898812978/Man.png"
+        },
+        {
+            "name": "Thrash Machine",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600509478309978/ThrashMachine.png"
+        },
+        {
+            "name": "Everyman",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600512451809390/Everyman.png"
+        },
+        {
+            "name": "ICE-E",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600518877618276/ICEE.png"
+        },
+        {
+            "name": "FRIEND",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600521012646048/FRIEND.png"
+        },
+        {
+            "name": "Pizzarina",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600523411652720/Pizzarina.png"
+        },
+        {
+            "name": "Mike",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600525655609464/Mike.png"
+        },
+        {
+            "name": "Caller",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600528260399175/Caller.png"
+        },
+        {
+            "name": "W.D. Gaster",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600549495906354/WDGaster.png"
+        },
+        {
+            "name": "Togore",
+            "image": "https://cdn.discordapp.com/attachments/853246754791358495/1541600551970537583/Togore.png"
+        }
+    ],
+    "yellow": [
+        {
+            "name": "Clover",
+            "image": "https://undertaleyellow.wiki.gg/images/Clover_overworld.png"
+        },
+        {
+            "name": "Flowey",
+            "image": "https://undertaleyellow.wiki.gg/images/Flowey_overworld.png"
+        },
+        {
+            "name": "Dalv",
+            "image": "https://undertaleyellow.wiki.gg/images/Dalv_overworld.png"
+        },
+        {
+            "name": "Martlet",
+            "image": "https://undertaleyellow.wiki.gg/images/Martlet_overworld.png"
+        },
+        {
+            "name": "Starlo",
+            "image": "https://undertaleyellow.wiki.gg/images/Starlo_overworld.png"
+        },
+        {
+            "name": "Ceroba",
+            "image": "https://undertaleyellow.wiki.gg/images/Ceroba_Ketsukane_overworld.png"
+        },
+        {
+            "name": "Axis",
+            "image": "https://undertaleyellow.wiki.gg/images/Axis_overworld.gif"
+        },
+        {
+            "name": "Chujin",
+            "image": "https://undertaleyellow.wiki.gg/images/Chujin_Ketsukane_overworld.png"
+        },
+        {
+            "name": "Kanako",
+            "image": "https://undertaleyellow.wiki.gg/images/Kanako_Ketsukane_overworld.png"
+        },
+        {
+            "name": "Penilla",
+            "image": "https://undertaleyellow.wiki.gg/images/Penilla_overworld.png"
+        },
+        {
+            "name": "Flier",
+            "image": "https://undertaleyellow.wiki.gg/images/Flier_overworld.png"
+        },
+        {
+            "name": "Sweet Corn",
+            "image": "https://undertaleyellow.wiki.gg/images/Sweet_Corn_overworld.png"
+        },
+        {
+            "name": "Rorrim",
+            "image": "https://undertaleyellow.wiki.gg/images/Rorrim_overworld.png"
+        },
+        {
+            "name": "Crispy Scroll",
+            "image": "https://undertaleyellow.wiki.gg/images/Crispy_Scroll_overworld.png"
+        },
+        {
+            "name": "Decibat",
+            "image": "https://undertaleyellow.wiki.gg/images/Decibat_overworld.gif"
+        },
+        {
+            "name": "Micro Froggit",
+            "image": "https://undertaleyellow.wiki.gg/images/Micro_Froggit_battle_idle.gif"
+        },
+        {
+            "name": "Toriel",
+            "image": "https://undertaleyellow.wiki.gg/images/Toriel_overworld.png"
+        },
+        {
+            "name": "Dust Bunny",
+            "image": "https://undertaleyellow.wiki.gg/images/Dust_Bunny_overworld.png"
+        },
+        {
+            "name": "Pops",
+            "image": "https://undertaleyellow.wiki.gg/images/Pops_overworld.png"
+        },
+        {
+            "name": "Broom",
+            "image": "https://undertaleyellow.wiki.gg/images/Broom_overworld.png"
+        },
+        {
+            "name": "Frostermit",
+            "image": "https://undertaleyellow.wiki.gg/images/Frostermit_overworld.png"
+        },
+        {
+            "name": "Insomnitot",
+            "image": "https://undertaleyellow.wiki.gg/images/Insomnitot_overworld.png"
+        },
+        {
+            "name": "Know Cone",
+            "image": "https://undertaleyellow.wiki.gg/images/Know_Cone_overworld.png"
+        },
+        {
+            "name": "Tri",
+            "image": "https://undertaleyellow.wiki.gg/images/Tri_overworld.png"
+        },
+        {
+            "name": "Hec",
+            "image": "https://undertaleyellow.wiki.gg/images/Hec_overworld.png"
+        },
+        {
+            "name": "Ta",
+            "image": "https://undertaleyellow.wiki.gg/images/Ta_overworld.png"
+        },
+        {
+            "name": "Female Adventurer",
+            "image": "https://undertaleyellow.wiki.gg/images/Female_adventurer_overworld.png"
+        },
+        {
+            "name": "Male Adventurer",
+            "image": "https://undertaleyellow.wiki.gg/images/Male_adventurer_overworld.png"
+        },
+        {
+            "name": "Slurpy",
+            "image": "https://undertaleyellow.wiki.gg/images/Slurpy_overworld.png"
+        },
+        {
+            "name": "Santa Hat Guy",
+            "image": "https://undertaleyellow.wiki.gg/images/Santa_hat_guy_overworld.png"
+        },
+        {
+            "name": "Mo",
+            "image": "https://undertaleyellow.wiki.gg/images/Mo_overworld.png"
+        },
+        {
+            "name": "Ice Wolf",
+            "image": "https://undertaleyellow.wiki.gg/images/Ice_Wolf_overworld.png"
+        },
+        {
+            "name": "Mail Whale",
+            "image": "https://undertaleyellow.wiki.gg/images/Mail_Whale_overworld.gif"
+        },
+        {
+            "name": "Rephil",
+            "image": "https://undertaleyellow.wiki.gg/images/Rephil_overworld.gif"
+        },
+        {
+            "name": "Toast",
+            "image": "https://undertaleyellow.wiki.gg/images/Toast_overworld.gif"
+        },
+        {
+            "name": "Swig",
+            "image": "https://undertaleyellow.wiki.gg/images/Swig_overworld.gif"
+        },
+        {
+            "name": "Sleeping Bear",
+            "image": "https://undertaleyellow.wiki.gg/images/Sleeping_bear_overworld.png"
+        },
+        {
+            "name": "Blankie",
+            "image": "https://undertaleyellow.wiki.gg/images/Blankie_overworld.png"
+        },
+        {
+            "name": "Flame Guy",
+            "image": "https://undertaleyellow.wiki.gg/images/Flame_guy_overworld.gif"
+        },
+        {
+            "name": "Donald Glover",
+            "image": "https://undertaleyellow.wiki.gg/images/Donald_Glover_overworld.png"
+        },
+        {
+            "name": "Honeydew Shopkeeper",
+            "image": "https://undertaleyellow.wiki.gg/images/Honeydew_Shopkeeper_face.png"
+        },
+        {
+            "name": "Rodney's Band",
+            "image": "https://undertaleyellow.wiki.gg/images/Rodney_overworld.png"
+        },
+        {
+            "name": "Couch Bear",
+            "image": "https://undertaleyellow.wiki.gg/images/Couch_bear_overworld.png"
+        },
+        {
+            "name": "Superfan",
+            "image": "https://undertaleyellow.wiki.gg/images/Superfan_overworld.png"
+        },
+        {
+            "name": "Dunes Rabbit",
+            "image": "https://undertaleyellow.wiki.gg/images/Dunes_rabbit_overworld.png"
+        },
+        {
+            "name": "Theorist",
+            "image": "https://undertaleyellow.wiki.gg/images/Theorist_overworld.png"
+        },
+        {
+            "name": "Torch",
+            "image": "https://undertaleyellow.wiki.gg/images/Torch_overworld.gif"
+        },
+        {
+            "name": "Swimmer",
+            "image": "https://undertaleyellow.wiki.gg/images/Swimmer_overworld.png"
+        },
+        {
+            "name": "Lounger",
+            "image": "https://undertaleyellow.wiki.gg/images/Lounger_overworld.png"
+        },
+        {
+            "name": "Maury",
+            "image": "https://undertaleyellow.wiki.gg/images/Maury_overworld.png"
+        },
+        {
+            "name": "Cranky",
+            "image": "https://undertaleyellow.wiki.gg/images/Cranky_overworld.png"
+        },
+        {
+            "name": "Snowflake",
+            "image": "https://undertaleyellow.wiki.gg/images/Snowflake_overworld.png"
+        },
+        {
+            "name": "Dunebud",
+            "image": "https://undertaleyellow.wiki.gg/images/Dunebud_overworld.png"
+        },
+        {
+            "name": "Sir Slither",
+            "image": "https://undertaleyellow.wiki.gg/images/Sir_Slither_overworld.png"
+        },
+        {
+            "name": "Cactony",
+            "image": "https://undertaleyellow.wiki.gg/images/Cactony_battle_idle.gif"
+        },
+        {
+            "name": "Bowll",
+            "image": "https://undertaleyellow.wiki.gg/images/Bowll_overworld.png"
+        },
+        {
+            "name": "Pedla",
+            "image": "https://undertaleyellow.wiki.gg/images/Pedla_overworld.png"
+        },
+        {
+            "name": "Violetta",
+            "image": "https://undertaleyellow.wiki.gg/images/Violetta_overworld.png"
+        },
+        {
+            "name": "Rosa",
+            "image": "https://undertaleyellow.wiki.gg/images/Rosa_overworld.png"
+        },
+        {
+            "name": "El Bailador",
+            "image": "https://undertaleyellow.wiki.gg/images/El_Bailador_overworld.png"
+        },
+        {
+            "name": "Ed",
+            "image": "https://undertaleyellow.wiki.gg/images/Ed_overworld.png"
+        },
+        {
+            "name": "Moray",
+            "image": "https://undertaleyellow.wiki.gg/images/Moray_overworld.png"
+        },
+        {
+            "name": "Ace",
+            "image": "https://undertaleyellow.wiki.gg/images/Ace_overworld.png"
+        },
+        {
+            "name": "Mooch",
+            "image": "https://undertaleyellow.wiki.gg/images/Mooch_overworld.png"
+        },
+        {
+            "name": "Starlo",
+            "image": "https://undertaleyellow.wiki.gg/images/Starlo_overworld.png"
+        },
+        {
+            "name": "Dina",
+            "image": "https://undertaleyellow.wiki.gg/images/Dina_face.gif"
+        },
+        {
+            "name": "Blackjack",
+            "image": "https://undertaleyellow.wiki.gg/images/Blackjack_face.png"
+        },
+        {
+            "name": "Red Miner",
+            "image": "https://undertaleyellow.wiki.gg/images/Red_miner_overworld.png"
+        },
+        {
+            "name": "Quiz Miner",
+            "image": "https://undertaleyellow.wiki.gg/images/Quiz_miner_overworld.png"
+        },
+        {
+            "name": "Green Slime Miner",
+            "image": "https://undertaleyellow.wiki.gg/images/Green_slime_miner_overworld.png"
+        },
+        {
+            "name": "Stresso",
+            "image": "https://undertaleyellow.wiki.gg/images/Stresso_overworld.png"
+        },
+        {
+            "name": "Elevator Slime",
+            "image": "https://undertaleyellow.wiki.gg/images/Elevator_Slime_overworld.png"
+        },
+        {
+            "name": "Smokey",
+            "image": "https://undertaleyellow.wiki.gg/images/Smokey_overworld.png"
+        },
+        {
+            "name": "Bryan",
+            "image": "https://undertaleyellow.wiki.gg/images/Bryan_overworld.png"
+        },
+        {
+            "name": "Angie",
+            "image": "https://undertaleyellow.wiki.gg/images/Angie_overworld.png"
+        },
+        {
+            "name": "Gilbert",
+            "image": "https://undertaleyellow.wiki.gg/images/Gilbert_overworld.png"
+        },
+        {
+            "name": "Matt",
+            "image": "https://undertaleyellow.wiki.gg/images/Matt_overworld.png"
+        },
+        {
+            "name": "Tall Miner",
+            "image": "https://undertaleyellow.wiki.gg/images/Tall_miner_overworld.png"
+        },
+        {
+            "name": "Snake Miner",
+            "image": "https://undertaleyellow.wiki.gg/images/Snake_miner_overworld.png"
+        },
+        {
+            "name": "Drinki",
+            "image": "https://undertaleyellow.wiki.gg/images/Drinki_overworld.gif"
+        },
+        {
+            "name": "Aunt Glover",
+            "image": "https://undertaleyellow.wiki.gg/images/Aunt_Glover_overworld.png"
+        },
+        {
+            "name": "Red",
+            "image": "https://undertaleyellow.wiki.gg/images/Red_overworld.png"
+        },
+        {
+            "name": "Rock Man",
+            "image": "https://undertaleyellow.wiki.gg/images/Rock_man_overworld.png"
+        },
+        {
+            "name": "Fortune Teller",
+            "image": "https://undertaleyellow.wiki.gg/images/Fortune_teller_overworld.png"
+        },
+        {
+            "name": "Clerk",
+            "image": "https://undertaleyellow.wiki.gg/images/Clerk_overworld.png"
+        },
+        {
+            "name": "Panda Modernist",
+            "image": "https://undertaleyellow.wiki.gg/images/Panda_modernist_overworld.png"
+        },
+        {
+            "name": "Sandra",
+            "image": "https://undertaleyellow.wiki.gg/images/Sandra_overworld.png"
+        },
+        {
+            "name": "Gamer Kid",
+            "image": "https://undertaleyellow.wiki.gg/images/Gamer_kid_overworld.png"
+        },
+        {
+            "name": "Mr. Sir",
+            "image": "https://undertaleyellow.wiki.gg/images/Mr._Sir_overworld.png"
+        },
+        {
+            "name": "Pyramid",
+            "image": "https://undertaleyellow.wiki.gg/images/Pyramid_overworld.png"
+        },
+        {
+            "name": "Shane",
+            "image": "https://undertaleyellow.wiki.gg/images/Shane_overworld.png"
+        },
+        {
+            "name": "Searby",
+            "image": "https://undertaleyellow.wiki.gg/images/Searby_overworld.gif"
+        },
+        {
+            "name": "Finger",
+            "image": "https://undertaleyellow.wiki.gg/images/Finger_overworld.png"
+        },
+        {
+            "name": "Poker Player 1",
+            "image": "https://undertaleyellow.wiki.gg/images/Poker_Players_overworld_1.png"
+        },
+        {
+            "name": "Poker Player 2",
+            "image": "https://undertaleyellow.wiki.gg/images/Poker_Players_overworld_2.png"
+        },
+        {
+            "name": "Poker Player 3",
+            "image": "https://undertaleyellow.wiki.gg/images/Poker_Players_overworld_3.png"
+        },
+        {
+            "name": "Cannibal Cup",
+            "image": "https://undertaleyellow.wiki.gg/images/Cannibal_Cup_overworld.png"
+        },
+        {
+            "name": "Bubblo",
+            "image": "https://undertaleyellow.wiki.gg/images/Bubblo_overworld.png"
+        },
+        {
+            "name": "Producer",
+            "image": "https://undertaleyellow.wiki.gg/images/Producer_overworld_Hotland.png"
+        },
+        {
+            "name": "Blembino",
+            "image": "https://undertaleyellow.wiki.gg/images/Blembino_overworld.png"
+        },
+        {
+            "name": "Happy Cactus",
+            "image": "https://undertaleyellow.wiki.gg/images/Happy_Cactus_overworld.png"
+        },
+        {
+            "name": "Big Cactus",
+            "image": "https://undertaleyellow.wiki.gg/images/Big_Cactus_overworld.png"
+        },
+        {
+            "name": "Cowcat",
+            "image": "https://undertaleyellow.wiki.gg/images/Cowcat_overworld.png"
+        },
+        {
+            "name": "Kangarufus",
+            "image": "https://undertaleyellow.wiki.gg/images/Kangarufus_overworld.png"
+        },
+        {
+            "name": "Gamer",
+            "image": "https://undertaleyellow.wiki.gg/images/Gamer_overworld.png"
+        },
+        {
+            "name": "Cooper",
+            "image": "https://undertaleyellow.wiki.gg/images/Cooper_overworld.png"
+        },
+        {
+            "name": "Vengeful Virgil",
+            "image": "https://undertaleyellow.wiki.gg/images/Vengeful_Virgil_overworld.png"
+        },
+        {
+            "name": "Doctor",
+            "image": "https://undertaleyellow.wiki.gg/images/Doctor_overworld.png"
+        },
+        {
+            "name": "Sleepo",
+            "image": "https://undertaleyellow.wiki.gg/images/Sleepo_overworld.png"
+        },
+        {
+            "name": "Karen",
+            "image": "https://undertaleyellow.wiki.gg/images/Karen_overworld.png"
+        },
+        {
+            "name": "Owen",
+            "image": "https://undertaleyellow.wiki.gg/images/Owen_overworld.png"
+        },
+        {
+            "name": "Marlyn",
+            "image": "https://undertaleyellow.wiki.gg/images/Marlyn_overworld.png"
+        },
+        {
+            "name": "Train Guy",
+            "image": "https://undertaleyellow.wiki.gg/images/Train_Guy_overworld.png"
+        },
+        {
+            "name": "Fake Horse",
+            "image": "https://undertaleyellow.wiki.gg/images/Fake_Horse_overworld.png"
+        },
+        {
+            "name": "Card Guy",
+            "image": "https://undertaleyellow.wiki.gg/images/Card_Guy_overworld.png"
+        },
+        {
+            "name": "Kanako's Friend",
+            "image": "https://undertaleyellow.wiki.gg/images/Kanako%27s_Friend_overworld.png"
+        },
+        {
+            "name": "Giftshopper",
+            "image": "https://undertaleyellow.wiki.gg/images/Giftshopper_overworld.png"
+        },
+        {
+            "name": "Jandroid",
+            "image": "https://undertaleyellow.wiki.gg/images/Jandroid_overworld.png"
+        },
+        {
+            "name": "Goosic",
+            "image": "https://undertaleyellow.wiki.gg/images/Goosic_overworld.png"
+        },
+        {
+            "name": "Telly-Vis",
+            "image": "https://undertaleyellow.wiki.gg/images/Telly-Vis_overworld.png"
+        },
+        {
+            "name": "Sousborg",
+            "image": "https://undertaleyellow.wiki.gg/images/Sousborg_overworld.png"
+        },
+        {
+            "name": "Macro Froggit",
+            "image": "https://undertaleyellow.wiki.gg/images/Macro_Froggit_battle_idle.gif"
+        },
+        {
+            "name": "Guardener",
+            "image": "https://undertaleyellow.wiki.gg/images/Guardener_overworld_idle.gif"
+        },
+        {
+            "name": "Vendy",
+            "image": "https://undertaleyellow.wiki.gg/images/Vendy_face.png"
+        },
+        {
+            "name": "Manta Bot",
+            "image": "https://undertaleyellow.wiki.gg/images/Manta_Bot_overworld.gif"
+        },
+        {
+            "name": "Grandfather Clock",
+            "image": "https://undertaleyellow.wiki.gg/images/Grandfather_Clock_overworld.gif"
+        },
+        {
+            "name": "Boba Drinker",
+            "image": "https://undertaleyellow.wiki.gg/images/Boba_Drinker_overworld.png"
+        },
+        {
+            "name": "Lil Bot 1",
+            "image": "https://undertaleyellow.wiki.gg/images/Lil_Bot_1_overworld.png"
+        },
+        {
+            "name": "Lil Bot 2",
+            "image": "https://undertaleyellow.wiki.gg/images/Lil_Bot_2_overworld.png"
+        },
+        {
+            "name": "Lil Bot 3",
+            "image": "https://undertaleyellow.wiki.gg/images/Lil_Bot_3_overworld.png"
+        },
+        {
+            "name": "Hermit",
+            "image": "https://undertaleyellow.wiki.gg/images/Hermit_overworld.gif"
+        },
+        {
+            "name": "Mr. Screen",
+            "image": "https://undertaleyellow.wiki.gg/images/Mr._Screen_overworld.png"
+        },
+        {
+            "name": "Meta Flowey",
+            "image": "https://undertaleyellow.wiki.gg/images/Flowey_battle_phase_2.png"
+        },
+        {
+            "name": "Zenith Martlet",
+            "image": "https://undertaleyellow.wiki.gg/images/Martlet_battle_idle_final.gif"
+        },
+        {
+            "name": "Bits and Buttons",
+            "image": "https://undertaleyellow.wiki.gg/images/Bits_%26_Bites_face.png"
+        },
+        {
+            "name": "Lobby Lad",
+            "image": "https://undertaleyellow.wiki.gg/images/Lobby_Lad_overworld.png"
+        },
+        {
+            "name": "Handlord",
+            "image": "https://undertaleyellow.wiki.gg/images/Handlord_overworld.png"
+        },
+        {
+            "name": "Mr. Cursor",
+            "image": "https://undertaleyellow.wiki.gg/images/Mr._Cursor_overworld.png"
+        },
+        {
+            "name": "Janitor",
+            "image": "https://undertaleyellow.wiki.gg/images/Janitor_overworld.png"
+        },
+        {
+            "name": "Receptionist",
+            "image": "https://undertaleyellow.wiki.gg/images/Receptionist_overworld.png"
+        },
+        {
+            "name": "Cold Man",
+            "image": "https://undertaleyellow.wiki.gg/images/Cold_Man_overworld.png"
+        },
+        {
+            "name": "Food Enjoyer",
+            "image": "https://undertaleyellow.wiki.gg/images/Food_Enjoyer_overworld.png"
+        },
+        {
+            "name": "Spider Girl",
+            "image": "https://undertaleyellow.wiki.gg/images/Spider_Girl_overworld.png"
+        },
+        {
+            "name": "Bouncer",
+            "image": "https://undertaleyellow.wiki.gg/images/Bouncer_overworld.png"
+        },
+        {
+            "name": "Diamond Boy",
+            "image": "https://undertaleyellow.wiki.gg/images/Diamond_Boy_overworld.png"
+        },
+        {
+            "name": "Heats Flamesman",
+            "image": "https://undertaleyellow.wiki.gg/images/Heats_Flamesman_overworld.png"
+        },
+        {
+            "name": "Asgore",
+            "image": "https://undertaleyellow.wiki.gg/images/Asgore_Dreemurr_overworld.png"
+        },
+        {
+            "name": "Umbrella Lady",
+            "image": "https://undertaleyellow.wiki.gg/images/Umbrella_Lady_overworld.png"
+        },
+        {
+            "name": "Charles",
+            "image": "https://undertaleyellow.wiki.gg/images/Charles_overworld.png"
+        },
+        {
+            "name": "Watcher",
+            "image": "https://undertaleyellow.wiki.gg/images/Watcher_overworld.png"
+        }
+    ]
+}

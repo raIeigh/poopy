@@ -571,14 +571,22 @@ class Poopy {
 
                 if (data.guildData[msg.guild.id].channels[msg.channel.id].battling) {
                     var battlingTypes = [
-                        "disabled", "battlers", "enemies", "all", "deltarune"
+                        "disabled",
+                        "battlers",
+                        "enemies",
+                        "all",
+                        "deltarune",
+                        "undertale",
+                        "utdr"
                     ]
                     
                     var battlingJSONs = {
                         battlers: [poopy.json.battlerJSON.battlers],
                         enemies: [poopy.json.battlerJSON.enemies],
                         all: [poopy.json.battlerJSON.battlers, poopy.json.battlerJSON.enemies],
-                        deltarune: [poopy.json.deltaruneJSON]
+                        deltarune: [poopy.json.utdrJSON.deltarune],
+                        undertale: [poopy.json.utdrJSON.undertale],
+                        utdr: [poopy.json.utdrJSON.undertale, poopy.json.utdrJSON.deltarune]
                     }
                     
                     var battlingValue = data.guildData[msg.guild.id].channels[msg.channel.id].battling

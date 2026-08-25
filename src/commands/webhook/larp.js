@@ -10,6 +10,8 @@ module.exports = {
                 { name: "The Battle Bricks", value: "tbb" },
                 { name: "The Battle Bricks (Friendlies)", value: "tbbfriendly" },
                 { name: "The Battle Bricks (Enemies)", value: "tbbenemy" },
+                { name: "UTDR (Undertale + Deltarune)", value: "utdr" },
+                { name: "Undertale", value: "undertale" },
                 { name: "Deltarune", value: "deltarune" }
             ]
         }
@@ -37,7 +39,7 @@ module.exports = {
 
         var larpHelp = "Available options are:\n"
             + "- **The Battle Bricks** (*Others: TBB Friendlies, TBB Enemies*)\n"
-            + "- **Deltarune**"
+            + "- **UTDR** (*Others: Undertale, Deltarune*)"
 
         var larpValue = args.slice(1).join(" ").trim().toLowerCase()
         var larps = [
@@ -62,6 +64,18 @@ module.exports = {
             {
                 value: 4,
                 match: /^(?:4|deltarune)$/i,
+                message: "https://cdn.discordapp.com/attachments/1415073653585875004/1537840000249626624/added_impact_frames_lmao.gif"
+            },
+            
+            {
+                value: 5,
+                match: /^(?:5|undertale)$/i,
+                message: "https://cdn.discordapp.com/attachments/1415073653585875004/1537840000249626624/added_impact_frames_lmao.gif"
+            },
+            
+            {
+                value: 6,
+                match: /^(?:6|utdr|undertale\s*(?:(and|\+)\s*)?deltarune)$/i,
                 message: "https://cdn.discordapp.com/attachments/1415073653585875004/1537840000249626624/added_impact_frames_lmao.gif"
             }
         ]
@@ -102,7 +116,7 @@ module.exports = {
         }
     },
     help: {
-        name: 'larp [type (tbb/tbbfriendly/tbbenemy/deltarune)] (manage webhooks/messages permission only)',
+        name: 'larp [type (tbb/undertale/deltarune/etc...)] (manage webhooks/messages permission only)',
         value: "It's time to larp."
     },
     cooldown: 2500,
