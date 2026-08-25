@@ -569,30 +569,22 @@ class Poopy {
                     sendObject.avatarURL = 'https://cdn.discordapp.com/attachments/760223418968047629/835923486668750888/imposter.jpg'
                 }
 
+                // yeah the data value is still battling i should change this soon probably idk
                 if (data.guildData[msg.guild.id].channels[msg.channel.id].battling) {
-                    var battlingTypes = [
-                        "disabled",
-                        "battlers",
-                        "enemies",
-                        "all",
-                        "deltarune",
-                        "undertale",
-                        "utdr"
-                    ]
-                    
                     var battlingJSONs = {
-                        battlers: [poopy.json.battlerJSON.battlers],
-                        enemies: [poopy.json.battlerJSON.enemies],
-                        all: [poopy.json.battlerJSON.battlers, poopy.json.battlerJSON.enemies],
-                        deltarune: [poopy.json.utdrJSON.deltarune],
-                        undertale: [poopy.json.utdrJSON.undertale],
-                        utdr: [poopy.json.utdrJSON.undertale, poopy.json.utdrJSON.deltarune]
+                    	-1: [poopy.json.utdrJSON.undertale, poopy.json.utdrJSON.deltarune, poopy.json.glaggleJSON, poopy.json.battlerJSON.battlers, poopy.json.battlerJSON.enemies],
+                        1: [poopy.json.battlerJSON.battlers],
+                        2: [poopy.json.battlerJSON.enemies],
+                        3: [poopy.json.battlerJSON.battlers, poopy.json.battlerJSON.enemies],
+                        4: [poopy.json.utdrJSON.deltarune],
+                        5: [poopy.json.utdrJSON.undertale],
+                        6: [poopy.json.utdrJSON.undertale, poopy.json.utdrJSON.deltarune],
+                        7: [poopy.json.glaggleJSON]
                     }
                     
                     var battlingValue = data.guildData[msg.guild.id].channels[msg.channel.id].battling
-                    var type = battlingTypes[battlingValue]
 
-                    var battlers = [].concat(...(battlingJSONs[type] ?? []))
+                    var battlers = [].concat(...(battlingJSONs[battlingValue] ?? []))
                         .filter(b => !b.custom || (b.custom && b.ignoreCustomBlacklist))
 
                     var battler = battlers.find(battler => battler.custom && battler.custom.some(id => id == msg.author.id)) ??

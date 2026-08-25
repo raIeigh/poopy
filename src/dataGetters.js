@@ -214,6 +214,7 @@ var dataGetters = {
             shieldJSON: 'shields',
             doopleyJSON: 'doopley',
             utdrJSON: 'utdr',
+            glaggleJSON: 'glagglepedia',
             eggphraseJSON: 'eggphrases',
             autoModJSON: 'automodFilter',
             emojiJSON: getEmojis

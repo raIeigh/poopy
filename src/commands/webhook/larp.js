@@ -12,7 +12,9 @@ module.exports = {
                 { name: "The Battle Bricks (Enemies)", value: "tbbenemy" },
                 { name: "UTDR (Undertale + Deltarune)", value: "utdr" },
                 { name: "Undertale", value: "undertale" },
-                { name: "Deltarune", value: "deltarune" }
+                { name: "Deltarune", value: "deltarune" },
+                { name: "Glagglepedia", value: "glagglepedia" },
+                { name: "Everything", value: "everything" }
             ]
         }
     }],
@@ -39,10 +41,19 @@ module.exports = {
 
         var larpHelp = "Available options are:\n"
             + "- **The Battle Bricks** (*Others: TBB Friendlies, TBB Enemies*)\n"
-            + "- **UTDR** (*Others: Undertale, Deltarune*)"
+            + "- **UTDR** (*Others: Undertale, Deltarune*)\n"
+            + "- **Glagglepedia**\n\n"
+            
+            + "- **Everything** *(give me chaos i don't care)*"
 
         var larpValue = args.slice(1).join(" ").trim().toLowerCase()
         var larps = [
+            {
+                value: -1,
+                match: /^(?:-1|all|everything|chaos)$/i,
+                message: "https://static.wikia.nocookie.net/the-battle-bricks/images/0/03/TBB_current_logo.png"
+            },
+            
             {
                 value: 1,
                 match: /^(?:1|(?:tbb|the\s*battle\s*bricks?)\s*friendl(?:y|ies))$/i,
@@ -77,6 +88,12 @@ module.exports = {
                 value: 6,
                 match: /^(?:6|utdr|undertale\s*(?:(and|\+)\s*)?deltarune)$/i,
                 message: "https://cdn.discordapp.com/attachments/1415073653585875004/1537840000249626624/added_impact_frames_lmao.gif"
+            },
+            
+            {
+                value: 7,
+                match: /^(?:7|glag(?:gle)?(?:land|pedia|s)?|enfosi)$/i,
+                message: "https://klipy.com/gifs/glognuts"
             }
         ]
 
