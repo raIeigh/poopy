@@ -27,7 +27,7 @@ module.exports = {
             matchedTextes = ['""']
         }
         var matrix = matchedTextes[0].substring(1, matchedTextes[0].length - 1)
-            .replace(/[^0-9.-:]/g, '').split(":")
+            .replace(/[^0-9.:-]/g, '').split(":")
             .splice(16).join(":")
         var currenturl = lastUrl(msg, 0)
         var fileinfo = await validateFile(currenturl).catch(async error => {

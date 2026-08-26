@@ -28,7 +28,7 @@ module.exports = {
 
         var dangerMsg = `Dangerous command confirmations for the current server have been **${data.guildData[msg.guild.id].ignoreDangerous ? "disabled" : "enabled"}**. This currently includes the following:\n` +
             `- \`battler\`\n` + 
-            `- \`larp\`\n`
+            `- \`larp\`\n` +
             `- \`pedro\`\n` + 
             `- \`votekick\``
 
