@@ -96,6 +96,7 @@
             "brightcontrast",
             "colordark",
             "colorlight",
+            "colormatrix",
             "curves",
             "hsl",
             "opacity",
