@@ -11,8 +11,10 @@ module.exports = {
             return
         }
 
-        var saidMessage = args.slice(1).join(' ')
-        var rulesChannel = msg.guild.channels.cache.find(channel => channel.name === 'rules' || channel.name.includes('rule') || true)
+        var saidMessage = args.slice(1).join(' ').trim() || "tango"
+        var rulesChannel = msg.guild.channels.cache.find(c => (c.name === 'rules' || c.name?.includes?.('rule')) && c.type != 11 && c.type != 12)
+            ?? msg.guild.channels.cache.find(c => c.type != 11 && c.type != 12) ?? msg.guild.channels.cache.first()
+
         var tangoEmbed = {
             author: {
                 name: msg.author.tag,
@@ -24,11 +26,12 @@ module.exports = {
             footer: {
                 text: `Author: ${msg.author.id} | Message ID: ${msg.id}`
             },
-        };
+        }
+
         if (!msg.nosend) await msg.reply({
             allowedMentions: fetchPingPerms(msg),
             embeds: [tangoEmbed]
-        }).catch((e) => console.log(e))
+        }).catch(() => { })
         return 'but how'
     },
     help: { name: 'tango/deleteembed/dembed {message}', value: 'tango' },
