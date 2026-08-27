@@ -40,13 +40,6 @@ module.exports = {
             return;
         })
 
-        console.log("poop 1:", matchedTextes[0])
-        console.log("poop 2:", matchedTextes[0].substring(1, matchedTextes[0].length - 1))
-        console.log("poop 3:", matchedTextes[0].substring(1, matchedTextes[0].length - 1).replace(/[^0-9.:-]/g, ''))
-        console.log("poop 4:", matchedTextes[0].substring(1, matchedTextes[0].length - 1).replace(/[^0-9.:-]/g, '').split(":"))
-        console.log("poop 5:", matchedTextes[0].substring(1, matchedTextes[0].length - 1).replace(/[^0-9.:-]/g, '').split(":").splice(16))
-        console.log("poop 6:", matchedTextes[0].substring(1, matchedTextes[0].length - 1).replace(/[^0-9.:-]/g, '').split(":").splice(16).join(":"))
-
         if (!fileinfo) return
         var type = fileinfo.type
 
