@@ -12,15 +12,18 @@ module.exports = {
         }
 
         var saidMessage = args.slice(1).join(' ').trim() || "tango"
-        var rulesChannel = msg.guild.channels.cache.find(c => (c.name === 'rules' || c.name?.includes?.('rule')) && c.type != 11 && c.type != 12)
-            ?? msg.guild.channels.cache.find(c => c.type != 11 && c.type != 12 && c.type != 4) ?? msg.guild.channels.cache.first()
+        
+        var validChannels = msg.guild.channels.cache.filter(c => ![4, 11, 12].includes(c.type))
+        var rulesChannel = validChannels.find(c => c.name === "rules")
+            ?? validChannels.find(c => c.name?.includes?.("rule"))
+            ?? validChannels.first()
 
         var tangoEmbed = {
             author: {
                 name: msg.author.tag,
                 icon_url: msg.author.displayAvatarURL({ dynamic: true, size: 1024, extension: 'png' })
             },
-            description: `**Message sent by <@${msg.author.id}> deleted in <#${rulesChannel && rulesChannel.id || msg.channel.id}>**\n${saidMessage}`,
+            description: `**Message sent by <@${msg.author.id}> deleted in <#${rulesChannel?.id ?? msg.channel?.id}>**\n${saidMessage}`,
             color: 0xFF470F,
             timestamp: new Date().toISOString(),
             footer: {

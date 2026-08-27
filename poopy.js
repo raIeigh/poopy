@@ -1286,7 +1286,12 @@ class Poopy {
         callbacks.guildCallbacks = [async guild => {
             infoPost(`Joined a new server (${bot.guilds.cache.size} in total)`)
 
-            var channel = guild.systemChannel || guild.channels.cache.find(c => c.type === Discord.ChannelType.GuildText && (c.name == 'general' || c.name == 'main' || c.name == 'chat'))
+            var validChannels = guild.channels.cache.filter(c => c.type === Discord.ChannelType.GuildText)
+            var channel = guild.systemChannel ?? validChannels.find(
+                c => c.name == 'general' || c.name == 'main' || c.name == 'chat'
+            ) ?? validChannels.find(
+                c => c.name?.includes?.('general') || c.name?.includes?.('main') || c.name?.includes?.('chat')
+            )
 
             if (!channel) {
                 guild.channels.cache.every(c => {
