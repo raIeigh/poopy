@@ -13,7 +13,7 @@ module.exports = {
 
         var saidMessage = args.slice(1).join(' ').trim() || "tango"
         var rulesChannel = msg.guild.channels.cache.find(c => (c.name === 'rules' || c.name?.includes?.('rule')) && c.type != 11 && c.type != 12)
-            ?? msg.guild.channels.cache.find(c => c.type != 11 && c.type != 12) ?? msg.guild.channels.cache.first()
+            ?? msg.guild.channels.cache.find(c => c.type != 11 && c.type != 12 && c.type != 4) ?? msg.guild.channels.cache.first()
 
         var tangoEmbed = {
             author: {
