@@ -47,7 +47,7 @@ module.exports = {
 
             await execPromise(`ffmpeg -i ${filepath}/${filename} -vcodec png ${filepath}/frames/input_%06d.png`)
             await execPromise(`ffmpeg -i ${filepath}/${filename} -vf "negate,format=rgba,colorchannelmixer=aa=0.5" -vcodec png ${filepath}/frames/inverted_halfopacity_%06d.png`)
-            await execPromise(`ffmpeg -i ${filepath}/frames/input_%06d.png -start_number ${framesOffset} -i ${filepath}/frames/inverted_halfopacity_%06d.png -i ${filepath}/${filename} -filter_complex "[0:v][1:v] overlay=0:0,split[pout][ppout];[ppout]palettegen=reserve_transparent=1[palette];[pout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -preset ${findpreset(args)} -gifflags -offsetting ${filepath}/output.gif`)
+            await execPromise(`ffmpeg -framerate ${fileinfo.info.fps} -i ${filepath}/frames/input_%06d.png -start_number ${framesOffset} -framerate ${fileinfo.info.fps} -i ${filepath}/frames/inverted_halfopacity_%06d.png -i ${filepath}/${filename} -filter_complex "[0:v][1:v] overlay=0:0,split[pout][ppout];[ppout]palettegen=reserve_transparent=1[palette];[pout][palette]paletteuse=alpha_threshold=128[out]" -map "[out]" -preset ${findpreset(args)} -gifflags -offsetting ${filepath}/output.gif`)
             return await sendFile(msg, filepath, `output.gif`)
         } else if (type.mime.startsWith('video')) {
             var filepath = await downloadFile(currenturl, `input.mp4`, {fileinfo})
@@ -55,9 +55,9 @@ module.exports = {
 
             fs.mkdir(`${filepath}/frames`)
 
-            await execPromise(`ffmpeg -i ${filepath}/${filename} -vcodec png ${filepath}/frames/input_%06d.png`).then((stdout, stderr) => { console.log(stdout); console.log(stderr) })
-            await execPromise(`ffmpeg -i ${filepath}/${filename} -vf "negate,format=rgba,colorchannelmixer=aa=0.5" -vcodec png ${filepath}/frames/inverted_halfopacity_%06d.png`).then((stdout, stderr) => { console.log(stdout); console.log(stderr) })
-            await execPromise(`ffmpeg -i ${filepath}/frames/input_%06d.png -start_number ${framesOffset} -i ${filepath}/frames/inverted_halfopacity_%06d.png -i ${filepath}/${filename} -filter_complex "[0:v][1:v] overlay=0:0" -c:v libx264 -preset ultrafast -c:a copy ${filepath}/output.mp4`).then((stdout, stderr) => { console.log(stdout); console.log(stderr) })
+            await execPromise(`ffmpeg -i ${filepath}/${filename} -vcodec png ${filepath}/frames/input_%06d.png`)
+            await execPromise(`ffmpeg -i ${filepath}/${filename} -vf "negate,format=rgba,colorchannelmixer=aa=0.5" -vcodec png ${filepath}/frames/inverted_halfopacity_%06d.png`)
+            await execPromise(`ffmpeg -framerate ${fileinfo.info.fps} -i ${filepath}/frames/input_%06d.png -start_number ${framesOffset} -framerate ${fileinfo.info.fps} -i ${filepath}/frames/inverted_halfopacity_%06d.png -i ${filepath}/${filename} -filter_complex "[0:v][1:v] overlay=0:0" -c:v libx264 -preset ultrafast -c:a copy ${filepath}/output.mp4`)
             return await sendFile(msg, filepath, `output.mp4`)
         } else {
             await msg.reply({
