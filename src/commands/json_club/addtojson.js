@@ -1,14 +1,16 @@
 module.exports = {
     name: ['addtojson'],
     args: [{
-        name: "json", required: true, specifarg: false, orig: "<json (funnygif, poop, dmphrases, shitting, eightball)>", autocomplete: [
+        name: "json", required: true, specifarg: false, orig: "<json (funnygif, poop, dmphrases, shitting, outsidemedia, eightball)>", autocomplete: [
             'funnygif',
             'poop',
             'dmphrases',
             'shitting',
+            'outsidemedia',
             'eightball'
         ]
-    }, { name: "value", required: true, specifarg: false, orig: "<value>" }],
+    }, { name: "value", required: true, specifarg: false, orig: "<value>" },
+    { name: "group", required: false, specifarg: false, orig: "[group (ONLY for outsidemedia json; short name for the community)]" }],
     execute: async function (msg, args) {
         let poopy = this
         let config = poopy.config
@@ -21,7 +23,7 @@ module.exports = {
             await msg.reply('Sorry... You\'re not in the JSON gang.').catch(() => { })
             return
         } else {
-            var types = ['funnygif', 'poop', 'dmphrases', 'shitting', 'eightball']
+            var types = ['funnygif', 'poop', 'dmphrases', 'shitting', 'outsidemedia', 'eightball']
 
             if (args[1] === undefined) {
                 await msg.reply(`What is the JSON to update?! (Available: ${types.map(t => `**${t}**`).join(', ')})`).catch(() => { })
@@ -42,15 +44,34 @@ module.exports = {
             }
             var saidMessage = args.slice(2).join(' ')
 
-            if (globaldata[type].find(v => v === saidMessage)) {
-                await msg.reply('Already exists.').catch(() => { })
+            var usesGroups = type === 'outsidemedia'
+            var group = args[3]
+            var groupInfo = usesGroups && group && globaldata[type].find(g => g.name === group)
+            var soExtra = (usesGroups && groupInfo && ` (${groupInfo.displayname})`) || '' 
+
+            var alreadyExists = usesGroups
+                ? globaldata[type].find(g => g.list.find(v => v === saidMessage))
+                : globaldata[type].find(v => v === saidMessage)
+
+            if (alreadyExists) {
+                await msg.reply('Already exists.' + (usesGroups && ` (${alreadyExists.displayname})` || '')).catch(() => { })
                 return
             }
 
-            globaldata[type].push(saidMessage)
+            if (usesGroups && group === undefined) {
+                await msg.reply(`What is the group it should be put in?! (Available: ${globaldata[type].map(g => `**${g.name}**`).join(', ')})`)
+                return;
+            }
+
+            if (usesGroups && group !== undefined && !groupInfo) {
+                await msg.reply(`\`${group}\` is not a valid group! (Available: ${globaldata[type].map(g => `**${g.name}**`).join(', ')})`)
+                return;
+            }
+
+            groupInfo.list.push(saidMessage)
 
             if (!msg.nosend) await msg.reply({
-                content: '✅ Added ' + saidMessage,
+                content: '✅ Added ' + saidMessage + soExtra,
                 allowedMentions: fetchPingPerms(msg)
             }).catch(() => { })
 
@@ -58,13 +79,14 @@ module.exports = {
             arrays.poopPhrases = globaldata.poop
             arrays.dmPhrases = globaldata.dmphrases
             arrays.shitting = globaldata.shitting
+            arrays.outsideMedia = globaldata.outsidemedia
             arrays.eightball = globaldata.eightball
 
-            return '✅ Added ' + saidMessage
+            return '✅ Added ' + saidMessage + soExtra
         };
     },
     help: {
-        name: 'addtojson <json (funnygif, poop, dmphrases, shitting, eightball)> <value>',
+        name: 'addtojson <json (funnygif, poop, dmphrases, shitting, outsidemedia, eightball)> <value> [group (ONLY for outsidemedia json; short name for the community)]',
         value: "Adds a new value to JSONs like oil or DM phrases."
     },
     cooldown: 2500,

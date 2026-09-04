@@ -1,11 +1,12 @@
 module.exports = {
     name: ['removefromjson'],
     args: [{
-        name: "json", required: true, specifarg: false, orig: "<json (funnygif, poop, dmphrases, shitting, eightball)>", autocomplete: [
+        name: "json", required: true, specifarg: false, orig: "<json (funnygif, poop, dmphrases, shitting, outsidemedia, eightball)>", autocomplete: [
             'funnygif',
             'poop',
             'dmphrases',
             'shitting',
+            'outsidemedia',
             'eightball'
         ]
     }, { name: "value", required: true, specifarg: false, orig: "<value>" }],
@@ -21,7 +22,7 @@ module.exports = {
             await msg.reply('Sorry... You\'re not in the JSON gang.').catch(() => { })
             return
         } else {
-            var types = ['funnygif', 'poop', 'dmphrases', 'shitting', 'eightball']
+            var types = ['funnygif', 'poop', 'dmphrases', 'shitting', 'outsidemedia', 'eightball']
 
             if (args[1] === undefined) {
                 await msg.reply(`What is the JSON to update?! (Available: ${types.map(t => `**${t}**`).join(', ')})`).catch(() => { })
@@ -42,15 +43,24 @@ module.exports = {
             }
             var saidMessage = args.slice(2).join(' ')
 
-            if (!globaldata[type].find(v => v === saidMessage)) {
+            var usesGroups = type === 'outsidemedia'
+            var groupInfo = usesGroups && globaldata[type].find(g => g.list.find(v => v === saidMessage))
+            var soExtra = (usesGroups && groupInfo && ` (${groupInfo.displayname})`) || '' 
+
+            var alreadyExists = usesGroups
+                ? groupInfo
+                : globaldata[type].find(v => v === saidMessage)
+
+            if (!alreadyExists) {
                 await msg.reply('Does not exist.').catch(() => { })
                 return
             }
 
-            var removed = globaldata[type].splice(globaldata[type].findIndex(v => v === saidMessage), 1)
+            var array = (usesGroups ? groupInfo.list : globaldata[type])
+            var removed = array.splice(array.findIndex(v => v === saidMessage), 1)
 
             if (!msg.nosend) await msg.reply({
-                content: '✅ Removed ' + removed[0],
+                content: '✅ Removed ' + removed[0] + soExtra,
                 allowedMentions: fetchPingPerms(msg)
             }).catch(() => { })
 
@@ -58,13 +68,14 @@ module.exports = {
             arrays.poopPhrases = globaldata.poop
             arrays.dmPhrases = globaldata.dmphrases
             arrays.shitting = globaldata.shitting
+            arrays.outsideMedia = globaldata.outsidemedia
             arrays.eightball = globaldata.eightball
 
-            return '✅ Removed ' + removed[0]
+            return '✅ Removed ' + removed[0] + soExtra
         };
     },
     help: {
-        name: 'removefromjson <json (funnygif, poop, dmphrases, shitting, eightball)> <value>',
+        name: 'removefromjson <json (funnygif, poop, dmphrases, shitting, outsidemedia, eightball)> <value>',
         value: "Removes a value from JSONs like oil or DM phrases."
     },
     cooldown: 2500,

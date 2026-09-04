@@ -315,6 +315,7 @@ vars.fileJsons = {
     poopPhrases: 'poop',
     dmPhrases: 'dmphrases',
     shitting: 'shitting',
+    outsideMedia: 'outsidemedia',
     eightball: 'eightball'
 }
 

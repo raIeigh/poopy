@@ -1,11 +1,12 @@
 module.exports = {
     name: ['updatefromjson'],
     args: [{
-        name: "json", required: true, specifarg: false, orig: "<json (funnygif, poop, dmphrases, shitting, eightball)>", autocomplete: [
+        name: "json", required: true, specifarg: false, orig: "<json (funnygif, poop, dmphrases, shitting, outsidemedia, eightball)>", autocomplete: [
             'funnygif',
             'poop',
             'dmphrases',
             'shitting',
+            'outsidemedia',
             'eightball'
         ]
     }],
@@ -22,7 +23,7 @@ module.exports = {
             await msg.reply('Sorry... You\'re not in the JSON gang.').catch(() => { })
             return
         } else {
-            var types = ['funnygif', 'poop', 'dmphrases', 'shitting', 'eightball']
+            var types = ['funnygif', 'poop', 'dmphrases', 'shitting', 'outsidemedia', 'eightball']
 
             if (args[1] === undefined) {
                 await msg.reply(`What is the JSON to update?! (Available: ${types.map(t => `**${t}**`).join(', ')})`).catch(() => { })
@@ -49,13 +50,14 @@ module.exports = {
             arrays.poopPhrases = globaldata.poop
             arrays.dmPhrases = globaldata.dmphrases
             arrays.shitting = globaldata.shitting
+            arrays.outsideMedia = globaldata.outsidemedia
             arrays.eightball = globaldata.eightball
 
             return '✅ JSON values updated from existing file.'
         };
     },
     help: {
-        name: 'updatefromjson <json (funnygif, poop, dmphrases, shitting, eightball)>',
+        name: 'updatefromjson <json (funnygif, poop, dmphrases, shitting, outsidemedia, eightball)>',
         value: "Updates from the bot's existing JSON files like oil or DM phrases."
     },
     cooldown: 2500,

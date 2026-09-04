@@ -1,14 +1,15 @@
 module.exports = {
     name: ['displayjson'],
     args: [{
-        name: "json", required: true, specifarg: false, orig: "<json (funnygif, poop, dmphrases, shitting, eightball)>", autocomplete: [
+        name: "json", required: true, specifarg: false, orig: "<json (funnygif, poop, dmphrases, shitting, outsidemedia, eightball)>", autocomplete: [
             'funnygif',
             'poop',
             'dmphrases',
             'shitting',
+            'outsidemedia',
             'eightball'
         ]
-    }],
+    }, { name: "group", required: false, specifarg: false, orig: "[group (ONLY for outsidemedia json; short name for the community)]" }],
     execute: async function (msg, args) {
         let poopy = this
         let config = poopy.config
@@ -21,7 +22,7 @@ module.exports = {
             await msg.reply('Sorry... You\'re not in the JSON gang.').catch(() => { })
             return
         } else {
-            var types = ['funnygif', 'poop', 'dmphrases', 'shitting', 'eightball']
+            var types = ['funnygif', 'poop', 'dmphrases', 'shitting', 'outsidemedia', 'eightball']
 
             if (args[1] === undefined) {
                 await msg.reply(`What is the JSON to display?! (Available: ${types.map(t => `**${t}**`).join(', ')})`).catch(() => { })
@@ -38,21 +39,31 @@ module.exports = {
                 return
             }
 
+            var usesGroups = type === 'outsidemedia'
+            var group = args[2]
+            var groupInfo = usesGroups && group && globaldata[type].find(g => g.name === group)
+
+            var array = usesGroups ? groupInfo && groupInfo.list : globaldata[type]
+            if (usesGroups && array === undefined)
+                array = globaldata[type].reduce((arr, groupInfo) => arr.concat(groupInfo.list), [])
+
+            var result = array.join('\n\n-----------------------------------------------\n\n') || 'lmao theres nothing'
+
             var currentcount = vars.filecount
             vars.filecount++
             var filepath = `temp/${config.database}/file${currentcount}`
             fs.mkdirSync(filepath)
-            fs.writeFileSync(`${filepath}/jsonlist.txt`, globaldata[type].join('\n\n-----------------------------------------------\n\n') || 'lmao theres nothing')
+            fs.writeFileSync(`${filepath}/jsonlist.txt`, result)
             if (!msg.nosend) await msg.reply({
                 files: [new Discord.AttachmentBuilder(`${filepath}/jsonlist.txt`)]
             }).catch(() => { })
             fs.rmSync(`${filepath}`, { force: true, recursive: true })
 
-            return globaldata[type].join('\n\n-----------------------------------------------\n\n') || 'lmao theres nothing'
+            return result
         };
     },
     help: {
-        name: 'displayjson <json (funnygif, poop, dmphrases, shitting, eightball)>',
+        name: 'displayjson <json (funnygif, poop, dmphrases, shitting, outsidemedia, eightball)>',
         value: "Displays the values of a JSON like oil or DM phrases."
     },
     cooldown: 2500,
