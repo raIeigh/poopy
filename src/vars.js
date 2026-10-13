@@ -355,7 +355,8 @@ vars.dataTemplate = {
         users: [],
         leaderboard: {},
         crons: [],
-        starboards: []
+        starboards: [],
+        reactBlacklists: []
     },
 
     userData: {
