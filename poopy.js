@@ -1363,7 +1363,12 @@ class Poopy {
         }]
 
         callbacks.reactionCallbacks = [async (reaction, user) => {
-            const msg = await reaction.message.fetch(false).catch(() => { }) ?? reaction.message
+            let msg = reaction.message
+            if (msg.partial) {
+                msg = await msg.fetch(false).catch(() => { })
+                if (!msg) return
+            }
+
             const emoji = reaction.emoji.toString()
 
             if (user) tempdata.collectors.filter(
@@ -1384,6 +1389,7 @@ class Poopy {
             ) {
                 const member = msg.guild.members.cache.get(user.id)
                     ?? await msg.guild.members.fetch(user.id).catch(() => { })
+                if (!member) return
 
                 const hasPerms = member && (
                     member.permissions.has(DiscordTypes.PermissionFlagsBits.ManageGuild) ||
@@ -1395,7 +1401,9 @@ class Poopy {
                     member?.permissions.has(DiscordTypes.PermissionFlagsBits.ManageMessages)
 
                 if (!hasMessagePerms) {
-                    const reactionUsers = await reaction.users.fetch().catch(() => { })
+                    const reactionUsers = reaction.count == reaction.users.cache.size
+                        ? reaction.users.cache
+                        : await reaction.users.fetch().catch(() => { })
 
                     let permittedReactionExists = false
 
