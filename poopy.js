@@ -1377,7 +1377,7 @@ class Poopy {
             )
 
             if (
-                msg.guild && (Date.now() - msg?.createdTimestamp) < 60_000 * 60 * 24
+                msg.guild && (Date.now() - msg.createdTimestamp) < 60_000 * 60 * 24 &&
                 (data.botData.reactBlacklists?.[msg.guild.id] ?? []).includes(msg.channel.id) &&
                 !starboards.length &&
                 user
