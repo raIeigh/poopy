@@ -572,7 +572,7 @@ class Poopy {
                 // yeah the data value is still battling i should change this soon probably idk
                 if (data.guildData[msg.guild.id].channels[msg.channel.id].battling) {
                     var battlingJSONs = {
-                    	[-1]: [poopy.json.utdrJSON.undertale, poopy.json.utdrJSON.deltarune, poopy.json.glaggleJSON, poopy.json.battlerJSON.battlers, poopy.json.battlerJSON.enemies],
+                        [-1]: [poopy.json.utdrJSON.undertale, poopy.json.utdrJSON.deltarune, poopy.json.glaggleJSON, poopy.json.battlerJSON.battlers, poopy.json.battlerJSON.enemies],
                         [1]: [poopy.json.battlerJSON.battlers],
                         [2]: [poopy.json.battlerJSON.enemies],
                         [3]: [poopy.json.battlerJSON.battlers, poopy.json.battlerJSON.enemies],
@@ -581,7 +581,7 @@ class Poopy {
                         [6]: [poopy.json.utdrJSON.undertale, poopy.json.utdrJSON.deltarune],
                         [7]: [poopy.json.glaggleJSON]
                     }
-                    
+
                     var battlingValue = data.guildData[msg.guild.id].channels[msg.channel.id].battling
 
                     var battlers = [].concat(...(battlingJSONs[battlingValue] ?? []))
@@ -1002,7 +1002,7 @@ class Poopy {
                 tempdata.collectors.filter(
                     c => c?.id && c?.id?.startsWith(msg.channel.id) && c?.type == "message"
                 ).forEach(collector => collector.collect(msg))
-                
+
                 tempdata.collectors.filter(
                     c => c.id === undefined || c.type === undefined
                 ).forEach(collector => {
@@ -1375,6 +1375,56 @@ class Poopy {
             const starboards = data.botData.starboards.filter(
                 s => s.guildId == msg?.guild?.id && (s.emoji == emoji || s.emoji == "ANY")
             )
+
+            if (
+                msg.guild &&
+                (data.botData.reactBlacklists?.[msg.guild.id] ?? []).includes(msg.channel.id) &&
+                !starboards.length &&
+                user
+            ) {
+                const member = msg.guild.members.cache.get(user.id)
+                    ?? await msg.guild.members.fetch(user.id).catch(() => { })
+
+                const hasPerms = member && (
+                    member.permissions.has(DiscordTypes.PermissionFlagsBits.ManageGuild) ||
+                    member.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) ||
+                    user.id === msg.guild.ownerId
+                )
+
+                const hasMessagePerms = hasPerms ||
+                    member?.permissions.has(DiscordTypes.PermissionFlagsBits.ManageMessages)
+
+                if (!hasMessagePerms) {
+                    const reactionUsers = await reaction.users.fetch().catch(() => { })
+
+                    let permittedReactionExists = false
+
+                    if (reactionUsers) {
+                        for (const reactionUser of reactionUsers.values()) {
+                            const reactionMember = msg.guild.members.cache.get(reactionUser.id)
+                                ?? await msg.guild.members.fetch(reactionUser.id).catch(() => { })
+
+                            if (!reactionMember) continue
+
+                            const reactionHasPerms =
+                                reactionMember.permissions.has(DiscordTypes.PermissionFlagsBits.ManageGuild) ||
+                                reactionMember.permissions.has(DiscordTypes.PermissionFlagsBits.Administrator) ||
+                                reactionUser.id === msg.guild.ownerId ||
+                                reactionMember.permissions.has(DiscordTypes.PermissionFlagsBits.ManageMessages)
+
+                            if (reactionHasPerms) {
+                                permittedReactionExists = true
+                                break
+                            }
+                        }
+                    }
+
+                    if (!permittedReactionExists) {
+                        await reaction.users.remove(user.id).catch(() => { })
+                        return
+                    }
+                }
+            }
 
             if (starboards.length <= 0) return
 
@@ -1770,7 +1820,7 @@ class Poopy {
                                 callback => callback(interaction).catch(() => { })
                             )
                         ).catch(() => { })
-                        
+
                         await sleep(1000)
                         if (!interaction.replied) interaction.deleteReply().catch(() => { })
                         else await callbacks.messageCallback(interaction.replied).catch(() => { })
@@ -1943,19 +1993,19 @@ class Poopy {
 
         if (!config.apiMode) {
             bot.on('messageCreate', (msg) => callbacks.messageCallbacks.forEach(callback => callback(msg).catch((e) => console.log(e))))
-            
+
             bot.on('messageUpdate', (oldMsg, msg) => callbacks.messageEditCallbacks.forEach(callback => callback(oldMsg, msg).catch((e) => console.log(e))))
             bot.on('messageDelete', (msg) => callbacks.messageDeleteCallbacks.forEach(callback => callback(msg).catch((e) => console.log(e))))
             bot.on('messageDeleteBulk', (messages) => messages.forEach((msg) => callbacks.messageDeleteCallbacks.forEach(callback => callback(msg).catch((e) => console.log(e)))))
-            
+
             bot.on('guildCreate', (guild) => callbacks.guildCallbacks.forEach(callback => callback(guild).catch((e) => console.log(e))))
             bot.on('guildDelete', (guild) => callbacks.guildDeleteCallbacks.forEach(callback => callback(guild).catch((e) => console.log(e))))
-            
+
             bot.on('messageReactionAdd', (reaction, user) => callbacks.reactionCallbacks.forEach(callback => callback(reaction, user).catch((e) => console.log(e))))
             bot.on('messageReactionRemove', (reaction, user) => callbacks.reactionCallbacks.forEach(callback => callback(reaction, user).catch((e) => console.log(e))))
             bot.on('messageReactionRemoveAll', (_, reactions) => reactions.forEach((reaction) => callbacks.reactionCallbacks.forEach(callback => callback(reaction).catch((e) => console.log(e)))))
             bot.on('messageReactionRemoveEmoji', (reaction) => callbacks.reactionCallbacks.forEach(callback => callback(reaction).catch((e) => console.log(e))))
-            
+
             bot.on('interactionCreate', (interaction) => callbacks.interactionCallbacks.forEach(callback => callback(interaction).catch((e) => console.log(e))))
 
             bot.on('error', (err) => console.log(err))
