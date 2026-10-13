@@ -1420,7 +1420,7 @@ class Poopy {
                     }
 
                     if (!permittedReactionExists) {
-                        await reaction.users.remove(user.id).catch(() => { })
+                        await reaction.remove().catch(() => { })
                         return
                     }
                 }
