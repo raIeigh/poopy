@@ -17,6 +17,5 @@ module.exports = {
       repeat.push(phrase)
     }
     return repeat.join(separator)
-  },
-  limit: 5
+  }
 }
