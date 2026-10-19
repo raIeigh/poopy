@@ -36,7 +36,7 @@ module.exports = {
                 var filename = `input.${fileinfo.shortext}`
                 fs.copyFileSync(`assets/video/crash.webm`, `${filepath}/crash.webm`)
 
-                await execPromise(`ffmpeg -i ${filepath}/${filename} -pix_fmt yuv444p -preset ${findpreset(args)} ${filepath}/webm.webm`)
+                await execPromise(`ffmpeg -i ${filepath}/${filename} -c:v libvpx -pix_fmt yuv420p -preset ${findpreset(args)} ${filepath}/webm.webm`)
                 fs.writeFileSync(`${filepath}/concat.txt`, `file 'webm.webm'\nfile 'crash.webm'`)
                 await execPromise(`ffmpeg -f concat -i ${filepath}/concat.txt -codec copy -preset ${findpreset(args)} ${filepath}/output.webm`)
                 return await sendFile(msg, filepath, `output.webm`)
